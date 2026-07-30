@@ -50350,12 +50350,12 @@
   },
   {
     "description": "Sunstone Rocks Small",
-    "offset": [ 0, 125, 0 ],
+    "offset": [ 0, 105, 0 ],
     "alignment": "CENTER",
     "dayNightOnly": true,
     "nightMultiplier": 2.5,
-    "radius": 200,
-    "strength": 4,
+    "radius": 185,
+    "strength": 3,
     "color": [
       255,
       240,
@@ -50374,7 +50374,7 @@
     "dayNightOnly": true,
     "nightMultiplier": 2.5,
     "radius": 350,
-    "strength": 4.5,
+    "strength": 3.5,
     "color": [
       255,
       240,
@@ -50392,7 +50392,7 @@
     "dayNightOnly": true,
     "nightMultiplier": 2.5,
     "radius": 225,
-    "strength": 4,
+    "strength": 3.5,
     "color": [
       255,
       240,
