@@ -1,11 +1,5 @@
 [
   {
-    "name": "TEST_1",
-    "area": "TEST_1",
-    "waterType": "WATER",
-    "forced": true
-  },
-  {
     "name": "DEFAULT_GRASS",
     "groundMaterial": "OVERWORLD_GRASS_1",
     "maxLightness": 55
