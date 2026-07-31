@@ -93434,5 +93434,48 @@
         "uvScale": 0.2
       }
     ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Candle Stand",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_CANDLE_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_150",
+        "receiveShadows": false
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Wall Candles",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_CANDLE_WALL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "receiveShadows": false,
+        "upwardsNormals": true
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
   }
 ]
