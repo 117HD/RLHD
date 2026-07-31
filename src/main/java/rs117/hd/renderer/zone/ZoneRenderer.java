@@ -311,9 +311,7 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void buildSkyboxCmd() {
-		if(!skyboxCmd.isEmpty())
-			return;
-
+		skyboxCmd.reset();
 		skyboxCmd.PushTimer(Timer.RENDER_SKYBOX);
 		skyboxCmd.SetShader(skyProgram);
 		skyboxCmd.DepthMask(false);
@@ -559,6 +557,10 @@ public class ZoneRenderer implements Renderer {
 					environmentManager.getForcedFixedSunAngles(),
 					environmentManager.getForcedFixedMoonAngles()
 				);
+
+				if(starField.generateStarField() || skyboxCmd.isEmpty())
+					buildSkyboxCmd();
+
 				double[] sunAnglesD = timeOfDay.getSunAngles();
 				double sunAltDeg = Math.toDegrees(sunAnglesD[1]);
 
@@ -1231,14 +1233,6 @@ public class ZoneRenderer implements Renderer {
 		if (skyGradientEnabled && !shouldRenderRSSkybox && skyProgram.isValid()) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			frameTimer.end(Timer.CLEAR_SCENE);
-
-			if(starField.generateStarField())
-				skyboxCmd.reset();
-
-			buildSkyboxCmd();
-
-//			if (skyGradientEnabled && !shouldRenderRSSkybox && plugin.orthographicProjection && skyProgram.isValid())
-//				skyboxCmd.execute(renderState);
 		} else {
 			// Use Day & night Cycle fog color if available, otherwise use environment manager's fog color
 			float[] fogColor = { 0, 0, 0 };
