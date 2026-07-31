@@ -8118,7 +8118,8 @@
       "GIANTS_FOUNDRY_DUGUPSOIL02_07"
     ],
     "inheritTileColorType": "OVERLAY",
-    "uvType": "WORLD_XZ"
+    "uvType": "BOX",
+    "uvScale": 0.75
   },
   {
     "description": "Emirs Arena - Ground decoration - Sand - Tiny",
@@ -12374,9 +12375,15 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.7,
-    "flatNormals": true,
+    "uvOrientationY": 512,
     "objectIds": [
       "WALLSUPPORT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
     ]
   },
   {
@@ -13241,6 +13248,52 @@
     ],
     "uvType": "BOX",
     "flatNormals": true
+  },
+  {
+    "description": "Rimmington - Seamstress Table",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "s == 0 && l < 53",
+        "baseMaterial": "METALLIC_1"
+      }
+    ],
+    "objectIds": [
+      "RIMMINGTON_CLOTHESEQUIP_TABLE"
+    ]
+  },
+  {
+    "description": "Rimmington - Seamstress Mannequin",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 7 && s == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "CLOTHESMODEL_WOMAN2",
+      "CLOTHESMODEL_WOMAN1",
+      "CLOTHESMODEL_MAN2",
+      "CLOTHESMODEL_MAN1"
+    ]
   },
   {
     "description": "Camelot - Brimhaven Dungeon - Stone",
@@ -14163,8 +14216,9 @@
     "flatNormals": true
   },
   {
-    "description": "Wizard Tower - Walls and Bridge",
+    "description": "Wizard Tower - Bridge Corner Tiles",
     "baseMaterial": "SMOOTH_STONE_VERY_LIGHT",
+    "undoVanillaShading": false,
     "uvType": "BOX",
     "uvScale": 0.7,
     "objectIds": [
@@ -17087,7 +17141,8 @@
     "uvScale": 0.3,
     "objectIds": [
       "FAI_VARROCK_RANGE",
-      "FAI_VARROCK_RANGE_WITH_PIPE"
+      "FAI_VARROCK_RANGE_WITH_PIPE",
+      "RIMMINGTON_POOR_RANGE"
     ]
   },
   {
@@ -20325,6 +20380,30 @@
         "baseMaterial": "CARPET_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.65
+      },
+      {
+        "colors": "h == 8 || h == 9",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Restless Ghost Altar with Skull",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "RESTLESS_GHOST_ALTAR_SKULL",
+      "RESTLESS_GHOST_ALTAR_NO_SKULL"
+    ],
+    "shiftSaturation": -1,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 6 && s != 1",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "shiftSaturation": -2,
+        "shiftLightness": 7
       },
       {
         "colors": "h == 8 || h == 9",
@@ -47605,6 +47684,16 @@
     "uvScale": 0.88
   },
   {
+    "description": "Lumbridge - Restless Ghost - The Ghost in Question",
+    "baseMaterial": "UNLIT",
+    "shiftLightness": 7,
+    "shiftAlpha": -30 ,
+    "minAlpha": 30,
+    "npcIds": [
+      "GHOSTX"
+    ]
+  },
+  {
     "description": "Lumbridge crypt stone block walls",
     "baseMaterial": "ROCK_3_SMOOTH",
     "objectIds": [ "RESTLESS_CRYPT_WALL" ],
@@ -47632,6 +47721,42 @@
         "colors": "h == 17",
         "baseMaterial": "GRUNGE_1",
         "flatNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge crypt ivy",
+    "baseMaterial": "LEAF_VEINS_DARKER",
+    "windDisplacementMode": "VERTEX_JIGGLE",
+    "objectIds": [
+      "AIDE_SHUTTERWINDOW"
+    ],
+    "uvType": "MODEL_YZ",
+    "uvOrientation": 144,
+    "uvScale": 0.1,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "shiftLightness": -2,
+        "depthBias": 1
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "shiftLightness": -2,
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
       }
     ]
   },
@@ -47810,10 +47935,19 @@
       "RIMMINGTON_WOOD_WALLS_WINDOW_DOUBLE01"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.7,
     "uvOrientationZ": 512,
     "uvOrientationY": 512,
-    "flatNormals": true
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "s == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "flatNormals": true
+      }
+    ]
   },
   {
     "description": "Rimmington House Roof - Corner",
@@ -48268,6 +48402,26 @@
     ],
     "objectIds": [
       "CART_HAY"
+    ]
+  },
+  {
+    "description": "Wooden Cart - Filled with Dirt",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "uvType": "BOX",
+        "baseMaterial": "DIRT_2",
+        "uvScale": 0.5,
+        "shiftLightness": -3
+      }
+    ],
+    "objectIds": [
+      "RIMMINGTON_WHEEL_BARROW"
     ]
   },
   {
@@ -49341,7 +49495,8 @@
       "FAI_VARROCK_SINGLE_BED_DIRTY",
       "HOS_BED_01",
       "NORMAL_BED",
-      "MURDER_QIP_BED"
+      "MURDER_QIP_BED",
+      "FAVOUR_BED"
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -49504,7 +49659,8 @@
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [ "REGICIDE_FRACTIONALIZING_STILL" ],
     "uvType": "BOX",
-    "uvOrientation": 512
+    "uvOrientation": 512,
+    "uvScale": 0.45
   },
   {
     "description": "Objects - Dirt - Manhole",
@@ -51978,6 +52134,7 @@
       "SLUG2_BOOKCASE",
       "SARIM_BOOKCASE2_OFFSET",
       "SARIM_BOOKCASE2_OFFSET_WESTFACING",
+      "SARIM_BOOKCASE2_OFFSET_NORTHFACING",
       "BOOKCASE_POLYBOOKS",
       "CANAFIS_BOOKSHELF_OLD_SHORT",
       "CANAFIS_BOOKSHELF_OLD_SHORT3",
@@ -52535,6 +52692,33 @@
     ],
     "objectIds": [
       "MINING_SPADE"
+    ]
+  },
+  {
+    "description": "Shovel in the ground with Dirt around it",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 5 && s == 7",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "inheritTileColorType": "UNDERLAY",
+        "shiftLightness": 2
+      }
+    ],
+    "objectIds": [
+      "RIMMINGTON_MINING_SPADE"
     ]
   },
   {
@@ -57390,7 +57574,7 @@
   },
   {
     "description": "Game Objects - Wooden Shelf With Book and Urns",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
     "uvOrientationX": 512,
     "uvOrientationZ": 512,
@@ -57669,11 +57853,16 @@
     "colorOverrides": [
       {
         "colors": "h == 7",
-        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
         "uvScale": 0.2,
         "uvType": "BOX",
-        "uvOrientationY": 512,
+        "uvOrientationX": 512,
         "uvOrientationZ": 512
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "GRUNGE_3",
+        "shiftSaturation": -2
       }
     ]
   },
@@ -57726,13 +57915,14 @@
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       "DRAYNOR_AGGIE_CAULDRON",
-      "SARIM_BETTYS_CAULDRON"
+      "SARIM_BETTYS_CAULDRON",
+      "HETTYCAULDRON"
     ],
     "uvType": "BOX",
     "uvScale": 0.25,
     "colorOverrides": [
       {
-        "colors": "h == 34",
+        "colors": "h == 34 || h == 21",
         "baseMaterial": "GRAY_75"
       }
     ]
@@ -58332,7 +58522,8 @@
         "colors": "h == 8",
         "baseMaterial": "ROPE",
         "uvType": "MODEL_YZ",
-        "uvOrientation": 512
+        "uvOrientation": 512,
+        "uvScale": 0.85
       }
     ]
   },
@@ -62910,15 +63101,15 @@
     "objectIds": [
       "FAI_VARROCK_FABRIC01",
       "FAI_VARROCK_FABRIC02",
-      "ICS_FLOOR_CLOTH"
+      "ICS_FLOOR_CLOTH",
+      "RIMMINGTON_FLOOR_CLOTH"
     ],
     "colorOverrides": [
       {
         "colors": "h == 7",
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
         "uvType": "BOX",
-        "uvOrientation": 512,
-        "uvScale": 0.4
+        "uvScale": 0.3
       }
     ]
   },
@@ -62933,8 +63124,8 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h == 7",
-        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "colors": "h == 7 || h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvOrientation": 512,
         "uvScale": 0.4
@@ -63749,7 +63940,8 @@
     "uvType": "BOX",
     "uvScale": 0.1,
     "objectIds": [
-      "GRANDFIREPLACE"
+      "GRANDFIREPLACE",
+      "FARM_FIREPLACE"
     ],
     "colorOverrides": [
       {
@@ -65908,6 +66100,7 @@
     "uvScale": 0.75,
     "objectIds": [
       "DRAGONMOUNTEDHEAD_RED",
+      "DRAGONMOUNTEDHEAD_RED3_OFFSET2",
       "DRAGONMOUNTEDHEAD_RED3_OFFSET",
       "DRAGONMOUNTEDHEAD",
       "DRAGONMOUNTEDHEAD3"
@@ -80875,17 +81068,113 @@
   },
   {
     "description": "Rimmington - Lands End - Wooden - Shelves - With Boxes",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
+    "uvScale": 0.4,
     "objectIds": [
       "RIMMINGTON_WAREHOUSE_SHELVES3",
+      "RIMMINGTON_WAREHOUSE_SHELVES2",
       "RIMMINGTON_WAREHOUSE_SHELVES4"
     ],
     "colorOverrides": [
       {
-        "colors": "h == 6",
-        "baseMaterial": "GRUNGE_3",
-        "uvType": "BOX"
+        "colors": "h == 6 && s > 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftLightness": 1,
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Rimmington - Double Bed",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvOrientation": 512,
+    "uvScale": 0.6,
+    "uvType": "BOX",
+    "objectIds": [
+      "POOR_BIGBED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Rimmington - Chemist Tables with Equipment",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "RIMMINGTON_CHEMIST_TABLE_2",
+      "RIMMINGTON_CHEMIST_TABLE_1",
+      "LAMP_OIL_STILL",
+      "LAMP_OIL_STILL_0",
+      "LAMP_OIL_STILL_1"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "flatNormals": true,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Rimmington - Art Easil",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.1,
+    "objectIds": [
+      "RIMMINGTON_ARTIST_EASIL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "flatNormals": true,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Rimmington - Campfire",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "FAVOUR_CAMPFIRE_BASE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6 || h == 7" ],
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Rimmington - Wind Chimes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": 3,
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "WITCHESCHARMS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 10" ],
+        "baseMaterial": "METALLIC_1_LIGHT"
       }
     ]
   },
@@ -80912,6 +81201,14 @@
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX"
       }
+    ]
+  },
+  {
+    "description": "Pest Control Isle - Wooden - Shelves - Empty",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "PEST_WAREHOUSE_SHELVES"
     ]
   },
   {
@@ -82337,7 +82634,7 @@
     ]
   },
   {
-    "description": "Canafis - Slepe - Table with thread scissors and other items",
+    "description": "Canafis - Slepe - Hole with Ladder and Trapdoor",
     "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX",
     "uvScale": 0.8,
