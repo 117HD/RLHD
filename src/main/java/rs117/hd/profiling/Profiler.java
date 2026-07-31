@@ -242,8 +242,8 @@ public class Profiler {
 	}
 
 	public synchronized void pushEvent(Event event) {
-		assert nextEventIndex < NUM_EVENTS;
-		events[nextEventIndex++] = event;
+		if(nextEventIndex < NUM_EVENTS)
+			events[nextEventIndex++] = event;
 	}
 
 	public void endFrameAndReset() {
