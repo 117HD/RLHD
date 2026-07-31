@@ -12124,6 +12124,19 @@
     "hideOtherAreas": true
   },
   {
+    "name": "WYRMSCRAIG_CATHEDRAL_BRICK_FLOOR",
+    "aabbs": [
+      [ 2529, 2217, 2541, 2221 ],
+      [ 2529, 2210, 2541, 2214 ]
+    ]
+  },
+  {
+    "name": "WYRMSCRAIG_CATHEDRAL_CARPET",
+    "aabbs": [
+      [ 2529, 2215, 2541, 2216 ]
+    ]
+  },
+  {
     "name": "SEWER_ENTRANCE_FIXES",
     "aabbs": [
       [ 2632, 3294 ],

@@ -11031,7 +11031,8 @@
     "name": "WYRMSCRAIG_CLIFFS",
     "area": "WYRMSCRAIG",
     "overlayIds": [ 643 ],
-    "groundMaterial": "VARIED_DIRT"
+    "groundMaterial": "VARIED_DIRT",
+    "minLightness": 10
   },
   {
     "name": "WYRMSCRAIG_PATHS",
@@ -11045,6 +11046,21 @@
     "overlayIds": [ 186 ],
     "groundMaterial": "HD_WOOD_PLANKS_2",
     "shiftLightness": 6,
+    "blended": false
+  },
+  {
+    "name": "WYRMSCRAIG_CATHEDRAL_BRICK_FLOOR",
+    "area": "WYRMSCRAIG_CATHEDRAL_BRICK_FLOOR",
+    "overlayIds": [ 339 ],
+    "groundMaterial": "BRICK_CAM_TORUM_2_STONE",
+    "blended": false
+  },
+  {
+    "name": "WYRMSCRAIG_CATHEDRAL_CARPET",
+    "area": "WYRMSCRAIG_CATHEDRAL_CARPET",
+    "overlayIds": [ 347 ],
+    "groundMaterial": "DIRTY_CARPET",
+    "shiftLightness": 2,
     "blended": false
   },
   {

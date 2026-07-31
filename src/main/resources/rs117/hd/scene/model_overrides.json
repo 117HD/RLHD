@@ -93477,5 +93477,36 @@
         "baseMaterial": "GRUNGE_3"
       }
     ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Walls",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT01",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT01A",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02A",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02B",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02C",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02D",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02A_MIRROR",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02E_MIRROR",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02E",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02G"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || s == 1",
+        "baseMaterial": "SMOOTH_STONE_LIGHT",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
   }
 ]
