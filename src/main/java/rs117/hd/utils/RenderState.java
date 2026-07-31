@@ -24,7 +24,7 @@ public final class RenderState {
 	public final GLDepthFunc depthFunc = addState(GLDepthFunc::new);
 	public final GLColorMask colorMask = addState(GLColorMask::new);
 	public final GLBlendFunc blendFunc = addState(GLBlendFunc::new);
-	public final GLBlendPolygonOffset polygonOffset = addState(GLBlendPolygonOffset::new);
+	public final GLPolygonOffset polygonOffset = addState(GLPolygonOffset::new);
 	public final GLCullFace cullFace = addState(GLCullFace::new);
 	public final GLEnable enable = addState(GLEnable::new);
 	public final GLDisable disable = addState(GLDisable::new);
@@ -139,8 +139,8 @@ public final class RenderState {
 		protected void applyValues(int[] values) { glBlendFuncSeparate(values[0], values[1], values[2], values[3]); }
 	}
 
-	public static final class GLBlendPolygonOffset extends GLState.FloatArray {
-		public GLBlendPolygonOffset() {super(2);}
+	public static final class GLPolygonOffset extends GLState.FloatArray {
+		public GLPolygonOffset() {super(2);}
 
 
 		@Override
