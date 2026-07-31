@@ -187,7 +187,7 @@ public class Profiler {
 		return autoTimers[index];
 	}
 
-	public void end(Timer timer) {
+	public boolean end(Timer timer) {
 		if (log.isDebugEnabled() && timer.hasGpuDebugGroup() && HdPlugin.GL_CAPS.OpenGL43) {
 			if (glDebugGroupStack.peek() != timer) {
 				if (glDebugGroupStack.contains(timer))
@@ -200,7 +200,7 @@ public class Profiler {
 
 		int index = timer.ordinal();
 		if (!isActive || !activeTimers[index])
-			return;
+			return false;
 
 		if (timer.isGpuTimer()) {
 			glQueryCounter(gpuQueries[index * 2 + 1], GL_TIMESTAMP);
@@ -216,6 +216,8 @@ public class Profiler {
 			activeTimers[index] = false;
 			heap[index] = 0;
 		}
+
+		return true;
 	}
 
 	public void addDuration(Timer timer, long nanos) {

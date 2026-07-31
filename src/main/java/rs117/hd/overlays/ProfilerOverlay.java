@@ -29,7 +29,6 @@ import net.runelite.client.input.MouseManager;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayManager;
-import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.ComponentOrientation;
 import net.runelite.client.ui.overlay.components.LayoutableRenderableEntity;
@@ -55,7 +54,7 @@ import static rs117.hd.renderer.zone.SceneManager.MAX_WORLDVIEWS;
 import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
-public class ProfilerOverlay extends OverlayPanel implements Profiler.Listener, MouseListener {
+public class ProfilerOverlay extends HDOverlayPanel implements Profiler.Listener, MouseListener {
 	private static final int PANEL_HORIZONTAL_PADDING = 8;
 	private static final int SWATCH_WIDTH = 10;
 	private static final int SWATCH_GAP = 4;
@@ -231,7 +230,7 @@ public class ProfilerOverlay extends OverlayPanel implements Profiler.Listener, 
 	}
 
 	@Override
-	public Dimension render(Graphics2D g) {
+	public Dimension onRender(Graphics2D g) {
 		long time = System.nanoTime();
 
 		lineCache.syncGraphOverlayState(ui.isGraphEnabled());
@@ -253,7 +252,7 @@ public class ProfilerOverlay extends OverlayPanel implements Profiler.Listener, 
 			renderTab(ui.getSelectedTab(), panelComponent, lineCache, timings, cpuLoad, contentLineWidth);
 		}
 
-		var result = super.render(g);
+		var result = super.onRender(g);
 		mainPanelWidth = panelWidth;
 		mainContentLineWidth = contentLineWidth;
 		if (result.height > 0)
@@ -1246,7 +1245,7 @@ public class ProfilerOverlay extends OverlayPanel implements Profiler.Listener, 
 		}
 	}
 
-	private class DetachedSettingsPanel extends OverlayPanel implements MouseListener {
+	private class DetachedSettingsPanel extends HDOverlayPanel implements MouseListener {
 		private boolean active;
 
 		DetachedSettingsPanel() {
@@ -1292,7 +1291,7 @@ public class ProfilerOverlay extends OverlayPanel implements Profiler.Listener, 
 		}
 
 		@Override
-		public Dimension render(Graphics2D g) {
+		public Dimension onRender(Graphics2D g) {
 			Header settings = getSettingsHeader();
 			Dimension preferred = getPreferredSize();
 			int width = preferred != null && preferred.width > 0
@@ -1303,7 +1302,7 @@ public class ProfilerOverlay extends OverlayPanel implements Profiler.Listener, 
 			panelComponent.setPreferredSize(new Dimension(width, 0));
 			panelComponent.getChildren().add(settings);
 
-			Dimension size = super.render(g);
+			Dimension size = super.onRender(g);
 			if (preferred == null || preferred.width <= 0 || preferred.height <= 0)
 				setPreferredSize(new Dimension(size.width, size.height));
 			return size;
@@ -1372,7 +1371,7 @@ public class ProfilerOverlay extends OverlayPanel implements Profiler.Listener, 
 		}
 	}
 
-	private class DetachedPanel extends OverlayPanel implements MouseListener {
+	private class DetachedPanel extends HDOverlayPanel implements MouseListener {
 		private static final int PANEL_HORIZONTAL_PADDING = 8;
 
 		private final ProfilerUI.Tab tab;
@@ -1458,7 +1457,7 @@ public class ProfilerOverlay extends OverlayPanel implements Profiler.Listener, 
 		}
 
 		@Override
-		public Dimension render(Graphics2D g) {
+		public Dimension onRender(Graphics2D g) {
 			if (snapshotPanelWidth <= 0)
 				captureSizeFromMain();
 
@@ -1471,7 +1470,7 @@ public class ProfilerOverlay extends OverlayPanel implements Profiler.Listener, 
 				panelComponent.getChildren().add(TitleComponent.builder()
 					.text(tab.getLabel() + " - Waiting for data...")
 					.build());
-				return super.render(g);
+				return super.onRender(g);
 			}
 
 			lineCache.syncGraphOverlayState(ui.isGraphEnabled());
@@ -1486,7 +1485,7 @@ public class ProfilerOverlay extends OverlayPanel implements Profiler.Listener, 
 			dockButton.setStretchWidth(lineWidth);
 			panelComponent.getChildren().add(dockButton);
 
-			return super.render(g);
+			return super.onRender(g);
 		}
 
 		private boolean getAverageTimings() {

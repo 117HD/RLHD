@@ -15,7 +15,6 @@ import net.runelite.client.input.MouseListener;
 import net.runelite.client.input.MouseManager;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayManager;
-import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import rs117.hd.HdPlugin;
 import rs117.hd.overlays.components.GraphComponent;
@@ -25,7 +24,7 @@ import rs117.hd.profiling.Profiler;
 
 @Slf4j
 @Singleton
-public class ProfilerGraphOverlay extends OverlayPanel implements MouseListener {
+public class ProfilerGraphOverlay extends HDOverlayPanel implements MouseListener {
 	private static final int SCREEN_MARGIN = 24;
 	private static final int PANEL_BORDER = 4;
 
@@ -110,7 +109,7 @@ public class ProfilerGraphOverlay extends OverlayPanel implements MouseListener 
 	}
 
 	@Override
-	public Dimension render(Graphics2D g) {
+	public Dimension onRender(Graphics2D g) {
 		ensureGraphs();
 		graphs().applyOverlaySizes(
 			Math.max(1, client.getCanvasWidth()),
@@ -122,7 +121,7 @@ public class ProfilerGraphOverlay extends OverlayPanel implements MouseListener 
 		graphs().syncFrames(profileSampleStore);
 		graphs().forEachVisible(panelComponent.getChildren()::add);
 
-		Dimension dimension = super.render(g);
+		Dimension dimension = super.onRender(g);
 		graphs().renderTooltips(g);
 		return dimension;
 	}
