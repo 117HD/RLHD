@@ -13,6 +13,8 @@ public abstract class HDOverlayPanel extends OverlayPanel {
 	@Inject
 	private Profiler profiler;
 
+	private final boolean[] pausedTimers = new boolean[Timer.TIMERS.length];
+
 	@Inject
 	public HDOverlayPanel(HdPlugin plugin) {
 		super(plugin);
@@ -23,16 +25,19 @@ public abstract class HDOverlayPanel extends OverlayPanel {
 	}
 
 	public Dimension render(final Graphics2D graphics) {
-		// TODO: Have an API To end all capture?
-		final boolean endedClient = profiler.end(Timer.CLIENT);
-		final boolean endedFrame = profiler.end(Timer.DRAW_FRAME);
+		for(int i = 0; i < pausedTimers.length; i++) {
+			final Timer timer = Timer.TIMERS[i];
+			if(timer.isCpuTimer())
+				pausedTimers[i] = profiler.end(Timer.TIMERS[i]);
+		}
 		try {
 			return onRender(graphics);
 		}finally {
-			if(endedClient)
-				profiler.begin(Timer.CLIENT);
-			if(endedFrame)
-				profiler.begin(Timer.DRAW_FRAME);
+			for(int i = 0; i < pausedTimers.length; i++) {
+				final Timer timer = Timer.TIMERS[i];
+				if(timer.isAsyncCpuTimer() && pausedTimers[i])
+					profiler.begin(timer);
+			}
 		}
 	}
 }
