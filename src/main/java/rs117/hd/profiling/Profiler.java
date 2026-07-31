@@ -33,6 +33,12 @@ public class Profiler {
 
 	private static final OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
 
+	@Getter
+	private static Profiler instance;
+
+	@Getter
+	private static boolean isActive = false;
+
 	@Inject
 	private ClientThread clientThread;
 
@@ -74,8 +80,6 @@ public class Profiler {
 			autoTimers[i] = new AutoTimer(Timer.TIMERS[i]);
 	}
 
-	@Getter
-	private boolean isActive = false;
 
 	public long cumulativeError;
 	public long errorCompensation;
@@ -90,6 +94,7 @@ public class Profiler {
 					for (int j = 0; j < 2; ++j)
 						gpuQueries[timer.ordinal() * 2 + j] = queryNames[queryIndex++];
 
+			instance = this;
 			isActive = true;
 			plugin.setupSyncMode();
 			plugin.enableDetailedTimers = true;
@@ -116,6 +121,8 @@ public class Profiler {
 				return;
 
 			isActive = false;
+			instance = null;
+
 			plugin.setupSyncMode();
 			plugin.enableDetailedTimers = false;
 
@@ -179,7 +186,7 @@ public class Profiler {
 			glQueryCounter(gpuQueries[index * 2], GL_TIMESTAMP);
 		} else if (!activeTimers[index]) {
 			cumulativeError += errorCompensation + 1 >> 1;
-			timings[index] -= System.nanoTime() - cumulativeError;
+			subtractDuration(index, System.nanoTime() - cumulativeError);
 			heap[index] = HDUtils.getUsedMemory(true);
 		}
 		activeTimers[index] = true;
@@ -211,7 +218,7 @@ public class Profiler {
 			final long allocated = newHeap - originalHeap;
 
 			cumulativeError += errorCompensation >> 1;
-			timings[index] += System.nanoTime() - cumulativeError;
+			addDuration(index, System.nanoTime() - cumulativeError);
 			allocations[index] += allocated > 0 ? allocated : 0;
 			activeTimers[index] = false;
 			heap[index] = 0;
@@ -220,27 +227,35 @@ public class Profiler {
 		return true;
 	}
 
+	private synchronized void subtractDuration(int ordinal, long nanos) {
+		timings[ordinal] -= nanos;
+	}
+
+	private synchronized void addDuration(int ordinal, long nanos) {
+		timings[ordinal] += nanos;
+	}
+
 	public void addDuration(Timer timer, long nanos) {
 		if (isActive)
-			timings[timer.ordinal()] += nanos;
+			addDuration(timer.ordinal(), nanos);
 	}
 
 	public void add(Timer timer, long startNanos) {
 		if (isActive)
-			timings[timer.ordinal()] += System.nanoTime() - startNanos;
+			addDuration(timer.ordinal(), System.nanoTime() - startNanos);
 	}
 
 	public void add(Timer timer, long startNanos, long startMemory) {
 		if (isActive) {
 			long allocation = HDUtils.getUsedMemory(true) - startMemory;
-			timings[timer.ordinal()] += System.nanoTime() - startNanos;
+			addDuration(timer.ordinal(), System.nanoTime() - startNanos);
 			allocations[timer.ordinal()] += allocation > 0 ? allocation : 0;
 		}
 	}
 
 	public void add(Timer timer, long duration, TimeUnit unit) {
 		if (isActive)
-			timings[timer.ordinal()] += TimeUnit.NANOSECONDS.convert(duration, unit);
+			addDuration(timer.ordinal(), TimeUnit.NANOSECONDS.convert(duration, unit));
 	}
 
 	public synchronized void pushEvent(Event event) {
