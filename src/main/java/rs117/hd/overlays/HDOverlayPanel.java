@@ -23,12 +23,16 @@ public abstract class HDOverlayPanel extends OverlayPanel {
 	}
 
 	public Dimension render(final Graphics2D graphics) {
-		final boolean ended = profiler.end(Timer.CLIENT);
+		// TODO: Have an API To end all capture?
+		final boolean endedClient = profiler.end(Timer.CLIENT);
+		final boolean endedFrame = profiler.end(Timer.DRAW_FRAME);
 		try {
 			return onRender(graphics);
 		}finally {
-			if(ended)
+			if(endedClient)
 				profiler.begin(Timer.CLIENT);
+			if(endedFrame)
+				profiler.begin(Timer.DRAW_FRAME);
 		}
 	}
 }
