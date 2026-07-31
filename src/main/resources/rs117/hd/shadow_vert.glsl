@@ -109,11 +109,6 @@ layout (location = 0) in vec3 vPosition;
             worldPosition = worldViewProjection * vec4(worldPosition, 1.0);;
         }
 
-    #if TERRAIN_ONLY_PASS
-        if(!isShadowDisabled)
-            worldPosition -= vNormal.xyz * 0.0002;
-    #endif
-
         vec4 clipPosition = lightProjectionMatrix * vec4(worldPosition, shouldCastShadow);
     #if !TERRAIN_ONLY_PASS
         if (getMaterialHasTransparency(material)) // bias face if it has transparency to avoid self-shadowing
