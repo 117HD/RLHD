@@ -93500,12 +93500,185 @@
     "colorOverrides": [
       {
         "colors": "h == 0 || s == 1",
-        "baseMaterial": "SMOOTH_STONE_LIGHT",
-        "uvType": "BOX"
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "shiftLightness": 3
       },
       {
         "colors": "a < 255",
         "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Roof",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT01",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT02",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT03",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT04",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT05",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT06",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT07",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT08",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT09",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT10",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT11",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT12",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT13",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT14",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT15",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT16",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT17",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT18",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT19",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT20",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT21",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT22",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT23",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT24",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT25",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT26",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT27",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT28",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT29",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT30",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT31",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT32",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT33",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT34",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT35",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT36",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT37",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT38",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT39",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT40",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT41",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT42",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT43",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT44",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT45",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT46",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT47",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT48",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT49",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT50",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT51",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT52",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT53",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT54",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT55",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT56",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT57",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT58",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT59",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT60",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT61",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT62",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT63",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT64"
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Broken Pews - Climbable",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationY": 512,
+    "uvOrientationZ": 560,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_PEW_BROKEN_CLIMB"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cushion",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Broken Pews - Decorative",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationY": 450,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_PEW_BROKEN03",
+      "WYRMSCRAIG_CATHEDRAL_PEW_BROKEN02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cushion",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Throne",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": 10,
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_THRONE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cushion",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Chains",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.15
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Throne Floor",
+    "baseMaterial": "ROCK_6",
+    "shiftLightness": 2,
+    "uvType": "BOX",
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_THRONE_FLOOR"
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "MAD_ANGEL_CATHERDRAL_DOORL",
+      "MAD_ANGEL_CATHERDRAL_DOORR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Golden Handles",
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.1
       }
     ]
   }
