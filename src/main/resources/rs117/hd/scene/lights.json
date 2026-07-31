@@ -50374,7 +50374,7 @@
     "offset": [ -75, 175, 145 ],
     "alignment": "CENTER",
     "dayNightOnly": true,
-    "nightMultiplier": 2.25,
+    "nightMultiplier": 2.5,
     "radius": 350,
     "strength": 3.5,
     "color": [
@@ -50392,7 +50392,7 @@
     "offset": [ 35, 150, -175 ],
     "alignment": "CENTER",
     "dayNightOnly": true,
-    "nightMultiplier": 2.25,
+    "nightMultiplier": 2.5,
     "radius": 225,
     "strength": 3.5,
     "color": [
@@ -50428,7 +50428,7 @@
     "offset": [ 160, 450, 75 ],
     "alignment": "CENTER",
     "dayNightOnly": true,
-    "nightMultiplier": 2.25,
+    "nightMultiplier": 2.5,
     "radius": 225,
     "strength": 4,
     "color": [
@@ -50446,7 +50446,7 @@
     "offset": [ -20, 400, -8 ],
     "alignment": "CENTER",
     "dayNightOnly": true,
-    "nightMultiplier": 2.25,
+    "nightMultiplier": 2.5,
     "radius": 175,
     "strength": 4,
     "color": [
@@ -50464,7 +50464,7 @@
     "offset": [ 100, 435, 45 ],
     "alignment": "CENTER",
     "dayNightOnly": true,
-    "nightMultiplier": 2.25,
+    "nightMultiplier": 2.5,
     "radius": 100,
     "strength": 4,
     "color": [
