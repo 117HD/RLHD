@@ -35,7 +35,7 @@ public final class JobSystem {
 	public HdPlugin plugin;
 
 	@Inject
-	public Profiler frametimer;
+	public Profiler profiler;
 
 	@Getter
 	boolean active;

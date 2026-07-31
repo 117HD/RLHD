@@ -219,7 +219,8 @@ public class Profiler {
 
 			cumulativeError += errorCompensation >> 1;
 			addDuration(index, System.nanoTime() - cumulativeError);
-			allocations[index] += allocated > 0 ? allocated : 0;
+			if(allocated > 0)
+				addAllocation(timer.ordinal(), allocated);
 			activeTimers[index] = false;
 			heap[index] = 0;
 		}
@@ -235,6 +236,10 @@ public class Profiler {
 		timings[ordinal] += nanos;
 	}
 
+	private synchronized void addAllocation(int ordinal, long allocated) {
+		allocations[ordinal] += allocated;
+	}
+
 	public void addDuration(Timer timer, long nanos) {
 		if (isActive)
 			addDuration(timer.ordinal(), nanos);
@@ -247,9 +252,10 @@ public class Profiler {
 
 	public void add(Timer timer, long startNanos, long startMemory) {
 		if (isActive) {
-			long allocation = HDUtils.getUsedMemory(true) - startMemory;
+			long allocated = HDUtils.getUsedMemory(true) - startMemory;
 			addDuration(timer.ordinal(), System.nanoTime() - startNanos);
-			allocations[timer.ordinal()] += allocation > 0 ? allocation : 0;
+			if(allocated > 0)
+				addAllocation(timer.ordinal(), allocated);
 		}
 	}
 

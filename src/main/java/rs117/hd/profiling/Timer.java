@@ -34,6 +34,7 @@ public enum Timer {
 	MAP_UI_BUFFER("Map UI Buffer"),
 	COPY_UI("Copy UI"),
 	MODEL_UPLOAD_COMPLETE,
+	ASYNC_MODEL_CACHE,
 
 	// Logic
 	VISIBILITY_CHECK,
