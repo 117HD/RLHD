@@ -181,28 +181,31 @@ public class AtmosphereUtils
 	}
 
 	/**
-	 * Converts colors in range from sRGB to linear RGB, then interpolates, and returns the interpolated linear RGB color.
+	 * Interpolates between keyframes of { x, sRGB r, g, b }, converting each keyframe from
+	 * sRGB to linear RGB first, and returns the interpolated linear RGB color.
+	 * Rows must be sorted by ascending x. Always returns a fresh array.
 	 *
 	 * @param x                    interpolation value
 	 * @param keyframesDegreesSrgb values
 	 * @return interpolated linear RGB
 	 */
-	public static float[] interpolateSrgb(float x, Object[][] keyframesDegreesSrgb) {
+	public static float[] interpolateSrgb(float x, float[][] keyframesDegreesSrgb) {
 		int end = keyframesDegreesSrgb.length - 1;
 		int i = 0;
-		while (i < end && x > ((Number) keyframesDegreesSrgb[i + 1][0]).floatValue())
+		while (i < end && x > keyframesDegreesSrgb[i + 1][0])
 			i++;
 
-		if (i == end)
-			return rgb((Color) keyframesDegreesSrgb[end][1]);
-
 		var from = keyframesDegreesSrgb[i];
-		var to = keyframesDegreesSrgb[i + 1];
-		var x1 = ((Number) from[0]).floatValue();
-		var x2 = ((Number) to[0]).floatValue();
+		if (i == end)
+			return ColorUtils.srgbToLinear(new float[] { from[1], from[2], from[3] });
 
-		float t = clamp((x - x1) / (x2 - x1), 0, 1);
-		return mix(rgb((Color) from[1]), rgb((Color) to[1]), t);
+		var to = keyframesDegreesSrgb[i + 1];
+		float t = clamp((x - from[0]) / (to[0] - from[0]), 0, 1);
+		return mix(
+			ColorUtils.srgbToLinear(new float[] { from[1], from[2], from[3] }),
+			ColorUtils.srgbToLinear(new float[] { to[1], to[2], to[3] }),
+			t
+		);
 	}
 
 	/**
