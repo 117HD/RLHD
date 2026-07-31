@@ -1116,12 +1116,12 @@
     "areas": [ "WARM_REGIONS" ],
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "depthBias": 1,
+    "minLightness": 120,
     "objectIds": [
       "TREE2",
       "TREE3",
       "TREE4",
       "LEPRECHAUNTREE",
-      "NEWBIETREE2",
       "WOM_TREE",
       "MAPLETREE",
       "PEST_TREE2",
@@ -1133,7 +1133,6 @@
       "DRILL_TREE3",
       "TREE",
       "LIGHTTREE",
-      "NEWBIETREE",
       "PEST_TREE",
       "ZEP_TREE",
       "DRILL_TREE",
@@ -1169,7 +1168,6 @@
       "TREE4",
       "LIGHTTREE2",
       "LEPRECHAUNTREE",
-      "NEWBIETREE2",
       "MAPLETREE",
       "MAPLE_TREE_FULLYGROWN_1",
       "MAPLE_TREE_FULLYGROWN_2",
@@ -1275,13 +1273,35 @@
     "objectIds": [
       "TREE",
       "LIGHTTREE",
-      "NEWBIETREE",
       "PEST_TREE",
       "ZEP_TREE",
       "DRILL_TREE",
       "MACRO_FORESTER_TREE",
       "TUT2_TREE",
       "TUT2_TREE_NOOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_ORANGE_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_ORANGE_TOP"
+      }
+    }
+  },
+  {
+    "description": "Tree - Lighter",
+    "baseMaterial": "BARK",
+    "shiftLightness": 6,
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "NEWBIETREE",
+      "NEWBIETREE2"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -1498,7 +1518,6 @@
       "MDAUGHTER_IMPASSABLE_TREE",
       "MDAUGHTER_IMPASSABLE_TREE2",
       "MDAUGHTER_PASSABLE_TREE",
-      "NEWBIEDEADTREE2",
       "MACRO_DIGGER_TREE",
       "DRAYNOR_DEADTREE",
       "WILD1_TREE_A",
@@ -1524,7 +1543,8 @@
       "DARKM_DEAD_TREE_03",
       "REGICIDE_TREE_DEAD2_D2",
       "REGICIDE_TREE_SWAMP1",
-      "REGICIDE_TREE_SWAMP2"
+      "REGICIDE_TREE_SWAMP2",
+      "NEWBIEDEADTREE2"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -13829,6 +13849,8 @@
       "PORT_SARIM_JAILDOOR",
       "NEWBIEDOOR4L",
       "NEWBIEDOOR4R",
+      "NEWBIEDOOR5_L",
+      "NEWBIEDOOR5_R",
       "ERNEST_DOORCLOSED",
       "ERNEST_DOORAJAR",
       "PICKLOCK3_L",
@@ -14008,7 +14030,8 @@
       "FAI_FALADOR_FURNACE",
       "FAI_FALADOR_FURNACE_DOOR_LEFT",
       "FAI_FALADOR_FURNACE_DOOR_RIGHT_MIRROR",
-      "DARKM_FURNACE"
+      "DARKM_FURNACE",
+      "NEWBIEFURNACE"
     ],
     "uvType": "BOX"
   },
@@ -31010,7 +31033,7 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
-    "uvScale": 1.2
+    "uvScale": 0.9
   },
   {
     "description": "Morytania - Fenkenstrains Castle - Walls - Brick Stone",
@@ -33059,7 +33082,8 @@
     "baseMaterial": "ROCK_4_ORE",
     "objectIds": [
       "ROCKS1",
-      "ROCKS2"
+      "ROCKS2",
+      "NEWBIEROCKS1"
     ],
     "uvType": "BOX",
     "uvScale": 0.33,
@@ -33347,6 +33371,7 @@
     ],
     "objectIds": [
       "BANKBOOTH",
+      "NEWBIEBANKBOOTH",
       "BANKPRIVATEBOOTH",
       "BANKBOOTH_END_RIGHT"
     ]
@@ -34549,7 +34574,7 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "NONE",
+        "baseMaterial": "GRAY_50",
         "flatNormals": true
       }
     ]
@@ -35083,7 +35108,8 @@
     "objectIds": [
       "SOS_FAM_WALL",
       "SOS_FAM_WALL_SPIKE",
-      "SOS_FAM_WALL_TOP"
+      "SOS_FAM_WALL_TOP",
+      "SOS_FAM_WALL_TOP_HALF"
     ],
     "uvType": "BOX",
     "uvScale": 0.44
@@ -36614,7 +36640,6 @@
       "OAK_TREE_3",
       "OAK_TREE_FULLYGROWN_1",
       "OAK_TREE_FULLYGROWN_2",
-      "NEWBIEOAKTREE",
       "OAKTREE",
       "DRILL_OAKTREE",
       "TUT2_OAK",
@@ -36622,6 +36647,28 @@
       "TREE_OAK_DEFAULT01",
       "GIM_OAKTREE",
       "OAKTREE_NOOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_RED_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_RED_TOP"
+      }
+    }
+  },
+  {
+    "description": "Oak Tree - Lighter",
+    "baseMaterial": "BARK",
+    "undoVanillaShading": false,
+    "shiftLightness": 6,
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "NEWBIEOAKTREE"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -36648,7 +36695,6 @@
       "OAK_TREE_3",
       "OAK_TREE_FULLYGROWN_1",
       "OAK_TREE_FULLYGROWN_2",
-      "NEWBIEOAKTREE",
       "OAKTREE",
       "DRILL_OAKTREE",
       "TUT2_OAK",
@@ -46626,10 +46672,18 @@
     "description": "Objects - Metallic - Range on textured bricks - Textured",
     "baseMaterial": "METALLIC_1",
     "uvType": "BOX",
-    "uvScale": 0.4,
+    "uvScale": 0.25,
     "objectIds": [
-      "NEWBIERANGE",
       "RANGE"
+    ]
+  },
+  {
+    "description": "Objects - Metallic - Range on textured bricks - Textured - Lighter",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      "NEWBIERANGE"
     ]
   },
   {
@@ -51529,9 +51583,15 @@
       "CURTAINEDBIGWINDOW",
       "REDCURTAINEDPOSHBIGWINDOW",
       "GREENCURTAINEDPOSHBIGWINDOW",
-      "BLACKCURTAINEDPOSHBIGWINDOW"
+      "BLACKCURTAINEDPOSHBIGWINDOW",
+      "CURTAINEDPOSHBIGWINDOW"
     ],
     "colorOverrides": [
+      {
+        "description": "Stone sile",
+        "colors": "s == 0 && l < 45 && l > 18",
+        "baseMaterial": "STONE"
+      },
       {
         "description": "Glass",
         "colors": "s == 0 && l > 45",
@@ -51556,11 +51616,6 @@
         "description": "Curtains - Taupe",
         "colors": "h == 6 && s < 3",
         "baseMaterial": "GRAY_75"
-      },
-      {
-        "description": "Stone sile",
-        "colors": "s == 0 && l < 45 && l > 30",
-        "baseMaterial": "STONE"
       }
     ]
   },

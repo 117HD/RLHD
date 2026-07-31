@@ -33,8 +33,9 @@
   {
     "name": "TUTORIAL_ISLAND_UNDERGROUND",
     "aabbs": [
-      [ 3067, 9491, 3120, 9534 ]
-    ]
+      [ 3062, 9485, 3129, 9535 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "TUTORIAL_ISLAND_QUEST_BUILDING",

@@ -42365,11 +42365,11 @@
     ]
   },
   {
-    "description": "Tutorial Island Cooking Range",
+    "description": "Tutorial Island Cooking Range Top",
     "height": 100,
-    "offset": [ 53, -53, 48 ],
-    "radius": 400,
-    "strength": 6,
+    "offset": [ 0, -10, -46 ],
+    "radius": 70,
+    "strength": 15,
     "color": [
       252,
       148,
@@ -42606,7 +42606,25 @@
     "strength": 17.5,
     "color": [
       252,
-      148,
+      90,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "NEWBIERANGE"
+    ]
+  },
+  {
+    "description": "Tutorial Island Cooking Range Front",
+    "height": 100,
+    "offset": [ 63, -33, 48 ],
+    "radius": 100,
+    "strength": 15,
+    "color": [
+      252,
+      90,
       3
     ],
     "type": "FLICKER",
