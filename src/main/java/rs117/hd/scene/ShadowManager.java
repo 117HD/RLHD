@@ -19,6 +19,7 @@ import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.RenderState;
+import rs117.hd.utils.StaticShadowCache;
 import rs117.hd.utils.TextureAtlasPacker;
 import rs117.hd.utils.TextureAtlasPacker.Rect;
 import rs117.hd.utils.collections.PrimitiveIntArray;
@@ -123,11 +124,14 @@ public class ShadowManager implements LightManager.Listener {
 	@Inject
 	private FrameTimer frameTimer;
 
+	private final StaticShadowCache staticCache = new StaticShadowCache(MAX_LIGHTS, MAX_FACE_RESOLUTION, ATLAS_SIZE);
+
 	private final ArrayList<Light> shadowLights = new ArrayList<>();
 	private final PrimitiveIntArray visibleIndices = new PrimitiveIntArray();
 
 	private final int[] packSizes = new int[MAX_LIGHTS];
 	private final Rect[] packRects = new Rect[MAX_LIGHTS];
+	private final int[] packSlots = new int[MAX_LIGHTS]; // cacheSlot for each packed light, parallel to packRects
 
 	private final float[] rawSizes = new float[MAX_LIGHTS];
 	private final int[] packLightIndices = new int[MAX_LIGHTS];
@@ -146,6 +150,7 @@ public class ShadowManager implements LightManager.Listener {
 
 	public void initialize() {
 		lightManager.addListener(this);
+		staticCache.initialize(plugin.staticShadowBlitProgram);
 
 		texShadowCubemapArray = glGenTextures();
 
@@ -180,6 +185,8 @@ public class ShadowManager implements LightManager.Listener {
 		shadowLights.clear();
 
 		lightManager.removeListener(this);
+
+		staticCache.destroy();
 
 		if (fboShadow != 0)
 			glDeleteFramebuffers(fboShadow);
@@ -272,15 +279,18 @@ public class ShadowManager implements LightManager.Listener {
 		for (int i = 0; i < count; i++) {
 			final Light light = shadowLights.get(visibleIndices.array[packLightIndices[i]]);
 			light.shadowData.atlasRect = packRects[i];
+			packSlots[i] = light.shadowData.cacheSlot;
 		}
+
+		staticCache.updateGrid(packSlots, packRects, count);
 	}
 
 	private float estimateRawShadowSize(Light light) {
 		final Camera sceneCamera = zoneRenderer.sceneCamera;
 		final float distance = sceneCamera.distanceTo(
-			 light.pos[0] + plugin.cameraShift[0],
-				light.pos[1],
-				light.pos[2] + plugin.cameraShift[1]
+			light.pos[0] + plugin.cameraShift[0],
+			light.pos[1],
+			light.pos[2] + plugin.cameraShift[1]
 		);
 
 		if (distance <= light.shadowNearPlane)
@@ -305,25 +315,37 @@ public class ShadowManager implements LightManager.Listener {
 			final Light light = shadowLights.get(lightIndex);
 			final ShadowData shadowData = light.shadowData;
 
-			shadowData.drawBuffer.reset();
+			shadowData.dynamicDrawBuffer.reset();
+
 			if (shadowData.atlasRect == null)
 				continue;
 
-			for (int z = 0; z < shadowData.overlappingZones.length; z++) {
-				final int zx = shadowData.overlappingZones.array[z] / ctx.sizeX;
-				final int zz = shadowData.overlappingZones.array[z] % ctx.sizeX;
+			final int zoneHash = shadowData.computeZoneHash(ctx);
+			shadowData.staticDirty = light.shadowMode != PositionalShadowMode.MOVEABLE && (!shadowData.staticEverBaked || zoneHash != shadowData.bakedZoneHash);
 
-				final Zone zone = ctx.zones[zx][zz];
-				if (!zone.initialized || zone.sizeO == 0)
-					continue;
+			if (shadowData.staticDirty) {
+				shadowData.staticDrawBuffer.reset();
 
-				zone.renderOpaque(shadowData.drawBuffer, 0, 0, 3, Collections.EMPTY_SET);
+				for (int z = 0; z < shadowData.overlappingZones.length; z++) {
+					final int packed = shadowData.overlappingZones.array[z];
+					final int zx = packed / ctx.sizeX;
+					final int zz = packed % ctx.sizeX;
+
+					final Zone zone = ctx.zones[zx][zz];
+					if (!zone.initialized || zone.sizeO == 0)
+						continue;
+
+					zone.renderOpaque(shadowData.staticDrawBuffer, 0, 0, 3, Collections.EMPTY_SET);
+				}
+
+				shadowData.bakedZoneHash = zoneHash;
+				shadowData.staticEverBaked = true;
 			}
 
-			if (light.shadowMode == PositionalShadowMode.DYNAMIC) {
+			if (light.shadowMode != PositionalShadowMode.STATIC) {
 				// TODO: This is too expensive at the moment, we need to append specific model draws which is tech that the ModelData branch has
-				shadowData.drawBuffer.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
-				shadowData.drawBuffer.ExecuteSubCommandBuffer(ctx.vaoDirectionalCmd);
+				shadowData.dynamicDrawBuffer.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
+				shadowData.dynamicDrawBuffer.ExecuteSubCommandBuffer(ctx.vaoDirectionalCmd);
 			}
 		}
 	}
@@ -378,29 +400,70 @@ public class ShadowManager implements LightManager.Listener {
 
 		frameTimer.begin(Timer.RENDER_POSITIONAL_SHADOWS);
 
-		zoneRenderer.depthProgram.use();
-
-		renderState.framebuffer.set(GL_FRAMEBUFFER, fboShadow);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.depthMask.set(true);
-		renderState.depthFunc.set(GL_LEQUAL);
 		renderState.ido.set(zoneRenderer.indirectDrawCmds.id);
 
 		glClearDepth(1);
 
+		// rebake dirty lights' static geometry, all faces, before entering the per-face loop
+		zoneRenderer.depthProgram.use();
+		renderState.depthFunc.set(GL_LEQUAL);
+
+		for (int i = 0; i < visibleIndices.length; i++) {
+			final int lightIndex = visibleIndices.array[i];
+			final Light light = shadowLights.get(lightIndex);
+			final ShadowData shadowData = light.shadowData;
+
+			if (shadowData.atlasRect == null || !shadowData.staticDirty || shadowData.cacheSlot < 0)
+				continue;
+
+			shiftedLightPos[0] = light.pos[0] + plugin.cameraShift[0];
+			shiftedLightPos[1] = light.pos[1];
+			shiftedLightPos[2] = light.pos[2] + plugin.cameraShift[1];
+
+			for (int face = 0; face < NUM_FACES; face++) {
+				staticCache.beginBakeLayer(renderState, shadowData.cacheSlot, face);
+				renderState.apply();
+
+				glClear(GL_DEPTH_BUFFER_BIT);
+				if (shadowData.staticDrawBuffer.isEmpty())
+					continue;
+
+				buildShadowViewMatrix(shadowView, faceRotation[face], shiftedLightPos);
+				copyTo(viewProjMatrix, light.shadowData.lightProjection);
+				mul(viewProjMatrix, shadowView);
+				zoneRenderer.depthProgram.uniViewProjection.set(viewProjMatrix);
+
+				shadowData.staticDrawBuffer.execute(renderState);
+			}
+
+			shadowData.staticDirty = false;
+		}
+
 		for(int face = 0; face < NUM_FACES; face++) {
+			// refresh the whole live-atlas face from the static cache in one draw
+
+			renderState.framebuffer.set(GL_FRAMEBUFFER, fboShadow);
 			renderState.framebufferTextureLayer.set(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texShadowCubemapArray, 0, face);
+			renderState.viewport.set(0, 0, ATLAS_SIZE, ATLAS_SIZE);
 			renderState.apply();
 
 			glClear(GL_DEPTH_BUFFER_BIT);
+
+			staticCache.blitFace(renderState, face);
+
+			// draw dynamic actors on top, only where a light actually has any
+			zoneRenderer.depthProgram.use();
+			renderState.depthFunc.set(GL_LEQUAL);
 
 			for (int i = 0; i < visibleIndices.length; i++) {
 				final int lightIndex = visibleIndices.array[i];
 				final Light light = shadowLights.get(lightIndex);
 				final ShadowData shadowData = light.shadowData;
 
-				if (shadowData.atlasRect == null || shadowData.drawBuffer.isEmpty())
+				if (shadowData.atlasRect == null || shadowData.dynamicDrawBuffer.isEmpty())
 					continue;
 
 				shiftedLightPos[0] = light.pos[0] + plugin.cameraShift[0];
@@ -422,7 +485,7 @@ public class ShadowManager implements LightManager.Listener {
 				);
 				renderState.apply();
 
-				shadowData.drawBuffer.execute(renderState);
+				//shadowData.dynamicDrawBuffer.execute(renderState);
 			}
 		}
 
@@ -439,6 +502,7 @@ public class ShadowManager implements LightManager.Listener {
 			return;
 
 		light.shadowData = new ShadowData();
+		light.shadowData.cacheSlot = staticCache.acquireSlot();
 		shadowLights.add(light);
 	}
 
@@ -447,16 +511,34 @@ public class ShadowManager implements LightManager.Listener {
 		if(light.shadowData == null)
 			return;
 
+		staticCache.releaseSlot(light.shadowData.cacheSlot);
 		light.shadowData = null;
 		shadowLights.remove(light);
 	}
 
 	public static final class ShadowData {
 		private final PrimitiveIntArray overlappingZones = new PrimitiveIntArray();
-		private final CommandBuffer drawBuffer = new CommandBuffer("Shadow::DrawBuffer");
+		private final CommandBuffer staticDrawBuffer = new CommandBuffer("Shadow::StaticDrawBuffer");
+		private final CommandBuffer dynamicDrawBuffer = new CommandBuffer("Shadow::DynamicDrawBuffer");
 		private final float[] lightProjection = new float[16];
 
 		private Rect atlasRect;
+
+		private int cacheSlot = -1;
+		private boolean staticDirty;
+		private boolean staticEverBaked = false;
+		private int bakedZoneHash;
+
+		public int computeZoneHash(WorldViewContext ctx) {
+			int zoneHash = 0;
+			for (int z = 0; z < overlappingZones.length; z++) {
+				final int packed = overlappingZones.array[z];
+				final int zx = packed / ctx.sizeX;
+				final int zz = packed % ctx.sizeX;
+				zoneHash += packed * 486187739 + System.identityHashCode(ctx.zones[zx][zz]) * 51;
+			}
+			return zoneHash * 31 + overlappingZones.length;
+		}
 
 		public int pack() {
 			if(atlasRect == null)

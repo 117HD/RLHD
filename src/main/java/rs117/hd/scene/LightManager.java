@@ -51,6 +51,7 @@ import net.runelite.client.plugins.entityhider.EntityHiderConfig;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import rs117.hd.HdPlugin;
 import rs117.hd.config.DynamicLights;
+import rs117.hd.config.PositionalShadowMode;
 import rs117.hd.data.ObjectType;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.scene.lights.Alignment;
@@ -782,6 +783,8 @@ public class LightManager {
 			Light light = new Light(def);
 			light.plane = -1;
 			light.actor = npc;
+			if(light.shadowMode != PositionalShadowMode.DISABLED)
+				light.shadowMode = PositionalShadowMode.MOVEABLE;
 			sceneContext.lights.add(light);
 			triggerCallbacks(light, true);
 		}
@@ -1053,6 +1056,8 @@ public class LightManager {
 			light.origin[1] = (int) projectile.getZ();
 			light.origin[2] = (int) projectile.getY();
 			light.plane = projectile.getFloor();
+			if(light.shadowMode != PositionalShadowMode.DISABLED)
+				light.shadowMode = PositionalShadowMode.MOVEABLE;
 
 			sceneContext.lights.add(light);
 			triggerCallbacks(light, true);

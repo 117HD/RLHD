@@ -87,6 +87,7 @@ import rs117.hd.config.ShadowMode;
 import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
+import rs117.hd.opengl.shader.StaticShadowBlitProgram;
 import rs117.hd.opengl.shader.TiledLightingShaderProgram;
 import rs117.hd.opengl.shader.UIShaderProgram;
 import rs117.hd.opengl.uniforms.UBOCompute;
@@ -309,6 +310,9 @@ public class HdPlugin extends Plugin {
 	@Getter
 	@Inject
 	public TiledLightingShaderProgram tiledLightingImageStoreProgram;
+
+	@Inject
+	public StaticShadowBlitProgram staticShadowBlitProgram;
 
 	public final List<TiledLightingShaderProgram> tiledLightingShaderPrograms = new ArrayList<>();
 
@@ -974,6 +978,7 @@ public class HdPlugin extends Plugin {
 
 		renderer.initializeShaders(includes);
 		uiProgram.compile(includes);
+		staticShadowBlitProgram.compile(includes);
 
 		if (configDynamicLights != DynamicLights.NONE && configTiledLighting) {
 			if (!AMD_GPU && configTiledLightingImageLoadStore &&
@@ -1601,8 +1606,8 @@ public class HdPlugin extends Plugin {
 	}
 
 	/**
-	 * Convert the front framebuffer to an Image
-	 */
+     * Convert the front framebuffer to an Image
+     */
 	public Image screenshot() {
 		if (uiResolution == null)
 			return null;
