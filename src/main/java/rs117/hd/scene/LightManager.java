@@ -684,9 +684,12 @@ public class LightManager {
 
 		// Copy over NPC and projectile lights from the old scene
 		ArrayList<Light> lightsToKeep = new ArrayList<>();
-		for (Light light : oldSceneContext.lights)
+		for (Light light : oldSceneContext.lights) {
 			if (light.actor != null || light.projectile != null)
 				lightsToKeep.add(light);
+			else
+				triggerCallbacks(light, false);
+		}
 
 		sceneContext.lights.addAll(lightsToKeep);
 		for (var light : lightsToKeep)

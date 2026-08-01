@@ -204,6 +204,14 @@ public class ShadowManager implements LightManager.Listener {
 		visibleIndices.reset();
 		visibleIndices.ensureCapacity(shadowLights.size());
 
+		final WorldViewContext ctx = sceneManager.getRoot();
+		for (int i = shadowLights.size() - 1; i >= 0; i--) {
+			if(ctx.sceneContext.lights.contains(shadowLights.get(i)))
+				continue;
+
+			shadowLights.remove(i);
+		}
+
 		for (int i = 0; i < shadowLights.size(); i++) {
 			final Light light = shadowLights.get(i);
 			light.shadowData.overlappingZones.reset();
