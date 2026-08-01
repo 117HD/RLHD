@@ -485,7 +485,7 @@ public class ShadowManager implements LightManager.Listener {
 				);
 				renderState.apply();
 
-				//shadowData.dynamicDrawBuffer.execute(renderState);
+				shadowData.dynamicDrawBuffer.execute(renderState);
 			}
 		}
 

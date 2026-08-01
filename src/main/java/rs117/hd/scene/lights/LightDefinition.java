@@ -22,7 +22,7 @@ public class LightDefinition {
 	@JsonAdapter(ColorUtils.SrgbToLinearAdapter.class)
 	public float[] color;
 	public LightType type = LightType.STATIC;
-	public PositionalShadowMode shadowMode = PositionalShadowMode.STATIC;
+	public PositionalShadowMode shadowMode = PositionalShadowMode.DYNAMIC;
 	public float duration;
 	public float range;
 	public int fadeInDuration = 50;
