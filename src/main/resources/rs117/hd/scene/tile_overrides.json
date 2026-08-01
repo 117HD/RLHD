@@ -2310,6 +2310,15 @@
     "blended": false
   },
   {
+    "name": "VARROCK_JULIETS_HOUSE_BLACONY",
+    "area": "VARROCK_JULIETS_HOUSE_BLACONY",
+    "overlayIds": [
+      171
+    ],
+    "groundMaterial": "WORN_TILES",
+    "blended": false
+  },
+  {
     "name": "VARROCK_JOLLY_BOAR_INN_KITCHEN_1",
     "area": "VARROCK_JOLLY_BOAR_INN",
     "overlayIds": [

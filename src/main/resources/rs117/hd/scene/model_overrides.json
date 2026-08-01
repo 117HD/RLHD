@@ -13515,11 +13515,19 @@
     ]
   },
   {
-    "description": "Candelabra - Dusty",
+    "description": "Candelabra - Cobwebs",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [ "SPOOKYCANDLES" ],
     "uvType": "BOX",
-    "uvScale": 0.4
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
   },
   {
     "description": "Candlestick Holder",
@@ -13571,7 +13579,6 @@
     "objectIds": [
       "SUITOFARMOUR",
       "FAI_VARROCK_SUITOFARMOUR",
-      "ROYAL_DWARF_ARMOUR2",
       "DRAGON_SLAYER_QIP_SUITOFARMOUR",
       "KR_SUITOFARMOUR_DARKKNIGHT",
       "KR_CAM_SUITOFARMOR",
@@ -14829,7 +14836,7 @@
     "uvType": "BOX",
     "flatNormals": true,
     "uvOrientationY": 512,
-    "uvScale": 0.4,
+    "uvScale": 0.55,
     "colorOverrides": [
       {
         "description": "Metal",
@@ -20674,6 +20681,7 @@
         "description": "Blue Cushion",
         "colors": "h > 30",
         "baseMaterial": "CARPET",
+        "shiftLightness": 2,
         "uvType": "BOX",
         "uvScale": 0.65
       },
@@ -20696,7 +20704,8 @@
       "POSH_CHAIR",
       "FAI_VARROCK_CHAIR_BLUE",
       "FAI_FALADOR_POSH_CHAIR_WHITE",
-      "POSH_CHAIR_WHITE"
+      "POSH_CHAIR_WHITE",
+      "FAI_VARROCK_JULIET_CHAIR"
     ]
   },
   {
@@ -48075,6 +48084,46 @@
     ]
   },
   {
+    "description": "Juliets Bed",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvOrientation": 512,
+    "uvScale": 0.6,
+    "uvType": "BOX",
+    "objectIds": [
+      "BIGPINKBED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 7" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_SMOOTH_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Juliets Shoerack",
+    "baseMaterial": "GRUNGE_3",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "FAI_VARROCK_SHOERACK"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 7" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
     "description": "Drawers with backsplash",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -48129,6 +48178,34 @@
       "ROMEO_JULIET_CRYPT_TOMB"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Stone slab - With Juliet lying on it",
+    "objectIds": [
+      "ROMEO_JULIET_CRYPT_TOMB_NO_HEADSTONE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0 || h == 5",
+        "uvType": "BOX",
+        "baseMaterial": "STONE_NORMALED"
+      }
+    ]
+  },
+  {
+    "description": "Romeo & Juliet - Coffin",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "ROMEO_JULIET_COFFIN_UPRIGHT",
+      "ROMEO_JULIET_COFFIN_FLAT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "baseMaterial": "WOOD_GRAIN_3"
+      }
+    ]
   },
   {
     "description": "Brown brick textured Stone Steps",
@@ -49430,6 +49507,13 @@
     ]
   },
   {
+    "description": "Grill - Lighter",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "objectIds": [
+      "WALLGRILL"
+    ]
+  },
+  {
     "description": "Wooden shelves with bottom cupboard - Empty",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ "COOKINGSHELVESEMPTY" ],
@@ -49643,9 +49727,9 @@
   },
   {
     "description": "Sink with textured water and wood paneling - textured",
-    "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.25,
+    "uvScale": 0.7,
+    "retainVanillaUvs": false,
     "objectIds": [
       "SINK",
       "SINK2",
@@ -52128,9 +52212,7 @@
     "description": "Wine rack with bottles",
     "baseMaterial": "GRAY_75",
     "objectIds": [
-      "FAI_VARROCK_WINE_RACK",
-      "FAI_VARROCK_CHEMISTY_SHELVES1",
-      "FAI_VARROCK_CHEMISTY_SHELVES2"
+      "FAI_VARROCK_WINE_RACK"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -52139,6 +52221,25 @@
       {
         "description": "Wood",
         "colors": "h > 5 && h < 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Bookshelf with books and a jar",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "objectIds": [
+      "FAI_VARROCK_CHEMISTY_SHELVES1",
+      "FAI_VARROCK_CHEMISTY_SHELVES2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 7 && s == 3",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.8
@@ -52256,7 +52357,7 @@
     ]
   },
   {
-    "description": "Varrock - Witchaven- Wooden - bookshelf with Multicolored books",
+    "description": "Varrock - Witchaven - Wooden - bookshelf with Multicolored books",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "FAI_VARROCK_SHELVES_BOOKS"
@@ -52273,9 +52374,11 @@
       {
         "description": "Shelf",
         "colors": "h == 7",
-        "baseMaterial": "GRUNGE_3",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.4
+        "uvScale": 0.75,
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512
       }
     ]
   },
@@ -53708,6 +53811,30 @@
     ]
   },
   {
+    "description": "Cushioned church pew with foot rest with npcs sleeping",
+    "colorOverrides": [
+      {
+        "description": "Red Cushion",
+        "colors": "h == 7 && s != 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientation": 512,
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Golden Cushion",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "npcIds": [
+      "ROMEO_JULIET_PEW_SLEEPING_MAN",
+      "ROMEO_JULIET_PEW_SLEEPING_WOMAN"
+    ]
+  },
+  {
     "description": "Varrock church wooden lectern",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientation": 512,
@@ -53772,8 +53899,7 @@
       {
         "description": "Paper",
         "colors": [
-          "h == 5 && s == 0",
-          "h == 10 && s == 0"
+          "h == 0 || h == 3 || h == 4 || h > 6 && s > 5 || h == 8 || h == 42"
         ],
         "baseMaterial": "GRUNGE_3",
         "uvType": "MODEL_XY"
@@ -53788,7 +53914,8 @@
     ],
     "objectIds": [
       "FAI_VARROCK_APOTHECARY_CABINET_TWO",
-      "FAI_VARROCK_APOTHECARY_CABINET_ALT"
+      "FAI_VARROCK_APOTHECARY_CABINET_ALT",
+      "FAI_VARROCK_PERIODIC_TABLE"
     ]
   },
   {
@@ -65977,7 +66104,9 @@
         "colors": "h >= 5 && h <= 7",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.75
+        "uvScale": 0.75,
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512
       },
       {
         "colors": "h == 0 && s == 0",
@@ -81231,14 +81360,6 @@
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX"
       }
-    ]
-  },
-  {
-    "description": "Pest Control Isle - Wooden - Shelves - Empty",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "uvType": "BOX",
-    "objectIds": [
-      "PEST_WAREHOUSE_SHELVES"
     ]
   },
   {

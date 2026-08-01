@@ -511,6 +511,13 @@
     ]
   },
   {
+    "name": "VARROCK_JULIETS_HOUSE_BLACONY",
+    "aabbs": [
+      [ 3165, 3430, 3166, 3436, 1 ],
+      [ 3155, 3425, 3161, 3426, 1 ]
+    ]
+  },
+  {
     "name": "VARROCK_JOLLY_BOAR_INN",
     "aabbs": [
       [ 3272, 3486, 3288, 3510 ]
