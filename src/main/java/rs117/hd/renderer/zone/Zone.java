@@ -245,7 +245,7 @@ public class Zone implements Destructible {
 
 		// Position
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_SHORT, false, VERT_SIZE, 0);
+		glVertexAttribPointer(0, 4, GL_SHORT, false, VERT_SIZE, 0);
 
 		// UVs
 		glEnableVertexAttribArray(1);
