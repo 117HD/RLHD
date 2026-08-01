@@ -14766,7 +14766,7 @@
     "colorOverrides": [
       {
         "description": "Golden Handles",
-        "colors": "h == 6 && s > 5 && s < 8",
+        "colors": "h == 6 && s > 5 && s < 8 && l > 40",
         "baseMaterial": "METALLIC_1_SEMIGLOSS",
         "uvType": "BOX",
         "uvScale": 0.2,
@@ -15328,10 +15328,11 @@
     "colorOverrides": [
       {
         "description": "Both required to prevent vanilla texture from disappearing",
-        "colors": "h == 0 && s == 0 && l < 72",
+        "colors": "h == 0 && s == 0 && l < 72 || h == 7 || h == 6 && s == 3",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
-        "uvScale": 0.2
+        "uvScale": 0.2,
+        "uvOrientation": 512
       },
       {
         "description": "Both required to prevent vanilla texture from disappearing",
@@ -15341,6 +15342,35 @@
         "uvScale": 0.2
       }
     ]
+  },
+  {
+    "description": "Lumbridge Windmill - Window",
+    "baseMaterial": "METALLIC_1",
+    "shiftLightness": -2,
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "uvOrientation": 512,
+    "objectIds": [
+      "ELFWINDOW_LIGHT",
+      "ELFWINDOW_LIGHT_2"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Both required to prevent vanilla texture from disappearing",
+        "colors": "h == 34",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge Windmill - Ladder Trim",
+    "baseMaterial": "WOOD_GRAIN_3_DARK",
+    "objectIds": [
+      "BAMBOO_DEPTH"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
   },
   {
     "description": "Lumbridge Windmill - Darken moving parts so they don't stick out as much",

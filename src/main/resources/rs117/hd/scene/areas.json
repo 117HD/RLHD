@@ -196,6 +196,12 @@
     ]
   },
   {
+    "name": "LUMBRIDGE_WINDMILL",
+    "aabbs": [
+      [ 3163, 3303, 3170, 3310 ]
+    ]
+  },
+  {
     "name": "LUMBRIDGE_SWAMP_PATH_FIX",
     "aabbs": [
       [ 3242, 3184, 3244, 3186 ]

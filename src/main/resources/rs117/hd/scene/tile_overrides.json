@@ -978,6 +978,20 @@
     }
   },
   {
+    "name": "LUMBRIDGE_WINDMILL_FLOOR",
+    "area": "LUMBRIDGE_WINDMILL",
+    "overlayIds": [
+      14
+    ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "shiftLightness": 4,
+    "shiftSaturation": -2,
+    "blended": false,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
     "name": "Molch Temple floor fix",
     "area": "Molch Temple floor fix",
     "overlayIds": [ 115 ],
