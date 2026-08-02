@@ -4755,7 +4755,8 @@
         "colors": "h == 7",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvOrientation": 448
+        "uvOrientation": 512,
+        "uvScale": 0.85
       }
     ],
     "objectIds": [
@@ -7069,14 +7070,15 @@
     "description": "Varrock - Shayzien - Metal - Metal bars gate",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientation": 117,
+    "uvScale": 0.3,
+    "uvOrientation": 512,
     "objectIds": [
       "SHAYZIEN_BANK_BARS_DOOR",
       "FAI_VARROCK_BANK_BARS",
       "FAI_VARROCK_BANK_BARS_END",
       "FAI_VARROCK_BANK_BARS_END_MIRROR",
-      "FAI_VARROCK_BANK_BARS_DOOR"
+      "FAI_VARROCK_BANK_BARS_DOOR",
+      "FAI_VARROCK_BANK_BARS_DOOR_MIRROR"
     ]
   },
   {
@@ -12473,7 +12475,7 @@
       "PUZZLE_LADDER_TOP"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.7
   },
   {
     "description": "Ladder, rotated UVs - Textured",
@@ -13658,6 +13660,8 @@
   {
     "description": "MARBLE_STATUE_OF_KING",
     "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "undoVanillaShading": false,
+    "shiftLightness": 2,
     "uvType": "BOX",
     "uvScale": 0.6,
     "objectIds": [
@@ -15999,6 +16003,45 @@
     "objectIds": [
       "FAI_VARROCK_DRAINS1",
       "FAI_VARROCK_DRAINS2"
+    ]
+  },
+  {
+    "description": "Varrock - Cloth - Bank barrier",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAI_VARROCK_BANK_BARRIER_END",
+      "FAI_VARROCK_BANK_BARRIER",
+      "FAI_VARROCK_INTERIOR_BANKWALL_CORNER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 19",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      },
+      {
+        "description": "Interior Wallpaper",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "colors": "h == 8 && s > 3"
+      },
+      {
+        "description": "Interior Wallpaper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Interior trim",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 7",
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "setLightness": 30
+      }
     ]
   },
   {
@@ -20941,7 +20984,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h > 3",
+        "colors": "h > 3 && h < 10",
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.25
@@ -23279,7 +23322,9 @@
       "ELID_MAYOR_STAIRS",
       "ELID_MAYOR_STAIRSTOP",
       "FAI_VARROCK_STAIRS",
-      "FAI_VARROCK_STAIRS_TOP"
+      "FAI_VARROCK_STAIRS_TOP",
+      "FAI_VARROCK_BANK_STAIRS",
+      "FAI_VARROCK_STAIRS_FROM_CELLAR"
     ]
   },
   {
@@ -32797,11 +32842,19 @@
   {
     "description": "Object - Dying Tree",
     "baseMaterial": "BARK",
+    "terrainVertexSnap": true,
     "objectIds": [
       "FAI_VARROCK_DEAD_TREE",
       "FAI_VARROCK_DEAD_TREE_NOOP"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 13 || h == 14",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
   },
   {
     "description": "Varrock - Wall Decoration - Wooden - Plank",
@@ -38171,13 +38224,14 @@
     "uvScale": 0.5,
     "upwardsNormals": true,
     "objectIds": [
-      "FAI_VARROCK_COOKING_CROCKERY_2"
+      "FAI_VARROCK_COOKING_CROCKERY_2",
+      "FAI_VARROCK_COOKING_CROCKERY_1"
     ],
     "uvType": "BOX",
     "uvOrientationX": 512,
     "colorOverrides": [
       {
-        "colors": "h == 6",
+        "colors": "h == 6 || h == 7 && s == 3",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
         "uvScale": 0.3,
@@ -38195,7 +38249,6 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
-    "uvOrientationX": 512,
     "colorOverrides": [
       {
         "colors": "h == 0 && s == 0",
@@ -47184,7 +47237,7 @@
     "colorOverrides": [
       {
         "description": "Metal",
-        "colors": "h == 0 && s == 0",
+        "colors": "h == 0 && s == 0 || h == 10",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
         "undoVanillaShading": false
       }
@@ -48133,7 +48186,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "FAI_VARROCK_CHEST_CLOSED",
-      "FAI_VARROCK_POOR_CHEST"
+      "FAI_VARROCK_POOR_CHEST",
+      "FAI_VARROCK_CHEST_OPEN"
     ],
     "uvType": "BOX",
     "uvOrientation": 512
@@ -49762,17 +49816,18 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 64,
+    "uvScale": 0.6,
     "colorOverrides": [
       {
         "description": "Wood frame",
-        "colors": "h == 6",
+        "colors": "h == 6 || h == 7",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX"
       }
     ]
   },
   {
-    "description": "Hosidius- Blue Bed with pillows - Light Frame",
+    "description": "Hosidius - Blue Bed with pillows - Light Frame",
     "baseMaterial": "CARPET",
     "objectIds": [
       "HOS_BED_03"
@@ -51313,7 +51368,8 @@
       "FAI_VARROCK_BANK_BOOTH_PRIVATE",
       "FAI_VARROCK_BANK_BOOTH_PRIVATE_END",
       "KR_BANK_BOOTH_PRIVATE_END_MIRROR",
-      "KR_BANK_BOOTH_PRIVATE_END"
+      "KR_BANK_BOOTH_PRIVATE_END",
+      "FAI_VARROCK_BANK_BOOTH_PRIVATE_END_MIRROR"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -52125,7 +52181,10 @@
       "FAI_VARROCK_SWORDCASE_SHORTSWORDS",
       "FAI_VARROCK_SWORDCASE_SCIMITAR",
       "FAI_VARROCK_BOWCASE",
-      "CABINET_BOWS_OFFSET_FOR_FALADOR_CASTLE_WALL"
+      "CABINET_BOWS_OFFSET_FOR_FALADOR_CASTLE_WALL",
+      "QIP_DS_SILVERLIGHT_CASE_FULL",
+      "QIP_DS_SILVERLIGHT_CASE_OPEN",
+      "QIP_DS_SILVERLIGHT_CASE_EMPTY"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -52134,12 +52193,12 @@
     "colorOverrides": [
       {
         "description": "Metal",
-        "colors": "h == 0 && s == 0",
+        "colors": "h == 0 && s == 0 || h == 46",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
       },
       {
         "description": "Gold",
-        "colors": "h == 10 && s == 7",
+        "colors": "h == 10 && s == 0 || h == 10 && s == 7",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
       },
       {
@@ -53062,14 +53121,16 @@
     "description": "Varrock - Jolly Boar Inn - Doublebed with orange blanket - Light Frame",
     "baseMaterial": "CARPET",
     "objectIds": [
-      "FAI_VARROCK_DOUBLE_BED_ORANGE"
+      "FAI_VARROCK_DOUBLE_BED_ORANGE",
+      "FAI_VARROCK_SINGLE_BED_ORANGE02"
     ],
     "uvType": "BOX",
+    "uvScale": 0.6,
     "uvOrientation": 64,
     "colorOverrides": [
       {
         "description": "Wood frame",
-        "colors": "h == 6",
+        "colors": "h == 6 || h == 7 && s != 7",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX"
       }
@@ -54043,6 +54104,39 @@
     ],
     "objectIds": [
       "FAI_VARROCK_CHEMISTY_TABLE"
+    ]
+  },
+  {
+    "description": "Varrock - PoH Easel",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.1,
+    "objectIds": [
+      "POH_ESTATE_AGENTS_LOC_ITEM"
+    ]
+  },
+  {
+    "description": "Varrock - Church Altar",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.1,
+    "objectIds": [
+      "FAI_VARROCK_CHURCH_ALTAR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
     ]
   },
   {
@@ -64019,12 +64113,13 @@
     "uvType": "BOX",
     "objectIds": [
       "KR_BANKTABLE",
-      "KR_BANKTABLE2"
+      "KR_BANKTABLE2",
+      "FAI_VARROCK_BANKTABLE"
     ],
     "colorOverrides": [
       {
         "description": "Wood",
-        "colors": "h == 6",
+        "colors": "h == 6 || h == 7",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.5,
@@ -64793,7 +64888,8 @@
     "uvOrientationY": 512,
     "objectIds": [
       "FAI_VARROCK_POSH_DRESSER",
-      "AKD_HUGHES_DRESSER_1_NOOP"
+      "AKD_HUGHES_DRESSER_1_NOOP",
+      "FAI_VARROCK_POSH_WARDROBE"
     ],
     "colorOverrides": [
       {
@@ -64806,7 +64902,7 @@
       },
       {
         "description": "Black Trim",
-        "colors": "h == 35",
+        "colors": "h == 35 || h == 42",
         "baseMaterial": "BLANK_GLOSS",
         "uvType": "BOX"
       }
@@ -64981,6 +65077,7 @@
       {
         "colors": "h == 0",
         "baseMaterial": "MARBLE_2_SEMIGLOSS",
+        "shiftLightness": -10,
         "uvScale": 0.6,
         "uvOrientation": 256,
         "uvType": "BOX"
@@ -66430,8 +66527,7 @@
         "colors": "h == 7",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.75,
-        "uvOrientationY": 512
+        "uvScale": 0.75
       }
     ]
   },
@@ -66439,18 +66535,10 @@
     "description": "Varrock - Cloth - Wooden - Castle Long Table",
     "baseMaterial": "CARPET",
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.6,
     "uvOrientation": 64,
     "objectIds": [
       "FAI_VARROCK_POSH_LARGE_TABLE"
-    ],
-    "colorOverrides": [
-      {
-        "description": "Wood frame",
-        "colors": "h == 7 && s == 3",
-        "baseMaterial": "WOOD_GRAIN_3",
-        "uvType": "BOX"
-      }
     ]
   },
   {
@@ -67201,7 +67289,8 @@
         "colors": "h >= 16",
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX",
-        "uvScale": 0.3
+        "uvScale": 0.3,
+        "undoVanillaShading": false
       },
       {
         "colors": "h == 5",

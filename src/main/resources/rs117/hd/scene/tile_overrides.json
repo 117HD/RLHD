@@ -1615,7 +1615,22 @@
     ],
     "groundMaterial": "VARROCK_PATHS",
     "shiftSaturation": -1,
-    "shiftLightness": 4
+    "shiftLightness": 4,
+    "replacements": {
+      "NONE": "!textures",
+      "VARROCK_WEST_BANK_SOUTH_PATH_FIX_1_TEXTURE_BLENDING_ONLY": "!blendingColors"
+    }
+  },
+  {
+    "name": "VARROCK_WEST_BANK_SOUTH_PATH_FIX_1_TEXTURE_BLENDING_ONLY",
+    "area": "VARROCK_WEST_BANK_SOUTH_PATH_FIX",
+    "overlayIds": [
+      172
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "shiftSaturation": -1,
+    "shiftLightness": 4,
+    "blended": false
   },
   {
     "name": "VARROCK_WILDERNESS_DITCH_PATH_FIX_1",
