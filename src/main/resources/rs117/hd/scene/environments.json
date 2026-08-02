@@ -386,7 +386,8 @@
     "fixedMoonAngles": [ 22.6, 89.75 ],
     "auroraVisibility": 0,
     "nightSkyColorStrength": 2.5,
-    "moonSizeMult": 3.05
+    "moonSizeMult": 3.05,
+    "forceMoonPhase": "FULL_MOON"
   },
   {
     "area": "VER_SINHAZA_TRANSITION",
@@ -432,7 +433,8 @@
     "fixedMoonAngles": [ 22.6, 89.75 ],
     "auroraVisibility": 0,
     "nightSkyColorStrength": 2.5,
-    "moonSizeMult": 3.05
+    "moonSizeMult": 3.05,
+    "forceMoonPhase": "FULL_MOON"
   },
   {
     "area": "VER_SINHAZA",
@@ -585,7 +587,8 @@
     "fixedMoonAngles": [ 22.6, 89.75 ],
     "auroraVisibility": 0,
     "nightSkyColorStrength": 2.5,
-    "moonSizeMult": 3.05
+    "moonSizeMult": 3.05,
+    "forceMoonPhase": "FULL_MOON"
   },
   {
     "area": "BARROWS",
@@ -629,7 +632,8 @@
     "fixedMoonAngles": [ 22.6, 89.75 ],
     "auroraVisibility": 0,
     "nightSkyColorStrength": 2.5,
-    "moonSizeMult": 3.05
+    "moonSizeMult": 3.05,
+    "forceMoonPhase": "FULL_MOON"
   },
   {
     "area": "DARKMEYER",
@@ -717,7 +721,8 @@
     "fixedMoonAngles": [ 22.6, 89.75 ],
 	"auroraVisibility": 0,
     "nightSkyColorStrength": 4.5,
-    "moonSizeMult": 3.05
+    "moonSizeMult": 3.05,
+    "forceMoonPhase": "FULL_MOON"
   },
   {
     "description": "Environment for the cutscene at the end of the The Blood Moon Rises",
@@ -785,7 +790,8 @@
     "fixedMoonAngles": [ 22.6, 89.75 ],
     "auroraVisibility": 0,
     "nightSkyColorStrength": 2.5,
-    "moonSizeMult": 3.05
+    "moonSizeMult": 3.05,
+    "forceMoonPhase": "FULL_MOON"
   },
   {
     "description": "Default Morytania Environment",
@@ -2571,6 +2577,7 @@
     "moonColor": "#ED3D3D",
     "moonLightColor": "#ED8B8B",
     "cycleMode": "FIXED_NIGHT",
+    "forceMoonPhase": "FULL_MOON",
     "fixedMoonAngles": [ 14.05, 89.85 ],
     "moonSizeMult": 2.8,
     "auroraVisibility": 0,

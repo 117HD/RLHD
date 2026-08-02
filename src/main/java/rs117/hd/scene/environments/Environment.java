@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.config.DaylightCycle;
+import rs117.hd.config.MoonPhase;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.ColorUtils;
@@ -63,6 +64,13 @@ public class Environment {
 	// the player's config setting. Null = use the configured mode.
 	@Nullable
 	public DaylightCycle cycleMode = null;
+	// When set, forces the moon phase for this environment, overriding the player's config
+	// setting. Values match the config dropdown: DYNAMIC, FULL_MOON, GIBBOUS, HALF_MOON,
+	// CRESCENT, NEW_MOON. Null = use the configured phase. Note that DYNAMIC is a real
+	// override that forces a naturally-advancing phase even when the player has locked one;
+	// omit the field entirely to defer to the config instead.
+	@Nullable
+	public MoonPhase forceMoonPhase = null;
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] ambientColor = rgb("#ffffff");
 	public float ambientStrength = 1;

@@ -42,6 +42,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DefaultSkyColor;
+import rs117.hd.config.MoonPhase;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.ExpressionParser;
@@ -696,6 +697,16 @@ public class EnvironmentManager {
 	@Nullable
 	public DaylightCycle getForcedCycleMode() {
 		return getCurrentEnvironment().cycleMode;
+	}
+
+	/**
+	 * The moon phase forced by the current environment, or null to use the player's configured
+	 * phase. Read directly (not blended) so the phase snaps to the new environment rather than
+	 * morphing across a transition — matching how {@link #getForcedCycleMode()} is handled.
+	 */
+	@Nullable
+	public MoonPhase getForcedMoonPhase() {
+		return getCurrentEnvironment().forceMoonPhase;
 	}
 
 	/**

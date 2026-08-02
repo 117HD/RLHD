@@ -7,6 +7,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.MoonBehavior;
+import rs117.hd.config.MoonPhase;
 import rs117.hd.opengl.uniforms.UBOSkybox;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.TimeOfDay;
@@ -118,9 +119,12 @@ public class DayNightLighting {
 		DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
 		DaylightCycle daylightCycle = forcedMode != null ? forcedMode : config.daylightCycle();
 
+		MoonPhase forcedMoonPhase = environmentManager.getForcedMoonPhase();
+		MoonPhase moonPhase = forcedMoonPhase != null ? forcedMoonPhase : config.moonPhase();
+
 		timeOfDay.setCycleMode(daylightCycle);
 		timeOfDay.setDayLength(config.dayLength());
-		timeOfDay.setMoonPhase(config.moonPhase());
+		timeOfDay.setMoonPhase(moonPhase);
 		timeOfDay.setMoonBehavior(config.moonBehavior());
 		timeOfDay.setCycleDurationMinutes(config.cycleDurationMinutes());
 		timeOfDay.setSeasonalHemisphere(config.seasonalHemisphere());

@@ -1,12 +1,16 @@
 package rs117.hd.tests;
 
+import com.google.gson.Gson;
 import org.junit.Test;
+import rs117.hd.config.MoonPhase;
 import rs117.hd.renderer.zone.DayNightLighting;
 import rs117.hd.scene.EnvironmentManager;
+import rs117.hd.scene.environments.Environment;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 
 /**
  * Regression tests for the two bugs found while extracting DayNightLighting out of ZoneRenderer.
@@ -94,5 +98,29 @@ public class DayNightLightingTest {
 
 	private static String overloadPickedFor(float value) {
 		return "float";
+	}
+
+	// Environments can force a moon phase via a "forceMoonPhase" field, using the same names as
+	// the config dropdown. Gson matches enum constants by exact name and silently yields null
+	// for anything it doesn't recognise - including an unknown field name - so a typo or a
+	// renamed constant would quietly fall back to the configured phase rather than failing.
+	// Pin every value the dropdown offers, and the field name itself.
+	@Test
+	public void environmentForceMoonPhaseParsesEveryConfigValue() {
+		Gson gson = new Gson();
+
+		for (MoonPhase phase : MoonPhase.values()) {
+			Environment env = gson.fromJson("{\"forceMoonPhase\": \"" + phase.name() + "\"}", Environment.class);
+			assertEquals("every config dropdown value must parse", phase, env.forceMoonPhase);
+		}
+
+		// Omitting the field means "defer to the player's config", so it must stay null
+		assertNull("an absent forceMoonPhase must not force anything", gson.fromJson("{}", Environment.class).forceMoonPhase);
+
+		// The old name must no longer bind, or renamed JSON would silently stop taking effect
+		assertNull(
+			"the pre-rename \"moonPhase\" field must not bind",
+			gson.fromJson("{\"moonPhase\": \"FULL_MOON\"}", Environment.class).forceMoonPhase
+		);
 	}
 }
