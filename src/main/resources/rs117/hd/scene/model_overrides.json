@@ -4977,7 +4977,6 @@
       "FAI_VARROCK_INTERIORWALL_BLACK_TOP",
       "FAI_VARROCK_INTERIORWALL_TERM",
       "FAI_VARROCK_INTERIORWALL_DOUBLE",
-      "FAI_VARROCK_INTERIOR_BANKWALL_CORNER",
       "FAI_VARROCK_INTERIOR_BANKWALL_CORNER_END",
       "FAI_VARROCK_INTERIORWALL_DOUBLE_TERM",
       "FAI_VARROCK_SMALL_WALL_FILLER_MIRROR",
@@ -5138,7 +5137,6 @@
       "FAI_FALADOR_CRENELATION_HILLSKEW",
       "FAI_FALADOR_INTERIOR_TALLER",
       "FAI_FALADOR_WALLS_TALLER",
-      "FAI_FALADOR_WALL_WINDOW_TALLER",
       "FAI_FALADOR_ROOFKIT_SLATE",
       "FAI_FALADOR_ROOFKIT_SLATE_CORNER_RIGHT",
       "FAI_FALADOR_ROOFKIT_SLATE_EDGECUT",
@@ -5157,7 +5155,6 @@
       "FAI_FALADOR_CASTLE_WALLS_SARODOMIN",
       "FAI_FALADOR_CASTLE_WALLS_SARODOMIN_L2",
       "FAI_FALADOR_INTERIOR",
-      "FAI_FALADOR_INTERIOR_WINDOW",
       "FAI_FALADOR_BATTLEMENTS",
       "FAI_FALADOR_BATTLEMENTS_2_TALL_TERMINATOR_LFT",
       "FAI_FALADOR_BATTLEMENTS_2_TALL_TERMINATOR_RHT",
@@ -5204,7 +5201,10 @@
       "FAI_FALADOR_CASTLE_CRUMBLE_MID",
       "FAI_FALADOR_INTERIOR_DOUBLE_TALLER",
       "FAI_FALADOR_CRENELATION",
-      "FAI_FALADOR_ROOF_EDGE_SHORT1"
+      "FAI_FALADOR_ROOF_EDGE_SHORT1",
+      "FAI_FALADOR_ROOF_CUT_L",
+      "FAI_FALADOR_ROOF_EDGE_SHORT1_MIRROR",
+      "FAI_FALADOR_ROOF_EDGE_R_SHORT1"
     ]
   },
   {
@@ -5216,10 +5216,11 @@
     "colorOverrides": [
       {
         "description": "Window Frame",
-        "colors": "h == 5",
+        "colors": "h == 5 || h == 6 && s == 3",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.8
+        "uvScale": 0.8,
+        "uvOrientationY": 512
       },
       {
         "description": "Stained Glass",
@@ -5229,7 +5230,8 @@
     ],
     "objectIds": [
       "FAI_FALADOR_SHOP_WINDOW",
-      "FAI_FALADOR_SHOP_WINDOW_CROSSED"
+      "FAI_FALADOR_SHOP_WINDOW_CROSSED",
+      "FAI_FALADOR_INTERIOR_WINDOW"
     ]
   },
   {
@@ -5251,7 +5253,8 @@
         "colors": "h == 6 && s >= 2",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.8
+        "uvScale": 0.6,
+        "uvOrientationY": 512
       },
       {
         "description": "Stained Glass",
@@ -5265,7 +5268,8 @@
       "FAI_FALADOR_PARTY_ROOM_WALL_WINDOW_BIG",
       "FAI_FALADOR_PARTY_ROOM_WALL_WINDOW_BIG_TERM",
       "FAI_FALADOR_PARTY_ROOM_WALL_WINDOW_BIG_TERM_MIRROR",
-      "FAI_FALADOR_PARTY_ROOM_WALL_WINDOW"
+      "FAI_FALADOR_PARTY_ROOM_WALL_WINDOW",
+      "FAI_FALADOR_WALL_WINDOW_TALLER"
     ]
   },
   {
@@ -5315,6 +5319,7 @@
   {
     "description": "Falador - Metallic - White Knight Armor",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "undoVanillaShading": false,
     "uvType": "BOX",
     "uvScale": 0.4,
     "objectIds": [
@@ -7006,7 +7011,8 @@
     "uvScale": 0.6,
     "uvOrientation": 173,
     "objectIds": [
-      "FAI_FALADOR_NOTICEBOARD"
+      "FAI_FALADOR_NOTICEBOARD",
+      "FAI_FALADOR_NOTICEBOARD2"
     ],
     "colorOverrides": [
       {
@@ -7014,7 +7020,7 @@
         "colors": "h <= 5",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.8
+        "uvScale": 0.4
       },
       {
         "description": "Metal",
@@ -7704,11 +7710,14 @@
   {
     "description": "STATUE_BUST",
     "baseMaterial": "MARBLE_1_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.55,
     "objectIds": [
       "BUST3",
       "MURDER_QIP_BUST_01",
       "MURDER_QIP_BUST_02",
-      "MURDER_QIP_BUST_03"
+      "MURDER_QIP_BUST_03",
+      "FAI_FALADOR_BUST"
     ]
   },
   {
@@ -11818,7 +11827,7 @@
     "flatNormals": true
   },
   {
-    "description": "Seers Village - Wooden -Bench",
+    "description": "Seers Village - Wooden - Bench",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -12576,7 +12585,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
-    "uvOrientation": 512,
+    "uvOrientationY": 512,
     "objectIds": [
       "SARIM_BANNISTER",
       "SARIM_BANNISTER_END",
@@ -12849,8 +12858,8 @@
         "colors": "h == 8",
         "baseMaterial": "METALLIC_1_GLOSS",
         "uvType": "BOX",
-        "uvScale": 0.5,
-        "uvOrientation": 192
+        "uvScale": 0.2,
+        "uvOrientation": 512
       },
       {
         "description": "Cushion",
@@ -13048,7 +13057,8 @@
       "MURDER_QIP_POSH_BENCH",
       "HOS_BENCH_01",
       "SOTE_ELF_VILLAGE_BENCH",
-      "SHAYZIEN_BENCH01"
+      "SHAYZIEN_BENCH01",
+      "RD_BENCH2_HALF"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -13105,7 +13115,7 @@
     "description": "Rooftop Agility - Rope Bridge - Rope",
     "baseMaterial": "ROPE",
     "uvType": "BOX",
-    "uvScale": 0.75,
+    "uvScale": 0.6,
     "objectIds": [
       "SHIPROPE"
     ]
@@ -13649,7 +13659,7 @@
     "description": "WALL_SHIELD",
     "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "uvType": "BOX",
-    "uvScale": 0.4,
+    "uvScale": 0.25,
     "uvOrientation": 512,
     "objectIds": [
       "WALLSHIELD3_WHITE",
@@ -14281,7 +14291,7 @@
     ]
   },
   {
-    "description": "Marble Staircase Spiral with wooden rails",
+    "description": "Stone Staircase Spiral with wooden rails",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -14301,6 +14311,16 @@
       "VARROCK_SPIRALSTAIRSTOP",
       "FAI_WIZTOWER_SPIRALSTAIRS_MIDDLE",
       "FAI_FALADOR_SPIRALSTAIRS"
+    ]
+  },
+  {
+    "description": "Stone Staircase Top Wooden Rails Only",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "FAI_FALADOR_SPIRALSTAIRSTOP"
     ]
   },
   {
@@ -16721,7 +16741,6 @@
       "LOTR_MINE_CRATE",
       "LOTR_MINE_CRATE_STACKED",
       "CANAFIS_CRATE",
-      "FAI_FALADOR_SMALL_CRATES",
       "KR_MERLINCRATE_EMPTY2",
       "KR_UNDERGROUND_JAIL_CRATE",
       "KR_UNDERGROUND_JAIL_CRATES_STACKED",
@@ -16921,6 +16940,19 @@
     "uvOrientationZ": 512
   },
   {
+    "description": "Objects - Wooden - Stack of crates - Small - Angled",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_FALADOR_SMALL_CRATES"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "flatNormals": true,
+    "uvOrientationY": 170,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
     "description": "Objects - Wooden - Stack of crates - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -16967,6 +16999,7 @@
       "DWARF_KELDAGRIM_WOODEN_BOXES_NO_OPS"
     ],
     "uvType": "BOX",
+    "uvScale": 0.8,
     "flatNormals": true,
     "uvOrientationY": 600,
     "uvOrientationX": 512,
@@ -21069,7 +21102,7 @@
     ]
   },
   {
-    "description": "Varrock Scatle - Ardougne Castle - Bathroom Table",
+    "description": "Varrock Castle - Ardougne Castle - Bathroom Table",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -21081,10 +21114,26 @@
       {
         "description": "Wood",
         "baseMaterial": "WOOD_GRAIN_3",
-        "colors": "s > 0",
-        "uvScale": 0.8,
+        "colors": "h > 0 && h < 8",
+        "uvScale": 0.65,
         "uvType": "BOX",
-        "uvOrientation": 179
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Objects - Bath",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "objectIds": [
+      "FAI_FALADOR_BATH"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "baseMaterial": "MARBLE_4_LOW_CONTRAST_LIGHT_GLOSS",
+        "colors": "h == 42",
+        "uvScale": 0.6,
+        "uvType": "BOX"
       }
     ]
   },
@@ -22558,8 +22607,17 @@
     "objectIds": [
       "ROOFTOPS_ARROWSIGN"
     ],
-    "uvType": "MODEL_XY",
-    "uvOrientation": 512
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "uvScale": 0.2
+      }
+    ]
   },
   {
     "description": "Nardah Sophanem - Walls - Rock",
@@ -32754,7 +32812,9 @@
     "description": "Object - Wooden - Plank - Chest - Metal Clasp",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "FAI_VARROCK_CONTAINER"
+      "FAI_VARROCK_CONTAINER",
+      "PARTYROOM_CHESTOPEN",
+      "FAI_FALADOR_PARTY_ROOM_CHEST_CLOSED"
     ],
     "uvType": "BOX",
     "uvOrientationZ": 512,
@@ -34414,7 +34474,8 @@
     "description": "Crafting Guild Blacksmith's tools",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
-    "uvOrientation": 192,
+    "uvScale": 0.3,
+    "uvOrientation": 512,
     "objectIds": [ "BLACKSMITHTOOLS" ],
     "flatNormals": true
   },
@@ -34990,7 +35051,8 @@
     "objectIds": [
       "FAI_VARROCK_BANK_CHEST_OPEN",
       "PIRATECHEST",
-      "PIRATECHESTOPEN"
+      "PIRATECHESTOPEN",
+      "FAI_FALADOR_BANK_CHEST"
     ],
     "uvOrientation": 512,
     "uvType": "BOX",
@@ -47238,7 +47300,8 @@
     "description": "Wooden shelves - Empty",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "COOKINGSHELFEMPTY"
+      "COOKINGSHELFEMPTY",
+      "COOKINGSHELFEMPTY_OFFSET"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -49414,7 +49477,8 @@
       "FAI_FALADOR_ORNATERAIL_SYMBOL"
     ],
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvOrientation": 512,
+    "uvScale": 0.2
   },
   {
     "description": "Falador Park - Hide floating floor trim",
@@ -50069,27 +50133,8 @@
     ]
   },
   {
-    "description": "Deaths office - Entrances roof - Falador",
-    "baseMaterial": "GRUNGE_1",
-    "uvType": "BOX",
-    "uvScale": 0.6,
-    "flatNormals": true,
-    "colorOverrides": [
-      {
-        "description": "Stone",
-        "colors": "h == 2 && s == 2",
-        "baseMaterial": "STONE_NORMALED",
-        "uvType": "BOX",
-        "uvScale": 0.8
-      }
-    ],
-    "objectIds": [
-      "FAI_DEATH_CRYPT_ENTRANCE_TOP"
-    ]
-  },
-  {
     "description": "Deaths office - Entrances - Falador",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.6,
     "flatNormals": true,
@@ -50102,15 +50147,24 @@
         "uvScale": 0.8
       },
       {
-        "description": "Metal",
-        "colors": "(h == 6 && s == 4)|| s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "description": "Roof Tiles",
+        "colors": "h == 2 && s == 2",
+        "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvScale": 0.8
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 6 && s == 4 || s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "uvOrientation": 512
       }
     ],
     "objectIds": [
-      "FAI_DEATH_CRYPT_ENTRANCE"
+      "FAI_DEATH_CRYPT_ENTRANCE",
+      "FAI_DEATH_CRYPT_ENTRANCE_TOP"
     ]
   },
   {
@@ -52210,7 +52264,8 @@
       "CABINET_BOWS_OFFSET_FOR_FALADOR_CASTLE_WALL",
       "QIP_DS_SILVERLIGHT_CASE_FULL",
       "QIP_DS_SILVERLIGHT_CASE_OPEN",
-      "QIP_DS_SILVERLIGHT_CASE_EMPTY"
+      "QIP_DS_SILVERLIGHT_CASE_EMPTY",
+      "CABINET_BOWS_WHITE"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -52439,7 +52494,6 @@
       "SARIM_BOOKCASE2",
       "FAI_WIZTOWER_BOOKCASE",
       "FAI_WIZTOWER_BOOKCASE_WALL",
-      "BOOKCASE_MAHOGANY",
       "FAI_FALADOR_BOOKCASE_WIDE",
       "FAI_FALADOR_BOOKSHELF_OLD_TALL",
       "CAPT_SIAD_BOOKCASE",
@@ -52479,6 +52533,53 @@
       {
         "description": "Red books",
         "colors": "h == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Dark brown books",
+        "colors": "h == 7 && s > 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Light brown books",
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Mahogany bookcase with brown and taupe colored books",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "BOOKCASE_MAHOGANY"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green books",
+        "colors": "h > 12",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red books",
+        "colors": "h == 4 && s == 4 || h == 4 && s == 6",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
         "uvScale": 0.4
@@ -53031,12 +53132,12 @@
         "baseMaterial": "DIRT_1",
         "uvType": "BOX",
         "uvScale": 0.2,
-        "inheritTileColorType": "UNDERLAY",
         "shiftLightness": 2
       }
     ],
     "objectIds": [
-      "RIMMINGTON_MINING_SPADE"
+      "RIMMINGTON_MINING_SPADE",
+      "MOLE_HILL_SPADE"
     ]
   },
   {
@@ -75905,7 +76006,27 @@
         "baseMaterial": "METALLIC_1_LIGHT"
       },
       {
-        "colors": "h == 8",
+        "colors": "h == 8 && s == 1",
+        "baseMaterial": "MARBLE_4_LOW_CONTRAST_LIGHT_GLOSS",
+        "uvScale": 0.65,
+        "uvOrientation": 256,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "While Guthix Sleeps - Memorial Statues - Unbuilt",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      "LUC2_HERO_STATUE_ANCIENT_01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8 && s > 5",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 8 && s == 1",
         "baseMaterial": "MARBLE_4_LOW_CONTRAST_LIGHT_GLOSS",
         "uvScale": 0.65,
         "uvOrientation": 256,
@@ -87478,6 +87599,47 @@
         "uvType": "BOX",
         "uvScale": 0.6,
         "depthBias": 1
+      }
+    ]
+  },
+  {
+    "description": "Falador Party Room - Fireplace",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FAI_FALADOR_PARTY_ROOM_FIREPLACE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "upwardsNormals": true
+      },
+      {
+        "colors": "h == 8 && s == 1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "depthBias": 1
+      }
+    ]
+  },
+  {
+    "description": "Falador - Sir Tiffy Cashien sitting on bench",
+    "npcIds": [
+      "RD_TELEPORTER_GUY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "upwardsNormals": true
+      },
+      {
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 512,
+        "baseMaterial": "WOOD_GRAIN_3"
       }
     ]
   },
