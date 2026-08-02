@@ -1,6 +1,6 @@
 #pragma once
 
-// Procedural aurora borealis — raymarched curtain waves
+// Procedural aurora borealis - raymarched curtain waves
 // Traces view rays through thin elevated layers to produce
 // distinctive vertical-ray, horizontal-wave aurora curtains.
 
@@ -54,10 +54,10 @@ vec3 auroraLayer(vec3 ro, vec3 rd, float planeY, float time, float layerSeed) {
     // Get the curtain wave position at this x coordinate
     float wave = auroraCurtain(curtainX, time + layerSeed * 5.0);
 
-    // Distance from the curtain center line — this creates the thin ribbon shape
+    // Distance from the curtain center line - this creates the thin ribbon shape
     float distFromCurtain = abs(curtainZ - wave);
 
-    // Sharp falloff away from the curtain line — thin ribbon, not a blob
+    // Sharp falloff away from the curtain line - thin ribbon, not a blob
     float curtainMask = exp(-distFromCurtain * distFromCurtain * 55.0);
 
     // Vertical ray structure: use noise along the curtain to create the
@@ -66,10 +66,10 @@ vec3 auroraLayer(vec3 ro, vec3 rd, float planeY, float time, float layerSeed) {
     float rayNoise = au_noise(vec2(curtainX * 12.0 + layerSeed * 10.0, time * 0.1));
     float rays = smoothstep(0.2, 0.8, rayNoise);
     // Keep the ray texture subtle so it modulates the curtain rather than
-    // carving it up — the wave shape remains the dominant read.
+    // carving it up - the wave shape remains the dominant read.
     rays = mix(0.55, 1.0, rays);
 
-    // Brightness variation along the curtain — some sections brighter
+    // Brightness variation along the curtain - some sections brighter
     float brightness = au_noise(vec2(curtainX * 2.0 - time * 0.02, layerSeed));
     brightness = 0.4 + brightness * 0.6;
 
@@ -99,7 +99,7 @@ vec3 auroraLayer(vec3 ro, vec3 rd, float planeY, float time, float layerSeed) {
     return col * intensity;
 }
 
-// Main entry point — returns additive aurora color
+// Main entry point - returns additive aurora color
 vec3 proceduralAurora(vec3 viewDir, float time) {
     float upAmount = -viewDir.y;
 
@@ -111,7 +111,7 @@ vec3 proceduralAurora(vec3 viewDir, float time) {
     if (northFacing < -0.2) return vec3(0.0);
     float northBlend = smoothstep(-0.2, 0.3, northFacing);
 
-    // Horizon fade — don't render right at horizon to blend with fog
+    // Horizon fade - don't render right at horizon to blend with fog
     float horizonFade = smoothstep(0.01, 0.06, upAmount);
 
     // Place camera at origin, aurora planes high above
@@ -128,6 +128,6 @@ vec3 proceduralAurora(vec3 viewDir, float time) {
 
     aurora *= northBlend * horizonFade;
 
-    // Overall brightness — bright enough to clearly pop against the night sky.
+    // Overall brightness - bright enough to clearly pop against the night sky.
     return aurora * 0.26;
 }

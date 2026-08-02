@@ -44,7 +44,7 @@
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
 #if TERRAIN_SHADOWS
-uniform sampler2DShadow terrainShadowMap;
+    uniform sampler2DShadow terrainShadowMap;
 #endif
 uniform usampler2DArray tiledLightingArray;
 
@@ -94,7 +94,7 @@ void main() {
         // Write the smallest depth which won't round to zero for DEPTH_COMPONENT_32F
         gl_FragDepth = 1.17549435e-38;
         FragColor = vec4(0, 0, 0, 1);
-        return;
+        if (GAP_FILLER == 1) return; // Redundant, for syntax highlighting in IntelliJ
     #endif
 
     vec3 downDir = vec3(0, -1, 0);
@@ -463,7 +463,7 @@ void main() {
            transmissionOut += backLightOut * (subsurface * SUBSURFACE_BASE_FRACTION + transmissionFocus * subsurfaceGlow);
 
            vec3 backPointLightsOut = vec3(0);
-           vec3 backPointLightsSpecularOut = vec3(0); // Ignored — specular doesn't make sense for backside lighting
+           vec3 backPointLightsSpecularOut = vec3(0); // Ignored - specular doesn't make sense for backside lighting
            calculateLighting(IN.position, -normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength, backPointLightsOut, backPointLightsSpecularOut);
 
            transmissionOut += backPointLightsOut * subsurface;
@@ -572,7 +572,7 @@ void main() {
             outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
         }
 
-        if (skyGradientEnabled == 1) {
+        if (skyGradientEnabled) {
             // Default to the fragment's own color so the mix below is a no-op
             // when there's no fog. The full sky-gradient reconstruction is only
             // needed where fog actually blends geometry toward the sky, so it's

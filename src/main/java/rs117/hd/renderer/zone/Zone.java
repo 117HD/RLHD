@@ -245,7 +245,7 @@ public class Zone implements Destructible {
 
 		// Position
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_SHORT, false, VERT_SIZE, 0);
+		glVertexAttribPointer(0, 4, GL_SHORT, false, VERT_SIZE, 0);
 
 		// UVs
 		glEnableVertexAttribArray(1);
@@ -406,7 +406,7 @@ public class Zone implements Destructible {
 			drawEnd[drawIdx - 1] = end;
 		} else if (drawIdx >= NUM_DRAW_RANGES) {
 			log.debug("draw ranges exhausted");
-		} else if(end > start){
+		} else if (end > start) {
 			drawOff[drawIdx] = start;
 			drawEnd[drawIdx] = end;
 			drawIdx++;

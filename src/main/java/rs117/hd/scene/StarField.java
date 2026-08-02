@@ -14,43 +14,7 @@ import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.utils.RenderState;
 import rs117.hd.utils.buffer.GLBuffer;
 
-import static org.lwjgl.opengl.GL11.glDeleteTextures;
-import static org.lwjgl.opengl.GL11.glTexImage2D;
-import static org.lwjgl.opengl.GL11C.GL_BLEND;
-import static org.lwjgl.opengl.GL11C.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11C.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11C.GL_FLOAT;
-import static org.lwjgl.opengl.GL11C.GL_LINEAR;
-import static org.lwjgl.opengl.GL11C.GL_RGBA;
-import static org.lwjgl.opengl.GL11C.GL_TEXTURE_MAG_FILTER;
-import static org.lwjgl.opengl.GL11C.GL_TEXTURE_MIN_FILTER;
-import static org.lwjgl.opengl.GL11C.GL_TEXTURE_WRAP_S;
-import static org.lwjgl.opengl.GL11C.GL_TEXTURE_WRAP_T;
-import static org.lwjgl.opengl.GL11C.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11C.glBindTexture;
-import static org.lwjgl.opengl.GL11C.glDrawArrays;
-import static org.lwjgl.opengl.GL11C.glGenTextures;
-import static org.lwjgl.opengl.GL11C.glTexParameteri;
-import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
-import static org.lwjgl.opengl.GL12C.GL_TEXTURE_WRAP_R;
-import static org.lwjgl.opengl.GL13C.GL_TEXTURE_CUBE_MAP;
-import static org.lwjgl.opengl.GL13C.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-import static org.lwjgl.opengl.GL13C.glActiveTexture;
-import static org.lwjgl.opengl.GL15C.GL_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15C.GL_STATIC_DRAW;
-import static org.lwjgl.opengl.GL15C.glBindBuffer;
-import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
-import static org.lwjgl.opengl.GL30.glDeleteFramebuffers;
-import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
-import static org.lwjgl.opengl.GL30C.GL_COLOR_ATTACHMENT0;
-import static org.lwjgl.opengl.GL30C.GL_FRAMEBUFFER;
-import static org.lwjgl.opengl.GL30C.GL_RGBA16F;
-import static org.lwjgl.opengl.GL30C.glBindFramebuffer;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
-import static org.lwjgl.opengl.GL30C.glFramebufferTexture2D;
-import static org.lwjgl.opengl.GL30C.glGenFramebuffers;
-import static org.lwjgl.opengl.GL30C.glGenVertexArrays;
+import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_NEBULA;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_UI;
 import static rs117.hd.utils.HDUtils.randomPointOnSphere;
@@ -67,8 +31,8 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 @Singleton
 public final class StarField {
-	private static final float[] UP_VECTOR = {0, 1, 0};
-	private static final float[] LEFT_VECTOR = {1, 0, 0};
+	private static final float[] UP_VECTOR = { 0, 1, 0 };
+	private static final float[] LEFT_VECTOR = { 1, 0, 0 };
 
 	private static final Color[] STAR_COLORS = {
 		new Color(1.0f, 0.7f, 0.45f),  // warm orange
@@ -167,9 +131,11 @@ public final class StarField {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texNebulaCubemap);
 
 		for (int face = 0; face < 6; face++)
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA16F,
+			glTexImage2D(
+				GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA16F,
 				NEBULA_CUBE_MAP_RESOLUTION,
-				NEBULA_CUBE_MAP_RESOLUTION, 0, GL_RGBA, GL_FLOAT, 0);
+				NEBULA_CUBE_MAP_RESOLUTION, 0, GL_RGBA, GL_FLOAT, 0
+			);
 
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -184,7 +150,7 @@ public final class StarField {
 	public void resetStarfield() { starfieldGenerated = false; }
 
 	public boolean generateStarField() {
-		if(starfieldGenerated)
+		if (starfieldGenerated)
 			return false;
 
 		starfieldGenerated = true;
@@ -199,7 +165,7 @@ public final class StarField {
 		generateLayer(vertexData, BRIGHT_STAR_COUNT, 1.2f, 1.0f, 1.0f);
 		generateLayer(vertexData, DIM_STAR_COUNT, 0.4f, 0.8f, 0.7f);
 
-		if(config.enableNebulas())
+		if (config.enableNebulas())
 			generateClusteredLayer(vertexData, CLUSTER_STAR_COUNT, CLUSTER_COUNT, CLUSTER_ANGULAR_SPREAD, 0.5f, 0.5f, 1.0f);
 
 		starCount = vertexData.position() / FLOATS_PER_STAR;
@@ -307,7 +273,16 @@ public final class StarField {
 		}
 	}
 
-	private void writeStar(FloatBuffer vertexBuffer, float dx, float dy, float dz, float maxBrightness, float sizeScale, float speed, float alpha) {
+	private void writeStar(
+		FloatBuffer vertexBuffer,
+		float dx,
+		float dy,
+		float dz,
+		float maxBrightness,
+		float sizeScale,
+		float speed,
+		float alpha
+	) {
 		// Power-law brightness: many dim, few bright (matches pow(seed, 2.5)).
 		float brightnessSeed = random.nextFloat();
 		float brightness = (float) Math.pow(brightnessSeed, 2.5) * maxBrightness;

@@ -119,7 +119,7 @@ public class AtmosphereUtils
 		return getDirectionalLightForAngles(timeOfDay, getSunAngles(millis, latLong));
 	}
 
-	/** Directional light color from pre-computed sun {azimuth, altitude} — used so fixed
+	/** Directional light color from pre-computed sun {azimuth, altitude} - used so fixed
 	 * modes can derive light from their fixed angle instead of an incremented-time date. */
 	public static float[] getDirectionalLightForAngles(TimeOfDay timeOfDay, double[] angles) {
 		// Use a fixed dim nighttime base color (4100K at low intensity).

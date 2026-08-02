@@ -1176,7 +1176,7 @@ public class HdPlugin extends Plugin {
 			uboGlobal.destroy();
 		uboGlobal = null;
 
-		if(uboSkybox != null)
+		if (uboSkybox != null)
 			uboSkybox.destroy();
 		uboSkybox = null;
 
@@ -1481,7 +1481,7 @@ public class HdPlugin extends Plugin {
 			glActiveTexture(TEXTURE_UNIT_TERRAIN_SHADOW_MAP);
 			glBindTexture(GL_TEXTURE_2D, texTerrainShadowMap);
 
-			terrainShadowMapResolution = (int)(shadowMapResolution * 0.5f);
+			terrainShadowMapResolution = shadowMapResolution / 2;
 			glTexImage2D(
 				GL_TEXTURE_2D,
 				0,

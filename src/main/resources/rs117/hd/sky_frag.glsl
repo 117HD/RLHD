@@ -2,6 +2,7 @@
 
 #include <uniforms/global.glsl>
 #include <uniforms/skybox.glsl>
+
 #include <utils/color_blindness.glsl>
 #include <utils/misc.glsl>
 #include <utils/starfield.glsl>
@@ -94,7 +95,7 @@ void main() {
 
         // Background sky + nebula only. Individual stars are drawn separately as
         // point sprites (star_vert/frag.glsl), so the costly per-pixel star-field
-        // search is gone — this just provides the dark night base + nebula.
+        // search is gone - this just provides the dark night base + nebula.
         vec3 nightSkyColor = proceduralStarfieldBackground(starDir);
 
         // Fade out the night sky/nebula near the horizon so the sky converges
@@ -128,7 +129,7 @@ void main() {
 
         if (moonDot > 0.0 && moonDayAlpha > 0.001) {
             // Moon angular radius: ~3.8 degrees diameter = 1.9 degrees half-angle
-            // cos(1.9 deg) ≈ 0.99945 — enlarged beyond realistic for visual impact.
+            // cos(1.9 deg) ≈ 0.99945 - enlarged beyond realistic for visual impact.
             // Scale the angular radius by moonSizeMult, then convert back to a cosine
             // threshold, so the per-environment size multiplier grows/shrinks the disk.
             float moonBaseRadius = acos(0.99945);
@@ -172,7 +173,7 @@ void main() {
                 float terminatorEdge = terminatorX * sqrt(max(0.0, 1.0 - yy));
                 // Widen the smoothstep near the poles where the ellipse curvature is steep
                 float edgeSoftness = mix(0.05, 0.35, yy * yy);
-                // Smooth the terminator edge — lit when localX is LESS than the edge
+                // Smooth the terminator edge - lit when localX is LESS than the edge
                 float isLit = smoothstep(terminatorEdge + edgeSoftness, terminatorEdge - edgeSoftness, localX);
 
                 // Limb darkening: edges of the moon are slightly darker
@@ -181,7 +182,7 @@ void main() {
                 // Procedural moon surface detail
                 vec2 moonUV = vec2(localX, localY) * 4.0 + vec2(50.0, 50.0);
 
-                // Large-scale terrain — broad tonal variation
+                // Large-scale terrain - broad tonal variation
                 float largeTerrain = moonFbm(moonUV * 0.4);
 
                 // Medium-scale detail
@@ -194,12 +195,12 @@ void main() {
                 float surfaceBrightness = largeTerrain * 0.4 + medTerrain * 0.4 + fineTerrain * 0.2;
                 surfaceBrightness = mix(0.6, 1.1, surfaceBrightness);
 
-                // Dark maria (seas) — a few subtle darker patches
+                // Dark maria (seas) - a few subtle darker patches
                 float seaNoise = moonFbm(moonUV * 0.8 + vec2(30.0, 70.0));
                 float seaMask = smoothstep(0.50, 0.40, seaNoise);
                 surfaceBrightness *= mix(1.0, 0.88, seaMask);
 
-                // Crater ray systems — bright ejecta from impact sites
+                // Crater ray systems - bright ejecta from impact sites
                 vec2 rayCenters[3] = vec2[3](
                     vec2(51.0, 47.5),   // lower right
                     vec2(48.2, 51.0),   // upper left
@@ -286,7 +287,7 @@ void main() {
         }
     }
 
-    // Aurora borealis — animated curtains near the northern horizon. Shown on the
+    // Aurora borealis - animated curtains near the northern horizon. Shown on the
     // randomly-selected aurora nights and faded with the night, but decoupled from
     // starVisibility so it can be scaled independently per environment via
     // auroraVisibility (0 on non-aurora nights or aurora-hidden areas). Uses

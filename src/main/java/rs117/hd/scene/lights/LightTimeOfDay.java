@@ -6,7 +6,6 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import javax.annotation.Nullable;
 
-
 public enum LightTimeOfDay {
 	DAY(0f, 0f),
 	DAWN(0f, 0.22f),

@@ -19,8 +19,7 @@ public enum MoonPhase
 	;
 
 	private final String name;
-	// Locked illumination fraction (0..1), or -1 for DYNAMIC (no lock).
-	public final float illumination;
+	public final float illumination; // Locked illumination fraction (0..1), or -1 for DYNAMIC (no lock).
 
 	public boolean isLocked() {
 		return this != DYNAMIC;

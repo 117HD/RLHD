@@ -125,7 +125,7 @@ void main() {
     mat4 viewToClip;
     vec2 tileNDCMin;
     vec2 tileNDCMax;
-    if (orthographicProjection != 0) {
+    if (orthographicProjection) {
         viewToClip = projectionMatrix * inverse(viewMatrix);
         tileNDCMin = min(min(ndcTL, ndcTR), min(ndcBL, ndcBR));
         tileNDCMax = max(max(ndcTL, ndcTR), max(ndcBL, ndcBR));
@@ -152,7 +152,7 @@ void main() {
         const float PROXIMITY_WEIGHT = 0.75;
         float distanceScore = clamp(1.0 - sqrt(lightDistSqr) / (sqrt(lightRadiusSqr) + 1e-6), 0.0, 1.0);
 
-        if (orthographicProjection != 0) {
+        if (orthographicProjection) {
             vec4 lightClip = viewToClip * vec4(lightViewPos, 1.0);
             vec2 lightNDC = lightClip.xy / max(abs(lightClip.w), 1e-5);
 

@@ -103,10 +103,10 @@ public class LightManager {
 	private HdPluginConfig config;
 
 	@Inject
-	private EnvironmentManager environmentManager;
+	private GamevalManager gamevalManager;
 
 	@Inject
-	private GamevalManager gamevalManager;
+	private EnvironmentManager environmentManager;
 
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
@@ -746,7 +746,7 @@ public class LightManager {
 			}
 		}
 
-		// Desaturate toward gray as the sun climbs — high sun produces whiter, more neutral light.
+		// Desaturate toward gray as the sun climbs - high sun produces whiter, more neutral light.
 		if (sunAltDeg > 0) {
 			float desat = smoothstep(0f, 90f, (float) sunAltDeg) * 0.75f;
 			float luma = dot(lightColor, SKY_LUMA_WEIGHTS);

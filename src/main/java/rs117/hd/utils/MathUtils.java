@@ -474,7 +474,7 @@ public final class MathUtils {
 	public static float angleDiff(float a, float b) {
 		float diff = (a - b) % TWO_PI;
 		if (diff < -PI) diff += TWO_PI;
-		if (diff > PI)  diff -= TWO_PI;
+		if (diff > PI) diff -= TWO_PI;
 		return abs(diff);
 	}
 

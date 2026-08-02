@@ -3891,16 +3891,16 @@
     ]
   },
   {
-    "description": "This is used so that teleporting into or using the door instantly sets the environment to the correct one when teleporting or using the door but still be smooth if walking in normally from the north",
     "name": "VER_SINHAZA_TRANSITION",
+    "description": "This is used so that teleporting into or using the door instantly sets the environment to the correct one when teleporting or using the door but still be smooth if walking in normally from the north",
     "aabbs": [
       [ 3648, 3229, 3650, 3231 ],
       [ 3647, 3218, 3651, 3220 ]
     ]
   },
   {
-    "description": "This is used to brighten north facing windows and doors",
     "name": "VER_SINHAZA_BRIGHTEN_WINDOWS_DOORS",
+    "description": "This is used to brighten north facing windows and doors",
     "aabbs": [
       [ 3659, 3201, 3673, 3214 ],
       [ 3668, 3224, 3672, 3232 ]

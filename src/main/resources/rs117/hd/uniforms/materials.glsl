@@ -45,9 +45,9 @@ bool getMaterialHasTransparency(const Material material) {
 }
 
 float getMaterialSubsurface(const Material material) {
-    return halfToFloat(uint(material.subsurfaceAndGlow) & 0xFFFFu);
+    return unpackHalfFloat(material.subsurfaceAndGlow & 0xFFFFu);
 }
 
 float getMaterialSubsurfaceGlow(const Material material) {
-    return halfToFloat((uint(material.subsurfaceAndGlow) >> 16u) & 0xFFFFu);
+    return unpackHalfFloat((material.subsurfaceAndGlow >> 16u) & 0xFFFFu);
 }

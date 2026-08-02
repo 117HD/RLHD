@@ -96,8 +96,7 @@
       },
       "followDayNight": {
         "type": "boolean",
-        "default": false,
-        "description": "When true, uses the outdoor sky horizon color for this light and scales strength with time of day while the daylight cycle is enabled, including in dungeons (e.g. tunnel exits). The configured color sets peak midday brightness."
+        "description": "When enabled, use the outdoor sky color for this light, and scale its strength with the time of day, while the daylight cycle is enabled, including in dungeons (e.g. tunnel exits). The specified light color then controls the peak midday brightness. Defaults to false."
       },
       "type": {
         "type": "string",
@@ -158,19 +157,18 @@
       },
       "nightMultiplier": {
         "type": "number",
-        "default": 1,
         "minimum": 0,
-        "description": "Peak-darkness strength target when the day & night cycle is active in overworld areas. 1 = default, 0.5 = half default brightness, 0 = off. Values above 1 boost brightness at night. Ignored outside overworld."
+        "description": "Peak darkness strength for when the day & night cycle is active in overworld areas. 1 = default, 0.5 = half default brightness, 0 = off. Values above 1 boost brightness at night. Ignored outside overworld. Defaults to 1."
       },
       "timeOfDay": {
         "type": "string",
         "enum": [ "DAY", "DAWN", "DUSK", "TWILIGHT", "NIGHT", "DEEP_NIGHT" ],
-        "description": "Cycle phase when this light starts turning on (e.g. DUSK at sunset, NIGHT mid-evening). Overworld only."
+        "description": "The cycle phase for which this light should start fading in (e.g. DUSK at sunset, NIGHT mid-evening). Only applies to overworld lights."
       },
       "timeOfDayOff": {
         "type": "string",
         "enum": [ "DAY", "DAWN", "DUSK", "TWILIGHT", "NIGHT", "DEEP_NIGHT" ],
-        "description": "Optional cycle phase when this light starts turning off at dawn. Omitted = mirror timeOfDay. Overworld only."
+        "description": "Optional cycle phase when this light should start fading out at dawn. Omitted = mirror timeOfDay. Overworld only."
       },
       "staggered": {
         "type": "boolean",

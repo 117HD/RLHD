@@ -4,8 +4,7 @@ import java.awt.event.KeyEvent;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.ChatMessageType;
-import net.runelite.api.Client;
+import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.Keybind;
@@ -55,10 +54,10 @@ public class DeveloperTools implements KeyListener {
 	private Client client;
 
 	@Inject
-	private EnvironmentManager environmentManager;
+	private GamevalManager gamevalManager;
 
 	@Inject
-	private GamevalManager gamevalManager;
+	private EnvironmentManager environmentManager;
 
 	@Inject
 	private TileInfoOverlay tileInfoOverlay;

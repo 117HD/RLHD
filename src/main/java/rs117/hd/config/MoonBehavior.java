@@ -11,10 +11,6 @@ public enum MoonBehavior
 
 	private final String name;
 
-	MoonBehavior() {
-		name = this.name();
-	}
-
 	@Override
 	public String toString() {
 		return name;

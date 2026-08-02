@@ -140,7 +140,7 @@ public class Environment {
 	// Aurora visibility multiplier for this area, controllable independently of
 	// starVisibility. Auroras still only appear on the randomly-selected aurora
 	// nights and fade with the night; this just scales how visible they are when they
-	// do. When left unset (sentinel -1), it falls back to starVisibility — the
+	// do. When left unset (sentinel -1), it falls back to starVisibility - the
 	// original behavior, where hiding stars also hid auroras. Set it explicitly to
 	// decouple: e.g. 0 hides auroras while keeping stars, 1 shows full auroras even
 	// where stars are dimmed. Resolved to a concrete value in normalize().
@@ -195,12 +195,12 @@ public class Environment {
 			moonColor = ColorUtils.colorTemperatureToLinearRgb(8000);
 
 		// When no distinct moonlight color is given, the cast light matches the
-		// moon disk (moonColor) — preserving the original single-color behavior.
+		// moon disk (moonColor) - preserving the original single-color behavior.
 		if (moonLightColor == null)
 			moonLightColor = moonColor;
 
 		// When no distinct night-sky color is given, the sky matches the moon
-		// disk (moonColor) — preserving the original single-color behavior.
+		// disk (moonColor) - preserving the original single-color behavior.
 		if (nightSkyColor == null)
 			nightSkyColor = moonColor;
 
