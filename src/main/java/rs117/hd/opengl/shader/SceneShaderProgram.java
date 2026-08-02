@@ -44,6 +44,8 @@ public class SceneShaderProgram extends ShaderProgram {
 		GapFiller() {
 			isGapFiller = true;
 			uniTextureFaces.ignoreMissing = true;
+			uniTextureArray.ignoreMissing = true;
+			uniShadowMap.ignoreMissing = true;
 		}
 	}
 

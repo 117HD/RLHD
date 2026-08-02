@@ -562,12 +562,17 @@ public class Zone implements Destructible {
 			shift++;
 		}
 
-		final int bucketCapacity = ceil(faceCount / 32.0f);
+		final int intsPerVertex = VERT_SIZE / Integer.BYTES;
+		final int writtenAlphaFaceCount = (endpos - startpos) / (3 * intsPerVertex);
+		final int bucketCapacity = ceil(writtenAlphaFaceCount / 32.0f);
 
-		final int[] packedFaces = PooledArrayType.INT.borrow(faceCount);
+		final int[] packedFaces = PooledArrayType.INT.borrow(writtenAlphaFaceCount);
 		final int[] doubleSidedBitSet = PooledArrayType.INT.borrow(bucketCapacity);
 
 		Arrays.fill(doubleSidedBitSet, 0, bucketCapacity, 0);
+
+		final Material baseMaterial = modelOverride.baseMaterial;
+		final Material textureMaterial = modelOverride.textureMaterial;
 
 		int radius = 0;
 		char bufferIdx = 0;
@@ -580,15 +585,17 @@ public class Zone implements Destructible {
 			if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, f))
 				continue;
 
-			int transparency = transparencies != null ? transparencies[f] & 0xFF : 0;
-			int textureId = faceTextures != null ? faceTextures[f] : -1;
-
+			Material material = baseMaterial;
 			ModelOverride faceOverride = modelOverride;
 
-			Material material = modelOverride.baseMaterial;
+			int transparency = SceneUploader.readFaceTransparency(model.getTransparency(), transparencies, f);
+			if (transparency == 255)
+				continue;
+
+			int textureId = faceTextures != null ? faceTextures[f] : -1;
 			if (textureId != -1) {
 				if (modelOverride.textureMaterial != Material.NONE) {
-					material = modelOverride.textureMaterial;
+					material = textureMaterial;
 				} else {
 					material = materialManager.fromVanillaTexture(textureId);
 					if (modelOverride.materialOverrides != null) {
