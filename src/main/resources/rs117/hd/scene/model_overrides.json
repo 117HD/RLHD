@@ -99866,26 +99866,6 @@
     ]
   },
   {
-    "description": "Draynor - Forthos - Cloth - Metal - Red Curtains",
-    "baseMaterial": "CARPET",
-    "uvType": "BOX",
-    "uvScale": 0.6,
-    "uvOrientation": 173,
-    "colorOverrides": [
-      {
-        "description": "Curtain rod",
-        "colors": "s == 0",
-        "baseMaterial": "METALLIC_1_SEMIGLOSS",
-        "uvType": "BOX",
-        "uvOrientation": -89,
-        "uvScale": 0.8
-      }
-    ],
-    "objectIds": [
-      "DRAYNOR_CRYPT_DRAPES"
-    ]
-  },
-  {
     "description": "Forthos - Metallic - Couldron - DYNAMIC - ANIMATED",
     "baseMaterial": "METALLIC_1",
     "uvType": "BOX",
