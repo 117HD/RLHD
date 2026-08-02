@@ -83,6 +83,12 @@ public class Environment {
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] directionalColor = rgb("#ffffff");
 	public float directionalStrength = .25f;
+	// Directional light strength used while the moon is lighting the scene. When unset
+	// (sentinel -1), falls back to directionalStrength so the moon is as strong as the sun
+	// (the original behavior, where one value drove both). Set this to let an area dim or
+	// brighten moonlight independently of sunlight. Resolved to a concrete value in
+	// normalize(). Only meaningful while the day & night cycle is driving the frame.
+	public float moonDirectionalStrength = -1;
 	@Nullable
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] waterColor;
@@ -209,6 +215,11 @@ public class Environment {
 		// disk (moonColor) - preserving the original single-color behavior.
 		if (nightSkyColor == null)
 			nightSkyColor = moonColor;
+
+		// When no distinct moonlight strength is given, moonlight is as strong as
+		// sunlight - preserving the original behavior, where directionalStrength drove both.
+		if (moonDirectionalStrength == -1)
+			moonDirectionalStrength = directionalStrength;
 
 		// Base water caustics on directional lighting by default
 		if (waterCausticsColor == null)

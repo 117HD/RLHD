@@ -2617,7 +2617,8 @@
     "minBrightnessBoost": 0.5,
     "nightSkyColor": "#FF0000",
     "sunriseSunsetStrength": 0.2,
-    "auroraVisibility": 0
+    "auroraVisibility": 0,
+	"moonDirectionalStrength": 2
   },
   {
     "area": "VAMPYRIUM_FOREST_INSTANCE",

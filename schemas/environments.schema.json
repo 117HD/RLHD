@@ -106,7 +106,12 @@
       },
       "directionalStrength": {
         "type": "number",
-        "description": "Directional light strength multiplier. Defaults to 0.25."
+        "description": "Directional light strength multiplier. Defaults to 0.25. While the day & night cycle is active this drives sunlight, and also moonlight unless `moonDirectionalStrength` is set."
+      },
+      "moonDirectionalStrength": {
+        "type": "number",
+        "description": "Directional light strength multiplier used while the moon is lighting the scene, crossfading in over twilight on the same schedule as the moonlight tint. When unset, falls back to `directionalStrength`, so moonlight is as strong as sunlight. Only applies while the day & night cycle is driving the scene.",
+        "minimum": 0
       },
       "waterColor": {
         "type": [ "string", "array" ],

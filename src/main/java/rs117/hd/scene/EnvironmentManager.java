@@ -126,6 +126,13 @@ public class EnvironmentManager {
 	public float currentDirectionalStrength = 0f;
 	private float targetDirectionalStrength = 0f;
 
+	// Directional strength while the moon is lighting the scene. Falls back to
+	// directionalStrength when the environment doesn't specify moonDirectionalStrength
+	// (handled in Environment.normalize).
+	private float startMoonDirectionalStrength = 0f;
+	public float currentMoonDirectionalStrength = 0f;
+	private float targetMoonDirectionalStrength = 0f;
+
 	private float[] startUnderwaterCausticsColor = new float[] { 0, 0, 0 };
 	public float[] currentUnderwaterCausticsColor = new float[] { 0, 0, 0 };
 	private float[] targetUnderwaterCausticsColor = new float[] { 0, 0, 0 };
@@ -439,6 +446,7 @@ public class EnvironmentManager {
 			currentAmbientStrength = mix(startAmbientStrength, targetAmbientStrength, t);
 			currentAmbientColor = mix(startAmbientColor, targetAmbientColor, t);
 			currentDirectionalStrength = mix(startDirectionalStrength, targetDirectionalStrength, t);
+			currentMoonDirectionalStrength = mix(startMoonDirectionalStrength, targetMoonDirectionalStrength, t);
 			currentDirectionalColor = mix(startDirectionalColor, targetDirectionalColor, t);
 			currentUnderglowStrength = mix(startUnderglowStrength, targetUnderglowStrength, t);
 			currentUnderglowColor = mix(startUnderglowColor, targetUnderglowColor, t);
@@ -505,6 +513,7 @@ public class EnvironmentManager {
 		startAmbientStrength = currentAmbientStrength;
 		startAmbientColor = currentAmbientColor;
 		startDirectionalStrength = currentDirectionalStrength;
+		startMoonDirectionalStrength = currentMoonDirectionalStrength;
 		startDirectionalColor = currentDirectionalColor;
 		startUnderglowStrength = currentUnderglowStrength;
 		startUnderglowColor = currentUnderglowColor;
@@ -553,6 +562,7 @@ public class EnvironmentManager {
 		targetAmbientStrength = env.ambientStrength;
 		targetAmbientColor = env.ambientColor;
 		targetDirectionalStrength = env.directionalStrength;
+		targetMoonDirectionalStrength = env.moonDirectionalStrength;
 		targetDirectionalColor = env.directionalColor;
 		targetUnderglowStrength = env.underglowStrength;
 		targetUnderglowColor = env.underglowColor;

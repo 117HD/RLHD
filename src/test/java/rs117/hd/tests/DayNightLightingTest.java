@@ -126,6 +126,34 @@ public class DayNightLightingTest {
 		);
 	}
 
+	// "moonDirectionalStrength" lets an area dim or brighten moonlight independently of sunlight.
+	// Omitting it must leave moonlight exactly as strong as sunlight, since every existing
+	// environment relies on the single directionalStrength driving both. The fallback runs in
+	// normalize(), so a value that never gets normalized would leak the -1 sentinel into the
+	// lighting math and black out the night.
+	@Test
+	public void environmentMoonDirectionalStrengthDefaultsToDirectionalStrength() {
+		Gson gson = new Gson();
+
+		Environment unset = gson.fromJson("{\"directionalStrength\": 0.8}", Environment.class).normalize();
+		assertEquals(
+			"an absent moonDirectionalStrength must fall back to directionalStrength",
+			0.8f, unset.moonDirectionalStrength, 0
+		);
+
+		Environment set = gson
+			.fromJson("{\"directionalStrength\": 0.8, \"moonDirectionalStrength\": 0.2}", Environment.class)
+			.normalize();
+		assertEquals("an explicit moonDirectionalStrength must win", 0.2f, set.moonDirectionalStrength, 0);
+		assertEquals("and must not disturb directionalStrength", 0.8f, set.directionalStrength, 0);
+
+		// 0 is a meaningful value - no moonlight at all - and must survive the sentinel check
+		Environment zero = gson
+			.fromJson("{\"directionalStrength\": 0.8, \"moonDirectionalStrength\": 0}", Environment.class)
+			.normalize();
+		assertEquals("an explicit 0 must not be treated as unset", 0f, zero.moonDirectionalStrength, 0);
+	}
+
 	// "forceMoonActive" lets a cutscene environment show the moon even when the player has the
 	// Moon config toggle off. It must default to false, so ordinary environments keep deferring
 	// to the config rather than silently forcing the moon on everywhere.

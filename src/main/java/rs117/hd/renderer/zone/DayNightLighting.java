@@ -181,9 +181,7 @@ public class DayNightLighting {
 		copyTo(lighting.ambientColor, timeOfDay.getRegionalAmbientLight(environmentManager.currentAmbientColor));
 
 		float brightnessMultiplier = timeOfDay.getDynamicBrightnessMultiplier(plugin.configMinimumBrightness);
-		lighting.directionalStrength = environmentManager.currentDirectionalStrength
-			* brightnessMultiplier
-			* environmentManager.currentSunlightStrength;
+		float baseDirectionalStrength = environmentManager.currentDirectionalStrength;
 		// Deliberately ignore the environment's ambientStrength (e.g. WINTER=3.5, AUTUMN=0.3)
 		// while the cycle is active, so the cycle's own brightness multiplier alone controls
 		// how dark nights get. Seasonal values would otherwise fight it.
@@ -213,7 +211,24 @@ public class DayNightLighting {
 				lighting.directionalColor[i] = mix(lighting.directionalColor[i], moonLightColor[i], moonInfluence);
 
 			tintNightSky(sky, moonInfluence);
+
+			// Crossfade the base strength toward the moon's own, on the same schedule as the
+			// color, so tint and intensity hand off together. moonInfluence is capped at
+			// MAX_MOON_COLOR_INFLUENCE for the color blend, which would leave the strength
+			// permanently short of the moon value; rescaling by that cap lets a full-strength
+			// night reach moonDirectionalStrength exactly. When the environment doesn't set
+			// moonDirectionalStrength it equals directionalStrength, so this mix is a no-op.
+			float strengthBlend = Math.min(1, moonInfluence / MAX_MOON_COLOR_INFLUENCE);
+			baseDirectionalStrength = mix(
+				baseDirectionalStrength,
+				environmentManager.currentMoonDirectionalStrength,
+				strengthBlend
+			);
 		}
+
+		lighting.directionalStrength = baseDirectionalStrength
+			* brightnessMultiplier
+			* environmentManager.currentSunlightStrength;
 
 		// The horizon color doubles as fog, so geometry fading into fog meets the skybox
 		// seamlessly at the horizon.
