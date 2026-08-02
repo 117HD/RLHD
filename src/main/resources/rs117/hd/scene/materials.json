@@ -1884,7 +1884,13 @@
   {
     "name": "ROCK_3_ORE",
     "parent": "ROCK_3",
-    "specularStrength": 1.0
+    "specularStrength": 1,
+    "specularGloss": 50,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.7
+    ]
   },
   {
     "name": "EADGARS_CAVE_FIX",
@@ -1929,7 +1935,12 @@
     "name": "ROCK_4_ORE",
     "parent": "ROCK_4",
     "displacementScale": 0.08,
-    "specularStrength": 1.0
+    "specularStrength": 1.0,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.7
+    ]
   },
   {
     "name": "ROCK_5_D"
@@ -1960,7 +1971,12 @@
     "name": "ROCK_5_ORE",
     "parent": "ROCK_5",
     "displacementScale": 0.08,
-    "specularStrength": 1.0
+    "specularStrength": 1.0,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.7
+    ]
   },
   {
     "name": "ROCK_6_N"

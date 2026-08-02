@@ -5398,6 +5398,8 @@
   {
     "description": "STATUE_OF_SARADOMIN_1",
     "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.75,
     "objectIds": [
       "FAI_FALADOR_SARADOMIN_STATUE",
       "FAI_FALADOR_SARADOMIN_STATUE_GREY"
@@ -5405,10 +5407,10 @@
   },
   {
     "description": "STONE_SIGNPOST",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvOrientation": 512,
-    "uvScale": 0.8,
+    "uvScale": 0.65,
     "objectIds": [
       "FAI_STONE_SIGN_BOTTOM",
       "FAI_STONE_SIGN_TOP"
@@ -6466,10 +6468,10 @@
   },
   {
     "description": "Grand Exchange - Stone - Teller Wall",
-    "baseMaterial": "GRUNGE_3_SHINY",
+    "baseMaterial": "SMOOTH_STONE",
+    "shiftLightness": 4,
     "uvType": "BOX",
-    "uvScale": 0.7,
-    "uvOrientation": 1024,
+    "uvScale": 0.65,
     "objectIds": [
       "EXCHANGE_BANK_WALL",
       "EXCHANGE_BANK_WALL_BANK",
@@ -16486,7 +16488,7 @@
       "FAI_BARBARIAN_ABODE_WALL_SHORTER"
     ],
     "uvType": "BOX",
-    "uvOrientation": 1536,
+    "uvOrientationZ": 1536,
     "uvScale": 0.66
   },
   {
@@ -16857,7 +16859,8 @@
       "CRATE_WOODEN01_REINFORCED01_STACKED01_IMCANDO01",
       "CRATE_WOODEN01_REINFORCED01_IMCANDO01",
       "CRATE_WOODEN01_REINFORCED01_OPEN01_IMCANDO01",
-      "SLUG2_LIGHTHOUSE_CRATE_STACK"
+      "SLUG2_LIGHTHOUSE_CRATE_STACK",
+      "BANANACRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -16879,7 +16882,8 @@
       "MYQ4_EMPTY_CRATE",
       "LUC2_MOV_CRATES_STACKED",
       "LANDS_END_HUNTER_CRATE",
-      "PEST_CRATES"
+      "PEST_CRATES",
+      "CHICKEN_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -33220,6 +33224,27 @@
     ]
   },
   {
+    "description": "Objects - Tree - Strange Palm",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "shiftSaturation": -1,
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "PALM"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 4" ],
+        "baseMaterial": "LIGHT_BARK",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "uvType": "BOX",
+        "uvScale": 0.35,
+        "shiftSaturation": -1
+      }
+    ]
+  },
+  {
     "description": "Barbarian Village - Wall - Wooden - Log",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
@@ -33304,14 +33329,14 @@
   },
   {
     "description": "Ore - Empty - Rock",
-    "baseMaterial": "ROCK_4_ORE",
+    "baseMaterial": "ROCK_6_LIGHT",
     "objectIds": [
       "ROCKS1",
       "ROCKS2",
       "NEWBIEROCKS1"
     ],
     "uvType": "BOX",
-    "uvScale": 0.33,
+    "uvScale": 0.45,
     "uvOrientation": 700
   },
   {
@@ -34964,7 +34989,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "FAI_VARROCK_BANK_CHEST_OPEN",
-      "PIRATECHEST"
+      "PIRATECHEST",
+      "PIRATECHESTOPEN"
     ],
     "uvOrientation": 512,
     "uvType": "BOX",
@@ -34973,7 +34999,7 @@
       {
         "colors": [ "h == 8" ],
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-        "uvType": "WORLD_XZ",
+        "uvType": "BOX",
         "uvScale": 0.25
       }
     ]
@@ -35169,12 +35195,12 @@
   },
   {
     "description": "Stronghold Of Security Rock Entrance",
-    "baseMaterial": "ROCK_5",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
     "objectIds": [
       "SOS_DUNG_ENT_OPEN"
     ],
     "uvType": "BOX",
-    "uvScale": 0.38,
+    "uvScale": 0.3,
     "uvOrientation": 128
   },
   {
@@ -53547,6 +53573,32 @@
     ],
     "objectIds": [
       "FAI_DWARF_BLACKSMITHTOOLS"
+    ]
+  },
+  {
+    "description": "Blacksmiths Whetstone",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 36",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.4,
+        "shiftLightness": -8
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_SMOOTH"
+      },
+      {
+        "colors": "h == 5 || h == 10",
+        "baseMaterial": "SMOOTH_STONE"
+      }
+    ],
+    "objectIds": [
+      "DEVIOUS_WHETSTONE"
     ]
   },
   {
