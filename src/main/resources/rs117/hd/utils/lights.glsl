@@ -17,14 +17,14 @@ void calculateLight(
     float radius = getLightRadius(light);
     float radiusSq = radius * radius;
     if (distanceSquared <= radiusSq) {
+        vec3 pointLightDir = normalize(lightToFrag);
+        float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
         float attenuation = 1 - sqrt(distanceSquared / radiusSq);
+
         attenuation *= attenuation;
-        attenuation *= sampleShadow(position, light.position.xyz, normals, light.packedShadowData, radius, getLightNearPlane(light));
+        attenuation *= sampleShadow(light, radius, position, normals, distanceSquared, pointLightDotNormals);
 
         vec3 pointLightColor = light.color.rgb * attenuation;
-        vec3 pointLightDir = normalize(lightToFrag);
-
-        float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
         pointLightsOut += pointLightColor * pointLightDotNormals;
 
         vec3 pointLightReflectDir = reflect(-pointLightDir, normals);

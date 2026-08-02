@@ -24,6 +24,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <uniforms/global.glsl>
+#include <uniforms/lights.glsl>
 
 #include <utils/constants.glsl>
 #include <utils/misc.glsl>
@@ -151,6 +152,7 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
 #endif
 
 #if POSITIONAL_SHADOWS
+
 uniform sampler2DArrayShadow shadowCubemapArray;
 
 const float SHADOW_NEAR_PLANE = 10.0;
@@ -225,35 +227,29 @@ vec3 shadowAtlasUV(vec3 dirFromLight, vec2 originPx, float sizePx, out int faceO
 	return vec3(atlasUV, forwardDist);
 }
 
-float sampleShadow(vec3 fragPos, vec3 lightPos, vec3 normal, int packedShadowData, float lightRadius, float lightNearPlane) {
+float sampleShadow(PointLight light, float lightRadius, vec3 fragPos, vec3 normal, float distanceSquared, float NdotL) {
 	vec2 originPx;
 	float sizePx;
-	if (!unpackShadowAtlasRect(packedShadowData, originPx, sizePx))
+	if (!unpackShadowAtlasRect(light.packedShadowData, originPx, sizePx))
 		return 1.0; // no shadow data for this light this frame -> fully lit
 
-	vec3 toFrag = fragPos - lightPos;
-	float dist = length(toFrag);
-	vec3 dirNorm = toFrag / dist;
-
-	float NdotL = clamp(dot(normal, -dirNorm), 0.0, 1.0);
 	float slopeScale = 1.0 - NdotL;
-
-	float texelWorldSize = (2.0 * dist) / sizePx;
+	float texelWorldSize = (2.0 * sqrt(distanceSquared)) / sizePx;
 	float normalOffset = texelWorldSize * NORMAL_BIAS_TEXELS * slopeScale;
 
 	vec3 biasedFragPos = fragPos + normal * normalOffset;
-	vec3 biasedDir = biasedFragPos - lightPos;
+	vec3 biasedDir = biasedFragPos - light.position.xyz;
 
 	int face;
 	vec3 uvAndDist = shadowAtlasUV(biasedDir, originPx, sizePx, face);
 	vec2 atlasUV = uvAndDist.xy;
 	float forwardDist = uvAndDist.z;
 
-	float compareDepth = shadowDistanceToDepth(forwardDist, lightNearPlane, lightRadius);
-
-	return texture(shadowCubemapArray, vec4(atlasUV, float(face), compareDepth));
+    float nearPlane = getLightNearPlane(light);
+	float compareDepth = shadowDistanceToDepth(forwardDist, nearPlane, lightRadius);
+    return texture(shadowCubemapArray, vec4(atlasUV, float(face), compareDepth));
 }
 
 #else
-#define sampleShadow(fragPos, lightPos, normal, packedShadowData, lightRadius, lightNearPlane) 1.0
+#define sampleShadow(light, lightRadius, fragPos, normal, distanceSquared, NdotL) 1.0
 #endif
