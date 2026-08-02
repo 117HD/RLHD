@@ -708,6 +708,16 @@ public class EnvironmentManager {
 	}
 
 	/**
+	 * Whether the current environment forces the moon to be shown regardless of the player's
+	 * "Moon" config toggle, for cutscenes and set pieces that require it. Read directly (not
+	 * blended) so it applies immediately on entering the area, matching how
+	 * {@link #getForcedCycleMode()} is handled.
+	 */
+	public boolean forceMoonActive() {
+		return getCurrentEnvironment().forceMoonActive;
+	}
+
+	/**
 	 * The fixed sun angles {azimuth, altitude} in radians forced by the current
 	 * environment, or null for none. Read directly (not blended) so the locked
 	 * sun snaps to the new environment rather than swinging across the sky during

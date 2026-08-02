@@ -71,6 +71,12 @@ public class Environment {
 	// omit the field entirely to defer to the config instead.
 	@Nullable
 	public MoonPhase forceMoonPhase = null;
+	// When true, the moon is shown in this environment even if the player has turned the "Moon"
+	// config toggle off. Intended for cutscenes and set pieces that require the moon to be
+	// present. Does not override the daytime fixed cycle modes (FIXED_DAWN, FIXED_MIDDAY,
+	// FIXED_SUNSET, FIXED_TWILIGHT), which still hide the moon, and does not change
+	// moonVisibility - use that to scale how visible the moon is once it is shown.
+	public boolean forceMoonActive = false;
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] ambientColor = rgb("#ffffff");
 	public float ambientStrength = 1;

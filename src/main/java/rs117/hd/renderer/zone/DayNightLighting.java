@@ -319,7 +319,11 @@ public class DayNightLighting {
 		// The visible disk keeps moonColor; moonLightColor drives the light on geometry
 		ubo.skyMoonColor.set(environmentManager.currentMoonColor);
 		ubo.skyMoonIllumination.set(moonIllumination);
-		ubo.moonVisibility.set(!hidesMoon(daylightCycle) && config.enableMoon() ? environmentManager.currentMoonVisibility : 0);
+		// An environment may force the moon on for a cutscene, overriding the player's toggle.
+		// The daytime fixed modes still hide it either way - a moon has no place in a locked
+		// daylit sky - so forcing only bypasses the config gate.
+		boolean moonEnabled = config.enableMoon() || environmentManager.forceMoonActive();
+		ubo.moonVisibility.set(!hidesMoon(daylightCycle) && moonEnabled ? environmentManager.currentMoonVisibility : 0);
 		ubo.moonSizeMult.set(environmentManager.currentMoonSizeMult);
 
 		ubo.starVisibility.set(config.enableStarMap() ? environmentManager.currentStarVisibility : 0);

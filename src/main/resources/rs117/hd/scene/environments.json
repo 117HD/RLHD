@@ -719,10 +719,11 @@
     "moonLightColor": "#ED8B8B",
     "cycleMode": "FIXED_NIGHT",
     "fixedMoonAngles": [ 22.6, 89.75 ],
-	"auroraVisibility": 0,
+    "auroraVisibility": 0,
     "nightSkyColorStrength": 4.5,
     "moonSizeMult": 3.05,
-    "forceMoonPhase": "FULL_MOON"
+    "forceMoonPhase": "FULL_MOON",
+    "forceMoonActive": true
   },
   {
     "description": "Environment for the cutscene at the end of the The Blood Moon Rises",
@@ -2578,6 +2579,7 @@
     "moonLightColor": "#ED8B8B",
     "cycleMode": "FIXED_NIGHT",
     "forceMoonPhase": "FULL_MOON",
+    "forceMoonActive": true,
     "fixedMoonAngles": [ 14.05, 89.85 ],
     "moonSizeMult": 2.8,
     "auroraVisibility": 0,

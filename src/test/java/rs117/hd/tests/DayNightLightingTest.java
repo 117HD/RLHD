@@ -9,8 +9,10 @@ import rs117.hd.scene.environments.Environment;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Regression tests for the two bugs found while extracting DayNightLighting out of ZoneRenderer.
@@ -121,6 +123,27 @@ public class DayNightLightingTest {
 		assertNull(
 			"the pre-rename \"moonPhase\" field must not bind",
 			gson.fromJson("{\"moonPhase\": \"FULL_MOON\"}", Environment.class).forceMoonPhase
+		);
+	}
+
+	// "forceMoonActive" lets a cutscene environment show the moon even when the player has the
+	// Moon config toggle off. It must default to false, so ordinary environments keep deferring
+	// to the config rather than silently forcing the moon on everywhere.
+	@Test
+	public void environmentForceMoonActiveParses() {
+		Gson gson = new Gson();
+
+		assertTrue(
+			"forceMoonActive must parse",
+			gson.fromJson("{\"forceMoonActive\": true}", Environment.class).forceMoonActive
+		);
+		assertFalse(
+			"an explicit false must not force the moon",
+			gson.fromJson("{\"forceMoonActive\": false}", Environment.class).forceMoonActive
+		);
+		assertFalse(
+			"an absent forceMoonActive must default to deferring to the config",
+			gson.fromJson("{}", Environment.class).forceMoonActive
 		);
 	}
 }
