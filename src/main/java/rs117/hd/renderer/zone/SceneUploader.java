@@ -401,10 +401,10 @@ public class SceneUploader implements AutoCloseable {
 				z.sizeF += 2;
 			} else {
 				z.onlyWater = false;
-
-				if (tileZ != 0 || override.doubleSidedFaces)
-					z.sizeO += 2;
 			}
+
+			if (tileZ != 0 || override.doubleSidedFaces)
+				z.sizeO += 2;
 		}
 
 		SceneTileModel model = t.getSceneTileModel();
@@ -436,10 +436,10 @@ public class SceneUploader implements AutoCloseable {
 				z.sizeF += len;
 			} else {
 				z.onlyWater = false;
-
-				if (tileZ != 0 || overlayOverride.doubleSidedFaces || underlayOverride.doubleSidedFaces)
-					z.sizeO += len;
 			}
+
+			if (tileZ != 0 || overlayOverride.doubleSidedFaces || underlayOverride.doubleSidedFaces)
+				z.sizeO += len;
 		}
 
 		WallObject wallObject = t.getWallObject();
