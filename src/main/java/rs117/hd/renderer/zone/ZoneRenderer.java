@@ -26,7 +26,6 @@ package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.Arrays;
 import java.util.Set;
 import javax.inject.Inject;
@@ -42,9 +41,7 @@ import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ColorFilter;
-import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DynamicLights;
-import rs117.hd.config.MoonBehavior;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.opengl.shader.NebulaBakeShaderProgram;
 import rs117.hd.opengl.shader.SceneShaderProgram;
@@ -67,7 +64,6 @@ import rs117.hd.scene.StarField;
 import rs117.hd.scene.TimeOfDay;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
-import rs117.hd.utils.AtmosphereUtils;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.CommandBuffer;
@@ -173,6 +169,9 @@ public class ZoneRenderer implements Renderer {
 	private TimeOfDay timeOfDay;
 
 	@Inject
+	private DayNightLighting dayNightLighting;
+
+	@Inject
 	private JobSystem jobSystem;
 
 	@Inject
@@ -184,14 +183,18 @@ public class ZoneRenderer implements Renderer {
 	public final Camera directionalCamera = new Camera().setOrthographic(true);
 	public final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
 
-	// Day & night Cycle - stored fog color for skybox clear
-	private float[] calculatedFogColorSrgb = null;
-	// Day & night Cycle - sky gradient enabled flag
+	// Day & night cycle state, all written once per frame in preSceneDrawTopLevel.
+
+	// Whether the gradient sky is being drawn in place of a solid clear this frame. Also gates
+	// whether the scene clear uses the cycle's fog color or the environment's.
 	private boolean skyGradientEnabled = false;
 	// The final directional light strength uploaded to uboGlobal.lightStrength each frame.
-	// Written in preSceneDrawTopLevel before zone command recording and the shadow pass,
-	// so both can skip work when the effective strength is zero (e.g. moonless nights).
+	// Written before zone command recording and the shadow pass, so both can skip work when
+	// the effective strength is zero (e.g. moonless nights).
 	private float effectiveDirectionalStrength;
+	// Scratch, reused each frame to keep the render loop allocation-free.
+	private final float[] directionalAngles = new float[2];
+	private final DayNightLighting.Lighting lighting = new DayNightLighting.Lighting();
 
 	public final RenderState renderState = new RenderState();
 	public final CommandBuffer sceneCmd = new CommandBuffer("Scene");
@@ -308,6 +311,26 @@ public class ZoneRenderer implements Renderer {
 		skyProgram.destroy();
 		nebulaBakeProgram.destroy();
 		starProgram.destroy();
+	}
+
+	/**
+	 * Point the shadow-casting directional camera at the given angles, ignoring changes below
+	 * a threshold.
+	 *
+	 * <p>Micro-rotations feed micro precision differences into the shadow map's view matrix,
+	 * which show up as shimmering shadow edges. Holding the camera still until the light has
+	 * moved a meaningful amount avoids that. The threshold scales with cycle duration, since a
+	 * fast cycle moves the sun far enough per frame that a fixed threshold would be visible as
+	 * stepping.
+	 */
+	private void applyDirectionalAngles(float pitch, float yaw) {
+		final float previousPitch = directionalCamera.getPitch();
+		final float previousRawYaw = PI - directionalCamera.getYaw();
+		final float threshold = DIRECTIONAL_ANGLE_UPDATE_THRESHOLD * saturate(timeOfDay.getCurrentCycleDuration() / 300.0f);
+		if (angleDiff(pitch, previousPitch) >= threshold || angleDiff(yaw, previousRawYaw) >= threshold) {
+			directionalCamera.setPitch(pitch);
+			directionalCamera.setYaw(PI - yaw);
+		}
 	}
 
 	private void buildSkyboxCmd() {
@@ -540,90 +563,19 @@ public class ZoneRenderer implements Renderer {
 				return;
 			}
 
-			// Use Day & night-Cycle sun/moon angles if enabled
+			// The day & night cycle overrides the environment's static sun angles when active
 			float directionalPitch = environmentManager.currentSunAngles[0];
 			float directionalYaw = environmentManager.currentSunAngles[1];
-			if (environmentManager.isOverworld() && plugin.configEnableDayNightCycle) {
-				// The environment may force a specific cycle mode, overriding the config.
-				DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
-				DaylightCycle daylightCycle = forcedMode != null ? forcedMode : config.daylightCycle();
-				timeOfDay.setCycleMode(daylightCycle);
-				timeOfDay.setDayLength(config.dayLength());
-				timeOfDay.setMoonPhase(config.moonPhase());
-				timeOfDay.setMoonBehavior(config.moonBehavior());
-				timeOfDay.setCycleDurationMinutes(config.cycleDurationMinutes());
-				timeOfDay.setSeasonalHemisphere(config.seasonalHemisphere());
-				timeOfDay.setFixedAngleOverrides(
-					environmentManager.getForcedFixedSunAngles(),
-					environmentManager.getForcedFixedMoonAngles()
-				);
-
-				if(starField.generateStarField() || skyboxCmd.isEmpty())
+			if (dayNightLighting.isActive()) {
+				if (starField.generateStarField() || skyboxCmd.isEmpty())
 					buildSkyboxCmd();
 
-				double[] sunAnglesD = timeOfDay.getSunAngles();
-				double sunAltDeg = Math.toDegrees(sunAnglesD[1]);
-
-				directionalPitch = (float) sunAnglesD[1];
-				// Add PI to the shadow azimuth for the dynamic astronomical sun/moon.
-				// anglesToSkyDirection was changed to correct the real sun (PI + azimuth,
-				// north/south negated); the shared shadow line below is PI - directionalYaw,
-				// so feeding azimuth + PI makes the shadow render opposite the corrected
-				// disk (shadows fall AWAY from the sun). Fixed-angle overrides already
-				// carry this +PI from setFixedAngleOverrides, so they are left as-is.
-				directionalYaw = (float) (sunAnglesD[0] + PI);
-
-				if (timeOfDay.hasFixedSunOverride()) {
-					// A fixed-mode sun override locks the sun disk; cast shadows from
-					// the same point so the sun disk and its shadows stay aligned.
-					// getFixedSunAngles() returns {azimuth, altitude}, so [1] is the
-					// pitch and [0] the yaw. The +PI the other branches apply is already
-					// baked into the stored azimuth by setFixedAngleOverrides.
-					double[] fixedSun = timeOfDay.getFixedSunAngles();
-					directionalPitch = (float) fixedSun[1];
-					directionalYaw = (float) fixedSun[0];
-				} else if (daylightCycle == DaylightCycle.FIXED_NIGHT || timeOfDay.hasFixedMoonOverride()) {
-					// Shadows must be cast from the same fixed point as the rendered
-					// moon disk, otherwise they drift while the moon stays put.
-					// +PI as above: the shared shadow line is PI - directionalYaw, so the
-					// azimuth needs the same half turn the disk's anglesToSkyDirection
-					// applies, otherwise shadows point toward the moon instead of away.
-					double[] moonAnglesD = timeOfDay.getFixedNightMoonAngles();
-					directionalPitch = (float) moonAnglesD[1];
-					directionalYaw = (float) (moonAnglesD[0] + PI);
-				} else if (sunAltDeg < 2.0) {
-					// Below +2° sun shadows are faded out, switch to moon direction
-					// early so the shadow map is already oriented when moon shadows
-					// start fading in via smoothstep — prevents brightness pop
-					double moonAltDeg = timeOfDay.getMoonAltitudeDegrees();
-					if (moonAltDeg > -10) {
-						// +PI matches the dynamic sun above (shared shadow line is
-						// PI - directionalYaw), so the moon shadow falls away from the disk.
-						if (timeOfDay.getCurrentMoonBehavior() == MoonBehavior.NIGHT_SYNCED) {
-							double[] moonAnglesD = timeOfDay.getNightSyncedMoonAngles();
-							directionalPitch = (float) moonAnglesD[1];
-							directionalYaw = (float) (moonAnglesD[0] + PI);
-						} else {
-							Instant moonDate = timeOfDay.getMoonDate();
-							double[] moonAnglesD = AtmosphereUtils.getMoonPosition(moonDate.toEpochMilli(), timeOfDay.getCurrentLatLong());
-							directionalPitch = (float) moonAnglesD[1];
-							directionalYaw = (float) (moonAnglesD[0] + PI);
-						}
-					}
-				}
+				dayNightLighting.resolveDirectionalAngles(directionalAngles);
+				directionalPitch = directionalAngles[0];
+				directionalYaw = directionalAngles[1];
 			}
 
-			// Clamp Updates to the Directional Cameras rotation until a substantial amount of movement has occurred
-			// This eliminated shadow jitter from occurring since we're not introducing micro precision differences into the shadow map
-			// due to slight changes to the view matrix
-			final float previousPitch = directionalCamera.getPitch();
-			final float previousRawYaw = PI - directionalCamera.getYaw();
-			final float updateThreshold = DIRECTIONAL_ANGLE_UPDATE_THRESHOLD * saturate(timeOfDay.getCurrentCycleDuration() / 300.0f);
-			if (angleDiff(directionalPitch, previousPitch) >= updateThreshold ||
-				angleDiff(directionalYaw, previousRawYaw) >= updateThreshold) {
-				directionalCamera.setPitch(directionalPitch);
-				directionalCamera.setYaw(PI - directionalYaw);
-			}
+			applyDirectionalAngles(directionalPitch, directionalYaw);
 
 			boolean hasDirectionalCameraChanged = directionalCamera.isViewDirty() || directionalCamera.isProjDirty();
 
@@ -755,205 +707,33 @@ public class ZoneRenderer implements Renderer {
 		if (client.getGameState().getState() >= GameState.LOGGED_IN.getState())
 			plugin.hasLoggedIn = true;
 
-		// Day & night Cycle - calculate modified lighting values
-		float[] directionalColor = environmentManager.currentDirectionalColor;
-		float directionalStrength = environmentManager.currentDirectionalStrength;
-		float[] ambientColor = environmentManager.currentAmbientColor;
-		float ambientStrength = environmentManager.currentAmbientStrength;
-		float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
-		float[] waterColor = environmentManager.currentWaterColor;
+		// Seed this frame's lighting from the environment, then let the day & night cycle
+		// override whatever it drives.
+		lighting.seedFrom(environmentManager);
 
-		if (environmentManager.isOverworld() && plugin.configEnableDayNightCycle) {
+		if (dayNightLighting.isActive()) {
 			skyGradientEnabled = true;
-
-			// The environment may force a specific cycle mode, overriding the config.
-			DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
-			DaylightCycle daylightCycle = forcedMode != null ? forcedMode : config.daylightCycle();
-			timeOfDay.setCycleMode(daylightCycle);
-			timeOfDay.setDayLength(config.dayLength());
-			timeOfDay.setMoonPhase(config.moonPhase());
-
-			directionalColor = timeOfDay.getRegionalDirectionalLight(environmentManager.currentDirectionalColor);
-			ambientColor = timeOfDay.getRegionalAmbientLight(environmentManager.currentAmbientColor);
-
-			float brightnessMultiplier = timeOfDay.getDynamicBrightnessMultiplier(plugin.configMinimumBrightness);
-			directionalStrength = environmentManager.currentDirectionalStrength * brightnessMultiplier * environmentManager.currentSunlightStrength;
-			// When Day & night is active, ignore the environment's ambientStrength
-			// (e.g. WINTER=3.5, AUTUMN=0.3) so the cycle's brightness multiplier
-			// controls night darkness without seasonal values making nights
-			// too dark or too bright.
-			ambientStrength = brightnessMultiplier;
-
-			double[] sunAnglesD = timeOfDay.getSunAngles();
-
-			// Calculate sky gradient colors for realistic sky rendering
-			// Pass regional fog color to blend with during peak daytime
-			float[][] skyGradientColors = timeOfDay.getSkyGradientColors(fogColor, environmentManager.currentSunStrength, environmentManager.currentSunriseSunsetStrength, environmentManager.currentSkyColorTakeoverAngle);
-
-			// Use the sky horizon color as fog color so geometry fading into
-			// fog seamlessly matches the skybox at the horizon
-			fogColor = skyGradientColors[1];
-			waterColor = ColorUtils.srgbToLinear(fogColor);
-			calculatedFogColorSrgb = fogColor;
-			float[] sunDirForSky = timeOfDay.getSunDirectionForSky();
-
-			plugin.uboSkybox.skyGradientEnabled.set(1);
-			plugin.uboSkybox.skyZenithColor.set(skyGradientColors[0]);
-			plugin.uboSkybox.skyHorizonColor.set(skyGradientColors[1]);
-			plugin.uboSkybox.skySunColor.set(skyGradientColors[2]);
-			plugin.uboSkybox.skySunDir.set(sunDirForSky);
-
-			// Set moon uniforms
-			float[] moonDir = timeOfDay.getMoonDirectionForSky();
-			float moonIllumination = timeOfDay.getMoonIlluminationFraction();
-			float[] moonColor = environmentManager.currentMoonColor;
-			// Cast-light (moonlight) color; matches moonColor unless the environment
-			// specifies a distinct moonLightColor. Drives the light on geometry, not
-			// the visible moon disk (which stays moonColor below).
-			float[] moonLightColor = environmentManager.currentMoonLightColor;
-			plugin.uboSkybox.skyMoonDir.set(moonDir);
-			plugin.uboSkybox.skyMoonColor.set(moonColor);
-			plugin.uboSkybox.skyMoonIllumination.set(moonIllumination);
-			plugin.uboSkybox.starVisibility.set(config.enableStarMap() ? environmentManager.currentStarVisibility : 0f);
-			plugin.uboSkybox.nebulaVisibility.set(config.enableNebulas() ? 1f : 0f);
-			boolean hideMoon = daylightCycle == DaylightCycle.FIXED_DAWN
-				|| daylightCycle == DaylightCycle.FIXED_MIDDAY
-				|| daylightCycle == DaylightCycle.FIXED_SUNSET
-				|| daylightCycle == DaylightCycle.FIXED_TWILIGHT;
-			plugin.uboSkybox.moonVisibility.set(!hideMoon && config.enableMoon() ? environmentManager.currentMoonVisibility : 0f);
-			plugin.uboSkybox.moonSizeMult.set(environmentManager.currentMoonSizeMult);
-			// Auroras appear on nights the per-night random roll selects. In modes
-			// with a day & night arc the roll switches during daytime so it's invisible
-			// behind nightSkyBlend; in always-night modes getAuroraStrength() applies a
-			// time-of-cycle envelope so they come and go instead of blazing all cycle.
-			// The per-environment auroraVisibility scales how visible they are when
-			// they do appear (independent of starVisibility).
-			plugin.uboSkybox.auroraVisibility.set(timeOfDay.getAuroraStrength() * environmentManager.currentAuroraVisibility);
-
-			// Calculate shadow visibility based on sun and moon altitude
-			double sunAltitudeDegrees = Math.toDegrees(sunAnglesD[1]);
-			double moonAltDeg = timeOfDay.getMoonAltitudeDegrees();
-			float shadowVisibility;
-
-			if (sunAltitudeDegrees > 2) {
-				// Sun shadows (existing behavior)
-				if (sunAltitudeDegrees <= 12) {
-					shadowVisibility = (float) ((sunAltitudeDegrees - 2) / 10.0 * 0.6);
-				} else if (sunAltitudeDegrees <= 15) {
-					shadowVisibility = (float) (0.6 + ((sunAltitudeDegrees - 12) / 3.0) * 0.3);
-				} else {
-					double sineFactor = Math.sin(sunAnglesD[1]);
-					shadowVisibility = (float) Math.max(0.9, Math.min(1.0, sineFactor));
-				}
-			} else {
-				// Night: sun below +2 degrees
-				// Moon shadow ramps in via smoothstep from +2° to -15°, then stays constant
-				float moonBaseShadow = 0;
-				if (moonAltDeg > -10 && moonIllumination > 0.01f) {
-					// Smoothstep elevation factor: starts at -10deg (zero derivative),
-					// reaches full strength at +20deg. C1 continuous onset prevents pop-in.
-					float me = (float) Math.min(1.0, Math.max(0, (moonAltDeg + 10.0) / 30.0));
-					float moonElevationFactor = me * me * (3.0f - 2.0f * me); // smoothstep
-					moonBaseShadow = moonIllumination * 0.2f * moonElevationFactor;
-				}
-
-				// Smoothstep blend from 0 at +2° to full moonBaseShadow at -15°
-				// Uses smoothstep so derivative is zero at both ends (no pop at -15°)
-				float t = (float) Math.min(1.0, Math.max(0, (2.0 - sunAltitudeDegrees) / 17.0));
-				float moonBlend = t * t * (3.0f - 2.0f * t); // smoothstep instead of quadratic
-				shadowVisibility = moonBlend * moonBaseShadow;
-			}
-
-			// Smooth sun-to-moon directional light color crossfade
-			// Begin moon color influence ABOVE the horizon (+5°) with a gentle ramp,
-			// overlapping with the sun's natural warm-color fade-out near the horizon.
-			// This prevents the color "pop" at 0° where warm sun tones vanish while
-			// cool moon tones appear simultaneously.
-			float moonInfluence = 0;
-			if (sunAltitudeDegrees < 5.0 && moonAltDeg > -10 && moonIllumination > 0.01f) {
-				if (sunAltitudeDegrees >= 0.0) {
-					// Pre-horizon: smoothstep from 0.0 at +5° to 0.05 at 0°
-					float pt = (float) ((5.0 - sunAltitudeDegrees) / 5.0);
-					float ps = pt * pt * (3.0f - 2.0f * pt);
-					moonInfluence = ps * 0.05f;
-				} else if (sunAltitudeDegrees >= -15.0) {
-					// Main twilight: smoothstep from 0.05 at 0° to 0.8 at -15°
-					float tt = (float) (-sunAltitudeDegrees / 15.0);
-					float ts = tt * tt * (3.0f - 2.0f * tt);
-					moonInfluence = 0.05f + ts * 0.75f;
-				} else {
-					// Deep night: cap at 0.8 so the moon tints but doesn't fully replace
-					// the base nighttime directional color
-					moonInfluence = 0.8f;
-				}
-
-				// Fade moon influence based on moon's own altitude (smoothstep)
-				float ht = (float) Math.min(1.0, Math.max(0, (moonAltDeg + 10.0) / 30.0));
-				float moonHorizonFade = ht * ht * (3.0f - 2.0f * ht);
-				moonInfluence *= moonHorizonFade;
-
-				// Scale by moon phase — full moon has strongest color tint, new moon has none
-				moonInfluence *= moonIllumination;
-
-				for (int i = 0; i < 3; i++) {
-					directionalColor[i] = directionalColor[i] * (1 - moonInfluence)
-						+ moonLightColor[i] * moonInfluence;
-				}
-			}
-
-			// Tint night sky toward the night-sky color as moon directional
-			// strength increases. Defaults to moonColor unless the environment
-			// specifies a distinct nightSkyColor.
-			if (moonInfluence > 0) {
-				float[] nightSkyColor = environmentManager.currentNightSkyColor;
-				// Base tint is a subtle 5% of moonInfluence; nightSkyColorStrength scales
-				// it up for areas where that reads too weakly. Clamp to a full blend so a
-				// large strength can't overshoot past the night-sky color.
-				float skyTint = Math.min(1f, moonInfluence * 0.05f * environmentManager.currentNightSkyColorStrength);
-				for (int i = 0; i < 3; i++) {
-					skyGradientColors[0][i] = skyGradientColors[0][i] * (1 - skyTint) + nightSkyColor[i] * skyTint;
-					skyGradientColors[1][i] = skyGradientColors[1][i] * (1 - skyTint) + nightSkyColor[i] * skyTint;
-				}
-				plugin.uboSkybox.skyZenithColor.set(skyGradientColors[0]);
-				plugin.uboSkybox.skyHorizonColor.set(skyGradientColors[1]);
-				fogColor = skyGradientColors[1];
-			}
-
-			// Scale minBrightnessBoost down as moon directional light increases,
-			// so the boost only raises minimum brightness without stacking with moonlight
-			float boostScale = 1.0f - shadowVisibility;
-			float boostedFloor = (plugin.configMinimumBrightness / 100.0f) * (1 + environmentManager.currentMinBrightnessBoost * boostScale);
-			ambientStrength = Math.max(ambientStrength, boostedFloor);
-
-			// Fold a fraction of the unshadowed directional light into ambient to
-			// simulate sky-fill in shadows. This fill is physically strongest at
-			// night/twilight (soft moon/sky light fills shadows) and minimal under
-			// a high sun (harsh light, crisp dark shadows). Scale it down as the sun
-			// climbs so high-noon shadows stay as dark as with the cycle disabled,
-			// while keeping the existing soft look near the horizon and at night.
-			float skyFill = 1.0f - smoothstep(0.0f, 45.0f, (float) sunAltitudeDegrees);
-			add(ambientColor, ambientColor, multiply(directionalColor, (1 - shadowVisibility) * skyFill));
-			directionalStrength *= shadowVisibility;
-		} else if(skyGradientEnabled) {
-			// Reset stored fog color when daylight cycle is disabled
-			calculatedFogColorSrgb = null;
+			dayNightLighting.computeLighting(lighting);
+		} else if (skyGradientEnabled) {
+			// Cycle just turned off, so restore the non-cycle sky defaults. The scene clear
+			// falls back to the environment's fog color while skyGradientEnabled is false.
 			skyGradientEnabled = false;
-			plugin.uboSkybox.reset();
+			dayNightLighting.reset();
 		}
 		plugin.uboSkybox.upload();
 
-		// Hide the game's built-in skybox models when requested, so the day & night
-		// cycle's own sky renders in their place. Hiding requires BOTH the per-area
-		// environment flag (which areas opt into) AND the config toggle (default on),
-		// which acts as a global master switch: an area is only affected if it sets
-		// hideVanillaSkyboxes, and a user can turn the toggle off to force ALL vanilla
-		// skyboxes back on regardless of the flag. Treating the skybox as absent here
-		// makes the existing !shouldRenderRSSkybox paths (skip the vanilla model
-		// upload, enable the gradient sky) do the swap automatically.
-		//
-		// Only hide when our gradient sky will actually render in its place
-		// (skyGradientEnabled) — otherwise hiding would leave a flat fog-colored sky
-		// where the vanilla skybox used to be.
+		float[] directionalColor = lighting.directionalColor;
+		float directionalStrength = lighting.directionalStrength;
+		float[] ambientColor = lighting.ambientColor;
+		float ambientStrength = lighting.ambientStrength;
+		float[] fogColor = lighting.fogColorSrgb;
+		float[] waterColor = lighting.waterColor;
+
+		// Hide the game's own skybox models so the cycle's sky shows in their place. Needs
+		// all three: the gradient sky must actually be rendering (otherwise hiding leaves a
+		// flat fog-colored sky), the area must opt in, and the config acts as a master switch
+		// to force vanilla skyboxes back on everywhere. Reporting the skybox as absent lets
+		// the existing !shouldRenderRSSkybox paths do the swap.
 		boolean hideVanillaSkyboxes = skyGradientEnabled
 			&& config.hideVanillaSkyboxes()
 			&& environmentManager.hideVanillaSkyboxes();
@@ -1234,10 +1014,10 @@ public class ZoneRenderer implements Renderer {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			frameTimer.end(Timer.CLEAR_SCENE);
 		} else {
-			// Use Day & night Cycle fog color if available, otherwise use environment manager's fog color
+			// Use the cycle's fog color if it's driving this frame, otherwise the environment's
 			float[] fogColor = { 0, 0, 0 };
 			if (!shouldRenderRSSkybox) {
-				fogColor = calculatedFogColorSrgb != null ? calculatedFogColorSrgb : ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+				fogColor = skyGradientEnabled ? lighting.fogColorSrgb : ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 			}
 
 			float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
