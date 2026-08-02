@@ -184,11 +184,6 @@ public class ZoneRenderer implements Renderer {
 	public final Camera directionalCamera = new Camera().setOrthographic(true);
 	public final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
 
-	// Day & night cycle state, all written once per frame in preSceneDrawTopLevel.
-
-	// Whether the gradient sky is being drawn in place of a solid clear this frame. Also gates
-	// whether the scene clear uses the cycle's fog color or the environment's.
-	private boolean skyGradientEnabled = false;
 	// The final directional light strength uploaded to uboGlobal.lightStrength each frame.
 	// Written before zone command recording and the shadow pass, so both can skip work when
 	// the effective strength is zero (e.g. moonless nights).
@@ -712,12 +707,12 @@ public class ZoneRenderer implements Renderer {
 		lighting.seedFrom(environmentManager);
 
 		if (dayNightLighting.isActive()) {
-			skyGradientEnabled = true;
+			shouldRenderSky = true;
 			dayNightLighting.computeLighting(lighting);
-		} else if (skyGradientEnabled) {
+		} else if (shouldRenderSky) {
 			// Cycle just turned off, so restore the non-cycle sky defaults. The scene clear
-			// falls back to the environment's fog color while skyGradientEnabled is false.
-			skyGradientEnabled = false;
+			// falls back to the environment's fog color while shouldRenderSky is false.
+			shouldRenderSky = false;
 			dayNightLighting.reset();
 		}
 		plugin.uboSkybox.upload();
@@ -734,7 +729,7 @@ public class ZoneRenderer implements Renderer {
 		// flat fog-colored sky), the area must opt in, and the config acts as a master switch
 		// to force vanilla skyboxes back on everywhere. Reporting the skybox as absent lets
 		// the existing !shouldRenderRSSkybox paths do the swap.
-		boolean hideVanillaSkyboxes = skyGradientEnabled
+		boolean hideVanillaSkyboxes = shouldRenderSky
 			&& config.hideVanillaSkyboxes()
 			&& environmentManager.hideVanillaSkyboxes();
 		shouldRenderVanillaSkybox = scene.getSkybox() != null && !hideVanillaSkyboxes;
@@ -1016,7 +1011,7 @@ public class ZoneRenderer implements Renderer {
 			// Use the cycle's fog color if it's driving this frame, otherwise the environment's
 			float[] fogColor = { 0, 0, 0 };
 			if (!shouldRenderVanillaSkybox)
-				fogColor = skyGradientEnabled ? lighting.fogColorSrgb : ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+				fogColor = shouldRenderSky ? lighting.fogColorSrgb : ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 
 			float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
 			glClearColor(
