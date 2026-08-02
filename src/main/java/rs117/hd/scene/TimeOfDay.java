@@ -225,7 +225,7 @@ public class TimeOfDay {
 	// rendered full. An environment may override this per-area via fixedMoonAngles.
 	// 135° south-east + the 180° described above.
 	private static final double FIXED_NIGHT_MOON_AZIMUTH = Math.toRadians(135 + 180);
-	private static final double FIXED_NIGHT_MOON_ALTITUDE = Math.toRadians(25); // low in the sky
+	private static final double FIXED_NIGHT_MOON_ALTITUDE = Math.toRadians(20); // low in the sky
 
 	// Reproduces the look the old date-based Fixed Dawn produced at the equator.
 	private static final double[] FIXED_DAWN_SUN = { Math.toRadians(-89.8), Math.toRadians(7.8) };
