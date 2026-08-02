@@ -41,8 +41,8 @@ public class UBOSkybox extends UniformBuffer<GLBuffer> {
 	
 	public void reset() {
 		skyGradientEnabled.set(0);
-		skyMoonDir.set(0, 0, 0);
-		skyMoonColor.set(0, 0, 0);
+		skyMoonDir.set(0f, 0f, 0f);
+		skyMoonColor.set(0f, 0f, 0f);
 		skyMoonIllumination.set(0f);
 		starVisibility.set(1f);
 		nebulaVisibility.set(0f);
