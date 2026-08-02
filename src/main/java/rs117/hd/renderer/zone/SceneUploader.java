@@ -257,7 +257,7 @@ public class SceneUploader implements AutoCloseable {
 				uploadZoneWater(ctx, zone, mzx, mzz, vb, fb);
 			zone.levelOffsets[Zone.LEVEL_WATER_SURFACE] = vb.position();
 
-			if (ctx.fillGaps && zone.hasGapFiller)
+			if (zone.hasGapFiller)
 				uploadZoneGapFillers(ctx, mzx, mzz, vb, fb);
 			zone.levelOffsets[Zone.LEVEL_GAP_FILLER] = vb.position();
 		}
@@ -713,8 +713,10 @@ public class SceneUploader implements AutoCloseable {
 		} else if (r instanceof DynamicObject) {
 			var dynamic = (DynamicObject) r;
 			m = dynamic.getModelZbuf();
-			if (dynamic.getRecordedObjectComposition() != null)
+			if (dynamic.getRecordedObjectComposition() != null) {
 				mightHaveTransparency = true;
+				mightBeDoubleSided = true;
+			}
 		}
 		if (m == null)
 			return;
@@ -1093,7 +1095,8 @@ public class SceneUploader implements AutoCloseable {
 			texturedFaceIdx, false
 		);
 
-		if (tileZ != 0 || override.doubleSidedFaces) {
+		boolean isDoubleSided = !onlyWaterSurface && (tileZ != 0 || override.doubleSidedFaces);
+		if (isDoubleSided) {
 			vb.putStaticVertex(
 				lx1, seHeight, lz1,
 				uvx + uvsin, uvy - uvcos, 0,
@@ -1143,7 +1146,7 @@ public class SceneUploader implements AutoCloseable {
 			texturedFaceIdx, false
 		);
 
-		if (tileZ != 0 || override.doubleSidedFaces) {
+		if (isDoubleSided) {
 			vb.putStaticVertex(
 				lx3, nwHeight, lz3,
 				uvx - uvcos, uvy - uvsin, 0,
@@ -1165,7 +1168,6 @@ public class SceneUploader implements AutoCloseable {
 				texturedFaceIdx, true
 			);
 		}
-
 
 		writeCache.release();
 	}
@@ -1462,7 +1464,8 @@ public class SceneUploader implements AutoCloseable {
 				texturedFaceIdx, false
 			);
 
-			if (tileZ != 0 || override.doubleSidedFaces) {
+			boolean isDoubleSided = !onlyWaterSurface && (tileZ != 0 || override.doubleSidedFaces);
+			if (isDoubleSided) {
 				vb.putStaticVertex(
 					lx2, ly2, lz2,
 					uvCx, uvCy, 0,
