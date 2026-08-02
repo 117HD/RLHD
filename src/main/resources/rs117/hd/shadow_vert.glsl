@@ -54,11 +54,11 @@ layout (location = 0) in vec3 vPosition;
 #endif
 
     void main() {
-    #if !TERRAIN_ONLY_PASS
-        int vertex = gl_VertexID % 3;
-
         int faceIdx = vTextureFaceIdx & 0x7FFFFFFF;
         bool windingReversed = vTextureFaceIdx < 0;
+
+    #if !TERRAIN_ONLY_PASS
+        int vertex = gl_VertexID % 3;
         if (windingReversed)
             vertex = 2 - vertex;
 
@@ -108,6 +108,11 @@ layout (location = 0) in vec3 vPosition;
             mat4x3 worldViewProjection = mat4x3(getWorldViewProjection(vWorldViewId));
             worldPosition = worldViewProjection * vec4(worldPosition, 1.0);;
         }
+
+    #if TERRAIN_ONLY_PASS
+        if(!isShadowDisabled)
+            worldPosition += vNormal.xyz * 0.0002 * (windingReversed ? 1 : -1);
+    #endif
 
         vec4 clipPosition = lightProjectionMatrix * vec4(worldPosition, shouldCastShadow);
     #if !TERRAIN_ONLY_PASS
