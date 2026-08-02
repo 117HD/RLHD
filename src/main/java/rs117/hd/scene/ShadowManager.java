@@ -206,8 +206,13 @@ public class ShadowManager implements LightManager.Listener {
 
 		final WorldViewContext ctx = sceneManager.getRoot();
 		for (int i = shadowLights.size() - 1; i >= 0; i--) {
-			if(ctx.sceneContext.lights.contains(shadowLights.get(i)))
+			final Light light = shadowLights.get(i);
+			if(ctx.sceneContext.lights.contains(light))
 				continue;
+
+			if(light.shadowData != null)
+				staticCache.releaseSlot(light.shadowData.cacheSlot);
+			light.shadowData = null;
 
 			shadowLights.remove(i);
 		}

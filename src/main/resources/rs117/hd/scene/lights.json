@@ -22176,6 +22176,7 @@
     "alignment": "CENTER",
     "radius": 450,
     "strength": 12.5,
+    "shadowNearPlane": 30.0,
     "color": [
       252,
       148,
