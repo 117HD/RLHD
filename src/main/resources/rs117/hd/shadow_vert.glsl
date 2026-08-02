@@ -57,43 +57,43 @@ layout (location = 0) in vec3 vPosition;
         int faceIdx = vTextureFaceIdx & 0x7FFFFFFF;
         bool windingReversed = vTextureFaceIdx < 0;
 
-    #if !TERRAIN_ONLY_PASS
-        int vertex = gl_VertexID % 3;
-        if (windingReversed)
-            vertex = 2 - vertex;
+        #if TERRAIN_ONLY_PASS
+            bool isShadowDisabled = false;
+        #else
+            int vertex = gl_VertexID % 3;
+            if (windingReversed)
+                vertex = 2 - vertex;
 
-        int alphaBiasHsl = texelFetch(textureFaces, faceIdx)[vertex];
-        int materialData = texelFetch(textureFaces, faceIdx + 1)[vertex];
+            int alphaBiasHsl = texelFetch(textureFaces, faceIdx)[vertex];
+            int materialData = texelFetch(textureFaces, faceIdx + 1)[vertex];
 
-        float opacity = 1 - (alphaBiasHsl >> 24 & 0xFF) / float(0xFF);
+            float opacity = 1 - (alphaBiasHsl >> 24 & 0xFF) / float(0xFF);
 
-        float opacityThreshold = float(materialData >> MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT & 0x3F) / 0x3F;
-        if (opacityThreshold == 0)
-            opacityThreshold = SHADOW_DEFAULT_OPACITY_THRESHOLD;
+            float opacityThreshold = float(materialData >> MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT & 0x3F) / 0x3F;
+            if (opacityThreshold == 0)
+                opacityThreshold = SHADOW_DEFAULT_OPACITY_THRESHOLD;
 
-        bool isShadowDisabled = opacity <= opacityThreshold;
+            bool isShadowDisabled = opacity <= opacityThreshold;
 
-        Material material = getMaterial(materialData >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
-        #if SHADOW_MODE == SHADOW_MODE_DETAILED
-            if (!isShadowDisabled) {
-                fUvw = vec4(vUv.xy, material.colorMap, material.shadowAlphaMap);
-                // Scroll UVs
-                fUvw.xy += material.scrollDuration * elapsedTime;
-                // Scale from the center
-                fUvw.xy = .5 + (fUvw.xy - .5) * material.textureScale.xy;
-            } else {
-                // All outputs must be written for Mac compatibility, even if unused
-                fUvw = vec4(0);
-            }
-            fMaterialData = materialData;
+            Material material = getMaterial(materialData >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
+            #if SHADOW_MODE == SHADOW_MODE_DETAILED
+                if (!isShadowDisabled) {
+                    fUvw = vec4(vUv.xy, material.colorMap, material.shadowAlphaMap);
+                    // Scroll UVs
+                    fUvw.xy += material.scrollDuration * elapsedTime;
+                    // Scale from the center
+                    fUvw.xy = .5 + (fUvw.xy - .5) * material.textureScale.xy;
+                } else {
+                    // All outputs must be written for Mac compatibility, even if unused
+                    fUvw = vec4(0);
+                }
+                fMaterialData = materialData;
+            #endif
+
+            #if SHADOW_TRANSPARENCY
+                fOpacity = opacity;
+            #endif
         #endif
-
-        #if SHADOW_TRANSPARENCY
-            fOpacity = opacity;
-        #endif
-    #else
-        bool isShadowDisabled = false;
-    #endif
 
         if (!isShadowDisabled && vWorldViewId > 0) {
             ivec4 tint = getWorldViewTint(vWorldViewId);
@@ -109,16 +109,16 @@ layout (location = 0) in vec3 vPosition;
             worldPosition = worldViewProjection * vec4(worldPosition, 1.0);;
         }
 
-    #if TERRAIN_ONLY_PASS
-        if(!isShadowDisabled)
-            worldPosition += vNormal.xyz * 0.0002 * (windingReversed ? 1 : -1);
-    #endif
+        #if TERRAIN_ONLY_PASS
+            if (!isShadowDisabled)
+                worldPosition += vNormal.xyz * 0.0002 * (windingReversed ? 1 : -1);
+        #endif
 
         vec4 clipPosition = lightProjectionMatrix * vec4(worldPosition, shouldCastShadow);
-    #if !TERRAIN_ONLY_PASS
-        if (getMaterialHasTransparency(material)) // bias face if it has transparency to avoid self-shadowing
-            clipPosition.z += SHADOW_TRANSPARENCY_BIAS;
-    #endif
+        #if !TERRAIN_ONLY_PASS
+            if (getMaterialHasTransparency(material)) // bias face if it has transparency to avoid self-shadowing
+                clipPosition.z += SHADOW_TRANSPARENCY_BIAS;
+        #endif
         gl_Position = clipPosition;
     }
 #else
@@ -127,24 +127,24 @@ layout (location = 0) in vec3 vPosition;
     layout (location = 4) in int vMaterialData;
     layout (location = 5) in int vTerrainData;
 
-#if !TERRAIN_ONLY_PASS
-    #if SHADOW_MODE == SHADOW_MODE_DETAILED
-        // Pass to geometry shader
-        flat out vec3 gPosition;
-        flat out vec3 gUv;
-        flat out int gMaterialData;
-        flat out int gCastShadow;
-        flat out int gWorldViewId;
-        #if SHADOW_TRANSPARENCY
-            flat out float gOpacity;
-        #endif
-    #else
-        #if SHADOW_TRANSPARENCY
-            // Pass to fragment shader
-            out float fOpacity;
+    #if !TERRAIN_ONLY_PASS
+        #if SHADOW_MODE == SHADOW_MODE_DETAILED
+            // Pass to geometry shader
+            flat out vec3 gPosition;
+            flat out vec3 gUv;
+            flat out int gMaterialData;
+            flat out int gCastShadow;
+            flat out int gWorldViewId;
+            #if SHADOW_TRANSPARENCY
+                flat out float gOpacity;
+            #endif
+        #else
+            #if SHADOW_TRANSPARENCY
+                // Pass to fragment shader
+                out float fOpacity;
+            #endif
         #endif
     #endif
-#endif
 
     void main() {
         int waterTypeIndex = vTerrainData >> 3 & 0xFF;

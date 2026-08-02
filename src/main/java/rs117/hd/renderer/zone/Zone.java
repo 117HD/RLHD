@@ -406,7 +406,7 @@ public class Zone implements Destructible {
 			drawEnd[drawIdx - 1] = end;
 		} else if (drawIdx >= NUM_DRAW_RANGES) {
 			log.debug("draw ranges exhausted");
-		} else if(end > start){
+		} else if (end > start) {
 			drawOff[drawIdx] = start;
 			drawEnd[drawIdx] = end;
 			drawIdx++;

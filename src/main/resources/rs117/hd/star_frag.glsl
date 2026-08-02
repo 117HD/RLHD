@@ -2,6 +2,7 @@
 
 #include <uniforms/global.glsl>
 #include <uniforms/skybox.glsl>
+
 #include <utils/color_blindness.glsl>
 
 in vec4 vColor;

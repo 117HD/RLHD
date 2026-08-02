@@ -108,10 +108,10 @@ public class LegacyRenderer implements Renderer {
 	private EnvironmentManager environmentManager;
 
 	@Inject
-	private TimeOfDay timeOfDay;
+	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
-	private ModelOverrideManager modelOverrideManager;
+	private TimeOfDay timeOfDay;
 
 	@Inject
 	private LegacySceneUploader sceneUploader;

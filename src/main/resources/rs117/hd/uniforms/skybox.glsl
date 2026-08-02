@@ -3,13 +3,13 @@
 #include NEBULA_CLUSTER_COUNT
 
 layout(std140) uniform UBOSkybox {
-    int skyGradientEnabled;
+    bool skyGradientEnabled;
     vec3 skyZenithColor;
     vec3 skyHorizonColor;
     vec3 skySunColor;
     vec3 skySunDir;
 
-    // Moon uniforms for Day & night Cycle
+    // Moon uniforms for day & night Cycle
     vec3 skyMoonDir;
     vec3 skyMoonColor;
     float skyMoonIllumination;

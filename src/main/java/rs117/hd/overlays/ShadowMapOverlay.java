@@ -47,7 +47,7 @@ public class ShadowMapOverlay extends ShaderOverlay<ShadowMapOverlay.Shader> imp
 	public void setActive(boolean active) {
 		super.setActive(active);
 
-		if(active) {
+		if (active) {
 			mouseManager.registerMouseWheelListener(this);
 		} else {
 			mouseManager.unregisterMouseWheelListener(this);
@@ -62,14 +62,16 @@ public class ShadowMapOverlay extends ShaderOverlay<ShadowMapOverlay.Shader> imp
 	@Override
 	public Dimension render(Graphics2D g) {
 		Dimension dim = super.render(g);
-		if (!super.isHidden()) {
+		if (!isHidden()) {
 			g.setColor(Color.YELLOW);
-			drawStringCentered(g,
+			drawStringCentered(
+				g,
 				showTerrainShadowMap ?
-					"Terrain Shadow map" :
-					"Main Shadow map",
+					"Terrain shadow map" :
+					"Main shadow map",
 				dim.width / 2.0f,
-				dim.height + 10);
+				dim.height + 10
+			);
 		}
 		return dim;
 	}
@@ -78,7 +80,6 @@ public class ShadowMapOverlay extends ShaderOverlay<ShadowMapOverlay.Shader> imp
 	public MouseWheelEvent mouseWheelMoved(MouseWheelEvent e) {
 		if (client.isKeyPressed(KeyCode.KC_SHIFT)) {
 			e.consume();
-
 			showTerrainShadowMap = !showTerrainShadowMap;
 		}
 

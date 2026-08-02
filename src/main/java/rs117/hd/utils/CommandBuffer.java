@@ -364,10 +364,12 @@ public class CommandBuffer {
 					case GL_TIMER: {
 						if (frameTimer != null) {
 							int timerOrdinal = (int) (data >> 9);
-							if(((data >> 8) & 1) == 1) {
-								frameTimer.begin(timerOrdinal);
+							assert timerOrdinal >= 0 && timerOrdinal < Timer.TIMERS.length;
+							var timer = Timer.TIMERS[timerOrdinal];
+							if (((data >> 8) & 1) == 1) {
+								frameTimer.begin(timer);
 							} else {
-								frameTimer.end(timerOrdinal);
+								frameTimer.end(timer);
 							}
 						}
 						break;

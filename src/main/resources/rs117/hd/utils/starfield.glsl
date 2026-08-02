@@ -86,7 +86,7 @@ float sf_noise(vec3 p) {
     );
 }
 
-// Fractal Brownian Motion — sums octaves of noise at increasing frequency and
+// Fractal Brownian Motion - sums octaves of noise at increasing frequency and
 // decreasing amplitude to build organic, multi-scale structure. Output is
 // normalized to roughly [0,1].
 float sf_fbm(vec3 p, int octaves) {
@@ -102,7 +102,7 @@ float sf_fbm(vec3 p, int octaves) {
     return sum / norm;
 }
 
-// Procedural shooting stars — returns additive color contribution
+// Procedural shooting stars - returns additive color contribution
 // Uses time-slotted deterministic spawning for rare, brief meteor streaks
 vec3 shootingStars(vec3 viewDir, float time) {
     vec3 color = vec3(0.0);
@@ -117,7 +117,7 @@ vec3 shootingStars(vec3 viewDir, float time) {
 
         vec3 seed = vec3(slot, float(channel) * 137.0 + 42.0, 7.0);
 
-        // ~12% spawn chance per slot → ~1 meteor per 42s average
+        // ~12% spawn chance per slot -> ~1 meteor per 42s average
         if (sf_hash(seed) > 0.12) continue;
 
         // Start position on upper sky sphere
@@ -190,7 +190,7 @@ vec3 proceduralNebula(vec3 dir) {
     // Domain warping: perturb the sample coordinate with a low-frequency fBm so
     // the large-scale structure no longer aligns to the noise lattice. This is
     // what turns blocky blobs into organic, drifting filaments. The warp is very
-    // low frequency, so a single octave is enough — and since it runs for EVERY
+    // low frequency, so a single octave is enough - and since it runs for EVERY
     // sky pixel (before the region early-out), keeping it at 1 octave matters.
     vec3 warp = vec3(
         sf_fbm(dir * 2.0 + vec3(11.3), 1),
@@ -209,7 +209,7 @@ vec3 proceduralNebula(vec3 dir) {
 
     // Most of the sky has no nebula (region == 0). The remaining detail/wisp/
     // color fBm lookups would just be multiplied by zero there, so bail out
-    // early — this is the bulk of the per-pixel savings.
+    // early - this is the bulk of the per-pixel savings.
     if (region <= 0.0)
         return vec3(0.0);
 
@@ -274,7 +274,7 @@ vec3 proceduralStarfield(vec3 dir) {
         // the side the fractional position leans toward. That's an 8-cell footprint
         // (own cell + nearer neighbor per axis) instead of the full 27, and it is
         // bit-identical to the 27-cell search while max starRadius < 0.5.
-        // EXACT ONLY WHILE max starRadius < 0.5 — current max is 0.45.
+        // EXACT ONLY WHILE max starRadius < 0.5 - current max is 0.45.
         vec3 frac = scaledDir - cell;                 // in [0,1)
         // step() gives 0 for frac<0.5 and 1 for frac>=0.5; map to -1/+1 so the offset
         // is always non-zero (avoids re-testing the own cell, which would double-count).
@@ -306,12 +306,12 @@ vec3 proceduralStarfield(vec3 dir) {
                     if (dist > thisRadius) continue;
 
                     // Power-law brightness (many dim, few bright).
-                    // pow(x, 2.5) == x*x*sqrt(x) — avoids the general pow().
+                    // pow(x, 2.5) == x*x*sqrt(x) - avoids the general pow().
                     float brightnessSeed = (cellRand - sparsity) / (1.0 - sparsity);
                     float brightness = brightnessSeed * brightnessSeed * sqrt(brightnessSeed) * maxBrightness;
 
                     // Very sharp point-spread falloff for crisp stars.
-                    // pow(f, 8) == three squarings — avoids the general pow().
+                    // pow(f, 8) == three squarings - avoids the general pow().
                     float falloff = 1.0 - smoothstep(0.0, thisRadius, dist);
                     falloff *= falloff; // ^2
                     falloff *= falloff; // ^4

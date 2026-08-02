@@ -16,6 +16,7 @@ import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.utils.AtmosphereUtils;
 
 import static rs117.hd.utils.ColorUtils.linearToSrgb;
+import static rs117.hd.utils.ColorUtils.rgb;
 import static rs117.hd.utils.ColorUtils.srgbToLinear;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -27,7 +28,7 @@ import static rs117.hd.utils.MathUtils.*;
  * <h2>Per-frame contract</h2>
  * The renderer calls, in this order, once per frame:
  * <ol>
- *   <li>{@link #update()} — advances the simulated clock and pins {@link #currentInstant}</li>
+ *   <li>{@link #update()} - advances the simulated clock and pins {@link #currentInstant}</li>
  *   <li>the {@code set*} frame-state methods (cycle mode, day length, moon phase/behavior,
  *       cycle duration, hemisphere, fixed-angle overrides)</li>
  *   <li>any number of getters</li>
@@ -52,11 +53,11 @@ import static rs117.hd.utils.MathUtils.*;
  * {@link DaylightCycle} splits into three families, and most branching in this file is one
  * of these three:
  * <ul>
- *   <li><b>DYNAMIC</b> — the simulated clock accumulates in {@link #accumulatedCycleTime}
+ *   <li><b>DYNAMIC</b> - the simulated clock accumulates in {@link #accumulatedCycleTime}
  *       and maps to an hour of day via {@link #cyclePositionToHour}.</li>
- *   <li><b>REAL_TIME / SYNCED_DAYS</b> — stateless: the instant is derived directly from the
+ *   <li><b>REAL_TIME / SYNCED_DAYS</b> - stateless: the instant is derived directly from the
  *       player's local clock, or from the UTC clock so all players see the same sky.</li>
- *   <li><b>The fixed modes</b> ({@link #isFixedMode}) — the sun sits at a constant angle,
+ *   <li><b>The fixed modes</b> ({@link #isFixedMode}) - the sun sits at a constant angle,
  *       bypassing the clock entirely. See {@link #getFixedModeSunAngles}.</li>
  * </ul>
  */
@@ -66,7 +67,7 @@ public class TimeOfDay {
 
 	// Pre-linearized deep-night sky color.
 	// Read-only: every consumer only reads components into fresh blend arrays.
-	private static final float[] NIGHT_SKY_LINEAR = srgbToLinear(5f / 255f, 7f / 255f, 15f / 255f);
+	private static final float[] NIGHT_SKY_LINEAR = rgb(5, 7, 15);
 
 	// Sky color keyframe tables, as { sunAltitudeDegrees, sRGB 0xRRGGBB }. Read-only
 	// constant data; AtmosphereUtils.interpolateSrgb only reads them and returns a fresh
@@ -128,9 +129,11 @@ public class TimeOfDay {
 	private static final long DAY_MS = 24L * 60 * 60 * 1000;
 	private static final long HOUR_MS = 60L * 60 * 1000;
 
-	/** March 20, 2025 00:00 UTC — spring equinox, i.e. balanced day & night lengths. */
+	/**
+	 * March 20, 2025 00:00 UTC - spring equinox, i.e. balanced day & night lengths.
+	 */
 	private static final long EQUINOX_EPOCH_MS = 1742428800000L;
-	/** June 10, 2025 — near the summer solstice, for a higher midday sun arc. */
+	/** June 10, 2025 - near the summer solstice, for a higher midday sun arc. */
 	private static final long SOLSTICE_EPOCH_MS = 1749513600000L;
 
 	/** An hour-of-day in [0, 24) as a millisecond offset from the start of that day. */
@@ -146,7 +149,7 @@ public class TimeOfDay {
 	 *
 	 * <p>A degenerate range (edge0 == edge1) collapses to 0 rather than a step. The
 	 * takeover-angle ramps below can be given a zero-width range when an area sets
-	 * skyColorTakeoverAngle to 0, and 0 is the value that makes those windows vanish —
+	 * skyColorTakeoverAngle to 0, and 0 is the value that makes those windows vanish -
 	 * i.e. the regional color takes over immediately at the horizon.
 	 */
 	private static float smoothstep(double edge0, double edge1, double x) {
@@ -205,16 +208,16 @@ public class TimeOfDay {
 	// ---------------------------------------------------------------------------------
 	// Built-in fixed-mode sun/moon positions, as {azimuth, altitude} in radians.
 	//
-	// IMPORTANT — these are stored PRE-ROTATED relative to environment-file angles.
+	// IMPORTANT - these are stored PRE-ROTATED relative to environment-file angles.
 	// anglesToSkyDirection maps azimuth with (PI + azimuth); that form was chosen to make
 	// the real astronomical sun rise in the east, and it rotates any fixed azimuth by 180°
 	// compared to the older (PI - azimuth) form these values were originally authored
 	// against. setFixedAngleOverrides compensates by adding 180° to environment-supplied
 	// angles, but the constants below feed getSunAngles/getFixedNightMoonAngles directly
-	// and skip that step — so each one has the 180° already baked into its literal value.
+	// and skip that step - so each one has the 180° already baked into its literal value.
 	//
 	// Net effect: to convert an environment-file azimuth to a constant here, add 180°.
-	// These angles are empirical — verify any change in-game rather than deriving it, since
+	// These angles are empirical - verify any change in-game rather than deriving it, since
 	// the sign conventions have been misleading offline more than once.
 	// ---------------------------------------------------------------------------------
 
@@ -231,13 +234,13 @@ public class TimeOfDay {
 	// yaw equal the cycle-off yaw, so light and shadows are identical between the two.
 	private static final double[] FIXED_MIDDAY_SUN = { Math.toRadians(55.0), Math.toRadians(52.0) };
 	// Sun on the horizon in the west. Authored as environment-file angles [0, 272], so the
-	// azimuth is stored as 272 + 180 = 452 ≡ 92°.
+	// azimuth is stored as 272 + 180 = 452 = 92° (mod 360).
 	private static final double[] FIXED_SUNSET_SUN = { Math.toRadians(92.0), Math.toRadians(0.0) };
-	// Sun just below the horizon — the position Fixed Sunset used before it was moved onto
+	// Sun just below the horizon - the position Fixed Sunset used before it was moved onto
 	// the horizon proper.
 	private static final double[] FIXED_TWILIGHT_SUN = { Math.toRadians(90.0), Math.toRadians(-2.5) };
 	// FIXED_NIGHT / ALWAYS_NIGHT: sun well below the horizon. The azimuth is irrelevant
-	// (the sun isn't rendered) — only the negative altitude matters, for night detection
+	// (the sun isn't rendered) - only the negative altitude matters, for night detection
 	// and shadow fade.
 	private static final double[] FIXED_NIGHT_SUN = { Math.toRadians(81.1), Math.toRadians(-88.0) };
 
@@ -251,7 +254,7 @@ public class TimeOfDay {
 	// Per-environment fixed-angle overrides {azimuth, altitude} in radians, or
 	// null to use astronomical/default angles. Set once per frame by the renderer
 	// from the current environment. Only consulted while a fixed cycle mode is
-	// active (see isFixedMode) — the dynamic cycle always computes angles.
+	// active (see isFixedMode) - the dynamic cycle always computes angles.
 	private double[] fixedSunAnglesOverride = null;
 	private double[] fixedMoonAnglesOverride = null;
 
@@ -269,15 +272,15 @@ public class TimeOfDay {
 	private double accumulatedCycleTime = 0.35;
 	private long completedCycles = 0; // Each completed cycle = one simulated day
 
-	// Current cycle mode — set once per frame by ZoneRenderer before any TimeOfDay calls
+	// Current cycle mode - set once per frame by ZoneRenderer before any TimeOfDay calls
 	private DaylightCycle currentCycleMode = DaylightCycle.DYNAMIC;
 
-	// Current day length skew — set once per frame alongside the cycle mode.
+	// Current day length skew - set once per frame alongside the cycle mode.
 	// Warps the linear cycle clock so day & night occupy different shares of the
 	// fixed total cycle time (see applyDayLengthWarp).
 	private DayLength currentDayLength = DayLength.STANDARD;
 
-	// Current moon phase lock — set once per frame. DYNAMIC = phase advances
+	// Current moon phase lock - set once per frame. DYNAMIC = phase advances
 	// naturally; any other value locks the moon's illumination fraction.
 	private MoonPhase currentMoonPhase = MoonPhase.DYNAMIC;
 
@@ -322,13 +325,13 @@ public class TimeOfDay {
 
 	/**
 	 * Set the per-environment fixed sun/moon angle overrides for this frame.
-	 *
+	 * <p>
 	 * Inputs are in the environment-file convention {altitude, azimuth} in radians
 	 * (the same order as Environment.sunAngles), or null for no override. They are
 	 * stored internally as {azimuth, altitude} to match the convention returned by
 	 * AtmosphereUtils.getSunAngles()/getMoonPosition() and consumed by the rest of
 	 * this class.
-	 *
+	 * <p>
 	 * Call before any other TimeOfDay methods. Only takes effect under a fixed
 	 * cycle mode; the dynamic cycle ignores these.
 	 */
@@ -338,7 +341,7 @@ public class TimeOfDay {
 		// with the north/south component negated) to correct the real astronomical sun,
 		// which rotates any fixed angle 180° in azimuth. These overrides were hand-
 		// authored to look right under the old transform, so we rotate them back 180°
-		// here — a single point that feeds both the disk and its shadow — so every
+		// here - a single point that feeds both the disk and its shadow - so every
 		// existing fixedSunAngles/fixedMoonAngles renders exactly as before.
 		double[] newSun = sunAngles == null ? null :
 			new double[] { sunAngles[1] + Math.PI, sunAngles[0] };
@@ -418,7 +421,7 @@ public class TimeOfDay {
 	/**
 	 * Whether the current cycle mode is one of the fixed modes (the sun/moon sit
 	 * at a fixed time of day). Fixed-angle overrides only apply in these modes.
-	 * DYNAMIC and REAL_TIME are excluded — both compute a moving astronomical sun.
+	 * DYNAMIC and REAL_TIME are excluded - both compute a moving astronomical sun.
 	 */
 	public boolean isFixedMode() {
 		switch (currentCycleMode) {
@@ -519,7 +522,7 @@ public class TimeOfDay {
 	/**
 	 * Warp a linear cycle position (0..1) so day and night occupy a different
 	 * share of the cycle, without changing the total cycle length.
-	 *
+	 * <p>
 	 * The cycle clock advances at a constant real-time rate; this remaps where
 	 * that clock "is" in the day. The day segment [0, dayFraction) is stretched
 	 * or compressed onto the natural day segment [0, NATURAL_DAY_BOUNDARY), and
@@ -546,7 +549,7 @@ public class TimeOfDay {
 	// ===== Sun position, light & sky colors ======================================
 
 	/**
-	 * The sun's {azimuth, altitude} in radians for this frame — the value nearly everything
+	 * The sun's {azimuth, altitude} in radians for this frame - the value nearly everything
 	 * else in this class derives from. Cached per frame; treat the result as read-only.
 	 *
 	 * @see <a href="https://en.wikipedia.org/wiki/Horizontal_coordinate_system">Horizontal coordinate system</a>
@@ -594,14 +597,14 @@ public class TimeOfDay {
 	 * <p>The base colors come from the procedural keyframe tables, indexed by sun altitude.
 	 * Four adjustments are then layered on, in order:
 	 * <ol>
-	 *   <li><b>sunStrength</b> — pulls a dark area's sky away from the procedural sunset
+	 *   <li><b>sunStrength</b> - pulls a dark area's sky away from the procedural sunset
 	 *       colors, toward the area's own color by day and the night sky after dusk.</li>
-	 *   <li><b>sunriseSunsetStrength</b> — holds a strongly-colored area at its own color
+	 *   <li><b>sunriseSunsetStrength</b> - holds a strongly-colored area at its own color
 	 *       right through the twilight window, so e.g. a blood-red sky doesn't turn blue at
 	 *       sunrise.</li>
-	 *   <li><b>the daytime regional blend</b> — as the sun climbs, the area's own color takes
+	 *   <li><b>the daytime regional blend</b> - as the sun climbs, the area's own color takes
 	 *       over from the procedural gradient, completely by {@code skyColorTakeoverAngle}.</li>
-	 *   <li><b>the night blend</b> — once the sun is well down, everything resolves to the
+	 *   <li><b>the night blend</b> - once the sun is well down, everything resolves to the
 	 *       generic night sky so the moon tint and starfield (applied downstream) take over.</li>
 	 * </ol>
 	 *
@@ -658,7 +661,7 @@ public class TimeOfDay {
 		//
 		// The window's upper edge MUST be the same takeover angle used by step 3. If this
 		// window closed earlier, there would be a gap where neither this suppression nor the
-		// daytime blend holds the color, letting the raw keyframes show through — and those
+		// daytime blend holds the color, letting the raw keyframes show through - and those
 		// are strongly blue at mid-high sun (the +15° zenith keyframe is 0x6496C8). That gap
 		// was the "sky goes blue after sunrise before settling into the area's color" bug.
 		if (regionalLin != null && sunriseSunsetStrength < 1) {
@@ -690,7 +693,7 @@ public class TimeOfDay {
 		// 4. Night blend, mirroring step 3: ramp from 0° (none) to -15° (full night sky).
 		// The night sky always resolves to this generic base so that, once the sun is well
 		// down, the moon-color tint (applied downstream in the renderer) and the procedural
-		// starfield take over — including in reduced sunriseSunsetStrength areas, where the
+		// starfield take over - including in reduced sunriseSunsetStrength areas, where the
 		// regional hold only spans the visible sunrise/sunset and must not persist into
 		// deep night.
 		float nightBlend = smoothstep(0, -15, sunAltitude);
@@ -821,7 +824,7 @@ public class TimeOfDay {
 		if (currentCycleMode == DaylightCycle.FIXED_NIGHT || hasFixedMoonOverride()) {
 			// getFixedNightMoonAngles() returns {azimuth, altitude}; use the override
 			// altitude when present so shadow visibility tracks the locked moon.
-			// ALWAYS_NIGHT is excluded — its moon keeps moving (dynamic altitude).
+			// ALWAYS_NIGHT is excluded - its moon keeps moving (dynamic altitude).
 			return Math.toDegrees(getFixedNightMoonAngles()[1]);
 		}
 		if (currentMoonBehavior == MoonBehavior.NIGHT_SYNCED) {
@@ -836,15 +839,15 @@ public class TimeOfDay {
 
 	/**
 	 * Whether the current simulated night is an "aurora night".
-	 *
+	 * <p>
 	 * Each cycle contains one night; we hash that night's index to a stable
 	 * pseudo-random value in [0,1) and compare against AURORA_NIGHT_CHANCE.
 	 * The result is constant for the whole night (no flicker) and re-rolled once
-	 * per cycle. Deterministic — no Math.random() — so it survives config changes
+	 * per cycle. Deterministic - no Math.random() - so it survives config changes
 	 * and resumes consistently.
-	 *
+	 * <p>
 	 * The index increments at cycle position 0.35 (~midday), the point furthest
-	 * from any night, so the roll never flips while auroras are on screen — the
+	 * from any night, so the roll never flips while auroras are on screen - the
 	 * switch happens in broad daylight where nightSkyBlend (and thus the aurora)
 	 * is already zero. This avoids a pop at the natural 5am cycle boundary.
 	 */
@@ -869,11 +872,11 @@ public class TimeOfDay {
 	/**
 	 * Aurora intensity envelope in [0, 1] for the current frame, combining the
 	 * per-cycle aurora roll with a time-of-cycle shape.
-	 *
+	 * <p>
 	 * In modes with a natural day & night arc, the sun goes down and comes back up, so
-	 * the sky's own nightFactor fades auroras in and out — here we just return 1 on an
+	 * the sky's own nightFactor fades auroras in and out - here we just return 1 on an
 	 * aurora night and let the shader's nightFactor do the shaping.
-	 *
+	 * <p>
 	 * In the always-night modes (Fixed Night / Always Night) the sun is pinned below
 	 * the horizon, so nightFactor is ~1 the whole cycle and a binary on/off would leave
 	 * auroras blazing for the entire cycle. Instead we apply an explicit envelope: on an
@@ -917,7 +920,7 @@ public class TimeOfDay {
 	 * Get night synced moon angles {azimuth, altitude} by mirroring the sun.
 	 * The moon is placed opposite the sun (azimuth + PI) with negated altitude,
 	 * so it rises when the sun sets and vice versa.
-	 *
+	 * <p>
 	 * Uses a fixed equinox base date plus a day offset that only advances
 	 * while the moon is below the horizon. This means the moon's phase
 	 * changes cycle-to-cycle, but the shift is never visible because it
@@ -932,8 +935,8 @@ public class TimeOfDay {
 	private double[] computeNightSyncedMoonAngles() {
 
 
-		// Real Time: mirror the sun computed from the player's real local clock —
-		// the same instant the REAL_TIME sun/realistic-moon use — so moonrise tracks
+		// Real Time: mirror the sun computed from the player's real local clock -
+		// the same instant the REAL_TIME sun/realistic-moon use - so moonrise tracks
 		// the real sunset and the moon spans the real night's length. Bypasses the
 		// cycle-duration accumulator entirely; without this, the night-synced moon
 		// would follow Cycle Duration while the sky follows the real clock.
@@ -948,7 +951,7 @@ public class TimeOfDay {
 
 		// Synced Days: derive the moon's mirror position and phase purely from the
 		// UTC clock so the night-synced moon is identical for every player, matching
-		// the UTC-synced sun. Stateless — bypasses the pending-increment machinery.
+		// the UTC-synced sun. Stateless - bypasses the pending-increment machinery.
 		if (currentCycleMode == DaylightCycle.SYNCED_DAYS) {
 			long currentTimeMillis = System.currentTimeMillis();
 			double cyclePosition = getSyncedDaysCyclePosition(currentTimeMillis);
@@ -962,7 +965,7 @@ public class TimeOfDay {
 		}
 
 		// Warp identically to the sun so the night-synced moon stays aligned with
-		// the (now re-sized) day & night periods — moonrise still tracks visual sunset.
+		// the (now re-sized) day & night periods - moonrise still tracks visual sunset.
 		double cyclePosition = applyDayLengthWarp(accumulatedCycleTime);
 
 		// Use a uniform linear mapping: cycle 0→1 maps to a full 24-hour day.
@@ -1096,7 +1099,7 @@ public class TimeOfDay {
 		// Synced Days mode: a full day & night every real UTC hour, phase-locked to the
 		// UTC clock and independent of Cycle Duration. Purely a function of the UTC
 		// epoch, so every player worldwide sees the same sun position at the same
-		// instant. Stateless — no accumulatedCycleTime — so it can't drift.
+		// instant. Stateless - no accumulatedCycleTime - so it can't drift.
 		if (currentCycleMode == DaylightCycle.SYNCED_DAYS) {
 			double cyclePosition = getSyncedDaysCyclePosition(currentTimeMillis);
 			double mappedHour = cyclePositionToHour(cyclePosition);
@@ -1120,7 +1123,7 @@ public class TimeOfDay {
 					fixedHour = 6.65; // Just after sunrise
 					break;
 				case FIXED_MIDDAY:
-					fixedHour = 14;   // Mid-afternoon — sun high but not at its peak
+					fixedHour = 14;   // Mid-afternoon - sun high but not at its peak
 					break;
 				case FIXED_SUNSET:
 					fixedHour = 18.1; // Sun right on the horizon at equinox latitude
@@ -1130,7 +1133,7 @@ public class TimeOfDay {
 					break;
 				case FIXED_NIGHT:
 				case ALWAYS_NIGHT:
-					fixedHour = 0;    // Midnight — sun well below the horizon
+					fixedHour = 0;    // Midnight - sun well below the horizon
 					break;
 				default:
 					fixedHour = 12;

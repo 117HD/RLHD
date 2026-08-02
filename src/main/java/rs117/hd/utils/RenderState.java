@@ -140,8 +140,9 @@ public final class RenderState {
 	}
 
 	public static final class GLPolygonOffset extends GLState.FloatArray {
-		public GLPolygonOffset() {super(2);}
-
+		public GLPolygonOffset() {
+			super(2);
+		}
 
 		@Override
 		protected void applyValues(float[] values) { glPolygonOffset(values[0],values[1]); }

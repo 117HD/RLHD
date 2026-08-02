@@ -10,10 +10,10 @@ out vec4 FragColor;
 
 void main() {
     float shadow;
-    if(showTerrainShadowMap) {
+    if (showTerrainShadowMap) {
         shadow = texture(terrainShadowMap, vec3(fUv, 1.0));
     } else {
         shadow = texture(shadowMap, fUv).r;
     }
-    FragColor = vec4(shadow, shadow, shadow, 1);
+    FragColor = vec4(vec3(shadow), 1);
 }

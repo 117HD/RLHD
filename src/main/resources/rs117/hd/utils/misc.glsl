@@ -211,7 +211,7 @@ vec2 getPoissonDisk(int idx) {
     }
 }
 
-float halfToFloat(uint h) {
+float unpackHalfFloat(uint h) {
     uint sign = (h >> 15u) & 0x1u;
     uint exponent = (h >> 10u) & 0x1Fu;
     uint mantissa = h & 0x3FFu;

@@ -58,7 +58,7 @@ void main() {
     // needs to be large enough to read as "far".
     vec4 clip = projectionMatrix * vec4(cameraPos + dir * 1.0e6, 1.0);
     if (clip.w <= 0.0) {
-        // Behind the camera — push off-screen so it's clipped.
+        // Behind the camera - push off-screen so it's clipped.
         gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
         gl_PointSize = 0.0;
         return;
@@ -104,7 +104,7 @@ void main() {
     float twinkleRate = mix(4.0, 13.2, starHash2);     // per-star base speed (varied so they desync)
     float twinkleAmt = mix(0.35, 0.5, starHash);       // per-star depth (all twinkle, some strongly)
     // Average two sines at incommensurate rates (the second ~0.37x) so the shimmer
-    // never repeats cleanly — reads as irregular/pseudo-random rather than a steady
+    // never repeats cleanly - reads as irregular/pseudo-random rather than a steady
     // pulse. Equal weighting keeps it gentle: full extremes only when both sines
     // align, so most of the time it sits mid-range. Bounded to [-1, 1].
     float s1 = sin(elapsedTime * twinkleRate + twinklePhase);

@@ -386,11 +386,9 @@ public class EnvironmentManager {
 	}
 
 	private boolean isConditionSatisfied(Environment environment) {
-		if (environment.varbitCondition != null && !environment.varbitCondition.test(varbitVariableSupplier))
-			return false;
-		if (environment.varpCondition != null && !environment.varpCondition.test(varpVariableSupplier))
-			return false;
-		return true;
+		return
+			(environment.varbitCondition == null || environment.varbitCondition.test(varbitVariableSupplier)) &&
+			(environment.varpCondition == null || environment.varpCondition.test(varpVariableSupplier));
 	}
 
 	/**
@@ -702,7 +700,7 @@ public class EnvironmentManager {
 	 * The fixed sun angles {azimuth, altitude} in radians forced by the current
 	 * environment, or null for none. Read directly (not blended) so the locked
 	 * sun snaps to the new environment rather than swinging across the sky during
-	 * a transition — matching how {@link #getForcedCycleMode()} is handled.
+	 * a transition - matching how {@link #getForcedCycleMode()} is handled.
 	 */
 	@Nullable
 	public float[] getForcedFixedSunAngles() {
@@ -843,7 +841,7 @@ public class EnvironmentManager {
 	}
 
 	/**
-	 * Regional fog for outdoor sky sampling. Never uses the current indoor/cave fog —
+	 * Regional fog for outdoor sky sampling. Never uses the current indoor/cave fog -
 	 * that caused dawn to blend toward static cave colors while dusk still used procedural twilight.
 	 */
 	private float[] resolveOutdoorRegionalFogSrgb(Environment env) {

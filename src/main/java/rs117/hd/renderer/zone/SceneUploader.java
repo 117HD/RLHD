@@ -748,6 +748,7 @@ public class SceneUploader implements AutoCloseable {
 		mightHaveTransparency |= transparencies != null || isVanillaTextured || modelTransparency != 0;
 		if (mightHaveTransparency)
 			z.sizeA += faceCount;
+
 		z.modelCount++;
 	}
 

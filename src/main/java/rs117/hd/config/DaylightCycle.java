@@ -18,10 +18,6 @@ public enum DaylightCycle
 
 	private final String name;
 
-	DaylightCycle() {
-		name = this.name();
-	}
-
 	@Override
 	public String toString() {
 		return name;
