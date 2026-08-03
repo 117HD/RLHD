@@ -860,6 +860,7 @@
     "directionalColor": "#ffbcb7",
     "directionalStrength": 0.5,
     "fogColor": "#0c0b0a",
+    "nightSkyColor": "#7084AF",
     "fogDepth": 45,
     "sunStrength": 0.02,
     "sunlightStrength": 0.1,
