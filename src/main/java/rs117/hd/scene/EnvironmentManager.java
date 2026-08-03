@@ -133,6 +133,18 @@ public class EnvironmentManager {
 	public float currentMoonDirectionalStrength = 0f;
 	private float targetMoonDirectionalStrength = 0f;
 
+	// How much of the moon's light casts shadows. Scales moon shadow visibility only;
+	// the light it removes from the directional term becomes ambient sky-fill.
+	private float startMoonShadowStrength = 1f;
+	public float currentMoonShadowStrength = 1f;
+	private float targetMoonShadowStrength = 1f;
+
+	// Lighting-only floor on the moon's illumination fraction. The visible disk is
+	// unaffected and still renders at its true phase.
+	private float startMinMoonIllumination = 0f;
+	public float currentMinMoonIllumination = 0f;
+	private float targetMinMoonIllumination = 0f;
+
 	private float[] startUnderwaterCausticsColor = new float[] { 0, 0, 0 };
 	public float[] currentUnderwaterCausticsColor = new float[] { 0, 0, 0 };
 	private float[] targetUnderwaterCausticsColor = new float[] { 0, 0, 0 };
@@ -447,6 +459,8 @@ public class EnvironmentManager {
 			currentAmbientColor = mix(startAmbientColor, targetAmbientColor, t);
 			currentDirectionalStrength = mix(startDirectionalStrength, targetDirectionalStrength, t);
 			currentMoonDirectionalStrength = mix(startMoonDirectionalStrength, targetMoonDirectionalStrength, t);
+			currentMoonShadowStrength = mix(startMoonShadowStrength, targetMoonShadowStrength, t);
+			currentMinMoonIllumination = mix(startMinMoonIllumination, targetMinMoonIllumination, t);
 			currentDirectionalColor = mix(startDirectionalColor, targetDirectionalColor, t);
 			currentUnderglowStrength = mix(startUnderglowStrength, targetUnderglowStrength, t);
 			currentUnderglowColor = mix(startUnderglowColor, targetUnderglowColor, t);
@@ -514,6 +528,8 @@ public class EnvironmentManager {
 		startAmbientColor = currentAmbientColor;
 		startDirectionalStrength = currentDirectionalStrength;
 		startMoonDirectionalStrength = currentMoonDirectionalStrength;
+		startMoonShadowStrength = currentMoonShadowStrength;
+		startMinMoonIllumination = currentMinMoonIllumination;
 		startDirectionalColor = currentDirectionalColor;
 		startUnderglowStrength = currentUnderglowStrength;
 		startUnderglowColor = currentUnderglowColor;
@@ -563,6 +579,8 @@ public class EnvironmentManager {
 		targetAmbientColor = env.ambientColor;
 		targetDirectionalStrength = env.directionalStrength;
 		targetMoonDirectionalStrength = env.moonDirectionalStrength;
+		targetMoonShadowStrength = env.moonShadowStrength;
+		targetMinMoonIllumination = env.minMoonIllumination;
 		targetDirectionalColor = env.directionalColor;
 		targetUnderglowStrength = env.underglowStrength;
 		targetUnderglowColor = env.underglowColor;

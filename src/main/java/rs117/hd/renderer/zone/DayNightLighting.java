@@ -49,6 +49,14 @@ public class DayNightLighting {
 	// Strongest shadow the moon alone can cast, before phase and elevation scaling
 	private static final float MOON_SHADOW_STRENGTH = 0.2f;
 
+	// Compresses the phase-to-shadow response, as pow(illumination, this). Shadow presence
+	// tracks how directional the light is, not how much of it there is, so a half moon casts
+	// obvious shadows despite being a small fraction of a full moon's brightness. Scaling
+	// shadows linearly with illumination modelled the brightness instead and made everything
+	// below a gibbous read as shadowless. 0.5 (a square root) lifts a half moon to ~71% of
+	// full-moon shadow and a crescent to 50%, while pow keeps a new moon at exactly 0.
+	private static final float MOON_SHADOW_PHASE_EXPONENT = 0.5f;
+
 	// Ceiling on how far moonlight can tint the directional color
 	private static final float MAX_MOON_COLOR_INFLUENCE = 0.8f;
 
@@ -199,10 +207,16 @@ public class DayNightLighting {
 			environmentManager.currentSkyColorTakeoverAngle
 		);
 
+		// The disk renders at its true phase, so this uses the unfloored illumination
 		uploadSkyUniforms(sky, daylightCycle, moonIllumination);
 
-		float shadowVisibility = computeShadowVisibility(sunAltDeg, moonAltDeg, moonIllumination);
-		float moonInfluence = computeMoonInfluence(sunAltDeg, moonAltDeg, moonIllumination);
+		// Everything below lights the scene rather than drawing the moon, so it uses the
+		// floored value: an environment can keep some moonlight on a new moon without the
+		// visible moon being lit to match.
+		float litMoonIllumination = Math.max(moonIllumination, environmentManager.currentMinMoonIllumination);
+
+		float shadowVisibility = computeShadowVisibility(sunAltDeg, moonAltDeg, litMoonIllumination);
+		float moonInfluence = computeMoonInfluence(sunAltDeg, moonAltDeg, litMoonIllumination);
 
 		if (moonInfluence > 0) {
 			// Tint the directional light toward moonlight
@@ -235,10 +249,23 @@ public class DayNightLighting {
 		copyTo(lighting.fogColorSrgb, sky[1]);
 		copyTo(lighting.waterColor, ColorUtils.srgbToLinear(sky[1]));
 
-		// Raise the ambient floor, scaling the boost down as moonlight takes over so the two
-		// don't stack into an over-bright night.
+		// Raise the ambient floor to stand in for the moonlight that isn't there, scaling the
+		// boost by how much moonlight is actually missing so the two never stack into an
+		// over-bright night. Full boost on a new moon, none under a full moon overhead.
+		//
+		// This keys off moonlight presence rather than shadowVisibility, which is what makes
+		// the moon-below-horizon case work: moonPresence is 0 both when the moon is new and
+		// when it has set, so a moonless night is lit the same either way. Gating on
+		// shadowVisibility couldn't distinguish them from a merely dim moon, and left a
+		// set moon as dark as no boost at all.
+		//
+		// Note this uses the raw moonIllumination, not the litMoonIllumination floored by
+		// minMoonIllumination. The boost stands in for moonlight the sky genuinely lacks, and
+		// minMoonIllumination is a lie told to the lighting to keep a new moon casting light -
+		// feeding it back in here would have the floor suppress the very boost that covers the
+		// case it exists for, and the two knobs would silently cancel.
 		float boostedFloor = (plugin.configMinimumBrightness / 100.0f)
-			* (1 + environmentManager.currentMinBrightnessBoost * (1 - shadowVisibility));
+			* (1 + environmentManager.currentMinBrightnessBoost * (1 - moonPresence(moonAltDeg, moonIllumination)));
 		lighting.ambientStrength = Math.max(lighting.ambientStrength, boostedFloor);
 
 		// Fold some of the unshadowed directional light into ambient to stand in for sky-fill
@@ -269,12 +296,28 @@ public class DayNightLighting {
 			return clamp(Math.sin(Math.toRadians(sunAltDeg)), 0.9f, 1);
 		}
 
+		// Phase goes through MOON_SHADOW_PHASE_EXPONENT rather than scaling shadows linearly,
+		// so the waxing and waning phases keep readable shadows instead of only a near-full
+		// moon casting any. Scaled by the environment's moonShadowStrength, so an area can
+		// deepen or flatten moonlit shadows without changing how bright the moonlight itself
+		// is. Only the moon branch is affected - the sun's shadows above are left alone.
 		float moonBaseShadow = 0;
-		if (isMoonLighting(moonAltDeg, moonIllumination))
-			moonBaseShadow = moonIllumination * MOON_SHADOW_STRENGTH * moonElevationFade(moonAltDeg);
+		if (isMoonLighting(moonAltDeg, moonIllumination)) {
+			moonBaseShadow = (float) Math.pow(moonIllumination, MOON_SHADOW_PHASE_EXPONENT)
+				* MOON_SHADOW_STRENGTH
+				* moonElevationFade(moonAltDeg)
+				* environmentManager.currentMoonShadowStrength;
+		}
 
-		// Blend in over the twilight window, from the sun cutoff down to -15 degrees
-		return smoothstep((float) SUN_SHADOW_CUTOFF_DEG, MOON_TINT_SUN_END_DEG, (float) sunAltDeg) * moonBaseShadow;
+		// Blend in over the twilight window, from the sun cutoff down to -15 degrees. Clamped
+		// because moonShadowStrength is unbounded above: callers use (1 - shadowVisibility) for
+		// the ambient floor and sky-fill, which would go negative and subtract light if a large
+		// value pushed this past 1.
+		return clamp(
+			smoothstep((float) SUN_SHADOW_CUTOFF_DEG, MOON_TINT_SUN_END_DEG, (float) sunAltDeg) * moonBaseShadow,
+			0,
+			1
+		);
 	}
 
 	// How far the directional light color has crossfaded from sunlight to moonlight, in
@@ -370,6 +413,18 @@ public class DayNightLighting {
 	// Whether the moon is up and lit enough to contribute light or shadows
 	private static boolean isMoonLighting(double moonAltDeg, float moonIllumination) {
 		return moonAltDeg > MOON_HORIZON_CUTOFF_DEG && moonIllumination > MIN_MOON_ILLUMINATION;
+	}
+
+	// How much moonlight is falling on the scene, in 0..1: phase times altitude fade. 1 is a
+	// full moon high overhead, 0 is a new moon or a moon that has set - the two cases a
+	// moonless-night ambient boost needs to treat alike. Deliberately independent of
+	// moonShadowStrength, which changes how the light is split between directional and
+	// ambient, not how much of it there is; folding that in would make an area's shadow
+	// tuning quietly move its night brightness too.
+	private static float moonPresence(double moonAltDeg, float moonIllumination) {
+		if (!isMoonLighting(moonAltDeg, moonIllumination))
+			return 0;
+		return clamp(moonIllumination * moonElevationFade(moonAltDeg), 0, 1);
 	}
 
 	// Moonlight fade with altitude, in 0..1. Smoothstep, so the onset at the horizon is C1

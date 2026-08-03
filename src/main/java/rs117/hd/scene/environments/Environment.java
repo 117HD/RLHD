@@ -89,6 +89,20 @@ public class Environment {
 	// brighten moonlight independently of sunlight. Resolved to a concrete value in
 	// normalize(). Only meaningful while the day & night cycle is driving the frame.
 	public float moonDirectionalStrength = -1;
+	// How much of the moon's light casts shadows, as a multiplier on the moon's shadow
+	// visibility. 1 (default) is the original behavior. The light this scales out of the
+	// directional term is folded into ambient as sky-fill rather than lost, so raising this
+	// deepens moonlit shadows without brightening the scene, and lowering it flattens them
+	// without darkening it. Pair with moonDirectionalStrength to control total moonlight and
+	// shadow contrast independently: a dim moon with crisp shadows is moonDirectionalStrength
+	// low and moonShadowStrength high. Only meaningful while the day & night cycle is active.
+	public float moonShadowStrength = 1;
+	// Floor on the moon's illumination fraction for LIGHTING purposes only - the visible moon
+	// disk still renders at its true phase. 0 (default) is the original behavior, where a new
+	// moon casts no light and no shadows at all. Raise it so even a new moon keeps some
+	// directional moonlight, for areas whose fiction wants a permanently moonlit night rather
+	// than a pitch-dark one. In [0, 1].
+	public float minMoonIllumination = 0;
 	@Nullable
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] waterColor;
@@ -180,6 +194,10 @@ public class Environment {
 	// preserves prior behavior.
 	public float skyColorTakeoverAngle = 40;
 	public float sunlightStrength = 1;
+	// How far this area's night-time ambient floor is raised to stand in for absent moonlight.
+	// Scaled by how much moonlight is missing, so it's at full strength on a new moon and on a
+	// night when the moon has set, tapers off as the moon waxes and climbs, and contributes
+	// nothing under a full moon overhead. 0 (default) disables it.
 	public float minBrightnessBoost = 0;
 
 	public Environment normalize() {

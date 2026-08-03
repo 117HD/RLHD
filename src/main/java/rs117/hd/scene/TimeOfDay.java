@@ -258,12 +258,21 @@ public class TimeOfDay {
 	private double[] fixedSunAnglesOverride = null;
 	private double[] fixedMoonAnglesOverride = null;
 
-	// Night Synced mode: day offset advances only while the moon is below the horizon,
-	// so phase changes are never visible. We track pending increments and apply them
-	// only when the mirrored moon altitude is negative.
+	// Night Synced mode: day offset advances only once the moon is low enough that its light
+	// no longer reaches the scene, so phase changes are never visible. We track pending
+	// increments and apply them when the mirrored moon altitude drops past
+	// MOON_PHASE_ADVANCE_ALTITUDE_RAD.
 	private long nightSyncedDayOffset = 0;
 	private long lastNightSyncedCycles = 0;
 	private long pendingDayIncrements = 0;
+
+	// Altitude the moon must fall below before a queued phase change is applied. Matches
+	// DayNightLighting's MOON_HORIZON_CUTOFF_DEG / MOON_ELEVATION_FADE_START_DEG (both -10),
+	// the altitude at which moonlight has fully faded out. The geometric horizon (0) is too
+	// early - the moon is still lighting and shadowing the scene between -10 and 0, so a phase
+	// change there is visible as a brightness jump. Kept here rather than imported so this
+	// class stays independent of the renderer; if that constant moves, this must follow.
+	private static final double MOON_PHASE_ADVANCE_ALTITUDE_RAD = Math.toRadians(-10);
 
 	// Simulated-clock state, preserved across config changes.
 	private long lastUpdateTime = 0;
@@ -992,8 +1001,17 @@ public class TimeOfDay {
 		double[] sunAngles = AtmosphereUtils.getSunAngles(fixedMillis, currentLatLong);
 		double moonAltitude = -sunAngles[1];
 
-		// Apply pending day increments only while the moon is below the horizon
-		if (pendingDayIncrements > 0 && moonAltitude < 0) {
+		// Apply pending day increments only once the moon is far enough down that its light
+		// no longer reaches the scene. A whole simulated day of phase lands at once, which
+		// near the quarters is a ~0.10 step in illumination, so doing this anywhere the moon
+		// still contributes shows up as a sudden brightness jump.
+		//
+		// The geometric horizon is not far enough: DayNightLighting fades moonlight out over
+		// MOON_ELEVATION_FADE_START_DEG..END and only stops lighting below
+		// MOON_HORIZON_CUTOFF_DEG, both -10 degrees, so between -10 and 0 the moon is under
+		// the horizon yet still lighting and shadowing the world. Waiting for that same
+		// altitude puts the phase change where every consumer already reads zero.
+		if (pendingDayIncrements > 0 && moonAltitude < MOON_PHASE_ADVANCE_ALTITUDE_RAD) {
 			nightSyncedDayOffset += pendingDayIncrements;
 			pendingDayIncrements = 0;
 		}

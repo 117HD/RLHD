@@ -113,6 +113,17 @@
         "description": "Directional light strength multiplier used while the moon is lighting the scene, crossfading in over twilight on the same schedule as the moonlight tint. When unset, falls back to `directionalStrength`, so moonlight is as strong as sunlight. Only applies while the day & night cycle is driving the scene.",
         "minimum": 0
       },
+      "moonShadowStrength": {
+        "type": "number",
+        "description": "How much of the moon's light casts shadows, as a multiplier on moon shadow visibility. 1 (default) is the standard behavior. Light scaled out of the directional term becomes ambient sky-fill rather than being lost, so raising this deepens moonlit shadows without brightening the scene and lowering it flattens them without darkening it. Combine with `moonDirectionalStrength` to set total moonlight and shadow contrast independently - e.g. a dim moon that still casts crisp shadows. Does not affect sunlight.",
+        "minimum": 0
+      },
+      "minMoonIllumination": {
+        "type": "number",
+        "description": "Floor on the moon's illumination fraction for lighting only; the visible moon disk still renders at its true phase. 0 (default) means a new moon casts no light or shadows. Raise it so even a new moon keeps some directional moonlight, for areas whose fiction calls for a permanently moonlit night.",
+        "minimum": 0,
+        "maximum": 1
+      },
       "waterColor": {
         "type": [ "string", "array" ],
         "description": "Water color in sRGB, specified as a hex color code or an array in the range 0-255. Accepts decimals.",

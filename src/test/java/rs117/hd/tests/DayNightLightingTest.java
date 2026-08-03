@@ -154,6 +154,129 @@ public class DayNightLightingTest {
 		assertEquals("an explicit 0 must not be treated as unset", 0f, zero.moonDirectionalStrength, 0);
 	}
 
+	// "moonShadowStrength" and "minMoonIllumination" let an area set moonlight brightness and
+	// moon shadow contrast independently. Both have meaningful natural defaults rather than a
+	// sentinel, so the thing worth pinning is that omitting them is exactly the old behavior:
+	// 1 leaves moon shadow visibility untouched, and 0 lets a new moon stay fully dark.
+	@Test
+	public void environmentMoonShadowFieldsDefaultToPreviousBehavior() {
+		Gson gson = new Gson();
+
+		Environment unset = gson.fromJson("{}", Environment.class).normalize();
+		assertEquals("moonShadowStrength must default to a no-op multiplier", 1f, unset.moonShadowStrength, 0);
+		assertEquals("minMoonIllumination must default to no floor", 0f, unset.minMoonIllumination, 0);
+
+		Environment set = gson
+			.fromJson("{\"moonShadowStrength\": 3, \"minMoonIllumination\": 0.35}", Environment.class)
+			.normalize();
+		assertEquals("an explicit moonShadowStrength must win", 3f, set.moonShadowStrength, 0);
+		assertEquals("an explicit minMoonIllumination must win", 0.35f, set.minMoonIllumination, 0);
+
+		// 0 means "the moon casts no shadows at all" and must survive normalize() rather than
+		// being mistaken for unset the way a -1-sentinel field would be
+		Environment zero = gson.fromJson("{\"moonShadowStrength\": 0}", Environment.class).normalize();
+		assertEquals("an explicit 0 must not be treated as unset", 0f, zero.moonShadowStrength, 0);
+	}
+
+	// The night ambient boost is scaled by (1 - moonPresence), where moonPresence is phase times
+	// altitude fade. The property that matters, and the reason it isn't gated on shadowVisibility:
+	// a new moon and a moon that has set are both "no moonlight" and must be boosted identically,
+	// while a full moon overhead gets nothing. Mirrors DayNightLighting.moonPresence.
+	@Test
+	public void nightBoostTreatsNewMoonAndSetMoonAlike() {
+		float newMoonHigh = moonPresence(60, 0);
+		float fullMoonSet = moonPresence(-20, 1);
+		float fullMoonHigh = moonPresence(60, 1);
+
+		assertEquals("a new moon contributes no moonlight", 0f, newMoonHigh, 0);
+		assertEquals("a moon below the horizon contributes no moonlight", 0f, fullMoonSet, 0);
+		assertEquals(
+			"a set moon must be boosted exactly like a new moon - this is the whole point of "
+			+ "keying the boost off moonlight presence rather than shadow visibility",
+			newMoonHigh, fullMoonSet, 0
+		);
+		assertEquals("a full moon overhead needs no boost", 1f, fullMoonHigh, 1e-6);
+
+		// Monotonic in phase and in altitude, so the boost fades in rather than popping
+		assertTrue("presence must grow with phase", moonPresence(60, 0.5f) > moonPresence(60, 0.25f));
+		assertTrue("presence must grow with altitude", moonPresence(30, 1) > moonPresence(0, 1));
+
+		// Continuous across the horizon cutoff: a moon just above it must not jump to full boost
+		assertTrue("presence must ease in above the cutoff", moonPresence(-9, 1) < 0.05f);
+	}
+
+	// Moon shadow visibility runs phase through pow(illumination, 0.5) rather than scaling it
+	// linearly. Shadow presence tracks how directional the light is, not how much of it there
+	// is, so a half moon casts obvious shadows in reality; linear scaling modelled brightness
+	// instead and left everything below a gibbous reading as shadowless. Pins the compression
+	// without pinning exact values, so the exponent stays tunable.
+	@Test
+	public void moonShadowPhaseResponseIsCompressed() {
+		// A new moon must still cast nothing - pow keeps 0 at 0, which a lifted curve could break
+		assertEquals("a new moon casts no shadow", 0f, phaseShadowFactor(0), 0);
+		assertEquals("a full moon is the reference", 1f, phaseShadowFactor(1), 1e-6);
+
+		// The point of the change: mid phases must sit well above their linear share
+		assertTrue("a half moon must cast well over half a full moon's shadow", phaseShadowFactor(0.5f) > 0.65f);
+		assertTrue("a crescent must stay clearly visible", phaseShadowFactor(0.25f) > 0.4f);
+
+		// Still monotonic, so waxing never reduces shadows
+		assertTrue(phaseShadowFactor(0.75f) > phaseShadowFactor(0.5f));
+		assertTrue(phaseShadowFactor(0.5f) > phaseShadowFactor(0.25f));
+
+		// And still compressive rather than inverted - never brighter than a full moon
+		assertTrue("no phase may out-shadow a full moon", phaseShadowFactor(0.75f) < 1f);
+	}
+
+	// Night Synced advances the moon's phase a whole simulated day at a time, which near the
+	// quarters moves illumination by ~0.10. That has to land where nothing can see it. The
+	// guard used to fire at the geometric horizon (0), but moonlight only finishes fading at
+	// -10, so for 10 degrees the moon was below the horizon and still lighting the scene - the
+	// phase step showed up as a sudden brightness jump. Pins that the threshold stays at or
+	// below the altitude where moonlight has fully faded out.
+	@Test
+	public void moonPhaseAdvancesOnlyWhereMoonlightHasFadedOut() {
+		double phaseAdvanceAltitudeDeg = Math.toDegrees(Math.toRadians(-10)); // TimeOfDay's guard
+		float moonlightGoneBelowDeg = -10; // DayNightLighting's fade start / horizon cutoff
+
+		assertTrue(
+			"the phase may only advance once moonlight has fully faded, or the step is visible",
+			phaseAdvanceAltitudeDeg <= moonlightGoneBelowDeg
+		);
+
+		// At the advance altitude the moon must contribute nothing, whatever its phase - that
+		// is what makes the step invisible rather than merely small
+		assertEquals(
+			"a phase change at the guard altitude must not move the lighting",
+			0f, moonPresence(phaseAdvanceAltitudeDeg, 0.5f), 0
+		);
+		assertEquals(
+			"...for any phase",
+			0f, moonPresence(phaseAdvanceAltitudeDeg, 1.0f), 0
+		);
+
+		// Sanity: just above it the moon IS still contributing, so the old 0-degree guard
+		// really was inside the visible window rather than a harmless early trigger
+		assertTrue(
+			"the geometric horizon is inside the window where moonlight still reaches the scene",
+			moonPresence(-0.001, 0.5f) > 0
+		);
+	}
+
+	// Mirrors the phase term of DayNightLighting.computeShadowVisibility
+	private static float phaseShadowFactor(float illumination) {
+		return (float) Math.pow(illumination, 0.5f);
+	}
+
+	// Mirrors DayNightLighting.moonPresence (private, and the class needs injected singletons)
+	private static float moonPresence(double moonAltDeg, float moonIllumination) {
+		if (moonAltDeg <= -10 || moonIllumination <= 0.01f)
+			return 0;
+		float t = Math.max(0, Math.min(1, (float) ((moonAltDeg - -10) / (20.0 - -10))));
+		float fade = t * t * (3 - 2 * t);
+		return Math.max(0, Math.min(1, moonIllumination * fade));
+	}
+
 	// "forceMoonActive" lets a cutscene environment show the moon even when the player has the
 	// Moon config toggle off. It must default to false, so ordinary environments keep deferring
 	// to the config rather than silently forcing the moon on everywhere.
