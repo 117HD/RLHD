@@ -20,11 +20,13 @@ import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.materials.Material;
+import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Props;
 
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.utils.ExpressionParser.asExpression;
 import static rs117.hd.utils.ExpressionParser.parseExpression;
+import static rs117.hd.utils.HDUtils.applyRotationToOffset;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -87,6 +89,8 @@ public class ModelOverride
 	public boolean invertDisplacementStrength = false;
 	public int depthBias = -1;
 	public boolean disablePrioritySorting = false;
+	public boolean modelOffsetRelative = false;
+	public int[] modelOffset = { 0, 0, 0, };
 
 	private int setHue = -1;
 	private int shiftHue;
@@ -321,6 +325,8 @@ public class ModelOverride
 			invertDisplacementStrength,
 			depthBias,
 			disablePrioritySorting,
+			modelOffsetRelative,
+			modelOffset,
 			setHue,
 			shiftHue,
 			minHue,
@@ -730,6 +736,21 @@ public class ModelOverride
 		l = clamp(l + shiftLightness, minLightness, maxLightness);
 
 		return h << 10 | s << 7 | l;
+	}
+
+	public void applyModelOffset(TileObject tileObject, int orientation, int[] result) {
+		result[0] = modelOffset[0];
+		result[1] = modelOffset[1];
+		result[2] = modelOffset[2];
+
+		if (modelOffsetRelative && (result[0] != 0 || result[2] != 0)) {
+			if(orientation != 0)
+				applyRotationToOffset(orientation, result);
+
+			final int bakedOrientation = HDUtils.getOrientationFromConfig(HDUtils.getObjectConfig(tileObject));
+			if(bakedOrientation != 0)
+				applyRotationToOffset(bakedOrientation, result);
+		}
 	}
 
 	@Nullable
