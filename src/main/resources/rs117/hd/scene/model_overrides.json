@@ -21944,8 +21944,7 @@
       "ROOFTOP_FOOTPRINTS_BROWN",
       "ROOFTOP_FOOTPRINTS_DIAGONAL_BROWN"
     ],
-    "castShadows": false,
-    "receiveShadows": false
+    "castShadows": false
   },
   {
     "description": "Zanaris - Walls - Grass",
@@ -31510,7 +31509,8 @@
     "description": "Objects - Stone - Giants Foundry - Moulds",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
-      "GIANTS_FOUNDRY_MOLD_LIBRARY"
+      "GIANTS_FOUNDRY_MOLD_LIBRARY",
+      "FAI_VARROCK_SMITHY_SWORD_MOULD_EMPTY"
     ],
     "uvType": "BOX",
     "uvScale": 0.6
@@ -33077,7 +33077,8 @@
     "uvOrientation": 512,
     "objectIds": [
       "FAI_VARROCK_TOOLSET",
-      "FAI_VARROCK_TOOLSET_02"
+      "FAI_VARROCK_TOOLSET_02",
+      "FAI_VARROCK_HANGING_HORSESHOES"
     ],
     "colorOverrides": [
       {
@@ -35192,16 +35193,132 @@
   },
   {
     "description": "Tutorial Island - Drill",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "FAI_VARROCK_SMITHY_DRILL"
     ],
     "uvType": "BOX",
-    "uvScale": 0.3,
+    "uvScale": 0.55,
     "colorOverrides": [
       {
         "colors": [ "h == 0", "h == 5", "h == 10" ],
         "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Smithy Hearth & Lathe",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "FAI_VARROCK_SMITHY_HEARTH",
+      "FAI_VARROCK_SMITHY_LATHE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2
+  },
+  {
+    "description": "Varrock - Smithy Bellows",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_BELLOWS"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": [ "s == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Smithy Blueprint Poster",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FAI_VARROCK_BLUEPRINT_POSTER"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3
+  },
+  {
+    "description": "Varrock - Smithy Blueprint Poster",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FAI_VARROCK_SMITHY_SAFETY_POSTER"
+    ],
+    "depthBias": 100,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Shop Signs",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      "FAI_VARROCK_BLACKSMITH_SHOP_SIGN",
+      "FAI_VARROCK_RANGE_SHOP_SIGN",
+      "FAI_VARROCK_BANK_SIGN",
+      "FAI_VARROCK_HAIRDRESSER_SIGN",
+      "FAI_VARROCK_GENERAL_STORE_SIGN",
+      "FAI_VARROCK_SEWING_SHOP_SIGN",
+      "FAI_VARROCK_FANCY_SIGN",
+      "FAI_VARROCK_DANCINGDONKEY_SIGN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5 || h == 6 || h == 7" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientationZ": 512,
+        "uvOrientationY": 512
+      },
+      {
+        "colors": [ "h == 3" ],
+        "baseMaterial": "BARK",
+        "uvType": "MODEL_YZ",
+        "uvScale": 0.2,
+        "uvOrientation": 512
+      },
+      {
+        "colors": [ "h > 12 && h < 30" ],
+        "baseMaterial": "LEAF_VEINS"
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Blue Moon Inn Sign",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      "FAI_VARROCK_BLUEMOON_PUB_SIGN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5 || h == 7" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientationY": 512
+      },
+      {
+        "colors": [ "h == 3" ],
+        "baseMaterial": "BARK",
+        "uvType": "MODEL_YZ",
+        "uvScale": 0.2,
+        "uvOrientation": 512
+      },
+      {
+        "colors": [ "h > 12 && h < 30" ],
+        "baseMaterial": "LEAF_VEINS"
       }
     ]
   },

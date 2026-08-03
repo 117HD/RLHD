@@ -23172,6 +23172,25 @@
     ]
   },
   {
+    "description": "Varrock Blacksmith Lathe",
+    "offset": [ -14, 60, 0 ],
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 3.5,
+    "color": [
+      252,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 20,
+    "nightMultiplier": 2,
+    "objectIds": [
+      "FAI_VARROCK_SMITHY_LATHE"
+    ]
+  },
+  {
     "description": "TABLE",
     "height": 100,
     "alignment": "CENTER",
