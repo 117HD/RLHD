@@ -7747,7 +7747,9 @@
       "OLDROOFEDGE_AL_GREYSLATE",
       "OLDROOFWALLFILLER",
       "OLDROOFEDGE_DOUBLELENGTH_RR_GREYSLATE",
-      "OLDROOFEDGE_DOUBLELENGTH_L_GREYSLATE"
+      "OLDROOFEDGE_DOUBLELENGTH_L_GREYSLATE",
+      "OLDROOFEDGE_DOUBLELENGTH_LL_GREYSLATE",
+      "OLDROOFEDGE_DOUBLELENGTH_R_GREYSLATE"
     ],
     "flatNormals": true
   },
@@ -13370,6 +13372,37 @@
     ]
   },
   {
+    "description": "Draynor Manor - Floor Board Holes",
+    "baseMaterial": "BLACK",
+    "objectIds": [
+      "BROKENFLOORBOARDS1",
+      "BROKENFLOORBOARDS2",
+      "BROKENFLOORBOARDS3"
+    ]
+  },
+  {
+    "description": "Draynor Manor - Avas Bed",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "ANMA_UNCOMF_BED",
+      "ANMA_COMF_BED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h > 11",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
     "description": "Draynor Manor - Count Draynor's Coffin",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
@@ -14363,6 +14396,7 @@
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       "FURNACE",
+      "FURNACE2",
       "VIKING_FURNACE",
       "VIKING_FURNACE2",
       "DWARF_KELDAGRIM_FURNACE",
@@ -15312,6 +15346,25 @@
     "uvOrientation": 1024
   },
   {
+    "description": "Sticks and Rocks - Rubble - Tiny",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "STICKS_TWIGS"
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.3,
+    "uvOrientation": 1024,
+    "colorOverrides": [
+      {
+        "windDisplacementMode": "VERTEX",
+        "colors": "h == 6",
+        "baseMaterial": "LIGHT_BARK",
+        "uvScale": 0.2,
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
     "description": "Rock-Like Object - Rubble - Small",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
@@ -15531,6 +15584,27 @@
     "uvScale": 0.85
   },
   {
+    "description": "Lumbridge Swamp - Cave Warning Sign",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 89,
+    "colorOverrides": [
+      {
+        "description": "Sign Post",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "flatNormals": true,
+        "uvOrientation": 512,
+        "undoVanillaShading": false,
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      "GOBLIN_CAVES_WARNINGSIGN"
+    ]
+  },
+  {
     "description": "Lumbridge Swamp Tree/Plant",
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX",
@@ -15565,6 +15639,23 @@
         "baseMaterial": "CARPET",
         "uvScale": 0.5,
         "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge Swamp - Swampy Sink",
+    "baseMaterial": "WATER_FOUNTAIN_FLAT",
+    "objectIds": [
+      "HW19_SLIMEY_SINK"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.2,
+        "uvType": "BOX"
       }
     ]
   },
@@ -16046,6 +16137,8 @@
     "description": "Inconspicuous Rocks",
     "baseMaterial": "BARK",
     "objectIds": [
+      "HIDEY_UNBUILT_BUSH_BEGINNER",
+      "HIDEY_BUSH_BEGINNER",
       "HIDEY_UNBUILT_BUSH_EASY",
       "HIDEY_BUSH_EASY",
       "HIDEY_UNBUILT_BUSH_MEDIUM",
@@ -21391,7 +21484,8 @@
     "objectIds": [
       "KR_BATHMIRROR",
       "BATHMIRROR",
-      "GRIM_WITCH_HOUSE_BATHMIRROR"
+      "GRIM_WITCH_HOUSE_BATHMIRROR",
+      "BATHMIRROR_SMALL"
     ],
     "uvType": "BOX",
     "uvScale": 0.33,
@@ -21500,7 +21594,8 @@
       "FULL_TWIG_LIGHT",
       "BROKEN_TWIG_LIGHT",
       "GROUNDCOVER_STRANGLER01_TWIGS04",
-      "TWIG_SAVANNAH_FULL01"
+      "TWIG_SAVANNAH_FULL01",
+      "FULL_TWIG_DARK"
     ]
   },
   {
@@ -34986,6 +35081,7 @@
       "LEAFLESSBUSH",
       "LEAFLESSBUSH2",
       "ENAKH_LEAFLESSBUSH",
+      "NEW_LEAFLESSBUSH",
       "FAI_LEAFLESS_BUSH_LARGE_01",
       "FAI_LEAFLESS_BUSH_LARGE_02",
       "DOV_HUNTING_PLANT2_NOOP",
@@ -35135,6 +35231,7 @@
     "description": "Objects - Hay - Hay Bale - Vanilla Textured",
     "textureMaterial": "HD_HAY",
     "objectIds": [
+      "HAYBAIL",
       "HAYSTACK",
       "HAYSTACK2"
     ],
@@ -48345,7 +48442,8 @@
       "MISTMYST_DOOR_EMERALD_INACTIVE",
       "CLOSET_DOOR",
       "DRAYNORPANELLEDDOOR_INACTIVE",
-      "HAUNTEDBACKDOOR"
+      "HAUNTEDBACKDOOR",
+      "HAUNTEDBACKDOOR_INACTIVE"
     ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -58792,7 +58890,8 @@
       "WISE_OLD_MAN_WALLCHART2",
       "WISE_OLD_MAN_WALLCHART3",
       "WITCHESWALLCHART",
-      "DRAYNOR_HAUNTED_PAINTING"
+      "DRAYNOR_HAUNTED_PAINTING",
+      "DRAYNOR_SPOOKYPICTURE"
     ]
   },
   {
@@ -71563,7 +71662,8 @@
     "objectIds": [
       "MUSHROOM2_LARGE",
       "MUSHROOMS2",
-      "MUSHROOM2"
+      "MUSHROOM2",
+      "MUSHROOM2_DARK"
     ],
     "uvType": "BOX"
   },
@@ -89013,7 +89113,7 @@
     "colorOverrides": [
       {
         "description": "Sign Post",
-        "colors": "h == 7 && s == 6",
+        "colors": "h == 6 || h == 7 && s == 6",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "flatNormals": true,
