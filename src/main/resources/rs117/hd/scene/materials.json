@@ -63,7 +63,7 @@
     "vanillaTextureIndex": 5
   },
   {
-    "name": "ROOF_SHINGLES_1",
+    "name": "ROOF_SHINGLES_RED",
     "vanillaTextureIndex": 6,
     "specularStrength": 0.5,
     "specularGloss": 30.0
@@ -316,7 +316,7 @@
     "vanillaTextureIndex": 43
   },
   {
-    "name": "ROOF_SHINGLES_2",
+    "name": "ROOF_SHINGLES_GRAY",
     "vanillaTextureIndex": 44
   },
   {
@@ -2699,20 +2699,32 @@
     "brightness": 3.25
   },
   {
+    "name": "VANILLA_ROOF_SHINGLES_RED",
+    "parent": "ROOF_SHINGLES_RED",
+    "specularStrength": 0.35,
+    "specularGloss": 40.0
+  },
+  {
+    "name": "VANILLA_ROOF_SHINGLES_GRAY",
+    "parent": "ROOF_SHINGLES_GRAY",
+    "specularStrength": 0.35,
+    "specularGloss": 40.0
+  },
+  {
     "name": "HD_ROOF_SHINGLES_N"
   },
   {
     "name": "HD_ROOF_SHINGLES_D"
   },
   {
-    "name": "HD_ROOF_SHINGLES_1",
+    "name": "HD_ROOF_SHINGLES_RED",
     "normalMap": "HD_ROOF_SHINGLES_N",
     "displacementMap": "HD_ROOF_SHINGLES_D",
     "displacementScale": 0.11,
     "specularStrength": 0.35,
     "specularGloss": 40.0,
     "materialsToReplace": [
-      "ROOF_SHINGLES_1"
+      "ROOF_SHINGLES_RED"
     ],
     "replacementCondition": "modelTextures"
   },
@@ -2748,12 +2760,12 @@
     "replacementCondition": "modelTextures"
   },
   {
-    "name": "HD_ROOF_SHINGLES_2",
+    "name": "HD_ROOF_SHINGLES_GRAY",
     "normalMap": "HD_ROOF_SHINGLES_N",
     "specularStrength": 0.3,
     "specularGloss": 30.0,
     "materialsToReplace": [
-      "ROOF_SHINGLES_2"
+      "ROOF_SHINGLES_GRAY"
     ],
     "replacementCondition": "modelTextures"
   },
@@ -3659,22 +3671,24 @@
     "replacementCondition": "season == SeasonalTheme.WINTER"
   },
   {
-    "name": "WINTER_HD_ROOF_SHINGLES_1",
+    "name": "WINTER_HD_ROOF_SHINGLES_RED",
     "normalMap": "HD_ROOF_SHINGLES_N",
     "specularStrength": 0.5,
     "specularGloss": 30.0,
     "materialsToReplace": [
-      "HD_ROOF_SHINGLES_1"
+      "HD_ROOF_SHINGLES_RED",
+      "VANILLA_ROOF_SHINGLES_RED"
     ],
     "replacementCondition": "season == SeasonalTheme.WINTER"
   },
   {
-    "name": "WINTER_HD_ROOF_SHINGLES_2",
+    "name": "WINTER_HD_ROOF_SHINGLES_GRAY",
     "normalMap": "HD_ROOF_SHINGLES_N",
     "specularStrength": 0.3,
     "specularGloss": 30.0,
     "materialsToReplace": [
-      "HD_ROOF_SHINGLES_2"
+      "HD_ROOF_SHINGLES_GRAY",
+      "VANILLA_ROOF_SHINGLES_GRAY"
     ],
     "replacementCondition": "season == SeasonalTheme.WINTER"
   },

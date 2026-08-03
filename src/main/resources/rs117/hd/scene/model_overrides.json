@@ -4373,16 +4373,58 @@
       "ROOFEDGE_AL",
       "ROOFEDGE_ALL",
       "ROOFEDGE_TIP",
-      "ROOF_THATCHED"
+      "ROOF_THATCHED",
+      "ROOFEDGE_ROUGH",
+      "ROOFEDGE_ROUGH2",
+      "ROOFEDGE_REDSLATE",
+      "ROOF_CHIMNEY_REDSLATE",
+      "ROOFEDGE_ENDL",
+      "OLDROOF_REDSLATE",
+      "WOODENROOF_REDSLATE",
+      "ROOF_TIP"
+    ],
+    "materialOverrides": {
+      "HD_BRICK": {
+        "textureMaterial": "HD_BRICK",
+        "depthBias": 1
+      },
+      "ROOF_SHINGLES_RED": {
+        "textureMaterial": "VANILLA_ROOF_SHINGLES_RED",
+        "shiftLightness": -3
+      }
+    }
+  },
+  {
+    "description": "Lumbridge - Building Walls with roofs - Gray",
+    "areas": [ "LUMBRIDGE" ],
+    "flatNormals": true,
+    "forceMaterialChanges": true,
+    "objectIds": [
+      "ROOFEDGE_GREYSLATE",
+      "ROOFEDGE_GREYSLATE",
+      "OLDROOF_GREYSLATE",
+      "OLDROOFEDGE_ROUGH2_GREYSLATE",
+      "OLDROOFEDGE_ROUGH_GREYSLATE",
+      "OLDROOF_DOUBLELENGTH_GREYSLATE",
+      "OLDROOF_TIP_GREYSLATE",
+      "OLDROOF_TIP_X_JUNCTION_GREYSLATE"
     ],
     "materialOverrides": {
       "HD_BRICK": {
         "textureMaterial": "HD_BRICK"
+      },
+      "ROOF_SHINGLES_GRAY": {
+        "textureMaterial": "VANILLA_ROOF_SHINGLES_GRAY",
+        "shiftLightness": -16,
+        "shiftHue": 5
       }
     }
   },
   {
     "description": "Lumbridge - Building Walls",
+    "baseMaterial": "SMOOTH_STONE_LIGHT",
+    "uvOrientation": 512,
+    "uvType": "MODEL_XZ",
     "areas": [ "LUMBRIDGE" ],
     "textureMaterial": "HD_BRICK",
     "flatNormals": true,
@@ -4391,7 +4433,12 @@
       "ROOFWALLFILLER_CHURCH",
       "BRICKWALL_CHURCH_FRAME",
       "BRICKWALL_RIVEREDGE",
-      "BRICKWALLSKEW"
+      "BRICKWALLSKEW",
+      "BRICKWALL_CHURCH",
+      "BRICKWALL_CHURCHBIGWINDOW1L",
+      "BRICKWALL_CHURCHBIGWINDOW1",
+      "BRICKWALL_CHURCHBIGWINDOW2L",
+      "BRICKWALL_CHURCHBIGWINDOW2"
     ]
   },
   {
@@ -4409,6 +4456,9 @@
   },
   {
     "description": "Lumbridge - Castle Walls",
+    "baseMaterial": "SMOOTH_STONE_LIGHT",
+    "uvOrientation": 512,
+    "uvType": "MODEL_XZ",
     "areas": [ "LUMBRIDGE" ],
     "textureMaterial": "HD_BRICK",
     "flatNormals": true,
@@ -5147,18 +5197,33 @@
       "FAI_FALADOR_INTERIOR_TALLER",
       "FAI_FALADOR_WALLS_TALLER",
       "FAI_FALADOR_ROOFKIT_SLATE",
+      "FAI_FALADOR_ROOF_EDGE_L_OFFSETS",
+      "FAI_FALADOR_ROOFKIT_SLATE_SHORT1",
+      "FAI_FALADOR_ROOF_CUT_R_SHORT1",
+      "FAI_FALADOR_ROOFKIT_SLATE_CORNER_LEFT",
+      "FAI_FALADOR_ROOF_CUT_L_SHORT2",
+      "FAI_FALADOR_ROOFKIT_SLATE_SHORT2",
       "FAI_FALADOR_ROOFKIT_SLATE_CORNER_RIGHT",
       "FAI_FALADOR_ROOFKIT_SLATE_EDGECUT",
       "FAI_FALADOR_ROOFKIT_SLATE_TWO",
+      "FAI_FALADOR_ROOFKIT_SLATE_SHORT3",
       "FAI_FALADOR_ROOFKIT_SLATE_THREE",
       "FAI_FALADOR_ROOFKIT_SLATE_OFFSET_UP",
       "FAI_FALADOR_ROOFKIT_SLATE_OFFSET_UP_2",
+      "FAI_FALADOR_ROOFKIT_SLATE_SHORT1_MIRROR",
       "FAI_FALADOR_ROOF_EDGE_OFFSET_UP",
+      "FAI_FALADOR_ROOFKIT_SLATE_RAISED",
+      "FAI_FALADOR_ROOF_EDGE_RAISED",
+      "FAI_FALADOR_ROOF_EDGE_MIRROR_RAISED",
+      "FAI_FALADOR_ROOFKIT_SLATE_RAISED2",
       "FAI_FALADOR_CASTLE_WALLS",
+      "FAI_FALADOR_ROOFKIT_CORNERCUT",
       "FAI_FALADOR_CASTLE_WALLS_L2",
+      "FAI_FALADOR_CASTLE_WALLS_CFIX_L2",
       "FAI_FALADOR_CASTLE_WALLS_FIX_LFT",
       "FAI_FALADOR_CASTLE_WALLS_2_TALLER",
       "FAI_FALADOR_CASTLE_WALLS_L2_LFT",
+      "FAI_FALADOR_ROOF_EDGE_OFFSETS",
       "FAI_FALADOR_CASTLE_WALLS_L2_5_TERMINATOR_RHT",
       "FAI_FALADOR_CASTLE_WALLS_L2_5_TERMINATOR_LFT",
       "FAI_FALADOR_CASTLE_WALLS_SARODOMIN",
@@ -5224,8 +5289,15 @@
     "flatNormals": true,
     "colorOverrides": [
       {
+        "description": "Interior Wall",
+        "colors": "h == 42 && s == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
         "description": "Window Frame",
-        "colors": "h == 5 || h == 6 && s == 3",
+        "colors": "h > 5 && s > 1 || h == 6 && s == 3",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.8,
@@ -12467,6 +12539,7 @@
       "CANAFIS_LADDERTOP",
       "BARROWS_LADDER",
       "FAI_FALADOR_LADDER",
+      "FAI_FALADOR_LADDER_TOP_FORCEAPPROACH_NORTH",
       "FAI_FALADOR_LADDER_TOP",
       "FAI_FALADOR_LADDER_TALLER",
       "KR_CAM_LADDERTOP",
@@ -14050,7 +14123,8 @@
       "CAVEWITCHCHEST",
       "TWOCATS_CHEST",
       "TWOCATS_CHEST_OPEN",
-      "LUNAR_MOONCLAN_CHEST"
+      "LUNAR_MOONCLAN_CHEST",
+      "LOST_TRIBE_CHEST"
     ],
     "uvType": "BOX",
     "uvScale": 0.25,
@@ -14799,6 +14873,18 @@
     ]
   },
   {
+    "description": "Wooden Door - Vanilla Textured",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "ELFDOOROPEN",
+      "ELFDOOR",
+      "INACTIVEELFDOOR"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvScale": 0.5
+  },
+  {
     "description": "Wooden Door 1 - Fake Plank",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -14958,6 +15044,7 @@
     ],
     "uvType": "BOX",
     "flatNormals": true,
+    "uvOrientationY": 512,
     "uvScale": 0.65
   },
   {
@@ -15016,6 +15103,7 @@
   {
     "description": "Wooden Door 3 - Fake Plank Golden Handle",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationY": 512,
     "uvType": "BOX",
     "objectIds": [
       "LEFAYEUNOPENABLEDOORL",
@@ -35243,6 +35331,22 @@
   },
   {
     "description": "Objects - Hay - Hay Bale",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "WEATHERVAIN"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Objects - Hay - Hay Bale",
     "baseMaterial": "HD_HAY",
     "objectIds": [
       "VC_HAYSTACK2"
@@ -50195,7 +50299,8 @@
       "HILLGIANT_BOSS_CORPSE2",
       "HILLGIANT_BOSS_CORPSE3",
       "DRAGON_SLAYER_QIP_CORPSE_1",
-      "DRAGON_SLAYER_QIP_CORPSE_2"
+      "DRAGON_SLAYER_QIP_CORPSE_2",
+      "CHARRED_BONES"
     ],
     "uvType": "BOX",
     "uvScale": 0.6
@@ -50405,7 +50510,40 @@
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [ "FIREPLACECOOKINGPOT" ],
     "uvType": "BOX",
-    "uvScale": 0.25
+    "uvScale": 0.25,
+    "colorOverrides": [
+      {
+        "colors": [ "a < 255" ],
+        "baseMaterial": "GRAY_200",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Cooking Pot in textured brick fireplace",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [ "MISC_SPITROAST" ],
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "colorOverrides": [
+      {
+        "colors": [ "a < 255" ],
+        "baseMaterial": "NONE",
+        "upwardsNormals": true
+      },
+      {
+        "colors": [ "h == 6 && s == 4" ],
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
   },
   {
     "description": "Brown Bed with pillow",
@@ -53513,7 +53651,8 @@
     "description": "Shelf with helmets",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "HELMETRACK"
+      "HELMETRACK",
+      "HELMETRACK_OFFSET_FOR_FALADOR_CASTLE_WALL"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -58812,7 +58951,8 @@
       "BOOKSHELF_OLD_SHORT3_MOVEDIN3",
       "BOOKSHELF_OLD_SHORT3_MOVEDIN2",
       "BOOKSHELF_OLD_TALL_MOVEDIN2",
-      "BOOKSHELF_OLD_TALL2_MOVEDIN2"
+      "BOOKSHELF_OLD_TALL2_MOVEDIN2",
+      "RD_BOOKSHELF_OLD_TALL"
     ],
     "colorOverrides": [
       {
