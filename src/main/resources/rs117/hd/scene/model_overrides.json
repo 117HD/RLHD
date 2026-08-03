@@ -14755,7 +14755,7 @@
   },
   {
     "description": "Static Lantern - Brighten Glass and Texture Metal",
-    "baseMaterial": "GRAY_200",
+    "baseMaterial": "GRAY_250",
     "objectIds": [
       "LANTERN"
     ],

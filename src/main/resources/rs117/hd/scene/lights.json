@@ -29106,12 +29106,12 @@
     "strength": 7.5,
     "color": [
       255,
-      180,
+      190,
       103
     ],
     "type": "STATIC",
     "duration": 0,
-    "nightMultiplier": 1.5,
+    "nightMultiplier": 1.55,
     "range": 20,
     "visibleFromOtherPlanes": true,
     "objectIds": [
@@ -29128,7 +29128,7 @@
     "staggered": true,
     "color": [
       255,
-      180,
+      190,
       103
     ],
     "type": "STATIC",
