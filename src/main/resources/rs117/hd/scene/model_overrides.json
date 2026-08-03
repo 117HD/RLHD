@@ -14769,6 +14769,26 @@
     ]
   },
   {
+    "description": "Static Lantern - Brighten Glass and Texture Metal - Alt",
+    "baseMaterial": "GRAY_250",
+    "objectIds": [
+      "AIDE_LANTERN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 7",
+        "baseMaterial": "GRAY_250"
+      },
+      {
+        "colors": "h == 0 || h == 6",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvOrientation": 512,
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
     "description": "Animated Round Lantern - Brighten Flame and Texture Metal",
     "baseMaterial": "NONE",
     "objectIds": [

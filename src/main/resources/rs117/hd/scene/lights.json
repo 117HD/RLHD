@@ -29115,7 +29115,8 @@
     "range": 20,
     "visibleFromOtherPlanes": true,
     "objectIds": [
-      "LANTERN"
+      "LANTERN",
+      "AIDE_LANTERN"
     ]
   },
   {
