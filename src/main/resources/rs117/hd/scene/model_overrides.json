@@ -843,7 +843,6 @@
     ],
     "objectIds": [
       "FAI_VARROCK_GYPSY_LAMP",
-      "FAI_VARROCK_GYPSY_LANTERN",
       "UPASS_CAGE_DUMMY",
       "UPASS_CAGE_DUMMY_DUMMY",
       "FAI_VARROCK_SWING_LANTERN",
@@ -11995,7 +11994,10 @@
     "baseMaterial": "CARPET_LIGHT",
     "objectIds": [
       "DARKM_MIDDLE_RUG_CORNER",
-      "DARKM_MIDDLE_RUG_STRAIGHT"
+      "DARKM_MIDDLE_RUG_STRAIGHT",
+      "FAI_VARROCK_PRETTY_RUG_CORNER",
+      "FAI_VARROCK_PRETTY_RUG_EDGE",
+      "FAI_VARROCK_PRETTY_RUG_CENTER"
     ],
     "uvType": "WORLD_XZ",
     "flatNormals": true
@@ -13288,10 +13290,10 @@
     "description": "Rimmington - Seamstress Mannequin",
     "baseMaterial": "CARPET_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.25,
+    "uvScale": 0.45,
     "colorOverrides": [
       {
-        "colors": "h == 5",
+        "colors": "h == 5 || h == 6",
         "baseMaterial": "WOOD_GRAIN_3_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.5
@@ -13306,7 +13308,10 @@
       "CLOTHESMODEL_WOMAN2",
       "CLOTHESMODEL_WOMAN1",
       "CLOTHESMODEL_MAN2",
-      "CLOTHESMODEL_MAN1"
+      "CLOTHESMODEL_MAN1",
+      "FAI_VARROCK_CLOTHESMODEL_MAN1",
+      "CLOTHESMODEL2",
+      "CLOTHESMODEL1"
     ]
   },
   {
@@ -14467,6 +14472,7 @@
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       "HANGINGLANTERN",
+      "FAI_VARROCK_PRETTY_OILLAMP",
       "FAI_VARROCK_OILLAMP",
       "FAI_VARROCK_SWING_LANTERN_UNLIT",
       "FAI_FALADOR_LANTERN",
@@ -32993,6 +32999,36 @@
     "uvScale": 0.85
   },
   {
+    "description": "Fortune-teller Aris - Shop Sign",
+    "baseMaterial": "GRUNGE_3_DULL",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "objectIds": [
+      "FAI_VARROCK_FORTUNE_SHOP_SIGN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s != 1 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationY": 512,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Fortune-teller Aris - Hanging Lantern",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "upwardsNormals": true,
+    "shiftLightness": 5,
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.2,
+    "objectIds": [
+      "FAI_VARROCK_GYPSY_LANTERN"
+    ]
+  },
+  {
     "description": "Zaff - Table and Rack with Staves",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
@@ -33040,7 +33076,8 @@
     "uvScale": 0.2,
     "uvOrientation": 512,
     "objectIds": [
-      "FAI_VARROCK_TOOLSET"
+      "FAI_VARROCK_TOOLSET",
+      "FAI_VARROCK_TOOLSET_02"
     ],
     "colorOverrides": [
       {
@@ -48347,11 +48384,12 @@
     "uvScale": 0.5,
     "uvType": "BOX",
     "objectIds": [
-      "FAI_VARROCK_SHOERACK"
+      "FAI_VARROCK_SHOERACK",
+      "FAI_VARROCK_SHOERACK02"
     ],
     "colorOverrides": [
       {
-        "colors": [ "h == 7" ],
+        "colors": [ "h == 7 && s < 7" ],
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.4
@@ -63598,9 +63636,10 @@
     "colorOverrides": [
       {
         "colors": "h == 7",
-        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvOrientation": 512,
+        "uvOrientationY": 512,
+        "uvOrientationZ": 512,
         "uvScale": 0.70
       }
     ]
@@ -63614,15 +63653,57 @@
       "FAI_VARROCK_FABRIC01",
       "FAI_VARROCK_FABRIC02",
       "ICS_FLOOR_CLOTH",
-      "RIMMINGTON_FLOOR_CLOTH"
+      "RIMMINGTON_FLOOR_CLOTH",
+      "FAI_VARROCK_FLOOR_CLOTH",
+      "FAI_VARROCK_CLOTHES3"
     ],
     "colorOverrides": [
       {
-        "colors": "h == 7",
+        "colors": "h == 6 || h == 7 || h == 8",
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
         "uvType": "BOX",
+        "uvOrientation": 512,
         "uvScale": 0.3
       }
+    ]
+  },
+  {
+    "description": "East Varrock - Fancy Dress Shop - Hanging Coat",
+    "baseMaterial": "CARPET_LIGHT",
+    "minLightness": 14,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAI_VARROCK_HANGING_COAT"
+    ]
+  },
+  {
+    "description": "East Varrock - Fancy Dress Shop - Pretty Bed",
+    "baseMaterial": "CARPET",
+    "shiftLightness": 2,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAI_VARROCK_PRETTY_BED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 6 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientationY": 512
+      }
+    ]
+  },
+  {
+    "description": "East Varrock - Fancy Dress Shop - Coat Hangars",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": 250,
+    "objectIds": [
+      "FAI_VARROCK_HANGERS"
     ]
   },
   {
@@ -63686,9 +63767,14 @@
         "uvScale": 0.8
       },
       {
+        "colors": "h == 9 || h == 16",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.34
+      },
+      {
         "colors": "s == 0",
-        "baseMaterial": "METALLIC_1_GLOSS",
-        "uvType": "MODEL_XZ"
+        "baseMaterial": "METALLIC_1_GLOSS"
       }
     ]
   },
@@ -67435,21 +67521,29 @@
     "uvType": "BOX",
     "uvOrientation": 89,
     "objectIds": [
-      "FAI_VARROCK_POTTED_PLANT3"
+      "FAI_VARROCK_POTTED_PLANT3",
+      "FAI_VARROCK_POTTED_PLANT1"
     ],
     "colorOverrides": [
       {
-        "colors": "h >= 16",
+        "colors": "h >= 14",
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX",
         "uvScale": 0.3,
-        "undoVanillaShading": false
+        "undoVanillaShading": false,
+        "upwardsNormals": true
       },
       {
-        "colors": "h == 5",
+        "colors": "h == 5 && l == 15 || h == 5 && l == 14",
         "baseMaterial": "DIRT_2",
         "uvType": "BOX",
         "uvScale": 0.3
+      },
+      {
+        "colors": "h == 5 && l != 14 || h == 6",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.35
       }
     ]
   },
