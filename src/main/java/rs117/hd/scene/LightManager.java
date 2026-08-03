@@ -50,6 +50,9 @@ import net.runelite.client.plugins.entityhider.EntityHiderConfig;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import rs117.hd.HdPlugin;
 import rs117.hd.config.DynamicLights;
+import rs117.hd.opengl.uniforms.UBOWorldViews;
+import rs117.hd.renderer.zone.SceneManager;
+import rs117.hd.renderer.zone.ZoneSceneContext;
 import rs117.hd.data.ObjectType;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.scene.lights.Alignment;
@@ -100,6 +103,9 @@ public class LightManager {
 
 	@Inject
 	private EntityHiderPlugin entityHiderPlugin;
+
+	@Inject
+	private SceneManager sceneManager;
 
 	private final ArrayList<Light> WORLD_LIGHTS = new ArrayList<>();
 	private final ListMultimap<Integer, LightDefinition> NPC_LIGHTS = ArrayListMultimap.create();
@@ -180,16 +186,45 @@ public class LightManager {
 
 		if (reloadLights) {
 			reloadLights = false;
-			sceneContext.lights.clear();
-			sceneContext.knownProjectiles.clear();
-			loadSceneLights(sceneContext);
-			swapSceneLights(sceneContext, null);
+			reloadSceneLights(sceneContext);
+
+			WorldView wv = client.getTopLevelWorldView();
+			if (wv != null) {
+				for (WorldEntity we : wv.worldEntities()) {
+					ZoneSceneContext subCtx = sceneManager.getLoadedSubSceneContext(we.getWorldView());
+					if (subCtx != null)
+						reloadSceneLights(subCtx);
+				}
+			}
 
 			client.getNpcs().forEach(npc -> {
 				addNpcLights(npc);
 				addSpotanimLights(npc);
 			});
 		}
+
+		updateSceneContext(sceneContext, cameraShift, cameraFrustum);
+
+		if (sceneContext == sceneManager.getSceneContext(null)) {
+			WorldView wv = client.getTopLevelWorldView();
+			if (wv != null) {
+				for (WorldEntity we : wv.worldEntities()) {
+					ZoneSceneContext subCtx = sceneManager.getLoadedSubSceneContext(we.getWorldView());
+					if (subCtx != null)
+						updateSceneContext(subCtx, cameraShift, cameraFrustum);
+				}
+			}
+		}
+	}
+
+	private void updateSceneContext(
+		@Nonnull SceneContext sceneContext,
+		int[] cameraShift,
+		float[][] cameraFrustum
+	) {
+		@Nullable
+		UBOWorldViews.WorldViewStruct worldViewStruct =
+			sceneManager.getWorldViewStruct(sceneContext.scene.getWorldViewId());
 
 		// These should never occur, but just in case...
 		if (sceneContext.knownProjectiles.size() > 10000) {
@@ -454,9 +489,18 @@ public class LightManager {
 				light.visible = light.changedVisibilityAt != -1 && light.elapsedTime - light.changedVisibilityAt < Light.VISIBILITY_FADE;
 
 			if (light.visible) {
+				copyTo(light.renderPos, light.pos);
+				if (worldViewStruct != null) {
+					float[] projected = { light.renderPos[0], light.renderPos[1], light.renderPos[2], 1.0f };
+					worldViewStruct.project(projected);
+					light.renderPos[0] = projected[0];
+					light.renderPos[1] = projected[1];
+					light.renderPos[2] = projected[2];
+				}
+
 				// Prioritize lights closer to the focal point
-				float distX = plugin.cameraFocalPoint[0] - light.pos[0];
-				float distZ = plugin.cameraFocalPoint[1] - light.pos[2];
+				float distX = plugin.cameraFocalPoint[0] - light.renderPos[0] - cameraShift[0];
+				float distZ = plugin.cameraFocalPoint[1] - light.renderPos[2] - cameraShift[1];
 				light.distanceSquared = distX * distX + distZ * distZ;
 
 				float maxRadius = light.def.radius;
@@ -480,9 +524,9 @@ public class LightManager {
 				// The above check already covers the near plane
 				if (plugin.configTiledLighting && light.visible) {
 					light.visible = isSphereIntersectingFrustum(
-						light.pos[0] + cameraShift[0],
-						light.pos[1],
-						light.pos[2] + cameraShift[1],
+						light.renderPos[0] + cameraShift[0],
+						light.renderPos[1],
+						light.renderPos[2] + cameraShift[1],
 						maxRadius, // use max radius, since the radius hasn't been updated yet
 						cameraFrustum,
 						4
@@ -666,6 +710,13 @@ public class LightManager {
 		}
 	}
 
+	private void reloadSceneLights(@Nonnull SceneContext sceneContext) {
+		sceneContext.lights.clear();
+		sceneContext.knownProjectiles.clear();
+		loadSceneLights(sceneContext);
+		swapSceneLights(sceneContext, null);
+	}
+
 	public void swapSceneLights(SceneContext sceneContext, @Nullable SceneContext oldSceneContext) {
 		// Force lights to instantly appear when spawning them as part of a new scene
 		for (int i = 0; i < sceneContext.lights.size(); i++)
@@ -700,6 +751,11 @@ public class LightManager {
 		for (var light : sceneContext.lights)
 			if (predicate.test(light))
 				light.markedForRemoval = true;
+	}
+
+	@Nullable
+	private SceneContext getSceneContext(@Nonnull TileObject tileObject) {
+		return sceneManager.getSceneContext(tileObject.getWorldView());
 	}
 
 	private void addSpotanimLights(Actor actor) {
@@ -782,7 +838,7 @@ public class LightManager {
 	}
 
 	private void handleObjectSpawn(TileObject object) {
-		var sceneContext = plugin.getSceneContext();
+		var sceneContext = getSceneContext(object);
 		if (sceneContext != null)
 			handleObjectSpawn(sceneContext, object);
 	}
@@ -845,7 +901,7 @@ public class LightManager {
 	}
 
 	private void handleObjectDespawn(TileObject tileObject) {
-		var sceneContext = plugin.getSceneContext();
+		var sceneContext = getSceneContext(tileObject);
 		if (sceneContext == null)
 			return;
 
@@ -979,6 +1035,7 @@ public class LightManager {
 				float tileHeight = mix(heightSouth, heightNorth, lerpZ);
 
 				Light light = new Light(def);
+				light.worldViewId = sceneContext.scene.getWorldViewId();
 				light.tileObject = tileObject;
 				light.tileObjectId = impostorId;
 				light.plane = plane;
@@ -1002,6 +1059,7 @@ public class LightManager {
 				return;
 
 			var copy = new Light(light.def);
+			copy.worldViewId = sceneContext.scene.getWorldViewId();
 			copy.plane = local[2];
 			copy.persistent = light.persistent;
 			copy.origin[0] = local[0] + LOCAL_HALF_TILE_SIZE;
