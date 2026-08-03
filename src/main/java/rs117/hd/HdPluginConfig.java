@@ -1253,6 +1253,72 @@ public interface HdPluginConfig extends Config
 
 	/*====== Internal settings ======*/
 
+	String KEY_FRAME_TIMER_OVERLAY_ENABLED = "frameTimerOverlayEnabled";
+	@ConfigItem(keyName = KEY_FRAME_TIMER_OVERLAY_ENABLED, hidden = true, name = "", description = "")
+	default boolean frameTimerOverlayEnabled() {
+		return false;
+	}
+
+	String KEY_FRAME_TIMER_GRAPH_ENABLED = "frameTimerGraphEnabled";
+	@ConfigItem(keyName = KEY_FRAME_TIMER_GRAPH_ENABLED, hidden = true, name = "", description = "")
+	default boolean frameTimerGraphEnabled() {
+		return false;
+	}
+
+	String KEY_FRAME_TIMER_HIDDEN_GRAPHS = "frameTimerHiddenGraphs";
+	@ConfigItem(keyName = KEY_FRAME_TIMER_HIDDEN_GRAPHS, hidden = true, name = "", description = "")
+	default String frameTimerHiddenGraphs() {
+		return "";
+	}
+
+	String KEY_FRAME_TIMER_SELECTED_TAB = "frameTimerSelectedTab";
+	@ConfigItem(keyName = KEY_FRAME_TIMER_SELECTED_TAB, hidden = true, name = "", description = "")
+	default String frameTimerSelectedTab() {
+		return "ALL";
+	}
+
+	String KEY_FRAME_TIMER_HIDDEN_TABS = "frameTimerHiddenTabs";
+	@ConfigItem(keyName = KEY_FRAME_TIMER_HIDDEN_TABS, hidden = true, name = "", description = "")
+	default String frameTimerHiddenTabs() {
+		return "";
+	}
+
+	String KEY_FRAME_TIMER_DETACHED_TABS = "frameTimerDetachedTabs";
+	@ConfigItem(keyName = KEY_FRAME_TIMER_DETACHED_TABS, hidden = true, name = "", description = "")
+	default String frameTimerDetachedTabs() {
+		return "";
+	}
+
+	String KEY_FRAME_TIMER_SETTINGS_DETACHED = "frameTimerSettingsDetached";
+	@ConfigItem(keyName = KEY_FRAME_TIMER_SETTINGS_DETACHED, hidden = true, name = "", description = "")
+	default boolean frameTimerSettingsDetached() {
+		return false;
+	}
+
+	String KEY_FRAME_TIMER_GRAPH_DETACHED = "frameTimerGraphDetached";
+	@ConfigItem(keyName = KEY_FRAME_TIMER_GRAPH_DETACHED, hidden = true, name = "", description = "")
+	default boolean frameTimerGraphDetached() {
+		return false;
+	}
+
+	String KEY_FRAME_TIMER_GRAPH_WIDTH = "frameTimerGraphWidth";
+	@ConfigItem(keyName = KEY_FRAME_TIMER_GRAPH_WIDTH, hidden = true, name = "", description = "")
+	default int frameTimerGraphWidth() {
+		return 800;
+	}
+
+	String KEY_FRAME_TIMER_GRAPH_HEIGHT = "frameTimerGraphHeight";
+	@ConfigItem(keyName = KEY_FRAME_TIMER_GRAPH_HEIGHT, hidden = true, name = "", description = "")
+	default int frameTimerGraphHeight() {
+		return 200;
+	}
+
+	String KEY_FRAME_TIMER_MEMORY_GRAPH_HEIGHT = "frameTimerMemoryGraphHeight";
+	@ConfigItem(keyName = KEY_FRAME_TIMER_MEMORY_GRAPH_HEIGHT, hidden = true, name = "", description = "")
+	default int frameTimerMemoryGraphHeight() {
+		return 75;
+	}
+
 	@ConfigItem(keyName = "pluginUpdateMessage", hidden = true, name = "", description = "")
 	void setPluginUpdateMessage(int version);
 	@ConfigItem(keyName = "pluginUpdateMessage", hidden = true, name = "", description = "")

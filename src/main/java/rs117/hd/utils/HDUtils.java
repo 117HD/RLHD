@@ -551,6 +551,40 @@ public final class HDUtils {
 		return "Unknown";
 	}
 
+	private static boolean THREAD_ALLOCATED_BYTES_SUPPORTED = true;
+	private static com.sun.management.ThreadMXBean threadMXBean;
+
+	public static boolean setupThreadAllocatedBytesMonitoring() {
+		if(ManagementFactory.getThreadMXBean() instanceof com.sun.management.ThreadMXBean) {
+			threadMXBean = (com.sun.management.ThreadMXBean) ManagementFactory.getThreadMXBean();
+			THREAD_ALLOCATED_BYTES_SUPPORTED = threadMXBean.isThreadAllocatedMemorySupported();
+			if(THREAD_ALLOCATED_BYTES_SUPPORTED) {
+				threadMXBean.setThreadAllocatedMemoryEnabled(true);
+				THREAD_ALLOCATED_BYTES_SUPPORTED = threadMXBean.isThreadAllocatedMemoryEnabled();
+			}
+		} else {
+			THREAD_ALLOCATED_BYTES_SUPPORTED = false;
+		}
+		return THREAD_ALLOCATED_BYTES_SUPPORTED;
+	}
+
+	public static long getUsedMemory(boolean useThreadTracking) {
+		if(THREAD_ALLOCATED_BYTES_SUPPORTED && useThreadTracking)
+			return threadMXBean.getThreadAllocatedBytes(Thread.currentThread().getId());
+
+		final Runtime runtime = Runtime.getRuntime();
+		return runtime.totalMemory() - runtime.freeMemory();
+	}
+
+	public static long getFreeSystemMemory() {
+		try {
+			var bean = ManagementFactory.getOperatingSystemMXBean();
+			return ((com.sun.management.OperatingSystemMXBean) bean).getFreePhysicalMemorySize();
+		} catch (Throwable ignored) {
+			return Long.MAX_VALUE;
+		}
+	}
+
 	public static long getTotalSystemMemory() {
 		try {
 			var bean = ManagementFactory.getOperatingSystemMXBean();
