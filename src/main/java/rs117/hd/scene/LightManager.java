@@ -29,6 +29,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.gson.Gson;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,6 +51,7 @@ import net.runelite.client.plugins.entityhider.EntityHiderConfig;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import rs117.hd.HdPlugin;
 import rs117.hd.config.DynamicLights;
+import rs117.hd.config.PositionalShadowMode;
 import rs117.hd.data.ObjectType;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.scene.lights.Alignment;
@@ -101,6 +103,7 @@ public class LightManager {
 	@Inject
 	private EntityHiderPlugin entityHiderPlugin;
 
+	private final ArrayDeque<Listener> listeners = new ArrayDeque<>();
 	private final ArrayList<Light> WORLD_LIGHTS = new ArrayList<>();
 	private final ListMultimap<Integer, LightDefinition> NPC_LIGHTS = ArrayListMultimap.create();
 	private final ListMultimap<Integer, LightDefinition> OBJECT_LIGHTS = ArrayListMultimap.create();
@@ -166,6 +169,7 @@ public class LightManager {
 		OBJECT_LIGHTS.clear();
 		PROJECTILE_LIGHTS.clear();
 		GRAPHICS_OBJECT_LIGHTS.clear();
+		removeAllListeners();
 
 		eventBus.unregister(this);
 	}
@@ -564,6 +568,7 @@ public class LightManager {
 				sceneContext.lights.remove(i);
 				if (light.projectile != null && --light.projectileRefCounter[0] == 0)
 					sceneContext.knownProjectiles.remove(light.projectile);
+				triggerCallbacks(light, false);
 			}
 		}
 	}
@@ -679,9 +684,12 @@ public class LightManager {
 
 		// Copy over NPC and projectile lights from the old scene
 		ArrayList<Light> lightsToKeep = new ArrayList<>();
-		for (Light light : oldSceneContext.lights)
+		for (Light light : oldSceneContext.lights) {
 			if (light.actor != null || light.projectile != null)
 				lightsToKeep.add(light);
+			else
+				triggerCallbacks(light, false);
+		}
 
 		sceneContext.lights.addAll(lightsToKeep);
 		for (var light : lightsToKeep)
@@ -736,6 +744,7 @@ public class LightManager {
 				light.spotanimId = spotAnimId;
 				light.actor = actor;
 				sceneContext.lights.add(light);
+				triggerCallbacks(light, true);
 			}
 		}
 	}
@@ -777,7 +786,10 @@ public class LightManager {
 			Light light = new Light(def);
 			light.plane = -1;
 			light.actor = npc;
+			if(light.shadowMode != PositionalShadowMode.DISABLED)
+				light.shadowMode = PositionalShadowMode.MOVEABLE;
 			sceneContext.lights.add(light);
+			triggerCallbacks(light, true);
 		}
 	}
 
@@ -989,6 +1001,7 @@ public class LightManager {
 				light.sizeX = sizeX;
 				light.sizeY = sizeY;
 				sceneContext.lights.add(light);
+				triggerCallbacks(light, true);
 			}
 		}
 	}
@@ -1008,6 +1021,7 @@ public class LightManager {
 			copy.origin[1] = sceneContext.scene.getTileHeights()[local[2]][tileExX][tileExY] - copy.def.height - 1;
 			copy.origin[2] = local[1] + LOCAL_HALF_TILE_SIZE;
 			sceneContext.lights.add(copy);
+			triggerCallbacks(light, true);
 		});
 	}
 
@@ -1045,8 +1059,11 @@ public class LightManager {
 			light.origin[1] = (int) projectile.getZ();
 			light.origin[2] = (int) projectile.getY();
 			light.plane = projectile.getFloor();
+			if(light.shadowMode != PositionalShadowMode.DISABLED)
+				light.shadowMode = PositionalShadowMode.MOVEABLE;
 
 			sceneContext.lights.add(light);
+			triggerCallbacks(light, true);
 		}
 	}
 
@@ -1121,6 +1138,7 @@ public class LightManager {
 			light.origin[2] = lp.getY();
 			light.plane = worldPos[2];
 			sceneContext.lights.add(light);
+			triggerCallbacks(light, true);
 		}
 	}
 
@@ -1186,4 +1204,25 @@ public class LightManager {
 //		if (plugin.enableDetailedTimers)
 //			frameTimer.end(Timer.IMPOSTOR_TRACKING);
 //	}
+
+	private void triggerCallbacks(Light light, boolean added) {
+		for (var listener : listeners) {
+			if (added) {
+				listener.onLightAdded(light);
+			} else {
+				listener.onLightRemoved(light);
+			}
+		}
+	}
+
+	public void addListener(Listener listener) { listeners.add(listener); }
+
+	public void removeListener(Listener listener) { listeners.remove(listener); }
+
+	public void removeAllListeners() { listeners.clear(); }
+
+	public interface Listener {
+		void onLightAdded(Light light);
+		void onLightRemoved(Light light);
+	}
 }

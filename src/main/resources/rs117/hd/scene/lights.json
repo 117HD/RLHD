@@ -21533,6 +21533,7 @@
     "alignment": "CENTER",
     "radius": 500,
     "strength": 9,
+    "shadowNearPlane": 85.0,
     "color": [
       252,
       148,
@@ -21769,6 +21770,7 @@
     "offset": [ 0, 215, 0 ],
     "radius": 275,
     "strength": 5.5,
+    "shadowNearPlane": 75,
     "color": [
       252,
       148,
@@ -21786,6 +21788,7 @@
     "offset": [ -10, 155, 0 ],
     "radius": 220,
     "strength": 8.5,
+    "shadowNearPlane": 35.0,
     "color": [
       252,
       148,
@@ -22173,6 +22176,7 @@
     "alignment": "CENTER",
     "radius": 450,
     "strength": 12.5,
+    "shadowNearPlane": 30.0,
     "color": [
       252,
       148,
@@ -29118,6 +29122,7 @@
     "offset": [ -5, 210, 0 ],
     "radius": 450,
     "strength": 7.5,
+    "shadowNearPlane": 35.0,
     "color": [
       255,
       180,

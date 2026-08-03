@@ -394,6 +394,24 @@ public final class HDUtils {
 		return hsl;
 	}
 
+	public static boolean SphereAABBIntersects(
+		float sphereX, float sphereY, float sphereZ, float sphereRadius,
+		float minX, float minY, float minZ,
+		float maxX, float maxY, float maxZ
+	) {
+		final float x = max(minX, min(sphereX, maxX));
+		final float y = max(minY, min(sphereY, maxY));
+		final float z = max(minZ, min(sphereZ, maxZ));
+
+		final float dx = x - sphereX;
+		final float dy = y - sphereY;
+		final float dz = z - sphereZ;
+
+		final float distSq = dx * dx + dy * dy + dz * dz;
+
+		return distSq < (sphereRadius * sphereRadius);
+	}
+
 	public static boolean isPointWithinFrustum(float x, float y, float z, float[][] cullingPlanes, int numPlanes) {
 		for (int i = 0; i < numPlanes; i++) {
 			final float[] p = cullingPlanes[i];
