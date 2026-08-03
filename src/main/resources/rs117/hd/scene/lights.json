@@ -22363,7 +22363,6 @@
       "GRANDFIREPLACE_OLDBRICK",
       "XMAS20_POH_FIREPLACE_2_LIT",
       "FARM_FIREPLACE",
-      "DRAYNOR_FIREPLACE",
       "XMAS20_POH_FIREPLACE_3_LIT",
       "BOARDGAMES_FIREPLACE_SMALL",
       "FAI_VARROCK_SHANTY_FIREPLACE",
@@ -22385,6 +22384,60 @@
       "MISTMYST_FIREPLACE_LIT",
       "POH_FIREPLACE_1_LIT",
       "POH_FIREPLACE_2_LIT"
+    ]
+  },
+  {
+    "description": "DRAYNOR_FIREPLACE_EMBERS",
+    "offset": [ 0, 25, 40 ],
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 30,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DRAYNOR_FIREPLACE"
+    ]
+  },
+  {
+    "description": "DRAYNOR_FIREPLACE_CANDLES_LEFT",
+    "offset": [ 32, 235, -15 ],
+    "alignment": "CENTER",
+    "radius": 75,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DRAYNOR_FIREPLACE_LEFT"
+    ]
+  },
+  {
+    "description": "DRAYNOR_FIREPLACE_CANDLES_RIGHT",
+    "offset": [ 32, 235, 15 ],
+    "alignment": "CENTER",
+    "radius": 75,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DRAYNOR_FIREPLACE_RIGHT"
     ]
   },
   {
