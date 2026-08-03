@@ -176,7 +176,7 @@ public class Material {
 		return replacementCondition.test(vars);
 	}
 
-	public final int packMaterialData(@Nonnull ModelOverride modelOverride, UvType uvType, boolean isOverlay) {
+	public final int packMaterialData(@Nonnull ModelOverride modelOverride, UvType uvType, boolean isOverlay, boolean isActor) {
 		// This needs to return zero by default, since we often fall back to writing all zeroes to UVs
 		assert isValid : String.format("Material %s used after invalidation", this);
 		int materialIndex = uboIndex;
@@ -187,13 +187,17 @@ public class Material {
 			   | (modelOverride.windDisplacementMode.ordinal() & 0x7) << 9
 			   | (modelOverride.invertDisplacementStrength ? 1 : 0) << 8
 			   | (modelOverride.terrainVertexSnap ? 1 : 0) << 7
-			   | (modelOverride == ModelOverride.NONE ? 1 : 0) << 6
+			   | (modelOverride == ModelOverride.NONE && !isActor ? 1 : 0) << 6
 			   | (!modelOverride.receiveShadows ? 1 : 0) << 5
 			   | (modelOverride.upwardsNormals ? 1 : 0) << 4
 			   | (modelOverride.flatNormals ? 1 : 0) << 3
 			   | (uvType.worldUvs ? 1 : 0) << 2
 			   | (uvType == UvType.VANILLA ? 1 : 0) << 1
 			   | (isOverlay ? 1 : 0);
+	}
+
+	public final int packMaterialData(@Nonnull ModelOverride modelOverride, UvType uvType, boolean isOverlay) {
+		return packMaterialData(modelOverride, uvType, isOverlay, false);
 	}
 
 	public void fillMaterialStruct(
