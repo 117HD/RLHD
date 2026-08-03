@@ -95,6 +95,23 @@
         "type": "number",
         "description": "The gloss of specular reflections. Defaults to 0. Commonly ranges from 10 to 500."
       },
+      "hexTilingScale": {
+        "type": "number",
+        "description": "The scale of the hexagonal tiling pattern. Defaults to 0.0 which disables hex tiling, anything greater enables it."
+      },
+      "hexTilingBlend": {
+        "type": "number",
+        "description": "The blending of the hexagonal tiling pattern. Defaults to 4.0."
+      },
+      "hexTilingMode": {
+        "type": "string",
+        "description": "Controls the Mode used to generate the base Hex UV:\n * Offset: Translate & Scales the Hex UV\n * Offset & Mirror: Flips U And/Or V components\n * Offset & Rotation: Applies a Discrete rotation to the UV",
+        "enum": [
+          "OFFSET",
+          "OFFSET_WITH_MIRROR",
+          "OFFSET_WITH_ROTATION"
+        ]
+      },
       "scrollSpeed": {
         "type": "array",
         "description": "The duration in seconds, per UV direction, before texture scrolling repeats. Defaults to [ 0, 0 ], which disables scrolling.",
