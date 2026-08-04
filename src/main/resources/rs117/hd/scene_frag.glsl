@@ -475,8 +475,8 @@ void main() {
 
     #if DEVELOPMENT
         if(!isTerrain && highlightModelOverrides == 1 && (combinedMaterialData >> MATERIAL_FLAG_HIGHLIGHT_MODELS_WITHOUT_OVERRIDE & 1) == 1) {
-            float mask = checkerboard(IN.position + vec3(elapsedTime * 25.0), 16.0);
-            float str = sin(((mod(elapsedTime, 10)) / 10.0) * PI) * 0.5;
+            float mask = checkerboard(IN.position + vec3(elapsedTime * 50.0), 16.0);
+            float str = sin(((mod(elapsedTime, 2.5)) / 2.5) * PI) * 0.5;
 
             outputColor.rgb += mix(vec3(0.59, 0.58, 0.94), vec3(0.98, 0.78, 0.83), mask) * str;
         }
