@@ -8169,6 +8169,28 @@
     "groundMaterial": "DIRT"
   },
   {
+    "name": "IMCANDO_PENINSULA_DUNES",
+    "area": "IMCANDO_PENINSULA_DUNES",
+    "underlayIds": [
+      62,
+      68
+    ],
+    "replacements": {
+      "DEFAULT_GRASS": [
+        "h > 8"
+      ],
+      "BEACH_SAND": "!blendingTextures",
+      "DEFAULT_SAND": true
+    }
+  },
+  {
+    "name": "IMCANDO_PENINSULA_DUNES_FIX",
+    "area": "IMCANDO_PENINSULA_DUNES_FIX",
+    "groundMaterial": "BEACH_SAND",
+    "setHue": 8,
+    "setSaturation": 3
+  },
+  {
     "name": "COMPLEX_TILES_IMCANDO_PENINSULA",
     "area": "IMCANDO_PENINSULA",
     "underlayIds": [
@@ -8187,8 +8209,8 @@
         "h >= 9 && s >= 4",
         "h >= 10 && s >= 2"
       ],
-      "SEASONAL_DIRT": "h <= 8 && s >= 4 && l <= 71",
-      "SEASONAL_SAND": true
+      "SEASONAL_DIRT": "h <= 8 && s >= 4 && l <= 71 || h == 9 && s == 3",
+      "BEACH_SAND": true
     }
   },
   {

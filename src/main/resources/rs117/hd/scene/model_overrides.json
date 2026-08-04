@@ -15748,9 +15748,18 @@
   },
   {
     "description": "Lumbridge Swamp - Fire with Pot",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "GRUNGE_2",
     "objectIds": [
       "EMBERS_WITH_PANS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "BARK",
+        "uvScale": 0.4,
+        "uvOrientationY": 512,
+        "uvType": "BOX"
+      }
     ]
   },
   {
@@ -16956,6 +16965,7 @@
     "objectIds": [
       "DWARFHUT_WOODEN_ROOF",
       "DWARFHUT_WOODEN_ROOF1",
+      "DWARFHUT_WOODEN_ROOF_MID_EDGE",
       "FAI_BARBARIAN_LONGHALL_ROOF1",
       "FAI_BARBARIAN_LONGHALL_ROOF2",
       "FAI_BARBARIAN_LONGHALL_ROOF3",
@@ -16965,7 +16975,8 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.66,
-    "uvOrientation": 512
+    "uvOrientation": 512,
+    "depthBias": 1
   },
   {
     "description": "Barbarian Hall - Roof Corners - Wooden - Planks",
@@ -16994,7 +17005,8 @@
     "uvType": "BOX",
     "uvScale": 0.66,
     "uvOrientationX": 512,
-    "uvOrientationZ": 512
+    "uvOrientationZ": 512,
+    "depthBias": 1
   },
   {
     "description": "Round Rug",
@@ -21776,7 +21788,8 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
-      "HAMMOCK"
+      "HAMMOCK",
+      "HAMMOCK_SWINGING"
     ]
   },
   {
@@ -23874,7 +23887,8 @@
       "XBOWS_JUNGLETREE_ROPE_GRAPPLED",
       "XBOWS_JUNGLETREE_BASIC",
       "XBOWS_JUNGLETREE_ROPE_TIED",
-      "DRAGON_SLAYER_QIP_BURNT_JUNGLE_TREE3"
+      "DRAGON_SLAYER_QIP_BURNT_JUNGLE_TREE3",
+      "JUNGLETREE2_BIG"
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -51350,12 +51364,88 @@
   },
   {
     "description": "Asgarnia Ice Dungeon - Entrance Trapdoor",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "DIRT_1_LIGHT",
     "objectIds": [
       "FAI_TRAPDOOR"
     ],
     "uvType": "BOX",
-    "uvScale": 0.55
+    "uvScale": 0.55,
+    "colorOverrides": [
+      {
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 4",
+        "uvType": "BOX",
+        "uvOrientationY": 512,
+        "uvScale": 0.6
+      },
+      {
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "windDisplacementModifier": -1,
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "colors": "h > 9"
+      }
+    ]
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Plants near entrance - Flower on Stalk",
+    "baseMaterial": "LIGHT_BARK",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -1,
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "colorOverrides": [
+      {
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "windDisplacementModifier": -1,
+        "baseMaterial": "GRUNGE_3_SMOOTH",
+        "colors": "h < 10 && s != 5 || h == 20 && l > 18 || h >= 22",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      },
+      {
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "windDisplacementModifier": -1,
+        "baseMaterial": "GRUNGE_2",
+        "colors": "h >= 17 && h < 22",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      }
+    ],
+    "objectIds": [
+      "SANDDUNE_PLANT1"
+    ]
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Plants near entrance - Leafy",
+    "baseMaterial": "LIGHT_BARK",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -1,
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "colorOverrides": [
+      {
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "windDisplacementModifier": -1,
+        "baseMaterial": "GRUNGE_3_SMOOTH",
+        "colors": "h < 10 && s != 5 || h == 20 && l > 18 || h >= 22",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      },
+      {
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "windDisplacementModifier": -1,
+        "baseMaterial": "LEAF_VEINS",
+        "shiftLightness": 2,
+        "colors": "h >= 17 && h < 22",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ],
+    "objectIds": [
+      "SANDDUNE_PLANT4",
+      "SANDDUNE_PLANT3",
+      "SANDDUNE_PLANT2"
+    ]
   },
   {
     "description": "Asgarnia Ice Dungeon - Muddy Walls",
@@ -51541,6 +51631,18 @@
       "FLOORKIT_OBSIDIAN01_FILL02"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Mudskipper Point - Warning Sign",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": 7,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "MUDSKIPPER_SIGN"
+    ]
   },
   {
     "description": "Campfire",
