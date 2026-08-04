@@ -51388,20 +51388,12 @@
   },
   {
     "description": "Asgarnia Ice Dungeon - Plants near entrance - Flower on Stalk",
-    "baseMaterial": "LIGHT_BARK",
+    "baseMaterial": "GRUNGE_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.35,
     "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "windDisplacementModifier": -1,
-    "uvType": "BOX",
-    "uvScale": 0.25,
     "colorOverrides": [
-      {
-        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
-        "windDisplacementModifier": -1,
-        "baseMaterial": "GRUNGE_3_SMOOTH",
-        "colors": "h < 10 && s != 5 || h == 20 && l > 18 || h >= 22",
-        "uvType": "BOX",
-        "uvScale": 0.35
-      },
       {
         "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
         "windDisplacementModifier": -1,
@@ -51427,7 +51419,7 @@
         "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
         "windDisplacementModifier": -1,
         "baseMaterial": "GRUNGE_3_SMOOTH",
-        "colors": "h < 10 && s != 5 || h == 20 && l > 18 || h >= 22",
+        "colors": "h >= 22",
         "uvType": "BOX",
         "uvScale": 0.35
       },
