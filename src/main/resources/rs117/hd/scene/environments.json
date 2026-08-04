@@ -2615,11 +2615,11 @@
     "sunStrength": 0.075,
     "sunlightStrength": 2,
     "starVisibility": 0.8,
-    "minBrightnessBoost": 1,
+    "minBrightnessBoost": 1.75,
     "nightSkyColor": "#FF0000",
     "sunriseSunsetStrength": 0.2,
     "auroraVisibility": 0,
-    "moonDirectionalStrength": 2
+    "moonDirectionalStrength": 3
   },
   {
     "area": "VAMPYRIUM_FOREST_INSTANCE",
