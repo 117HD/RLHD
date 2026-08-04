@@ -178,10 +178,10 @@ public class DayNightLightingTest {
 		assertEquals("an explicit 0 must not be treated as unset", 0f, zero.moonShadowStrength, 0);
 	}
 
-	// The night ambient boost is scaled by (1 - moonPresence), where moonPresence is phase times
-	// altitude fade. The property that matters, and the reason it isn't gated on shadowVisibility:
-	// a new moon and a moon that has set are both "no moonlight" and must be boosted identically,
-	// while a full moon overhead gets nothing. Mirrors DayNightLighting.moonPresence.
+	// The night ambient boost is scaled by moonPresence, which is phase times altitude fade. The
+	// property that matters, and the reason it isn't gated on shadowVisibility: a new moon and a
+	// moon that has set are both "no moonlight" and must be boosted identically, while a full
+	// moon overhead is the point of least boost. Mirrors DayNightLighting.moonPresence.
 	@Test
 	public void nightBoostTreatsNewMoonAndSetMoonAlike() {
 		float newMoonHigh = moonPresence(60, 0);
@@ -195,7 +195,7 @@ public class DayNightLightingTest {
 			+ "keying the boost off moonlight presence rather than shadow visibility",
 			newMoonHigh, fullMoonSet, 0
 		);
-		assertEquals("a full moon overhead needs no boost", 1f, fullMoonHigh, 1e-6);
+		assertEquals("a full moon overhead is maximum moonlight", 1f, fullMoonHigh, 1e-6);
 
 		// Monotonic in phase and in altitude, so the boost fades in rather than popping
 		assertTrue("presence must grow with phase", moonPresence(60, 0.5f) > moonPresence(60, 0.25f));
@@ -203,6 +203,30 @@ public class DayNightLightingTest {
 
 		// Continuous across the horizon cutoff: a moon just above it must not jump to full boost
 		assertTrue("presence must ease in above the cutoff", moonPresence(-9, 1) < 0.05f);
+	}
+
+	// Presence is remapped into [MIN_BRIGHTNESS_BOOST_RESIDUAL, 1] before it scales the boost, so
+	// a full moon overhead keeps a fifth of it instead of scaling it away entirely. Without the
+	// residual an environment's lifted night floor silently reverted to the unboosted value once
+	// a month, at exactly the phase a builder is least likely to be looking at.
+	// Mirrors the boostFraction calculation in DayNightLighting.
+	@Test
+	public void fullMoonKeepsPartOfTheBrightnessBoost() {
+		float newMoon = boostFraction(60, 0);
+		float fullMoonHigh = boostFraction(60, 1);
+
+		assertEquals("a moonless night must still take the whole boost", 1f, newMoon, 1e-6);
+		assertEquals(
+			"a full moon overhead must retain the residual fraction, not zero it",
+			0.2f, fullMoonHigh, 1e-6
+		);
+
+		// Only the floor moves - the falloff keeps its shape and stays monotonic in moonlight
+		assertTrue("more moonlight must mean less boost", boostFraction(60, 0.25f) > fullMoonHigh);
+		assertTrue("boost must fall as the moon rises", boostFraction(60, 1) < boostFraction(0, 1));
+
+		// A set moon is a moonless night, residual or not
+		assertEquals("a set moon takes the same boost as a new moon", newMoon, boostFraction(-20, 1), 0);
 	}
 
 	// Moon shadow visibility runs phase through pow(illumination, 0.5) rather than scaling it
@@ -275,6 +299,12 @@ public class DayNightLightingTest {
 		float t = Math.max(0, Math.min(1, (float) ((moonAltDeg - -10) / (20.0 - -10))));
 		float fade = t * t * (3 - 2 * t);
 		return Math.max(0, Math.min(1, moonIllumination * fade));
+	}
+
+	// Mirrors DayNightLighting's boostFraction: presence remapped into [residual, 1]
+	private static float boostFraction(double moonAltDeg, float moonIllumination) {
+		float residual = 0.2f;
+		return residual + (1 - residual) * (1 - moonPresence(moonAltDeg, moonIllumination));
 	}
 
 	// "forceMoonActive" lets a cutscene environment show the moon even when the player has the

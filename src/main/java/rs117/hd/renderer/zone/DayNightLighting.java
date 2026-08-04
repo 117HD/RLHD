@@ -57,6 +57,13 @@ public class DayNightLighting {
 	// full-moon shadow and a crescent to 50%, while pow keeps a new moon at exactly 0.
 	private static final float MOON_SHADOW_PHASE_EXPONENT = 0.5f;
 
+	// Fraction of the ambient floor boost that survives a full moon directly overhead - the
+	// point of maximum moonlight, where the boost would otherwise scale to nothing. Moonlight
+	// at its brightest still isn't enough to stand in for the boost entirely, so an area that
+	// asks for a lifted night floor keeps some of it on every night rather than having its
+	// darkest-shadow tuning silently revert once a month.
+	private static final float MIN_BRIGHTNESS_BOOST_RESIDUAL = 0.2f;
+
 	// Ceiling on how far moonlight can tint the directional color
 	private static final float MAX_MOON_COLOR_INFLUENCE = 0.8f;
 
@@ -251,7 +258,9 @@ public class DayNightLighting {
 
 		// Raise the ambient floor to stand in for the moonlight that isn't there, scaling the
 		// boost by how much moonlight is actually missing so the two never stack into an
-		// over-bright night. Full boost on a new moon, none under a full moon overhead.
+		// over-bright night. Full boost on a new moon, down to MIN_BRIGHTNESS_BOOST_RESIDUAL
+		// of it under a full moon overhead - the scaling never reaches zero, because even the
+		// brightest moonlight doesn't fully replace the floor the environment asked for.
 		//
 		// This keys off moonlight presence rather than shadowVisibility, which is what makes
 		// the moon-below-horizon case work: moonPresence is 0 both when the moon is new and
@@ -264,8 +273,12 @@ public class DayNightLighting {
 		// minMoonIllumination is a lie told to the lighting to keep a new moon casting light -
 		// feeding it back in here would have the floor suppress the very boost that covers the
 		// case it exists for, and the two knobs would silently cancel.
+		// Remapped into [MIN_BRIGHTNESS_BOOST_RESIDUAL, 1] rather than used raw, so the falloff
+		// with moonlight keeps its shape and only the floor moves.
+		float boostFraction = MIN_BRIGHTNESS_BOOST_RESIDUAL + (1 - MIN_BRIGHTNESS_BOOST_RESIDUAL)
+			* (1 - moonPresence(moonAltDeg, moonIllumination));
 		float boostedFloor = (plugin.configMinimumBrightness / 100.0f)
-			* (1 + environmentManager.currentMinBrightnessBoost * (1 - moonPresence(moonAltDeg, moonIllumination)));
+			* (1 + environmentManager.currentMinBrightnessBoost * boostFraction);
 		lighting.ambientStrength = Math.max(lighting.ambientStrength, boostedFloor);
 
 		// Fold some of the unshadowed directional light into ambient to stand in for sky-fill
