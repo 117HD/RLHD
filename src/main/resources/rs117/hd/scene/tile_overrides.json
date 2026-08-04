@@ -1848,6 +1848,17 @@
     "groundMaterial": "GRASS_1"
   },
   {
+    "name": "VARROCK_SEWERS_WATER",
+    "area": "VARROCK_SEWERS",
+    "overlayIds": [
+      7,
+      128,
+      156
+    ],
+    "waterType": "CAVE_WATER_SWAMP",
+    "blended": false
+  },
+  {
     "name": "STRONGHOLD_OF_SECURITY_OOZE",
     "area": "STRONGHOLD_OF_SECURITY_PESTILENCE",
     "underlayIds": [
