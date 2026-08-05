@@ -16292,7 +16292,8 @@
     "depthBias": 1,
     "objectIds": [
       "FAI_VARROCK_DRAINS1",
-      "FAI_VARROCK_DRAINS2"
+      "FAI_VARROCK_DRAINS2",
+      "FAI_VARROCK_DRAINS3"
     ],
     "colorOverrides": [
       {
