@@ -39211,8 +39211,7 @@
   },
   {
     "description": "SKULL_WALL_TORCH",
-    "height": 207,
-    "alignment": "FRONT",
+    "offset": [ -10, 207, 0 ],
     "radius": 300,
     "strength": 10.5,
     "color": [

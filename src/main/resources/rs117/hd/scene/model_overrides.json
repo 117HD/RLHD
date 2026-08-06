@@ -8704,6 +8704,7 @@
       "CAVEENTRANCE3",
       "UPASS_CAVEENTRANCE2",
       "XMAS20_GOBLIN_CAVE_ENTRANCE",
+      "XMAS20_GOBLIN_CAVE_ENTRANCE_NOOP",
       "GA_CAVE",
       "SHAYZIEN_RIVER_CAVE"
     ],
@@ -10299,7 +10300,8 @@
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       "PIER_RAIL_TALL",
-      "TIMBERWALL_BROWN"
+      "TIMBERWALL_BROWN",
+      "GOBLIN_OUTPOST_WALL"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -14135,6 +14137,25 @@
     ]
   },
   {
+    "description": "Skull Wall Torch with Metal Bracket",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      "SKULLTORCH_GRUBBY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255 || h == 3",
+        "baseMaterial": "GRAY_125",
+        "receiveShadows": false,
+        "upwardsNormals": true
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
     "description": "WALL_SHIELD",
     "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "uvType": "BOX",
@@ -17432,7 +17453,8 @@
       "FAI_VARROCK_LARGE_CRATE",
       "FAI_VARROCK_LARGE_CRATES",
       "FAI_VARROCK_RED_CRATE",
-      "DADDYSHOME_CRATES"
+      "DADDYSHOME_CRATES",
+      "GOBLIN_OUTPOST_LARGE_CRATE_ARMOUR1"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -26256,7 +26278,9 @@
       "GOBLIN_OUTPOST_POORDOOR_DOUBLE_INNER",
       "GOBLIN_OUTPOST_OPENPOORDOOR_DOUBLE_INNER",
       "GOBLIN_OUTPOST_POORDOOR_DOUBLER_INNER",
-      "GOBLIN_OUTPOST_OPENPOORDOOR_DOUBLER_INNER"
+      "GOBLIN_OUTPOST_OPENPOORDOOR_DOUBLER_INNER",
+      "GOBLIN_OUTPOST_POORDOOR_DOUBLE_INNER_NOOP",
+      "GOBLIN_OUTPOST_POORDOOR_DOUBLER_INNER_NOOP"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -26297,10 +26321,145 @@
   },
   {
     "description": "Goblin Village Wooden Ladder",
-    "baseMaterial": "WOOD_GRAIN",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationY": 512,
+    "uvScale": 0.6,
+    "uvType": "BOX",
     "objectIds": [
       "GOBLIN_LADDER_BOTTOM",
-      "GOBLIN_LADDER_TOP"
+      "GOBLIN_LADDER_TOP",
+      "GOBLIN_LADDER_MIDDLE"
+    ]
+  },
+  {
+    "description": "Goblin Village Wooden Ladder with Hole",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "_100_GOBLIN_LADDER_DOWN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Goblin Village Banner Pole",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "objectIds": [
+      "GOBLIN_BANNER_POLE"
+    ]
+  },
+  {
+    "description": "Goblin Village Animated Banner",
+    "baseMaterial": "CARPET_LIGHT",
+    "shiftLightness": 3,
+    "objectIds": [
+      "GOBLIN_BANNER_RED",
+      "GOBLIN_BANNER_GREEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 7" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Goblin Village Wall Banner",
+    "baseMaterial": "CARPET_LIGHT",
+    "shiftLightness": 3,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "GOBLIN_WALL_FLAG_RED",
+      "GOBLIN_WALL_FLAG_GREEN",
+      "GOBLIN_CHANGING_CURTAIN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "uvOrientationX": 512
+      },
+      {
+        "colors": [ "h == 2" ],
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Goblin Village - Timber Defence",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.15,
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 7 && s == 4",
+        "baseMaterial": "BARK",
+        "shiftLightness": 3,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "GOBLIN_TIMBERDEFENCE_NEW",
+      "TIMBERDEFENCE_EDGER_NEW"
+    ]
+  },
+  {
+    "description": "Goblin Village - Roof Middle",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "_100_GOBLIN_ROOF_TOP",
+      "_100_GOBLIN_ROOF_END_MIRROR",
+      "_100_GOBLIN_ROOF_END",
+      "_100_GOBLIN_ROOF_TOP_LOWER",
+      "_100_GOBLIN_ROOF_END2",
+      "_100_GOBLIN_ROOF_END2_MIRROR",
+      "_100_GOBLIN_ROOF_BEFORE_EX"
+    ]
+  },
+  {
+    "description": "Goblin Village - Roof Middle - Not Rotated",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "_100_GOBLIN_ROOF1",
+      "_100_GOBLIN_ROOF2"
+    ]
+  },
+  {
+    "description": "Goblin Village - Roof Edge",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "_100_GOBLIN_ROOF"
     ]
   },
   {
@@ -33480,12 +33639,15 @@
       "WILD_CHEST_CLOSED",
       "WILD_CHEST_OPEN",
       "KEBOS_CHEST_CLOSED_INACTIVE",
-      "WGS_MOVARIO_RUNE_CHEST"
+      "WGS_MOVARIO_RUNE_CHEST",
+      "GOBLIN_OUTPOST_CHEST_CLOSED"
     ],
     "uvType": "BOX",
     "uvOrientationZ": 512,
     "uvOrientationX": 512,
-    "flatNormals": true
+    "flatNormals": true,
+    "uvOrientationY": 512,
+    "uvScale": 0.8
   },
   {
     "description": "Object - Wooden - Plank - Chest - Metal Clasp",
@@ -49652,7 +49814,9 @@
       "MURDERBARRELC",
       "MURDERBARRELD",
       "MURDERBARRELE",
-      "MURDERBARRELF"
+      "MURDERBARRELF",
+      "GOBLIN_OUTPOST_BARREL",
+      "DK_BARREL"
     ]
   },
   {
@@ -50691,7 +50855,7 @@
     "description": "Skulls",
     "baseMaterial": "BONE",
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.25,
     "objectIds": [
       "WEREWOLF_SKULL_CLIMB_1",
       "WEREWOLF_SKULL_CLIMB_2",
@@ -50699,7 +50863,8 @@
       "BLOODTEMPLE_SKULL_FLOATING01",
       "BLOODTEMPLE_SKULL_FLOATING02",
       "BLOODTEMPLE_SKULL_FLOATING03",
-      "PILE_OF_SKULLS"
+      "PILE_OF_SKULLS",
+      "GOBLIN_OUTPOST_SKULL_PILE"
     ]
   },
   {
