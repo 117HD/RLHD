@@ -6654,7 +6654,6 @@
         "uvScale": 0.66
       },
       {
-        "description": "Wood",
         "colors": "h > 10",
         "baseMaterial": "LEAVES_1",
         "uvType": "BOX",
@@ -16060,7 +16059,6 @@
     ],
     "colorOverrides": [
       {
-        "description": "Both required to prevent vanilla texture from disappearing",
         "colors": "h == 34",
         "baseMaterial": "NONE"
       }
@@ -49324,7 +49322,7 @@
     ]
   },
   {
-    "description": "Lumbridge crypt ivy",
+    "description": "Lumbridge Window with ivy",
     "baseMaterial": "LEAF_VEINS_DARKER",
     "windDisplacementMode": "VERTEX_JIGGLE",
     "objectIds": [
@@ -52620,21 +52618,7 @@
       "CANOESTATION_TREE_FALLING"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8,
-    "colorOverrides": [
-      {
-        "description": "Wood frame",
-        "colors": "h == 26",
-        "baseMaterial": "NONE"
-      },
-      {
-        "description": "Wood frame",
-        "colors": "h == 7 || h == 8",
-        "baseMaterial": "ROPE",
-        "uvType": "BOX",
-        "uvScale": 0.6
-      }
-    ]
+    "uvScale": 0.8
   },
   {
     "description": "Canoe Station - with Canoes",
