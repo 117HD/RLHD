@@ -22186,7 +22186,8 @@
       "VMQ4_METZLI_BOSS_FINAL_SECTION_BORDER",
       "CHOMPYBIRD_SPITROAST_EMPTY",
       "BONES_IN_PASTE_FIRE",
-      "TEMPOROSS_LOBBY_FIRE"
+      "TEMPOROSS_LOBBY_FIRE",
+      "EAGLEPEAK_CAMPFIRE_FIRE_MESSY"
     ]
   },
   {
@@ -22747,6 +22748,24 @@
       "FAI_FALADOR_FURNACE_GLOW",
       "FURNACE",
       "BR_FURNACE"
+    ]
+  },
+  {
+    "description": "FURNACE_GLOW_OFFSET",
+    "offset": [ 160, 120, 0 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 7.5,
+    "color": [
+      252,
+      90,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "LOVAQUEST_TOWER_FURNACE_LIT"
     ]
   },
   {
@@ -47936,6 +47955,42 @@
     ]
   },
   {
+    "description": "Port Roberts - Metal cooking Range 1",
+    "height": 100,
+    "offset": [ 0, -45, -70 ],
+    "radius": 75,
+    "strength": 8,
+    "color": [
+      252,
+      60,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "PISCARILIUS_RANGE"
+    ]
+  },
+  {
+    "description": "Port Roberts - Metal cooking Range 2",
+    "height": 100,
+    "offset": [ 0, 40, 0 ],
+    "radius": 200,
+    "strength": 4,
+    "color": [
+      252,
+      108,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "PISCARILIUS_RANGE"
+    ]
+  },
+  {
     "description": "Sailing - Kraken Lighting Attack - Blue - Projectile",
     "offset": [ 0, 30, 0 ],
     "radius": 450,
@@ -50476,6 +50531,42 @@
     "type": "STATIC",
     "objectIds": [
       "WYRMSCRAIG_SUNSTONE01"
+    ]
+  },
+  {
+    "description": "COALS_BUCKET",
+    "height": 80,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "COALS_BUCKET_LARGE"
+    ]
+  },
+  {
+    "description": "LOVAKENJ_BANK_LIGHT",
+    "height": 220,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 5,
+    "color": [
+      252,
+      230,
+      40
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LOVA_BANK_LIGHT_ON_01"
     ]
   }
 ]
