@@ -893,14 +893,18 @@
   {
     "area": "MISTHALIN_MYSTERY_MANOR_REGION",
     "lightningEffects": true,
-    "ambientColor": "#615c57",
-    "ambientStrength": 1.5,
-    "directionalColor": "#ffd4d1",
+    "ambientColor": "#A5B3B7",
+    "ambientStrength": 1.2,
+    "directionalColor": "#B6D4D1",
     "directionalStrength": 0.1,
-    "fogColor": "#0f0e0d",
+    "fogColor": "#090A12",
     "waterColor": "#1f2838",
     "waterCausticsStrength": 0,
-    "fogDepth": 40
+    "fogDepth": 50,
+    "cycleMode": "FIXED_NIGHT",
+    "nightSkyColor": "#ADADAD",
+    "moonDirectionalStrength": 2,
+    "minBrightnessBoost": 0.35
   },
   {
     "area": "MOTHERLODE_MINE",
