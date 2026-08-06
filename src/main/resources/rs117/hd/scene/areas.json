@@ -11852,10 +11852,6 @@
     "regions": [ 16717 ]
   },
   {
-    "name": "Black Knights Fort - Entrance Tile Fix",
-    "aabbs": [ [ 3016, 3519 ] ]
-  },
-  {
     "name": "Black Knights Fort - Basement",
     "aabbs": [ [ 1857, 4225, 1877, 4252 ] ],
     "hideOtherAreas": true

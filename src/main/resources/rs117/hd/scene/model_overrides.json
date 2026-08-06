@@ -5470,7 +5470,8 @@
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "undoVanillaShading": false,
     "uvType": "BOX",
-    "uvScale": 0.4,
+    "uvScale": 0.2,
+    "minLightness": 17,
     "objectIds": [
       "FAI_FALADOR_SUITOFAMOUR",
       "SUITOFARMOUR_WHITEKNIGHT"
@@ -12633,6 +12634,7 @@
       "QIP_WATCHTOWER_LADDER_TOP",
       "DK_LADDER",
       "DK_LADDERTOP",
+      "DK_MEETING_LADDERTOP",
       "DK_MEETING_LADDER",
       "MYQ3_LADDER_DOWN",
       "MYQ3_LADDER_UP",
@@ -13585,8 +13587,7 @@
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       "VAMPCOFFIN",
-      "VAMPCOFFIN_ANIMATED",
-      "COUNT_DRAYNOR_COFFIN"
+      "VAMPCOFFIN_ANIMATED"
     ],
     "npcIds": [
       "COUNT_DRAYNOR_COFFIN"
@@ -14869,10 +14870,10 @@
   },
   {
     "description": "STONE Staircase Spiral with wooden rails",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvOrientation": 765,
-    "uvScale": 0.4,
+    "uvScale": 0.75,
     "colorOverrides": [
       {
         "colors": [ "h == 7 && s > 2", "h == 5 && s == 2" ],
@@ -17365,9 +17366,6 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "GERTRUDEEMPTY_CRATE",
-      "FAI_VARROCK_LARGE_CRATE",
-      "FAI_VARROCK_LARGE_CRATES",
-      "FAI_VARROCK_SMALL_CRATES",
       "FAI_VARROCK_GREEN_CRATE",
       "AHOY_BOXES_1",
       "FARMING_CRATE",
@@ -17468,6 +17466,16 @@
     ],
     "uvType": "BOX",
     "uvOrientationY": 170,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Wooden - Small Crate 550 degree top",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "DK_BOXES"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 550,
     "uvScale": 0.6
   },
   {
@@ -19205,7 +19213,8 @@
       "BR_STOOL",
       "LUC2_MOV_STOOL",
       "PEST_STOOL",
-      "TOTE_PORTAL_TO_GOTR_CHILD_HIDDEN"
+      "TOTE_PORTAL_TO_GOTR_CHILD_HIDDEN",
+      "DK_STOOL"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -26423,8 +26432,7 @@
       }
     ],
     "objectIds": [
-      "GOBLIN_TIMBERDEFENCE_NEW",
-      "TIMBERDEFENCE_EDGER_NEW"
+      "GOBLIN_TIMBERDEFENCE_NEW"
     ]
   },
   {
@@ -48790,11 +48798,13 @@
     "receiveShadows": false
   },
   {
-    "description": "Marble statues at Lumbridge Entrance - Textured",
+    "description": "Marble statues - Textured",
     "objectIds": [
       "STATUE_LUMBRIDGE",
       "GARDEN_QUEEN_STATUE",
-      "STATUE_PLINTH_LUMBRIDGE"
+      "STATUE_PLINTH_LUMBRIDGE",
+      "FAI_FALADOR_STATUE_KNIGHT_HALBERD",
+      "FAI_FALADOR_STATUE_KNIGHT_MACE"
     ],
     "baseMaterial": "MARBLE_2_SEMIGLOSS",
     "uvType": "BOX",
@@ -50846,7 +50856,8 @@
       "HILLGIANT_BOSS_CORPSE3",
       "DRAGON_SLAYER_QIP_CORPSE_1",
       "DRAGON_SLAYER_QIP_CORPSE_2",
-      "CHARRED_BONES"
+      "CHARRED_BONES",
+      "WILD1_SKELETON_1"
     ],
     "uvType": "BOX",
     "uvScale": 0.6
@@ -50958,7 +50969,9 @@
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
       "PLAGUE_GRILL",
-      "PLAGUE_GRILL_VIS"
+      "PLAGUE_GRILL_VIS",
+      "WITCHGRILL_INACTIVE",
+      "WITCHGRILL"
     ]
   },
   {
@@ -51334,7 +51347,10 @@
   {
     "description": "Stone bat wall decoration",
     "baseMaterial": "STONE_NORMALED",
-    "objectIds": [ "GARGOYLE1" ],
+    "objectIds": [
+      "GARGOYLE1",
+      "GARGOYLE1_DARKBROWN"
+    ],
     "uvType": "BOX",
     "uvScale": 0.8
   },
@@ -59785,7 +59801,8 @@
   {
     "description": "Aggie's House - Broom",
     "objectIds": [
-      "DRAYNOR_AGGIE_WITCHESBROOM"
+      "DRAYNOR_AGGIE_WITCHESBROOM",
+      "WITCHESBROOM"
     ],
     "colorOverrides": [
       {
@@ -59810,7 +59827,10 @@
     "objectIds": [
       "DRAYNOR_AGGIE_CAULDRON",
       "SARIM_BETTYS_CAULDRON",
-      "HETTYCAULDRON"
+      "HETTYCAULDRON",
+      "DK_CAULDRON",
+      "BLACKKNIGHTHOLE",
+      "DK_CAULDRON_SABOTAGED"
     ],
     "uvType": "BOX",
     "uvScale": 0.25,
@@ -59818,6 +59838,23 @@
       {
         "colors": "h == 34 || h == 21",
         "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Witches Metal Table",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "DK_WITCHES_TABLE_CORNER"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
       }
     ]
   },
@@ -65969,7 +66006,8 @@
     "uvScale": 0.1,
     "objectIds": [
       "GRANDFIREPLACE",
-      "FARM_FIREPLACE"
+      "FARM_FIREPLACE",
+      "GRANDFIREPLACE_OLDBRICK"
     ],
     "colorOverrides": [
       {
@@ -83141,7 +83179,10 @@
     "objectIds": [
       "PIRATETREASURE_WAREHOUSE_SHELVES2",
       "PIRATETREASURE_WAREHOUSE_SHELVES3",
-      "PIRATETREASURE_WAREHOUSE_SHELVES4"
+      "PIRATETREASURE_WAREHOUSE_SHELVES4",
+      "DK_SHELVES1",
+      "DK_SHELVES2",
+      "DK_SHELVES3"
     ]
   },
   {
