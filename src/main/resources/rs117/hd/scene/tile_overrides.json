@@ -2250,6 +2250,19 @@
     }
   },
   {
+    "name": "VARROCK_CHAMPIONS_GUILD_ROOF",
+    "area": "VARROCK_CHAMPIONS_GUILD_ROOF",
+    "overlayIds": [
+      171
+    ],
+    "groundMaterial": "BRICK_PATHS",
+    "blended": false,
+    "heightOffset": 37,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
     "name": "VARROCK_CHAMPIONS_GUILD_BOTTOM_FLOOR",
     "area": "VARROCK_CHAMPIONS_GUILD",
     "overlayIds": [

@@ -1113,7 +1113,6 @@
     "areas": [ "WARM_REGIONS" ],
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "depthBias": 1,
-    "minLightness": 120,
     "objectIds": [
       "TREE2",
       "TREE3",
@@ -15277,10 +15276,13 @@
       "OPENCASTLEDOOR",
       "DEATH_CASTLEDOOR",
       "CASTLEDOOR_INACTIVE",
-      "CRAFTINGGUILDDOOR"
+      "CRAFTINGGUILDDOOR",
+      "CHAMPIONDOOR",
+      "CHAMPIONDOOR_OPEN"
     ],
     "flatNormals": true,
     "uvType": "BOX",
+    "uvOrientationY": 512,
     "uvScale": 0.4
   },
   {
@@ -21528,6 +21530,30 @@
       "FAI_FALADOR_POSH_CHAIR_WHITE",
       "POSH_CHAIR_WHITE",
       "FAI_VARROCK_JULIET_CHAIR"
+    ]
+  },
+  {
+    "description": "Wooden Table - Blue Cloth with Gold Decorations",
+    "baseMaterial": "CARPET",
+    "shiftLightness": 2,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      },
+      {
+        "colors": "h == 9 && s == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ],
+    "objectIds": [
+      "FAI_VARROCK_POSH_BIG_TABLE_BLUE"
     ]
   },
   {
@@ -31083,7 +31109,8 @@
       "MURDER_QIP_CONTEST_FENCE",
       "MURDER_QIP_CONTEST_FENCE_POST",
       "MURDER_QIP_CONTEST_FENCE_ENDR",
-      "MURDER_QIP_CONTEST_FENCE_ENDL"
+      "MURDER_QIP_CONTEST_FENCE_ENDL",
+      "LUMBRIDGE_SC_FENCEJUMP"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -54449,7 +54476,7 @@
     "uvScale": 0.8,
     "colorOverrides": [
       {
-        "colors": "h == 0 && s == 0",
+        "colors": "h == 0 && s == 0 || h == 10 && s == 0",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
         "uvType": "BOX",
         "uvOrientation": 920,
@@ -54458,7 +54485,8 @@
     ],
     "objectIds": [
       "PLOUGH",
-      "RIMMINGTON_PLOUGH"
+      "RIMMINGTON_PLOUGH",
+      "FAI_VARROCK_PLOUGH"
     ]
   },
   {

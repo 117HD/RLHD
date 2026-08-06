@@ -441,9 +441,15 @@
     ]
   },
   {
+    "name": "VARROCK_CHAMPIONS_GUILD_ROOF",
+    "aabbs": [
+      [ 3188, 3350, 3194, 3362, 2 ]
+    ]
+  },
+  {
     "name": "VARROCK_CHAMPIONS_GUILD_KITCHEN",
     "aabbs": [
-      [ 3188, 3352, 3194, 3354 ]
+      [ 3188, 3352, 3194, 3354, 0 ]
     ]
   },
   {
