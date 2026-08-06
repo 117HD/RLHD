@@ -1611,6 +1611,11 @@
     "specularGloss": 30.0
   },
   {
+    "name": "GRUNGE_3_MIRRORED",
+    "parent": "GRUNGE_3",
+    "textureScale": [ -1, -1 ,1 ]
+  },
+  {
     "name": "GRUNGE_3_SMOOTH",
     "parent": "GRUNGE_3",
     "normalMap": null

@@ -7852,7 +7852,8 @@
       }
     ],
     "objectIds": [
-      "GUIDEROPES1"
+      "GUIDEROPES1",
+      "GUIDEROPES2"
     ]
   },
   {
@@ -14336,7 +14337,8 @@
     "flatNormals": true,
     "objectIds": [
       "FROG_QUEST_CHEST",
-      "FROG_QUEST_CHEST_OPEN"
+      "FROG_QUEST_CHEST_OPEN",
+      "THBANKCHEST"
     ],
     "colorOverrides": [
       {
@@ -14344,8 +14346,7 @@
         "colors": "s == 0",
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
         "uvType": "BOX",
-        "uvScale": 0.4,
-        "uvOrientation": -89
+        "uvScale": 0.2
       }
     ]
   },
@@ -14424,7 +14425,9 @@
       "CTRATGATEA",
       "CTRATGATEC",
       "PRISONDOOR",
+      "SHANTAY_PRISONDOOR",
       "ARENA_PRISONDOOR",
+      "ALIDOOR",
       "ARENA_INACTIVEGATE",
       "ARENA_INACTIVEGATE_R",
       "ARENA_JEREMYDOOR",
@@ -15272,7 +15275,8 @@
       "CASTLEDOOR",
       "OPENCASTLEDOOR",
       "DEATH_CASTLEDOOR",
-      "CASTLEDOOR_INACTIVE"
+      "CASTLEDOOR_INACTIVE",
+      "CRAFTINGGUILDDOOR"
     ],
     "flatNormals": true,
     "uvType": "BOX",
@@ -16108,7 +16112,8 @@
     "uvType": "BOX",
     "uvScale": 0.35,
     "objectIds": [
-      "SCARECROW"
+      "SCARECROW",
+      "RIMMINGTON_SCARECROW"
     ],
     "colorOverrides": [
       {
@@ -22972,6 +22977,16 @@
     "uvOrientation": 512
   },
   {
+    "description": "Al-Kharid Roof Support Beams",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "DESERTROOFBEAMS"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvScale": 0.5
+  },
+  {
     "description": "Pollnivneach Windows",
     "baseMaterial": "WATTLE_1",
     "objectIds": [
@@ -23010,6 +23025,22 @@
     ]
   },
   {
+    "description": "Al-Kharid Small Table",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.55,
+    "retainVanillaUvs": false,
+    "objectIds": [
+      "EGYPT_SMALL_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
     "description": "Al-Kharid Pillars",
     "baseMaterial": "MARBLE_3",
     "uvType": "BOX",
@@ -23021,11 +23052,22 @@
     ]
   },
   {
-    "description": "Al-Kharid stone stable with pillars",
-    "baseMaterial": "STONE",
+    "description": "Al-Kharid stone table with pillars",
+    "baseMaterial": "GRUNGE_3",
+    "retainVanillaUvs": false,
+    "uvScale": 0.75,
+    "uvType": "BOX",
     "objectIds": [
       "EGYPT_TABLE",
-      "EGYPT_TABLE_2"
+      "EGYPT_TABLE_2",
+      "EGYPT_TABLE_CARPET_EXHIBIT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8 && s == 1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX"
+      }
     ]
   },
   {
@@ -23173,7 +23215,16 @@
       "DESERTDOOROPEN"
     ],
     "uvType": "MODEL_XY",
-    "uvScale": 0.80
+    "uvScale": 0.80,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Pollnivneach Double Doors",
@@ -23238,7 +23289,8 @@
   },
   {
     "description": "AL Kharid - Bed and Chair",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvScale": 0.6,
     "uvType": "BOX",
     "objectIds": [
       "EGYPT_BED",
@@ -23283,6 +23335,24 @@
       "FEUD_TENTWALL",
       "TENTROOF2",
       "TENTROOFCENTRE2"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Kharidian Tent Old Top",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvScale": 0.6,
+    "objectIds": [
+      "TENTROOFOLD"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Shanty Pass Doorway",
+    "retainVanillaUvs": false,
+    "uvScale": 0.6,
+    "objectIds": [
+      "SHANTAY_PASS_HENGE_DOORWAY"
     ],
     "uvType": "BOX"
   },
@@ -23425,6 +23495,7 @@
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "POTTEDFERN1",
+      "POTTEDFERN",
       "POTTEDSMALLFERN",
       "POTTEDFERN2"
     ],
@@ -35944,7 +36015,11 @@
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "BANKDOOR_R_INACTIVE",
-      "BANKDOOR_L_INACTIVE"
+      "BANKDOOR_L_INACTIVE",
+      "BANKDOOR_R",
+      "BANKDOOR_L",
+      "OPENBANKDOOR_R",
+      "OPENBANKDOOR_L"
     ],
     "uvType": "BOX",
     "uvScale": 0.4
@@ -46780,7 +46855,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "DWARF_KELDAGRIM_SMALL_CUPBOARD",
-      "SWAN_CUPBOARD"
+      "SWAN_CUPBOARD",
+      "ALICUPBOARD"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -48651,6 +48727,7 @@
     "uvScale": 0.75,
     "objectIds": [
       "SHOPSIGN",
+      "GENERALSTORESIGN",
       "XMTS_PUB_SIGN"
     ],
     "colorOverrides": [
@@ -53479,7 +53556,8 @@
       "REDCURTAINEDPOSHBIGWINDOW",
       "GREENCURTAINEDPOSHBIGWINDOW",
       "BLACKCURTAINEDPOSHBIGWINDOW",
-      "CURTAINEDPOSHBIGWINDOW"
+      "CURTAINEDPOSHBIGWINDOW",
+      "WHITECURTAINEDPOSHBIGWINDOW"
     ],
     "colorOverrides": [
       {
@@ -54369,11 +54447,12 @@
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
         "uvType": "BOX",
         "uvOrientation": 920,
-        "uvScale": 0.5
+        "uvScale": 0.2
       }
     ],
     "objectIds": [
-      "PLOUGH"
+      "PLOUGH",
+      "RIMMINGTON_PLOUGH"
     ]
   },
   {
@@ -58781,7 +58860,8 @@
     "uvScale": 0.5,
     "objectIds": [
       "POH_BOARD_YANILLE",
-      "POH_BOARD_PRIFDDINAS"
+      "POH_BOARD_PRIFDDINAS",
+      "POH_BOARD_RIMMINGTON"
     ],
     "colorOverrides": [
       {
@@ -59893,13 +59973,16 @@
     "uvOrientationZ": 512,
     "objectIds": [
       "MARKET",
+      "ROGUETRADER_ALI_M_STALL_NOWT",
       "DRAYNOR_TOY_MARKET",
       "RAG_MARKET_STALL",
       "SEED_STALL",
       "FURTHIEFSTALL",
       "GEMTHIEFSTALL",
+      "GEMMARKET",
       "CAKETHIEFSTALL",
       "SILKTHIEFSTALL",
+      "SILKMARKET",
       "SILVERTHIEFSTALL",
       "SPICETHIEFSTALL",
       "FORTIS_MARKET_STALL_GEMS",
@@ -65857,8 +65940,7 @@
         "colors": "h == 0 && s == 0",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
-        "uvScale": 0.4,
-        "uvOrientation": 89
+        "uvScale": 0.2
       }
     ]
   },
@@ -72552,7 +72634,8 @@
     "uvOrientation": 512,
     "upwardsNormals": true,
     "objectIds": [
-      "VARLAMORE_NICE_CHEST"
+      "VARLAMORE_NICE_CHEST",
+      "DIARY_GUILD_BANKCHEST"
     ],
     "colorOverrides": [
       {
@@ -72560,8 +72643,7 @@
         "colors": "s == 0",
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
         "uvType": "BOX",
-        "uvScale": 0.4,
-        "uvOrientation": -89
+        "uvScale": 0.2
       }
     ]
   },

@@ -2619,6 +2619,17 @@
     "blended": false
   },
   {
+    "name": "AL_KHARID_ROOF",
+    "area": "AL_KHARID_BUILDINGS",
+    "overlayIds": [
+      9
+    ],
+    "groundMaterial": "GRUNGE_3_ALT",
+    "blended": false,
+    "maxLightness": 65,
+    "uvScale": 1.5
+  },
+  {
     "name": "AL_KHARID_FLOOR_MARBLE_2",
     "area": "AL_KHARID_BUILDINGS",
     "overlayIds": [
@@ -8515,7 +8526,38 @@
     "groundMaterial": "OVERWORLD_GRASS_1",
     "maxLightness": 50,
     "shiftHue": -1,
-    "minHue": 9
+    "minHue": 9,
+    "maxSaturation": 4
+  },
+  {
+    "name": "KHARID_GRASS_TO_DIRT_TRANSITION",
+    "groundMaterial": "GRASSY_DIRT",
+    "maxLightness": 50,
+    "shiftHue": -2,
+    "minHue": 8
+  },
+  {
+    "name": "KHARID_DIRT_TO_SAND_TRANSITION",
+    "groundMaterial": "DIRT_1",
+    "maxLightness": 55,
+    "shiftHue": -2,
+    "minHue": 7
+  },
+  {
+    "name": "KHARID_DIRT_TO_SAND_TRANSITION_2",
+    "groundMaterial": "DIRT_1",
+    "maxLightness": 52,
+    "shiftHue": -2,
+    "minHue": 4,
+    "maxSaturation": 3
+  },
+  {
+    "name": "KHARID_DIRT_TO_SAND_TRANSITION_3",
+    "groundMaterial": "VARIED_DIRT",
+    "maxLightness": 48,
+    "shiftHue": -1,
+    "minHue": 6,
+    "maxSaturation": 3
   },
   {
     "name": "KHARID_GRASS_CLAMPED",
@@ -8530,14 +8572,6 @@
     "groundMaterial": "OVERWORLD_GRASS_1",
     "maxLightness": 50,
     "shiftHue": -2
-  },
-  {
-    "name": "KHARID_GRASSY_SAND",
-    "groundMaterial": "GRASSY_SAND",
-    "maxLightness": 60,
-    "shiftHue": -1,
-    "minHue": 6,
-    "maxSaturation": 3
   },
   {
     "name": "KHARID_DIRTY_SAND",
@@ -8624,6 +8658,9 @@
       129
     ],
     "replacements": {
+      "KHARID_DIRT_TO_SAND_TRANSITION": [
+        "h == 9 && s == 3 || h == 10 && s == 3"
+      ],
       "KHARID_GRASS": [
         "h >= 19",
         "h >= 10 && s >= 3",
@@ -8666,7 +8703,7 @@
       "KHARID_DIRT": [
         "h == 7 && s > 3 && s < 8"
       ],
-      "KHARID_GRASSY_SAND": [
+      "KHARID_DIRT_TO_SAND_TRANSITION_3": [
         "h == 8 && s == 5 || s == 6"
       ]
     }
@@ -8694,7 +8731,7 @@
         "h > 9 && s > 3",
         "h == 9 && s > 4"
       ],
-      "KHARID_GRASSY_SAND": [
+      "KHARID_DIRT_TO_SAND_TRANSITION_3": [
         "h == 8 && s >= 5",
         "h == 8 && s == 4",
         "h == 8 && s >= 5"
@@ -8721,6 +8758,10 @@
       126
     ],
     "replacements": {
+      "KHARID_GRASS_TO_DIRT_TRANSITION":
+      [
+        "h == 10 && s == 3 || h == 11 && s == 3"
+      ],
       "KHARID_GRASS_CLAMPED": [
         "h > 11",
         "h > 9 && s > 3",
@@ -8754,6 +8795,9 @@
       129
     ],
     "replacements": {
+      "KHARID_DIRT_TO_SAND_TRANSITION": [
+        "h == 9 && s == 3 || h == 10 && s == 3"
+      ],
       "KHARID_GRASS": [
         "h > 10",
         "h > 9 && s > 3",
@@ -8865,7 +8909,19 @@
       129
     ],
     "replacements": {
-      "KHARID_GRASSY_SAND":[
+      "KHARID_GRASS_TO_DIRT_TRANSITION":
+      [
+        "h == 10 && s == 3 || h == 11 && s == 3"
+      ],
+      "KHARID_DIRT_TO_SAND_TRANSITION":
+      [
+        "h == 9 && s == 3"
+      ],
+      "KHARID_DIRT_TO_SAND_TRANSITION_2":
+      [
+        "h == 9 && s == 4 || h == 10 && s == 4"
+      ],
+      "KHARID_DIRT_TO_SAND_TRANSITION_3":[
         "s == 2 && 9 <= h && h <= 10",
         "s == 4 && 9 <= h && h <= 11"
       ],
@@ -8873,7 +8929,7 @@
         "s == 4 && 8 == h"
       ],
       "KHARID_GRASS": [
-        "h >= 12",
+        "h >= 10",
         "h > 8 && s > 3"
       ],
       "KHARID_DIRT": [
