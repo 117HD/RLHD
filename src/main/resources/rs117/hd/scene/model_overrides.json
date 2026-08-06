@@ -4366,6 +4366,7 @@
     "areas": [ "LUMBRIDGE" ],
     "objectIds": [
       "ROOF_REDSLATE",
+      "ROOF_WOODEN_SMALL_FILLER",
       "ROOFWALLFILLER",
       "ROOF_DOUBLELENGTH",
       "ROOFEDGE_DOUBLELENGTH_R",
@@ -30718,7 +30719,9 @@
       "PLANT_FERN_TLATI01",
       "PLANT_FERN_TLATI02",
       "PLANT_FERN_TLATI03",
-      "PLANT_FERN_TLATI04"
+      "PLANT_FERN_TLATI04",
+      "MISTMYST_HEWEY_FERN_VIS",
+      "MISTMYST_ABIGALE_FERN_VIS"
     ]
   },
   {
@@ -35700,7 +35703,8 @@
       "FAI_LEAFLESS_BUSH_SMALL_01",
       "FAI_LEAFLESS_BUSH_SMALL_02",
       "DOV_HUNTING_PLANT2",
-      "DOV_HUNTING_PLANT2_OP"
+      "DOV_HUNTING_PLANT2_OP",
+      "HW17_JARVIS_BUSH"
     ],
     "uvType": "BOX",
     "uvOrientation": 600
