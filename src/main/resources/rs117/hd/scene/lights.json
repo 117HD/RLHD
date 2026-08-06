@@ -21982,6 +21982,25 @@
     ]
   },
   {
+    "description": "LANTERN - VISIBLE ON OTHER PLANES",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 12.5,
+    "visibleFromOtherPlanes": true,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FAI_WIZTOWER_LANTERN"
+    ]
+  },
+  {
     "description": "Shilo Mine Lantern",
     "offset": [ -8, 115, 30 ],
     "alignment": "CENTER",
@@ -49872,6 +49891,25 @@
     "range": 20,
     "objectIds": [
       "MYQ6_ENTRY_HALL_DEFENCE_DOOR"
+    ]
+  },
+  {
+    "description": "Demon Slayer - Delrith Weakened",
+    "offset": [ 0, 100, 0 ],
+    "alignment": "CENTER",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "despawnWithParent": true,
+    "radius": 300,
+    "strength": 20,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "npcIds": [
+      "DELRITH_WEAKENED"
     ]
   }
 ]
