@@ -22397,8 +22397,6 @@
       "MYQ3_GHETTO_FIREPLACE_TOP_NOOFFSET",
       "FENK_FIREPLACE",
       "QIP_DIGSITE_FIREPLACE",
-      "MYQ3_FIREPLACE_LOOSE_TILE",
-      "MISTMYST_FIREPLACE_UNLIT",
       "MISTMYST_FIREPLACE_REVEALED",
       "MISTMYST_FIREPLACE_LIT",
       "POH_FIREPLACE_1_LIT",
@@ -23257,7 +23255,6 @@
     "type": "STATIC",
     "duration": 0,
     "range": 20,
-    "nightMultiplier": 2,
     "objectIds": [
       "FAI_VARROCK_SMITHY_LATHE"
     ]
