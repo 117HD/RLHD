@@ -103,6 +103,16 @@
     "duration": 2.0
   },
   {
+    "name": "BLOOD_DARK",
+    "normalStrength": 0.05,
+    "baseOpacity": 0.85,
+    "fresnelAmount": 0.0,
+    "surfaceColor": "#1E0000",
+    "foamColor": "#753f2d",
+    "depthColor": "#321a16",
+    "duration": 2.0
+  },
+  {
     "name": "BLOOD_FLAT",
     "normalStrength": 0.05,
     "baseOpacity": 0.85,
@@ -293,6 +303,28 @@
       85,
       85,
       85
+    ],
+    "depthColor": [
+      10.79,
+      36.75,
+      41.32
+    ]
+  },
+  {
+    "name": "CAVE_WATER_SWAMP",
+    "specularStrength": 0.15,
+    "specularGloss": 75.0,
+    "baseOpacity": 0.9,
+    "fresnelAmount": 0.13,
+    "surfaceColor": [
+      15,
+      25,
+      17
+    ],
+    "foamColor": [
+      55,
+      55,
+      55
     ],
     "depthColor": [
       10.79,

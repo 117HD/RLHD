@@ -257,7 +257,7 @@ public class SceneUploader implements AutoCloseable {
 				uploadZoneWater(ctx, zone, mzx, mzz, vb, fb);
 			zone.levelOffsets[Zone.LEVEL_WATER_SURFACE] = vb.position();
 
-			if (ctx.fillGaps && zone.hasGapFiller)
+			if (zone.hasGapFiller)
 				uploadZoneGapFillers(ctx, mzx, mzz, vb, fb);
 			zone.levelOffsets[Zone.LEVEL_GAP_FILLER] = vb.position();
 		}
@@ -401,10 +401,10 @@ public class SceneUploader implements AutoCloseable {
 				z.sizeF += 2;
 			} else {
 				z.onlyWater = false;
-
-				if (tileZ != 0 || override.doubleSidedFaces)
-					z.sizeO += 2;
 			}
+
+			if (tileZ != 0 || override.doubleSidedFaces)
+				z.sizeO += 2;
 		}
 
 		SceneTileModel model = t.getSceneTileModel();
@@ -436,10 +436,10 @@ public class SceneUploader implements AutoCloseable {
 				z.sizeF += len;
 			} else {
 				z.onlyWater = false;
-
-				if (tileZ != 0 || overlayOverride.doubleSidedFaces || underlayOverride.doubleSidedFaces)
-					z.sizeO += len;
 			}
+
+			if (tileZ != 0 || overlayOverride.doubleSidedFaces || underlayOverride.doubleSidedFaces)
+				z.sizeO += len;
 		}
 
 		WallObject wallObject = t.getWallObject();
@@ -713,8 +713,10 @@ public class SceneUploader implements AutoCloseable {
 		} else if (r instanceof DynamicObject) {
 			var dynamic = (DynamicObject) r;
 			m = dynamic.getModelZbuf();
-			if (dynamic.getRecordedObjectComposition() != null)
+			if (dynamic.getRecordedObjectComposition() != null) {
 				mightHaveTransparency = true;
+				mightBeDoubleSided = true;
+			}
 		}
 		if (m == null)
 			return;
@@ -1093,7 +1095,8 @@ public class SceneUploader implements AutoCloseable {
 			texturedFaceIdx, false
 		);
 
-		if (tileZ != 0 || override.doubleSidedFaces) {
+		boolean isDoubleSided = !onlyWaterSurface && (tileZ != 0 || override.doubleSidedFaces);
+		if (isDoubleSided) {
 			vb.putStaticVertex(
 				lx1, seHeight, lz1,
 				uvx + uvsin, uvy - uvcos, 0,
@@ -1143,7 +1146,7 @@ public class SceneUploader implements AutoCloseable {
 			texturedFaceIdx, false
 		);
 
-		if (tileZ != 0 || override.doubleSidedFaces) {
+		if (isDoubleSided) {
 			vb.putStaticVertex(
 				lx3, nwHeight, lz3,
 				uvx - uvcos, uvy - uvsin, 0,
@@ -1165,7 +1168,6 @@ public class SceneUploader implements AutoCloseable {
 				texturedFaceIdx, true
 			);
 		}
-
 
 		writeCache.release();
 	}
@@ -1462,7 +1464,8 @@ public class SceneUploader implements AutoCloseable {
 				texturedFaceIdx, false
 			);
 
-			if (tileZ != 0 || override.doubleSidedFaces) {
+			boolean isDoubleSided = !onlyWaterSurface && (tileZ != 0 || override.doubleSidedFaces);
+			if (isDoubleSided) {
 				vb.putStaticVertex(
 					lx2, ly2, lz2,
 					uvCx, uvCy, 0,
@@ -1673,7 +1676,6 @@ public class SceneUploader implements AutoCloseable {
 					continue;
 
 				if (faceOverride.inheritTileColorType != InheritTileColorType.NONE) {
-					final Scene scene = ctx.scene;
 					SceneTileModel tileModel = tile.getSceneTileModel();
 					SceneTilePaint tilePaint = tile.getSceneTilePaint();
 
@@ -2714,7 +2716,7 @@ public class SceneUploader implements AutoCloseable {
 		}
 	}
 
-	private static int readFaceTransparency(byte modelTransparency, byte[] transparencies, int f) {
+	public static int readFaceTransparency(byte modelTransparency, byte[] transparencies, int f) {
 		// Based on https://github.com/runelite/runelite/commit/a88ac64d5a154020cdc21612fc0f1eb32aa8d0f8#diff-2495d11499767f573d041baf080ee6b50dddd325e37b34a402f4c23efc3c2324R464-R478
 		if (modelTransparency == -1)
 			return 255;
