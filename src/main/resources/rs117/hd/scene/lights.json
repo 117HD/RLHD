@@ -44354,7 +44354,8 @@
     "type": "STATIC",
     "objectIds": [
       "HG_CAVE_EXIT",
-      "CAVEKIT_ROCK01_ENTRANCE02"
+      "CAVEKIT_ROCK01_ENTRANCE02",
+      "WYRMSCRAIG_CAVE_EXIT"
     ]
   },
   {
@@ -44374,7 +44375,7 @@
     ]
   },
   {
-    "description": "Wold Den Cave Exit",
+    "description": "Wolf Den Cave Exit",
     "offset": [ -100, 100, 0 ],
     "alignment": "CENTER",
     "radius": 700,
@@ -49906,6 +49907,72 @@
     "type": "STATIC",
     "npcIds": [
       "DELRITH_WEAKENED"
+    ]
+  },
+  {
+    "description": "Wyrmscraig Dungeon Exit - Far",
+    "offset": [ 0, 200, 200 ],
+    "alignment": "CENTER",
+    "radius": 1500,
+    "strength": 10,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "WYRMSCRAIG_CAVE_EXIT_SAILABLE"
+    ]
+  },
+  {
+    "description": "Wyrmscraig Dungeon Exit - Near",
+    "offset": [ 0, 250, 500 ],
+    "alignment": "CENTER",
+    "radius": 750,
+    "strength": 20,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "WYRMSCRAIG_CAVE_EXIT_SAILABLE"
+    ]
+  },
+  {
+    "description": "Wyrmscraig Cathedral Candles",
+    "offset": [ -30, 210, 0 ],
+    "radius": 175,
+    "strength": 5.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_CANDLE_WALL"
+    ]
+  },
+  {
+    "description": "Wyrmscraig Cathedral Altar Candles",
+    "offset": [ 0, 180, -13 ],
+    "radius": 130,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_CANDLE_TABLE"
     ]
   }
 ]

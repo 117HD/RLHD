@@ -2373,6 +2373,12 @@
     ]
   },
   {
+    "name": "BRICK_CAM_TORUM_2_STONE",
+    "parent": "BRICK_CAM_TORUM_2",
+    "ambientOcclusionMap": "SMOOTH_STONE",
+    "normalMap": "STONE_N"
+  },
+  {
     "name": "DARKMEYER_BRICK_PATH_BLEND",
     "parent": "DARKMEYER_BRICK_PATH",
     "textureScale": [

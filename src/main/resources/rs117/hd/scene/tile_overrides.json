@@ -8771,8 +8771,7 @@
       126
     ],
     "replacements": {
-      "KHARID_GRASS_TO_DIRT_TRANSITION":
-      [
+      "KHARID_GRASS_TO_DIRT_TRANSITION": [
         "h == 10 && s == 3 || h == 11 && s == 3"
       ],
       "KHARID_GRASS_CLAMPED": [
@@ -8922,19 +8921,16 @@
       129
     ],
     "replacements": {
-      "KHARID_GRASS_TO_DIRT_TRANSITION":
-      [
+      "KHARID_GRASS_TO_DIRT_TRANSITION": [
         "h == 10 && s == 3 || h == 11 && s == 3"
       ],
-      "KHARID_DIRT_TO_SAND_TRANSITION":
-      [
+      "KHARID_DIRT_TO_SAND_TRANSITION": [
         "h == 9 && s == 3"
       ],
-      "KHARID_DIRT_TO_SAND_TRANSITION_2":
-      [
+      "KHARID_DIRT_TO_SAND_TRANSITION_2": [
         "h == 9 && s == 4 || h == 10 && s == 4"
       ],
-      "KHARID_DIRT_TO_SAND_TRANSITION_3":[
+      "KHARID_DIRT_TO_SAND_TRANSITION_3": [
         "s == 2 && 9 <= h && h <= 10",
         "s == 4 && 9 <= h && h <= 11"
       ],
@@ -11391,6 +11387,50 @@
     "area": "KRAKEN_COVE_WALL_FIX",
     "underlayIds": [ 53, 54 ],
     "waterType": "SWAMP_WATER"
+  },
+  {
+    "name": "WYRMSCRAIG_CLIFFS",
+    "area": "WYRMSCRAIG",
+    "overlayIds": [ 643 ],
+    "groundMaterial": "VARIED_DIRT",
+    "minLightness": 10
+  },
+  {
+    "name": "WYRMSCRAIG_PATHS",
+    "area": "WYRMSCRAIG",
+    "overlayIds": [ 187 ],
+    "groundMaterial": "PLAIN_DIRT"
+  },
+  {
+    "name": "WYRMSCRAIG_WOODEN_FLOORS",
+    "area": "WYRMSCRAIG",
+    "overlayIds": [ 186 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "shiftLightness": 6,
+    "blended": false
+  },
+  {
+    "name": "WYRMSCRAIG_CATHEDRAL_BRICK_FLOOR",
+    "area": "WYRMSCRAIG_CATHEDRAL_BRICK_FLOOR",
+    "overlayIds": [ 339 ],
+    "groundMaterial": "BRICK_CAM_TORUM_2_STONE",
+    "blended": false
+  },
+  {
+    "name": "WYRMSCRAIG_CATHEDRAL_CARPET",
+    "area": "WYRMSCRAIG_CATHEDRAL_CARPET",
+    "overlayIds": [ 347 ],
+    "groundMaterial": "DIRTY_CARPET",
+    "shiftLightness": 2,
+    "blended": false
+  },
+  {
+    "name": "WYRMSCRAIG_DUNGEON_WATER",
+    "area": "WYRMSCRAIG_DUNGEON",
+    "overlayIds": [ 454, 456 ],
+    "waterType": "CAVE_WATER_MURKY",
+    "shiftLightness": 6,
+    "blended": false
   },
   {
     "name": "TAG - Areas - END"

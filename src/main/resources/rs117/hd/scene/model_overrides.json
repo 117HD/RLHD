@@ -1134,7 +1134,8 @@
       "DRILL_TREE",
       "MACRO_FORESTER_TREE",
       "TUT2_TREE",
-      "TUT2_TREE_NOOP"
+      "TUT2_TREE_NOOP",
+      "TREE_AUTUMN02"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -1173,7 +1174,11 @@
       "TUT2_TREE2",
       "TUT2_TREE2_NOOP",
       "GIM_TREE",
-      "DRILL_TREE3"
+      "DRILL_TREE3",
+      "TREE2_AUTUMN02",
+      "TREE_AUTUMN02",
+      "TREE_AUTUMN01",
+      "TREE2_AUTUMN01"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -4952,7 +4957,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "flatNormals": true,
     "uvType": "BOX",
-    "uvOrientation": 448,
+    "uvScale": 0.85,
+    "uvOrientation": 512,
     "objectIds": [
       "FAI_VARROCK_SHANTY_WALL_LEV2",
       "FAI_VARROCK_SHANTY_WALL_LEV2_TYPE2",
@@ -10406,6 +10412,14 @@
         "uvType": "BOX",
         "uvOrientation": -42,
         "uvScale": 0.5
+      },
+      {
+        "colors": "h == 42",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "BOX",
+        "shiftLightness": 10,
+        "shiftSaturation": -1,
+        "shiftHue": -2
       }
     ]
   },
@@ -18636,7 +18650,9 @@
       "NASTYFUNGUS_DARK",
       "WILDERNESSFUNGUS",
       "NEW_NASTYFUNGUS_DARK",
-      "NEW_NASTYFUNGUS_SMALL_DARK"
+      "NEW_NASTYFUNGUS_SMALL_DARK",
+      "DRAGON_SLAYER_QIP_NASTYFUNGUS",
+      "DRAGON_SLAYER_QIP_NASTYFUNGUS_SMALL"
     ],
     "uvType": "BOX",
     "uvScale": 0.6
@@ -20044,7 +20060,11 @@
       "TOA_ZEBAK_DEBRIS_STONE03",
       "TOA_ZEBAK_ROCKS04_NOBLOCKRANGE",
       "TOA_ZEBAK_ROCKS05_NOBLOCKRANGE",
-      "MDAUGHTER_ROCKSLIDE"
+      "MDAUGHTER_ROCKSLIDE",
+      "FFG_NOTEBOOK_ROCK",
+      "WYRMSCRAIG_CLIFF_SHORTCUT_BLOCKAGE_VIS",
+      "WYRMSCRAIG_CLIFF_SHORTCUT_TOP_VIS",
+      "WYRMSCRAIG_CLIFF_SHORTCUT_BOTTOM"
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -34510,6 +34530,16 @@
     "uvScale": 0.33
   },
   {
+    "description": "Ore - Sunstone - Rock",
+    "baseMaterial": "ROCK_3_SMOOTH_LIGHT",
+    "objectIds": [
+      "SUNSTONEROCK1",
+      "SUNSTONEROCK2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3
+  },
+  {
     "description": "Ore - Clay - Rock",
     "baseMaterial": "DIRT_2",
     "objectIds": [
@@ -39672,7 +39702,8 @@
       "SW_SPINNINGWHEEL_BROKEN",
       "SW_SPINNINGWHEEL_FIXED",
       "SPINNINGWHEEL",
-      "CONTACT_SPINNING_WHEEL"
+      "CONTACT_SPINNING_WHEEL",
+      "SPINNINGWHEEL_QUETZACALI"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -45828,7 +45859,8 @@
       "SKEWSTEPS_STONE_IMCANDO01_DARK01",
       "ROR_TEMPLE_TALL_BLUE_ARCH01_DARK02",
       "ROR_TEMPLE_TALL_BLUE_DARK01",
-      "DEEPFIN_CAVE_SHORTCUT"
+      "DEEPFIN_CAVE_SHORTCUT",
+      "WYRMSCRAIG_CAVE_SHORTCUT"
     ],
     "uvType": "BOX",
     "uvScale": 0.86
@@ -55374,7 +55406,8 @@
     "objectIds": [
       "LOGPILE_SMALL",
       "LOGPILE",
-      "CONTACT_LOGPILE"
+      "CONTACT_LOGPILE",
+      "QIP_DIGSITE_LOGPILE"
     ],
     "colorOverrides": [
       {
@@ -57518,12 +57551,15 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "flatNormals": true,
+    "undoVanillaShading": false,
+    "shiftLightness": 2,
     "objectIds": [
       "WALLKIT_WOODEN01_DEFAULT01",
       "WALLKIT_WOODEN01_WINDOW01",
       "WALLKIT_WOODEN02_DEFAULT01",
       "WALLKIT_WOODEN02_WINDOW01",
-      "WALLKIT_WOODEN01_DEFAULT01_UPPER"
+      "WALLKIT_WOODEN01_DEFAULT01_UPPER",
+      "WALLKIT_WOODEN01_WINDOW01_UPPER"
     ]
   },
   {
@@ -57533,7 +57569,8 @@
     "uvScale": 0.8,
     "flatNormals": true,
     "objectIds": [
-      "WALLKIT_WOODEN01_DEFAULT01_DOOR_OPEN_NOOP"
+      "WALLKIT_WOODEN01_DEFAULT01_DOOR_OPEN_NOOP",
+      "WALLKIT_WOODEN01_DEFAULT01_DOOR_OPEN"
     ],
     "colorOverrides": [
       {
@@ -57550,6 +57587,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
+    "undoVanillaShading": false,
     "objectIds": [
       "FORTIS_DOOR_L",
       "FORTIS_DOOR_L_LOCKED",
@@ -71421,7 +71459,6 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.6,
-    "uvOrientationY": 256,
     "uvOrientationZ": 512,
     "uvOrientationX": 512,
     "objectIds": [
@@ -75861,7 +75898,8 @@
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "OVERLOOK_GENERAL_SHELF",
-      "OVERLOOK_GENERAL_SHELF3"
+      "OVERLOOK_GENERAL_SHELF3",
+      "OVERLOOK_GENERAL_SHELF4"
     ],
     "colorOverrides": [
       {
@@ -81432,7 +81470,8 @@
     "objectIds": [
       "SAILING_GANGPLANK_PROXY",
       "SAILING_GANGPLANK_PROXY_WIDE",
-      "SAILING_GANGPLANK_PROXY_WIDE_INACTIVE"
+      "SAILING_GANGPLANK_PROXY_WIDE_INACTIVE",
+      "SAILING_GANGPLANK_PROXY_WIDE_VIKING"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -102367,6 +102406,566 @@
     "minLightness": 11,
     "objectIds": [
       "MAGGOT_KING_BLOOD"
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Basalt",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "objectIds": [
+      "BASALT_SINGLE_01",
+      "BASALT_SINGLE_02",
+      "BASALT_SINGLE_03",
+      "BASALT_SINGLE_04",
+      "BASALT_SINGLE_05",
+      "BASALT_SINGLE_06",
+      "BASALT_SINGLE_07",
+      "BASALT_SINGLE_08",
+      "BASALT_SINGLE_09",
+      "WYRMSCRAIG_CAVE_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Dead Tree",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 128,
+    "objectIds": [
+      "TREE_DEAD_01",
+      "TREE_DEAD_02",
+      "TREE_DEAD_03",
+      "TREE_DEAD_04"
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Dead Tree - Stump",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 128,
+    "objectIds": [
+      "TREE_DEAD_01_STUMP",
+      "TREE_DEAD_02_STUMP",
+      "TREE_DEAD_03_STUMP",
+      "TREE_DEAD_04_STUMP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cave Entrance",
+    "baseMaterial": "ROCK_6",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "WYRMSCRAIG_CAVE_WATERFALL"
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Large Cave Entrance",
+    "uvType": "BOX",
+    "textureMaterial": "WATER_FLAT_FLOW_2",
+    "shiftLightness": -25,
+    "retainVanillaUvs": false,
+    "uvScale": 1.5,
+    "objectIds": [
+      "WYRMSCRAIG_CAVE_ENTRANCE_SAILABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "ROCK_6",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h > 4",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Large Cave Exit",
+    "uvType": "BOX",
+    "textureMaterial": "WATER_FLAT_FLOW_2",
+    "shiftLightness": -50,
+    "shiftHue": 40,
+    "retainVanillaUvs": false,
+    "uvScale": 1.5,
+    "objectIds": [
+      "WYRMSCRAIG_CAVE_EXIT_SAILABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "hide": true
+      },
+      {
+        "colors": "h == 39",
+        "baseMaterial": "NONE",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "ROCK_6",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 42",
+        "baseMaterial": "ROCK_6",
+        "shiftLightness": -3,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Dungeon Exit",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "WYRMSCRAIG_CAVE_EXIT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86,
+    "colorOverrides": [
+      {
+        "colors": "l > 20",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "WOODEN_PLANK_DOCKS",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "VIKING_PIER_NO_MAPSCENE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Wyrmscraig - Giant Sunstone Outcrop",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "shiftLightness": 3,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "WYRMSCRAIG_SUNSTONE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "SMOOTH_STONE",
+        "shiftLightness": 3,
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Unbuilt Bank Chest",
+    "baseMaterial": "WOOD_GRAIN",
+    "shiftLightness": 3,
+    "objectIds": [
+      "WYRMSCRAIG_BANK_CHEST_NOTBUILT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1",
+        "shiftLightness": 12,
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.15
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Bank Chest",
+    "baseMaterial": "WOOD_GRAIN",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "WYRMSCRAIG_BANK_CHEST_BUILT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1",
+        "undoVanillaShading": false,
+        "shiftLightness": 12,
+        "uvType": "BOX",
+        "uvScale": 0.15
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "CARPET",
+        "shiftLightness": 10,
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Crafting Tent",
+    "baseMaterial": "GRUNGE_3",
+    "shiftLightness": 3,
+    "objectIds": [
+      "WYRMSCRAIG_CRAFTING_TENT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 10",
+        "baseMaterial": "CARPET",
+        "shiftLightness": 10,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Goat Pit Spikes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": 5,
+    "objectIds": [
+      "GOAT_PIT_SPIKES"
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Scarecrow",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "objectIds": [
+      "HW24_SCARECROW_HEADLESS_NOOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 3",
+        "baseMaterial": "HD_HAY",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Shelf with Bucket",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "objectIds": [
+      "QUEST_LUNAR_SHELF_BUCKET"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Sunstone Dust",
+    "baseMaterial": "SMOOTH_STONE",
+    "minLightness": 10,
+    "maxLightness": 40,
+    "objectIds": [
+      "FFG_DUST_VIS"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "castShadows": false
+  },
+  {
+    "description": "Wyrmscraig - Golem Crafting",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "GOLEM_STATION_EMPTY",
+      "GOLEM_STATION_BASE",
+      "GOLEM_STATION_SHAPED_1",
+      "GOLEM_STATION_SHAPED_2",
+      "GOLEM_STATION_SHAPED_3",
+      "GOLEM_STATION_SHAPED_4",
+      "GOLEM_RUBBLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 7 || h == 7 || h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Candle Stand",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_CANDLE_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_150",
+        "receiveShadows": false
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Wall Candles",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_CANDLE_WALL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "receiveShadows": false,
+        "upwardsNormals": true
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Walls",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT01",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT01A",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02A",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02B",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02C",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02D",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02A_MIRROR",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02E_MIRROR",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02E",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02G"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || s == 1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "shiftLightness": 3
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Roof",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT01",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT02",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT03",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT04",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT05",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT06",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT07",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT08",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT09",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT10",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT11",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT12",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT13",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT14",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT15",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT16",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT17",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT18",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT19",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT20",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT21",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT22",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT23",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT24",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT25",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT26",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT27",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT28",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT29",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT30",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT31",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT32",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT33",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT34",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT35",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT36",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT37",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT38",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT39",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT40",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT41",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT42",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT43",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT44",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT45",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT46",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT47",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT48",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT49",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT50",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT51",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT52",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT53",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT54",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT55",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT56",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT57",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT58",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT59",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT60",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT61",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT62",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT63",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT64"
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Broken Pews - Climbable",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationY": 512,
+    "uvOrientationZ": 560,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_PEW_BROKEN_CLIMB"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cushion",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Broken Pews - Decorative",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationY": 450,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_PEW_BROKEN03",
+      "WYRMSCRAIG_CATHEDRAL_PEW_BROKEN02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cushion",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Throne",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": 10,
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_THRONE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cushion",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Chains",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.15
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Throne Floor",
+    "baseMaterial": "ROCK_6",
+    "shiftLightness": 2,
+    "uvType": "BOX",
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_THRONE_FLOOR"
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "MAD_ANGEL_CATHERDRAL_DOORL",
+      "MAD_ANGEL_CATHERDRAL_DOORR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Golden Handles",
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      }
     ]
   }
 ]
