@@ -11433,6 +11433,43 @@
     "blended": false
   },
   {
+    "name": "Forthos Dungeon - Brick Tile overlay",
+    "area": "FORTHOS_DUNGEON",
+    "uvScale": 2,
+    "shiftLightness": 5,
+    "blended": false,
+    "uvOrientation": 512,
+    "overlayIds": [
+      2,
+      3
+    ],
+    "groundMaterial": "BRICK_PATHS"
+  },
+  {
+    "name": "Forthos Dungeon - Tile Edges",
+    "area": "FORTHOS_DUNGEON",
+    "shiftLightness": 8,
+    "blended": false,
+    "overlayIds": [
+      1,
+      37
+    ],
+    "groundMaterial": "GRAVEL"
+  },
+  {
+    "name": "Forthos Dungeon - Dirt Underlay",
+    "area": "FORTHOS_DUNGEON",
+    "uvOrientation": 128,
+    "underlayIds": [
+      63,
+      66,
+      146,
+      149,
+      150
+    ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "TAG - Areas - END"
   },
   {

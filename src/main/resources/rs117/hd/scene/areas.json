@@ -7319,6 +7319,13 @@
     ]
   },
   {
+    "name": "FORTHOS_DUNGEON",
+    "aabbs": [
+      [ 1779, 9879, 1868, 9996 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "BLOOD_ALTAR",
     "aabbs": [
       [ 1703, 3815, 1739, 3844 ],

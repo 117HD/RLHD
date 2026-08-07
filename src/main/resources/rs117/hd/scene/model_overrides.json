@@ -8757,8 +8757,6 @@
       "DRAGON_SLAYER_MINE_TUNNEL_LEFT_MINE",
       "DRAGON_SLAYER_MINE_TUNNEL_LEFT_ENTER",
       "DRAGON_SLAYER_MINE_TUNNEL_RIGHT_ENTER",
-      "DRAGON_SLAYER_QIP_MINE_WALL_BRICK",
-      "DRAGON_SLAYER_QIP_MINE_WALL_BRICK_M",
       "DRAGON_SLAYER_MINE_WALL_ROCKY",
       "DRAGON_SLAYER_QIP_MINE_WALL_END",
       "DRAGON_SLAYER_QIP_MINE_WALL_END2",
@@ -8914,7 +8912,11 @@
       "HOSDUN_BRICK_WALL_DAMAGED",
       "HOSDUN_STONE_PILE1",
       "HOSDUN_STONE_PILE2",
-      "HOSDUN_PILLAR"
+      "HOSDUN_PILLAR",
+      "DRAGON_SLAYER_QIP_MINE_WALL_BRICK",
+      "DRAGON_SLAYER_QIP_MINE_WALL_BRICK_M",
+      "HOSDUN_BRICK_WALL_PASSAGE_CLOSED",
+      "HOSDUN_BRICK_WALL_PASSAGE"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -14433,7 +14435,11 @@
   },
   {
     "description": "Metal Fence Gate",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "shiftLightness": 6,
     "objectIds": [
       "CTRATGATEA",
       "CTRATGATEC",
@@ -14564,11 +14570,12 @@
       "SLP_DUNGEON_DOOR_NOOP",
       "SLP_DUNGEON_DOOR",
       "SLP_DUNGEON_DOOR_OPEN",
-      "SLP_DUNGEON_DOOR_2"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.25,
-    "uvOrientation": 512
+      "SLP_DUNGEON_DOOR_2",
+      "HOSDUN_WEST_DOOR",
+      "HOSDUN_EAST_DOOR",
+      "HOSDUN_GRUBBY_DOOR_LOCKED",
+      "HOSDUN_GRUBBY_DOOR_OPEN"
+    ]
   },
   {
     "description": "Metal Fence Gate with textured posts",
@@ -31944,10 +31951,29 @@
       "FAI_VARROCK_UNFINISHED_WEAPONS_01",
       "FAI_VARROCK_UNFINISHED_WEAPONS_02",
       "FAI_VARROCK_UNFINISHED_WEAPONS_03",
-      "WILDERNESS_MANICALS",
       "WILDY_HUB_BACKPACK"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Ferox Enclave - Manicals",
+    "baseMaterial": "METALLIC_1",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h > 0",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientationX": 512,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "WILDERNESS_MANICALS"
+    ]
   },
   {
     "description": "Ferox Enclave - Statue",
@@ -62546,9 +62572,11 @@
   },
   {
     "description": "Abandoned Mine wooden levers with metal plate",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "uvType": "BOX",
-    "uvScale": 0.75,
+    "uvScale": 0.33,
+    "shiftLightness": 8,
+    "uvOrientation": 87,
     "colorOverrides": [
       {
         "description": "Lever",
@@ -62571,7 +62599,9 @@
       "HAUNTEDMINE_POINT_LEVER_INACTIVE",
       "HAUNTEDMINE_POINT_LEVER_FLOODED9",
       "HAUNTEDMINE_POINT_LEVER_FLOODED10",
-      "HAUNTEDMINE_POINT_LEVER_FLOODED11"
+      "HAUNTEDMINE_POINT_LEVER_FLOODED11",
+      "HOSDUN_LEVER_CLOSED",
+      "HOSDUN_LEVER_OPEN"
     ]
   },
   {
@@ -63718,6 +63748,12 @@
         "colors": "h == 0",
         "baseMaterial": "MARBLE_1",
         "uvType": "BOX"
+      },
+      {
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "shiftLightness": 6
       }
     ]
   },
@@ -69400,9 +69436,13 @@
   {
     "description": "Hosidius - White brick walls",
     "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 179,
     "objectIds": [
       "HOS_FORT_WALL_STONE_PILE2",
       "HOS_FORT_WALL_STONE_PILE1",
+      "AKD_FORTHOS_STONE_PILE_NOOP",
       "HOS_FORT_WALL_CRUMBLE_L",
       "HOS_FORT_WALL_CRUMBLE_SMALL_L",
       "HOS_FORT_WALL",
@@ -69411,10 +69451,96 @@
       "HOS_FORT_WALL_BATTLEMENT_CRUMBLE_R",
       "HOS_FORT_BRIDGE_SUPPORT",
       "HOS_FORT_WALL_BATTLEMENT"
-    ],
+    ]
+  },
+  {
+    "description": "Hosidius - External spiral Stairs",
+    "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvScale": 0.6,
-    "uvOrientation": 179
+    "uvOrientation": 179,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "BLACK"
+      },
+      {
+        "colors": [ "h == 8", "h == 9" ],
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "HOSDUN_ENTRANCE_SPIRAL_STEPS_HOLE"
+    ]
+  },
+  {
+    "description": "Forthos - Dungeon Spiral Stairs",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 189,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      }
+    ],
+    "objectIds": [
+      "HOSDUN_ENTRANCE_SPIRAL_STAIRS"
+    ]
+  },
+  {
+    "description": "Forthos Dungeon - Catacombs Entrance",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "shiftLightness": 2,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "BLACK"
+      },
+      {
+        "colors": "h == 0 && l > 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 179
+      },
+      {
+        "colors": "h >= 48",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 179
+      }
+    ],
+    "objectIds": [
+      "HOSDUN_CATACOMB_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Catacombs of Kourend - Exit Vines",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 179,
+    "shiftLightness": 2,
+    "objectIds": [
+      "HOSDUN_CATAVINE_CORNER",
+      "HOSDUN_CATAVINE_END",
+      "HOSDUN_CATAVINE_END_DIAG",
+      "HOSDUN_CATAVINE_DIAG1",
+      "HOSDUN_CATAVINE_DIAG2",
+      "HOSDUN_CATAVINE_DIAG3",
+      "HOSDUN_CATAVINE_DIAGFILLER"
+    ]
   },
   {
     "description": "Hosidius - Dungeon entrance",
@@ -96563,7 +96689,8 @@
     "uvOrientation": 192,
     "objectIds": [
       "HAVEN_TOWER_BASEMENT_CAGE_TALL",
-      "HAVEN_TOWER_BASEMENT_CAGE_SMALL"
+      "HAVEN_TOWER_BASEMENT_CAGE_SMALL",
+      "HAVEN_TOWER_BASEMENT_CAGE_TALL_BROKEN"
     ]
   },
   {
@@ -96605,6 +96732,23 @@
       "BOOTH_DRAKAN01_LAB01",
       "BOOTH_DRAKAN01_LAB01_2X2_OFFSET",
       "BOOTH_DRAKAN01_LAB01_SHATTERED01"
+    ]
+  },
+  {
+    "description": "Vampyre Lab Booth - Dynamic - ANIMATED",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": [ "a < 255" ],
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_VAMPYRIFICATION_BOOTH_ANIMATED",
+      "MYQ6_VAMPYRIFICATION_BOOTH_ANIMATED_BROKEN"
     ]
   },
   {
@@ -102966,6 +103110,135 @@
         "uvType": "BOX",
         "uvScale": 0.1
       }
+    ]
+  },
+  {
+    "description": "Forthos - Metallic - Couldron - DYNAMIC - ANIMATED",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 313,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Smoke",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Void",
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "HOSDUN_CAULDRON"
+    ]
+  },
+  {
+    "description": "Forthos - Metallic - Torch - DYNAMIC - ANIMATED",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "uvOrientation": 313,
+    "shiftLightness": 10,
+    "colorOverrides": [
+      {
+        "description": "Flame",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      "HOSDUN_TORCH"
+    ]
+  },
+  {
+    "description": "Forthos - Metallic - Bone Burner",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "uvOrientation": 313,
+    "shiftLightness": 10,
+    "colorOverrides": [
+      {
+        "description": "Flame",
+        "colors": "h == 42",
+        "baseMaterial": "GRUNGE_3_SHINY"
+      }
+    ],
+    "objectIds": [
+      "HOSDUN_BONE_BURNER"
+    ]
+  },
+  {
+    "description": "Forthos - Stone - Bookshelf with books",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": -187,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Shelf",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "HOSDUN_TEMPLE_BOOKCASE"
+    ]
+  },
+  {
+    "description": "Forthos Dungeon - Grubby chest with metallic banding",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 86,
+    "uvScale": 0.2,
+    "shiftLightness": 3,
+    "colorOverrides": [
+      {
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "s == 0",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "HOSDUN_GRUBBY_CHEST_CLOSED",
+      "HOSDUN_GRUBBY_CHEST_OPEN"
+    ]
+  },
+  {
+    "description": "Forthos Dungeon - Altar",
+    "baseMaterial": "MARBLE_3",
+    "uvOrientation": 286,
+    "uvType": "BOX",
+    "objectIds": [
+      "HOSDUN_ALTAR_NORMAL",
+      "HOSDUN_SUN_ALTAR_BROKEN",
+      "HOSDUN_STONE_RELIEF_CLOSED",
+      "HOSDUN_STONE_RELIEF_OPEN"
+    ]
+  },
+  {
+    "description": "Forthos Dungeon - Floor Tile",
+    "baseMaterial": "MARBLE_3",
+    "uvOrientation": 286,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "l > 30",
+        "baseMaterial": "MARBLE_2",
+        "uvOrientationX": 187,
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "HOSDUN_TEMPLE_SYMBOL"
     ]
   }
 ]
