@@ -586,9 +586,9 @@
     "area": "DRAYNOR_MANOR",
     "lightningEffects": true,
     "ambientColor": "#615c57",
-    "ambientStrength": 1.5,
+    "ambientStrength": 3,
     "directionalColor": "#ffbcb7",
-    "directionalStrength": 2,
+    "directionalStrength": 0.5,
     "fogColor": "#0c0b0a",
     "fogDepth": 45
   },
@@ -2188,6 +2188,32 @@
     "waterCausticsStrength": 0
   },
   {
+    "area": "VAMPYRIUM",
+    "fogColor": "#330D0D",
+    "fogDepth": 15,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 50,
+    "waterCausticsStrength": 0
+  },
+  {
+    "area": "VAMPYRIUM_FOREST_INSTANCE",
+    "fogColor": "#330D0D",
+    "fogDepth": 40,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 50,
+    "waterCausticsStrength": 0
+  },
+  {
+    "area": "MAGGOT_KING_ARENA",
+    "fogColor": "#160404",
+    "fogDepth": 50,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 50
+  },
+  {
     "area": "PLAYER_OWNED_HOUSE_WILDY",
     "isPohTheme": true,
     "ambientColor": "#d7d2d2",
@@ -2252,6 +2278,19 @@
     "directionalStrength": 2.5,
     "fogColor": "#aebde0",
     "fogDepth": 50
+  },
+  {
+    "area": "WYRMSCRAIG",
+    "ambientColor": "#96a3cb",
+    "ambientStrength": 0.9,
+    "directionalColor": "#abc2d3",
+    "directionalStrength": 2,
+    "fogColor": "#969CB4",
+    "fogDepth": 35,
+    "groundFogEnd": -600,
+    "groundFogOpacity": 0.225,
+    "windSpeed": 17.5,
+    "windStrength": 60
   },
   {
     "key": "OVERWORLD",

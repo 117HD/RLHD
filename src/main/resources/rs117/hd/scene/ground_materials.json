@@ -182,6 +182,16 @@
     ]
   },
   {
+    "name": "DIRTY_CARPET",
+    "materials": [
+      "CARPET_LIGHT",
+      "CARPET_LIGHT",
+      "DIRT_2",
+      "DIRT_1",
+      "CARPET_LIGHT"
+    ]
+  },
+  {
     "name": "BRICK",
     "materials": [
       "BRICK"
@@ -211,6 +221,14 @@
     "name": "GRUNGE_3",
     "materials": [
       "GRUNGE_3"
+    ]
+  },
+  {
+    "name": "GRUNGE_3_ALT",
+    "materials": [
+      "GRUNGE_3_MIRRORED",
+      "GRUNGE_3",
+      "GRUNGE_3_MIRRORED"
     ]
   },
   {
@@ -355,6 +373,18 @@
     "name": "DARKMEYER_BRICK_PATH_BLEND",
     "materials": [
       "DARKMEYER_BRICK_PATH_BLEND"
+    ]
+  },
+  {
+    "name": "CASTLE_DRAKEN_BRICK_FLOOR_DIRTY",
+    "materials": [
+      "CASTLE_DRAKEN_BRICK_FLOOR",
+      "DIRT_1",
+      "CASTLE_DRAKEN_BRICK_FLOOR",
+      "DIRT_2",
+      "CASTLE_DRAKEN_BRICK_FLOOR",
+      "CASTLE_DRAKEN_BRICK_FLOOR",
+      "DIRT_1"
     ]
   },
   {
@@ -575,7 +605,7 @@
     "name": "PACKED_EARTH",
     "materials": [
       "DIRT_1",
-      "GRAVEL",
+      "GRAVEL_LIGHT",
       "DIRT_1",
       "DIRT_1",
       "DIRT_2"
@@ -688,6 +718,19 @@
     "name": "SMOOTH_STONE",
     "materials": [
       "SMOOTH_STONE"
+    ]
+  },
+  {
+    "name": "DIRTY_SMOOTH_STONE",
+    "materials": [
+      "SMOOTH_STONE",
+      "DIRT_1"
+    ]
+  },
+  {
+    "name": "BRICK_CAM_TORUM_2_STONE",
+    "materials": [
+      "BRICK_CAM_TORUM_2_STONE"
     ]
   }
 ]
