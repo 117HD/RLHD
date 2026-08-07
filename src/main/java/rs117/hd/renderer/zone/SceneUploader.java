@@ -1994,11 +1994,9 @@ public class SceneUploader implements AutoCloseable {
 		final int radius = model.getRadius();
 		final byte modelTransparency = model.getTransparency();
 
-		boolean vanillaTexturedCached = false;
 		int cachedVanillaTexturedId = -1;
 		ModelOverride cachedVanillaTextureOverride = null;
 
-		boolean colorOverrideCached = false;
 		int cachedAhsl = -1;
 		ModelOverride cachedAhslOverride = null;
 
@@ -2031,34 +2029,30 @@ public class SceneUploader implements AutoCloseable {
 				} else {
 					material = materialManager.fromVanillaTexture(textureId);
 					if (modelOverride.materialOverrides != null) {
-						final var override = vanillaTexturedCached && cachedVanillaTexturedId == textureId ?
+						final var override = cachedVanillaTexturedId == textureId ?
 							cachedVanillaTextureOverride :
 							modelOverride.materialOverrides.get(material);
+						cachedVanillaTexturedId = textureId;
+						cachedVanillaTextureOverride = override;
 
 						if (override != null) {
 							faceOverride = override;
 							material = faceOverride.textureMaterial;
 						}
-
-						vanillaTexturedCached = true;
-						cachedVanillaTexturedId = textureId;
-						cachedVanillaTextureOverride = override;
 					}
 				}
 			} else if (modelOverride.colorOverrides != null) {
 				final int ahsl = (0xFF - transparency) << 16 | model.getFaceColors1()[f];
-				final var override = (colorOverrideCached && cachedAhsl == ahsl) ?
+				final var override = cachedAhsl == ahsl ?
 					cachedAhslOverride :
 					modelOverride.testColorOverrides(ahsl);
+				cachedAhsl = ahsl;
+				cachedAhslOverride = override;
 
 				if (override != null) {
 					faceOverride = override;
 					material = faceOverride.baseMaterial;
 				}
-
-				colorOverrideCached = true;
-				cachedAhsl = ahsl;
-				cachedAhslOverride = override;
 			}
 
 			if (faceOverride.hide)
