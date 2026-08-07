@@ -843,7 +843,6 @@
     ],
     "objectIds": [
       "FAI_VARROCK_GYPSY_LAMP",
-      "FAI_VARROCK_GYPSY_LANTERN",
       "UPASS_CAGE_DUMMY",
       "UPASS_CAGE_DUMMY_DUMMY",
       "FAI_VARROCK_SWING_LANTERN",
@@ -854,8 +853,6 @@
       "FAIRY_MUSHROOM_TORCH_BLUE",
       "POH_DEMON",
       "POH_DUNGEON_TREASURE_2",
-      "II_FENCEGATE_L",
-      "II_FENCEGATE_LC",
       "EYEGLO_BATTLE_TORTOISE_REVEAL",
       "QIP_DIGSITE_SWING_LANTERN",
       "TOURTRAP_QIP_CART_CAMEL",
@@ -1121,7 +1118,6 @@
       "TREE3",
       "TREE4",
       "LEPRECHAUNTREE",
-      "NEWBIETREE2",
       "WOM_TREE",
       "MAPLETREE",
       "PEST_TREE2",
@@ -1133,13 +1129,13 @@
       "DRILL_TREE3",
       "TREE",
       "LIGHTTREE",
-      "NEWBIETREE",
       "PEST_TREE",
       "ZEP_TREE",
       "DRILL_TREE",
       "MACRO_FORESTER_TREE",
       "TUT2_TREE",
-      "TUT2_TREE_NOOP"
+      "TUT2_TREE_NOOP",
+      "TREE_AUTUMN02"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -1169,7 +1165,6 @@
       "TREE4",
       "LIGHTTREE2",
       "LEPRECHAUNTREE",
-      "NEWBIETREE2",
       "MAPLETREE",
       "MAPLE_TREE_FULLYGROWN_1",
       "MAPLE_TREE_FULLYGROWN_2",
@@ -1179,7 +1174,11 @@
       "TUT2_TREE2",
       "TUT2_TREE2_NOOP",
       "GIM_TREE",
-      "DRILL_TREE3"
+      "DRILL_TREE3",
+      "TREE2_AUTUMN02",
+      "TREE_AUTUMN02",
+      "TREE_AUTUMN01",
+      "TREE2_AUTUMN01"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -1275,13 +1274,35 @@
     "objectIds": [
       "TREE",
       "LIGHTTREE",
-      "NEWBIETREE",
       "PEST_TREE",
       "ZEP_TREE",
       "DRILL_TREE",
       "MACRO_FORESTER_TREE",
       "TUT2_TREE",
       "TUT2_TREE_NOOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_ORANGE_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_ORANGE_TOP"
+      }
+    }
+  },
+  {
+    "description": "Tree - Lighter",
+    "baseMaterial": "BARK",
+    "shiftLightness": 6,
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "NEWBIETREE",
+      "NEWBIETREE2"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -1498,7 +1519,6 @@
       "MDAUGHTER_IMPASSABLE_TREE",
       "MDAUGHTER_IMPASSABLE_TREE2",
       "MDAUGHTER_PASSABLE_TREE",
-      "NEWBIEDEADTREE2",
       "MACRO_DIGGER_TREE",
       "DRAYNOR_DEADTREE",
       "WILD1_TREE_A",
@@ -1524,10 +1544,21 @@
       "DARKM_DEAD_TREE_03",
       "REGICIDE_TREE_DEAD2_D2",
       "REGICIDE_TREE_SWAMP1",
-      "REGICIDE_TREE_SWAMP2"
+      "REGICIDE_TREE_SWAMP2",
+      "NEWBIEDEADTREE2"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "UNDEAD_TREES",
+    "baseMaterial": "LIGHT_BARK",
+    "npcIds": [
+      "NASTY_TREE_UNCHOPPABLE",
+      "NASTY_TREE_CHOPPABLE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "My Arms Big Adventure - Rope Tree",
@@ -3333,6 +3364,7 @@
       "GARDEN_WHITE_TREE_WEEDS_1",
       "GARDEN_WHITE_TREE_WEEDS_2",
       "GARDEN_WHITE_TREE_WEEDS_3",
+      "GARDEN_DELPHINIUMS_WEEDS_3",
       "GARDEN_SNOWDROPS_WEEDS_1",
       "GARDEN_SNOWDROPS_WEEDS_2",
       "GARDEN_SNOWDROPS_WEEDS_3",
@@ -3923,10 +3955,14 @@
     "objectIds": [
       "QIP_DS_STONE_WALL_SMALL",
       "QIP_DS_STONE_WALL_LARGE",
+      "QIP_DS_STONE_WALL_LARGE_TOP_DOME2",
       "QIP_DS_STONE_WALL_LARGE_TOP",
       "QIP_DS_STONE_WALL_SMALL_TOP",
       "QIP_DS_STONE_WALL_SMALL_TOP_DOME",
-      "QIP_DS_STONE_TABLE_INTACT"
+      "QIP_DS_STONE_TABLE_INTACT",
+      "QIP_DS_STONE_WALL_TOP_DOME",
+      "QIP_DS_STONE_TABLE_EXPLOSION",
+      "QIP_DS_STONE_TABLE_DESTROYED"
     ]
   },
   {
@@ -4332,9 +4368,9 @@
   {
     "description": "Lumbridge - Building Walls with roofs",
     "areas": [ "LUMBRIDGE" ],
-    "flatNormals": true,
     "objectIds": [
       "ROOF_REDSLATE",
+      "ROOF_WOODEN_SMALL_FILLER",
       "ROOFWALLFILLER",
       "ROOF_DOUBLELENGTH",
       "ROOFEDGE_DOUBLELENGTH_R",
@@ -4344,16 +4380,58 @@
       "ROOFEDGE_AL",
       "ROOFEDGE_ALL",
       "ROOFEDGE_TIP",
-      "ROOF_THATCHED"
+      "ROOF_THATCHED",
+      "ROOFEDGE_ROUGH",
+      "ROOFEDGE_ROUGH2",
+      "ROOFEDGE_REDSLATE",
+      "ROOF_CHIMNEY_REDSLATE",
+      "ROOFEDGE_ENDL",
+      "OLDROOF_REDSLATE",
+      "WOODENROOF_REDSLATE",
+      "ROOF_TIP"
+    ],
+    "materialOverrides": {
+      "HD_BRICK": {
+        "textureMaterial": "HD_BRICK",
+        "depthBias": 1
+      },
+      "ROOF_SHINGLES_RED": {
+        "textureMaterial": "VANILLA_ROOF_SHINGLES_RED",
+        "shiftLightness": -3
+      }
+    }
+  },
+  {
+    "description": "Lumbridge - Building Walls with roofs - Gray",
+    "areas": [ "LUMBRIDGE" ],
+    "flatNormals": true,
+    "forceMaterialChanges": true,
+    "objectIds": [
+      "ROOFEDGE_GREYSLATE",
+      "ROOFEDGE_GREYSLATE",
+      "OLDROOF_GREYSLATE",
+      "OLDROOFEDGE_ROUGH2_GREYSLATE",
+      "OLDROOFEDGE_ROUGH_GREYSLATE",
+      "OLDROOF_DOUBLELENGTH_GREYSLATE",
+      "OLDROOF_TIP_GREYSLATE",
+      "OLDROOF_TIP_X_JUNCTION_GREYSLATE"
     ],
     "materialOverrides": {
       "HD_BRICK": {
         "textureMaterial": "HD_BRICK"
+      },
+      "ROOF_SHINGLES_GRAY": {
+        "textureMaterial": "VANILLA_ROOF_SHINGLES_GRAY",
+        "shiftLightness": -16,
+        "shiftHue": 5
       }
     }
   },
   {
     "description": "Lumbridge - Building Walls",
+    "baseMaterial": "SMOOTH_STONE_LIGHT",
+    "uvOrientation": 512,
+    "uvType": "MODEL_XZ",
     "areas": [ "LUMBRIDGE" ],
     "textureMaterial": "HD_BRICK",
     "flatNormals": true,
@@ -4362,7 +4440,12 @@
       "ROOFWALLFILLER_CHURCH",
       "BRICKWALL_CHURCH_FRAME",
       "BRICKWALL_RIVEREDGE",
-      "BRICKWALLSKEW"
+      "BRICKWALLSKEW",
+      "BRICKWALL_CHURCH",
+      "BRICKWALL_CHURCHBIGWINDOW1L",
+      "BRICKWALL_CHURCHBIGWINDOW1",
+      "BRICKWALL_CHURCHBIGWINDOW2L",
+      "BRICKWALL_CHURCHBIGWINDOW2"
     ]
   },
   {
@@ -4380,6 +4463,9 @@
   },
   {
     "description": "Lumbridge - Castle Walls",
+    "baseMaterial": "SMOOTH_STONE_LIGHT",
+    "uvOrientation": 512,
+    "uvType": "MODEL_XZ",
     "areas": [ "LUMBRIDGE" ],
     "textureMaterial": "HD_BRICK",
     "flatNormals": true,
@@ -4490,7 +4576,15 @@
     "objectIds": [
       "FAI_VARROCK_ROOFKIT_SLATE",
       "FAI_VARROCK_ROOFKIT_SLATE_RAISED",
-      "FAI_VARROCK_ROOFKIT_SLATE_CUT_CORNER"
+      "FAI_VARROCK_ROOFKIT_SLATE_CUT_CORNER",
+      "FAI_VARROCK_ROOFKIT_SLATE_CUT",
+      "FAI_VARROCK_ROOFKIT_SLATE_CUT_MIRROR1",
+      "FAI_VARROCK_ROOFKIT_SLATE_CUT_MIRROR",
+      "FAI_VARROCK_ROOFKIT_SLATE_CUT_CORNER_MIRROR",
+      "FAI_VARROCK_ROOFKIT_SLATE_WALL",
+      "FAI_VARROCK_ROOFKIT_SLATE_WALL_CUT",
+      "FAI_VARROCK_ROOFKIT_SLATE_HORIZ_CUT",
+      "FAI_VARROCK_ROOFKIT_SLATE_HORIZ_CUT_CORNER"
     ]
   },
   {
@@ -4508,8 +4602,9 @@
   },
   {
     "description": "Varrock Fountain Railing and Statues",
-    "baseMaterial": "STONE_NORMALED",
-    "depthBias": 100,
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvScale": 0.75,
+    "undoVanillaShading": false,
     "objectIds": [
       "FAI_VARROCK_CENTRAL_SQUARE_STATUE01",
       "FAI_VARROCK_CENTRAL_SQUARE_STATUE01",
@@ -4522,8 +4617,9 @@
   },
   {
     "description": "Varrock Fountain Rocks with Water",
-    "baseMaterial": "STONE_NORMALED",
-    "depthBias": 255,
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "undoVanillaShading": false,
+    "uvScale": 0.75,
     "objectIds": [
       "FAI_VARROCK_CENTRAL_SQUARE01"
     ],
@@ -4532,8 +4628,7 @@
       {
         "colors": "h >= 34",
         "baseMaterial": "WATER_FOUNTAIN_FLAT",
-        "uvType": "MODEL_XZ",
-        "depthBias": 255
+        "uvType": "MODEL_XZ"
       },
       {
         "colors": "h == 5",
@@ -4619,7 +4714,9 @@
     "uvScale": 0.6,
     "objectIds": [
       "FAI_VARROCK_SMALL_WALL",
+      "FAI_VARROCK_SMALL_WALL_CASTLE_FIT_LEFT",
       "FAI_VARROCK_CASTLE_BATTLEMENT_CAPPED",
+      "FAI_VARROCK_SMALL_WALL_CASTLE_FIT_RIGHT",
       "FAI_VARROCK_CASTLE_BATTLEMENT_HILLSKEW",
       "FAI_VARROCK_CASTLE_BATTLEMENT_HILLSKEW_SHARELIGHT",
       "FAI_VARROCK_CASTLE_WALL_NO_BACK",
@@ -4637,6 +4734,57 @@
     ],
     "flatNormals": true,
     "shadowOpacityThreshold": 0.12
+  },
+  {
+    "description": "GRAND_EXCHANGE_CLAN_RECRUITMENT_BOARD",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "CLAN_RECRUITMENT_TABLE",
+      "CLAN_RECRUITMENT_BOARD"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 37 || h == 5",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "GRAND_EXCHANGE_BOARD_GAMES_PILLARS",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "GZ_CANOPY_PILLAR_01",
+      "GZ_CANOPY_PILLAR_02",
+      "GZ_CANOPY_PILLAR_03",
+      "GZ_CANOPY_PILLAR_04"
+    ]
+  },
+  {
+    "description": "GRAND_EXCHANGE_BOARD_GAMES_CANOPY",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "GZ_CANOPY_SMALL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 5",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
   },
   {
     "description": "Grand Exchange - Stone - Arches and pillared walls",
@@ -4735,7 +4883,8 @@
         "colors": "h == 7",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvOrientation": 448
+        "uvOrientation": 512,
+        "uvScale": 0.85
       }
     ],
     "objectIds": [
@@ -4808,7 +4957,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "flatNormals": true,
     "uvType": "BOX",
-    "uvOrientation": 448,
+    "uvScale": 0.85,
+    "uvOrientation": 512,
     "objectIds": [
       "FAI_VARROCK_SHANTY_WALL_LEV2",
       "FAI_VARROCK_SHANTY_WALL_LEV2_TYPE2",
@@ -4900,6 +5050,7 @@
     "uvScale": 0.6,
     "objectIds": [
       "FAI_VARROCK_POOR_WALL",
+      "FAI_VARROCK_CRUMBLY_WALL7",
       "FAI_VARROCK_POOR_WALL_TOP",
       "FAI_VARROCK_POOR_WALL_TOP_ACTIVE",
       "FAI_VARROCK_POOR_WALL_HOLES",
@@ -4911,6 +5062,7 @@
       "FAI_VARROCK_WALLS_POOR_CRUMBLE",
       "FAI_VARROCK_WALLS_POOR_CRUMBLE_SMALL",
       "FAI_VARROCK_POOR_WALL_TERM",
+      "VC_BROKEN_WALL",
       "FAI_VARROCK_POOR_WALL_LVL2_DOUBLE",
       "FAI_VARROCK_POOR_WALL_LVL2_OFFSET1",
       "FAI_VARROCK_POOR_WALL_LVL2_OFFSET2",
@@ -4952,11 +5104,11 @@
       "FAI_VARROCKWALL_HILLSKEW",
       "FAI_VARROCKWALL",
       "FAI_VARROCK_INTERIORWALL",
+      "FAI_VARROCK_SMALL_WALL_FILLER",
       "FAI_VARROCK_INTERIORWALL_BLACK",
       "FAI_VARROCK_INTERIORWALL_BLACK_TOP",
       "FAI_VARROCK_INTERIORWALL_TERM",
       "FAI_VARROCK_INTERIORWALL_DOUBLE",
-      "FAI_VARROCK_INTERIOR_BANKWALL_CORNER",
       "FAI_VARROCK_INTERIOR_BANKWALL_CORNER_END",
       "FAI_VARROCK_INTERIORWALL_DOUBLE_TERM",
       "FAI_VARROCK_SMALL_WALL_FILLER_MIRROR",
@@ -4986,6 +5138,7 @@
       "FAI_VARROCK_CASTLE_GARDEN_FILL",
       "FAI_VARROCK_CASTLE_GARDEN_FILL_2",
       "FAI_VARROCK_CASTLE_INTERIOR",
+      "FAI_VARROCK_CASTLE_CAPPED",
       "FAI_VARROCK_CASTLE_INTERIOR_RESIZE",
       "FAI_VARROCK_CASTLE_INTERIOR_TERM_RESIZE",
       "FAI_VARROCK_CASTLE_INTERIOR_OFFSET",
@@ -5054,7 +5207,7 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "colors": "h == 7",
         "uvType": "BOX",
-        "uvOrientation": 512,
+        "uvOrientationZ": 512,
         "uvScale": 0.6
       }
     ]
@@ -5117,26 +5270,39 @@
       "FAI_FALADOR_CRENELATION_HILLSKEW",
       "FAI_FALADOR_INTERIOR_TALLER",
       "FAI_FALADOR_WALLS_TALLER",
-      "FAI_FALADOR_WALL_WINDOW_TALLER",
       "FAI_FALADOR_ROOFKIT_SLATE",
+      "FAI_FALADOR_ROOF_EDGE_L_OFFSETS",
+      "FAI_FALADOR_ROOFKIT_SLATE_SHORT1",
+      "FAI_FALADOR_ROOF_CUT_R_SHORT1",
+      "FAI_FALADOR_ROOFKIT_SLATE_CORNER_LEFT",
+      "FAI_FALADOR_ROOF_CUT_L_SHORT2",
+      "FAI_FALADOR_ROOFKIT_SLATE_SHORT2",
       "FAI_FALADOR_ROOFKIT_SLATE_CORNER_RIGHT",
       "FAI_FALADOR_ROOFKIT_SLATE_EDGECUT",
       "FAI_FALADOR_ROOFKIT_SLATE_TWO",
+      "FAI_FALADOR_ROOFKIT_SLATE_SHORT3",
       "FAI_FALADOR_ROOFKIT_SLATE_THREE",
       "FAI_FALADOR_ROOFKIT_SLATE_OFFSET_UP",
       "FAI_FALADOR_ROOFKIT_SLATE_OFFSET_UP_2",
+      "FAI_FALADOR_ROOFKIT_SLATE_SHORT1_MIRROR",
       "FAI_FALADOR_ROOF_EDGE_OFFSET_UP",
+      "FAI_FALADOR_ROOFKIT_SLATE_RAISED",
+      "FAI_FALADOR_ROOF_EDGE_RAISED",
+      "FAI_FALADOR_ROOF_EDGE_MIRROR_RAISED",
+      "FAI_FALADOR_ROOFKIT_SLATE_RAISED2",
       "FAI_FALADOR_CASTLE_WALLS",
+      "FAI_FALADOR_ROOFKIT_CORNERCUT",
       "FAI_FALADOR_CASTLE_WALLS_L2",
+      "FAI_FALADOR_CASTLE_WALLS_CFIX_L2",
       "FAI_FALADOR_CASTLE_WALLS_FIX_LFT",
       "FAI_FALADOR_CASTLE_WALLS_2_TALLER",
       "FAI_FALADOR_CASTLE_WALLS_L2_LFT",
+      "FAI_FALADOR_ROOF_EDGE_OFFSETS",
       "FAI_FALADOR_CASTLE_WALLS_L2_5_TERMINATOR_RHT",
       "FAI_FALADOR_CASTLE_WALLS_L2_5_TERMINATOR_LFT",
       "FAI_FALADOR_CASTLE_WALLS_SARODOMIN",
       "FAI_FALADOR_CASTLE_WALLS_SARODOMIN_L2",
       "FAI_FALADOR_INTERIOR",
-      "FAI_FALADOR_INTERIOR_WINDOW",
       "FAI_FALADOR_BATTLEMENTS",
       "FAI_FALADOR_BATTLEMENTS_2_TALL_TERMINATOR_LFT",
       "FAI_FALADOR_BATTLEMENTS_2_TALL_TERMINATOR_RHT",
@@ -5183,7 +5349,10 @@
       "FAI_FALADOR_CASTLE_CRUMBLE_MID",
       "FAI_FALADOR_INTERIOR_DOUBLE_TALLER",
       "FAI_FALADOR_CRENELATION",
-      "FAI_FALADOR_ROOF_EDGE_SHORT1"
+      "FAI_FALADOR_ROOF_EDGE_SHORT1",
+      "FAI_FALADOR_ROOF_CUT_L",
+      "FAI_FALADOR_ROOF_EDGE_SHORT1_MIRROR",
+      "FAI_FALADOR_ROOF_EDGE_R_SHORT1"
     ]
   },
   {
@@ -5194,11 +5363,19 @@
     "flatNormals": true,
     "colorOverrides": [
       {
-        "description": "Window Frame",
-        "colors": "h == 5",
-        "baseMaterial": "WOOD_GRAIN_3",
+        "description": "Interior Wall",
+        "colors": "h == 42 && s == 0",
+        "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
         "uvScale": 0.8
+      },
+      {
+        "description": "Window Frame",
+        "colors": "h > 5 && s > 1 || h == 6 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationY": 512
       },
       {
         "description": "Stained Glass",
@@ -5208,7 +5385,8 @@
     ],
     "objectIds": [
       "FAI_FALADOR_SHOP_WINDOW",
-      "FAI_FALADOR_SHOP_WINDOW_CROSSED"
+      "FAI_FALADOR_SHOP_WINDOW_CROSSED",
+      "FAI_FALADOR_INTERIOR_WINDOW"
     ]
   },
   {
@@ -5230,7 +5408,8 @@
         "colors": "h == 6 && s >= 2",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.8
+        "uvScale": 0.6,
+        "uvOrientationY": 512
       },
       {
         "description": "Stained Glass",
@@ -5244,7 +5423,8 @@
       "FAI_FALADOR_PARTY_ROOM_WALL_WINDOW_BIG",
       "FAI_FALADOR_PARTY_ROOM_WALL_WINDOW_BIG_TERM",
       "FAI_FALADOR_PARTY_ROOM_WALL_WINDOW_BIG_TERM_MIRROR",
-      "FAI_FALADOR_PARTY_ROOM_WALL_WINDOW"
+      "FAI_FALADOR_PARTY_ROOM_WALL_WINDOW",
+      "FAI_FALADOR_WALL_WINDOW_TALLER"
     ]
   },
   {
@@ -5294,8 +5474,10 @@
   {
     "description": "Falador - Metallic - White Knight Armor",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "undoVanillaShading": false,
     "uvType": "BOX",
-    "uvScale": 0.4,
+    "uvScale": 0.2,
+    "minLightness": 17,
     "objectIds": [
       "FAI_FALADOR_SUITOFAMOUR",
       "SUITOFARMOUR_WHITEKNIGHT"
@@ -5377,6 +5559,8 @@
   {
     "description": "STATUE_OF_SARADOMIN_1",
     "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.75,
     "objectIds": [
       "FAI_FALADOR_SARADOMIN_STATUE",
       "FAI_FALADOR_SARADOMIN_STATUE_GREY"
@@ -5384,10 +5568,10 @@
   },
   {
     "description": "STONE_SIGNPOST",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvOrientation": 512,
-    "uvScale": 0.8,
+    "uvScale": 0.65,
     "objectIds": [
       "FAI_STONE_SIGN_BOTTOM",
       "FAI_STONE_SIGN_TOP"
@@ -6445,10 +6629,10 @@
   },
   {
     "description": "Grand Exchange - Stone - Teller Wall",
-    "baseMaterial": "GRUNGE_3_SHINY",
+    "baseMaterial": "SMOOTH_STONE",
+    "shiftLightness": 4,
     "uvType": "BOX",
-    "uvScale": 0.7,
-    "uvOrientation": 1024,
+    "uvScale": 0.65,
     "objectIds": [
       "EXCHANGE_BANK_WALL",
       "EXCHANGE_BANK_WALL_BANK",
@@ -6462,7 +6646,9 @@
     "uvType": "BOX",
     "uvScale": 0.7,
     "objectIds": [
-      "GZ_FENCE"
+      "GZ_FENCE",
+      "GZ_WALL_FENCE_CONNECTOR_LEFT",
+      "GZ_WALL_FENCE_CONNECTOR_RIGHT"
     ],
     "colorOverrides": [
       {
@@ -6472,6 +6658,12 @@
         "uvType": "BOX",
         "uvOrientation": 512,
         "uvScale": 0.66
+      },
+      {
+        "colors": "h > 10",
+        "baseMaterial": "LEAVES_1",
+        "uvType": "BOX",
+        "uvScale": 0.4
       }
     ]
   },
@@ -6983,7 +7175,8 @@
     "uvScale": 0.6,
     "uvOrientation": 173,
     "objectIds": [
-      "FAI_FALADOR_NOTICEBOARD"
+      "FAI_FALADOR_NOTICEBOARD",
+      "FAI_FALADOR_NOTICEBOARD2"
     ],
     "colorOverrides": [
       {
@@ -6991,7 +7184,7 @@
         "colors": "h <= 5",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.8
+        "uvScale": 0.4
       },
       {
         "description": "Metal",
@@ -7049,14 +7242,15 @@
     "description": "Varrock - Shayzien - Metal - Metal bars gate",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientation": 117,
+    "uvScale": 0.3,
+    "uvOrientation": 512,
     "objectIds": [
       "SHAYZIEN_BANK_BARS_DOOR",
       "FAI_VARROCK_BANK_BARS",
       "FAI_VARROCK_BANK_BARS_END",
       "FAI_VARROCK_BANK_BARS_END_MIRROR",
-      "FAI_VARROCK_BANK_BARS_DOOR"
+      "FAI_VARROCK_BANK_BARS_DOOR",
+      "FAI_VARROCK_BANK_BARS_DOOR_MIRROR"
     ]
   },
   {
@@ -7663,7 +7857,8 @@
       }
     ],
     "objectIds": [
-      "GUIDEROPES1"
+      "GUIDEROPES1",
+      "GUIDEROPES2"
     ]
   },
   {
@@ -7680,11 +7875,14 @@
   {
     "description": "STATUE_BUST",
     "baseMaterial": "MARBLE_1_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.55,
     "objectIds": [
       "BUST3",
       "MURDER_QIP_BUST_01",
       "MURDER_QIP_BUST_02",
-      "MURDER_QIP_BUST_03"
+      "MURDER_QIP_BUST_03",
+      "FAI_FALADOR_BUST"
     ]
   },
   {
@@ -7693,13 +7891,21 @@
       "OLDCASTLEWALL",
       "OLDWALL",
       "CROSS_OLDCASTLEEDGE",
+      "OLDROOF_GREYSLATE_SMALL_FILLER",
       "OLDWALL_NO_OCCLUDE",
       "CASTLEWARS_WALL_SARADOMIN",
       "CASTLEWARS_CASTLEBATTLEMENTS_SARADOMIN",
       "CASTLEWARS_BATTLEMENTS_SARADOMIN_BLOCKRANGE",
       "CASTLEWARS_CASTLEBATTLEMENTS_ZAMORAK",
       "CASTLEWARS_BATTLEMENTS_SARADOMIN_CLIMBABLE",
-      "CASTLEWARS_BATTLEMENTS_ZAMORAK_CLIMBABLE"
+      "CASTLEWARS_BATTLEMENTS_ZAMORAK_CLIMBABLE",
+      "OLDROOFEDGE_ALL_GREYSLATE",
+      "OLDROOFEDGE_AL_GREYSLATE",
+      "OLDROOFWALLFILLER",
+      "OLDROOFEDGE_DOUBLELENGTH_RR_GREYSLATE",
+      "OLDROOFEDGE_DOUBLELENGTH_L_GREYSLATE",
+      "OLDROOFEDGE_DOUBLELENGTH_LL_GREYSLATE",
+      "OLDROOFEDGE_DOUBLELENGTH_R_GREYSLATE"
     ],
     "flatNormals": true
   },
@@ -8098,7 +8304,8 @@
       "GIANTS_FOUNDRY_DUGUPSOIL02_07"
     ],
     "inheritTileColorType": "OVERLAY",
-    "uvType": "WORLD_XZ"
+    "uvType": "BOX",
+    "uvScale": 0.75
   },
   {
     "description": "Emirs Arena - Ground decoration - Sand - Tiny",
@@ -8504,6 +8711,7 @@
       "CAVEENTRANCE3",
       "UPASS_CAVEENTRANCE2",
       "XMAS20_GOBLIN_CAVE_ENTRANCE",
+      "XMAS20_GOBLIN_CAVE_ENTRANCE_NOOP",
       "GA_CAVE",
       "SHAYZIEN_RIVER_CAVE"
     ],
@@ -8549,8 +8757,6 @@
       "DRAGON_SLAYER_MINE_TUNNEL_LEFT_MINE",
       "DRAGON_SLAYER_MINE_TUNNEL_LEFT_ENTER",
       "DRAGON_SLAYER_MINE_TUNNEL_RIGHT_ENTER",
-      "DRAGON_SLAYER_QIP_MINE_WALL_BRICK",
-      "DRAGON_SLAYER_QIP_MINE_WALL_BRICK_M",
       "DRAGON_SLAYER_MINE_WALL_ROCKY",
       "DRAGON_SLAYER_QIP_MINE_WALL_END",
       "DRAGON_SLAYER_QIP_MINE_WALL_END2",
@@ -8706,7 +8912,11 @@
       "HOSDUN_BRICK_WALL_DAMAGED",
       "HOSDUN_STONE_PILE1",
       "HOSDUN_STONE_PILE2",
-      "HOSDUN_PILLAR"
+      "HOSDUN_PILLAR",
+      "DRAGON_SLAYER_QIP_MINE_WALL_BRICK",
+      "DRAGON_SLAYER_QIP_MINE_WALL_BRICK_M",
+      "HOSDUN_BRICK_WALL_PASSAGE_CLOSED",
+      "HOSDUN_BRICK_WALL_PASSAGE"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -10099,7 +10309,8 @@
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       "PIER_RAIL_TALL",
-      "TIMBERWALL_BROWN"
+      "TIMBERWALL_BROWN",
+      "GOBLIN_OUTPOST_WALL"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -10203,6 +10414,14 @@
         "uvType": "BOX",
         "uvOrientation": -42,
         "uvScale": 0.5
+      },
+      {
+        "colors": "h == 42",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "BOX",
+        "shiftLightness": 10,
+        "shiftSaturation": -1,
+        "shiftHue": -2
       }
     ]
   },
@@ -11315,10 +11534,15 @@
       "WALLKIT_SHAYZIEN_RAIL01",
       "PVPA_DESERTGATE_OPEN",
       "WALLKIT_AUBURN01_FENCE01_NOSHADOW",
-      "GRAB_EVIL_TWIN_WOODENRAILING_HILLSKEW"
+      "GRAB_EVIL_TWIN_WOODENRAILING_HILLSKEW",
+      "II_FENCING",
+      "II_FENCEGATE_L",
+      "II_FENCEGATE_LC",
+      "II_FENCEGATE_R"
     ],
     "flatNormals": true,
     "uvType": "BOX",
+    "uvScale": 0.75,
     "uvOrientation": 512
   },
   {
@@ -11343,12 +11567,24 @@
   },
   {
     "description": "Single row fences - End, joining wall",
-    "baseMaterial": "GRAY_65",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
     "objectIds": [
       "FAI_VARROCK_CASTLE_INT_FENCE_JOIN",
-      "FAI_VARROCK_CASTLE_INT_FENCE_JOIN_MIRROR"
+      "FAI_VARROCK_WOODENRAILING_FILLER_FIX",
+      "FAI_VARROCK_CASTLE_INT_FENCE_JOIN_MIRROR",
+      "FAI_VARROCK_WOODENRAILING_FILLER_MIRROR"
     ],
-    "flatNormals": true
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "SMOOTH_STONE_SEMI_DARK",
+        "flatNormals": true,
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
   },
   {
     "description": "FENCES_3",
@@ -11793,7 +12029,7 @@
     "flatNormals": true
   },
   {
-    "description": "Seers Village - Wooden -Bench",
+    "description": "Seers Village - Wooden - Bench",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -11961,7 +12197,17 @@
     "baseMaterial": "CARPET_LIGHT",
     "objectIds": [
       "DARKM_MIDDLE_RUG_CORNER",
-      "DARKM_MIDDLE_RUG_STRAIGHT"
+      "DARKM_MIDDLE_RUG_STRAIGHT",
+      "FAI_VARROCK_PRETTY_RUG_CORNER",
+      "FAI_VARROCK_PRETTY_RUG_EDGE",
+      "FAI_VARROCK_PRETTY_RUG_CENTER",
+      "FAI_VARROCK_HAIRDRESSER_WELCOME_MAT",
+      "FAI_VARROCK_SHANTY_RUG_MIDDLE",
+      "FAI_VARROCK_SHANTY_RUG_SIDE",
+      "FAI_VARROCK_SHANTY_RUG_CORNER",
+      "GZ_RUGCORNER",
+      "GZ_RUGSIDE",
+      "GZ_RUGMIDDLE"
     ],
     "uvType": "WORLD_XZ",
     "flatNormals": true
@@ -12354,9 +12600,15 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.7,
-    "flatNormals": true,
+    "uvOrientationY": 512,
     "objectIds": [
       "WALLSUPPORT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
     ]
   },
   {
@@ -12398,6 +12650,7 @@
       "QIP_WATCHTOWER_LADDER_TOP",
       "DK_LADDER",
       "DK_LADDERTOP",
+      "DK_MEETING_LADDERTOP",
       "DK_MEETING_LADDER",
       "MYQ3_LADDER_DOWN",
       "MYQ3_LADDER_UP",
@@ -12407,6 +12660,7 @@
       "CANAFIS_LADDERTOP",
       "BARROWS_LADDER",
       "FAI_FALADOR_LADDER",
+      "FAI_FALADOR_LADDER_TOP_FORCEAPPROACH_NORTH",
       "FAI_FALADOR_LADDER_TOP",
       "FAI_FALADOR_LADDER_TALLER",
       "KR_CAM_LADDERTOP",
@@ -12443,10 +12697,12 @@
       "PEST_WATCHTOWER_LADDER",
       "PEST_WATCHTOWER_LADDER_TOP",
       "PUZZLE_LADDER",
-      "PUZZLE_LADDER_TOP"
+      "PUZZLE_LADDER_TOP",
+      "_25TH_LADDER_BOTTOM",
+      "PHOENIXLADDER"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.7
   },
   {
     "description": "Ladder, rotated UVs - Textured",
@@ -12545,7 +12801,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
-    "uvOrientation": 512,
+    "uvOrientationY": 512,
     "objectIds": [
       "SARIM_BANNISTER",
       "SARIM_BANNISTER_END",
@@ -12818,8 +13074,8 @@
         "colors": "h == 8",
         "baseMaterial": "METALLIC_1_GLOSS",
         "uvType": "BOX",
-        "uvScale": 0.5,
-        "uvOrientation": 192
+        "uvScale": 0.2,
+        "uvOrientation": 512
       },
       {
         "description": "Cushion",
@@ -13017,7 +13273,8 @@
       "MURDER_QIP_POSH_BENCH",
       "HOS_BENCH_01",
       "SOTE_ELF_VILLAGE_BENCH",
-      "SHAYZIEN_BENCH01"
+      "SHAYZIEN_BENCH01",
+      "RD_BENCH2_HALF"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -13074,7 +13331,7 @@
     "description": "Rooftop Agility - Rope Bridge - Rope",
     "baseMaterial": "ROPE",
     "uvType": "BOX",
-    "uvScale": 0.75,
+    "uvScale": 0.6,
     "objectIds": [
       "SHIPROPE"
     ]
@@ -13182,7 +13439,8 @@
       "FARMING_COUNTER_TABLE",
       "WILDY_HUB_BROKEN_TABLE",
       "TOURTRAP_QIP_DESERT_TABLE",
-      "MYQ3_HIDEOUT_LARGE_TABLE"
+      "MYQ3_HIDEOUT_LARGE_TABLE",
+      "DRAYNOR_BIG_WOODEN_TABLE"
     ]
   },
   {
@@ -13217,10 +13475,333 @@
     "objectIds": [
       "SPOOKYCHAIR",
       "DRAYNOR_CHAIR_COBWEB",
-      "KR_CAM_SPOOKYCHAIR"
+      "KR_CAM_SPOOKYCHAIR",
+      "DRAYNOR_HAUNTED_CHAIR"
     ],
     "uvType": "BOX",
     "flatNormals": true
+  },
+  {
+    "description": "Draynor Manor - Tables with Cloth Coverings",
+    "baseMaterial": "CARPET",
+    "shiftLightness": 2,
+    "objectIds": [
+      "DRAYNOR_ROUND_TABLE",
+      "DRAYNOR_BIGTABLE",
+      "DRAYNOR_SMALLTABLE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Draynor Manor - Fancy Table",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      "DRAYNOR_BIGTABLE2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.15,
+    "colorOverrides": [
+      {
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 300
+      }
+    ]
+  },
+  {
+    "description": "Draynor Manor - Skeletons",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      "GOLEM_SKELETON_1",
+      "GOLEM_SKELETON_2",
+      "GOLEM_SKELETON_3",
+      "GOLEM_SKELETON_2_OFFSET"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "shiftLightness": -5,
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Draynor Manor - Stairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "DRAYNOR_MANOR_STAIRS_UP",
+      "DRAYNOR_MANOR_STAIRS_DOWN",
+      "CRYPTSTAIRSDOWN",
+      "CRYPTSTAIRSUP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientation": 512,
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Draynor Manor - Floor Board Holes",
+    "baseMaterial": "BLACK",
+    "objectIds": [
+      "BROKENFLOORBOARDS1",
+      "BROKENFLOORBOARDS2",
+      "BROKENFLOORBOARDS3"
+    ]
+  },
+  {
+    "description": "Draynor Manor - Avas Bed",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "ANMA_UNCOMF_BED",
+      "ANMA_COMF_BED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h > 11",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Draynor Manor - Count Draynor's Coffin",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "objectIds": [
+      "VAMPCOFFIN",
+      "VAMPCOFFIN_ANIMATED"
+    ],
+    "npcIds": [
+      "COUNT_DRAYNOR_COFFIN"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "colorOverrides": [
+      {
+        "colors": "h == 8 && s == 4",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 8 || h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Draynor Manor - Crypt Curtains",
+    "baseMaterial": "CARPET_LIGHT",
+    "objectIds": [
+      "DRAYNOR_CRYPT_DRAPES",
+      "DRAYNOR_CRYPT_CURTAINSR"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Draynor Manor - Crypt Curtains - Darken",
+    "baseMaterial": "CARPET",
+    "shiftLightness": -5,
+    "objectIds": [
+      "DRAYNOR_CRYPT_DRAPES_BRIGHT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Draynor Manor - Crypt Curtains - Lighten",
+    "baseMaterial": "CARPET_LIGHT",
+    "shiftLightness": 3,
+    "objectIds": [
+      "DRAYNOR_CRYPT_CURTAINSL"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Draynor Manor - Fireplace",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "DRAYNOR_FIREPLACE_RIGHT",
+      "DRAYNOR_FIREPLACE",
+      "DRAYNOR_FIREPLACE_LEFT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s > 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      },
+      {
+        "colors": "h == 8",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Draynor Manor - Oddenstien Equipment",
+    "baseMaterial": "METALLIC_1",
+    "shiftLightness": 2,
+    "objectIds": [
+      "DRAYNOR_MACHINE1",
+      "DRAYNOR_MACHINE2",
+      "DRAYNOR_MACHINE3",
+      "DRAYNOR_MACHINE4",
+      "DRAYNOR_MACHINE5"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Rimmington - Seamstress Table",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "s == 0 && l < 53",
+        "baseMaterial": "METALLIC_1"
+      }
+    ],
+    "objectIds": [
+      "RIMMINGTON_CLOTHESEQUIP_TABLE"
+    ]
+  },
+  {
+    "description": "Seamstress Mannequin",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 7 && s == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "CLOTHESMODEL_WOMAN2",
+      "CLOTHESMODEL_WOMAN1",
+      "CLOTHESMODEL_MAN2",
+      "CLOTHESMODEL_MAN1",
+      "FAI_VARROCK_CLOTHESMODEL_MAN1",
+      "FAI_VARROCK_CLOTHESMODEL_WOMAN1",
+      "CLOTHESMODEL2",
+      "CLOTHESMODEL1"
+    ]
+  },
+  {
+    "description": "Varrock - Robin Hood Mannequin",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "colorOverrides": [
+      {
+        "colors": "h == 4 || h == 6 || h == 7",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      },
+      {
+        "colors": "h == 0 && s == 0 || h == 0 && s == 7",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "FAI_VARROCK_BOW_SHOP_MANEQUIN"
+    ]
   },
   {
     "description": "Camelot - Brimhaven Dungeon - Stone",
@@ -13369,9 +13950,13 @@
   {
     "description": "Wattle Style House (Ardougne, Digsite, Hosidius) - Wooden overhang",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationX": 512,
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.8,
+    "maxLightness": 23,
+    "minLightness": 23,
     "flatNormals": true,
+    "undoVanillaShading": false,
     "objectIds": [ "TIMBER_OVERHANG" ]
   },
   {
@@ -13420,7 +14005,7 @@
     "description": "Candelabra - Wooden",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
-    "uvScale": 0.4,
+    "uvScale": 0.15,
     "objectIds": [
       "CANDLES"
     ],
@@ -13442,11 +14027,19 @@
     ]
   },
   {
-    "description": "Candelabra - Dusty",
-    "baseMaterial": "METALLIC_1_LIGHT",
+    "description": "Candelabra - Cobwebs",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [ "SPOOKYCANDLES" ],
     "uvType": "BOX",
-    "uvScale": 0.4
+    "uvScale": 0.2,
+    "colorOverrides": [
+      {
+        "colors": "h == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
   },
   {
     "description": "Candlestick Holder",
@@ -13493,20 +14086,37 @@
     ]
   },
   {
-    "description": "Decorative Armor",
+    "description": "Decorative Armor - Keep Vanilla Shading",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       "SUITOFARMOUR",
       "FAI_VARROCK_SUITOFARMOUR",
-      "ROYAL_DWARF_ARMOUR2",
       "DRAGON_SLAYER_QIP_SUITOFARMOUR",
       "KR_SUITOFARMOUR_DARKKNIGHT",
       "KR_CAM_SUITOFARMOR",
+      "WOM_SUITOFARMOUR_SARADOMIN",
+      "SUITOFARMOUR_SARADOMIN",
       "SUITOFARMOUR_DARKKNIGHT",
-      "SLUG2_SUITOFARMOUR_WHITEKNIGHT_BLACK"
+      "SLUG2_SUITOFARMOUR_WHITEKNIGHT_BLACK",
+      "DEATH_SUITOFARMOUR",
+      "OLDSUITOFARMOUR",
+      "SUITOFARMOUR_VARROCK"
     ],
     "uvType": "BOX",
-    "uvScale": 0.4
+    "uvScale": 0.4,
+    "uvOrientation": 512,
+    "undoVanillaShading": false
+  },
+  {
+    "description": "Decorative Armor",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "ROYAL_DWARF_ARMOUR1",
+      "ROYAL_DWARF_ARMOUR2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 512
   },
   {
     "description": "STONE_WINDOWS",
@@ -13544,10 +14154,29 @@
     ]
   },
   {
+    "description": "Skull Wall Torch with Metal Bracket",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      "SKULLTORCH_GRUBBY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255 || h == 3",
+        "baseMaterial": "GRAY_125",
+        "receiveShadows": false,
+        "upwardsNormals": true
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
     "description": "WALL_SHIELD",
     "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "uvType": "BOX",
-    "uvScale": 0.4,
+    "uvScale": 0.25,
     "uvOrientation": 512,
     "objectIds": [
       "WALLSHIELD3_WHITE",
@@ -13560,6 +14189,8 @@
   {
     "description": "MARBLE_STATUE_OF_KING",
     "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "undoVanillaShading": false,
+    "shiftLightness": 2,
     "uvType": "BOX",
     "uvScale": 0.6,
     "objectIds": [
@@ -13645,10 +14276,31 @@
     "uvOrientation": 512
   },
   {
+    "description": "Metallic Guilded Chest with Wooden Planks",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      "PHOENIXSHUTCHEST",
+      "PHOENIXOPENCHEST"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
     "description": "Metallic Chest - Textured",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       "CHESTCLOSED",
+      "CHESTOPEN",
       "CHESTCLOSED_NOOP",
       "TRAPCHEST1",
       "TRAPCHEST5",
@@ -13659,10 +14311,11 @@
       "CAVEWITCHCHEST",
       "TWOCATS_CHEST",
       "TWOCATS_CHEST_OPEN",
-      "LUNAR_MOONCLAN_CHEST"
+      "LUNAR_MOONCLAN_CHEST",
+      "LOST_TRIBE_CHEST"
     ],
     "uvType": "BOX",
-    "uvScale": 0.33,
+    "uvScale": 0.25,
     "uvOrientation": 512
   },
   {
@@ -13699,7 +14352,8 @@
     "flatNormals": true,
     "objectIds": [
       "FROG_QUEST_CHEST",
-      "FROG_QUEST_CHEST_OPEN"
+      "FROG_QUEST_CHEST_OPEN",
+      "THBANKCHEST"
     ],
     "colorOverrides": [
       {
@@ -13707,8 +14361,7 @@
         "colors": "s == 0",
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
         "uvType": "BOX",
-        "uvScale": 0.4,
-        "uvOrientation": -89
+        "uvScale": 0.2
       }
     ]
   },
@@ -13782,12 +14435,18 @@
   },
   {
     "description": "Metal Fence Gate",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "shiftLightness": 6,
     "objectIds": [
       "CTRATGATEA",
       "CTRATGATEC",
       "PRISONDOOR",
+      "SHANTAY_PRISONDOOR",
       "ARENA_PRISONDOOR",
+      "ALIDOOR",
       "ARENA_INACTIVEGATE",
       "ARENA_INACTIVEGATE_R",
       "ARENA_JEREMYDOOR",
@@ -13795,6 +14454,7 @@
       "ZQSHILOGATECLOSEDR",
       "PRISONDOOROPEN",
       "INACTIVEPRISONDOOR",
+      "INACTIVEPRISONDOOR_L",
       "PRISONDOOR_R",
       "PRISONDOOROPEN_R",
       "PRISONDOOR_L",
@@ -13829,6 +14489,8 @@
       "PORT_SARIM_JAILDOOR",
       "NEWBIEDOOR4L",
       "NEWBIEDOOR4R",
+      "NEWBIEDOOR5_L",
+      "NEWBIEDOOR5_R",
       "ERNEST_DOORCLOSED",
       "ERNEST_DOORAJAR",
       "PICKLOCK3_L",
@@ -13845,8 +14507,11 @@
       "FAI_FALADOR_PARTY_NEG_ROOM_DOOR_BARS_MIRROR",
       "FAI_FALADOR_PARTY_NEG_ROOM_DOOR_BARS",
       "FAI_VARROCK_PRISONBARS",
+      "FAI_VARROCK_PRISONBARS_FIX_B",
+      "FAI_VARROCK_PRISONBARS_FIX_A",
       "MURDER_QIP_METALGATECLOSEDL",
       "MURDER_QIP_METALGATECLOSEDR",
+      "MURDER_QIP_METALGATEOPENL",
       "MURDER_QIP_METALGATEOPENL",
       "MURDER_QIP_METALGATEOPENR",
       "HILLGIANT_BOSS_EXIT_R",
@@ -13905,11 +14570,12 @@
       "SLP_DUNGEON_DOOR_NOOP",
       "SLP_DUNGEON_DOOR",
       "SLP_DUNGEON_DOOR_OPEN",
-      "SLP_DUNGEON_DOOR_2"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.25,
-    "uvOrientation": 512
+      "SLP_DUNGEON_DOOR_2",
+      "HOSDUN_WEST_DOOR",
+      "HOSDUN_EAST_DOOR",
+      "HOSDUN_GRUBBY_DOOR_LOCKED",
+      "HOSDUN_GRUBBY_DOOR_OPEN"
+    ]
   },
   {
     "description": "Metal Fence Gate with textured posts",
@@ -13983,7 +14649,8 @@
     "objectIds": [
       "FAI_VARROCK_FOUNTAIN_SPLASH",
       "ATES_FOUNTAIN",
-      "MURDERFOUNTAIN"
+      "MURDERFOUNTAIN",
+      "HAUNTEDFOUNTAIN"
     ],
     "colorOverrides": [
       {
@@ -14001,6 +14668,7 @@
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       "FURNACE",
+      "FURNACE2",
       "VIKING_FURNACE",
       "VIKING_FURNACE2",
       "DWARF_KELDAGRIM_FURNACE",
@@ -14008,7 +14676,8 @@
       "FAI_FALADOR_FURNACE",
       "FAI_FALADOR_FURNACE_DOOR_LEFT",
       "FAI_FALADOR_FURNACE_DOOR_RIGHT_MIRROR",
-      "DARKM_FURNACE"
+      "DARKM_FURNACE",
+      "NEWBIEFURNACE"
     ],
     "uvType": "BOX"
   },
@@ -14140,8 +14809,9 @@
     "flatNormals": true
   },
   {
-    "description": "Wizard Tower - Walls and Bridge",
+    "description": "Wizard Tower - Bridge Corner Tiles",
     "baseMaterial": "SMOOTH_STONE_VERY_LIGHT",
+    "undoVanillaShading": false,
     "uvType": "BOX",
     "uvScale": 0.7,
     "objectIds": [
@@ -14172,7 +14842,7 @@
     ]
   },
   {
-    "description": "Marble Staircase Spiral with wooden rails",
+    "description": "Stone Staircase Spiral with wooden rails",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -14191,7 +14861,18 @@
       "VARROCK_SPIRALSTAIRS_MIDDLE_TALLER",
       "VARROCK_SPIRALSTAIRSTOP",
       "FAI_WIZTOWER_SPIRALSTAIRS_MIDDLE",
-      "FAI_FALADOR_SPIRALSTAIRS"
+      "FAI_FALADOR_SPIRALSTAIRS",
+      "DRAYNOR_SPIRALSTAIRS"
+    ]
+  },
+  {
+    "description": "Stone Staircase Top Wooden Rails Only",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "FAI_FALADOR_SPIRALSTAIRSTOP"
     ]
   },
   {
@@ -14212,10 +14893,10 @@
   },
   {
     "description": "STONE Staircase Spiral with wooden rails",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvOrientation": 765,
-    "uvScale": 0.4,
+    "uvScale": 0.75,
     "colorOverrides": [
       {
         "colors": [ "h == 7 && s > 2", "h == 5 && s == 2" ],
@@ -14338,10 +15019,12 @@
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       "HANGINGLANTERN",
+      "FAI_VARROCK_PRETTY_OILLAMP",
       "FAI_VARROCK_OILLAMP",
       "FAI_VARROCK_SWING_LANTERN_UNLIT",
       "FAI_FALADOR_LANTERN",
-      "LANTERN_OFF"
+      "LANTERN_OFF",
+      "FAI_WIZTOWER_LANTERN"
     ]
   },
   {
@@ -14387,6 +15070,18 @@
         "uvScale": 0.25
       }
     ]
+  },
+  {
+    "description": "Wooden Door - Vanilla Textured",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "ELFDOOROPEN",
+      "ELFDOOR",
+      "INACTIVEELFDOOR"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvScale": 0.5
   },
   {
     "description": "Wooden Door 1 - Fake Plank",
@@ -14481,9 +15176,9 @@
       "FAI_VARROCK_DOOR",
       "FAI_VARROCK_DOOR_OPEN_TALLER",
       "FAI_VARROCK_DOOR_TALLER",
+      "BLACKARMDOOR",
+      "BLACKARMDOOR_OPEN",
       "FAI_VARROCK_BANK_LOCKED_DOOR",
-      "HUNDRED_LUMBRIDGE_DOUBLEDOORL",
-      "HUNDRED_LUMBRIDGE_DOUBLEDOORR",
       "QIP_SHEEP_SHEARER_POORDOOR",
       "QIP_SHEEP_SHEARER_POORDOOROPEN",
       "POORDOOR_DOUBLE_INNER",
@@ -14550,6 +15245,7 @@
     ],
     "uvType": "BOX",
     "flatNormals": true,
+    "uvOrientationY": 512,
     "uvScale": 0.65
   },
   {
@@ -14599,15 +15295,20 @@
       "CASTLEDOOR",
       "OPENCASTLEDOOR",
       "DEATH_CASTLEDOOR",
-      "CASTLEDOOR_INACTIVE"
+      "CASTLEDOOR_INACTIVE",
+      "CRAFTINGGUILDDOOR",
+      "CHAMPIONDOOR",
+      "CHAMPIONDOOR_OPEN"
     ],
     "flatNormals": true,
     "uvType": "BOX",
+    "uvOrientationY": 512,
     "uvScale": 0.4
   },
   {
     "description": "Wooden Door 3 - Fake Plank Golden Handle",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationY": 512,
     "uvType": "BOX",
     "objectIds": [
       "LEFAYEUNOPENABLEDOORL",
@@ -14684,16 +15385,15 @@
       "FAI_FALADOR_DOUBLE_DOOR_R",
       "FAI_FALADOR_DOUBLE_DOOR_R_OPEN",
       "SLP_MANSION_DOOR_L",
-      "SLP_MANSION_DOOR_R"
+      "SLP_MANSION_DOOR_R",
+      "HUNDRED_LUMBRIDGE_DOUBLEDOORL",
+      "HUNDRED_LUMBRIDGE_DOUBLEDOORR"
     ],
     "colorOverrides": [
       {
         "description": "Golden Handles",
-        "colors": "h == 6 && s > 5 && s < 8",
-        "baseMaterial": "METALLIC_1_SEMIGLOSS",
-        "uvType": "BOX",
-        "uvScale": 0.2,
-        "uvOrientation": 512
+        "colors": "h == 6 && s == 7",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS"
       }
     ]
   },
@@ -14727,6 +15427,7 @@
       "FAI_VARROCK_POOR_DOOR_OPEN",
       "FAI_VARROCK_POOR_DOOR_INACTIVE",
       "FAI_VARROCK_POOR_DOOR",
+      "FAI_VARROCK_POOR_DOOR_BOARDED",
       "FAI_VARROCK_SHANTY_DOOR_OPEN",
       "FAI_VARROCK_SHANTY_DOOR",
       "FARMING_SHED_POORDOOR",
@@ -14740,7 +15441,8 @@
       "SLUG2_VILLAGE_POORDOOR",
       "PEST_POORDOOROPEN",
       "PEST_POORDOORALWAYSOPEN",
-      "MISC_BANK_DOOR"
+      "MISC_BANK_DOOR",
+      "PHOENIXDOOR"
     ],
     "uvOrientation": 512,
     "uvScale": 0.4,
@@ -14752,7 +15454,7 @@
     "uvType": "BOX",
     "flatNormals": true,
     "uvOrientationY": 512,
-    "uvScale": 0.4,
+    "uvScale": 0.55,
     "colorOverrides": [
       {
         "description": "Metal",
@@ -14767,6 +15469,7 @@
       "GUIDORDOOR",
       "GUIDORDOOROPEN",
       "FAI_VARROCK_CASTLE_DOOR_OPEN",
+      "FAI_VARROCK_CASTLE_DOOR_INACTIVE",
       "FAI_VARROCK_CASTLE_DOOR",
       "DS2_VARROCK_DOOR_OPEN",
       "DS2_VARROCK_DOOR",
@@ -14780,7 +15483,38 @@
       "FAI_VARROCK_WOODENRAILING"
     ],
     "uvType": "BOX",
-    "uvOrientation": 512
+    "uvOrientation": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Varrock Castle Railing - With Potted Plant",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_WOODEN_RAILING_CUT"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h >= 14",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "undoVanillaShading": false,
+        "upwardsNormals": true
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "DIRT_2",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h == 7 && s == 1 || h == 8",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
   },
   {
     "description": "Varrock Castle - Staircase",
@@ -14895,7 +15629,8 @@
     "objectIds": [
       "FAI_VARROCK_IVY_MEDIUM",
       "FAI_VARROCK_IVY_SMALL",
-      "LIGHTHOUSE_IVY01_LARGE01"
+      "LIGHTHOUSE_IVY01_LARGE01",
+      "FAI_VARROCK_IVY_LARGE"
     ]
   },
   {
@@ -14937,6 +15672,25 @@
     "uvType": "MODEL_XZ",
     "uvScale": 0.3,
     "uvOrientation": 1024
+  },
+  {
+    "description": "Sticks and Rocks - Rubble - Tiny",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "STICKS_TWIGS"
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.3,
+    "uvOrientation": 1024,
+    "colorOverrides": [
+      {
+        "windDisplacementMode": "VERTEX",
+        "colors": "h == 6",
+        "baseMaterial": "LIGHT_BARK",
+        "uvScale": 0.2,
+        "uvType": "MODEL_XZ"
+      }
+    ]
   },
   {
     "description": "Rock-Like Object - Rubble - Small",
@@ -15158,6 +15912,27 @@
     "uvScale": 0.85
   },
   {
+    "description": "Lumbridge Swamp - Cave Warning Sign",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 89,
+    "colorOverrides": [
+      {
+        "description": "Sign Post",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "flatNormals": true,
+        "uvOrientation": 512,
+        "undoVanillaShading": false,
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      "GOBLIN_CAVES_WARNINGSIGN"
+    ]
+  },
+  {
     "description": "Lumbridge Swamp Tree/Plant",
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX",
@@ -15196,10 +15971,36 @@
     ]
   },
   {
+    "description": "Lumbridge Swamp - Swampy Sink",
+    "baseMaterial": "WATER_FOUNTAIN_FLAT",
+    "objectIds": [
+      "HW19_SLIMEY_SINK"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.2,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Lumbridge Swamp - Fire with Pot",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "GRUNGE_2",
     "objectIds": [
       "EMBERS_WITH_PANS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "BARK",
+        "uvScale": 0.4,
+        "uvOrientationY": 512,
+        "uvType": "BOX"
+      }
     ]
   },
   {
@@ -15251,10 +16052,11 @@
     "colorOverrides": [
       {
         "description": "Both required to prevent vanilla texture from disappearing",
-        "colors": "h == 0 && s == 0 && l < 72",
+        "colors": "h == 0 && s == 0 && l < 72 || h == 7 || h == 6 && s == 3",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
-        "uvScale": 0.2
+        "uvScale": 0.2,
+        "uvOrientation": 512
       },
       {
         "description": "Both required to prevent vanilla texture from disappearing",
@@ -15266,6 +16068,34 @@
     ]
   },
   {
+    "description": "Lumbridge Windmill - Window",
+    "baseMaterial": "METALLIC_1",
+    "shiftLightness": -2,
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "uvOrientation": 512,
+    "objectIds": [
+      "ELFWINDOW_LIGHT",
+      "ELFWINDOW_LIGHT_2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 34",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge Windmill - Ladder Trim",
+    "baseMaterial": "WOOD_GRAIN_3_DARK",
+    "objectIds": [
+      "BAMBOO_DEPTH"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
+  },
+  {
     "description": "Lumbridge Windmill - Darken moving parts so they don't stick out as much",
     "baseMaterial": "GRAY_75",
     "objectIds": [
@@ -15275,12 +16105,37 @@
     ]
   },
   {
+    "description": "Lumbridge - Axe Stump",
+    "baseMaterial": "METALLIC_1",
+    "upwardsNormals": true,
+    "objectIds": [
+      "WOODCHIPPINGS",
+      "LOG_WITHAXE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "colors": "h == 6 && s > 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationX": 612,
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
     "description": "Scarecrow",
     "baseMaterial": "CARPET_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.35,
     "objectIds": [
-      "SCARECROW"
+      "SCARECROW",
+      "RIMMINGTON_SCARECROW"
     ],
     "colorOverrides": [
       {
@@ -15381,6 +16236,7 @@
     "description": "Objects - Rocks - Medium",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
+      "VARROCK_QUETZAL_LANDING_SITE_HIDDEN",
       "WATERFALLSQUISHEDROCKS",
       "FAI_VARROCK_ROCKS",
       "FAI_VARROCK_ROCKS_LARGE",
@@ -15518,6 +16374,8 @@
       "DOV_HUNTING_BOULDER1_OP",
       "DOV_HUNTING_BOULDER2",
       "DOV_HUNTING_BOULDER2_OP",
+      "DOV_HUNTING_BOULDER1_NOOP",
+      "DOV_HUNTING_BOULDER2_NOOP",
       "DS2_GRAVE_ROCKS",
       "DORGESH_CAVES_ROCKS_SMALL_02",
       "DORGESH_CAVES_ROCKS_SMALL_03",
@@ -15619,6 +16477,8 @@
     "description": "Inconspicuous Rocks",
     "baseMaterial": "BARK",
     "objectIds": [
+      "HIDEY_UNBUILT_BUSH_BEGINNER",
+      "HIDEY_BUSH_BEGINNER",
       "HIDEY_UNBUILT_BUSH_EASY",
       "HIDEY_BUSH_EASY",
       "HIDEY_UNBUILT_BUSH_MEDIUM",
@@ -15848,12 +16708,53 @@
     ]
   },
   {
+    "description": "Varrock - Cloth - Bank barrier",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAI_VARROCK_BANK_BARRIER_END",
+      "FAI_VARROCK_BANK_BARRIER",
+      "FAI_VARROCK_INTERIOR_BANKWALL_CORNER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 19",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      },
+      {
+        "description": "Interior Wallpaper",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "colors": "h == 8 && s > 3"
+      },
+      {
+        "description": "Interior Wallpaper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Interior trim",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 7",
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "setLightness": 30
+      }
+    ]
+  },
+  {
     "description": "Sinclair Mansion Drain",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvScale": 0.75,
     "objectIds": [
-      "MURDERDRAIN"
+      "MURDERDRAIN",
+      "QIP_DS_QUESTDRAIN_KEY",
+      "QIP_DS_QUESTDRAIN_NOKEY"
     ],
     "colorOverrides": [
       {
@@ -16209,6 +17110,7 @@
       "FAI_VARROCK_RUBBLES2",
       "FAI_VARROCK_RUBBLES3",
       "FAI_VARROCK_RUBBLES4",
+      "FAI_VARROCK_RUBBLES5",
       "FAI_VARROCK_RUBBLES_LARGE",
       "SWAMP_DIGDUGUPSOIL1",
       "SWAMP_DIGDUGUPSOIL3",
@@ -16289,7 +17191,7 @@
       "FAI_BARBARIAN_ABODE_WALL_SHORTER"
     ],
     "uvType": "BOX",
-    "uvOrientation": 1536,
+    "uvOrientationZ": 1536,
     "uvScale": 0.66
   },
   {
@@ -16310,6 +17212,7 @@
     "objectIds": [
       "DWARFHUT_WOODEN_ROOF",
       "DWARFHUT_WOODEN_ROOF1",
+      "DWARFHUT_WOODEN_ROOF_MID_EDGE",
       "FAI_BARBARIAN_LONGHALL_ROOF1",
       "FAI_BARBARIAN_LONGHALL_ROOF2",
       "FAI_BARBARIAN_LONGHALL_ROOF3",
@@ -16319,7 +17222,8 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.66,
-    "uvOrientation": 512
+    "uvOrientation": 512,
+    "depthBias": 1
   },
   {
     "description": "Barbarian Hall - Roof Corners - Wooden - Planks",
@@ -16348,7 +17252,8 @@
     "uvType": "BOX",
     "uvScale": 0.66,
     "uvOrientationX": 512,
-    "uvOrientationZ": 512
+    "uvOrientationZ": 512,
+    "depthBias": 1
   },
   {
     "description": "Round Rug",
@@ -16488,10 +17393,6 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "GERTRUDEEMPTY_CRATE",
-      "FAI_VARROCK_LARGE_CRATE",
-      "FAI_VARROCK_LARGE_CRATES",
-      "FAI_VARROCK_SMALL_CRATES",
-      "FAI_VARROCK_RED_CRATE",
       "FAI_VARROCK_GREEN_CRATE",
       "AHOY_BOXES_1",
       "FARMING_CRATE",
@@ -16522,7 +17423,6 @@
       "LOTR_MINE_CRATE",
       "LOTR_MINE_CRATE_STACKED",
       "CANAFIS_CRATE",
-      "FAI_FALADOR_SMALL_CRATES",
       "KR_MERLINCRATE_EMPTY2",
       "KR_UNDERGROUND_JAIL_CRATE",
       "KR_UNDERGROUND_JAIL_CRATES_STACKED",
@@ -16569,6 +17469,41 @@
     ],
     "uvType": "BOX",
     "flatNormals": true
+  },
+  {
+    "description": "Objects - Wooden - Crate - Don't Undo Vanilla Shading",
+    "undoVanillaShading": false,
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_LARGE_CRATE",
+      "FAI_VARROCK_LARGE_CRATES",
+      "FAI_VARROCK_RED_CRATE",
+      "DADDYSHOME_CRATES",
+      "GOBLIN_OUTPOST_LARGE_CRATE_ARMOUR1"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Objects - Wooden - Small Crate - Don't Undo Vanilla Shading",
+    "undoVanillaShading": false,
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_SMALL_CRATES"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 170,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Wooden - Small Crate 550 degree top",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "DK_BOXES"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 550,
+    "uvScale": 0.6
   },
   {
     "description": "Objects - Wooden - Crate - Stacked - 256 degree angled top",
@@ -16660,7 +17595,8 @@
       "CRATE_WOODEN01_REINFORCED01_STACKED01_IMCANDO01",
       "CRATE_WOODEN01_REINFORCED01_IMCANDO01",
       "CRATE_WOODEN01_REINFORCED01_OPEN01_IMCANDO01",
-      "SLUG2_LIGHTHOUSE_CRATE_STACK"
+      "SLUG2_LIGHTHOUSE_CRATE_STACK",
+      "BANANACRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -16682,7 +17618,8 @@
       "MYQ4_EMPTY_CRATE",
       "LUC2_MOV_CRATES_STACKED",
       "LANDS_END_HUNTER_CRATE",
-      "PEST_CRATES"
+      "PEST_CRATES",
+      "CHICKEN_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -16716,6 +17653,20 @@
     "uvType": "BOX",
     "flatNormals": true,
     "uvOrientationY": 600,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Objects - Wooden - Stack of crates - Small - Angled",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_FALADOR_SMALL_CRATES",
+      "DRAYNOR_SMALL_CRATES"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "flatNormals": true,
+    "uvOrientationY": 170,
     "uvOrientationX": 512,
     "uvOrientationZ": 512
   },
@@ -16766,6 +17717,7 @@
       "DWARF_KELDAGRIM_WOODEN_BOXES_NO_OPS"
     ],
     "uvType": "BOX",
+    "uvScale": 0.8,
     "flatNormals": true,
     "uvOrientationY": 600,
     "uvOrientationX": 512,
@@ -17018,7 +17970,7 @@
   },
   {
     "description": "Metallic - Ground - Armor",
-    "baseMaterial": "METALLIC_2",
+    "baseMaterial": "METALLIC_1",
     "objectIds": [
       "DAMAGEDARMOUR1",
       "DAMAGEDARMOUR2",
@@ -17027,7 +17979,7 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
-    "uvScale": 0.7
+    "uvScale": 0.15
   },
   {
     "description": "Objects - Metallic - Chair - Broken",
@@ -17064,7 +18016,8 @@
     "uvScale": 0.3,
     "objectIds": [
       "FAI_VARROCK_RANGE",
-      "FAI_VARROCK_RANGE_WITH_PIPE"
+      "FAI_VARROCK_RANGE_WITH_PIPE",
+      "RIMMINGTON_POOR_RANGE"
     ]
   },
   {
@@ -17704,7 +18657,9 @@
       "NASTYFUNGUS_DARK",
       "WILDERNESSFUNGUS",
       "NEW_NASTYFUNGUS_DARK",
-      "NEW_NASTYFUNGUS_SMALL_DARK"
+      "NEW_NASTYFUNGUS_SMALL_DARK",
+      "DRAGON_SLAYER_QIP_NASTYFUNGUS",
+      "DRAGON_SLAYER_QIP_NASTYFUNGUS_SMALL"
     ],
     "uvType": "BOX",
     "uvScale": 0.6
@@ -18286,7 +19241,9 @@
       "HOS_STOOL_03",
       "BR_STOOL",
       "LUC2_MOV_STOOL",
-      "PEST_STOOL"
+      "PEST_STOOL",
+      "TOTE_PORTAL_TO_GOTR_CHILD_HIDDEN",
+      "DK_STOOL"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -18321,7 +19278,8 @@
       "CON_CONTRACT_VARROCK_SOUTH_SMALL_TABLE_REGULAR",
       "CON_CONTRACT_VARROCK_SOUTH_SMALL_TABLE_MAHOGANY",
       "AIDE_TABLE_SMALL",
-      "MYQ6_VANESCULA_TABLE"
+      "MYQ6_VANESCULA_TABLE",
+      "MISTMYST_TABLE_KNIFE"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -19109,7 +20067,11 @@
       "TOA_ZEBAK_DEBRIS_STONE03",
       "TOA_ZEBAK_ROCKS04_NOBLOCKRANGE",
       "TOA_ZEBAK_ROCKS05_NOBLOCKRANGE",
-      "MDAUGHTER_ROCKSLIDE"
+      "MDAUGHTER_ROCKSLIDE",
+      "FFG_NOTEBOOK_ROCK",
+      "WYRMSCRAIG_CLIFF_SHORTCUT_BLOCKAGE_VIS",
+      "WYRMSCRAIG_CLIFF_SHORTCUT_TOP_VIS",
+      "WYRMSCRAIG_CLIFF_SHORTCUT_BOTTOM"
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -20310,6 +21272,30 @@
     ]
   },
   {
+    "description": "Restless Ghost Altar with Skull",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "RESTLESS_GHOST_ALTAR_SKULL",
+      "RESTLESS_GHOST_ALTAR_NO_SKULL"
+    ],
+    "shiftSaturation": -1,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 6 && s != 1",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "shiftSaturation": -2,
+        "shiftLightness": 7
+      },
+      {
+        "colors": "h == 8 || h == 9",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
     "description": "Player Killing - Loot Key Chest",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvType": "BOX",
@@ -20322,7 +21308,8 @@
       }
     ],
     "objectIds": [
-      "WILDY_HUB_LOOT_CHEST_CLOSED"
+      "WILDY_HUB_LOOT_CHEST_CLOSED",
+      "WILDY_HUB_LOOT_CHEST_CLOSED_SHIFTED"
     ]
   },
   {
@@ -20451,7 +21438,8 @@
     "objectIds": [
       "OLDCHAIR",
       "OLDCHAIR2",
-      "PISCARILIUS_CHAIR_02"
+      "PISCARILIUS_CHAIR_02",
+      "DADDYSHOME_CHAIR_BROKEN_0OP"
     ]
   },
   {
@@ -20542,6 +21530,7 @@
         "description": "Blue Cushion",
         "colors": "h > 30",
         "baseMaterial": "CARPET",
+        "shiftLightness": 2,
         "uvType": "BOX",
         "uvScale": 0.65
       },
@@ -20564,7 +21553,32 @@
       "POSH_CHAIR",
       "FAI_VARROCK_CHAIR_BLUE",
       "FAI_FALADOR_POSH_CHAIR_WHITE",
-      "POSH_CHAIR_WHITE"
+      "POSH_CHAIR_WHITE",
+      "FAI_VARROCK_JULIET_CHAIR"
+    ]
+  },
+  {
+    "description": "Wooden Table - Blue Cloth with Gold Decorations",
+    "baseMaterial": "CARPET",
+    "shiftLightness": 2,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      },
+      {
+        "colors": "h == 9 && s == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ],
+    "objectIds": [
+      "FAI_VARROCK_POSH_BIG_TABLE_BLUE"
     ]
   },
   {
@@ -20760,7 +21774,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h > 3",
+        "colors": "h > 3 && h < 10",
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.25
@@ -20841,7 +21855,7 @@
     ]
   },
   {
-    "description": "Varrock Scatle - Ardougne Castle - Bathroom Table",
+    "description": "Varrock Castle - Ardougne Castle - Bathroom Table",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -20853,10 +21867,26 @@
       {
         "description": "Wood",
         "baseMaterial": "WOOD_GRAIN_3",
-        "colors": "s > 0",
-        "uvScale": 0.8,
+        "colors": "h > 0 && h < 8",
+        "uvScale": 0.65,
         "uvType": "BOX",
-        "uvOrientation": 179
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Objects - Bath",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "objectIds": [
+      "FAI_FALADOR_BATH"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "baseMaterial": "MARBLE_4_LOW_CONTRAST_LIGHT_GLOSS",
+        "colors": "h == 42",
+        "uvScale": 0.6,
+        "uvType": "BOX"
       }
     ]
   },
@@ -20866,7 +21896,8 @@
     "objectIds": [
       "KR_BATHMIRROR",
       "BATHMIRROR",
-      "GRIM_WITCH_HOUSE_BATHMIRROR"
+      "GRIM_WITCH_HOUSE_BATHMIRROR",
+      "BATHMIRROR_SMALL"
     ],
     "uvType": "BOX",
     "uvScale": 0.33,
@@ -20975,7 +22006,8 @@
       "FULL_TWIG_LIGHT",
       "BROKEN_TWIG_LIGHT",
       "GROUNDCOVER_STRANGLER01_TWIGS04",
-      "TWIG_SAVANNAH_FULL01"
+      "TWIG_SAVANNAH_FULL01",
+      "FULL_TWIG_DARK"
     ]
   },
   {
@@ -21069,7 +22101,8 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
-      "HAMMOCK"
+      "HAMMOCK",
+      "HAMMOCK_SWINGING"
     ]
   },
   {
@@ -21266,10 +22299,11 @@
     "description": "Gnome - Objects - Wooden - Staircase Rails - Textured",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
-    "uvOrientation": 512,
+    "uvOrientationY": 512,
     "uvScale": 0.8,
     "objectIds": [
-      "SPIRALSTAIRSTOP_WOODEN"
+      "SPIRALSTAIRSTOP_WOODEN",
+      "SPIRALSTAIRSTOP_3"
     ]
   },
   {
@@ -21660,8 +22694,7 @@
       "ROOFTOP_FOOTPRINTS_BROWN",
       "ROOFTOP_FOOTPRINTS_DIAGONAL_BROWN"
     ],
-    "castShadows": false,
-    "receiveShadows": false
+    "castShadows": false
   },
   {
     "description": "Zanaris - Walls - Grass",
@@ -21997,6 +23030,16 @@
     "uvOrientation": 512
   },
   {
+    "description": "Al-Kharid Roof Support Beams",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "DESERTROOFBEAMS"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvScale": 0.5
+  },
+  {
     "description": "Pollnivneach Windows",
     "baseMaterial": "WATTLE_1",
     "objectIds": [
@@ -22035,6 +23078,22 @@
     ]
   },
   {
+    "description": "Al-Kharid Small Table",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.55,
+    "retainVanillaUvs": false,
+    "objectIds": [
+      "EGYPT_SMALL_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
     "description": "Al-Kharid Pillars",
     "baseMaterial": "MARBLE_3",
     "uvType": "BOX",
@@ -22046,11 +23105,22 @@
     ]
   },
   {
-    "description": "Al-Kharid stone stable with pillars",
-    "baseMaterial": "STONE",
+    "description": "Al-Kharid stone table with pillars",
+    "baseMaterial": "GRUNGE_3",
+    "retainVanillaUvs": false,
+    "uvScale": 0.75,
+    "uvType": "BOX",
     "objectIds": [
       "EGYPT_TABLE",
-      "EGYPT_TABLE_2"
+      "EGYPT_TABLE_2",
+      "EGYPT_TABLE_CARPET_EXHIBIT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8 && s == 1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX"
+      }
     ]
   },
   {
@@ -22198,7 +23268,16 @@
       "DESERTDOOROPEN"
     ],
     "uvType": "MODEL_XY",
-    "uvScale": 0.80
+    "uvScale": 0.80,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Pollnivneach Double Doors",
@@ -22263,7 +23342,8 @@
   },
   {
     "description": "AL Kharid - Bed and Chair",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvScale": 0.6,
     "uvType": "BOX",
     "objectIds": [
       "EGYPT_BED",
@@ -22312,6 +23392,24 @@
     "uvType": "BOX"
   },
   {
+    "description": "Kharidian Tent Old Top",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvScale": 0.6,
+    "objectIds": [
+      "TENTROOFOLD"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Shanty Pass Doorway",
+    "retainVanillaUvs": false,
+    "uvScale": 0.6,
+    "objectIds": [
+      "SHANTAY_PASS_HENGE_DOORWAY"
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Metal Monkeybars",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
@@ -22329,8 +23427,17 @@
     "objectIds": [
       "ROOFTOPS_ARROWSIGN"
     ],
-    "uvType": "MODEL_XY",
-    "uvOrientation": 512
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "uvScale": 0.2
+      }
+    ]
   },
   {
     "description": "Nardah Sophanem - Walls - Rock",
@@ -22441,6 +23548,7 @@
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "POTTEDFERN1",
+      "POTTEDFERN",
       "POTTEDSMALLFERN",
       "POTTEDFERN2"
     ],
@@ -23097,7 +24205,9 @@
       "ELID_MAYOR_STAIRS",
       "ELID_MAYOR_STAIRSTOP",
       "FAI_VARROCK_STAIRS",
-      "FAI_VARROCK_STAIRS_TOP"
+      "FAI_VARROCK_STAIRS_TOP",
+      "FAI_VARROCK_BANK_STAIRS",
+      "FAI_VARROCK_STAIRS_FROM_CELLAR"
     ]
   },
   {
@@ -23156,7 +24266,8 @@
       "XBOWS_JUNGLETREE_ROPE_GRAPPLED",
       "XBOWS_JUNGLETREE_BASIC",
       "XBOWS_JUNGLETREE_ROPE_TIED",
-      "DRAGON_SLAYER_QIP_BURNT_JUNGLE_TREE3"
+      "DRAGON_SLAYER_QIP_BURNT_JUNGLE_TREE3",
+      "JUNGLETREE2_BIG"
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -23772,11 +24883,13 @@
   {
     "description": "Drill Sergent - Tank",
     "baseMaterial": "METALLIC_1_LIGHT",
+    "uvOrientation": 512,
     "objectIds": [
       "BARRACK_TANK",
       "BATHPIPES"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.25
   },
   {
     "description": "Drill Sergent - Barricade, Obstacle Net, Target & Wire Post",
@@ -25298,7 +26411,9 @@
       "GOBLIN_OUTPOST_POORDOOR_DOUBLE_INNER",
       "GOBLIN_OUTPOST_OPENPOORDOOR_DOUBLE_INNER",
       "GOBLIN_OUTPOST_POORDOOR_DOUBLER_INNER",
-      "GOBLIN_OUTPOST_OPENPOORDOOR_DOUBLER_INNER"
+      "GOBLIN_OUTPOST_OPENPOORDOOR_DOUBLER_INNER",
+      "GOBLIN_OUTPOST_POORDOOR_DOUBLE_INNER_NOOP",
+      "GOBLIN_OUTPOST_POORDOOR_DOUBLER_INNER_NOOP"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -25339,10 +26454,144 @@
   },
   {
     "description": "Goblin Village Wooden Ladder",
-    "baseMaterial": "WOOD_GRAIN",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationY": 512,
+    "uvScale": 0.6,
+    "uvType": "BOX",
     "objectIds": [
       "GOBLIN_LADDER_BOTTOM",
-      "GOBLIN_LADDER_TOP"
+      "GOBLIN_LADDER_TOP",
+      "GOBLIN_LADDER_MIDDLE"
+    ]
+  },
+  {
+    "description": "Goblin Village Wooden Ladder with Hole",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "_100_GOBLIN_LADDER_DOWN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Goblin Village Banner Pole",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "objectIds": [
+      "GOBLIN_BANNER_POLE"
+    ]
+  },
+  {
+    "description": "Goblin Village Animated Banner",
+    "baseMaterial": "CARPET_LIGHT",
+    "shiftLightness": 3,
+    "objectIds": [
+      "GOBLIN_BANNER_RED",
+      "GOBLIN_BANNER_GREEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 7" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Goblin Village Wall Banner",
+    "baseMaterial": "CARPET_LIGHT",
+    "shiftLightness": 3,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "GOBLIN_WALL_FLAG_RED",
+      "GOBLIN_WALL_FLAG_GREEN",
+      "GOBLIN_CHANGING_CURTAIN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "uvOrientationX": 512
+      },
+      {
+        "colors": [ "h == 2" ],
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Goblin Village - Timber Defence",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.15,
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 7 && s == 4",
+        "baseMaterial": "BARK",
+        "shiftLightness": 3,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "GOBLIN_TIMBERDEFENCE_NEW"
+    ]
+  },
+  {
+    "description": "Goblin Village - Roof Middle",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "_100_GOBLIN_ROOF_TOP",
+      "_100_GOBLIN_ROOF_END_MIRROR",
+      "_100_GOBLIN_ROOF_END",
+      "_100_GOBLIN_ROOF_TOP_LOWER",
+      "_100_GOBLIN_ROOF_END2",
+      "_100_GOBLIN_ROOF_END2_MIRROR",
+      "_100_GOBLIN_ROOF_BEFORE_EX"
+    ]
+  },
+  {
+    "description": "Goblin Village - Roof Middle - Not Rotated",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "_100_GOBLIN_ROOF1",
+      "_100_GOBLIN_ROOF2"
+    ]
+  },
+  {
+    "description": "Goblin Village - Roof Edge",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "_100_GOBLIN_ROOF"
     ]
   },
   {
@@ -29507,6 +30756,7 @@
     "baseMaterial": "LEAF_VEINS",
     "uvType": "MODEL_XZ",
     "windDisplacementMode": "OBJECT",
+    "undoVanillaShading": false,
     "uvScale": 0.25,
     "objectIds": [
       "SMALLFERN",
@@ -29520,7 +30770,9 @@
       "PLANT_FERN_TLATI01",
       "PLANT_FERN_TLATI02",
       "PLANT_FERN_TLATI03",
-      "PLANT_FERN_TLATI04"
+      "PLANT_FERN_TLATI04",
+      "MISTMYST_HEWEY_FERN_VIS",
+      "MISTMYST_ABIGALE_FERN_VIS"
     ]
   },
   {
@@ -29587,7 +30839,9 @@
       "DOV_HUNTING_PLANT1_OP",
       "DOV_HUNTING_PLANT_INITIAL",
       "PLANT_TROPICAL_01",
-      "IG_PLANT_FLAT"
+      "IG_PLANT_FLAT",
+      "DOV_HUNTING_PLANT1_NOOP",
+      "DOV_HUNTING_PLANT1_OP"
     ]
   },
   {
@@ -29753,6 +31007,8 @@
   {
     "description": "Generic - Plank - Tables - Picnic Bench",
     "baseMaterial": "WOOD_GRAIN_3",
+    "minLightness": 10,
+    "undoVanillaShading": false,
     "objectIds": [
       "FAI_VARROCK_POSH_BENCH",
       "FAI_VARROCK_FULL_BENCH"
@@ -29851,7 +31107,8 @@
     "description": "Objects - Stone - Dessous Gravestone - Large",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      "VAMPIRE_BIG_GRAVE_NOBLOOD"
+      "VAMPIRE_BIG_GRAVE_NOBLOOD",
+      "FAIRY_DRAYNOR_GRAVESTONE"
     ],
     "uvType": "GEOMETRY",
     "flatNormals": true
@@ -29877,7 +31134,8 @@
       "MURDER_QIP_CONTEST_FENCE",
       "MURDER_QIP_CONTEST_FENCE_POST",
       "MURDER_QIP_CONTEST_FENCE_ENDR",
-      "MURDER_QIP_CONTEST_FENCE_ENDL"
+      "MURDER_QIP_CONTEST_FENCE_ENDL",
+      "LUMBRIDGE_SC_FENCEJUMP"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -30693,10 +31951,29 @@
       "FAI_VARROCK_UNFINISHED_WEAPONS_01",
       "FAI_VARROCK_UNFINISHED_WEAPONS_02",
       "FAI_VARROCK_UNFINISHED_WEAPONS_03",
-      "WILDERNESS_MANICALS",
       "WILDY_HUB_BACKPACK"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Ferox Enclave - Manicals",
+    "baseMaterial": "METALLIC_1",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h > 0",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientationX": 512,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "WILDERNESS_MANICALS"
+    ]
   },
   {
     "description": "Ferox Enclave - Statue",
@@ -30725,7 +32002,8 @@
       "DT2_GHORROCK_CELL_BED_OP",
       "DT2_GHORROCK_BED_POOR",
       "DT2_GHORROCK_THANKYOU_BED",
-      "DT2_HIDEOUT_BED"
+      "DT2_HIDEOUT_BED",
+      "DADDYSHOME_BED_BROKEN_0OP"
     ],
     "uvType": "BOX",
     "uvScale": 0.66
@@ -30992,14 +32270,6 @@
     "uvScale": 0.7
   },
   {
-    "description": "Morytania - Objects - Metallic - Suit of Armor",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-    "objectIds": [
-      "OLDSUITOFARMOUR"
-    ],
-    "uvType": "BOX"
-  },
-  {
     "description": "Wooden Wedge Stairs",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -31010,7 +32280,7 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
-    "uvScale": 1.2
+    "uvScale": 0.9
   },
   {
     "description": "Morytania - Fenkenstrains Castle - Walls - Brick Stone",
@@ -31222,7 +32492,8 @@
     "description": "Objects - Stone - Giants Foundry - Moulds",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
-      "GIANTS_FOUNDRY_MOLD_LIBRARY"
+      "GIANTS_FOUNDRY_MOLD_LIBRARY",
+      "FAI_VARROCK_SMITHY_SWORD_MOULD_EMPTY"
     ],
     "uvType": "BOX",
     "uvScale": 0.6
@@ -32474,10 +33745,13 @@
     "objectIds": [
       "FAI_VARROCK_POOR_WALL_SUPPORT",
       "FAI_VARROCK_POOR_WALL_SUPPORT2",
-      "SLUG2_POOR_WALL_SUPPORT"
+      "SLUG2_POOR_WALL_SUPPORT",
+      "FAI_VARROCK_UNDERGROUND_SUPPORT",
+      "FAI_VARROCK_UNDERGROUND_SUPPORT2"
     ],
     "uvType": "BOX",
-    "flatNormals": true
+    "flatNormals": true,
+    "uvOrientationY": 512
   },
   {
     "description": "Object - Wooden - Support Post",
@@ -32519,18 +33793,23 @@
       "WILD_CHEST_CLOSED",
       "WILD_CHEST_OPEN",
       "KEBOS_CHEST_CLOSED_INACTIVE",
-      "WGS_MOVARIO_RUNE_CHEST"
+      "WGS_MOVARIO_RUNE_CHEST",
+      "GOBLIN_OUTPOST_CHEST_CLOSED"
     ],
     "uvType": "BOX",
     "uvOrientationZ": 512,
     "uvOrientationX": 512,
-    "flatNormals": true
+    "flatNormals": true,
+    "uvOrientationY": 512,
+    "uvScale": 0.8
   },
   {
     "description": "Object - Wooden - Plank - Chest - Metal Clasp",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "FAI_VARROCK_CONTAINER"
+      "FAI_VARROCK_CONTAINER",
+      "PARTYROOM_CHESTOPEN",
+      "FAI_FALADOR_PARTY_ROOM_CHEST_CLOSED"
     ],
     "uvType": "BOX",
     "uvOrientationZ": 512,
@@ -32622,11 +33901,19 @@
   {
     "description": "Object - Dying Tree",
     "baseMaterial": "BARK",
+    "terrainVertexSnap": true,
     "objectIds": [
       "FAI_VARROCK_DEAD_TREE",
       "FAI_VARROCK_DEAD_TREE_NOOP"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 13 || h == 14",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
   },
   {
     "description": "Varrock - Wall Decoration - Wooden - Plank",
@@ -32666,7 +33953,8 @@
       "FAI_VARROCK_TENT_PEG_CONER_MIRROR",
       "FAI_VARROCK_TENT_SLOPE1",
       "FAI_VARROCK_TENT_SLOPE2",
-      "FAI_VARROCK_TENT_PEAK"
+      "FAI_VARROCK_TENT_PEAK",
+      "FAI_VARROCK_TENTDOOR"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -32699,6 +33987,36 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.85
+  },
+  {
+    "description": "Fortune-teller Aris - Shop Sign",
+    "baseMaterial": "GRUNGE_3_DULL",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "objectIds": [
+      "FAI_VARROCK_FORTUNE_SHOP_SIGN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s != 1 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationY": 512,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Fortune-teller Aris - Hanging Lantern",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "upwardsNormals": true,
+    "shiftLightness": 5,
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.2,
+    "objectIds": [
+      "FAI_VARROCK_GYPSY_LANTERN"
+    ]
   },
   {
     "description": "Zaff - Table and Rack with Staves",
@@ -32748,7 +34066,9 @@
     "uvScale": 0.2,
     "uvOrientation": 512,
     "objectIds": [
-      "FAI_VARROCK_TOOLSET"
+      "FAI_VARROCK_TOOLSET",
+      "FAI_VARROCK_TOOLSET_02",
+      "FAI_VARROCK_HANGING_HORSESHOES"
     ],
     "colorOverrides": [
       {
@@ -32776,6 +34096,37 @@
       {
         "colors": "h == 48",
         "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Varrock Market - Tea Stall",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "TEA_STALL"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "CARPET_LIGHT",
+        "colors": "h == 6 && s == 1",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 6 && s == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientationZ": 512
+      },
+      {
+        "baseMaterial": "METALLIC_1",
+        "colors": "h == 0 || h == 5 || h == 7",
+        "uvType": "BOX",
+        "uvScale": 0.15
       }
     ]
   },
@@ -32885,22 +34236,42 @@
   {
     "description": "Lumbridge - Varrock Crossroads Signpost",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "shiftLightness": -5,
     "objectIds": [
       "FAI_VARROCK_SIGNPOST_1"
     ],
     "uvType": "BOX",
     "uvScale": 0.35,
-    "flatNormals": true
+    "upwardsNormals": true,
+    "undoVanillaShading": false
   },
   {
-    "description": "Lumbridge - Al Khrid Crossroads Signpost",
+    "description": "Lumbridge - Al Kharid Crossroads Signpost",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "shiftLightness": 5,
     "objectIds": [
       "AIDE_SIGNPOST_1"
     ],
     "uvType": "BOX",
     "uvScale": 0.35,
-    "upwardsNormals": true
+    "upwardsNormals": true,
+    "undoVanillaShading": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 4 || h == 5",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "undoVanillaShading": false
+      }
+    ]
   },
   {
     "description": "What Lies Below - Camp Fire",
@@ -32968,6 +34339,27 @@
         "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "uvType": "BOX",
         "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Objects - Tree - Strange Palm",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "shiftSaturation": -1,
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "PALM"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 4" ],
+        "baseMaterial": "LIGHT_BARK",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "uvType": "BOX",
+        "uvScale": 0.35,
+        "shiftSaturation": -1
       }
     ]
   },
@@ -33056,13 +34448,14 @@
   },
   {
     "description": "Ore - Empty - Rock",
-    "baseMaterial": "ROCK_4_ORE",
+    "baseMaterial": "ROCK_6_LIGHT",
     "objectIds": [
       "ROCKS1",
-      "ROCKS2"
+      "ROCKS2",
+      "NEWBIEROCKS1"
     ],
     "uvType": "BOX",
-    "uvScale": 0.33,
+    "uvScale": 0.45,
     "uvOrientation": 700
   },
   {
@@ -33161,6 +34554,16 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.33
+  },
+  {
+    "description": "Ore - Sunstone - Rock",
+    "baseMaterial": "ROCK_3_SMOOTH_LIGHT",
+    "objectIds": [
+      "SUNSTONEROCK1",
+      "SUNSTONEROCK2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3
   },
   {
     "description": "Ore - Clay - Rock",
@@ -33347,6 +34750,7 @@
     ],
     "objectIds": [
       "BANKBOOTH",
+      "NEWBIEBANKBOOTH",
       "BANKPRIVATEBOOTH",
       "BANKBOOTH_END_RIGHT"
     ]
@@ -33665,6 +35069,9 @@
       "ROOTS_1",
       "ROOTS_2",
       "ROOTS_3",
+      "ROOTS_1_LIGHT",
+      "ROOTS_2_LIGHT",
+      "ROOTS_3_LIGHT",
       "CAVE_TWIG1",
       "AVIUM_ROOTS01",
       "AVIUM_ROOTS02",
@@ -34139,7 +35546,8 @@
     "description": "Crafting Guild Blacksmith's tools",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
-    "uvOrientation": 192,
+    "uvScale": 0.3,
+    "uvOrientation": 512,
     "objectIds": [ "BLACKSMITHTOOLS" ],
     "flatNormals": true
   },
@@ -34367,6 +35775,7 @@
       "LEAFLESSBUSH",
       "LEAFLESSBUSH2",
       "ENAKH_LEAFLESSBUSH",
+      "NEW_LEAFLESSBUSH",
       "FAI_LEAFLESS_BUSH_LARGE_01",
       "FAI_LEAFLESS_BUSH_LARGE_02",
       "DOV_HUNTING_PLANT2_NOOP",
@@ -34375,7 +35784,8 @@
       "FAI_LEAFLESS_BUSH_SMALL_01",
       "FAI_LEAFLESS_BUSH_SMALL_02",
       "DOV_HUNTING_PLANT2",
-      "DOV_HUNTING_PLANT2_OP"
+      "DOV_HUNTING_PLANT2_OP",
+      "HW17_JARVIS_BUSH"
     ],
     "uvType": "BOX",
     "uvOrientation": 600
@@ -34516,6 +35926,7 @@
     "description": "Objects - Hay - Hay Bale - Vanilla Textured",
     "textureMaterial": "HD_HAY",
     "objectIds": [
+      "HAYBAIL",
       "HAYSTACK",
       "HAYSTACK2"
     ],
@@ -34524,6 +35935,22 @@
     "uvOrientationY": 512,
     "uvOrientationZ": 512,
     "retainVanillaUvs": false
+  },
+  {
+    "description": "Objects - Hay - Hay Bale",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "WEATHERVAIN"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
+    ]
   },
   {
     "description": "Objects - Hay - Hay Bale",
@@ -34549,7 +35976,7 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "NONE",
+        "baseMaterial": "GRAY_50",
         "flatNormals": true
       }
     ]
@@ -34674,7 +36101,11 @@
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "BANKDOOR_R_INACTIVE",
-      "BANKDOOR_L_INACTIVE"
+      "BANKDOOR_L_INACTIVE",
+      "BANKDOOR_R",
+      "BANKDOOR_L",
+      "OPENBANKDOOR_R",
+      "OPENBANKDOOR_L"
     ],
     "uvType": "BOX",
     "uvScale": 0.4
@@ -34714,7 +36145,9 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "FAI_VARROCK_BANK_CHEST_OPEN",
-      "PIRATECHEST"
+      "PIRATECHEST",
+      "PIRATECHESTOPEN",
+      "FAI_FALADOR_BANK_CHEST"
     ],
     "uvOrientation": 512,
     "uvType": "BOX",
@@ -34723,7 +36156,7 @@
       {
         "colors": [ "h == 8" ],
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-        "uvType": "WORLD_XZ",
+        "uvType": "BOX",
         "uvScale": 0.25
       }
     ]
@@ -34817,16 +36250,152 @@
   },
   {
     "description": "Tutorial Island - Drill",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "FAI_VARROCK_SMITHY_DRILL"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.55,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0", "h == 5", "h == 10" ],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Bear Pit Hole with Ladder",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_BEARPIT_TRAPDOOR"
     ],
     "uvType": "BOX",
     "uvScale": 0.3,
     "colorOverrides": [
       {
-        "colors": [ "h == 0", "h == 5", "h == 10" ],
-        "baseMaterial": "GRUNGE_3"
+        "colors": [ "h == 6 && l == 37 || h == 7" ],
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": 512,
+        "maxLightness": 30
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Smithy Hearth & Lathe",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "FAI_VARROCK_SMITHY_HEARTH",
+      "FAI_VARROCK_SMITHY_LATHE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2
+  },
+  {
+    "description": "Varrock - Smithy Bellows",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_BELLOWS"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": [ "s == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Smithy Blueprint Poster",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FAI_VARROCK_BLUEPRINT_POSTER"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3
+  },
+  {
+    "description": "Varrock - Smithy Blueprint Poster",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FAI_VARROCK_SMITHY_SAFETY_POSTER"
+    ],
+    "depthBias": 100,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Shop Signs",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      "FAI_VARROCK_BLACKSMITH_SHOP_SIGN",
+      "FAI_VARROCK_RANGE_SHOP_SIGN",
+      "FAI_VARROCK_BANK_SIGN",
+      "FAI_VARROCK_HAIRDRESSER_SIGN",
+      "FAI_VARROCK_GENERAL_STORE_SIGN",
+      "FAI_VARROCK_SEWING_SHOP_SIGN",
+      "FAI_VARROCK_FANCY_SIGN",
+      "FAI_VARROCK_DANCINGDONKEY_SIGN",
+      "FAI_VARROCK_SWORD_SHOP_SIGN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5 || h == 6 || h == 7" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientationZ": 512,
+        "uvOrientationY": 512
+      },
+      {
+        "colors": [ "h == 3" ],
+        "baseMaterial": "BARK",
+        "uvType": "MODEL_YZ",
+        "uvScale": 0.2,
+        "uvOrientation": 512
+      },
+      {
+        "colors": [ "h > 12 && h < 30" ],
+        "baseMaterial": "LEAF_VEINS"
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Blue Moon Inn Sign",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      "FAI_VARROCK_BLUEMOON_PUB_SIGN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5 || h == 7" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientationY": 512
+      },
+      {
+        "colors": [ "h == 3" ],
+        "baseMaterial": "BARK",
+        "uvType": "MODEL_YZ",
+        "uvScale": 0.2,
+        "uvOrientation": 512
+      },
+      {
+        "colors": [ "h > 12 && h < 30" ],
+        "baseMaterial": "LEAF_VEINS"
       }
     ]
   },
@@ -34919,12 +36488,12 @@
   },
   {
     "description": "Stronghold Of Security Rock Entrance",
-    "baseMaterial": "ROCK_5",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
     "objectIds": [
       "SOS_DUNG_ENT_OPEN"
     ],
     "uvType": "BOX",
-    "uvScale": 0.38,
+    "uvScale": 0.3,
     "uvOrientation": 128
   },
   {
@@ -35083,7 +36652,8 @@
     "objectIds": [
       "SOS_FAM_WALL",
       "SOS_FAM_WALL_SPIKE",
-      "SOS_FAM_WALL_TOP"
+      "SOS_FAM_WALL_TOP",
+      "SOS_FAM_WALL_TOP_HALF"
     ],
     "uvType": "BOX",
     "uvScale": 0.44
@@ -36558,7 +38128,11 @@
       "HUNTING_TRAIL_END_BUSH35_55",
       "ZEP_BUSH",
       "BIM_BUSH",
-      "WILDBUSH1"
+      "WILDBUSH1",
+      "DOV_HUNTING_BUSH1_NOOP",
+      "DOV_HUNTING_BUSH2_NOOP",
+      "DOV_HUNTING_BUSH2_OP",
+      "DOV_HUNTING_BUSH1_OP"
     ]
   },
   {
@@ -36614,7 +38188,6 @@
       "OAK_TREE_3",
       "OAK_TREE_FULLYGROWN_1",
       "OAK_TREE_FULLYGROWN_2",
-      "NEWBIEOAKTREE",
       "OAKTREE",
       "DRILL_OAKTREE",
       "TUT2_OAK",
@@ -36622,6 +38195,28 @@
       "TREE_OAK_DEFAULT01",
       "GIM_OAKTREE",
       "OAKTREE_NOOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_RED_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_RED_TOP"
+      }
+    }
+  },
+  {
+    "description": "Oak Tree - Lighter",
+    "baseMaterial": "BARK",
+    "undoVanillaShading": false,
+    "shiftLightness": 6,
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "NEWBIEOAKTREE"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -36648,7 +38243,6 @@
       "OAK_TREE_3",
       "OAK_TREE_FULLYGROWN_1",
       "OAK_TREE_FULLYGROWN_2",
-      "NEWBIEOAKTREE",
       "OAKTREE",
       "DRILL_OAKTREE",
       "TUT2_OAK",
@@ -37953,13 +39547,14 @@
     "uvScale": 0.5,
     "upwardsNormals": true,
     "objectIds": [
-      "FAI_VARROCK_COOKING_CROCKERY_2"
+      "FAI_VARROCK_COOKING_CROCKERY_2",
+      "FAI_VARROCK_COOKING_CROCKERY_1"
     ],
     "uvType": "BOX",
     "uvOrientationX": 512,
     "colorOverrides": [
       {
-        "colors": "h == 6",
+        "colors": "h == 6 || h == 7 && s == 3",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
         "uvScale": 0.3,
@@ -37977,7 +39572,6 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
-    "uvOrientationX": 512,
     "colorOverrides": [
       {
         "colors": "h == 0 && s == 0",
@@ -38134,7 +39728,8 @@
       "SW_SPINNINGWHEEL_BROKEN",
       "SW_SPINNINGWHEEL_FIXED",
       "SPINNINGWHEEL",
-      "CONTACT_SPINNING_WHEEL"
+      "CONTACT_SPINNING_WHEEL",
+      "SPINNINGWHEEL_QUETZACALI"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -40102,19 +41697,64 @@
   },
   {
     "description": "Varrock Sewers - Bryophyta - Axe Stump",
-    "baseMaterial": "GRUNGE_3",
-    "uvType": "BOX",
+    "baseMaterial": "METALLIC_1",
+    "upwardsNormals": true,
     "objectIds": [
       "GB_LOG_WITHAXE",
-      "WOODCHIPPINGS_LIGHT",
-      "LOG_WITHAXE"
+      "WOODCHIPPINGS_LIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 6 && s == 3",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "colors": "h == 6 && s > 5 || h == 6 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationX": 612,
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Varrock Sewers - Bryophyta - Mossy Chest",
+    "baseMaterial": "METALLIC_1",
+    "shiftLightness": 6,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "MOSSYKEY_CHEST_CLOSED",
+      "MOSSYKEY_CHEST_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 9",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "undoVanillaShading": false,
+        "uvScale": 0.4,
+        "shiftLightness": 5
+      }
+    ]
+  },
+  {
+    "description": "Varrock Sewers - Bryophyta - Wooden Stakes",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "ROGUESDEN_RAILING"
     ],
     "colorOverrides": [
       {
         "colors": "h == 6",
-        "baseMaterial": "LIGHT_BARK",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.4
+        "uvScale": 0.2,
+        "uvOrientationY": 512
       }
     ]
   },
@@ -40158,7 +41798,8 @@
       "OLDWALL_BLACKBACK_A_DARK03",
       "OLDWALL_BLACKBACK_B_DARK03",
       "OLDWALL_BLACKBACK_A_DARK02",
-      "OLDWALL_BLACKBACK_A"
+      "OLDWALL_BLACKBACK_A",
+      "OLDWALL_BLACKBACK_B"
     ]
   },
   {
@@ -40167,6 +41808,17 @@
     "baseMaterial": "PURE_BLACK",
     "objectIds": [
       "DUNGEONKIT_WALLTOP01_SEWERS01"
+    ]
+  },
+  {
+    "description": "Varrock Sewers - Agility Pipe",
+    "areas": [ "VARROCK_SEWERS" ],
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "VARROCK_DUNGEON_PIPE_SC",
+      "VARROCK_DUNGEON_PIPE_SC"
     ]
   },
   {
@@ -40803,7 +42455,9 @@
     "baseMaterial": "GRUNGE_1_DARK",
     "objectIds": [
       "RUBBLE_1",
-      "RUBBLE_2"
+      "RUBBLE_2",
+      "HORROR_RUBBLE_1",
+      "FAI_VARROCK_BOTTLES1"
     ],
     "colorOverrides": [
       {
@@ -44231,7 +45885,8 @@
       "SKEWSTEPS_STONE_IMCANDO01_DARK01",
       "ROR_TEMPLE_TALL_BLUE_ARCH01_DARK02",
       "ROR_TEMPLE_TALL_BLUE_DARK01",
-      "DEEPFIN_CAVE_SHORTCUT"
+      "DEEPFIN_CAVE_SHORTCUT",
+      "WYRMSCRAIG_CAVE_SHORTCUT"
     ],
     "uvType": "BOX",
     "uvScale": 0.86
@@ -45288,7 +46943,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "DWARF_KELDAGRIM_SMALL_CUPBOARD",
-      "SWAN_CUPBOARD"
+      "SWAN_CUPBOARD",
+      "ALICUPBOARD"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -45676,7 +47332,8 @@
     "uvType": "BOX",
     "retainVanillaUvs": false,
     "objectIds": [
-      "WATER_BARREL1"
+      "WATER_BARREL1",
+      "WATER_BARREL2"
     ],
     "colorOverrides": [
       {
@@ -46626,10 +48283,18 @@
     "description": "Objects - Metallic - Range on textured bricks - Textured",
     "baseMaterial": "METALLIC_1",
     "uvType": "BOX",
-    "uvScale": 0.4,
+    "uvScale": 0.25,
     "objectIds": [
-      "NEWBIERANGE",
       "RANGE"
+    ]
+  },
+  {
+    "description": "Objects - Metallic - Range on textured bricks - Textured - Lighter",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      "NEWBIERANGE"
     ]
   },
   {
@@ -46744,17 +48409,62 @@
   },
   {
     "description": "Wooden Step Ladder",
-    "objectIds": [ "STEPLADDER" ],
+    "objectIds": [
+      "STEPLADDER",
+      "FAI_VARROCK_STEPLADDERS"
+    ],
     "baseMaterial": "WOOD_GRAIN_3",
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Hanging Sacks",
+    "objectIds": [
+      "FAI_VARROCK_GENERAL_STORE_HANGSACK1",
+      "FAI_VARROCK_GENERAL_STORE_HANGSACK2"
+    ],
+    "baseMaterial": "ROPE",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "BURLAP",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Shop Counter",
+    "objectIds": [
+      "FAI_VARROCK_GENERAL_STORE_COUNTER"
+    ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 7 && s == 3 || h == 21 || h == 23 || h == 59",
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "h == 6 || h == 8",
+        "baseMaterial": "METALLIC_1"
+      }
+    ]
   },
   {
     "description": "Ceramic Big Vase",
     "objectIds": [ "ORNATE_VASE1" ],
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientation": 462
+    "uvScale": 0.3
   },
   {
     "description": "Sheep Shearer fence and gate",
@@ -46906,7 +48616,8 @@
     "description": "Wooden shelves - Empty",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "COOKINGSHELFEMPTY"
+      "COOKINGSHELFEMPTY",
+      "COOKINGSHELFEMPTY_OFFSET"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -46931,8 +48642,9 @@
     "colorOverrides": [
       {
         "description": "Metal",
-        "colors": "h == 0 && s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+        "colors": "h == 0 && s == 0 || h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "undoVanillaShading": false
       }
     ]
   },
@@ -46960,7 +48672,7 @@
         "colors": "h == 0 && s == 0",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
         "undoVanillaShading": false,
-        "shiftLightness": 5
+        "shiftLightness": 3
       }
     ]
   },
@@ -46979,7 +48691,8 @@
       {
         "description": "Metal",
         "colors": "h == 0 && s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "undoVanillaShading": false
       }
     ]
   },
@@ -47102,6 +48815,7 @@
     "uvScale": 0.75,
     "objectIds": [
       "SHOPSIGN",
+      "GENERALSTORESIGN",
       "XMTS_PUB_SIGN"
     ],
     "colorOverrides": [
@@ -47249,11 +48963,13 @@
     "receiveShadows": false
   },
   {
-    "description": "Marble statues at Lumbridge Entrance - Textured",
+    "description": "Marble statues - Textured",
     "objectIds": [
       "STATUE_LUMBRIDGE",
       "GARDEN_QUEEN_STATUE",
-      "STATUE_PLINTH_LUMBRIDGE"
+      "STATUE_PLINTH_LUMBRIDGE",
+      "FAI_FALADOR_STATUE_KNIGHT_HALBERD",
+      "FAI_FALADOR_STATUE_KNIGHT_MACE"
     ],
     "baseMaterial": "MARBLE_2_SEMIGLOSS",
     "uvType": "BOX",
@@ -47388,6 +49104,7 @@
       "DRAYNOR_WALLS_PLASTER5",
       "DRAYNOR_WALLS_PLASTER6",
       "DRAYNOR_WALLS_BROKE",
+      "MISTMYST_DESTRUCTABLE_WALL_DAMAGED",
       "DRAYNOR_WALLS_BROKE_MIRROR",
       "DRAYNOR_WALLS_BROKE2",
       "DRAYNOR_WALLS_BROKE2_MIRROR",
@@ -47404,21 +49121,46 @@
       "DRAYNOR_WALL_TOP_NOT_ARCHED_EXT",
       "MISTMYST_DESTRUCTABLE_WALL_CLIMBABLE_BROKEN",
       "MISTMYST_DESTRUCTABLE_WALL_BROKEN",
-      "MISTMYST_KITCHEN_DOOR_TOP"
+      "MISTMYST_KITCHEN_DOOR_TOP",
+      "DRAYNOR_WALL_ARCH_EXT"
     ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvOrientation": 512,
-    "uvScale": 1.2,
-    "retainVanillaUvs": false,
+    "uvScale": 0.75,
     "colorOverrides": [
       {
-        "description": "Red carpet",
+        "description": "Wallpaper",
         "colors": [ "h == 0 && s > 0" ],
         "baseMaterial": "GRUNGE_3",
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Stone",
+        "colors": [ "h == 0" ],
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Wood Panels Vertical",
+        "colors": [ "h == 3 && s == 7" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
       }
     ]
+  },
+  {
+    "description": "Draynor Manor - Fence",
+    "objectIds": [
+      "DRAYNOR_MANOR_FENCE"
+    ],
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.2
   },
   {
     "description": "Avas Bookcase wall",
@@ -47462,30 +49204,50 @@
         "uvScale": 0.4
       },
       {
-        "description": "Red carpet",
+        "description": "Red wallapaper",
         "colors": [ "h == 0 && s >= 2" ],
         "baseMaterial": "GRUNGE_3",
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "minLightness": 8
       }
     ],
     "objectIds": [
       "HAUNTEDBOOKCASER",
       "HAUNTEDBOOKCASEL",
       "DRAYNOR_WALLS_RIGHT_TERMINATOR",
-      "DRAYNOR_WALLS_LEFT_TERMINATOR"
+      "DRAYNOR_WALLS_LEFT_TERMINATOR",
+      "HAUNTEDBOOKCASEOPEN"
     ]
   },
   {
     "description": "Murder Mystery Wooden Double Doors",
     "objectIds": [
-      "TKBUSH_L",
       "HAUNTEDDOORR_INACTIVE",
+      "HAUNTEDDOORL_INACTIVE",
       "MISTMYST_FRONT_DOORL",
       "MISTMYST_FRONT_DOORR"
     ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Draynor Manor Wooden Double Doors - Closed",
+    "objectIds": [
+      "HAUNTEDDOORL",
+      "HAUNTEDDOORR"
+    ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
   },
   {
     "description": "Murder Mystery Wooden Doors",
@@ -47501,11 +49263,31 @@
       "MISTMYST_DOOR_DIAMOND",
       "MISTMYST_DOOR_SAPPHIRE",
       "MISTMYST_DOOR_RUBY_INACTIVE",
-      "MISTMYST_DOOR_EMERALD_INACTIVE"
+      "MISTMYST_DOOR_EMERALD_INACTIVE",
+      "CLOSET_DOOR",
+      "DRAYNORPANELLEDDOOR_INACTIVE",
+      "HAUNTEDBACKDOOR",
+      "HAUNTEDBACKDOOR_INACTIVE"
     ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.75
+  },
+  {
+    "description": "Draynor Manor Grandfather Clock - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "objectIds": [
+      "DRAYNOR_GRANDFATHERCLOCK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Clock Face",
+        "colors": "h == 7 && s == 1",
+        "baseMaterial": "GRAY_80"
+      }
+    ]
   },
   {
     "description": "Fancy wooden table with alternating lines",
@@ -47537,7 +49319,13 @@
     ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
+    ]
   },
   {
     "description": "Lumbridge - Restless Ghost - Coffin",
@@ -47549,6 +49337,16 @@
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "BOX",
     "uvScale": 0.88
+  },
+  {
+    "description": "Lumbridge - Restless Ghost - The Ghost in Question",
+    "baseMaterial": "UNLIT",
+    "shiftLightness": 7,
+    "shiftAlpha": -30 ,
+    "minAlpha": 30,
+    "npcIds": [
+      "GHOSTX"
+    ]
   },
   {
     "description": "Lumbridge crypt stone block walls",
@@ -47582,6 +49380,42 @@
     ]
   },
   {
+    "description": "Lumbridge Window with ivy",
+    "baseMaterial": "LEAF_VEINS_DARKER",
+    "windDisplacementMode": "VERTEX_JIGGLE",
+    "objectIds": [
+      "AIDE_SHUTTERWINDOW"
+    ],
+    "uvType": "MODEL_YZ",
+    "uvOrientation": 144,
+    "uvScale": 0.1,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "shiftLightness": -2,
+        "depthBias": 1
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "shiftLightness": -2,
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
     "description": "Lumbridge Basement - Culinaromancer's Chest",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -47607,6 +49441,15 @@
         "baseMaterial": "METALLIC_1_LIGHT"
       }
     ]
+  },
+  {
+    "description": "Lumbridge General Store - Teddy Bear",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      "TOB_SPECTATOR_MISTHALIN_TEDDYBEAR"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.24
   },
   {
     "description": "Objects - Wooden - Brown Drawers with metallic handles",
@@ -47756,10 +49599,19 @@
       "RIMMINGTON_WOOD_WALLS_WINDOW_DOUBLE01"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.7,
     "uvOrientationZ": 512,
     "uvOrientationY": 512,
-    "flatNormals": true
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "s == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "flatNormals": true
+      }
+    ]
   },
   {
     "description": "Rimmington House Roof - Corner",
@@ -47814,7 +49666,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "FAI_VARROCK_CHEST_CLOSED",
-      "FAI_VARROCK_POOR_CHEST"
+      "FAI_VARROCK_POOR_CHEST",
+      "FAI_VARROCK_CHEST_OPEN"
     ],
     "uvType": "BOX",
     "uvOrientation": 512
@@ -47854,6 +49707,47 @@
       "FAI_VARROCK_WARDROBE_POSH2",
       "AKD_HUGHES_WARDROBE_1_NOOP",
       "SLUG2_WARDROBE"
+    ]
+  },
+  {
+    "description": "Juliets Bed",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvOrientation": 512,
+    "uvScale": 0.6,
+    "uvType": "BOX",
+    "objectIds": [
+      "BIGPINKBED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 7" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_SMOOTH_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Juliets Shoerack",
+    "baseMaterial": "GRUNGE_3",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "FAI_VARROCK_SHOERACK",
+      "FAI_VARROCK_SHOERACK02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 7 && s < 7" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
     ]
   },
   {
@@ -47911,6 +49805,34 @@
       "ROMEO_JULIET_CRYPT_TOMB"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Stone slab - With Juliet lying on it",
+    "objectIds": [
+      "ROMEO_JULIET_CRYPT_TOMB_NO_HEADSTONE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0 || h == 5",
+        "uvType": "BOX",
+        "baseMaterial": "STONE_NORMALED"
+      }
+    ]
+  },
+  {
+    "description": "Romeo & Juliet - Coffin",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "ROMEO_JULIET_COFFIN_UPRIGHT",
+      "ROMEO_JULIET_COFFIN_FLAT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "baseMaterial": "WOOD_GRAIN_3"
+      }
+    ]
   },
   {
     "description": "Brown brick textured Stone Steps",
@@ -48068,7 +49990,9 @@
       "MURDERBARRELC",
       "MURDERBARRELD",
       "MURDERBARRELE",
-      "MURDERBARRELF"
+      "MURDERBARRELF",
+      "GOBLIN_OUTPOST_BARREL",
+      "DK_BARREL"
     ]
   },
   {
@@ -48214,6 +50138,26 @@
     ],
     "objectIds": [
       "CART_HAY"
+    ]
+  },
+  {
+    "description": "Wooden Cart - Filled with Dirt",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "uvType": "BOX",
+        "baseMaterial": "DIRT_2",
+        "uvScale": 0.5,
+        "shiftLightness": -3
+      }
+    ],
+    "objectIds": [
+      "RIMMINGTON_WHEEL_BARROW"
     ]
   },
   {
@@ -48927,7 +50871,8 @@
       "FAI_FALADOR_ORNATERAIL_SYMBOL"
     ],
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvOrientation": 512,
+    "uvScale": 0.2
   },
   {
     "description": "Falador Park - Hide floating floor trim",
@@ -49076,7 +51021,9 @@
       "HILLGIANT_BOSS_CORPSE2",
       "HILLGIANT_BOSS_CORPSE3",
       "DRAGON_SLAYER_QIP_CORPSE_1",
-      "DRAGON_SLAYER_QIP_CORPSE_2"
+      "DRAGON_SLAYER_QIP_CORPSE_2",
+      "CHARRED_BONES",
+      "WILD1_SKELETON_1"
     ],
     "uvType": "BOX",
     "uvScale": 0.6
@@ -49085,14 +51032,16 @@
     "description": "Skulls",
     "baseMaterial": "BONE",
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.25,
     "objectIds": [
       "WEREWOLF_SKULL_CLIMB_1",
       "WEREWOLF_SKULL_CLIMB_2",
       "BLOODTEMPLE_SKULL_PILE01",
       "BLOODTEMPLE_SKULL_FLOATING01",
       "BLOODTEMPLE_SKULL_FLOATING02",
-      "BLOODTEMPLE_SKULL_FLOATING03"
+      "BLOODTEMPLE_SKULL_FLOATING03",
+      "PILE_OF_SKULLS",
+      "GOBLIN_OUTPOST_SKULL_PILE"
     ]
   },
   {
@@ -49110,8 +51059,7 @@
     "objectIds": [ "WAREHOUSE_SHELVES" ],
     "uvType": "BOX",
     "uvScale": 0.8,
-    "uvOrientationX": 512,
-    "retainVanillaUvs": false
+    "uvOrientationX": 512
   },
   {
     "description": "Wooden shelves - Triple - Filled with Boxes",
@@ -49123,9 +51071,8 @@
       "COWQUEST_SETH_SHELF"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.65,
     "uvOrientationX": 512,
-    "retainVanillaUvs": false,
     "colorOverrides": [
       {
         "colors": "h != 7",
@@ -49188,7 +51135,16 @@
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
       "PLAGUE_GRILL",
-      "PLAGUE_GRILL_VIS"
+      "PLAGUE_GRILL_VIS",
+      "WITCHGRILL_INACTIVE",
+      "WITCHGRILL"
+    ]
+  },
+  {
+    "description": "Grill - Lighter",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "objectIds": [
+      "WALLGRILL"
     ]
   },
   {
@@ -49211,17 +51167,22 @@
   {
     "description": "Gallows",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "GALLOWS" ],
+    "objectIds": [
+      "DRAYNOR_HAUNTED_GALLOWS",
+      "GALLOWS"
+    ],
     "uvType": "BOX",
     "uvScale": 0.8
   },
   {
-    "description": "Gallows",
+    "description": "Gallow Steps",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationY": 512,
-    "objectIds": [ "DRAYNOR_GALLOWS_STEPS" ]
+    "objectIds": [
+      "DRAYNOR_GALLOWS_STEPS"
+    ]
   },
   {
     "description": "Brown brick wall with metal spikes - Textured",
@@ -49276,7 +51237,40 @@
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [ "FIREPLACECOOKINGPOT" ],
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 0.25,
+    "colorOverrides": [
+      {
+        "colors": [ "a < 255" ],
+        "baseMaterial": "GRAY_200",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Cooking Pot in textured brick fireplace",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [ "MISC_SPITROAST" ],
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "colorOverrides": [
+      {
+        "colors": [ "a < 255" ],
+        "baseMaterial": "NONE",
+        "upwardsNormals": true
+      },
+      {
+        "colors": [ "h == 6 && s == 4" ],
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
   },
   {
     "description": "Brown Bed with pillow",
@@ -49287,7 +51281,8 @@
       "FAI_VARROCK_SINGLE_BED_DIRTY",
       "HOS_BED_01",
       "NORMAL_BED",
-      "MURDER_QIP_BED"
+      "MURDER_QIP_BED",
+      "FAVOUR_BED"
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -49347,17 +51342,18 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 64,
+    "uvScale": 0.6,
     "colorOverrides": [
       {
         "description": "Wood frame",
-        "colors": "h == 6",
+        "colors": "h == 6 || h == 7",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX"
       }
     ]
   },
   {
-    "description": "Hosidius- Blue Bed with pillows - Light Frame",
+    "description": "Hosidius - Blue Bed with pillows - Light Frame",
     "baseMaterial": "CARPET",
     "objectIds": [
       "HOS_BED_03"
@@ -49385,6 +51381,7 @@
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       "BARREL",
+      "BARREL_STACKED",
       "BARREL_WATERFALL_QUEST",
       "BARRELWITHTAP",
       "UPASSDWARFBREWBARREL"
@@ -49404,9 +51401,9 @@
   },
   {
     "description": "Sink with textured water and wood paneling - textured",
-    "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.25,
+    "uvScale": 0.7,
+    "retainVanillaUvs": false,
     "objectIds": [
       "SINK",
       "SINK2",
@@ -49426,6 +51423,13 @@
         "uvType": "BOX",
         "uvScale": 0.66,
         "uvOrientation": 512
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.25
       }
     ]
   },
@@ -49441,16 +51445,38 @@
     "description": "Drain and pipe - textured",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
-      "PIPE_DRAIN"
+      "PIPE_DRAIN",
+      "QIP_DS_KEYPIPE"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.3
+  },
+  {
+    "description": "Demon Slayer - Muddy Key",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "QIP_DS_RUSTYKEY_MUD",
+      "QIP_DS_RUSTYKEY_MUDONLY"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 6",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
   },
   {
     "description": "Fractionalising Still",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [ "REGICIDE_FRACTIONALIZING_STILL" ],
     "uvType": "BOX",
-    "uvOrientation": 512
+    "uvOrientation": 512,
+    "uvScale": 0.45
   },
   {
     "description": "Objects - Dirt - Manhole",
@@ -49487,7 +51513,10 @@
   {
     "description": "Stone bat wall decoration",
     "baseMaterial": "STONE_NORMALED",
-    "objectIds": [ "GARGOYLE1" ],
+    "objectIds": [
+      "GARGOYLE1",
+      "GARGOYLE1_DARKBROWN"
+    ],
     "uvType": "BOX",
     "uvScale": 0.8
   },
@@ -49564,27 +51593,8 @@
     ]
   },
   {
-    "description": "Deaths office - Entrances roof - Falador",
-    "baseMaterial": "GRUNGE_1",
-    "uvType": "BOX",
-    "uvScale": 0.6,
-    "flatNormals": true,
-    "colorOverrides": [
-      {
-        "description": "Stone",
-        "colors": "h == 2 && s == 2",
-        "baseMaterial": "STONE_NORMALED",
-        "uvType": "BOX",
-        "uvScale": 0.8
-      }
-    ],
-    "objectIds": [
-      "FAI_DEATH_CRYPT_ENTRANCE_TOP"
-    ]
-  },
-  {
     "description": "Deaths office - Entrances - Falador",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.6,
     "flatNormals": true,
@@ -49597,15 +51607,24 @@
         "uvScale": 0.8
       },
       {
-        "description": "Metal",
-        "colors": "(h == 6 && s == 4)|| s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "description": "Roof Tiles",
+        "colors": "h == 2 && s == 2",
+        "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvScale": 0.8
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 6 && s == 4 || s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "uvOrientation": 512
       }
     ],
     "objectIds": [
-      "FAI_DEATH_CRYPT_ENTRANCE"
+      "FAI_DEATH_CRYPT_ENTRANCE",
+      "FAI_DEATH_CRYPT_ENTRANCE_TOP"
     ]
   },
   {
@@ -49990,7 +52009,8 @@
     "terrainVertexSnap": true,
     "terrainVertexSnapThreshold": 0.025,
     "objectIds": [
-      "COMPOST"
+      "COMPOST",
+      "HAUNTEDCOMPOSTHEAP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -50082,12 +52102,80 @@
   },
   {
     "description": "Asgarnia Ice Dungeon - Entrance Trapdoor",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "DIRT_1_LIGHT",
     "objectIds": [
       "FAI_TRAPDOOR"
     ],
     "uvType": "BOX",
-    "uvScale": 0.55
+    "uvScale": 0.55,
+    "colorOverrides": [
+      {
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 4",
+        "uvType": "BOX",
+        "uvOrientationY": 512,
+        "uvScale": 0.6
+      },
+      {
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "windDisplacementModifier": -1,
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "colors": "h > 9"
+      }
+    ]
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Plants near entrance - Flower on Stalk",
+    "baseMaterial": "GRUNGE_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -1,
+    "colorOverrides": [
+      {
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "windDisplacementModifier": -1,
+        "baseMaterial": "GRUNGE_2",
+        "colors": "h >= 17 && h < 22",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      }
+    ],
+    "objectIds": [
+      "SANDDUNE_PLANT1"
+    ]
+  },
+  {
+    "description": "Asgarnia Ice Dungeon - Plants near entrance - Leafy",
+    "baseMaterial": "LIGHT_BARK",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -1,
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "colorOverrides": [
+      {
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "windDisplacementModifier": -1,
+        "baseMaterial": "GRUNGE_3_SMOOTH",
+        "colors": "h >= 22",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      },
+      {
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "windDisplacementModifier": -1,
+        "baseMaterial": "LEAF_VEINS",
+        "shiftLightness": 2,
+        "colors": "h >= 17 && h < 22",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ],
+    "objectIds": [
+      "SANDDUNE_PLANT4",
+      "SANDDUNE_PLANT3",
+      "SANDDUNE_PLANT2"
+    ]
   },
   {
     "description": "Asgarnia Ice Dungeon - Muddy Walls",
@@ -50273,6 +52361,18 @@
       "FLOORKIT_OBSIDIAN01_FILL02"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Mudskipper Point - Warning Sign",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": 7,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "MUDSKIPPER_SIGN"
+    ]
   },
   {
     "description": "Campfire",
@@ -50889,7 +52989,8 @@
       "FAI_VARROCK_BANK_BOOTH_PRIVATE",
       "FAI_VARROCK_BANK_BOOTH_PRIVATE_END",
       "KR_BANK_BOOTH_PRIVATE_END_MIRROR",
-      "KR_BANK_BOOTH_PRIVATE_END"
+      "KR_BANK_BOOTH_PRIVATE_END",
+      "FAI_VARROCK_BANK_BOOTH_PRIVATE_END_MIRROR"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -51529,9 +53630,16 @@
       "CURTAINEDBIGWINDOW",
       "REDCURTAINEDPOSHBIGWINDOW",
       "GREENCURTAINEDPOSHBIGWINDOW",
-      "BLACKCURTAINEDPOSHBIGWINDOW"
+      "BLACKCURTAINEDPOSHBIGWINDOW",
+      "CURTAINEDPOSHBIGWINDOW",
+      "WHITECURTAINEDPOSHBIGWINDOW"
     ],
     "colorOverrides": [
+      {
+        "description": "Stone sile",
+        "colors": "s == 0 && l < 45 && l > 18",
+        "baseMaterial": "STONE"
+      },
       {
         "description": "Glass",
         "colors": "s == 0 && l > 45",
@@ -51556,11 +53664,6 @@
         "description": "Curtains - Taupe",
         "colors": "h == 6 && s < 3",
         "baseMaterial": "GRAY_75"
-      },
-      {
-        "description": "Stone sile",
-        "colors": "s == 0 && l < 45 && l > 30",
-        "baseMaterial": "STONE"
       }
     ]
   },
@@ -51700,7 +53803,11 @@
       "FAI_VARROCK_SWORDCASE_SHORTSWORDS",
       "FAI_VARROCK_SWORDCASE_SCIMITAR",
       "FAI_VARROCK_BOWCASE",
-      "CABINET_BOWS_OFFSET_FOR_FALADOR_CASTLE_WALL"
+      "CABINET_BOWS_OFFSET_FOR_FALADOR_CASTLE_WALL",
+      "QIP_DS_SILVERLIGHT_CASE_FULL",
+      "QIP_DS_SILVERLIGHT_CASE_OPEN",
+      "QIP_DS_SILVERLIGHT_CASE_EMPTY",
+      "CABINET_BOWS_WHITE"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -51709,12 +53816,12 @@
     "colorOverrides": [
       {
         "description": "Metal",
-        "colors": "h == 0 && s == 0",
+        "colors": "h == 0 && s == 0 || h == 46",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
       },
       {
         "description": "Gold",
-        "colors": "h == 10 && s == 7",
+        "colors": "h == 10 && s == 0 || h == 10 && s == 7",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
       },
       {
@@ -51887,9 +53994,7 @@
     "description": "Wine rack with bottles",
     "baseMaterial": "GRAY_75",
     "objectIds": [
-      "FAI_VARROCK_WINE_RACK",
-      "FAI_VARROCK_CHEMISTY_SHELVES1",
-      "FAI_VARROCK_CHEMISTY_SHELVES2"
+      "FAI_VARROCK_WINE_RACK"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -51905,6 +54010,25 @@
     ]
   },
   {
+    "description": "Bookshelf with books and a jar",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "objectIds": [
+      "FAI_VARROCK_CHEMISTY_SHELVES1",
+      "FAI_VARROCK_CHEMISTY_SHELVES2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 7 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
     "description": "Wooden bookcase with brown and taupe colored books",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -51912,7 +54036,6 @@
       "SARIM_BOOKCASE2",
       "FAI_WIZTOWER_BOOKCASE",
       "FAI_WIZTOWER_BOOKCASE_WALL",
-      "BOOKCASE_MAHOGANY",
       "FAI_FALADOR_BOOKCASE_WIDE",
       "FAI_FALADOR_BOOKSHELF_OLD_TALL",
       "CAPT_SIAD_BOOKCASE",
@@ -51923,6 +54046,7 @@
       "SLUG2_BOOKCASE",
       "SARIM_BOOKCASE2_OFFSET",
       "SARIM_BOOKCASE2_OFFSET_WESTFACING",
+      "SARIM_BOOKCASE2_OFFSET_NORTHFACING",
       "BOOKCASE_POLYBOOKS",
       "CANAFIS_BOOKSHELF_OLD_SHORT",
       "CANAFIS_BOOKSHELF_OLD_SHORT3",
@@ -51951,6 +54075,53 @@
       {
         "description": "Red books",
         "colors": "h == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Dark brown books",
+        "colors": "h == 7 && s > 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Light brown books",
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Mahogany bookcase with brown and taupe colored books",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "BOOKCASE_MAHOGANY"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green books",
+        "colors": "h > 12",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red books",
+        "colors": "h == 4 && s == 4 || h == 4 && s == 6",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
         "uvScale": 0.4
@@ -52014,7 +54185,7 @@
     ]
   },
   {
-    "description": "Varrock - Witchaven- Wooden - bookshelf with Multicolored books",
+    "description": "Varrock - Witchaven - Wooden - bookshelf with Multicolored books",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "FAI_VARROCK_SHELVES_BOOKS"
@@ -52031,9 +54202,11 @@
       {
         "description": "Shelf",
         "colors": "h == 7",
-        "baseMaterial": "GRUNGE_3",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.4
+        "uvScale": 0.75,
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512
       }
     ]
   },
@@ -52099,7 +54272,6 @@
         "uvType": "BOX",
         "uvScale": 0.4
       },
-
       {
         "description": "Light brown books",
         "colors": "h == 6 && s == 3 || h == 7 && s == 5 || h == 7 && s == 6 && l < 10",
@@ -52191,7 +54363,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientationY": 512,
     "objectIds": [
-      "DS2_VARROCK_BOOKCASE"
+      "DS2_VARROCK_BOOKCASE",
+      "FAI_VARROCK_RUNE_BOOKCASE_THIN"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -52210,13 +54383,13 @@
       },
       {
         "description": "Dark brown books",
-        "colors": "h == 7 && s == 6",
+        "colors": "h == 7 && s == 6 || h == 4 || h == 14",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX"
       },
       {
         "description": "Light brown books",
-        "colors": "h == 7 && s == 3",
+        "colors": "h == 6",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX"
       }
@@ -52241,7 +54414,7 @@
     "uvOrientationY": 512,
     "colorOverrides": [
       {
-        "description": "Green books",
+        "description": "Wood",
         "colors": "h == 5",
         "baseMaterial": "WOOD_GRAIN_3",
         "shiftLightness": 2,
@@ -52296,7 +54469,8 @@
     "description": "Shelf with helmets",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "HELMETRACK"
+      "HELMETRACK",
+      "HELMETRACK_OFFSET_FOR_FALADOR_CASTLE_WALL"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -52344,15 +54518,17 @@
     "uvScale": 0.8,
     "colorOverrides": [
       {
-        "colors": "h == 0 && s == 0",
+        "colors": "h == 0 && s == 0 || h == 10 && s == 0",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
         "uvType": "BOX",
         "uvOrientation": 920,
-        "uvScale": 0.5
+        "uvScale": 0.2
       }
     ],
     "objectIds": [
-      "PLOUGH"
+      "PLOUGH",
+      "RIMMINGTON_PLOUGH",
+      "FAI_VARROCK_PLOUGH"
     ]
   },
   {
@@ -52483,6 +54659,33 @@
     ]
   },
   {
+    "description": "Shovel in the ground with Dirt around it",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 5 && s == 7",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "shiftLightness": 2
+      }
+    ],
+    "objectIds": [
+      "RIMMINGTON_MINING_SPADE",
+      "MOLE_HILL_SPADE"
+    ]
+  },
+  {
     "description": "Dead Tree with snow",
     "baseMaterial": "BARK",
     "uvType": "BOX",
@@ -52502,13 +54705,18 @@
   },
   {
     "description": "Golden 3 candle scone with lit flame - static",
-    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
-    "uvScale": 0.6,
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.45,
     "uvType": "BOX",
     "colorOverrides": [
       {
         "colors": [ "h == 6 && s < 3" ],
         "baseMaterial": "NONE"
+      },
+      {
+        "colors": [ "a < 255" ],
+        "baseMaterial": "NONE",
+        "upwardsNormals": true
       }
     ],
     "objectIds": [
@@ -52590,14 +54798,16 @@
     "description": "Varrock - Jolly Boar Inn - Doublebed with orange blanket - Light Frame",
     "baseMaterial": "CARPET",
     "objectIds": [
-      "FAI_VARROCK_DOUBLE_BED_ORANGE"
+      "FAI_VARROCK_DOUBLE_BED_ORANGE",
+      "FAI_VARROCK_SINGLE_BED_ORANGE02"
     ],
     "uvType": "BOX",
+    "uvScale": 0.6,
     "uvOrientation": 64,
     "colorOverrides": [
       {
         "description": "Wood frame",
-        "colors": "h == 6",
+        "colors": "h == 6 || h == 7 && s != 7",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX"
       }
@@ -52974,10 +55184,11 @@
   },
   {
     "description": "Spiral Staircase - Concrete textured",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "objectIds": [
       "SPIRALSTAIRS",
-      "SPIRALSTAIRSMIDDLE"
+      "SPIRALSTAIRSMIDDLE",
+      "SPIRALSTAIRSBOTTOM_3"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -53013,6 +55224,32 @@
     ],
     "objectIds": [
       "FAI_DWARF_BLACKSMITHTOOLS"
+    ]
+  },
+  {
+    "description": "Blacksmiths Whetstone",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 36",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.4,
+        "shiftLightness": -8
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_SMOOTH"
+      },
+      {
+        "colors": "h == 5 || h == 10",
+        "baseMaterial": "SMOOTH_STONE"
+      }
+    ],
+    "objectIds": [
+      "DEVIOUS_WHETSTONE"
     ]
   },
   {
@@ -53193,10 +55430,19 @@
     "uvType": "BOX",
     "uvScale": 0.33,
     "objectIds": [
+      "LOGPILE_SMALL",
       "LOGPILE",
-      "CONTACT_LOGPILE"
+      "CONTACT_LOGPILE",
+      "QIP_DIGSITE_LOGPILE"
     ],
     "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.35,
+        "uvType": "MODEL_XY",
+        "uvOrientation": 512
+      },
       {
         "colors": "h == 7",
         "baseMaterial": "METALLIC_1"
@@ -53439,9 +55685,32 @@
     ]
   },
   {
+    "description": "Cushioned church pew with foot rest with npcs sleeping",
+    "colorOverrides": [
+      {
+        "description": "Red Cushion",
+        "colors": "h == 7 && s != 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientation": 512,
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Golden Cushion",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "npcIds": [
+      "ROMEO_JULIET_PEW_SLEEPING_MAN",
+      "ROMEO_JULIET_PEW_SLEEPING_WOMAN"
+    ]
+  },
+  {
     "description": "Varrock church wooden lectern",
     "baseMaterial": "WOOD_GRAIN_3",
-    "uvOrientation": 512,
     "uvType": "BOX",
     "uvScale": 0.6,
     "colorOverrides": [
@@ -53503,8 +55772,7 @@
       {
         "description": "Paper",
         "colors": [
-          "h == 5 && s == 0",
-          "h == 10 && s == 0"
+          "h == 0 || h == 3 || h == 4 || h > 6 && s > 5 || h == 8 || h == 42"
         ],
         "baseMaterial": "GRUNGE_3",
         "uvType": "MODEL_XY"
@@ -53519,7 +55787,8 @@
     ],
     "objectIds": [
       "FAI_VARROCK_APOTHECARY_CABINET_TWO",
-      "FAI_VARROCK_APOTHECARY_CABINET_ALT"
+      "FAI_VARROCK_APOTHECARY_CABINET_ALT",
+      "FAI_VARROCK_PERIODIC_TABLE"
     ]
   },
   {
@@ -53538,6 +55807,39 @@
     ],
     "objectIds": [
       "FAI_VARROCK_CHEMISTY_TABLE"
+    ]
+  },
+  {
+    "description": "Varrock - PoH Easel",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.1,
+    "objectIds": [
+      "POH_ESTATE_AGENTS_LOC_ITEM"
+    ]
+  },
+  {
+    "description": "Varrock - Church Altar",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.1,
+    "objectIds": [
+      "FAI_VARROCK_CHURCH_ALTAR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
     ]
   },
   {
@@ -55275,12 +57577,15 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "flatNormals": true,
+    "undoVanillaShading": false,
+    "shiftLightness": 2,
     "objectIds": [
       "WALLKIT_WOODEN01_DEFAULT01",
       "WALLKIT_WOODEN01_WINDOW01",
       "WALLKIT_WOODEN02_DEFAULT01",
       "WALLKIT_WOODEN02_WINDOW01",
-      "WALLKIT_WOODEN01_DEFAULT01_UPPER"
+      "WALLKIT_WOODEN01_DEFAULT01_UPPER",
+      "WALLKIT_WOODEN01_WINDOW01_UPPER"
     ]
   },
   {
@@ -55290,7 +57595,8 @@
     "uvScale": 0.8,
     "flatNormals": true,
     "objectIds": [
-      "WALLKIT_WOODEN01_DEFAULT01_DOOR_OPEN_NOOP"
+      "WALLKIT_WOODEN01_DEFAULT01_DOOR_OPEN_NOOP",
+      "WALLKIT_WOODEN01_DEFAULT01_DOOR_OPEN"
     ],
     "colorOverrides": [
       {
@@ -55307,6 +57613,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
+    "undoVanillaShading": false,
     "objectIds": [
       "FORTIS_DOOR_L",
       "FORTIS_DOOR_L_LOCKED",
@@ -56635,7 +58942,8 @@
     "uvScale": 0.5,
     "objectIds": [
       "POH_BOARD_YANILLE",
-      "POH_BOARD_PRIFDDINAS"
+      "POH_BOARD_PRIFDDINAS",
+      "POH_BOARD_RIMMINGTON"
     ],
     "colorOverrides": [
       {
@@ -57335,7 +59643,7 @@
   },
   {
     "description": "Game Objects - Wooden Shelf With Book and Urns",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
     "uvOrientationX": 512,
     "uvOrientationZ": 512,
@@ -57469,7 +59777,9 @@
       "BOOKSHELF_OLD_SHORT3_MOVEDIN3",
       "BOOKSHELF_OLD_SHORT3_MOVEDIN2",
       "BOOKSHELF_OLD_TALL_MOVEDIN2",
-      "BOOKSHELF_OLD_TALL2_MOVEDIN2"
+      "BOOKSHELF_OLD_TALL2_MOVEDIN2",
+      "RD_BOOKSHELF_OLD_TALL",
+      "BOOKSHELF_OLD_SHORT3"
     ],
     "colorOverrides": [
       {
@@ -57545,7 +59855,10 @@
       "WISE_OLD_MAN_FLOORCHART3",
       "WISE_OLD_MAN_WALLCHART1",
       "WISE_OLD_MAN_WALLCHART2",
-      "WISE_OLD_MAN_WALLCHART3"
+      "WISE_OLD_MAN_WALLCHART3",
+      "WITCHESWALLCHART",
+      "DRAYNOR_HAUNTED_PAINTING",
+      "DRAYNOR_SPOOKYPICTURE"
     ]
   },
   {
@@ -57557,8 +59870,7 @@
       "WOM_RICH_GLOBE_MODEL",
       "SARADOMIN_STAFF",
       "WOM_BATHSCREEN_GOLD",
-      "WISE_OLD_MAN_TELESCOPE",
-      "WOM_SUITOFARMOUR_SARADOMIN"
+      "WISE_OLD_MAN_TELESCOPE"
     ],
     "colorOverrides": [
       {
@@ -57614,11 +59926,16 @@
     "colorOverrides": [
       {
         "colors": "h == 7",
-        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-        "uvScale": 0.2,
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvScale": 0.4,
         "uvType": "BOX",
-        "uvOrientationY": 512,
+        "uvOrientationX": 512,
         "uvOrientationZ": 512
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "GRUNGE_3",
+        "shiftSaturation": -2
       }
     ]
   },
@@ -57647,7 +59964,8 @@
   {
     "description": "Aggie's House - Broom",
     "objectIds": [
-      "DRAYNOR_AGGIE_WITCHESBROOM"
+      "DRAYNOR_AGGIE_WITCHESBROOM",
+      "WITCHESBROOM"
     ],
     "colorOverrides": [
       {
@@ -57671,14 +59989,35 @@
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       "DRAYNOR_AGGIE_CAULDRON",
-      "SARIM_BETTYS_CAULDRON"
+      "SARIM_BETTYS_CAULDRON",
+      "HETTYCAULDRON",
+      "DK_CAULDRON",
+      "BLACKKNIGHTHOLE",
+      "DK_CAULDRON_SABOTAGED"
     ],
     "uvType": "BOX",
     "uvScale": 0.25,
     "colorOverrides": [
       {
-        "colors": "h == 34",
+        "colors": "h == 34 || h == 21",
         "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Witches Metal Table",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "DK_WITCHES_TABLE_CORNER"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
       }
     ]
   },
@@ -57717,13 +60056,16 @@
     "uvOrientationZ": 512,
     "objectIds": [
       "MARKET",
+      "ROGUETRADER_ALI_M_STALL_NOWT",
       "DRAYNOR_TOY_MARKET",
       "RAG_MARKET_STALL",
       "SEED_STALL",
       "FURTHIEFSTALL",
       "GEMTHIEFSTALL",
+      "GEMMARKET",
       "CAKETHIEFSTALL",
       "SILKTHIEFSTALL",
+      "SILKMARKET",
       "SILVERTHIEFSTALL",
       "SPICETHIEFSTALL",
       "FORTIS_MARKET_STALL_GEMS",
@@ -58277,7 +60619,8 @@
         "colors": "h == 8",
         "baseMaterial": "ROPE",
         "uvType": "MODEL_YZ",
-        "uvOrientation": 512
+        "uvOrientation": 512,
+        "uvScale": 0.85
       }
     ]
   },
@@ -58454,7 +60797,8 @@
     ],
     "objectIds": [
       "KR_STUDYDESK",
-      "STUDYDESK"
+      "STUDYDESK",
+      "STUDYDESK_MAHOGANY"
     ]
   },
   {
@@ -60228,9 +62572,11 @@
   },
   {
     "description": "Abandoned Mine wooden levers with metal plate",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "uvType": "BOX",
-    "uvScale": 0.75,
+    "uvScale": 0.33,
+    "shiftLightness": 8,
+    "uvOrientation": 87,
     "colorOverrides": [
       {
         "description": "Lever",
@@ -60253,7 +62599,9 @@
       "HAUNTEDMINE_POINT_LEVER_INACTIVE",
       "HAUNTEDMINE_POINT_LEVER_FLOODED9",
       "HAUNTEDMINE_POINT_LEVER_FLOODED10",
-      "HAUNTEDMINE_POINT_LEVER_FLOODED11"
+      "HAUNTEDMINE_POINT_LEVER_FLOODED11",
+      "HOSDUN_LEVER_CLOSED",
+      "HOSDUN_LEVER_OPEN"
     ]
   },
   {
@@ -61400,6 +63748,12 @@
         "colors": "h == 0",
         "baseMaterial": "MARBLE_1",
         "uvType": "BOX"
+      },
+      {
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "shiftLightness": 6
       }
     ]
   },
@@ -62817,7 +65171,8 @@
     "uvType": "BOX",
     "uvScale": 0.4,
     "objectIds": [
-      "FAI_VARROCK_FABRIC_RACK"
+      "FAI_VARROCK_FABRIC_RACK",
+      "FAI_VARROCK_FABRIC_RACK_HAIRDRESSER01"
     ],
     "colorOverrides": [
       {
@@ -62840,9 +65195,10 @@
     "colorOverrides": [
       {
         "colors": "h == 7",
-        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvOrientation": 512,
+        "uvOrientationY": 512,
+        "uvOrientationZ": 512,
         "uvScale": 0.70
       }
     ]
@@ -62855,16 +65211,63 @@
     "objectIds": [
       "FAI_VARROCK_FABRIC01",
       "FAI_VARROCK_FABRIC02",
-      "ICS_FLOOR_CLOTH"
+      "ICS_FLOOR_CLOTH",
+      "RIMMINGTON_FLOOR_CLOTH",
+      "FAI_VARROCK_FLOOR_CLOTH",
+      "FAI_VARROCK_CLOTHES3",
+      "FAI_VARROCK_CLOTHES4",
+      "FAI_VARROCK_CLOTHES1",
+      "FAI_VARROCK_CLOTHES5",
+      "FAI_VARROCK_CLOTHES2",
+      "FAI_VARROCK_FLOOR_CLOTH_HAIRDRESSER01"
     ],
     "colorOverrides": [
       {
-        "colors": "h == 7",
+        "colors": "h == 6 || h == 7 || h == 8",
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
         "uvType": "BOX",
         "uvOrientation": 512,
-        "uvScale": 0.4
+        "uvScale": 0.3
       }
+    ]
+  },
+  {
+    "description": "East Varrock - Fancy Dress Shop - Hanging Coat",
+    "baseMaterial": "CARPET_LIGHT",
+    "minLightness": 14,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAI_VARROCK_HANGING_COAT"
+    ]
+  },
+  {
+    "description": "East Varrock - Fancy Dress Shop - Pretty Bed",
+    "baseMaterial": "CARPET",
+    "shiftLightness": 2,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAI_VARROCK_PRETTY_BED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 6 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientationY": 512
+      }
+    ]
+  },
+  {
+    "description": "East Varrock - Fancy Dress Shop - Coat Hangars",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": 250,
+    "objectIds": [
+      "FAI_VARROCK_HANGERS"
     ]
   },
   {
@@ -62878,8 +65281,8 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h == 7",
-        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "colors": "h == 7 || h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvOrientation": 512,
         "uvScale": 0.4
@@ -62928,9 +65331,14 @@
         "uvScale": 0.8
       },
       {
+        "colors": "h == 9 || h == 16",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.34
+      },
+      {
         "colors": "s == 0",
-        "baseMaterial": "METALLIC_1_GLOSS",
-        "uvType": "MODEL_XZ"
+        "baseMaterial": "METALLIC_1_GLOSS"
       }
     ]
   },
@@ -62947,6 +65355,84 @@
         "colors": "h == 37",
         "baseMaterial": "METALLIC_NONE_GLOSS",
         "uvType": "MODEL_XY"
+      }
+    ]
+  },
+  {
+    "description": "East Varrock - Hair Dresser - Shelves and Tables",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "FAI_VARROCK_SHELF_HAIRDRESSER01",
+      "FAI_VARROCK_SHELF_HAIRDRESSER02",
+      "FAI_VARROCK_WOODEN_TABLE_HAIRDRESSER01",
+      "FAI_VARROCK_WOODEN_TABLE_HAIRDRESSER02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientationY": 512
+      }
+    ]
+  },
+  {
+    "description": "East Varrock - Hair Dresser - Tables with Mirror",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "FAI_VARROCK_TABLE_HAIRDRESSER01",
+      "FAI_VARROCK_TABLE_HAIRDRESSER02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 2",
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientationY": 512
+      }
+    ]
+  },
+  {
+    "description": "East Varrock - Hair Dresser - Chairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "FAI_VARROCK_CHAIR_HAIRDRESSER01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "East Varrock - Hair Dresser - Parrot in Cage",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationY": 256,
+    "objectIds": [
+      "FAI_CAGE_PARROT01_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h != 7",
+        "baseMaterial": "GRAY_90"
       }
     ]
   },
@@ -63508,12 +65994,13 @@
     "uvType": "BOX",
     "objectIds": [
       "KR_BANKTABLE",
-      "KR_BANKTABLE2"
+      "KR_BANKTABLE2",
+      "FAI_VARROCK_BANKTABLE"
     ],
     "colorOverrides": [
       {
         "description": "Wood",
-        "colors": "h == 6",
+        "colors": "h == 6 || h == 7",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.5,
@@ -63546,8 +66033,7 @@
         "colors": "h == 0 && s == 0",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
-        "uvScale": 0.4,
-        "uvOrientation": 89
+        "uvScale": 0.2
       }
     ]
   },
@@ -63640,7 +66126,9 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "objectIds": [
-      "KR_SEERS_VILLAGE_PIANO_A"
+      "KR_SEERS_VILLAGE_PIANO_A",
+      "MISTMYST_PIANO_CLOSED",
+      "MISTMYST_PIANO_OPEN"
     ]
   },
   {
@@ -63694,7 +66182,12 @@
     "uvType": "BOX",
     "uvScale": 0.1,
     "objectIds": [
-      "GRANDFIREPLACE"
+      "GRANDFIREPLACE",
+      "FARM_FIREPLACE",
+      "GRANDFIREPLACE_OLDBRICK",
+      "MISTMYST_FIREPLACE_LIT",
+      "MISTMYST_FIREPLACE_UNLIT",
+      "MISTMYST_FIREPLACE_REVEALED"
     ],
     "colorOverrides": [
       {
@@ -64281,7 +66774,8 @@
     "uvOrientationY": 512,
     "objectIds": [
       "FAI_VARROCK_POSH_DRESSER",
-      "AKD_HUGHES_DRESSER_1_NOOP"
+      "AKD_HUGHES_DRESSER_1_NOOP",
+      "FAI_VARROCK_POSH_WARDROBE"
     ],
     "colorOverrides": [
       {
@@ -64294,7 +66788,7 @@
       },
       {
         "description": "Black Trim",
-        "colors": "h == 35",
+        "colors": "h == 35 || h == 42",
         "baseMaterial": "BLANK_GLOSS",
         "uvType": "BOX"
       }
@@ -64452,7 +66946,8 @@
     },
     "objectIds": [
       "FAI_VARROCK_POSH_BATHSCREEN1",
-      "ALDARIN_SCREEN_DEFAULT01"
+      "ALDARIN_SCREEN_DEFAULT01",
+      "BATHSCREEN"
     ],
     "uvType": "BOX",
     "uvScale": 0.65
@@ -64469,6 +66964,7 @@
       {
         "colors": "h == 0",
         "baseMaterial": "MARBLE_2_SEMIGLOSS",
+        "shiftLightness": -10,
         "uvScale": 0.6,
         "uvOrientation": 256,
         "uvType": "BOX"
@@ -64877,23 +67373,41 @@
       "SHAYZIEN_WEAPONCASE_LARGE"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.65,
     "uvOrientationX": 512,
     "colorOverrides": [
       {
         "description": "Metal",
-        "colors": "h == 0 && s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
-      },
-      {
-        "description": "Gold",
-        "colors": "h == 10 && s == 7",
+        "colors": "h == 0  || h == 10 && s == 7",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
       },
       {
         "description": "Glass",
         "colors": "a < 255",
-        "baseMaterial": "GRAY_75"
+        "baseMaterial": "GRAY_60"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Varrock - Metallic - Wooden - Wall standing Weapons case",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "FAI_VARROCK_FLOORSTANDING_WEAPONCASE2",
+      "FAI_VARROCK_FLOORSTANDING_WEAPONCASE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0  || h == 10 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_60"
       }
     ]
   },
@@ -65100,7 +67614,8 @@
       "FAI_VARROCK_WINDMILL_WINDOW_LARGE",
       "FAI_VARROCK_WINDMILL_WINDOW",
       "FAI_VARROCK_WINDMILL_TERM",
-      "FAI_VARROCK_WINDMILL_TERM_MIRROR"
+      "FAI_VARROCK_WINDMILL_TERM_MIRROR",
+      "FAI_VARROCK_WINDMILL_WALL_TYPE2_MIRROR_5"
     ]
   },
   {
@@ -65700,7 +68215,9 @@
         "colors": "h >= 5 && h <= 7",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.75
+        "uvScale": 0.75,
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512
       },
       {
         "colors": "h == 0 && s == 0",
@@ -65739,8 +68256,8 @@
     "description": "Varrock - Wooden - Metallic - Shelves Gold canisters",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "uvType": "BOX",
-    "uvScale": 0.35,
-    "uvOrientation": 42,
+    "uvScale": 0.2,
+    "uvOrientation": 512,
     "objectIds": [
       "FAI_VARROCK_RUNE_SHELF2",
       "FAI_VARROCK_RUNE_SHELF3"
@@ -65748,6 +68265,24 @@
     "colorOverrides": [
       {
         "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Phoenix Hideout Sign",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      "QIP_SOA_VTAM_CORPORATION_SIGN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvOrientationX": 512,
@@ -65853,6 +68388,7 @@
     "uvScale": 0.75,
     "objectIds": [
       "DRAGONMOUNTEDHEAD_RED",
+      "DRAGONMOUNTEDHEAD_RED3_OFFSET2",
       "DRAGONMOUNTEDHEAD_RED3_OFFSET",
       "DRAGONMOUNTEDHEAD",
       "DRAGONMOUNTEDHEAD3"
@@ -65879,7 +68415,7 @@
     "description": "Varrock - Wooden - Bull Head Trophy (also in Spira's house)",
     "baseMaterial": "CARPET",
     "uvType": "BOX",
-    "uvScale": 0.75,
+    "uvScale": 0.45,
     "objectIds": [
       "BULLMOUNTEDHEAD"
     ],
@@ -65895,7 +68431,6 @@
         "colors": "h == 10",
         "baseMaterial": "BONE",
         "uvType": "BOX",
-        "uvOrientation": 512,
         "uvScale": 0.25
       }
     ]
@@ -65915,8 +68450,7 @@
         "colors": "h == 7",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.75,
-        "uvOrientationY": 512
+        "uvScale": 0.75
       }
     ]
   },
@@ -65924,18 +68458,10 @@
     "description": "Varrock - Cloth - Wooden - Castle Long Table",
     "baseMaterial": "CARPET",
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.6,
     "uvOrientation": 64,
     "objectIds": [
       "FAI_VARROCK_POSH_LARGE_TABLE"
-    ],
-    "colorOverrides": [
-      {
-        "description": "Wood frame",
-        "colors": "h == 7 && s == 3",
-        "baseMaterial": "WOOD_GRAIN_3",
-        "uvType": "BOX"
-      }
     ]
   },
   {
@@ -66656,43 +69182,34 @@
     ]
   },
   {
-    "description": "Draynor - Kourend - Wooden -  Table with pink purple table cloth",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "uvType": "BOX",
-    "uvScale": 0.6,
-    "objectIds": [
-      "DRAYNOR_SMALLTABLE"
-    ],
-    "colorOverrides": [
-      {
-        "description": "Gold Table cloth",
-        "colors": "h == 60",
-        "baseMaterial": "CARPET",
-        "uvType": "BOX",
-        "uvScale": 0.65
-      }
-    ]
-  },
-  {
     "description": "Zeah - Hosidius - Potted Plants",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvOrientation": 89,
     "objectIds": [
-      "FAI_VARROCK_POTTED_PLANT3"
+      "FAI_VARROCK_POTTED_PLANT3",
+      "FAI_VARROCK_POTTED_PLANT1"
     ],
     "colorOverrides": [
       {
-        "colors": "h >= 16",
+        "colors": "h >= 14",
         "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "undoVanillaShading": false,
+        "upwardsNormals": true
+      },
+      {
+        "colors": "h == 5 && l == 15 || h == 5 && l == 14",
+        "baseMaterial": "DIRT_2",
         "uvType": "BOX",
         "uvScale": 0.3
       },
       {
-        "colors": "h == 5",
-        "baseMaterial": "DIRT_2",
+        "colors": "h == 5 && l != 14 || h == 6",
+        "baseMaterial": "BARK",
         "uvType": "BOX",
-        "uvScale": 0.3
+        "uvScale": 0.35
       }
     ]
   },
@@ -66900,7 +69417,8 @@
     "objectIds": [
       "CABBAGE",
       "AVIUM_CABBAGE01",
-      "AVIUM_CABBAGE02"
+      "AVIUM_CABBAGE02",
+      "DRAYNOR_MAGIC_CABBAGE"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -66918,9 +69436,13 @@
   {
     "description": "Hosidius - White brick walls",
     "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 179,
     "objectIds": [
       "HOS_FORT_WALL_STONE_PILE2",
       "HOS_FORT_WALL_STONE_PILE1",
+      "AKD_FORTHOS_STONE_PILE_NOOP",
       "HOS_FORT_WALL_CRUMBLE_L",
       "HOS_FORT_WALL_CRUMBLE_SMALL_L",
       "HOS_FORT_WALL",
@@ -66929,10 +69451,96 @@
       "HOS_FORT_WALL_BATTLEMENT_CRUMBLE_R",
       "HOS_FORT_BRIDGE_SUPPORT",
       "HOS_FORT_WALL_BATTLEMENT"
-    ],
+    ]
+  },
+  {
+    "description": "Hosidius - External spiral Stairs",
+    "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvScale": 0.6,
-    "uvOrientation": 179
+    "uvOrientation": 179,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "BLACK"
+      },
+      {
+        "colors": [ "h == 8", "h == 9" ],
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "HOSDUN_ENTRANCE_SPIRAL_STEPS_HOLE"
+    ]
+  },
+  {
+    "description": "Forthos - Dungeon Spiral Stairs",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 189,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      }
+    ],
+    "objectIds": [
+      "HOSDUN_ENTRANCE_SPIRAL_STAIRS"
+    ]
+  },
+  {
+    "description": "Forthos Dungeon - Catacombs Entrance",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "shiftLightness": 2,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "BLACK"
+      },
+      {
+        "colors": "h == 0 && l > 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 179
+      },
+      {
+        "colors": "h >= 48",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 179
+      }
+    ],
+    "objectIds": [
+      "HOSDUN_CATACOMB_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Catacombs of Kourend - Exit Vines",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 179,
+    "shiftLightness": 2,
+    "objectIds": [
+      "HOSDUN_CATAVINE_CORNER",
+      "HOSDUN_CATAVINE_END",
+      "HOSDUN_CATAVINE_END_DIAG",
+      "HOSDUN_CATAVINE_DIAG1",
+      "HOSDUN_CATAVINE_DIAG2",
+      "HOSDUN_CATAVINE_DIAG3",
+      "HOSDUN_CATAVINE_DIAGFILLER"
+    ]
   },
   {
     "description": "Hosidius - Dungeon entrance",
@@ -68977,7 +71585,6 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.6,
-    "uvOrientationY": 256,
     "uvOrientationZ": 512,
     "uvOrientationX": 512,
     "objectIds": [
@@ -70214,7 +72821,8 @@
     "uvOrientation": 512,
     "upwardsNormals": true,
     "objectIds": [
-      "VARLAMORE_NICE_CHEST"
+      "VARLAMORE_NICE_CHEST",
+      "DIARY_GUILD_BANKCHEST"
     ],
     "colorOverrides": [
       {
@@ -70222,8 +72830,7 @@
         "colors": "s == 0",
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
         "uvType": "BOX",
-        "uvScale": 0.4,
-        "uvOrientation": -89
+        "uvScale": 0.2
       }
     ]
   },
@@ -70272,7 +72879,9 @@
     "objectIds": [
       "MUSHROOM2_LARGE",
       "MUSHROOMS2",
-      "MUSHROOM2"
+      "MUSHROOM2",
+      "MUSHROOM2_DARK",
+      "MUSHROOMS2_DARK"
     ],
     "uvType": "BOX"
   },
@@ -72272,7 +74881,8 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "objectIds": [
-      "CON_CONTRACT_VARROCK_MID_BED_EDITABLE"
+      "CON_CONTRACT_VARROCK_MID_BED_EDITABLE",
+      "CON_CONTRACT_VARROCK_MID_BED_DEFAULT"
     ],
     "colorOverrides": [
       {
@@ -72303,7 +74913,8 @@
     "objectIds": [
       "CON_CONTRACT_VARROCK_SOUTH_MEDIUM_BED_OAK",
       "CON_CONTRACT_VARROCK_SOUTH_MEDIUM_BED_TEAK",
-      "CON_CONTRACT_VARROCK_SOUTH_MEDIUM_BED_MAHOGANY"
+      "CON_CONTRACT_VARROCK_SOUTH_MEDIUM_BED_MAHOGANY",
+      "CON_CONTRACT_VARROCK_SOUTH_MEDIUM_BED_DEFAULT"
     ],
     "colorOverrides": [
       {
@@ -72647,7 +75258,8 @@
       "CON_CONTRACT_VARROCK_MID_DRESSER_REGULAR",
       "CON_CONTRACT_VARROCK_MID_DRESSER_OAK",
       "CON_CONTRACT_VARROCK_MID_DRESSER_TEAK",
-      "CON_CONTRACT_VARROCK_MID_DRESSER_MAHOGANY"
+      "CON_CONTRACT_VARROCK_MID_DRESSER_MAHOGANY",
+      "FAI_VARROCK_DRESSER"
     ],
     "colorOverrides": [
       {
@@ -73412,7 +76024,8 @@
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "OVERLOOK_GENERAL_SHELF",
-      "OVERLOOK_GENERAL_SHELF3"
+      "OVERLOOK_GENERAL_SHELF3",
+      "OVERLOOK_GENERAL_SHELF4"
     ],
     "colorOverrides": [
       {
@@ -75249,7 +77862,27 @@
         "baseMaterial": "METALLIC_1_LIGHT"
       },
       {
-        "colors": "h == 8",
+        "colors": "h == 8 && s == 1",
+        "baseMaterial": "MARBLE_4_LOW_CONTRAST_LIGHT_GLOSS",
+        "uvScale": 0.65,
+        "uvOrientation": 256,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "While Guthix Sleeps - Memorial Statues - Unbuilt",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      "LUC2_HERO_STATUE_ANCIENT_01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8 && s > 5",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 8 && s == 1",
         "baseMaterial": "MARBLE_4_LOW_CONTRAST_LIGHT_GLOSS",
         "uvScale": 0.65,
         "uvOrientation": 256,
@@ -76639,7 +79272,8 @@
     "uvType": "BOX",
     "uvScale": 0.5,
     "objectIds": [
-      "FAI_VARROCK_WALLSHELF_HAIRDRESSER01"
+      "FAI_VARROCK_WALLSHELF_HAIRDRESSER01",
+      "FAI_VARROCK_WALLSHELF_HAIRDRESSER02"
     ],
     "colorOverrides": [
       {
@@ -78962,7 +81596,8 @@
     "objectIds": [
       "SAILING_GANGPLANK_PROXY",
       "SAILING_GANGPLANK_PROXY_WIDE",
-      "SAILING_GANGPLANK_PROXY_WIDE_INACTIVE"
+      "SAILING_GANGPLANK_PROXY_WIDE_INACTIVE",
+      "SAILING_GANGPLANK_PROXY_WIDE_VIKING"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -80815,22 +83450,123 @@
     "objectIds": [
       "PIRATETREASURE_WAREHOUSE_SHELVES2",
       "PIRATETREASURE_WAREHOUSE_SHELVES3",
-      "PIRATETREASURE_WAREHOUSE_SHELVES4"
+      "PIRATETREASURE_WAREHOUSE_SHELVES4",
+      "DK_SHELVES1",
+      "DK_SHELVES2",
+      "DK_SHELVES3"
     ]
   },
   {
     "description": "Rimmington - Lands End - Wooden - Shelves - With Boxes",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
+    "uvScale": 0.4,
     "objectIds": [
       "RIMMINGTON_WAREHOUSE_SHELVES3",
+      "RIMMINGTON_WAREHOUSE_SHELVES2",
       "RIMMINGTON_WAREHOUSE_SHELVES4"
     ],
     "colorOverrides": [
       {
-        "colors": "h == 6",
-        "baseMaterial": "GRUNGE_3",
-        "uvType": "BOX"
+        "colors": "h == 6 && s > 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftLightness": 1,
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Rimmington - Double Bed",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvOrientation": 512,
+    "uvScale": 0.6,
+    "uvType": "BOX",
+    "objectIds": [
+      "POOR_BIGBED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Rimmington - Chemist Tables with Equipment",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "RIMMINGTON_CHEMIST_TABLE_2",
+      "RIMMINGTON_CHEMIST_TABLE_1",
+      "LAMP_OIL_STILL",
+      "LAMP_OIL_STILL_0",
+      "LAMP_OIL_STILL_1"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "flatNormals": true,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Rimmington - Art Easel",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.1,
+    "objectIds": [
+      "RIMMINGTON_ARTIST_EASIL",
+      "TOB_SPECTATOR_MISTHALIN_EASEL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "flatNormals": true,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Rimmington - Campfire",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "FAVOUR_CAMPFIRE_BASE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6 || h == 7" ],
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Rimmington - Wind Chimes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": 3,
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "WITCHESCHARMS",
+      "DRAYNOR_AGGIE_WITCHESCHARMS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 10" ],
+        "baseMaterial": "METALLIC_1_LIGHT"
       }
     ]
   },
@@ -82282,7 +85018,7 @@
     ]
   },
   {
-    "description": "Canafis - Slepe - Table with thread scissors and other items",
+    "description": "Canafis - Slepe - Hole with Ladder and Trapdoor",
     "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -85217,7 +87953,8 @@
     "description": "Tirannwn - Prifddinas - Archery Target",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
-      "PRIF_TARGET"
+      "PRIF_TARGET",
+      "TARGET"
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -85424,11 +88161,12 @@
   },
   {
     "description": "Varrock - Stone - Surok Statue",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
       "SUROK_STATUEBASE",
+      "SUROK_STATUEBASE1",
       "SUROK_STATUEBASE2"
     ]
   },
@@ -85459,7 +88197,12 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "objectIds": [
-      "FAI_VARROCK_UNDERGROUND"
+      "FAI_VARROCK_UNDERGROUND",
+      "FAI_VARROCK_UNDERGROUND_DOUBLE_TERM_L",
+      "FAI_VARROCK_UNDERGROUND_DOUBLE_TERM_R",
+      "FAI_VARROCK_UNDERGROUND_JOIN_MIRROR",
+      "FAI_VARROCK_UNDERGROUND_DOUBLE",
+      "FAI_VARROCK_UNDERGROUND_JOIN"
     ],
     "colorOverrides": [
       {
@@ -86729,6 +89472,47 @@
     ]
   },
   {
+    "description": "Falador Party Room - Fireplace",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FAI_FALADOR_PARTY_ROOM_FIREPLACE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "upwardsNormals": true
+      },
+      {
+        "colors": "h == 8 && s == 1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "depthBias": 1
+      }
+    ]
+  },
+  {
+    "description": "Falador - Sir Tiffy Cashien sitting on bench",
+    "npcIds": [
+      "RD_TELEPORTER_GUY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "upwardsNormals": true
+      },
+      {
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 512,
+        "baseMaterial": "WOOD_GRAIN_3"
+      }
+    ]
+  },
+  {
     "description": "Xmas 2025 - Rug",
     "baseMaterial": "CARPET_LIGHT",
     "uvType": "MODEL_XZ",
@@ -87257,7 +90041,9 @@
     "objectIds": [
       "DTTD_MACHINE_PARTS_CRATE_SMALL_FULL",
       "DTTD_MACHINE_PARTS_CRATE_BIG_FULL",
+      "DTTD_MACHINE_PARTS_CRATE_BIG_EMPTY",
       "DTTD_BOX_KART",
+      "DTTD_KART_EMPTY",
       "DTTD_MACHINE_PARTS_CRATE_SMALL_EMPTY",
       "DTTD_MACHINE_CRATE_OPEN_WITH_LID"
     ],
@@ -87281,12 +90067,17 @@
     "description": "Death to the Dorgushuun - Watermill Ladder",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "DTTD_MILL_TRAPDOOR_OPEN"
+      "DTTD_MILL_TRAPDOOR_OPEN",
+      "DTTD_MILL_TRAPDOOR_CLOSED"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientationX": 512,
     "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_SMOOTH"
+      },
       {
         "colors": "l == 2",
         "baseMaterial": "BLACK"
@@ -87528,7 +90319,8 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "flatNormals": true,
-        "uvScale": 1.2
+        "undoVanillaShading": false,
+        "uvScale": 0.7
       },
       {
         "description": "Sign",
@@ -87536,13 +90328,34 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "flatNormals": true,
-        "uvOrientation": 512
+        "undoVanillaShading": false,
+        "uvOrientation": 512,
+        "uvScale": 0.7
       }
     ],
     "objectIds": [
       "COWBOSS_SIGN_WARNING",
       "COWBOSS_SCOREBOARD",
       "COWBOSS_SCOREBOARD_UBER"
+    ]
+  },
+  {
+    "description": "Lumbridge - Generic Signpost",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 89,
+    "colorOverrides": [
+      {
+        "description": "Sign Post",
+        "colors": "h == 6 || h == 7 && s == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "flatNormals": true,
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      "DRAYNOR2_SIGNPOST"
     ]
   },
   {
@@ -93876,7 +96689,8 @@
     "uvOrientation": 192,
     "objectIds": [
       "HAVEN_TOWER_BASEMENT_CAGE_TALL",
-      "HAVEN_TOWER_BASEMENT_CAGE_SMALL"
+      "HAVEN_TOWER_BASEMENT_CAGE_SMALL",
+      "HAVEN_TOWER_BASEMENT_CAGE_TALL_BROKEN"
     ]
   },
   {
@@ -93918,6 +96732,23 @@
       "BOOTH_DRAKAN01_LAB01",
       "BOOTH_DRAKAN01_LAB01_2X2_OFFSET",
       "BOOTH_DRAKAN01_LAB01_SHATTERED01"
+    ]
+  },
+  {
+    "description": "Vampyre Lab Booth - Dynamic - ANIMATED",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": [ "a < 255" ],
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_VAMPYRIFICATION_BOOTH_ANIMATED",
+      "MYQ6_VAMPYRIFICATION_BOOTH_ANIMATED_BROKEN"
     ]
   },
   {
@@ -99719,6 +102550,695 @@
     "minLightness": 11,
     "objectIds": [
       "MAGGOT_KING_BLOOD"
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Basalt",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "objectIds": [
+      "BASALT_SINGLE_01",
+      "BASALT_SINGLE_02",
+      "BASALT_SINGLE_03",
+      "BASALT_SINGLE_04",
+      "BASALT_SINGLE_05",
+      "BASALT_SINGLE_06",
+      "BASALT_SINGLE_07",
+      "BASALT_SINGLE_08",
+      "BASALT_SINGLE_09",
+      "WYRMSCRAIG_CAVE_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Dead Tree",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 128,
+    "objectIds": [
+      "TREE_DEAD_01",
+      "TREE_DEAD_02",
+      "TREE_DEAD_03",
+      "TREE_DEAD_04"
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Dead Tree - Stump",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 128,
+    "objectIds": [
+      "TREE_DEAD_01_STUMP",
+      "TREE_DEAD_02_STUMP",
+      "TREE_DEAD_03_STUMP",
+      "TREE_DEAD_04_STUMP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cave Entrance",
+    "baseMaterial": "ROCK_6",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "WYRMSCRAIG_CAVE_WATERFALL"
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Large Cave Entrance",
+    "uvType": "BOX",
+    "textureMaterial": "WATER_FLAT_FLOW_2",
+    "shiftLightness": -25,
+    "retainVanillaUvs": false,
+    "uvScale": 1.5,
+    "objectIds": [
+      "WYRMSCRAIG_CAVE_ENTRANCE_SAILABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "ROCK_6",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h > 4",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Large Cave Exit",
+    "uvType": "BOX",
+    "textureMaterial": "WATER_FLAT_FLOW_2",
+    "shiftLightness": -50,
+    "shiftHue": 40,
+    "retainVanillaUvs": false,
+    "uvScale": 1.5,
+    "objectIds": [
+      "WYRMSCRAIG_CAVE_EXIT_SAILABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "hide": true
+      },
+      {
+        "colors": "h == 39",
+        "baseMaterial": "NONE",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "ROCK_6",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 42",
+        "baseMaterial": "ROCK_6",
+        "shiftLightness": -3,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Dungeon Exit",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "WYRMSCRAIG_CAVE_EXIT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86,
+    "colorOverrides": [
+      {
+        "colors": "l > 20",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "WOODEN_PLANK_DOCKS",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "VIKING_PIER_NO_MAPSCENE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Wyrmscraig - Giant Sunstone Outcrop",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "shiftLightness": 3,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "WYRMSCRAIG_SUNSTONE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "SMOOTH_STONE",
+        "shiftLightness": 3,
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Unbuilt Bank Chest",
+    "baseMaterial": "WOOD_GRAIN",
+    "shiftLightness": 3,
+    "objectIds": [
+      "WYRMSCRAIG_BANK_CHEST_NOTBUILT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1",
+        "shiftLightness": 12,
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.15
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Bank Chest",
+    "baseMaterial": "WOOD_GRAIN",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "WYRMSCRAIG_BANK_CHEST_BUILT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1",
+        "undoVanillaShading": false,
+        "shiftLightness": 12,
+        "uvType": "BOX",
+        "uvScale": 0.15
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "CARPET",
+        "shiftLightness": 10,
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Crafting Tent",
+    "baseMaterial": "GRUNGE_3",
+    "shiftLightness": 3,
+    "objectIds": [
+      "WYRMSCRAIG_CRAFTING_TENT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 10",
+        "baseMaterial": "CARPET",
+        "shiftLightness": 10,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Goat Pit Spikes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": 5,
+    "objectIds": [
+      "GOAT_PIT_SPIKES"
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Scarecrow",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "objectIds": [
+      "HW24_SCARECROW_HEADLESS_NOOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 3",
+        "baseMaterial": "HD_HAY",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Shelf with Bucket",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "objectIds": [
+      "QUEST_LUNAR_SHELF_BUCKET"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Sunstone Dust",
+    "baseMaterial": "SMOOTH_STONE",
+    "minLightness": 10,
+    "maxLightness": 40,
+    "objectIds": [
+      "FFG_DUST_VIS"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "castShadows": false
+  },
+  {
+    "description": "Wyrmscraig - Golem Crafting",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "GOLEM_STATION_EMPTY",
+      "GOLEM_STATION_BASE",
+      "GOLEM_STATION_SHAPED_1",
+      "GOLEM_STATION_SHAPED_2",
+      "GOLEM_STATION_SHAPED_3",
+      "GOLEM_STATION_SHAPED_4",
+      "GOLEM_RUBBLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 7 || h == 7 || h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Candle Stand",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_CANDLE_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_150",
+        "receiveShadows": false
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Wall Candles",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_CANDLE_WALL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "receiveShadows": false,
+        "upwardsNormals": true
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Walls",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT01",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT01A",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02A",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02B",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02C",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02D",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02A_MIRROR",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02E_MIRROR",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02E",
+      "WYRMSCRAIG_CATHEDRAL_WALLKIT02G"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || s == 1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "shiftLightness": 3
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Roof",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT01",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT02",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT03",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT04",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT05",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT06",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT07",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT08",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT09",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT10",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT11",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT12",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT13",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT14",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT15",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT16",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT17",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT18",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT19",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT20",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT21",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT22",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT23",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT24",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT25",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT26",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT27",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT28",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT29",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT30",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT31",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT32",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT33",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT34",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT35",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT36",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT37",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT38",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT39",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT40",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT41",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT42",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT43",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT44",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT45",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT46",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT47",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT48",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT49",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT50",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT51",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT52",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT53",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT54",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT55",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT56",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT57",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT58",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT59",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT60",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT61",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT62",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT63",
+      "WYRMSCRAIG_CATHEDRAL_ROOFKIT64"
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Broken Pews - Climbable",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationY": 512,
+    "uvOrientationZ": 560,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_PEW_BROKEN_CLIMB"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cushion",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Broken Pews - Decorative",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationY": 450,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_PEW_BROKEN03",
+      "WYRMSCRAIG_CATHEDRAL_PEW_BROKEN02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cushion",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Throne",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": 10,
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_THRONE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cushion",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Chains",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.15
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Throne Floor",
+    "baseMaterial": "ROCK_6",
+    "shiftLightness": 2,
+    "uvType": "BOX",
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_THRONE_FLOOR"
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Cathedral Door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "MAD_ANGEL_CATHERDRAL_DOORL",
+      "MAD_ANGEL_CATHERDRAL_DOORR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Golden Handles",
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      }
+    ]
+  },
+  {
+    "description": "Forthos - Metallic - Couldron - DYNAMIC - ANIMATED",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 313,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Smoke",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Void",
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "HOSDUN_CAULDRON"
+    ]
+  },
+  {
+    "description": "Forthos - Metallic - Torch - DYNAMIC - ANIMATED",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "uvOrientation": 313,
+    "shiftLightness": 10,
+    "colorOverrides": [
+      {
+        "description": "Flame",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      "HOSDUN_TORCH"
+    ]
+  },
+  {
+    "description": "Forthos - Metallic - Bone Burner",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "uvOrientation": 313,
+    "shiftLightness": 10,
+    "colorOverrides": [
+      {
+        "description": "Flame",
+        "colors": "h == 42",
+        "baseMaterial": "GRUNGE_3_SHINY"
+      }
+    ],
+    "objectIds": [
+      "HOSDUN_BONE_BURNER"
+    ]
+  },
+  {
+    "description": "Forthos - Stone - Bookshelf with books",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": -187,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Shelf",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "HOSDUN_TEMPLE_BOOKCASE"
+    ]
+  },
+  {
+    "description": "Forthos Dungeon - Grubby chest with metallic banding",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 86,
+    "uvScale": 0.2,
+    "shiftLightness": 3,
+    "colorOverrides": [
+      {
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "s == 0",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "HOSDUN_GRUBBY_CHEST_CLOSED",
+      "HOSDUN_GRUBBY_CHEST_OPEN"
+    ]
+  },
+  {
+    "description": "Forthos Dungeon - Altar",
+    "baseMaterial": "MARBLE_3",
+    "uvOrientation": 286,
+    "uvType": "BOX",
+    "objectIds": [
+      "HOSDUN_ALTAR_NORMAL",
+      "HOSDUN_SUN_ALTAR_BROKEN",
+      "HOSDUN_STONE_RELIEF_CLOSED",
+      "HOSDUN_STONE_RELIEF_OPEN"
+    ]
+  },
+  {
+    "description": "Forthos Dungeon - Floor Tile",
+    "baseMaterial": "MARBLE_3",
+    "uvOrientation": 286,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "l > 30",
+        "baseMaterial": "MARBLE_2",
+        "uvOrientationX": 187,
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "HOSDUN_TEMPLE_SYMBOL"
     ]
   }
 ]
