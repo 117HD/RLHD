@@ -19265,6 +19265,7 @@
       "SW_BANDOS_GHOST_VIS",
       "AHOY_GHOST_DISGUISE",
       "AHOY_GHOST_DISGUISE_GREEN",
+      "GHOSTX",
       "GHOST",
       "GHOST2",
       "GHOST3",
@@ -21981,6 +21982,25 @@
     ]
   },
   {
+    "description": "LANTERN - VISIBLE ON OTHER PLANES",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 12.5,
+    "visibleFromOtherPlanes": true,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FAI_WIZTOWER_LANTERN"
+    ]
+  },
+  {
     "description": "Shilo Mine Lantern",
     "offset": [ -8, 115, 30 ],
     "alignment": "CENTER",
@@ -22362,7 +22382,6 @@
       "GRANDFIREPLACE_OLDBRICK",
       "XMAS20_POH_FIREPLACE_2_LIT",
       "FARM_FIREPLACE",
-      "DRAYNOR_FIREPLACE",
       "XMAS20_POH_FIREPLACE_3_LIT",
       "BOARDGAMES_FIREPLACE_SMALL",
       "FAI_VARROCK_SHANTY_FIREPLACE",
@@ -22378,12 +22397,64 @@
       "MYQ3_GHETTO_FIREPLACE_TOP_NOOFFSET",
       "FENK_FIREPLACE",
       "QIP_DIGSITE_FIREPLACE",
-      "MYQ3_FIREPLACE_LOOSE_TILE",
-      "MISTMYST_FIREPLACE_UNLIT",
       "MISTMYST_FIREPLACE_REVEALED",
       "MISTMYST_FIREPLACE_LIT",
       "POH_FIREPLACE_1_LIT",
       "POH_FIREPLACE_2_LIT"
+    ]
+  },
+  {
+    "description": "DRAYNOR_FIREPLACE_EMBERS",
+    "offset": [ 0, 25, 40 ],
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 30,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DRAYNOR_FIREPLACE"
+    ]
+  },
+  {
+    "description": "DRAYNOR_FIREPLACE_CANDLES_LEFT",
+    "offset": [ 32, 235, -15 ],
+    "alignment": "CENTER",
+    "radius": 75,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DRAYNOR_FIREPLACE_LEFT"
+    ]
+  },
+  {
+    "description": "DRAYNOR_FIREPLACE_CANDLES_RIGHT",
+    "offset": [ 32, 235, 15 ],
+    "alignment": "CENTER",
+    "radius": 75,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DRAYNOR_FIREPLACE_RIGHT"
     ]
   },
   {
@@ -23168,6 +23239,24 @@
     "range": 20,
     "objectIds": [
       "FAI_VARROCK_SMITHY_HEARTH"
+    ]
+  },
+  {
+    "description": "Varrock Blacksmith Lathe",
+    "offset": [ -14, 60, 0 ],
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 3.5,
+    "color": [
+      252,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FAI_VARROCK_SMITHY_LATHE"
     ]
   },
   {
@@ -39119,8 +39208,7 @@
   },
   {
     "description": "SKULL_WALL_TORCH",
-    "height": 207,
-    "alignment": "FRONT",
+    "offset": [ -10, 207, 0 ],
     "radius": 300,
     "strength": 10.5,
     "color": [
@@ -42365,11 +42453,11 @@
     ]
   },
   {
-    "description": "Tutorial Island Cooking Range",
+    "description": "Tutorial Island Cooking Range Top",
     "height": 100,
-    "offset": [ 53, -53, 48 ],
-    "radius": 400,
-    "strength": 6,
+    "offset": [ 0, -10, -46 ],
+    "radius": 70,
+    "strength": 15,
     "color": [
       252,
       148,
@@ -42606,7 +42694,25 @@
     "strength": 17.5,
     "color": [
       252,
-      148,
+      90,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "NEWBIERANGE"
+    ]
+  },
+  {
+    "description": "Tutorial Island Cooking Range Front",
+    "height": 100,
+    "offset": [ 63, -33, 48 ],
+    "radius": 100,
+    "strength": 15,
+    "color": [
+      252,
+      90,
       3
     ],
     "type": "FLICKER",
@@ -49781,6 +49887,25 @@
     "range": 20,
     "objectIds": [
       "MYQ6_ENTRY_HALL_DEFENCE_DOOR"
+    ]
+  },
+  {
+    "description": "Demon Slayer - Delrith Weakened",
+    "offset": [ 0, 100, 0 ],
+    "alignment": "CENTER",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "despawnWithParent": true,
+    "radius": 300,
+    "strength": 20,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "npcIds": [
+      "DELRITH_WEAKENED"
     ]
   }
 ]

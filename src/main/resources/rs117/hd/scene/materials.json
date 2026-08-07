@@ -63,7 +63,7 @@
     "vanillaTextureIndex": 5
   },
   {
-    "name": "ROOF_SHINGLES_1",
+    "name": "ROOF_SHINGLES_RED",
     "vanillaTextureIndex": 6,
     "specularStrength": 0.5,
     "specularGloss": 30.0
@@ -316,7 +316,7 @@
     "vanillaTextureIndex": 43
   },
   {
-    "name": "ROOF_SHINGLES_2",
+    "name": "ROOF_SHINGLES_GRAY",
     "vanillaTextureIndex": 44
   },
   {
@@ -1611,6 +1611,11 @@
     "specularGloss": 30.0
   },
   {
+    "name": "GRUNGE_3_MIRRORED",
+    "parent": "GRUNGE_3",
+    "textureScale": [ -1, -1 ,1 ]
+  },
+  {
     "name": "GRUNGE_3_SMOOTH",
     "parent": "GRUNGE_3",
     "normalMap": null
@@ -1884,7 +1889,13 @@
   {
     "name": "ROCK_3_ORE",
     "parent": "ROCK_3",
-    "specularStrength": 1.0
+    "specularStrength": 1,
+    "specularGloss": 50,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.7
+    ]
   },
   {
     "name": "EADGARS_CAVE_FIX",
@@ -1929,7 +1940,12 @@
     "name": "ROCK_4_ORE",
     "parent": "ROCK_4",
     "displacementScale": 0.08,
-    "specularStrength": 1.0
+    "specularStrength": 1.0,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.7
+    ]
   },
   {
     "name": "ROCK_5_D"
@@ -1960,7 +1976,12 @@
     "name": "ROCK_5_ORE",
     "parent": "ROCK_5",
     "displacementScale": 0.08,
-    "specularStrength": 1.0
+    "specularStrength": 1.0,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.7
+    ]
   },
   {
     "name": "ROCK_6_N"
@@ -2683,20 +2704,32 @@
     "brightness": 3.25
   },
   {
+    "name": "VANILLA_ROOF_SHINGLES_RED",
+    "parent": "ROOF_SHINGLES_RED",
+    "specularStrength": 0.35,
+    "specularGloss": 40.0
+  },
+  {
+    "name": "VANILLA_ROOF_SHINGLES_GRAY",
+    "parent": "ROOF_SHINGLES_GRAY",
+    "specularStrength": 0.35,
+    "specularGloss": 40.0
+  },
+  {
     "name": "HD_ROOF_SHINGLES_N"
   },
   {
     "name": "HD_ROOF_SHINGLES_D"
   },
   {
-    "name": "HD_ROOF_SHINGLES_1",
+    "name": "HD_ROOF_SHINGLES_RED",
     "normalMap": "HD_ROOF_SHINGLES_N",
     "displacementMap": "HD_ROOF_SHINGLES_D",
     "displacementScale": 0.11,
     "specularStrength": 0.35,
     "specularGloss": 40.0,
     "materialsToReplace": [
-      "ROOF_SHINGLES_1"
+      "ROOF_SHINGLES_RED"
     ],
     "replacementCondition": "modelTextures"
   },
@@ -2732,12 +2765,12 @@
     "replacementCondition": "modelTextures"
   },
   {
-    "name": "HD_ROOF_SHINGLES_2",
+    "name": "HD_ROOF_SHINGLES_GRAY",
     "normalMap": "HD_ROOF_SHINGLES_N",
     "specularStrength": 0.3,
     "specularGloss": 30.0,
     "materialsToReplace": [
-      "ROOF_SHINGLES_2"
+      "ROOF_SHINGLES_GRAY"
     ],
     "replacementCondition": "modelTextures"
   },
@@ -3643,22 +3676,24 @@
     "replacementCondition": "season == SeasonalTheme.WINTER"
   },
   {
-    "name": "WINTER_HD_ROOF_SHINGLES_1",
+    "name": "WINTER_HD_ROOF_SHINGLES_RED",
     "normalMap": "HD_ROOF_SHINGLES_N",
     "specularStrength": 0.5,
     "specularGloss": 30.0,
     "materialsToReplace": [
-      "HD_ROOF_SHINGLES_1"
+      "HD_ROOF_SHINGLES_RED",
+      "VANILLA_ROOF_SHINGLES_RED"
     ],
     "replacementCondition": "season == SeasonalTheme.WINTER"
   },
   {
-    "name": "WINTER_HD_ROOF_SHINGLES_2",
+    "name": "WINTER_HD_ROOF_SHINGLES_GRAY",
     "normalMap": "HD_ROOF_SHINGLES_N",
     "specularStrength": 0.3,
     "specularGloss": 30.0,
     "materialsToReplace": [
-      "HD_ROOF_SHINGLES_2"
+      "HD_ROOF_SHINGLES_GRAY",
+      "VANILLA_ROOF_SHINGLES_GRAY"
     ],
     "replacementCondition": "season == SeasonalTheme.WINTER"
   },
