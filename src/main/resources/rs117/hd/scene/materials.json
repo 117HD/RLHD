@@ -2108,6 +2108,15 @@
     "brightness": 1.1
   },
   {
+    "name": "FUR_N"
+  },
+  {
+    "name": "FUR",
+    "normalMap": "FUR_N",
+    "specularStrength": 0.25,
+    "specularGloss": 30.0
+  },
+  {
     "name": "FALADOR_PATH_BRICK_N"
   },
   {
