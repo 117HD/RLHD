@@ -87,6 +87,7 @@ void main() {
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(cameraPos - IN.position);
 
+    int combinedMaterialData = fMaterialData[0] | fMaterialData[1] | fMaterialData[2];
     Material material1 = getMaterial(fMaterialData[0] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
     Material material2 = getMaterial(fMaterialData[1] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
     Material material3 = getMaterial(fMaterialData[2] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
@@ -125,7 +126,7 @@ void main() {
         // Vanilla tree textures rely on UVs being clamped horizontally, which HD doesn't do at the texture level.
         // Instead we manually clamp vanilla textures with transparency here. Including the transparency check
         // allows texture wrapping to work correctly for the mirror shield.
-        if ((fMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1 && getMaterialHasTransparency(material1))
+        if ((combinedMaterialData >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1 && getMaterialHasTransparency(material1))
             blendedUv.x = clamp(blendedUv.x, 0, .984375);
 
         vec2 uv1 = blendedUv;
@@ -315,7 +316,7 @@ void main() {
 
         // normals
         vec3 normals;
-        if ((fMaterialData[0] >> MATERIAL_FLAG_UPWARDS_NORMALS & 1) == 1) {
+        if ((combinedMaterialData >> MATERIAL_FLAG_UPWARDS_NORMALS & 1) == 1) {
             normals = vec3(0, -1, 0);
         } else {
             vec3 n1 = sampleNormalMap(material1, uv1, TBN);
@@ -333,7 +334,7 @@ void main() {
         #endif
 
         float shadow = 0;
-        if ((fMaterialData[0] >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0)
+        if ((combinedMaterialData >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0)
             shadow = sampleShadowMap(fragPos, vec2(0), lightDotNormals);
         shadow = max(shadow, selfShadowing);
         float inverseShadow = 1 - shadow;
@@ -453,7 +454,7 @@ void main() {
             getMaterialIsUnlit(material3)
         ));
 
-        #if VANILLA_COLOR_BANDING
+        #if VANILLA_adjustedWorldPosCOLOR_BANDING
             outputColor.rgb = linearToSrgb(outputColor.rgb);
             outputColor.rgb = srgbToHsv(outputColor.rgb);
             outputColor.b = floor(outputColor.b * 127) / 127;
@@ -471,6 +472,15 @@ void main() {
         if (isUnderwater) {
             sampleUnderwater(outputColor.rgb, waterType, waterDepth, lightDotNormals);
         }
+
+    #if HIGHLIGHT
+        if(!isTerrain && (combinedMaterialData >> MATERIAL_FLAG_HIGHLIGHT_MODELS_WITHOUT_OVERRIDE & 1) == 1) {
+            float mask = checkerboard(IN.position + vec3(elapsedTime * 50.0), 16.0);
+            float str = sin(((mod(elapsedTime, 2.5)) / 2.5) * PI) * 0.5;
+
+            outputColor.rgb += mix(vec3(0.59, 0.58, 0.94), vec3(0.98, 0.78, 0.83), mask) * str;
+        }
+    #endif
     }
 
     #if LEGACY_RENDERER

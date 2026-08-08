@@ -2,8 +2,10 @@ package rs117.hd.utils;
 
 import java.awt.event.KeyEvent;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.Keybind;
@@ -22,9 +24,11 @@ import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
 import static java.awt.event.InputEvent.SHIFT_DOWN_MASK;
 
 @Slf4j
+@Singleton
 public class DeveloperTools implements KeyListener {
 	// This could be part of the config if we had developer mode config sections
 	private static final Keybind KEY_TOGGLE_TILE_INFO = new Keybind(KeyEvent.VK_F3, CTRL_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_HIGHLIGHT = new Keybind(KeyEvent.VK_H, CTRL_DOWN_MASK | SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_FRAME_TIMINGS = new Keybind(KeyEvent.VK_F4, CTRL_DOWN_MASK);
 	private static final Keybind KEY_RECORD_TIMINGS_SNAPSHOT = new Keybind(KeyEvent.VK_F4, CTRL_DOWN_MASK | SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_SHADOW_MAP_OVERLAY = new Keybind(KeyEvent.VK_F5, CTRL_DOWN_MASK);
@@ -34,6 +38,9 @@ public class DeveloperTools implements KeyListener {
 	private static final Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, CTRL_DOWN_MASK);
 	private static final Keybind KEY_RELOAD_SCENE = new Keybind(KeyEvent.VK_R, CTRL_DOWN_MASK);
+
+	@Inject
+	private Client client;
 
 	@Inject
 	private ClientThread clientThread;
@@ -67,6 +74,8 @@ public class DeveloperTools implements KeyListener {
 
 	private boolean keyBindingsEnabled;
 	private boolean tileInfoOverlayEnabled;
+	@Getter
+	private boolean highlightModelOverridesEnabled;
 	@Getter
 	private boolean frameTimingsOverlayEnabled;
 	private boolean shadowMapOverlayEnabled;
@@ -107,6 +116,17 @@ public class DeveloperTools implements KeyListener {
 		hideUiEnabled = false;
 	}
 
+	private void toggleModelOverrideHighlighter() {
+		highlightModelOverridesEnabled = !highlightModelOverridesEnabled;
+		clientThread.invoke(() -> client.addChatMessage(
+			ChatMessageType.GAMEMESSAGE,
+			"117 HD",
+			"<col=006600>[117 HD] " + (highlightModelOverridesEnabled ? "Enabled" : "Disabled") + " Model Override Highlighter",
+			"117 HD"
+		));
+		plugin.recompilePrograms();
+	}
+
 	@Subscribe
 	public void onCommandExecuted(CommandExecuted commandExecuted) {
 		if (!commandExecuted.getCommand().equalsIgnoreCase("117hd"))
@@ -120,6 +140,9 @@ public class DeveloperTools implements KeyListener {
 		switch (action) {
 			case "tileinfo":
 				tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
+				break;
+			case "highlight":
+				toggleModelOverrideHighlighter();
 				break;
 			case "timers":
 			case "timings":
@@ -160,6 +183,8 @@ public class DeveloperTools implements KeyListener {
 	public void keyPressed(KeyEvent e) {
 		if (KEY_TOGGLE_TILE_INFO.matches(e)) {
 			tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
+		} else if (KEY_TOGGLE_HIGHLIGHT.matches(e)) {
+			toggleModelOverrideHighlighter();
 		} else if (KEY_TOGGLE_FRAME_TIMINGS.matches(e)) {
 			frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
 		} else if (KEY_RECORD_TIMINGS_SNAPSHOT.matches(e)) {

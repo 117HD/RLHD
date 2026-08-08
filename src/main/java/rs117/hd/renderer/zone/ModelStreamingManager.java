@@ -395,6 +395,7 @@ public class ModelStreamingManager {
 				final DynamicModelVAO.View shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
 				sceneUploader.uploadTempModel(
 					culledFaces,
+					renderable,
 					m,
 					modelOverride,
 					preOrientation,
@@ -421,6 +422,7 @@ public class ModelStreamingManager {
 
 				sceneUploader.uploadTempModel(
 					visibleFaces,
+					renderable,
 					m,
 					modelOverride,
 					preOrientation,

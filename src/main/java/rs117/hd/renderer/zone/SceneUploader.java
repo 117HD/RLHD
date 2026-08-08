@@ -2134,6 +2134,7 @@ public class SceneUploader implements AutoCloseable {
 	// temp draw
 	public void uploadTempModel(
 		PrimitiveCharArray faces,
+		Renderable renderable,
 		Model model,
 		ModelOverride modelOverride,
 		int preOrientation,
@@ -2184,6 +2185,7 @@ public class SceneUploader implements AutoCloseable {
 		final byte modelTransparency = model.getTransparency();
 
 		final boolean isVanillaTextured = faceTextures != null;
+		final boolean isActor = renderable instanceof Actor;
 
 		int orientSin = 0;
 		int orientCos = 0;
@@ -2223,7 +2225,7 @@ public class SceneUploader implements AutoCloseable {
 				color3 = faceOverride.modifyColor(color3);
 			}
 
-			final int materialData = material.packMaterialData(faceOverride, uvType, false);
+			final int materialData = material.packMaterialData(faceOverride, uvType, false, isActor);
 
 			final int triangleA = indices1[face];
 			final int vertexOffsetA = triangleA * 3;
