@@ -1805,9 +1805,30 @@ public class SceneUploader implements AutoCloseable {
 			}
 
 			if (plugin.configUndoVanillaShading && faceOverride.undoVanillaShading && !keepShading) {
-				color1 = undoVanillaShading(color1, plugin.configLegacyGreyColors, modelNormals[0], modelNormals[1], modelNormals[2]);
-				color2 = undoVanillaShading(color2, plugin.configLegacyGreyColors, modelNormals[3], modelNormals[4], modelNormals[5]);
-				color3 = undoVanillaShading(color3, plugin.configLegacyGreyColors, modelNormals[6], modelNormals[7], modelNormals[8]);
+				color1 = undoVanillaShading(
+					color1,
+					plugin.configLegacyGreyColors,
+					modelNormals[0],
+					modelNormals[1],
+					modelNormals[2],
+					isTextured
+				);
+				color2 = undoVanillaShading(
+					color2,
+					plugin.configLegacyGreyColors,
+					modelNormals[3],
+					modelNormals[4],
+					modelNormals[5],
+					isTextured
+				);
+				color3 = undoVanillaShading(
+					color3,
+					plugin.configLegacyGreyColors,
+					modelNormals[6],
+					modelNormals[7],
+					modelNormals[8],
+					isTextured
+				);
 			}
 
 			if (shouldRotateNormals)
@@ -2272,9 +2293,30 @@ public class SceneUploader implements AutoCloseable {
 				}
 
 				if (plugin.configUndoVanillaShading && modelOverride.undoVanillaShading) {
-					color1 = undoVanillaShading(color1, plugin.configLegacyGreyColors, faceNormals[0], faceNormals[1], faceNormals[2]);
-					color2 = undoVanillaShading(color2, plugin.configLegacyGreyColors, faceNormals[3], faceNormals[4], faceNormals[5]);
-					color3 = undoVanillaShading(color3, plugin.configLegacyGreyColors, faceNormals[6], faceNormals[7], faceNormals[8]);
+					color1 = undoVanillaShading(
+						color1,
+						plugin.configLegacyGreyColors,
+						faceNormals[0],
+						faceNormals[1],
+						faceNormals[2],
+						textureId != -1
+					);
+					color2 = undoVanillaShading(
+						color2,
+						plugin.configLegacyGreyColors,
+						faceNormals[3],
+						faceNormals[4],
+						faceNormals[5],
+						textureId != -1
+					);
+					color3 = undoVanillaShading(
+						color3,
+						plugin.configLegacyGreyColors,
+						faceNormals[6],
+						faceNormals[7],
+						faceNormals[8],
+						textureId != -1
+					);
 				}
 
 				if (shouldRotateNormals && !shouldCalculateFaceNormal)
@@ -2670,45 +2712,62 @@ public class SceneUploader implements AutoCloseable {
 
 	public static int undoVanillaShading(
 		int color, boolean legacyGreyColors,
-		int nx, int ny, int nz
+		int nx, int ny, int nz, boolean isTextured
 	) {
-		return undoVanillaShading(color, legacyGreyColors, nx * nx + ny * ny + nz * nz, nx + ny + nz);
+		return undoVanillaShading(color, legacyGreyColors, (float) nx, (float) ny, (float) nz, isTextured);
 	}
 
 	public static int undoVanillaShading(
 		int color, boolean legacyGreyColors,
-		float nx, float ny, float nz
+		float nx, float ny, float nz, boolean isTextured
 	) {
-		return undoVanillaShading(color, legacyGreyColors, nx * nx + ny * ny + nz * nz, nx + ny + nz);
-	}
-
-	private static int undoVanillaShading(
-		int color, boolean legacyGreyColors,
-		float len, float norm
-	) {
-		//int h = color >> 10 & 0x3F; Unused only S & L need unpacking
+		// 1. Unpack Saturation and Lightness
 		int s = (color >> 7) & 0x7;
 		int l = color & 0x7F;
 
-		// Approximately invert vanilla shading by brightening vertices that were likely darkened by vanilla based on
-		// vertex normals. This process is error-prone, as not all models are lit by vanilla with the same light
-		// direction, and some models even have baked lighting built into the model itself. In some cases, increasing
-		// brightness in this way leads to overly bright colors, so we are forced to cap brightness at a relatively
-		// low value for it to look acceptable in most cases.
-		final float colorAdjust = BASE_LIGHTEN - l + (l < IGNORE_LOW_LIGHTNESS ? 0f : (l - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
+		// We keep the old heuristic color adjuster, but apply it using the correct directional vector
+		float colorAdjust = 10f - l + (l < 3 ? 0f : (l - 3) * 3f);
 
-		// Normals are currently unrotated, so we don't need to do any rotation for this
-		if (len > 0f) {
-			final float invLen = rcp(sqrt(len));
-			final float lightDotNormal = norm * 0.57735026f * invLen;
-			if (lightDotNormal > 0f)
-				l += (int) (lightDotNormal * colorAdjust);
+		// 2. Normalize the vertex normals
+		float normalLen = (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
+
+		if (normalLen > 0f) {
+			// INVERTED OSRS Sun Vector (Pointing away from the light source)
+			float lX = 0.707f;
+			float lY = 0.141f;
+			float lZ = 0.707f;
+
+			float normX = nx / normalLen;
+			float normY = ny / normalLen;
+			float normZ = nz / normalLen;
+
+			// 4. Calculate the true dot product
+			float dotProduct = (normX * lX) + (normY * lY) + (normZ * lZ);
+
+			// 5. Apply the lighting adjustment ONLY to the shadowed faces
+			if (dotProduct > 0f) {
+				l += (int) (dotProduct * colorAdjust);
+			}
 		}
 
-		// Clamp brightness as detailed above
-		l = min(l, legacyGreyColors ? 55 : getMaxBrightness(s));
+		// 6. Reduce brightness by 10% ONLY for untextured models - Fights overbrightness
+		if (!isTextured) {
+			l = (int) (l * 0.90f);
+		}
 
-		// Preserve H, replace S & L
+		// 7. Calculate Max Brightness
+		int maxBrightness = legacyGreyColors ? 55 : getMaxBrightness(s);
+
+		// 8. White/Grayscale Headroom Fix (Untextured Only)
+		// We only clamp the headroom if the surface is untextured.
+		if (s == 0 && !legacyGreyColors && !isTextured) {
+			maxBrightness = Math.min(maxBrightness, 87);
+		}
+
+		// 9. Final Clamp
+		l = Math.max(0, Math.min(l, maxBrightness));
+
+		// Repack and return
 		return (color & 0xFC00) | (s << 7) | l;
 	}
 
