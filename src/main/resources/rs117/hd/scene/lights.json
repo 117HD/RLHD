@@ -18962,6 +18962,7 @@
       "SW_BANDOS_GHOST_VIS",
       "AHOY_GHOST_DISGUISE",
       "AHOY_GHOST_DISGUISE_GREEN",
+      "GHOSTX",
       "GHOST",
       "GHOST2",
       "GHOST3",
@@ -21830,6 +21831,25 @@
     ]
   },
   {
+    "description": "LANTERN - VISIBLE ON OTHER PLANES",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 12.5,
+    "visibleFromOtherPlanes": true,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FAI_WIZTOWER_LANTERN"
+    ]
+  },
+  {
     "description": "Shilo Mine Lantern",
     "offset": [ -8, 115, 30 ],
     "alignment": "CENTER",
@@ -22324,7 +22344,6 @@
       "GRANDFIREPLACE_OLDBRICK",
       "XMAS20_POH_FIREPLACE_2_LIT",
       "FARM_FIREPLACE",
-      "DRAYNOR_FIREPLACE",
       "XMAS20_POH_FIREPLACE_3_LIT",
       "BOARDGAMES_FIREPLACE_SMALL",
       "FAI_VARROCK_SHANTY_FIREPLACE",
@@ -22336,11 +22355,64 @@
       "TWOCATS_FIREPLACE_GOT_WOOD",
       "FENK_FIREPLACE",
       "QIP_DIGSITE_FIREPLACE",
-      "MISTMYST_FIREPLACE_UNLIT",
       "MISTMYST_FIREPLACE_REVEALED",
       "MISTMYST_FIREPLACE_LIT",
       "POH_FIREPLACE_1_LIT",
       "POH_FIREPLACE_2_LIT"
+    ]
+  },
+  {
+    "description": "DRAYNOR_FIREPLACE_EMBERS",
+    "offset": [ 0, 25, 40 ],
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 30,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DRAYNOR_FIREPLACE"
+    ]
+  },
+  {
+    "description": "DRAYNOR_FIREPLACE_CANDLES_LEFT",
+    "offset": [ 32, 235, -15 ],
+    "alignment": "CENTER",
+    "radius": 75,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DRAYNOR_FIREPLACE_LEFT"
+    ]
+  },
+  {
+    "description": "DRAYNOR_FIREPLACE_CANDLES_RIGHT",
+    "offset": [ 32, 235, 15 ],
+    "alignment": "CENTER",
+    "radius": 75,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DRAYNOR_FIREPLACE_RIGHT"
     ]
   },
   {
@@ -23160,6 +23232,24 @@
     "range": 20,
     "objectIds": [
       "FAI_VARROCK_SMITHY_HEARTH"
+    ]
+  },
+  {
+    "description": "Varrock Blacksmith Lathe",
+    "offset": [ -14, 60, 0 ],
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 3.5,
+    "color": [
+      252,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FAI_VARROCK_SMITHY_LATHE"
     ]
   },
   {
@@ -39207,8 +39297,7 @@
   },
   {
     "description": "SKULL_WALL_TORCH",
-    "height": 207,
-    "alignment": "FRONT",
+    "offset": [ -10, 207, 0 ],
     "radius": 300,
     "strength": 10.5,
     "color": [
@@ -42489,11 +42578,11 @@
     ]
   },
   {
-    "description": "Tutorial Island Cooking Range",
+    "description": "Tutorial Island Cooking Range Top",
     "height": 100,
-    "offset": [ 53, -53, 48 ],
-    "radius": 400,
-    "strength": 6,
+    "offset": [ 0, -10, -46 ],
+    "radius": 70,
+    "strength": 15,
     "color": [
       252,
       148,
@@ -42732,7 +42821,25 @@
     "strength": 17.5,
     "color": [
       252,
-      148,
+      90,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "NEWBIERANGE"
+    ]
+  },
+  {
+    "description": "Tutorial Island Cooking Range Front",
+    "height": 100,
+    "offset": [ 63, -33, 48 ],
+    "radius": 100,
+    "strength": 15,
+    "color": [
+      252,
+      90,
       3
     ],
     "type": "FLICKER",
@@ -44374,7 +44481,8 @@
     "type": "STATIC",
     "objectIds": [
       "HG_CAVE_EXIT",
-      "CAVEKIT_ROCK01_ENTRANCE02"
+      "CAVEKIT_ROCK01_ENTRANCE02",
+      "WYRMSCRAIG_CAVE_EXIT"
     ]
   },
   {
@@ -44394,7 +44502,7 @@
     ]
   },
   {
-    "description": "Wold Den Cave Exit",
+    "description": "Wolf Den Cave Exit",
     "offset": [ -100, 100, 0 ],
     "alignment": "CENTER",
     "radius": 700,
@@ -50531,6 +50639,91 @@
     "type": "STATIC",
     "objectIds": [
       "WYRMSCRAIG_SUNSTONE01"
+    ]
+  },
+  {
+    "description": "Demon Slayer - Delrith Weakened",
+    "offset": [ 0, 100, 0 ],
+    "alignment": "CENTER",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "despawnWithParent": true,
+    "radius": 300,
+    "strength": 20,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "npcIds": [
+      "DELRITH_WEAKENED"
+    ]
+  },
+  {
+    "description": "Wyrmscraig Dungeon Exit - Far",
+    "offset": [ 0, 200, 200 ],
+    "alignment": "CENTER",
+    "radius": 1500,
+    "strength": 10,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "WYRMSCRAIG_CAVE_EXIT_SAILABLE"
+    ]
+  },
+  {
+    "description": "Wyrmscraig Dungeon Exit - Near",
+    "offset": [ 0, 250, 500 ],
+    "alignment": "CENTER",
+    "radius": 750,
+    "strength": 20,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "WYRMSCRAIG_CAVE_EXIT_SAILABLE"
+    ]
+  },
+  {
+    "description": "Wyrmscraig Cathedral Candles",
+    "offset": [ -30, 210, 0 ],
+    "radius": 175,
+    "strength": 5.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_CANDLE_WALL"
+    ]
+  },
+  {
+    "description": "Wyrmscraig Cathedral Altar Candles",
+    "offset": [ 0, 180, -13 ],
+    "radius": 130,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "WYRMSCRAIG_CATHEDRAL_CANDLE_TABLE"
     ]
   },
   {

@@ -112,6 +112,17 @@ public class Area {
 				maxZ = Math.max(maxZ, aabb.maxZ);
 			}
 
+			if (unhideAreas != null) {
+				for (AABB aabb : unhideAreas) {
+					minX = Math.min(minX, aabb.minX);
+					minY = Math.min(minY, aabb.minY);
+					minZ = Math.min(minZ, aabb.minZ);
+					maxX = Math.max(maxX, aabb.maxX);
+					maxY = Math.max(maxY, aabb.maxY);
+					maxZ = Math.max(maxZ, aabb.maxZ);
+				}
+			}
+
 			areaBounds = new AABB(minX, minY, minZ, maxX, maxY, maxZ);
 
 			if (aabbs.length > 4) {
