@@ -2208,10 +2208,16 @@ public class SceneUploader implements AutoCloseable {
 
 		int orientSin = 0;
 		int orientCos = 0;
+		// The default unrotated world sun vector for dynamic objects
+		float localLx = 0.577f;
+		float localLy = 0.577f;
+		float localLz = 0.577f;
+
 		if (orientation != 0) {
 			orientation = mod(orientation, 2048);
 			orientSin = SINE[orientation];
 			orientCos = COSINE[orientation];
+
 		}
 
 		for (int f = 0; f < faces.length; ++f) {
@@ -2296,25 +2302,22 @@ public class SceneUploader implements AutoCloseable {
 					color1 = undoVanillaShading(
 						color1,
 						plugin.configLegacyGreyColors,
-						faceNormals[0],
-						faceNormals[1],
-						faceNormals[2],
+						faceNormals[0], faceNormals[1], faceNormals[2],
+						localLx, localLy, localLz,
 						textureId != -1
 					);
 					color2 = undoVanillaShading(
 						color2,
 						plugin.configLegacyGreyColors,
-						faceNormals[3],
-						faceNormals[4],
-						faceNormals[5],
+						faceNormals[3], faceNormals[4], faceNormals[5],
+						localLx, localLy, localLz,
 						textureId != -1
 					);
 					color3 = undoVanillaShading(
 						color3,
 						plugin.configLegacyGreyColors,
-						faceNormals[6],
-						faceNormals[7],
-						faceNormals[8],
+						faceNormals[6], faceNormals[7], faceNormals[8],
+						localLx, localLy, localLz,
 						textureId != -1
 					);
 				}
@@ -2710,64 +2713,68 @@ public class SceneUploader implements AutoCloseable {
 		out[2] = out[6] = out[10] = 0f;
 	}
 
-	public static int undoVanillaShading(
-		int color, boolean legacyGreyColors,
-		int nx, int ny, int nz, boolean isTextured
-	) {
-		return undoVanillaShading(color, legacyGreyColors, (float) nx, (float) ny, (float) nz, isTextured);
-	}
-
+	// 1. Static Geometry Router (Uses your perfect fixed world sun)
 	public static int undoVanillaShading(
 		int color, boolean legacyGreyColors,
 		float nx, float ny, float nz, boolean isTextured
 	) {
-		// 1. Unpack Saturation and Lightness
+		return undoVanillaShading(
+			color, legacyGreyColors,
+			nx, ny, nz,
+			0.707f, 0.141f, 0.707f, // Fixed world sun
+			isTextured
+		);
+	}
+
+	// 2. Integer Router (For compatibility with existing integer arrays)
+	public static int undoVanillaShading(
+		int color, boolean legacyGreyColors,
+		int nx, int ny, int nz, boolean isTextured
+	) {
+		return undoVanillaShading(
+			color, legacyGreyColors,
+			(float) nx, (float) ny, (float) nz,
+			0.707f, 0.141f, 0.707f,
+			isTextured
+		);
+	}
+
+	// 3. The Core CPU-Optimized Engine
+	public static int undoVanillaShading(
+		int color, boolean legacyGreyColors,
+		float nx, float ny, float nz,
+		float lX, float lY, float lZ, // Dynamic light vector injection
+		boolean isTextured
+	) {
 		int s = (color >> 7) & 0x7;
 		int l = color & 0x7F;
 
-		// We keep the old heuristic color adjuster, but apply it using the correct directional vector
 		float colorAdjust = 10f - l + (l < 3 ? 0f : (l - 3) * 3f);
+		float len = nx * nx + ny * ny + nz * nz;
 
-		// 2. Normalize the vertex normals
-		float normalLen = (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
+		if (len > 0f) {
+			// CPU OPTIMIZATION: 1 inverse sqrt, 0 vertex divisions.
+			float invLen = 1.0f / (float) Math.sqrt(len);
 
-		if (normalLen > 0f) {
-			// INVERTED OSRS Sun Vector (Pointing away from the light source)
-			float lX = 0.707f;
-			float lY = 0.141f;
-			float lZ = 0.707f;
+			// Combine normalization directly into the dot product
+			float dotProduct = (nx * lX + ny * lY + nz * lZ) * invLen;
 
-			float normX = nx / normalLen;
-			float normY = ny / normalLen;
-			float normZ = nz / normalLen;
-
-			// 4. Calculate the true dot product
-			float dotProduct = (normX * lX) + (normY * lY) + (normZ * lZ);
-
-			// 5. Apply the lighting adjustment ONLY to the shadowed faces
 			if (dotProduct > 0f) {
 				l += (int) (dotProduct * colorAdjust);
 			}
 		}
 
-		// 6. Reduce brightness by 10% ONLY for untextured models - Fights overbrightness
 		if (!isTextured) {
 			l = (int) (l * 0.90f);
 		}
 
-		// 7. Calculate Max Brightness
 		int maxBrightness = legacyGreyColors ? 55 : getMaxBrightness(s);
 
-		// 8. White/Grayscale Headroom Fix (Untextured Only)
-		// We only clamp the headroom if the surface is untextured.
 		if (s == 0 && !legacyGreyColors && !isTextured) {
 			maxBrightness = Math.min(maxBrightness, 87);
 		}
 
-		// 9. Final Clamp
 		l = Math.max(0, Math.min(l, maxBrightness));
-
-		// Repack and return
 		return (color & 0xFC00) | (s << 7) | l;
 	}
 
