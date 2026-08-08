@@ -3,6 +3,8 @@
 #include <utils/constants.glsl>
 
 layout(std140) uniform UBOGlobal {
+    bool orthographicProjection;
+
     int expandedMapLoadingChunks;
     float drawDistance;
 
@@ -14,6 +16,7 @@ layout(std140) uniform UBOGlobal {
     int colorFilter;
     float colorFilterFade;
 
+    ivec4 viewportSize;
     ivec2 sceneResolution;
     ivec2 tiledLightingResolution;
 

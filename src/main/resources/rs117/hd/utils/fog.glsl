@@ -25,7 +25,8 @@
  */
 #include <uniforms/global.glsl>
 
-#define TILE_SIZE 128
+#include <utils/constants.glsl>
+
 #define FOG_SCENE_EDGE_MIN ((    - expandedMapLoadingChunks * 8 + 1) * TILE_SIZE)
 #define FOG_SCENE_EDGE_MAX ((104 + expandedMapLoadingChunks * 8 - 1) * TILE_SIZE)
 #define FOG_CORNER_ROUNDING 1.5

@@ -471,6 +471,13 @@ public final class MathUtils {
 		return product;
 	}
 
+	public static float angleDiff(float a, float b) {
+		float diff = (a - b) % TWO_PI;
+		if (diff < -PI) diff += TWO_PI;
+		if (diff > PI) diff -= TWO_PI;
+		return abs(diff);
+	}
+
 	/**
 	 * Yields incorrect results if either of the input vectors is used as the output vector.
 	 */

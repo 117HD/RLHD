@@ -54,6 +54,22 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 			log.warn("{}.{} - {}", owner.glBuffer.name, name, message);
 		}
 
+		// A setter used against the wrong property type silently skips the write, leaving the
+		// property at its previous value, so the failure surfaces as a stale uniform rather than
+		// an error. Java makes this very easy to hit: an all-int expression like
+		// `floatProp.set(cond ? 1 : 0)` binds set(int) over set(float), because int->int is an
+		// exact match, and it compiles cleanly. Assert so dev builds fail at the offending call
+		// instead of days later via a shader reading the wrong value. Assertions are off in
+		// production, where the warning alone is the right behavior.
+		//
+		// Deliberately separate from log(): the uninitialized-property path also logs, but that
+		// one legitimately occurs around shader recompiles and buffer teardown, when offset is
+		// reset to -1, so it must stay a warning.
+		private void logTypeMismatch(String message) {
+			log(message);
+			assert false : owner.glBuffer.name + "." + name + " - " + message;
+		}
+
 		private boolean isUninitialized() {
 			if (offset >= 0)
 				return false;
@@ -66,17 +82,17 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 
 			if (!type.isInt) {
-				log("Int setter was used with a non-int property type");
+				logTypeMismatch("Int setter was used with a non-int property type");
 				return;
 			}
 
 			if (values == null) {
-				log("Int setter was provided with null value");
+				logTypeMismatch("Int setter was provided with null value");
 				return;
 			}
 
 			if (values.length != type.elementCount) {
-				log(String.format("Int setter was provided with incorrect number of elements: %d != %d", values.length, type.elementCount));
+				logTypeMismatch(String.format("Int setter was provided with incorrect number of elements: %d != %d", values.length, type.elementCount));
 				return;
 			}
 
@@ -89,7 +105,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 
 			if (type != PropertyType.Int) {
-				log("Int setter was used with the wrong property type: " + type);
+				logTypeMismatch("Int setter was used with the wrong property type: " + type);
 				return;
 			}
 
@@ -102,7 +118,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 
 			if (type != PropertyType.IVec2) {
-				log("Int setter was used with the wrong property type: " + type);
+				logTypeMismatch("Int setter was used with the wrong property type: " + type);
 				return;
 			}
 
@@ -115,7 +131,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 
 			if (type != PropertyType.IVec3) {
-				log("Int setter was used with the wrong property type: " + type);
+				logTypeMismatch("Int setter was used with the wrong property type: " + type);
 				return;
 			}
 
@@ -128,7 +144,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 
 			if (type != PropertyType.IVec4) {
-				log("Int setter was used with the wrong property type: " + type);
+				logTypeMismatch("Int setter was used with the wrong property type: " + type);
 				return;
 			}
 
@@ -141,17 +157,17 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 
 			if (type.isInt) {
-				log("Float setter was used with an int property type");
+				logTypeMismatch("Float setter was used with an int property type");
 				return;
 			}
 
 			if (values == null) {
-				log("Float setter was provided with null value");
+				logTypeMismatch("Float setter was provided with null value");
 				return;
 			}
 
 			if (values.length != type.elementCount) {
-				log(String.format(
+				logTypeMismatch(String.format(
 					"Float setter was provided with incorrect number of elements: %d != %d",
 					values.length,
 					type.elementCount
@@ -175,7 +191,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 
 			if (type != PropertyType.Float) {
-				log("Float setter was used with the wrong property type: " + type);
+				logTypeMismatch("Float setter was used with the wrong property type: " + type);
 				return;
 			}
 
@@ -188,7 +204,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 
 			if (type != PropertyType.FVec2) {
-				log("Float setter was used with the wrong property type: " + type);
+				logTypeMismatch("Float setter was used with the wrong property type: " + type);
 				return;
 			}
 
@@ -201,7 +217,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 
 			if (type != PropertyType.FVec3) {
-				log("Float setter was used with the wrong property type: " + type);
+				logTypeMismatch("Float setter was used with the wrong property type: " + type);
 				return;
 			}
 
@@ -214,7 +230,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 
 			if (type != PropertyType.FVec4) {
-				log("Float setter was used with the wrong property type: " + type);
+				logTypeMismatch("Float setter was used with the wrong property type: " + type);
 				return;
 			}
 

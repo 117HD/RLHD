@@ -28,8 +28,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
@@ -38,11 +40,17 @@ import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DefaultSkyColor;
+import rs117.hd.config.MoonPhase;
 import rs117.hd.scene.environments.Environment;
+import rs117.hd.utils.ColorUtils;
+import rs117.hd.utils.ExpressionParser;
+import rs117.hd.utils.ExpressionPredicate;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
+import rs117.hd.utils.VariableSupplier;
 
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
@@ -64,6 +72,25 @@ public class EnvironmentManager {
 
 	@Inject
 	private HdPluginConfig config;
+
+	@Inject
+	private GamevalManager gamevalManager;
+
+	@Inject
+	private TimeOfDay timeOfDay;
+
+	private final Map<Integer, Integer> varbitOverrides = new HashMap<>();
+	private final Map<Integer, Integer> varpOverrides = new HashMap<>();
+	private final Map<String, Integer> varbitConditionVars = new HashMap<>();
+	private final Map<String, Integer> varpConditionVars = new HashMap<>();
+	private final VariableSupplier varbitVariableSupplier = name -> {
+		Integer id = varbitConditionVars.get(name);
+		return id == null ? null : getVarbitValue(id);
+	};
+	private final VariableSupplier varpVariableSupplier = name -> {
+		Integer id = varpConditionVars.get(name);
+		return id == null ? null : getVarpValue(id);
+	};
 
 	private static final float TRANSITION_DURATION = 3; // seconds
 	// distance in tiles to skip transition (e.g. entering cave, teleporting)
@@ -99,6 +126,25 @@ public class EnvironmentManager {
 	public float currentDirectionalStrength = 0f;
 	private float targetDirectionalStrength = 0f;
 
+	// Directional strength while the moon is lighting the scene. Falls back to
+	// directionalStrength when the environment doesn't specify moonDirectionalStrength
+	// (handled in Environment.normalize).
+	private float startMoonDirectionalStrength = 0f;
+	public float currentMoonDirectionalStrength = 0f;
+	private float targetMoonDirectionalStrength = 0f;
+
+	// How much of the moon's light casts shadows. Scales moon shadow visibility only;
+	// the light it removes from the directional term becomes ambient sky-fill.
+	private float startMoonShadowStrength = 1f;
+	public float currentMoonShadowStrength = 1f;
+	private float targetMoonShadowStrength = 1f;
+
+	// Lighting-only floor on the moon's illumination fraction. The visible disk is
+	// unaffected and still renders at its true phase.
+	private float startMinMoonIllumination = 0f;
+	public float currentMinMoonIllumination = 0f;
+	private float targetMinMoonIllumination = 0f;
+
 	private float[] startUnderwaterCausticsColor = new float[] { 0, 0, 0 };
 	public float[] currentUnderwaterCausticsColor = new float[] { 0, 0, 0 };
 	private float[] targetUnderwaterCausticsColor = new float[] { 0, 0, 0 };
@@ -118,6 +164,22 @@ public class EnvironmentManager {
 	private float[] startUnderglowColor = new float[] { 0, 0, 0 };
 	public float[] currentUnderglowColor = new float[] { 0, 0, 0 };
 	private float[] targetUnderglowColor = new float[] { 0, 0, 0 };
+
+	private float[] startMoonColor = new float[] { 0, 0, 0 };
+	public float[] currentMoonColor = new float[] { 0, 0, 0 };
+	private float[] targetMoonColor = new float[] { 0, 0, 0 };
+
+	// Color of the light the moon casts (moonlight). Falls back to moonColor when
+	// the environment doesn't specify moonLightColor (handled in Environment.normalize).
+	private float[] startMoonLightColor = new float[] { 0, 0, 0 };
+	public float[] currentMoonLightColor = new float[] { 0, 0, 0 };
+	private float[] targetMoonLightColor = new float[] { 0, 0, 0 };
+
+	// Color the night sky is tinted toward as the moon rises. Falls back to moonColor
+	// when the environment doesn't specify nightSkyColor (handled in Environment.normalize).
+	private float[] startNightSkyColor = new float[] { 0, 0, 0 };
+	public float[] currentNightSkyColor = new float[] { 0, 0, 0 };
+	private float[] targetNightSkyColor = new float[] { 0, 0, 0 };
 
 	private float startGroundFogStart = 0f;
 	public float currentGroundFogStart = 0f;
@@ -151,6 +213,46 @@ public class EnvironmentManager {
 	public float currentWindCeiling = 0f;
 	private float targetWindCeiling = 0f;
 
+	private float startStarVisibility = 1f;
+	public float currentStarVisibility = 1f;
+	private float targetStarVisibility = 1f;
+
+	private float startMoonVisibility = 1f;
+	public float currentMoonVisibility = 1f;
+	private float targetMoonVisibility = 1f;
+
+	private float startAuroraVisibility = 1f;
+	public float currentAuroraVisibility = 1f;
+	private float targetAuroraVisibility = 1f;
+
+	private float startMoonSizeMult = 1f;
+	public float currentMoonSizeMult = 1f;
+	private float targetMoonSizeMult = 1f;
+
+	private float startNightSkyColorStrength = 1f;
+	public float currentNightSkyColorStrength = 1f;
+	private float targetNightSkyColorStrength = 1f;
+
+	private float startSunStrength = 1f;
+	public float currentSunStrength = 1f;
+	private float targetSunStrength = 1f;
+
+	private float startSunriseSunsetStrength = 1f;
+	public float currentSunriseSunsetStrength = 1f;
+	private float targetSunriseSunsetStrength = 1f;
+
+	private float startSkyColorTakeoverAngle = 40f;
+	public float currentSkyColorTakeoverAngle = 40f;
+	private float targetSkyColorTakeoverAngle = 40f;
+
+	private float startSunlightStrength = 1f;
+	public float currentSunlightStrength = 1f;
+	private float targetSunlightStrength = 1f;
+
+	private float startMinBrightnessBoost = 0f;
+	public float currentMinBrightnessBoost = 0f;
+	private float targetMinBrightnessBoost = 0f;
+
 	private boolean lightningEnabled = false;
 	private boolean forceNextTransition = false;
 
@@ -160,9 +262,16 @@ public class EnvironmentManager {
 	@Nonnull
 	private Environment currentEnvironment = Environment.NONE;
 
+	// Per-frame cache for sampleOutdoorSky: every followDayNight light under the same
+	// resolved environment yields the same sample within a frame
+	private OutdoorSkySample cachedSkySample;
+	private Environment cachedSkySampleEnvironment;
+	private int cachedSkySampleMinBrightness;
+	private int cachedSkySampleFrame = -1;
+
 	public void startUp() {
 		fileWatcher = ENVIRONMENTS_PATH.watch((path, first) -> {
-			try {
+			try (var ignored = gamevalManager.obtainHandle()) {
 				environments = path.loadJson(plugin.getGson(), Environment[].class);
 				if (environments == null)
 					throw new IOException("Empty or invalid: " + path);
@@ -192,6 +301,8 @@ public class EnvironmentManager {
 				for (var env : environments)
 					env.normalize();
 
+				bindConditionVars(ignored);
+
 				clientThread.invoke(() -> {
 					// Force instant transition during development
 					if (!first)
@@ -217,6 +328,9 @@ public class EnvironmentManager {
 	public void reset() {
 		currentEnvironment = Environment.NONE;
 		forceNextTransition = false;
+		cachedSkySample = null;
+		cachedSkySampleEnvironment = null;
+		cachedSkySampleFrame = -1;
 	}
 
 	public void reload() {
@@ -225,6 +339,76 @@ public class EnvironmentManager {
 		startUp();
 		forceNextTransition = true;
 		currentEnvironment = previous;
+	}
+
+	public int getVarbitValue(int id) {
+		Integer override = varbitOverrides.get(id);
+		return override != null ? override : client.getVarbitValue(id);
+	}
+
+	public int getVarpValue(int id) {
+		Integer override = varpOverrides.get(id);
+		return override != null ? override : client.getVarpValue(id);
+	}
+
+	public void setVarbitOverride(int id, int state) {
+		varbitOverrides.put(id, state);
+	}
+
+	public void setVarpOverride(int id, int state) {
+		varpOverrides.put(id, state);
+	}
+
+	public void clearVarbitOverrides() {
+		varbitOverrides.clear();
+	}
+
+	public void clearVarpOverrides() {
+		varpOverrides.clear();
+	}
+
+	public void clearVarOverrides() {
+		clearVarbitOverrides();
+		clearVarpOverrides();
+	}
+
+	private void bindConditionVars(GamevalManager.Handle gamevals) {
+		varbitConditionVars.clear();
+		varpConditionVars.clear();
+		if (environments == null)
+			return;
+
+		for (var env : environments) {
+			bindConditionVars(env.varbitCondition, gamevals.getVarbits(), varbitConditionVars, "varbit");
+			bindConditionVars(env.varpCondition, gamevals.getVarps(), varpConditionVars, "varp");
+		}
+	}
+
+	private void bindConditionVars(
+		ExpressionPredicate condition,
+		Map<String, Integer> gamevals,
+		Map<String, Integer> bindings,
+		String kind
+	) {
+		if (!(condition instanceof ExpressionParser.SerializableExpressionPredicate))
+			return;
+		var expr = ((ExpressionParser.SerializableExpressionPredicate) condition).expression;
+		for (String name : expr.variables) {
+			if (bindings.containsKey(name))
+				continue;
+			Integer id = gamevals.get(name.toUpperCase());
+			if (id == null) {
+				log.error("Unknown {} condition variable '{}'", kind, name, new Throwable());
+				continue;
+			}
+			bindings.put(name, id);
+		}
+	}
+
+	private boolean isConditionSatisfied(Environment environment) {
+		return
+			(environment.varbitCondition == null || environment.varbitCondition.test(varbitVariableSupplier)) &&
+			(environment.varpCondition == null || environment.varpCondition.test(varpVariableSupplier));
 	}
 
 	/**
@@ -249,10 +433,12 @@ public class EnvironmentManager {
 
 		boolean skipTransition = tileChange >= SKIP_TRANSITION_DISTANCE;
 		for (var environment : sceneContext.environments) {
-			if (environment.area.containsPoint(focalPoint)) {
-				changeEnvironment(environment, skipTransition);
-				break;
-			}
+			if (!environment.area.containsPoint(focalPoint))
+				continue;
+			if (!isConditionSatisfied(environment))
+				continue;
+			changeEnvironment(environment, skipTransition);
+			break;
 		}
 
 		updateTargetSkyColor(); // Update every frame, since other plugins may control it
@@ -272,9 +458,15 @@ public class EnvironmentManager {
 			currentAmbientStrength = mix(startAmbientStrength, targetAmbientStrength, t);
 			currentAmbientColor = mix(startAmbientColor, targetAmbientColor, t);
 			currentDirectionalStrength = mix(startDirectionalStrength, targetDirectionalStrength, t);
+			currentMoonDirectionalStrength = mix(startMoonDirectionalStrength, targetMoonDirectionalStrength, t);
+			currentMoonShadowStrength = mix(startMoonShadowStrength, targetMoonShadowStrength, t);
+			currentMinMoonIllumination = mix(startMinMoonIllumination, targetMinMoonIllumination, t);
 			currentDirectionalColor = mix(startDirectionalColor, targetDirectionalColor, t);
 			currentUnderglowStrength = mix(startUnderglowStrength, targetUnderglowStrength, t);
 			currentUnderglowColor = mix(startUnderglowColor, targetUnderglowColor, t);
+			currentMoonColor = mix(startMoonColor, targetMoonColor, t);
+			currentMoonLightColor = mix(startMoonLightColor, targetMoonLightColor, t);
+			currentNightSkyColor = mix(startNightSkyColor, targetNightSkyColor, t);
 			currentGroundFogStart = mix(startGroundFogStart, targetGroundFogStart, t);
 			currentGroundFogEnd = mix(startGroundFogEnd, targetGroundFogEnd, t);
 			currentGroundFogOpacity = mix(startGroundFogOpacity, targetGroundFogOpacity, t);
@@ -286,6 +478,16 @@ public class EnvironmentManager {
 			currentWindSpeed = mix(startWindSpeed, targetWindSpeed, t);
 			currentWindStrength = mix(startWindStrength, targetWindStrength, t);
 			currentWindCeiling = mix(startWindCeiling, targetWindCeiling, t);
+			currentStarVisibility = mix(startStarVisibility, targetStarVisibility, t);
+			currentMoonVisibility = mix(startMoonVisibility, targetMoonVisibility, t);
+			currentAuroraVisibility = mix(startAuroraVisibility, targetAuroraVisibility, t);
+			currentMoonSizeMult = mix(startMoonSizeMult, targetMoonSizeMult, t);
+			currentNightSkyColorStrength = mix(startNightSkyColorStrength, targetNightSkyColorStrength, t);
+			currentSunStrength = mix(startSunStrength, targetSunStrength, t);
+			currentSunriseSunsetStrength = mix(startSunriseSunsetStrength, targetSunriseSunsetStrength, t);
+			currentSkyColorTakeoverAngle = mix(startSkyColorTakeoverAngle, targetSkyColorTakeoverAngle, t);
+			currentSunlightStrength = mix(startSunlightStrength, targetSunlightStrength, t);
+			currentMinBrightnessBoost = mix(startMinBrightnessBoost, targetMinBrightnessBoost, t);
 		}
 
 		updateLightning();
@@ -325,9 +527,15 @@ public class EnvironmentManager {
 		startAmbientStrength = currentAmbientStrength;
 		startAmbientColor = currentAmbientColor;
 		startDirectionalStrength = currentDirectionalStrength;
+		startMoonDirectionalStrength = currentMoonDirectionalStrength;
+		startMoonShadowStrength = currentMoonShadowStrength;
+		startMinMoonIllumination = currentMinMoonIllumination;
 		startDirectionalColor = currentDirectionalColor;
 		startUnderglowStrength = currentUnderglowStrength;
 		startUnderglowColor = currentUnderglowColor;
+		startMoonColor = currentMoonColor;
+		startMoonLightColor = currentMoonLightColor;
+		startNightSkyColor = currentNightSkyColor;
 		startGroundFogStart = currentGroundFogStart;
 		startGroundFogEnd = currentGroundFogEnd;
 		startGroundFogOpacity = currentGroundFogOpacity;
@@ -337,6 +545,16 @@ public class EnvironmentManager {
 		startWindSpeed = currentWindSpeed;
 		startWindStrength = currentWindStrength;
 		startWindCeiling = currentWindCeiling;
+		startStarVisibility = currentStarVisibility;
+		startMoonVisibility = currentMoonVisibility;
+		startAuroraVisibility = currentAuroraVisibility;
+		startMoonSizeMult = currentMoonSizeMult;
+		startNightSkyColorStrength = currentNightSkyColorStrength;
+		startSunStrength = currentSunStrength;
+		startSunriseSunsetStrength = currentSunriseSunsetStrength;
+		startSkyColorTakeoverAngle = currentSkyColorTakeoverAngle;
+		startSunlightStrength = currentSunlightStrength;
+		startMinBrightnessBoost = currentMinBrightnessBoost;
 		for (int i = 0; i < 2; i++)
 			startSunAngles[i] = mod(currentSunAngles[i], TWO_PI);
 
@@ -360,15 +578,31 @@ public class EnvironmentManager {
 		targetAmbientStrength = env.ambientStrength;
 		targetAmbientColor = env.ambientColor;
 		targetDirectionalStrength = env.directionalStrength;
+		targetMoonDirectionalStrength = env.moonDirectionalStrength;
+		targetMoonShadowStrength = env.moonShadowStrength;
+		targetMinMoonIllumination = env.minMoonIllumination;
 		targetDirectionalColor = env.directionalColor;
 		targetUnderglowStrength = env.underglowStrength;
 		targetUnderglowColor = env.underglowColor;
+		targetMoonColor = env.moonColor;
+		targetMoonLightColor = env.moonLightColor;
+		targetNightSkyColor = env.nightSkyColor;
+		targetNightSkyColorStrength = env.nightSkyColorStrength;
 		targetUnderwaterCausticsColor = env.waterCausticsColor;
 		targetUnderwaterCausticsStrength = env.waterCausticsStrength;
 		targetWindAngle = env.windAngle;
 		targetWindSpeed = env.windSpeed;
 		targetWindStrength = env.windStrength;
 		targetWindCeiling = env.windCeiling;
+		targetStarVisibility = env.starVisibility;
+		targetMoonVisibility = env.moonVisibility;
+		targetAuroraVisibility = env.auroraVisibility;
+		targetMoonSizeMult = env.moonSizeMult;
+		targetSunStrength = env.sunStrength;
+		targetSunriseSunsetStrength = env.sunriseSunsetStrength;
+		targetSkyColorTakeoverAngle = env.skyColorTakeoverAngle;
+		targetSunlightStrength = env.sunlightStrength;
+		targetMinBrightnessBoost = env.minBrightnessBoost;
 
 		// Prevent transitions from taking the long way around
 		for (int i = 0; i < 2; i++) {
@@ -381,8 +615,8 @@ public class EnvironmentManager {
 	public void updateTargetSkyColor() {
 		Environment env = getCurrentEnvironment();
 
-		if (env.fogColor == null || env.allowSkyOverride && config.overrideSky()) {
-			DefaultSkyColor sky = config.defaultSkyColor();
+		if (env.fogColor == null || env.allowSkyOverride && plugin.configOverrideSky) {
+			DefaultSkyColor sky = plugin.configDefaultSkyColor;
 			targetFogColor = sky.getRgb(client);
 			if (sky == DefaultSkyColor.OSRS)
 				sky = DefaultSkyColor.DEFAULT;
@@ -482,6 +716,55 @@ public class EnvironmentManager {
 		return currentEnvironment;
 	}
 
+	/**
+	 * The day & night cycle mode forced by the current environment, or null to use
+	 * the player's configured mode.
+	 */
+	@Nullable
+	public DaylightCycle getForcedCycleMode() {
+		return getCurrentEnvironment().cycleMode;
+	}
+
+	/**
+	 * The moon phase forced by the current environment, or null to use the player's configured
+	 * phase. Read directly (not blended) so the phase snaps to the new environment rather than
+	 * morphing across a transition — matching how {@link #getForcedCycleMode()} is handled.
+	 */
+	@Nullable
+	public MoonPhase getForcedMoonPhase() {
+		return getCurrentEnvironment().forceMoonPhase;
+	}
+
+	/**
+	 * Whether the current environment forces the moon to be shown regardless of the player's
+	 * "Moon" config toggle, for cutscenes and set pieces that require it. Read directly (not
+	 * blended) so it applies immediately on entering the area, matching how
+	 * {@link #getForcedCycleMode()} is handled.
+	 */
+	public boolean forceMoonActive() {
+		return getCurrentEnvironment().forceMoonActive;
+	}
+
+	/**
+	 * The fixed sun angles {azimuth, altitude} in radians forced by the current
+	 * environment, or null for none. Read directly (not blended) so the locked
+	 * sun snaps to the new environment rather than swinging across the sky during
+	 * a transition - matching how {@link #getForcedCycleMode()} is handled.
+	 */
+	@Nullable
+	public float[] getForcedFixedSunAngles() {
+		return getCurrentEnvironment().fixedSunAngles;
+	}
+
+	/**
+	 * The fixed moon angles {azimuth, altitude} in radians forced by the current
+	 * environment, or null for none. See {@link #getForcedFixedSunAngles()}.
+	 */
+	@Nullable
+	public float[] getForcedFixedMoonAngles() {
+		return getCurrentEnvironment().fixedMoonAngles;
+	}
+
 	private Environment getOverworldEnvironment() {
 		switch (plugin.configSeasonalTheme) {
 			case AUTUMN:
@@ -493,11 +776,137 @@ public class EnvironmentManager {
 		}
 	}
 
+	public boolean isOverworld() {
+		return currentEnvironment.isOverworld;
+	}
+
 	public boolean isUnderwater() {
 		return currentEnvironment.isUnderwater;
 	}
 
 	public boolean allowRoofShadows() {
 		return currentEnvironment.allowRoofShadows;
+	}
+
+	public boolean hideVanillaSkyboxes() {
+		return currentEnvironment.hideVanillaSkyboxes;
+	}
+
+	public static final int OUTDOOR_WORLD_Y_OFFSET = 3602;
+
+	public int[] getOutdoorWorldPos(int[] worldPos) {
+		return new int[] {
+			worldPos[0],
+			worldPos[1] - OUTDOOR_WORLD_Y_OFFSET,
+			0
+		};
+	}
+
+	@Nonnull
+	public Environment getOverworldEnvironmentForTheme() {
+		return getOverworldEnvironment();
+	}
+
+	/**
+	 * Find the environment whose area contains {@code worldPos}.
+	 * When {@code preferOverworld} is true, returns the first matching overworld environment,
+	 * otherwise the first match of any kind. Falls back to the seasonal overworld or DEFAULT.
+	 */
+	@Nonnull
+	public Environment getEnvironmentAt(int[] worldPos, boolean preferOverworld) {
+		Environment anyMatch = null;
+		Environment overworldMatch = null;
+
+		if (environments != null) {
+			for (var environment : environments) {
+				if (environment == Environment.DEFAULT)
+					continue;
+				if (!environment.area.containsPoint(worldPos))
+					continue;
+				if (anyMatch == null)
+					anyMatch = environment;
+				if (environment.isOverworld)
+					overworldMatch = environment;
+			}
+		}
+
+		if (preferOverworld) {
+			if (overworldMatch != null)
+				return overworldMatch;
+			return getOverworldEnvironment();
+		}
+
+		if (anyMatch != null)
+			return anyMatch;
+		return Environment.DEFAULT;
+	}
+
+	public static final class OutdoorSkySample {
+		public final float[] horizonLinear;
+		public final float[] noonHorizonLinear;
+		public final float brightnessMultiplier;
+
+		public OutdoorSkySample(float[] horizonLinear, float[] noonHorizonLinear, float brightnessMultiplier) {
+			this.horizonLinear = horizonLinear;
+			this.noonHorizonLinear = noonHorizonLinear;
+			this.brightnessMultiplier = brightnessMultiplier;
+		}
+	}
+
+	/**
+	 * Sample outdoor sky/fog for a world position, using the overworld environment above {@code worldPos}.
+	 */
+	@Nonnull
+	public OutdoorSkySample sampleOutdoorSky(int[] worldPos, int minimumBrightness) {
+		Environment env = getEnvironmentAt(getOutdoorWorldPos(worldPos), true);
+
+		// The sky color stack below only depends on the resolved environment, the current
+		// frame's time-of-day state and the minimum brightness, so reuse the sample for
+		// every light that resolves to the same environment within a frame
+		int frame = plugin.frame;
+		if (env == cachedSkySampleEnvironment && frame == cachedSkySampleFrame && minimumBrightness == cachedSkySampleMinBrightness)
+			return cachedSkySample;
+
+		float[] regionalFogSrgb = resolveOutdoorRegionalFogSrgb(env);
+
+		float[][] skyGradientColors = timeOfDay.getSkyGradientColors(
+			regionalFogSrgb,
+			env.sunStrength,
+			env.sunriseSunsetStrength,
+			env.skyColorTakeoverAngle
+		);
+		float[] horizonLinear = ColorUtils.srgbToLinear(skyGradientColors[1]);
+		float[] noonHorizonLinear = ColorUtils.srgbToLinear(
+			timeOfDay.getReferenceHorizonColor(regionalFogSrgb)
+		);
+		float brightnessMultiplier = timeOfDay.getDynamicBrightnessMultiplier(minimumBrightness);
+
+		OutdoorSkySample sample = new OutdoorSkySample(horizonLinear, noonHorizonLinear, brightnessMultiplier);
+		cachedSkySample = sample;
+		cachedSkySampleEnvironment = env;
+		cachedSkySampleFrame = frame;
+		cachedSkySampleMinBrightness = minimumBrightness;
+		return sample;
+	}
+
+	/**
+	 * Regional fog for outdoor sky sampling. Never uses the current indoor/cave fog -
+	 * that caused dawn to blend toward static cave colors while dusk still used procedural twilight.
+	 */
+	private float[] resolveOutdoorRegionalFogSrgb(Environment env) {
+		if (env.fogColor != null)
+			return ColorUtils.linearToSrgb(env.fogColor);
+
+		if (env.allowSkyOverride) {
+			DefaultSkyColor sky = config.defaultSkyColor();
+			float[] regionalFogSrgb = sky.getRgb(client);
+			if (sky == DefaultSkyColor.OSRS)
+				regionalFogSrgb = DefaultSkyColor.DEFAULT.getRgb(client);
+			return regionalFogSrgb;
+		}
+
+		Environment themeEnv = getOverworldEnvironmentForTheme();
+		float[] themeFog = themeEnv.fogColor != null ? themeEnv.fogColor : Environment.DEFAULT.fogColor;
+		return ColorUtils.linearToSrgb(themeFog);
 	}
 }

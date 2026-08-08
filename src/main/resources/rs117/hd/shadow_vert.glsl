@@ -35,10 +35,12 @@ layout (location = 0) in vec3 vPosition;
 
 #if ZONE_RENDERER
     layout (location = 1) in vec4 vUv;
+    layout (location = 2) in vec4 vNormal;
     layout (location = 3) in int vTextureFaceIdx;
     layout (location = 6) in int vWorldViewId;
     layout (location = 7) in ivec2 vSceneBase;
 
+#if !TERRAIN_ONLY_PASS
     uniform isamplerBuffer textureFaces;
 
     #if SHADOW_MODE == SHADOW_MODE_DETAILED
@@ -49,71 +51,74 @@ layout (location = 0) in vec3 vPosition;
     #if SHADOW_TRANSPARENCY
         out float fOpacity;
     #endif
+#endif
 
     void main() {
-        int vertex = gl_VertexID % 3;
-
         int faceIdx = vTextureFaceIdx & 0x7FFFFFFF;
         bool windingReversed = vTextureFaceIdx < 0;
-        if (windingReversed)
-            vertex = 2 - vertex;
 
-        int alphaBiasHsl = texelFetch(textureFaces, faceIdx)[vertex];
-        int materialData = texelFetch(textureFaces, faceIdx + 1)[vertex];
-        int terrainData = texelFetch(textureFaces, faceIdx + 2)[vertex];
+        #if TERRAIN_ONLY_PASS
+            bool isShadowDisabled = false;
+        #else
+            int vertex = gl_VertexID % 3;
+            if (windingReversed)
+                vertex = 2 - vertex;
 
-        int waterTypeIndex = terrainData >> 3 & 0xFF;
-        float opacity = 1 - (alphaBiasHsl >> 24 & 0xFF) / float(0xFF);
+            int alphaBiasHsl = texelFetch(textureFaces, faceIdx)[vertex];
+            int materialData = texelFetch(textureFaces, faceIdx + 1)[vertex];
 
-        float opacityThreshold = float(materialData >> MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT & 0x3F) / 0x3F;
-        if (opacityThreshold == 0)
-            opacityThreshold = SHADOW_DEFAULT_OPACITY_THRESHOLD;
+            float opacity = 1 - (alphaBiasHsl >> 24 & 0xFF) / float(0xFF);
 
-        bool isTransparent = opacity <= opacityThreshold;
-        bool isGroundPlaneTile = (terrainData & 0xF) == 1; // plane == 0 && isTerrain
-        bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
+            float opacityThreshold = float(materialData >> MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT & 0x3F) / 0x3F;
+            if (opacityThreshold == 0)
+                opacityThreshold = SHADOW_DEFAULT_OPACITY_THRESHOLD;
 
-        bool isShadowDisabled =
-            isGroundPlaneTile ||
-            isWaterSurfaceOrUnderwaterTile ||
-            isTransparent;
+            bool isShadowDisabled = opacity <= opacityThreshold;
+
+            Material material = getMaterial(materialData >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
+            #if SHADOW_MODE == SHADOW_MODE_DETAILED
+                if (!isShadowDisabled) {
+                    fUvw = vec4(vUv.xy, material.colorMap, material.shadowAlphaMap);
+                    // Scroll UVs
+                    fUvw.xy += material.scrollDuration * elapsedTime;
+                    // Scale from the center
+                    fUvw.xy = .5 + (fUvw.xy - .5) * material.textureScale.xy;
+                } else {
+                    // All outputs must be written for Mac compatibility, even if unused
+                    fUvw = vec4(0);
+                }
+                fMaterialData = materialData;
+            #endif
+
+            #if SHADOW_TRANSPARENCY
+                fOpacity = opacity;
+            #endif
+        #endif
 
         if (!isShadowDisabled && vWorldViewId > 0) {
             ivec4 tint = getWorldViewTint(vWorldViewId);
             isShadowDisabled = tint.w > 0;
         }
 
-        Material material = getMaterial(materialData >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
-        #if SHADOW_MODE == SHADOW_MODE_DETAILED
-            if (!isShadowDisabled) {
-                fUvw = vec4(vUv.xy, material.colorMap, material.shadowAlphaMap);
-                // Scroll UVs
-                fUvw.xy += material.scrollDuration * elapsedTime;
-                // Scale from the center
-                fUvw.xy = .5 + (fUvw.xy - .5) * material.textureScale.xy;
-            } else {
-                // All outputs must be written for Mac compatibility, even if unused
-                fUvw = vec4(0);
-            }
-            fMaterialData = materialData;
-        #endif
-
         int shouldCastShadow = isShadowDisabled ? 0 : 1;
 
         vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
         vec3 worldPosition = sceneOffset + vPosition;
-        if (vWorldViewId != -1) {
+        if (vWorldViewId != -1 && !isShadowDisabled) {
             mat4x3 worldViewProjection = mat4x3(getWorldViewProjection(vWorldViewId));
             worldPosition = worldViewProjection * vec4(worldPosition, 1.0);;
         }
 
-        #if SHADOW_TRANSPARENCY
-            fOpacity = opacity;
+        #if TERRAIN_ONLY_PASS
+            if (!isShadowDisabled)
+                worldPosition += vNormal.xyz * 0.0002 * (windingReversed ? 1 : -1);
         #endif
 
         vec4 clipPosition = lightProjectionMatrix * vec4(worldPosition, shouldCastShadow);
-        if (getMaterialHasTransparency(material)) // bias face if it has transparency to avoid self-shadowing
-            clipPosition.z += SHADOW_TRANSPARENCY_BIAS;
+        #if !TERRAIN_ONLY_PASS
+            if (getMaterialHasTransparency(material)) // bias face if it has transparency to avoid self-shadowing
+                clipPosition.z += SHADOW_TRANSPARENCY_BIAS;
+        #endif
         gl_Position = clipPosition;
     }
 #else
@@ -122,20 +127,22 @@ layout (location = 0) in vec3 vPosition;
     layout (location = 4) in int vMaterialData;
     layout (location = 5) in int vTerrainData;
 
-    #if SHADOW_MODE == SHADOW_MODE_DETAILED
-        // Pass to geometry shader
-        flat out vec3 gPosition;
-        flat out vec3 gUv;
-        flat out int gMaterialData;
-        flat out int gCastShadow;
-        flat out int gWorldViewId;
-        #if SHADOW_TRANSPARENCY
-            flat out float gOpacity;
-        #endif
-    #else
-        #if SHADOW_TRANSPARENCY
-            // Pass to fragment shader
-            out float fOpacity;
+    #if !TERRAIN_ONLY_PASS
+        #if SHADOW_MODE == SHADOW_MODE_DETAILED
+            // Pass to geometry shader
+            flat out vec3 gPosition;
+            flat out vec3 gUv;
+            flat out int gMaterialData;
+            flat out int gCastShadow;
+            flat out int gWorldViewId;
+            #if SHADOW_TRANSPARENCY
+                flat out float gOpacity;
+            #endif
+        #else
+            #if SHADOW_TRANSPARENCY
+                // Pass to fragment shader
+                out float fOpacity;
+            #endif
         #endif
     #endif
 
@@ -151,14 +158,28 @@ layout (location = 0) in vec3 vPosition;
         bool isGroundPlaneTile = (vTerrainData & 0xF) == 1; // plane == 0 && isTerrain
         bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
 
-        bool isShadowDisabled =
-            isGroundPlaneTile ||
-            isWaterSurfaceOrUnderwaterTile ||
-            isTransparent;
+        #if TERRAIN_ONLY_PASS
+            // Terrain-only pass: only ground plane tiles cast shadows
+            bool isShadowDisabled =
+                !isGroundPlaneTile ||
+                isWaterSurfaceOrUnderwaterTile;
+        #elif TERRAIN_SHADOWS
+            // Main pass with terrain shadows: terrain goes to its own map
+            bool isShadowDisabled =
+                isGroundPlaneTile ||
+                isWaterSurfaceOrUnderwaterTile ||
+                isTransparent;
+        #else
+            // Exclude ground plane tiles from casting shadows (original behavior)
+            bool isShadowDisabled =
+                isGroundPlaneTile ||
+                isWaterSurfaceOrUnderwaterTile ||
+                isTransparent;
+        #endif
 
         int shouldCastShadow = isShadowDisabled ? 0 : 1;
 
-        #if SHADOW_MODE == SHADOW_MODE_DETAILED
+        #if SHADOW_MODE == SHADOW_MODE_DETAILED && !TERRAIN_ONLY_PASS
             gPosition = vPosition;
             gUv = vUv.xyz;
             gMaterialData = vMaterialData;
@@ -168,7 +189,7 @@ layout (location = 0) in vec3 vPosition;
             #endif
         #else
             gl_Position = lightProjectionMatrix * vec4(vPosition, shouldCastShadow);
-            #if SHADOW_TRANSPARENCY
+            #if SHADOW_TRANSPARENCY && !TERRAIN_ONLY_PASS
                 fOpacity = opacity;
             #endif
         #endif

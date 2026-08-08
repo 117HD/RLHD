@@ -47,6 +47,7 @@ import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
+import rs117.hd.scene.TimeOfDay;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -108,6 +109,9 @@ public class LegacyRenderer implements Renderer {
 
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
+
+	@Inject
+	private TimeOfDay timeOfDay;
 
 	@Inject
 	private LegacySceneUploader sceneUploader;
@@ -683,6 +687,13 @@ public class LegacyRenderer implements Renderer {
 				plugin.invViewProjMatrix = Mat4.inverse(plugin.viewProjMatrix);
 
 				if (sceneContext.scene == scene) {
+					// Advance the time-of-day clock and refresh the per-frame astronomy
+					// snapshot before the first TimeOfDay usage of the frame. The
+					// EnvironmentManager/LightManager updates below read its getters, which
+					// dereference the instant pinned here, so this renderer has to drive
+					// update() the same way ZoneRenderer does.
+					timeOfDay.update();
+
 					try {
 						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
 						environmentManager.update(sceneContext);
@@ -698,10 +709,12 @@ public class LegacyRenderer implements Renderer {
 					}
 				}
 
+				plugin.uboGlobal.viewportSize.set(plugin.sceneViewport);
 				plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
 				plugin.uboGlobal.viewMatrix.set(plugin.viewMatrix);
 				plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);
 				plugin.uboGlobal.invProjectionMatrix.set(plugin.invViewProjMatrix);
+				plugin.uboGlobal.orthographicProjection.set(plugin.orthographicProjection ? 1 : 0);
 				plugin.uboGlobal.pointLightsCount.set(sceneContext.numVisibleLights);
 				plugin.uboGlobal.upload();
 			}
@@ -1131,6 +1144,7 @@ public class LegacyRenderer implements Renderer {
 				frameTimer.end(Timer.RENDER_SHADOWS);
 			}
 
+			plugin.uboGlobal.orthographicProjection.set(plugin.orthographicProjection ? 1 : 0);
 			plugin.uboGlobal.upload();
 			sceneProgram.use();
 
