@@ -2749,7 +2749,8 @@ public class SceneUploader implements AutoCloseable {
 		int s = (color >> 7) & 0x7;
 		int l = color & 0x7F;
 
-		float colorAdjust = 10f - l + (l < 3 ? 0f : (l - 3) * 3f);
+		
+		float colorAdjust = 17f + (l * 1.5f);
 		float len = nx * nx + ny * ny + nz * nz;
 
 		if (len > 0f) {
