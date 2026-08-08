@@ -20,6 +20,7 @@ import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.tile_overrides.TileOverride;
+import rs117.hd.scene.tile_overrides.TileOverrideVariables;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -228,6 +229,18 @@ public class TileOverrideManager {
 
 	@Nonnull
 	public TileOverride getOverride(SceneContext sceneContext, @Nonnull Tile tile, @Nonnull int[] worldPos, int... ids) {
+		final var vars = SceneContext.TILE_OVERRIDE_VARIABLES.get();
+		try {
+			return getOverride(sceneContext, vars.setTile(tile), worldPos, ids);
+		}
+		finally {
+			vars.setTile(null); // Avoid accidentally keeping the old scene in memory
+		}
+	}
+
+	@Nonnull
+	public TileOverride getOverride(SceneContext sceneContext, TileOverrideVariables vars, @Nonnull int[] worldPos, int... ids) {
+		final Tile tile = vars.getTile();
 		if (ids.length == 0) {
 			var pos = tile.getSceneLocation();
 			int x = pos.getX() + sceneContext.sceneOffset;
@@ -244,11 +257,7 @@ public class TileOverrideManager {
 		if (override.isConstant())
 			return override;
 
-		final var vars = SceneContext.TILE_OVERRIDE_VARIABLES.get();
-		vars.setTile(tile);
-		TileOverride replacement = override.resolveReplacements(vars);
-		vars.setTile(null); // Avoid accidentally keeping the old scene in memory
-		return replacement;
+		return override.resolveReplacements(vars);
 	}
 
 	@Nonnull
