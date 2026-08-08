@@ -124,6 +124,7 @@ public class DeveloperTools implements KeyListener {
 			"<col=006600>[117 HD] " + (highlightModelOverridesEnabled ? "Enabled" : "Disabled") + " Model Override Highlighter",
 			"117 HD"
 		));
+		plugin.recompilePrograms();
 	}
 
 	@Subscribe

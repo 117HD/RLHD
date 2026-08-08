@@ -35,8 +35,6 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public Property underglowColor = addProperty(PropertyType.FVec3, "underglowColor");
 	public Property underglowStrength = addProperty(PropertyType.Float, "underglowStrength");
 
-	public Property highlightModelOverrides = addProperty(PropertyType.Int, "highlightModelOverrides");
-
 	public Property useFog = addProperty(PropertyType.Int, "useFog");
 	public Property fogDepth = addProperty(PropertyType.Float, "fogDepth");
 	public Property fogColor = addProperty(PropertyType.FVec3, "fogColor");

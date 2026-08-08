@@ -51,7 +51,6 @@ import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.ColorUtils;
-import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
@@ -94,9 +93,6 @@ public class LegacyRenderer implements Renderer {
 
 	@Inject
 	private HdPluginConfig config;
-
-	@Inject
-	private DeveloperTools developerTools;
 
 	@Inject
 	private OpenCLManager clManager;
@@ -1003,7 +999,6 @@ public class LegacyRenderer implements Renderer {
 					break;
 			}
 			fogDepth *= min(plugin.getDrawDistance(), 90) / 10.f;
-			plugin.uboGlobal.highlightModelOverrides.set(developerTools.isHighlightModelOverridesEnabled());
 			plugin.uboGlobal.useFog.set(fogDepth > 0 ? 1 : 0);
 			plugin.uboGlobal.fogDepth.set(fogDepth);
 			plugin.uboGlobal.fogColor.set(fogColor);

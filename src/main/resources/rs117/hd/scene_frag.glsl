@@ -473,8 +473,8 @@ void main() {
             sampleUnderwater(outputColor.rgb, waterType, waterDepth, lightDotNormals);
         }
 
-    #if DEVELOPMENT
-        if(!isTerrain && highlightModelOverrides == 1 && (combinedMaterialData >> MATERIAL_FLAG_HIGHLIGHT_MODELS_WITHOUT_OVERRIDE & 1) == 1) {
+    #if HIGHLIGHT
+        if(!isTerrain && (combinedMaterialData >> MATERIAL_FLAG_HIGHLIGHT_MODELS_WITHOUT_OVERRIDE & 1) == 1) {
             float mask = checkerboard(IN.position + vec3(elapsedTime * 50.0), 16.0);
             float str = sin(((mod(elapsedTime, 2.5)) / 2.5) * PI) * 0.5;
 
