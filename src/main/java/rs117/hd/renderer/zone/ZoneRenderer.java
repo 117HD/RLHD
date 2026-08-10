@@ -105,8 +105,7 @@ public class ZoneRenderer implements Renderer {
 	private int customSkyboxTextureId;
 	private int customSkyboxCubemapTextureId;
 	private boolean loadedSkyboxIsCubemap;
-	private rs117.hd.config.SkyboxTheme loadedSkyboxTheme = rs117.hd.config.SkyboxTheme.NONE;
-	private String loadedCustomSkyboxName = "";
+	private String loadedCustomSkyboxName;
 	private int lastCameraYaw = -1;
 	private float continuousSkyboxYaw = 0f;
 
@@ -781,16 +780,12 @@ public class ZoneRenderer implements Renderer {
 
 		// --- DYNAMIC SKYBOX THEME CONFIGURATION TRACKER ---
 		rs117.hd.config.SkyboxTheme currentTheme = config.selectedSkyboxTheme();
-		boolean hasActiveSkyboxTheme = currentTheme != rs117.hd.config.SkyboxTheme.NONE;
+		boolean hasActiveSkyboxTheme = currentTheme == rs117.hd.config.SkyboxTheme.CUSTOM;
 		String currentCustomSkyboxName = config.customSkyboxName();
 
 		if (hasActiveSkyboxTheme && environmentManager.isOverworld()) {
-			boolean themeChanged = currentTheme != loadedSkyboxTheme;
-			boolean customNameChanged = currentTheme == rs117.hd.config.SkyboxTheme.CUSTOM
-				&& !currentCustomSkyboxName.equals(loadedCustomSkyboxName);
-
-			// INTERCEPT: Check if the user changed the dropdown selection or custom name mid-game
-			if (themeChanged || customNameChanged) {
+			// INTERCEPT: Check if the user changed the custom skybox name mid-game
+			if (!currentCustomSkyboxName.equals(loadedCustomSkyboxName)) {
 				// Free the old texture handles from GPU memory if they exist
 				if (customSkyboxTextureId != 0) {
 					glDeleteTextures(customSkyboxTextureId);
@@ -802,14 +797,7 @@ public class ZoneRenderer implements Renderer {
 				}
 				loadedSkyboxIsCubemap = false;
 
-				if (currentTheme == rs117.hd.config.SkyboxTheme.CUSTOM) {
-					loadCustomSkybox(currentCustomSkyboxName);
-				} else {
-					// Stream the new asset path specified by the active built-in enum selection
-					customSkyboxTextureId = loadSkyboxTexture(currentTheme.getResourcePath());
-				}
-
-				loadedSkyboxTheme = currentTheme;
+				loadCustomSkybox(currentCustomSkyboxName);
 				loadedCustomSkyboxName = currentCustomSkyboxName;
 			}
 
@@ -1436,20 +1424,6 @@ public class ZoneRenderer implements Renderer {
 		}
 		buffer.flip();
 		return buffer;
-	}
-
-	private int loadSkyboxTexture(String resourcePath) {
-		try (java.io.InputStream is = getClass().getResourceAsStream(resourcePath)) {
-			if (is == null) {
-				log.error("Could not find built-in skybox resource at: " + resourcePath);
-				return 0;
-			}
-
-			return uploadEquirectTexture(javax.imageio.ImageIO.read(is));
-		} catch (Exception e) {
-			log.error("Failed to load built-in skybox texture from resources.", e);
-			return 0;
-		}
 	}
 
 	private int loadSkyboxTexture(java.awt.image.BufferedImage image) {

@@ -818,7 +818,7 @@ public interface HdPluginConfig extends Config
 	)
 	default SkyboxTheme selectedSkyboxTheme()
 	{
-		return SkyboxTheme.PARTLY_CLOUDY;
+		return SkyboxTheme.NONE;
 	}
 
 	String KEY_CUSTOM_SKYBOX_NAME = "customSkyboxName";
