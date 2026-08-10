@@ -1,4 +1,4 @@
-package rs117.hd.scene.customskybox;
+package rs117.hd.scene;
 
 public class CustomSkyboxEntry {
 	public String name;

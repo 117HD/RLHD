@@ -798,10 +798,10 @@ public interface HdPluginConfig extends Config
 	default boolean pohThemeEnvironments() { return true; }
 
 
-	/*====== 3D Skybox settings ======*/
+	/*====== Skybox settings ======*/
 
 	@ConfigSection(
-		name = "3D Skybox",
+		name = "Skybox",
 		description = "Settings for high-resolution 3D panoramic skybox rendering templates.",
 		position = 4,
 		closedByDefault = true
@@ -820,19 +820,24 @@ public interface HdPluginConfig extends Config
 	{
 		return SkyboxTheme.NONE;
 	}
+	@ConfigItem(keyName = KEY_SELECTED_SKYBOX_THEME, hidden = true, name = "", description = "")
+	void selectedSkyboxTheme(SkyboxTheme theme);
 
 	String KEY_CUSTOM_SKYBOX_NAME = "customSkyboxName";
 	@ConfigItem(
 		keyName = KEY_CUSTOM_SKYBOX_NAME,
 		name = "Custom Skybox Name",
 		description = "When 'Skybox Style' is set to Custom, the skybox to use.<br>" +
-			"Drop an image into .runelite/117hd/custom-skyboxes/ and enter its filename<br>" +
-			"(without extension) here, or add a manifest.json there for cubemaps/multiple skies.<br>" +
+			"Drop an image into .runelite/117hd/custom-skyboxes/ and enter its filename here<br>" +
+			"(with or without its file extension), or add a manifest.json there for<br>" +
+			"cubemaps/multiple skies.<br>" +
 			"In-game commands: ::117hd skybox list, ::117hd skybox cycle, ::117hd skybox open.",
 		position = 1,
 		section = skyboxSettings
 	)
 	default String customSkyboxName() { return ""; }
+	@ConfigItem(keyName = KEY_CUSTOM_SKYBOX_NAME, hidden = true, name = "", description = "")
+	void customSkyboxName(String name);
 
 
 	/*====== Miscellaneous settings ======*/

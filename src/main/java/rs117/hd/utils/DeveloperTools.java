@@ -9,7 +9,6 @@ import net.runelite.api.Client;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
-import net.runelite.client.config.ConfigManager;
 import net.runelite.client.config.Keybind;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
@@ -17,6 +16,7 @@ import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.config.SkyboxTheme;
 import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
@@ -55,9 +55,6 @@ public class DeveloperTools implements KeyListener {
 
 	@Inject
 	private KeyManager keyManager;
-
-	@Inject
-	private ConfigManager configManager;
 
 	@Inject
 	private HdPlugin plugin;
@@ -216,8 +213,8 @@ public class DeveloperTools implements KeyListener {
 				}
 				int index = names.indexOf(config.customSkyboxName());
 				String next = names.get((index + 1) % names.size());
-				configManager.setConfiguration(HdPluginConfig.CONFIG_GROUP, HdPluginConfig.KEY_CUSTOM_SKYBOX_NAME, next);
-				configManager.setConfiguration(HdPluginConfig.CONFIG_GROUP, HdPluginConfig.KEY_SELECTED_SKYBOX_THEME, "CUSTOM");
+				config.customSkyboxName(next);
+				config.selectedSkyboxTheme(SkyboxTheme.CUSTOM);
 				sendChatMessage("Custom skybox set to: " + next);
 				break;
 			case "open":

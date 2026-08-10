@@ -28,6 +28,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -176,16 +177,57 @@ public class TextureManager {
 
 	@Nullable
 	public BufferedImage loadTexture(String filename) {
-		for (String ext : SUPPORTED_IMAGE_EXTENSIONS) {
-			ResourcePath path = TEXTURE_PATH.resolve(filename + "." + ext);
+		return loadImage(TEXTURE_PATH, filename, SUPPORTED_IMAGE_EXTENSIONS);
+	}
+
+	/**
+	 * Resolves {@code filename} against {@code basePath} and loads it as an image, tolerating
+	 * filenames given both with and without an extension: the filename is tried as-is first (in
+	 * case it already ends in a valid extension), then with each of {@code extensions} appended.
+	 */
+	@Nullable
+	public BufferedImage loadImage(ResourcePath basePath, String filename, String[] extensions) {
+		try {
+			return basePath.resolve(filename).loadImage();
+		} catch (Exception ignored) {
+			// Not a valid path as given - fall through to trying each supported extension below
+		}
+
+		for (String ext : extensions) {
+			ResourcePath path = basePath.resolve(filename + "." + ext);
 			try {
 				return path.loadImage();
 			} catch (Exception ex) {
-				log.trace("Unable to load texture: {}", path, ex);
+				log.trace("Unable to load image: {}", path, ex);
 			}
 		}
 
 		return null;
+	}
+
+	/**
+	 * Slices a standard unwrapped horizontal-cross cubemap layout (4 columns x 3 rows) into
+	 * the 6 individual cube faces, in +X,-X,+Y,-Y,+Z,-Z order:
+	 * <pre>
+	 *        [+Y]
+	 * [-X] [+Z] [+X] [-Z]
+	 *        [-Y]
+	 * </pre>
+	 */
+	public static BufferedImage[] sliceHorizontalCross(BufferedImage cross) {
+		int faceSize = cross.getWidth() / 4;
+		if (faceSize <= 0 || cross.getHeight() / 3 != faceSize)
+			throw new IllegalArgumentException(
+				"Cubemap cross image must have a 4:3 aspect ratio (width / 4 == height / 3)");
+
+		return new BufferedImage[] {
+			cross.getSubimage(2 * faceSize, faceSize, faceSize, faceSize), // +X
+			cross.getSubimage(0, faceSize, faceSize, faceSize), // -X
+			cross.getSubimage(faceSize, 0, faceSize, faceSize), // +Y
+			cross.getSubimage(faceSize, 2 * faceSize, faceSize, faceSize), // -Y
+			cross.getSubimage(faceSize, faceSize, faceSize, faceSize), // +Z
+			cross.getSubimage(3 * faceSize, faceSize, faceSize, faceSize), // -Z
+		};
 	}
 
 	public void uploadTexture(int target, int textureLayer, int[] textureSize, BufferedImage image) {
@@ -240,5 +282,69 @@ public class TextureManager {
 			final float maxSamples = glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
 			glTexParameterf(GL_TEXTURE_2D_ARRAY, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, clamp(level, 1, maxSamples));
 		}
+	}
+
+	/**
+	 * Packs a BufferedImage's ARGB pixels into a tightly-packed RGBA ByteBuffer suitable for
+	 * uploading via glTexImage2D.
+	 */
+	private static ByteBuffer packRgba(BufferedImage img) {
+		int width = img.getWidth();
+		int height = img.getHeight();
+		int[] pixels = new int[width * height];
+		img.getRGB(0, 0, width, height, pixels, 0, width);
+
+		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				int pixel = pixels[y * width + x];
+				buffer.put((byte) ((pixel >> 16) & 0xFF));
+				buffer.put((byte) ((pixel >> 8) & 0xFF));
+				buffer.put((byte) (pixel & 0xFF));
+				buffer.put((byte) ((pixel >> 24) & 0xFF));
+			}
+		}
+		buffer.flip();
+		return buffer;
+	}
+
+	/**
+	 * Uploads a single BufferedImage as a standalone GL_TEXTURE_2D and returns its texture id.
+	 */
+	public int createTexture2D(BufferedImage img) {
+		int width = img.getWidth();
+		int height = img.getHeight();
+		ByteBuffer buffer = packRgba(img);
+
+		int texId = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, texId);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+		return texId;
+	}
+
+	/**
+	 * Uploads 6 face images (in +X,-X,+Y,-Y,+Z,-Z order) as a GL_TEXTURE_CUBE_MAP and returns its texture id.
+	 */
+	public int createCubemapTexture(BufferedImage[] faces) {
+		int texId = glGenTextures();
+		glBindTexture(GL_TEXTURE_CUBE_MAP, texId);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+		for (int i = 0; i < 6; i++) {
+			var face = faces[i];
+			glTexImage2D(
+				GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA8,
+				face.getWidth(), face.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, packRgba(face));
+		}
+		return texId;
 	}
 }

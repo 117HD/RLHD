@@ -6,10 +6,10 @@
  * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
+ *    list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- * this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution.
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -43,19 +43,23 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.ShadowMode;
+import rs117.hd.config.SkyboxTheme;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
+import rs117.hd.opengl.shader.SkyboxShaderProgram;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
+import rs117.hd.scene.CustomSkyboxManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
+import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.ColorUtils;
@@ -93,25 +97,22 @@ public class ZoneRenderer implements Renderer {
 	public static final int TEXTURE_UNIT_TEXTURED_FACES = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_SKYBOX = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_SKYBOX_CUBEMAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	private static final int TEXTURE_UNIT_SKYBOX_INDEX = TEXTURE_UNIT_SKYBOX - GL_TEXTURE0;
-	private static final int TEXTURE_UNIT_SKYBOX_CUBEMAP_INDEX = TEXTURE_UNIT_SKYBOX_CUBEMAP - GL_TEXTURE0;
-	private int skyboxShaderProgramId;
-	private int skyboxUniformCameraYaw;
-	private int skyboxUniformCameraPitch;
-	private int skyboxUniformProjectionMatrix;
-	private int skyboxUniformIsCubemap;
-	private int skyboxUniformTexture;
-	private int skyboxUniformCubemapTexture;
 	private int customSkyboxTextureId;
 	private int customSkyboxCubemapTextureId;
 	private boolean loadedSkyboxIsCubemap;
 	private String loadedCustomSkyboxName;
-	private int lastCameraYaw = -1;
-	private float continuousSkyboxYaw = 0f;
 
 	@Inject
-	private rs117.hd.scene.CustomSkyboxManager customSkyboxManager;
+	private CustomSkyboxManager customSkyboxManager;
 
+	@Inject
+	private TextureManager textureManager;
+
+	@Inject
+	private SkyboxShaderProgram.Equirect skyboxEquirectProgram;
+
+	@Inject
+	private SkyboxShaderProgram.Cubemap skyboxCubemapProgram;
 
 	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
 	public static final int UNIFORM_BLOCK_WORLD_VIEWS = UNIFORM_BLOCK_COUNT++;
@@ -254,14 +255,8 @@ public class ZoneRenderer implements Renderer {
 		sceneProgram.compile(includes);
 		fastShadowProgram.compile(includes);
 		detailedShadowProgram.compile(includes);
-
-		skyboxShaderProgramId = compileSkyboxShader();
-		skyboxUniformCameraYaw = glGetUniformLocation(skyboxShaderProgramId, "cameraYaw");
-		skyboxUniformCameraPitch = glGetUniformLocation(skyboxShaderProgramId, "cameraPitch");
-		skyboxUniformProjectionMatrix = glGetUniformLocation(skyboxShaderProgramId, "projectionMatrix");
-		skyboxUniformIsCubemap = glGetUniformLocation(skyboxShaderProgramId, "isCubemap");
-		skyboxUniformTexture = glGetUniformLocation(skyboxShaderProgramId, "skyboxTexture");
-		skyboxUniformCubemapTexture = glGetUniformLocation(skyboxShaderProgramId, "skyboxCubemap");
+		skyboxEquirectProgram.compile(includes);
+		skyboxCubemapProgram.compile(includes);
 		// The actual skybox texture is loaded lazily in scenePass() once the configured theme is known
 	}
 
@@ -270,6 +265,8 @@ public class ZoneRenderer implements Renderer {
 		sceneProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
+		skyboxEquirectProgram.destroy();
+		skyboxCubemapProgram.destroy();
 	}
 
 	private void initializeBuffers() {
@@ -317,6 +314,7 @@ public class ZoneRenderer implements Renderer {
 		try {
 			WorldViewContext ctx = sceneManager.getContext(scene);
 			if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading) {
+				// When triggering plugin restarts in rapid succession, it can end up in a state where no scene is loaded initially
 				if (scene.getWorldViewId() == WorldView.TOPLEVEL && client.getGameState() == GameState.LOGGED_IN)
 					clientThread.invokeLater(() -> client.setGameState(GameState.LOADING));
 				return;
@@ -361,6 +359,7 @@ public class ZoneRenderer implements Renderer {
 
 		scene.setDrawDistance(plugin.getDrawDistance());
 
+		// Ensure that the previous frames commands have finished flushing
 		frameTimer.begin(Timer.DRAW_FLUSH);
 		glFlush();
 		frameTimer.end(Timer.DRAW_FLUSH);
@@ -391,6 +390,7 @@ public class ZoneRenderer implements Renderer {
 			if (plugin.orthographicProjection)
 				zoom *= ORTHOGRAPHIC_ZOOM;
 
+			// Calculate the viewport dimensions before scaling in order to include the extra padding
 			sceneCamera.setOrthographic(plugin.orthographicProjection);
 			sceneCamera.setPosition(plugin.cameraPosition);
 			sceneCamera.setOrientation(plugin.cameraOrientation);
@@ -401,6 +401,7 @@ public class ZoneRenderer implements Renderer {
 			sceneCamera.setNearPlane(plugin.orthographicProjection ? -40000 : NEAR_PLANE);
 			sceneCamera.setZoom(zoom);
 
+			// Calculate view matrix, view proj & inv matrix
 			boolean hasSceneCameraChanged = sceneCamera.isViewDirty() || sceneCamera.isProjDirty();
 			sceneCamera.getViewMatrix(plugin.viewMatrix);
 			sceneCamera.getViewProjMatrix(plugin.viewProjMatrix);
@@ -430,8 +431,8 @@ public class ZoneRenderer implements Renderer {
 			boolean hasDirectionalCameraChanged = directionalCamera.isViewDirty() || directionalCamera.isProjDirty();
 
 			if (plugin.configShadowsEnabled &&
-			    (hasSceneCameraChanged || hasDirectionalCameraChanged) &&
-			    !sceneCamera.isOrthographic()
+				(hasSceneCameraChanged || hasDirectionalCameraChanged) &&
+				!sceneCamera.isOrthographic()
 			) {
 				int shadowDrawDistance = 90 * LOCAL_TILE_SIZE;
 
@@ -443,6 +444,7 @@ public class ZoneRenderer implements Renderer {
 					add(sceneCenter, sceneCenter, corner);
 				divide(sceneCenter, sceneCenter, (float) volumeCorners.length);
 
+				// Reset position before transforming points
 				directionalCamera.setPosition(0, 0, 0);
 
 				float minX = Float.POSITIVE_INFINITY, maxX = Float.NEGATIVE_INFINITY;
@@ -464,19 +466,24 @@ public class ZoneRenderer implements Renderer {
 					maxZ = max(maxZ, corner[2]);
 				}
 
+				// Offset the Directional Camera by the radius of the scene
 				float[] directionalFwd = directionalCamera.getForwardDirection();
 				multiply(directionalFwd, directionalFwd, radius);
 				add(sceneCenter, sceneCenter, directionalFwd);
 
+				// Calculate directional size from the AABB of the scene frustum corners
+				// Then snap to the nearest multiple of `LOCAL_HALF_TILE_SIZE` to prevent shimmering
 				int directionalSize = (int) max(abs(maxY - minY), abs(maxX - minX), abs(maxZ - minZ));
 				directionalSize = Math.round(directionalSize / (float) LOCAL_HALF_TILE_SIZE) * LOCAL_HALF_TILE_SIZE;
-				directionalSize = max(8000, directionalSize);
+				directionalSize = max(8000, directionalSize); // Clamp the size to prevent going too small at reduced draw distances
 
+				// Ignore directional size changes below the change threshold to avoid inducing shimmering
 				int previousDirectionalSize = directionalCamera.getViewportWidth();
-				float changeThreshold = previousDirectionalSize * 0.05f;
+				float changeThreshold = previousDirectionalSize * 0.05f; // 10% of the previous directional size
 				if (abs(directionalSize - previousDirectionalSize) < changeThreshold)
 					directionalSize = previousDirectionalSize;
 
+				// Snap Position to Shadow Texel Grid to prevent shimmering
 				directionalCamera.transformPoint(sceneCenter, sceneCenter);
 
 				float texelSize = (float) directionalSize / plugin.shadowMapResolution;
@@ -505,6 +512,7 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.invProjectionMatrix.set(plugin.invViewProjMatrix);
 
 			if (plugin.configDynamicLights != DynamicLights.NONE) {
+				// Update lights UBO
 				assert ctx.sceneContext.numVisibleLights <= UBOLights.MAX_LIGHTS;
 
 				frameTimer.begin(Timer.UPDATE_LIGHTS);
@@ -526,9 +534,10 @@ public class ZoneRenderer implements Renderer {
 					plugin.uboLights.setLight(i, lightPosition, lightColor);
 
 					if (plugin.configTiledLighting) {
+						// Pre-calculate the view space position of the light, to save having to do the multiplication in the culling shader
 						lightPosition[3] = 1.0f;
 						Mat4.mulVec(lightPosition, plugin.viewMatrix, lightPosition);
-						lightPosition[3] = lightRadiusSq;
+						lightPosition[3] = lightRadiusSq; // Restore lightRadiusSq
 						plugin.uboLightsCulling.setLight(i, lightPosition, lightColor);
 					}
 				}
@@ -540,6 +549,7 @@ public class ZoneRenderer implements Renderer {
 			}
 		}
 
+		// Upon logging in, the client will draw some frames with zero geometry before it hides the login screen
 		if (client.getGameState().getState() >= GameState.LOGGED_IN.getState())
 			plugin.hasLoggedIn = true;
 
@@ -606,6 +616,7 @@ public class ZoneRenderer implements Renderer {
 			environmentManager.currentGroundFogOpacity :
 			0);
 
+		// Lights & lightning
 		plugin.uboGlobal.lightningBrightness.set(environmentManager.getLightningBrightness());
 
 		plugin.uboGlobal.saturation.set(config.saturation() / 100f);
@@ -625,6 +636,7 @@ public class ZoneRenderer implements Renderer {
 
 		plugin.uboGlobal.upload();
 
+		// Reset buffers for the next frame
 		indirectDrawCmdsStaging.clear();
 		sceneCmd.reset();
 		directionalCmd.reset();
@@ -664,11 +676,13 @@ public class ZoneRenderer implements Renderer {
 
 		sceneFboValid = true;
 
+		// Upload world views before rendering
 		uboWorldViews.upload();
 
 		if (eboAlphaWriter != null)
 			eboAlphaWriter.flush();
 
+		// Scene draw state to apply before all recorded commands
 		if (indirectDrawCmdsStaging.position() > 0) {
 			indirectDrawCmdsStaging.flip();
 			indirectDrawCmds.orphan();
@@ -679,6 +693,7 @@ public class ZoneRenderer implements Renderer {
 		frameTimer.begin(Timer.RENDER_FRAME);
 		shouldRenderScene = true;
 
+		// TODO: Add proper support for stat tracking to the FrameTimer or elsewhere
 		plugin.drawnDynamicRenderableCount += modelStreamingManager.getDrawnDynamicRenderableCount();
 
 		checkGLErrors();
@@ -725,6 +740,7 @@ public class ZoneRenderer implements Renderer {
 			environmentManager.currentDirectionalStrength > 0;
 
 		if (shouldRenderShadows || shouldClearShadowFbo) {
+			// Render to the shadow depth map
 			renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboShadowMap);
 			renderState.viewport.set(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
 			renderState.apply();
@@ -758,8 +774,8 @@ public class ZoneRenderer implements Renderer {
 
 	private void scenePass() {
 		sceneProgram.use();
-		frameTimer.begin(Timer.DRAW_SCENE);
 
+		frameTimer.begin(Timer.DRAW_SCENE);
 		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
 		if (plugin.msaaSamples > 1) {
 			renderState.enable.set(GL_MULTISAMPLE);
@@ -770,17 +786,24 @@ public class ZoneRenderer implements Renderer {
 		renderState.ido.set(indirectDrawCmds.id);
 		renderState.apply();
 
+		// Clear scene
 		frameTimer.begin(Timer.CLEAR_SCENE);
+
 		float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 		float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
-		glClearColor(gammaCorrectedFogColor[0], gammaCorrectedFogColor[1], gammaCorrectedFogColor[2], 1f);
+		glClearColor(
+			gammaCorrectedFogColor[0],
+			gammaCorrectedFogColor[1],
+			gammaCorrectedFogColor[2],
+			1f
+		);
 		glClearDepth(0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		frameTimer.end(Timer.CLEAR_SCENE);
 
 		// --- DYNAMIC SKYBOX THEME CONFIGURATION TRACKER ---
-		rs117.hd.config.SkyboxTheme currentTheme = config.selectedSkyboxTheme();
-		boolean hasActiveSkyboxTheme = currentTheme == rs117.hd.config.SkyboxTheme.CUSTOM;
+		SkyboxTheme currentTheme = config.selectedSkyboxTheme();
+		boolean hasActiveSkyboxTheme = currentTheme == SkyboxTheme.CUSTOM;
 		String currentCustomSkyboxName = config.customSkyboxName();
 
 		if (hasActiveSkyboxTheme && environmentManager.isOverworld()) {
@@ -805,47 +828,21 @@ public class ZoneRenderer implements Renderer {
 			if (customSkyboxTextureId != 0 || customSkyboxCubemapTextureId != 0) {
 				glDisable(GL_DEPTH_TEST);
 				glDepthMask(false);
-				glUseProgram(skyboxShaderProgramId);
 
-				float horizontalSpeed = 1.0f;
-				float verticalSpeed = 1.0f;
-
-				int currentYaw = (client.getCameraYaw() / 8) & 2047;
-
-				if (lastCameraYaw == -1) {
-					lastCameraYaw = currentYaw;
-					continuousSkyboxYaw = currentYaw;
-				}
-
-				int deltaYaw = currentYaw - lastCameraYaw;
-				if (deltaYaw > 1024) {
-					deltaYaw -= 2048;
-				} else if (deltaYaw < -1024) {
-					deltaYaw += 2048;
-				}
-
-				continuousSkyboxYaw += (deltaYaw * horizontalSpeed);
-				continuousSkyboxYaw = (continuousSkyboxYaw % 2048.0f + 2048.0f) % 2048.0f;
-				lastCameraYaw = currentYaw;
-
-				float yawRadians = (float) ((continuousSkyboxYaw * 2.0 * Math.PI / 2048.0));
-				float pitchRadians = (float) (((client.getCameraPitch() / 8) * 2.0 * Math.PI / 2048.0) * verticalSpeed);
-
-				float[] projMatrix = sceneCamera.getProjectionMatrix();
-
-				glUniform1f(skyboxUniformCameraYaw, yawRadians);
-				glUniform1f(skyboxUniformCameraPitch, pitchRadians);
-				glUniformMatrix4fv(skyboxUniformProjectionMatrix, false, projMatrix);
-				glUniform1i(skyboxUniformIsCubemap, loadedSkyboxIsCubemap ? 1 : 0);
-
+				// isCubemap is a compile-time #define, so equirect and cubemap skyboxes use
+				// separately-compiled shader variants rather than a per-pixel runtime branch.
+				// The camera ray itself is reconstructed in skybox_frag.glsl from the global
+				// UBO's viewMatrix/projectionMatrix, so no per-frame camera uniforms are needed.
 				if (loadedSkyboxIsCubemap) {
+					skyboxCubemapProgram.use();
 					glActiveTexture(TEXTURE_UNIT_SKYBOX_CUBEMAP);
 					glBindTexture(GL_TEXTURE_CUBE_MAP, customSkyboxCubemapTextureId);
-					glUniform1i(skyboxUniformCubemapTexture, TEXTURE_UNIT_SKYBOX_CUBEMAP_INDEX);
+					skyboxCubemapProgram.setSkyboxCubemap(TEXTURE_UNIT_SKYBOX_CUBEMAP);
 				} else {
+					skyboxEquirectProgram.use();
 					glActiveTexture(TEXTURE_UNIT_SKYBOX);
 					glBindTexture(GL_TEXTURE_2D, customSkyboxTextureId);
-					glUniform1i(skyboxUniformTexture, TEXTURE_UNIT_SKYBOX_INDEX);
+					skyboxEquirectProgram.setSkyboxTexture(TEXTURE_UNIT_SKYBOX);
 				}
 
 				glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -861,20 +858,27 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		frameTimer.begin(Timer.RENDER_SCENE);
+
 		renderState.enable.set(GL_BLEND);
 		renderState.enable.set(GL_CULL_FACE);
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
+		// Render the scene
 		sceneCmd.execute();
+
+		// TODO: Filler tiles
 		frameTimer.end(Timer.RENDER_SCENE);
 
 		glBindVertexArray(0);
+
+		// Done rendering the scene
 		renderState.disable.set(GL_BLEND);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.disable.set(GL_DEPTH_TEST);
 		renderState.apply();
+
 		frameTimer.end(Timer.DRAW_SCENE);
 	}
 
@@ -1005,6 +1009,7 @@ public class ZoneRenderer implements Renderer {
 			final boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
 			if (hasAlpha) {
 				final int offset = ctx.sceneContext.sceneOffset >> 3;
+				// Only sort if the alpha will be directly visible, since shadows don't require sorting
 				if (level == 0 && (!sceneManager.isRoot(ctx) || z.inSceneFrustum))
 					z.alphaSort(zx - offset, zz - offset, sceneCamera);
 
@@ -1056,16 +1061,20 @@ public class ZoneRenderer implements Renderer {
 					if (sceneManager.isRoot(ctx))
 						frameTimer.end(Timer.UNMAP_ROOT_CTX);
 
+					// Draw opaque
 					ctx.drawAll(VAO_OPAQUE, ctx.vaoSceneCmd);
 					ctx.drawAll(VAO_OPAQUE, ctx.vaoDirectionalCmd);
 					ctx.drawAll(VAO_PLAYER, ctx.vaoDirectionalCmd);
 
+					// Draw shadow-only models
 					ctx.drawAll(VAO_SHADOW, ctx.vaoDirectionalCmd);
 
+					// Draw players with sorted alpha, without writing depth
 					ctx.vaoSceneCmd.DepthMask(false);
 					ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
 					ctx.vaoSceneCmd.DepthMask(true);
 
+					// Redraw players, this time only writing depth, for correct ordering with the background
 					ctx.vaoSceneCmd.ColorMask(false, false, false, false);
 					ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
 					ctx.vaoSceneCmd.ColorMask(true, true, true, true);
@@ -1140,6 +1149,8 @@ public class ZoneRenderer implements Renderer {
 			try {
 				plugin.prepareInterfaceTexture();
 			} catch (Exception ex) {
+				// Fixes: https://github.com/runelite/runelite/issues/12930
+				// Gracefully Handle loss of opengl buffers and context
 				log.warn("prepareInterfaceTexture exception", ex);
 				plugin.restartPlugin();
 				return;
@@ -1155,6 +1166,7 @@ public class ZoneRenderer implements Renderer {
 			if (sceneFboValid && plugin.sceneResolution != null && plugin.sceneViewport != null) {
 				glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboScene);
 				if (plugin.fboSceneResolve != 0) {
+					// Blit from the scene FBO to the multisample resolve FBO
 					glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboSceneResolve);
 					glBlitFramebuffer(
 						0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
@@ -1164,6 +1176,7 @@ public class ZoneRenderer implements Renderer {
 					glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboSceneResolve);
 				}
 
+				// Blit from the resolved FBO to the default FBO
 				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
 				glBlitFramebuffer(
 					0,
@@ -1197,9 +1210,12 @@ public class ZoneRenderer implements Renderer {
 				frameTimer.end(Timer.SWAP_BUFFERS);
 				drawManager.processDrawComplete(plugin::screenshot);
 			} catch (RuntimeException ex) {
+				// this is always fatal
 				if (!plugin.canvas.isValid()) {
+					// this might be AWT shutting down on VM shutdown, ignore it
 					return;
 				}
+
 				log.error("Unable to swap buffers:", ex);
 			}
 
@@ -1219,6 +1235,8 @@ public class ZoneRenderer implements Renderer {
 	public void onGameStateChanged(GameStateChanged gameStateChanged) {
 		GameState state = gameStateChanged.getGameState();
 		if (state.getState() < GameState.LOADING.getState()) {
+			// this is to avoid scene fbo blit when going from <loading to >=loading,
+			// but keep it when doing >loading to loading
 			sceneFboValid = false;
 		}
 	}
@@ -1285,7 +1303,7 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	/**
-	 * Loads the custom skybox entry with the given name from {@link rs117.hd.scene.CustomSkyboxManager},
+	 * Loads the custom skybox entry with the given name from {@link CustomSkyboxManager},
 	 * dispatching to the equirectangular or cubemap upload path depending on the entry's declared type.
 	 * Populates {@link #customSkyboxTextureId}, {@link #customSkyboxCubemapTextureId} and
 	 * {@link #loadedSkyboxIsCubemap}. Leaves both texture ids at 0 if the entry can't be found or loaded.
@@ -1301,179 +1319,21 @@ public class ZoneRenderer implements Renderer {
 		try {
 			switch (entry.type) {
 				case "cubemap":
-					customSkyboxCubemapTextureId = loadCubemapTexture(customSkyboxManager.loadCubemapFaceImages(entry));
+					customSkyboxCubemapTextureId = textureManager.createCubemapTexture(customSkyboxManager.loadCubemapFaceImages(entry));
 					loadedSkyboxIsCubemap = true;
 					break;
 				case "cubemap_cross":
-					customSkyboxCubemapTextureId = loadCubemapTexture(customSkyboxManager.loadCubemapCrossImage(entry));
+					customSkyboxCubemapTextureId = textureManager.createCubemapTexture(customSkyboxManager.loadCubemapCrossImage(entry));
 					loadedSkyboxIsCubemap = true;
 					break;
 				case "equirect":
-					customSkyboxTextureId = loadSkyboxTexture(customSkyboxManager.loadEquirectImage(entry));
+					customSkyboxTextureId = textureManager.createTexture2D(customSkyboxManager.loadEquirectImage(entry));
 					break;
 				default:
 					log.warn("Unknown custom skybox type '{}' for entry '{}'", entry.type, name);
 			}
-		} catch (IOException ex) {
+		} catch (Exception ex) {
 			log.warn("Failed to load custom skybox '{}'", name, ex);
-		}
-	}
-
-	private int compileSkyboxShader() {
-		int vShader = glCreateShader(GL_VERTEX_SHADER);
-		int fShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-		String vSrc = "#version 330\n" +
-		              "out vec2 screenUV;\n" +
-		              "void main() {\n" +
-		              "    vec2 pos[3] = vec2[3](vec2(-1, -1), vec2(3, -1), vec2(-1, 3));\n" +
-		              "    gl_Position = vec4(pos[gl_VertexID], 1.0, 1.0);\n" +
-		              "    screenUV = pos[gl_VertexID] * 0.5 + 0.5;\n" +
-		              "}";
-
-		String fSrc = "#version 330\n" +
-		              "in vec2 screenUV;\n" +
-		              "out vec4 FragColor;\n" +
-		              "uniform sampler2D skyboxTexture;\n" +
-		              "uniform samplerCube skyboxCubemap;\n" +
-		              "uniform bool isCubemap;\n" +
-		              "uniform float cameraYaw;\n" +
-		              "uniform float cameraPitch;\n" +
-		              "uniform mat4 projectionMatrix;\n" +
-		              "void main() {\n" +
-		              "    float xClip = screenUV.x * 2.0 - 1.0;\n" +
-		              "    float yClip = screenUV.y * 2.0 - 1.0;\n" +
-		              "    \n" +
-		              "    vec3 viewDir = vec3(\n" +
-		              "        xClip / projectionMatrix[0][0],\n" +
-		              "        yClip / projectionMatrix[1][1],\n" +
-		              "        -1.0\n" +
-		              "    );\n" +
-		              "    \n" +
-		              "    float cosP = cos(cameraPitch);\n" +
-		              "    float sinP = sin(cameraPitch);\n" +
-		              "    vec3 pitchedDir = vec3(\n" +
-		              "        viewDir.x,\n" +
-		              "        viewDir.y * cosP - viewDir.z * sinP,\n" +
-		              "        viewDir.y * sinP + viewDir.z * cosP\n" +
-		              "    );\n" +
-		              "    \n" +
-		              "    float cosY = cos(cameraYaw);\n" +
-		              "    float sinY = sin(cameraYaw);\n" +
-		              "    vec3 finalDir = vec3(\n" +
-		              "        pitchedDir.x * cosY + pitchedDir.z * sinY,\n" +
-		              "        pitchedDir.y,\n" +
-		              "        -pitchedDir.x * sinY + pitchedDir.z * cosY\n" +
-		              "    );\n" +
-		              "    \n" +
-		              "    vec3 dir = normalize(finalDir);\n" +
-		              "    \n" +
-		              "    if (isCubemap) {\n" +
-		              "        FragColor = texture(skyboxCubemap, dir);\n" +
-		              "        return;\n" +
-		              "    }\n" +
-		              "    \n" +
-		              "    // --- APPLY VERTICAL SHIFT HERE ---\n" +
-		              "    // Slightly offsetting the Y lookup pushes the panorama horizon downwards\n" +
-		              "    float shiftedY = dir.y - 0.12;\n" +
-		              "    \n" +
-		              "    // Map UV coordinates using our shifted position variable\n" +
-		              "    vec2 uv = vec2(atan(dir.x, -dir.z) / (2.0 * 3.14159265) + 0.5, 1.0 - (acos(clamp(shiftedY, -1.0, 1.0)) / 3.14159265));\n" +
-		              "    \n" +
-		              "    FragColor = texture(skyboxTexture, uv);\n" +
-		              "}";
-
-		glShaderSource(vShader, vSrc);
-		glCompileShader(vShader);
-		if (glGetShaderi(vShader, GL_COMPILE_STATUS) == GL_FALSE) {
-			log.error("Vertex Shader Error: " + glGetShaderInfoLog(vShader));
-		}
-
-		glShaderSource(fShader, fSrc);
-		glCompileShader(fShader);
-		if (glGetShaderi(fShader, GL_COMPILE_STATUS) == GL_FALSE) {
-			log.error("Fragment Shader Error: " + glGetShaderInfoLog(fShader));
-		}
-
-		int program = glCreateProgram();
-		glAttachShader(program, vShader);
-		glAttachShader(program, fShader);
-		glLinkProgram(program);
-		return program;
-	}
-
-	/**
-	 * Packs a BufferedImage's ARGB pixels into a tightly-packed RGBA ByteBuffer suitable for
-	 * uploading via glTexImage2D.
-	 */
-	private static java.nio.ByteBuffer packRgba(java.awt.image.BufferedImage img) {
-		int width = img.getWidth();
-		int height = img.getHeight();
-		int[] pixels = new int[width * height];
-		img.getRGB(0, 0, width, height, pixels, 0, width);
-
-		java.nio.ByteBuffer buffer = org.lwjgl.BufferUtils.createByteBuffer(width * height * 4);
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
-				int pixel = pixels[y * width + x];
-				buffer.put((byte) ((pixel >> 16) & 0xFF));
-				buffer.put((byte) ((pixel >> 8) & 0xFF));
-				buffer.put((byte) (pixel & 0xFF));
-				buffer.put((byte) ((pixel >> 24) & 0xFF));
-			}
-		}
-		buffer.flip();
-		return buffer;
-	}
-
-	private int loadSkyboxTexture(java.awt.image.BufferedImage image) {
-		try {
-			return uploadEquirectTexture(image);
-		} catch (Exception e) {
-			log.error("Failed to upload custom skybox texture.", e);
-			return 0;
-		}
-	}
-
-	private int uploadEquirectTexture(java.awt.image.BufferedImage img) {
-		int width = img.getWidth();
-		int height = img.getHeight();
-		java.nio.ByteBuffer buffer = packRgba(img);
-
-		int texId = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, texId);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-		return texId;
-	}
-
-	/**
-	 * Uploads 6 face images (in +X,-X,+Y,-Y,+Z,-Z order) as a GL_TEXTURE_CUBE_MAP.
-	 */
-	private int loadCubemapTexture(java.awt.image.BufferedImage[] faces) {
-		try {
-			int texId = glGenTextures();
-			glBindTexture(GL_TEXTURE_CUBE_MAP, texId);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-			for (int i = 0; i < 6; i++) {
-				var face = faces[i];
-				glTexImage2D(
-					GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA8,
-					face.getWidth(), face.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, packRgba(face));
-			}
-			return texId;
-		} catch (Exception e) {
-			log.error("Failed to upload custom skybox cubemap texture.", e);
-			return 0;
 		}
 	}
 

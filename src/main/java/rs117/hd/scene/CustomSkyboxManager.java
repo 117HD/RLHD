@@ -14,8 +14,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.HdPlugin;
-import rs117.hd.scene.customskybox.CubemapUtils;
-import rs117.hd.scene.customskybox.CustomSkyboxEntry;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -42,6 +40,9 @@ public class CustomSkyboxManager {
 
 	@Inject
 	private ScheduledExecutorService executor;
+
+	@Inject
+	private TextureManager textureManager;
 
 	private FileWatcher.UnregisterCallback fileWatcher;
 	private ScheduledFuture<?> debounce;
@@ -139,22 +140,30 @@ public class CustomSkyboxManager {
 		return CUSTOM_SKYBOX_DIR.toFile();
 	}
 
+	/**
+	 * Looks up an entry by name, tolerating names given with or without a file extension (e.g.
+	 * both "sunset" and "sunset.png" resolve the same entry), since File Explorer hides
+	 * extensions by default on Windows and users commonly copy a name with or without one.
+	 */
 	public CustomSkyboxEntry getEntry(String name) {
-		return skyboxesByName.get(name);
+		var entry = skyboxesByName.get(name);
+		if (entry != null)
+			return entry;
+		return skyboxesByName.get(stripExtension(name));
 	}
 
-	public BufferedImage loadEquirectImage(CustomSkyboxEntry entry) throws IOException {
-		return CUSTOM_SKYBOX_DIR.resolve(entry.file).loadImage();
+	public BufferedImage loadEquirectImage(CustomSkyboxEntry entry) {
+		return textureManager.loadImage(CUSTOM_SKYBOX_DIR, entry.file, SUPPORTED_IMAGE_EXTENSIONS);
 	}
 
-	public BufferedImage[] loadCubemapFaceImages(CustomSkyboxEntry entry) throws IOException {
+	public BufferedImage[] loadCubemapFaceImages(CustomSkyboxEntry entry) {
 		var faces = new BufferedImage[6];
 		for (int i = 0; i < 6; i++)
-			faces[i] = CUSTOM_SKYBOX_DIR.resolve(entry.faces[i]).loadImage();
+			faces[i] = textureManager.loadImage(CUSTOM_SKYBOX_DIR, entry.faces[i], SUPPORTED_IMAGE_EXTENSIONS);
 		return faces;
 	}
 
-	public BufferedImage[] loadCubemapCrossImage(CustomSkyboxEntry entry) throws IOException {
-		return CubemapUtils.sliceHorizontalCross(CUSTOM_SKYBOX_DIR.resolve(entry.file).loadImage());
+	public BufferedImage[] loadCubemapCrossImage(CustomSkyboxEntry entry) {
+		return TextureManager.sliceHorizontalCross(textureManager.loadImage(CUSTOM_SKYBOX_DIR, entry.file, SUPPORTED_IMAGE_EXTENSIONS));
 	}
 }
