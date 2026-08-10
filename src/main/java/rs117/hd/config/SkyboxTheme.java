@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum SkyboxTheme {
-	NONE("None (Vanilla/117)"),
-	CUSTOM("Custom (.runelite/117hd/custom-skyboxes)");
+	NONE("None"),
+	CUSTOM("Custom");
 
 	private final String name;
 

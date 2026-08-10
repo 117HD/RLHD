@@ -825,9 +825,10 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_CUSTOM_SKYBOX_NAME,
 		name = "Custom Skybox Name",
-		description = "When 'Skybox Style' is set to Custom, the name of an entry from<br>" +
-			".runelite/117hd/custom-skyboxes/manifest.json to use.<br>" +
-			"Use the ::117hd skybox list command in-game to see available names.",
+		description = "When 'Skybox Style' is set to Custom, the skybox to use.<br>" +
+			"Drop an image into .runelite/117hd/custom-skyboxes/ and enter its filename<br>" +
+			"(without extension) here, or add a manifest.json there for cubemaps/multiple skies.<br>" +
+			"In-game commands: ::117hd skybox list, ::117hd skybox cycle, ::117hd skybox open.",
 		position = 1,
 		section = skyboxSettings
 	)

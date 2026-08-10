@@ -195,7 +195,7 @@ public class DeveloperTools implements KeyListener {
 
 	private void onSkyboxCommand(String[] args) {
 		if (args.length < 2) {
-			sendChatMessage("Usage: ::117hd skybox <list|cycle>");
+			sendChatMessage("Usage: ::117hd skybox <list|cycle|open>");
 			return;
 		}
 
@@ -203,7 +203,7 @@ public class DeveloperTools implements KeyListener {
 		switch (args[1].toLowerCase()) {
 			case "list":
 				if (names.isEmpty()) {
-					sendChatMessage("No custom skyboxes found in .runelite/117hd/custom-skyboxes/manifest.json");
+					sendChatMessage("No custom skyboxes found in .runelite/117hd/custom-skyboxes/");
 				} else {
 					sendChatMessage("Custom skyboxes: " + String.join(", ", names));
 				}
@@ -211,7 +211,7 @@ public class DeveloperTools implements KeyListener {
 			case "cycle":
 			case "next":
 				if (names.isEmpty()) {
-					sendChatMessage("No custom skyboxes found in .runelite/117hd/custom-skyboxes/manifest.json");
+					sendChatMessage("No custom skyboxes found in .runelite/117hd/custom-skyboxes/");
 					break;
 				}
 				int index = names.indexOf(config.customSkyboxName());
@@ -219,6 +219,14 @@ public class DeveloperTools implements KeyListener {
 				configManager.setConfiguration(HdPluginConfig.CONFIG_GROUP, HdPluginConfig.KEY_CUSTOM_SKYBOX_NAME, next);
 				configManager.setConfiguration(HdPluginConfig.CONFIG_GROUP, HdPluginConfig.KEY_SELECTED_SKYBOX_THEME, "CUSTOM");
 				sendChatMessage("Custom skybox set to: " + next);
+				break;
+			case "open":
+				try {
+					java.awt.Desktop.getDesktop().open(customSkyboxManager.getDirectory());
+				} catch (Exception ex) {
+					log.warn("Failed to open custom skyboxes folder", ex);
+					sendChatMessage("Failed to open folder: " + customSkyboxManager.getDirectory());
+				}
 				break;
 		}
 	}
