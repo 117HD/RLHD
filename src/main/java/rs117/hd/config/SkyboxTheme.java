@@ -10,7 +10,8 @@ public enum SkyboxTheme {
 	CLEAR_DAY("Clear Day (Autumn Field)", "/rs117/hd/skybox3d/autumn_field_puresky_4k.png"),
 	CLOUDY("Cloudy Overcast (Soil)", "/rs117/hd/skybox3d/overcast_soil_puresky_4k.png"),
 	STARRY_NIGHT("Starry Night (Qwantani)", "/rs117/hd/skybox3d/qwantani_night_puresky_4k.png"),
-	PARTLY_CLOUDY("Partly Cloudy (Sunflowers)", "/rs117/hd/skybox3d/sunflowers_puresky_4k.png");
+	PARTLY_CLOUDY("Partly Cloudy (Sunflowers)", "/rs117/hd/skybox3d/sunflowers_puresky_4k.png"),
+	CUSTOM("Custom (.runelite/117hd/custom-skyboxes)", null);
 
 	private final String name;
 	private final String resourcePath;

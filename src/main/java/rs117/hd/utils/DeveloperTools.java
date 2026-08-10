@@ -1,23 +1,29 @@
 package rs117.hd.utils;
 
 import java.awt.event.KeyEvent;
+import java.util.List;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.Client;
+import net.runelite.api.ChatMessageType;
 import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.config.ConfigManager;
 import net.runelite.client.config.Keybind;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import rs117.hd.HdPlugin;
+import rs117.hd.HdPluginConfig;
 import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TileInfoOverlay;
 import rs117.hd.overlays.TiledLightingOverlay;
 import rs117.hd.scene.AreaManager;
+import rs117.hd.scene.CustomSkyboxManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 
@@ -39,6 +45,9 @@ public class DeveloperTools implements KeyListener {
 	private static final Keybind KEY_RELOAD_SCENE = new Keybind(KeyEvent.VK_R, CTRL_DOWN_MASK);
 
 	@Inject
+	private Client client;
+
+	@Inject
 	private ClientThread clientThread;
 
 	@Inject
@@ -48,7 +57,16 @@ public class DeveloperTools implements KeyListener {
 	private KeyManager keyManager;
 
 	@Inject
+	private ConfigManager configManager;
+
+	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private HdPluginConfig config;
+
+	@Inject
+	private CustomSkyboxManager customSkyboxManager;
 
 	@Inject
 	private TileInfoOverlay tileInfoOverlay;
@@ -169,7 +187,45 @@ public class DeveloperTools implements KeyListener {
 			case "culling":
 				plugin.freezeCulling = !plugin.freezeCulling;
 				break;
+			case "skybox":
+				onSkyboxCommand(args);
+				break;
 		}
+	}
+
+	private void onSkyboxCommand(String[] args) {
+		if (args.length < 2) {
+			sendChatMessage("Usage: ::117hd skybox <list|cycle>");
+			return;
+		}
+
+		List<String> names = customSkyboxManager.getAvailableNames();
+		switch (args[1].toLowerCase()) {
+			case "list":
+				if (names.isEmpty()) {
+					sendChatMessage("No custom skyboxes found in .runelite/117hd/custom-skyboxes/manifest.json");
+				} else {
+					sendChatMessage("Custom skyboxes: " + String.join(", ", names));
+				}
+				break;
+			case "cycle":
+			case "next":
+				if (names.isEmpty()) {
+					sendChatMessage("No custom skyboxes found in .runelite/117hd/custom-skyboxes/manifest.json");
+					break;
+				}
+				int index = names.indexOf(config.customSkyboxName());
+				String next = names.get((index + 1) % names.size());
+				configManager.setConfiguration(HdPluginConfig.CONFIG_GROUP, HdPluginConfig.KEY_CUSTOM_SKYBOX_NAME, next);
+				configManager.setConfiguration(HdPluginConfig.CONFIG_GROUP, HdPluginConfig.KEY_SELECTED_SKYBOX_THEME, "CUSTOM");
+				sendChatMessage("Custom skybox set to: " + next);
+				break;
+		}
+	}
+
+	private void sendChatMessage(String message) {
+		clientThread.invoke(() -> client.addChatMessage(
+			ChatMessageType.GAMEMESSAGE, "117 HD", "<col=ffff00>[117 HD] " + message + "</col>", "117 HD"));
 	}
 
 	@Override

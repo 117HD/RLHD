@@ -102,6 +102,7 @@ import rs117.hd.renderer.legacy.LegacyRenderer;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.scene.AreaManager;
+import rs117.hd.scene.CustomSkyboxManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.GamevalManager;
@@ -217,6 +218,7 @@ public class HdPlugin extends Plugin {
 	// Manually instantiate singletons and lazily inject them to avoid circular dependencies
 	private static final List<Class<?>> LAZY_SINGLETONS = List.of(
 		AreaManager.class,
+		CustomSkyboxManager.class,
 		EnvironmentManager.class,
 		GamevalManager.class,
 		GroundMaterialManager.class,
@@ -262,6 +264,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private EnvironmentManager environmentManager;
+
+	@Inject
+	private CustomSkyboxManager customSkyboxManager;
 
 	@Inject
 	private TextureManager textureManager;
@@ -712,6 +717,7 @@ public class HdPlugin extends Plugin {
 				modelOverrideManager.startUp();
 				lightManager.startUp();
 				environmentManager.startUp();
+				customSkyboxManager.startUp();
 				fishingSpotReplacer.startUp();
 				gammaCalibrationOverlay.initialize();
 				npcDisplacementCache.initialize();
@@ -781,6 +787,7 @@ public class HdPlugin extends Plugin {
 			modelOverrideManager.shutDown();
 			lightManager.shutDown();
 			environmentManager.shutDown();
+			customSkyboxManager.shutDown();
 			fishingSpotReplacer.shutDown();
 			areaManager.shutDown();
 			gamevalManager.shutDown();

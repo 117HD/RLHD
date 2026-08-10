@@ -92,11 +92,26 @@ public class ZoneRenderer implements Renderer {
 	private static int TEXTURE_UNIT_COUNT = HdPlugin.TEXTURE_UNIT_COUNT;
 	public static final int TEXTURE_UNIT_TEXTURED_FACES = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_SKYBOX = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_SKYBOX_CUBEMAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	private static final int TEXTURE_UNIT_SKYBOX_INDEX = TEXTURE_UNIT_SKYBOX - GL_TEXTURE0;
+	private static final int TEXTURE_UNIT_SKYBOX_CUBEMAP_INDEX = TEXTURE_UNIT_SKYBOX_CUBEMAP - GL_TEXTURE0;
 	private int skyboxShaderProgramId;
+	private int skyboxUniformCameraYaw;
+	private int skyboxUniformCameraPitch;
+	private int skyboxUniformProjectionMatrix;
+	private int skyboxUniformIsCubemap;
+	private int skyboxUniformTexture;
+	private int skyboxUniformCubemapTexture;
 	private int customSkyboxTextureId;
+	private int customSkyboxCubemapTextureId;
+	private boolean loadedSkyboxIsCubemap;
 	private rs117.hd.config.SkyboxTheme loadedSkyboxTheme = rs117.hd.config.SkyboxTheme.NONE;
+	private String loadedCustomSkyboxName = "";
 	private int lastCameraYaw = -1;
 	private float continuousSkyboxYaw = 0f;
+
+	@Inject
+	private rs117.hd.scene.CustomSkyboxManager customSkyboxManager;
 
 
 	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
@@ -242,8 +257,13 @@ public class ZoneRenderer implements Renderer {
 		detailedShadowProgram.compile(includes);
 
 		skyboxShaderProgramId = compileSkyboxShader();
-		// Pass the absolute resource path string to your loading method
-		customSkyboxTextureId = loadSkyboxTexture("/rs117/hd/skybox3d/sunflowers_puresky_4k.png");
+		skyboxUniformCameraYaw = glGetUniformLocation(skyboxShaderProgramId, "cameraYaw");
+		skyboxUniformCameraPitch = glGetUniformLocation(skyboxShaderProgramId, "cameraPitch");
+		skyboxUniformProjectionMatrix = glGetUniformLocation(skyboxShaderProgramId, "projectionMatrix");
+		skyboxUniformIsCubemap = glGetUniformLocation(skyboxShaderProgramId, "isCubemap");
+		skyboxUniformTexture = glGetUniformLocation(skyboxShaderProgramId, "skyboxTexture");
+		skyboxUniformCubemapTexture = glGetUniformLocation(skyboxShaderProgramId, "skyboxCubemap");
+		// The actual skybox texture is loaded lazily in scenePass() once the configured theme is known
 	}
 
 	@Override
@@ -762,33 +782,48 @@ public class ZoneRenderer implements Renderer {
 		// --- DYNAMIC SKYBOX THEME CONFIGURATION TRACKER ---
 		rs117.hd.config.SkyboxTheme currentTheme = config.selectedSkyboxTheme();
 		boolean hasActiveSkyboxTheme = currentTheme != rs117.hd.config.SkyboxTheme.NONE;
+		String currentCustomSkyboxName = config.customSkyboxName();
 
 		if (hasActiveSkyboxTheme && environmentManager.isOverworld()) {
+			boolean themeChanged = currentTheme != loadedSkyboxTheme;
+			boolean customNameChanged = currentTheme == rs117.hd.config.SkyboxTheme.CUSTOM
+				&& !currentCustomSkyboxName.equals(loadedCustomSkyboxName);
 
-			// INTERCEPT: Check if the user changed the dropdown selection mid-game
-			if (currentTheme != loadedSkyboxTheme) {
-				// Free the old texture handle from GPU memory if it exists
+			// INTERCEPT: Check if the user changed the dropdown selection or custom name mid-game
+			if (themeChanged || customNameChanged) {
+				// Free the old texture handles from GPU memory if they exist
 				if (customSkyboxTextureId != 0) {
 					glDeleteTextures(customSkyboxTextureId);
 					customSkyboxTextureId = 0;
 				}
+				if (customSkyboxCubemapTextureId != 0) {
+					glDeleteTextures(customSkyboxCubemapTextureId);
+					customSkyboxCubemapTextureId = 0;
+				}
+				loadedSkyboxIsCubemap = false;
 
-				// Stream the new asset path specified by the active enum selection
-				customSkyboxTextureId = loadSkyboxTexture(currentTheme.getResourcePath());
+				if (currentTheme == rs117.hd.config.SkyboxTheme.CUSTOM) {
+					loadCustomSkybox(currentCustomSkyboxName);
+				} else {
+					// Stream the new asset path specified by the active built-in enum selection
+					customSkyboxTextureId = loadSkyboxTexture(currentTheme.getResourcePath());
+				}
+
 				loadedSkyboxTheme = currentTheme;
+				loadedCustomSkyboxName = currentCustomSkyboxName;
 			}
 
-			// Only run drawing commands if the selected asset file loaded successfully
-			if (customSkyboxTextureId != 0) {
+			// Only run drawing commands if the selected asset loaded successfully
+			if (customSkyboxTextureId != 0 || customSkyboxCubemapTextureId != 0) {
 				glDisable(GL_DEPTH_TEST);
 				glDepthMask(false);
 				glUseProgram(skyboxShaderProgramId);
 
-				// [ Your original texture coordinate math stays exactly here ]
 				float horizontalSpeed = 1.0f;
 				float verticalSpeed = 1.0f;
 
-				int currentYaw = client.getCameraYaw();
+				int currentYaw = (client.getCameraYaw() / 8) & 2047;
+
 				if (lastCameraYaw == -1) {
 					lastCameraYaw = currentYaw;
 					continuousSkyboxYaw = currentYaw;
@@ -806,17 +841,24 @@ public class ZoneRenderer implements Renderer {
 				lastCameraYaw = currentYaw;
 
 				float yawRadians = (float) ((continuousSkyboxYaw * 2.0 * Math.PI / 2048.0));
-				float pitchRadians = (float) ((client.getCameraPitch() * 2.0 * Math.PI / 2048.0) * verticalSpeed);
+				float pitchRadians = (float) (((client.getCameraPitch() / 8) * 2.0 * Math.PI / 2048.0) * verticalSpeed);
 
 				float[] projMatrix = sceneCamera.getProjectionMatrix();
 
-				glUniform1f(glGetUniformLocation(skyboxShaderProgramId, "cameraYaw"), yawRadians);
-				glUniform1f(glGetUniformLocation(skyboxShaderProgramId, "cameraPitch"), pitchRadians);
-				glUniformMatrix4fv(glGetUniformLocation(skyboxShaderProgramId, "projectionMatrix"), false, projMatrix);
+				glUniform1f(skyboxUniformCameraYaw, yawRadians);
+				glUniform1f(skyboxUniformCameraPitch, pitchRadians);
+				glUniformMatrix4fv(skyboxUniformProjectionMatrix, false, projMatrix);
+				glUniform1i(skyboxUniformIsCubemap, loadedSkyboxIsCubemap ? 1 : 0);
 
-				glActiveTexture(GL_TEXTURE8);
-				glBindTexture(GL_TEXTURE_2D, customSkyboxTextureId);
-				glUniform1i(glGetUniformLocation(skyboxShaderProgramId, "skyboxTexture"), 8);
+				if (loadedSkyboxIsCubemap) {
+					glActiveTexture(TEXTURE_UNIT_SKYBOX_CUBEMAP);
+					glBindTexture(GL_TEXTURE_CUBE_MAP, customSkyboxCubemapTextureId);
+					glUniform1i(skyboxUniformCubemapTexture, TEXTURE_UNIT_SKYBOX_CUBEMAP_INDEX);
+				} else {
+					glActiveTexture(TEXTURE_UNIT_SKYBOX);
+					glBindTexture(GL_TEXTURE_2D, customSkyboxTextureId);
+					glUniform1i(skyboxUniformTexture, TEXTURE_UNIT_SKYBOX_INDEX);
+				}
 
 				glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -1254,6 +1296,41 @@ public class ZoneRenderer implements Renderer {
 		}
 	}
 
+	/**
+	 * Loads the custom skybox entry with the given name from {@link rs117.hd.scene.CustomSkyboxManager},
+	 * dispatching to the equirectangular or cubemap upload path depending on the entry's declared type.
+	 * Populates {@link #customSkyboxTextureId}, {@link #customSkyboxCubemapTextureId} and
+	 * {@link #loadedSkyboxIsCubemap}. Leaves both texture ids at 0 if the entry can't be found or loaded.
+	 */
+	private void loadCustomSkybox(String name) {
+		var entry = customSkyboxManager.getEntry(name);
+		if (entry == null) {
+			if (!name.isEmpty())
+				log.warn("Custom skybox not found in manifest: {}", name);
+			return;
+		}
+
+		try {
+			switch (entry.type) {
+				case "cubemap":
+					customSkyboxCubemapTextureId = loadCubemapTexture(customSkyboxManager.loadCubemapFaceImages(entry));
+					loadedSkyboxIsCubemap = true;
+					break;
+				case "cubemap_cross":
+					customSkyboxCubemapTextureId = loadCubemapTexture(customSkyboxManager.loadCubemapCrossImage(entry));
+					loadedSkyboxIsCubemap = true;
+					break;
+				case "equirect":
+					customSkyboxTextureId = loadSkyboxTexture(customSkyboxManager.loadEquirectImage(entry));
+					break;
+				default:
+					log.warn("Unknown custom skybox type '{}' for entry '{}'", entry.type, name);
+			}
+		} catch (IOException ex) {
+			log.warn("Failed to load custom skybox '{}'", name, ex);
+		}
+	}
+
 	private int compileSkyboxShader() {
 		int vShader = glCreateShader(GL_VERTEX_SHADER);
 		int fShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -1270,6 +1347,8 @@ public class ZoneRenderer implements Renderer {
 		              "in vec2 screenUV;\n" +
 		              "out vec4 FragColor;\n" +
 		              "uniform sampler2D skyboxTexture;\n" +
+		              "uniform samplerCube skyboxCubemap;\n" +
+		              "uniform bool isCubemap;\n" +
 		              "uniform float cameraYaw;\n" +
 		              "uniform float cameraPitch;\n" +
 		              "uniform mat4 projectionMatrix;\n" +
@@ -1301,6 +1380,11 @@ public class ZoneRenderer implements Renderer {
 		              "    \n" +
 		              "    vec3 dir = normalize(finalDir);\n" +
 		              "    \n" +
+		              "    if (isCubemap) {\n" +
+		              "        FragColor = texture(skyboxCubemap, dir);\n" +
+		              "        return;\n" +
+		              "    }\n" +
+		              "    \n" +
 		              "    // --- APPLY VERTICAL SHIFT HERE ---\n" +
 		              "    // Slightly offsetting the Y lookup pushes the panorama horizon downwards\n" +
 		              "    float shiftedY = dir.y - 0.12;\n" +
@@ -1330,47 +1414,91 @@ public class ZoneRenderer implements Renderer {
 		return program;
 	}
 
+	/**
+	 * Packs a BufferedImage's ARGB pixels into a tightly-packed RGBA ByteBuffer suitable for
+	 * uploading via glTexImage2D.
+	 */
+	private static java.nio.ByteBuffer packRgba(java.awt.image.BufferedImage img) {
+		int width = img.getWidth();
+		int height = img.getHeight();
+		int[] pixels = new int[width * height];
+		img.getRGB(0, 0, width, height, pixels, 0, width);
+
+		java.nio.ByteBuffer buffer = org.lwjgl.BufferUtils.createByteBuffer(width * height * 4);
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				int pixel = pixels[y * width + x];
+				buffer.put((byte) ((pixel >> 16) & 0xFF));
+				buffer.put((byte) ((pixel >> 8) & 0xFF));
+				buffer.put((byte) (pixel & 0xFF));
+				buffer.put((byte) ((pixel >> 24) & 0xFF));
+			}
+		}
+		buffer.flip();
+		return buffer;
+	}
+
 	private int loadSkyboxTexture(String resourcePath) {
-		int texId = 0;
-		try {
-			java.io.InputStream is = getClass().getResourceAsStream(resourcePath);
+		try (java.io.InputStream is = getClass().getResourceAsStream(resourcePath)) {
 			if (is == null) {
-				log.error("IMAGE IS NULL: Could not find resource at: " + resourcePath);
+				log.error("Could not find built-in skybox resource at: " + resourcePath);
 				return 0;
 			}
 
-			// Fully qualified variable initialization:
-			java.awt.image.BufferedImage img = javax.imageio.ImageIO.read(is);
-			is.close();
+			return uploadEquirectTexture(javax.imageio.ImageIO.read(is));
+		} catch (Exception e) {
+			log.error("Failed to load built-in skybox texture from resources.", e);
+			return 0;
+		}
+	}
 
-			int width = img.getWidth();
-			int height = img.getHeight();
-			int[] pixels = new int[width * height];
-			img.getRGB(0, 0, width, height, pixels, 0, width);
+	private int loadSkyboxTexture(java.awt.image.BufferedImage image) {
+		try {
+			return uploadEquirectTexture(image);
+		} catch (Exception e) {
+			log.error("Failed to upload custom skybox texture.", e);
+			return 0;
+		}
+	}
 
-			java.nio.ByteBuffer buffer = org.lwjgl.BufferUtils.createByteBuffer(width * height * 4);
-			for(int y = 0; y < height; y++) {
-				for(int x = 0; x < width; x++) {
-					int pixel = pixels[y * width + x];
-					buffer.put((byte) ((pixel >> 16) & 0xFF));
-					buffer.put((byte) ((pixel >> 8) & 0xFF));
-					buffer.put((byte) (pixel & 0xFF));
-					buffer.put((byte) ((pixel >> 24) & 0xFF));
-				}
+	private int uploadEquirectTexture(java.awt.image.BufferedImage img) {
+		int width = img.getWidth();
+		int height = img.getHeight();
+		java.nio.ByteBuffer buffer = packRgba(img);
+
+		int texId = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, texId);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+		return texId;
+	}
+
+	/**
+	 * Uploads 6 face images (in +X,-X,+Y,-Y,+Z,-Z order) as a GL_TEXTURE_CUBE_MAP.
+	 */
+	private int loadCubemapTexture(java.awt.image.BufferedImage[] faces) {
+		try {
+			int texId = glGenTextures();
+			glBindTexture(GL_TEXTURE_CUBE_MAP, texId);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+			for (int i = 0; i < 6; i++) {
+				var face = faces[i];
+				glTexImage2D(
+					GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA8,
+					face.getWidth(), face.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, packRgba(face));
 			}
-			buffer.flip();
-
-			texId = glGenTextures();
-			glBindTexture(GL_TEXTURE_2D, texId);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 			return texId;
 		} catch (Exception e) {
-			log.error("Failed to load custom skybox texture from resources.", e);
+			log.error("Failed to upload custom skybox cubemap texture.", e);
 			return 0;
 		}
 	}

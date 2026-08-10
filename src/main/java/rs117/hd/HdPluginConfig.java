@@ -821,6 +821,18 @@ public interface HdPluginConfig extends Config
 		return SkyboxTheme.PARTLY_CLOUDY;
 	}
 
+	String KEY_CUSTOM_SKYBOX_NAME = "customSkyboxName";
+	@ConfigItem(
+		keyName = KEY_CUSTOM_SKYBOX_NAME,
+		name = "Custom Skybox Name",
+		description = "When 'Skybox Style' is set to Custom, the name of an entry from<br>" +
+			".runelite/117hd/custom-skyboxes/manifest.json to use.<br>" +
+			"Use the ::117hd skybox list command in-game to see available names.",
+		position = 1,
+		section = skyboxSettings
+	)
+	default String customSkyboxName() { return ""; }
+
 
 	/*====== Miscellaneous settings ======*/
 
