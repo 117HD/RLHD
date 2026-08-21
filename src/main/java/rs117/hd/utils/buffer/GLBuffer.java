@@ -39,7 +39,7 @@ import static org.lwjgl.opengl.GL44.GL_MAP_PERSISTENT_BIT;
 import static org.lwjgl.opengl.GL44.glBufferStorage;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.SUPPORTS_STORAGE_BUFFERS;
-import static rs117.hd.HdPlugin.checkGLErrors;
+import static rs117.hd.opengl.Utils.checkGLErrors;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j

@@ -106,7 +106,7 @@ layout (location = 0) in vec3 vPosition;
         vec3 worldPosition = sceneOffset + vPosition;
         if (vWorldViewId != -1 && !isShadowDisabled) {
             mat4x3 worldViewProjection = mat4x3(getWorldViewProjection(vWorldViewId));
-            worldPosition = worldViewProjection * vec4(worldPosition, 1.0);;
+            worldPosition = worldViewProjection * vec4(worldPosition, 1.0);
         }
 
         #if TERRAIN_ONLY_PASS
