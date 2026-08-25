@@ -2,6 +2,7 @@ package rs117.hd.utils.collections;
 
 import java.util.Comparator;
 import java.util.List;
+import rs117.hd.utils.collections.PooledArrayType.PooledArray;
 
 public final class Util {
 	public static final int DEFAULT_CAPACITY = 16;
@@ -62,14 +63,12 @@ public final class Util {
 		final int size = list.size();
 		if (size <= 1) return;
 
-		final Object[] buf = PooledArrayType.OBJECT.borrow(size);
-		try {
+		try (PooledArray<Object[]> bufArray = PooledArrayType.OBJECT.borrow("QuickSort::Objects", size)) {
+			final Object[] buf = bufArray.getArray();
 			list.toArray(buf);
 			quickSortInternal(buf, 0, size - 1, comparator);
 			for (int i = 0; i < size; i++)
 				list.set(i, (T) buf[i]);
-		} finally {
-			PooledArrayType.OBJECT.release(buf);
 		}
 	}
 
@@ -93,8 +92,9 @@ public final class Util {
 		 * ceil(log2(n)), so 64 int slots (= 32 pairs) covers 2^32 elements.
 		 * We borrow from the pool to keep the entire call heap-allocation-free.
 		 */
-		final int[] stack = PooledArrayType.INT.borrow(64);
-		try {
+		try (PooledArray<int[]> stackArray = PooledArrayType.INT.borrow("QuickSort::stack", 64)) {
+			final int[] stack = stackArray.getArray();
+
 			int top = 0;
 			stack[top++] = left;
 			stack[top++] = right;
@@ -176,8 +176,6 @@ public final class Util {
 					}
 				}
 			}
-		} finally {
-			PooledArrayType.INT.release(stack);
 		}
 	}
 

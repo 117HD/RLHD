@@ -28,6 +28,8 @@ import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.Int2IntHashMap;
 import rs117.hd.utils.collections.IntHashSet;
 import rs117.hd.utils.collections.PooledArrayType;
+import rs117.hd.utils.collections.PooledArrayType.PooledArray;
+import rs117.hd.utils.collections.PooledArrayType.PooledArrayRef;
 
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -433,7 +435,7 @@ public class Zone implements Destructible {
 		int dist;
 		int asyncSortIdx = -1;
 		int sortedFacesLen;
-		int[] tempSortedFaces;
+		PooledArrayRef<int[]> sortedFaces;
 
 		static final int SKIP = 1; // temporary model is in a closer zone
 		static final int TEMP = 2; // temporary model added to a closer zone
@@ -497,6 +499,7 @@ public class Zone implements Destructible {
 		m.tboF = tboF;
 		m.rid = (short) rid;
 		m.level = (byte) level;
+		m.sortedFaces = PooledArrayType.INT.ref("AlphaModel::SortedFaces");
 		if (lx > -1) {
 			m.lx = (byte) lx;
 			m.lz = (byte) lz;
@@ -564,95 +567,96 @@ public class Zone implements Destructible {
 		final int writtenAlphaFaceCount = (endpos - startpos) / (3 * intsPerVertex);
 		final int bucketCapacity = ceil(writtenAlphaFaceCount / 32.0f);
 
-		final int[] packedFaces = PooledArrayType.INT.borrow(writtenAlphaFaceCount);
-		final int[] doubleSidedBitSet = PooledArrayType.INT.borrow(bucketCapacity);
+		try (PooledArray<int[]> packedFacesArray = PooledArrayType.INT.borrow("Zone::AddAlphaModel::packedFacesArray", writtenAlphaFaceCount);
+			PooledArray<int[]> doubleSidedBitSetArray = PooledArrayType.INT.borrow("Zone::AddAlphaModel::doubleSidedBitSetArray",bucketCapacity)
+		) {
+			final int[] packedFaces = packedFacesArray.getArray();
+			final int[] doubleSidedBitSet = doubleSidedBitSetArray.getArray();
 
-		Arrays.fill(doubleSidedBitSet, 0, bucketCapacity, 0);
+			Arrays.fill(doubleSidedBitSet, 0, bucketCapacity, 0);
 
-		final Material baseMaterial = modelOverride.baseMaterial;
-		final Material textureMaterial = modelOverride.textureMaterial;
+			final Material baseMaterial = modelOverride.baseMaterial;
+			final Material textureMaterial = modelOverride.textureMaterial;
 
-		int radius = 0;
-		char bufferIdx = 0;
-		char doubleSidedCount = 0;
-		for (int f = 0; f < faceCount; ++f) {
-			if (color3[f] == -2)
-				continue;
+			int radius = 0;
+			char bufferIdx = 0;
+			char doubleSidedCount = 0;
+			for (int f = 0; f < faceCount; ++f) {
+				if (color3[f] == -2)
+					continue;
 
-			// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
-			if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, f))
-				continue;
+				// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
+				if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, f))
+					continue;
 
-			Material material = baseMaterial;
-			ModelOverride faceOverride = modelOverride;
+				Material material = baseMaterial;
+				ModelOverride faceOverride = modelOverride;
 
-			int transparency = SceneUploader.readFaceTransparency(model.getTransparency(), transparencies, f);
-			if (transparency == 255)
-				continue;
+				int transparency = SceneUploader.readFaceTransparency(model.getTransparency(), transparencies, f);
+				if (transparency == 255)
+					continue;
 
-			int textureId = faceTextures != null ? faceTextures[f] : -1;
-			if (textureId != -1) {
-				if (modelOverride.textureMaterial != Material.NONE) {
-					material = textureMaterial;
-				} else {
-					material = materialManager.fromVanillaTexture(textureId);
-					if (modelOverride.materialOverrides != null) {
-						var override = modelOverride.materialOverrides.get(material);
-						if (override != null) {
-							faceOverride = override;
-							material = override.textureMaterial;
+				int textureId = faceTextures != null ? faceTextures[f] : -1;
+				if (textureId != -1) {
+					if (modelOverride.textureMaterial != Material.NONE) {
+						material = textureMaterial;
+					} else {
+						material = materialManager.fromVanillaTexture(textureId);
+						if (modelOverride.materialOverrides != null) {
+							var override = modelOverride.materialOverrides.get(material);
+							if (override != null) {
+								faceOverride = override;
+								material = override.textureMaterial;
+							}
 						}
 					}
+				} else if (modelOverride.colorOverrides != null) {
+					final int ahsl = (0xFF - transparency) << 16 | (unlitColor != null ? unlitColor[f] & 0xFFFF : color1[f]);
+					final var override = modelOverride.testColorOverrides(ahsl);
+					if (override != null) {
+						faceOverride = override;
+						material = override.baseMaterial;
+					}
 				}
-			} else if (modelOverride.colorOverrides != null) {
-				final int ahsl = (0xFF - transparency) << 16 | (unlitColor != null ? unlitColor[f] & 0xFFFF : color1[f]);
-				final var override = modelOverride.testColorOverrides(ahsl);
-				if (override != null) {
-					faceOverride = override;
-					material = override.baseMaterial;
+
+				if (faceOverride.hide)
+					continue;
+
+				if (faceOverride.modifiesAlpha)
+					transparency = 255 - faceOverride.modifyAlpha(255 - transparency);
+
+				boolean hasAlpha = material.hasTransparency || transparency != 0;
+				if (!hasAlpha)
+					continue;
+
+				final int fx = (((int) (vertexX[indices1[f]] + vertexX[indices2[f]] + vertexX[indices3[f]]) / 3) - cx) >> shift;
+				final int fy = (((int) (vertexY[indices1[f]] + vertexY[indices2[f]] + vertexY[indices3[f]]) / 3) - cy) >> shift;
+				final int fz = (((int) (vertexZ[indices1[f]] + vertexZ[indices2[f]] + vertexZ[indices3[f]]) / 3) - cz) >> shift;
+
+				radius = Math.max(radius, fx * fx + fy * fy + fz * fz);
+				packedFaces[bufferIdx] = ((fx & ((1 << 11) - 1)) << 21)
+										 | ((fy & ((1 << 10) - 1)) << 11)
+										 | (fz & ((1 << 11) - 1));
+
+				if (faceOverride.doubleSidedFaces || material.doubleSidedFaces) {
+					doubleSidedBitSet[bufferIdx >> 5] |= 1 << (bufferIdx & 31);
+					doubleSidedCount++;
 				}
+
+				bufferIdx++;
 			}
 
-			if (faceOverride.hide)
-				continue;
+			assert packedFaces.length > 0;
+			// Normally these will be equal, but transparency is used to hide faces in the TzHaar reskin
+			assert bufferIdx <= packedFaces.length : String.format("%d > %d", (int) bufferIdx, packedFaces.length);
 
-			if (faceOverride.modifiesAlpha)
-				transparency = 255 - faceOverride.modifyAlpha(255 - transparency);
+			m.radius = 2 + (int) Math.sqrt(radius);
+			m.packedFaces = Arrays.copyOf(packedFaces, bufferIdx);
+			m.doubleSidedBitSet = doubleSidedCount > 0 ? Arrays.copyOf(doubleSidedBitSet, ceil(bufferIdx / 32.0f)) : null;
+			m.doubleSidedCount = doubleSidedCount;
 
-			boolean hasAlpha = material.hasTransparency || transparency != 0;
-			if (!hasAlpha)
-				continue;
-
-			final int fx = (((int) (vertexX[indices1[f]] + vertexX[indices2[f]] + vertexX[indices3[f]]) / 3) - cx) >> shift;
-			final int fy = (((int) (vertexY[indices1[f]] + vertexY[indices2[f]] + vertexY[indices3[f]]) / 3) - cy) >> shift;
-			final int fz = (((int) (vertexZ[indices1[f]] + vertexZ[indices2[f]] + vertexZ[indices3[f]]) / 3) - cz) >> shift;
-
-			radius = Math.max(radius, fx * fx + fy * fy + fz * fz);
-			packedFaces[bufferIdx] = ((fx & ((1 << 11) - 1)) << 21)
-			                         | ((fy & ((1 << 10) - 1)) << 11)
-			                         | (fz & ((1 << 11) - 1));
-
-			if (faceOverride.doubleSidedFaces || material.doubleSidedFaces) {
-				doubleSidedBitSet[bufferIdx >> 5] |= 1 << (bufferIdx & 31);
-				doubleSidedCount++;
-			}
-
-			bufferIdx++;
+			alphaModels.add(m);
 		}
-
-		assert packedFaces.length > 0;
-		// Normally these will be equal, but transparency is used to hide faces in the TzHaar reskin
-		assert bufferIdx <= packedFaces.length : String.format("%d > %d", (int) bufferIdx, packedFaces.length);
-
-		m.radius = 2 + (int) Math.sqrt(radius);
-		m.packedFaces = Arrays.copyOf(packedFaces, bufferIdx);
-		m.doubleSidedBitSet = doubleSidedCount > 0 ? Arrays.copyOf(doubleSidedBitSet, ceil(bufferIdx / 32.0f)) : null;
-		m.doubleSidedCount = doubleSidedCount;
-
-		alphaModels.add(m);
-
-		PooledArrayType.INT.release(packedFaces);
-		PooledArrayType.INT.release(doubleSidedBitSet);
 	}
 
 	synchronized AlphaModel requestTempAlphaModel(ModelOverride modelOverride, int level, int x, int y, int z) {
@@ -683,12 +687,12 @@ public class Zone implements Destructible {
 				alphaModels.remove(i);
 				m.packedFaces = null;
 				m.doubleSidedBitSet = null;
+				m.sortedFaces = null;
 				ALPHA_MODEL_POOL.recycle(m);
 			}
 
-			if (m.tempSortedFaces != null)
-				PooledArrayType.INT.release(m.tempSortedFaces);
-			m.tempSortedFaces = null;
+			if (m.sortedFaces != null)
+				m.sortedFaces.close();
 		}
 	}
 
@@ -740,7 +744,7 @@ public class Zone implements Destructible {
 				continue;
 
 			m.dist = dist;
-			m.tempSortedFaces = PooledArrayType.INT.borrow((m.packedFaces.length + m.doubleSidedCount) * 3);
+			m.sortedFaces.ensureCapacity((m.packedFaces.length + m.doubleSidedCount) * 3);
 			alphaSortingJob.addAlphaModel(m);
 		}
 		alphaSortingJob.queue(camera);
@@ -816,7 +820,7 @@ public class Zone implements Destructible {
 					alphaSortingJob.waitForCompletion(10);
 			}
 
-			if (m.tempSortedFaces == null || m.sortedFacesLen <= 0)
+			if (m.sortedFaces == null || m.sortedFacesLen <= 0)
 				continue;
 
 			sortedAlphaFacesUpload.alphaModels.add(m);
@@ -936,7 +940,7 @@ public class Zone implements Destructible {
 				m2.radius = m.radius;
 				m2.doubleSidedCount = m.doubleSidedCount;
 				m2.asyncSortIdx = m.asyncSortIdx;
-				m2.tempSortedFaces = m.tempSortedFaces;
+				m2.sortedFaces = m.sortedFaces;
 				m2.sortedFacesLen = m.sortedFacesLen;
 
 				m2.flags = AlphaModel.TEMP;

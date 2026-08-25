@@ -48,7 +48,7 @@ import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PooledArrayType;
-import rs117.hd.utils.collections.PooledObjectArray;
+import rs117.hd.utils.collections.PooledArrayType.PooledArrayRef;
 import rs117.hd.utils.collections.PrimitiveCharArray;
 import rs117.hd.utils.collections.PrimitiveIntArray;
 
@@ -133,12 +133,14 @@ public class SceneUploader implements AutoCloseable {
 	private final int[] modelNormals = new int[9];
 	private final short[][] tileNormals = new short[4][3];
 
-	private int[] modelVertices;
-	public int tempModelAlphaFaces = 0;
+	private final PooledArrayRef<int[]> modelVertices = PooledArrayType.INT.ref("SceneUploader::modelVertices");
+	private final PooledArrayRef<boolean[]> visibility = PooledArrayType.BOOL.ref("SceneUploader::visibility");
+	private final PooledArrayRef<float[]> modelProjected = PooledArrayType.FLOAT.ref("SceneUploader::modelProjected");
+	private final PooledArrayRef<ModelOverride[]> faceOverrides = PooledArrayType.OBJECT.ref("SceneUploader::faceOverrides");
+	private final PooledArrayRef<Material[]> faceMaterials = PooledArrayType.OBJECT.ref("SceneUploader::faceMaterials");
+	private final PooledArrayRef<UvType[]> faceUVTypes = PooledArrayType.OBJECT.ref("SceneUploader::faceUVTypes");
 
-	private final PooledObjectArray<ModelOverride> faceOverrides = new PooledObjectArray<>();
-	private final PooledObjectArray<Material> faceMaterials = new PooledObjectArray<>();
-	private final PooledObjectArray<UvType> faceUVTypes = new PooledObjectArray<>();
+	public int tempModelAlphaFaces = 0;
 
 	private final int[] tzHaarRecolored = new int[3];
 	private final float[] projected = new float[4];
@@ -169,16 +171,12 @@ public class SceneUploader implements AutoCloseable {
 		currentScene = null;
 		onBeforeProcessTile = null;
 
-		PooledArrayType.INT.release(modelVertices);
-		modelVertices = null;
-
-		faceOverrides.release();
-		faceMaterials.release();
-		faceUVTypes.release();
-	}
-
-	private void ensureVerticesAllocated(int vertexCount) {
-		modelVertices = PooledArrayType.INT.ensureCapacity(modelVertices, vertexCount * 3);
+		modelVertices.close();
+		visibility.close();
+		modelProjected.close();
+		faceOverrides.close();
+		faceMaterials.close();
+		faceUVTypes.close();
 	}
 
 	public void estimateZoneSize(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) throws InterruptedException {
@@ -1546,8 +1544,7 @@ public class SceneUploader implements AutoCloseable {
 			orientCos = COSINE[orientation];
 		}
 
-		ensureVerticesAllocated(vertexCount);
-
+		final int[] modelVertices = this.modelVertices.ensureCapacity(vertexCount * 3);
 		for (int v = 0, vertexOffset = 0; v < vertexCount; ++v) {
 			int vx = (int) vertexX[v];
 			int vy = (int) vertexY[v];
@@ -1896,12 +1893,17 @@ public class SceneUploader implements AutoCloseable {
 	) {
 		final int vertexCount = model.getVerticesCount();
 
+		if(isModelPartiallyVisible)
+			visibility.ensureCapacity(vertexCount);
+		modelProjected.ensureCapacity(vertexCount * 3);
+
+		final int[] modelVertices = this.modelVertices.ensureCapacity(vertexCount * 3);
+		final boolean[] visibility = this.visibility.getArray();
+		final float[] modelProjected = this.modelProjected.getArray();
+
 		final float[] verticesX = model.getVerticesX();
 		final float[] verticesY = model.getVerticesY();
 		final float[] verticesZ = model.getVerticesZ();
-
-		final boolean[] visibility = isModelPartiallyVisible ? PooledArrayType.BOOL.borrow(vertexCount) : null;
-		final float[] modelProjected = PooledArrayType.FLOAT.borrow(vertexCount * 3);
 
 		// Identity orient, will result in no rotation
 		float orientSinf = 0;
@@ -1912,8 +1914,6 @@ public class SceneUploader implements AutoCloseable {
 			orientSinf = SINE[orientation] / 65536f;
 			orientCosf = COSINE[orientation] / 65536f;
 		}
-
-		ensureVerticesAllocated(vertexCount);
 
 		boolean shouldSort = true;
 		boolean allVertsVisible = true;
@@ -2125,9 +2125,6 @@ public class SceneUploader implements AutoCloseable {
 			visibleFaces.put(f);
 		}
 
-		PooledArrayType.BOOL.release(visibility);
-		PooledArrayType.FLOAT.release(modelProjected);
-
 		return shouldSort;
 	}
 
@@ -2169,6 +2166,7 @@ public class SceneUploader implements AutoCloseable {
 		final byte[] textureFaces = model.getTextureFaces();
 		final byte[] bias = model.getFaceBias();
 		final int[] faceNormals = isShadow ? EMPTY_NORMALS : modelNormals;
+		final int[] modelVertices = this.modelVertices.getArray();
 
 		final int faceCount = model.getFaceCount();
 		final boolean hasBias = bias != null;

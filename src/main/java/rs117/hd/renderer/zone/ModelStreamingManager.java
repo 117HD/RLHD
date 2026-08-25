@@ -25,6 +25,7 @@ import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PooledArrayType;
+import rs117.hd.utils.collections.PooledArrayType.PooledArray;
 import rs117.hd.utils.collections.PrimitiveCharArray;
 
 import static net.runelite.api.Perspective.*;
@@ -362,13 +363,13 @@ public class ModelStreamingManager {
 
 		try (
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
-			FacePrioritySorter facePrioritySorter = shouldSort ? FacePrioritySorter.POOL.acquire() : null
+			FacePrioritySorter facePrioritySorter = shouldSort ? FacePrioritySorter.POOL.acquire() : null;
+			PooledArray<int[]> faceDistances = shouldSort ? PooledArrayType.INT.borrow("ModelStreamingManager::uploadTempModel", m.getFaceCount()) : null
 		) {
-			final int[] faceDistances = shouldSort ? PooledArrayType.INT.borrow(m.getFaceCount()) : null;
 			shouldSort &= sceneUploader.preprocessTempModel(
 				projection,
 				plugin.cameraFrustum,
-				faceDistances,
+				faceDistances != null ? faceDistances.getArray() : null,
 				visibleFaces,
 				culledFaces,
 				isModelPartiallyVisible,
@@ -381,11 +382,8 @@ public class ModelStreamingManager {
 
 			final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
-			if (shouldSort && !isSquashed)
-				facePrioritySorter.sortModelFaces(visibleFaces, m, faceDistances, !isActor);
-
-			if (facePrioritySorter != null)
-				PooledArrayType.INT.release(faceDistances);
+			if (shouldSort && faceDistances != null && !isSquashed)
+				facePrioritySorter.sortModelFaces(visibleFaces, m, faceDistances.getArray(), !isActor);
 
 			if (culledFaces.length > 0 &&
 				modelOverride.castShadows &&
