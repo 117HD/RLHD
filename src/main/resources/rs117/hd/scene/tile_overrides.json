@@ -11295,11 +11295,23 @@
     "groundMaterial": "VARIED_DIRT"
   },
   {
+    "name": "Vampyrium - Sangvesti Roofs",
+    "area": "VAMPYRIUM_SANGVESTI_BUILDINGS",
+    "uvOrientation": 512,
+    "blended": false,
+    "overlayIds": [
+      633
+    ],
+    "groundMaterial": "DIRTY_STONE"
+  },
+  {
     "name": "Vampyrium - Dirt",
     "area": "VAMPYRIUM",
     "uvOrientation": 512,
     "shiftLightness": 1,
+    "minLightness": 7,
     "underlayIds": [
+      77,
       92,
       237,
       235,
@@ -11317,10 +11329,13 @@
     "area": "VAMPYRIUM",
     "uvOrientation": -128,
     "shiftLightness": 1,
+    "minLightness": 7,
     "overlayIds": [
       427,
       629,
-      634
+      631,
+      634,
+      640
     ],
     "groundMaterial": "VARIED_DIRT"
   },

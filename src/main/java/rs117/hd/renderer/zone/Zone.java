@@ -399,6 +399,8 @@ public class Zone implements Destructible {
 
 	private static void pushRange(int start, int end) {
 		assert end >= start;
+		if (end <= start)
+			return;
 
 		if (drawIdx > 0 && drawEnd[drawIdx - 1] == start) {
 			drawEnd[drawIdx - 1] = end;
