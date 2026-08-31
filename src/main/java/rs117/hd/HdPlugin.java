@@ -689,11 +689,9 @@ public class HdPlugin extends Plugin {
 				waterTypeManager.startUp();
 				gamevalManager.startUp();
 
-				gpuFlags = DrawCallbacks.GPU | renderer.gpuFlags();
+				gpuFlags = DrawCallbacks.GPU | renderer.gpuFlags() | DrawCallbacks.UNLIT_FACE_COLORS;
 				if (config.removeVertexSnapping())
 					gpuFlags |= DrawCallbacks.NO_VERTEX_SNAPPING;
-				if (configShadingMode.unlitFaceColors)
-					gpuFlags |= DrawCallbacks.UNLIT_FACE_COLORS;
 				client.setGpuFlags(gpuFlags);
 
 				// Initialize the renderer after setting initial GPU flags,

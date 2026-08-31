@@ -165,9 +165,10 @@
         "type": "number",
         "description": "The fraction along the models height defining the region of which vertices blend to the terrain surface. Defaults to 0.125."
       },
-      "undoVanillaShading": {
-        "type": "boolean",
-        "description": "Whether the model should undo the baked phong shading in the vertex colours. Defaults to true."
+      "shadingMode": {
+        "type": "string",
+        "description": "Whether/How the model should undo the baked phong shading in the vertex colours. Defaults to DEFAULT.",
+        "enum": [ "NONE", "DEFAULT", "UNLIT" ]
       },
       "hideAsWaterEffect": {
         "type": "boolean",
@@ -383,9 +384,10 @@
               "type": "number",
               "description": "The fraction along the models height defining the region of which vertices blend to the terrain surface. Defaults to 0.125."
             },
-            "undoVanillaShading": {
-              "type": "boolean",
-              "description": "Whether the model should undo the baked phong shading in the vertex colours. Defaults to true."
+            "shadingMode": {
+              "type": "string",
+              "description": "Whether/How the model should undo the baked phong shading in the vertex colours. Defaults to DEFAULT.",
+              "enum": [ "NONE", "DEFAULT", "UNLIT" ]
             },
             "hideAsWaterEffect": {
               "type": "boolean",
