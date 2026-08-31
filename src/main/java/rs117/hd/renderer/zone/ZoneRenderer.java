@@ -1023,7 +1023,8 @@ public class ZoneRenderer implements Renderer {
 			if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
 				return;
 
-			frameTimer.begin(Timer.DRAW_PASS);
+			final Timer passTimer = pass == DrawCallbacks.PASS_OPAQUE ? Timer.DRAW_PASS_OPAQUE : Timer.DRAW_PASS_ALPHA;
+			frameTimer.begin(passTimer);
 
 			switch (pass) {
 				case DrawCallbacks.PASS_OPAQUE:
@@ -1061,13 +1062,21 @@ public class ZoneRenderer implements Renderer {
 					ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
 					ctx.vaoSceneCmd.ColorMask(true, true, true, true);
 
+					frameTimer.begin(Timer.ALPHA_FACE_UPLOAD);
+					for (int zx = 0; zx < ctx.sizeX; ++zx)
+						for (int zz = 0; zz < ctx.sizeZ; ++zz)
+							ctx.zones[zx][zz].completeSortedAlphaFacesUpload();
+					frameTimer.end(Timer.ALPHA_FACE_UPLOAD);
+
+					frameTimer.begin(Timer.POST_ALPHA_PASS);
 					for (int zx = 0; zx < ctx.sizeX; ++zx)
 						for (int zz = 0; zz < ctx.sizeZ; ++zz)
 							ctx.zones[zx][zz].postAlphaPass();
+					frameTimer.end(Timer.POST_ALPHA_PASS);
 					break;
 			}
 
-			frameTimer.end(Timer.DRAW_PASS);
+			frameTimer.end(passTimer);
 			checkGLErrors();
 		} catch (Throwable ex) {
 			log.error("Error in drawPass({}, {}, {}):", projection, scene != null ? scene.getWorldViewId() : null, pass, ex);

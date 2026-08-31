@@ -672,8 +672,11 @@ public class Zone implements Destructible {
 		return m;
 	}
 
-	synchronized void postAlphaPass() {
+	void completeSortedAlphaFacesUpload() {
 		sortedAlphaFacesUpload.waitForCompletion();
+	}
+
+	synchronized void postAlphaPass() {
 		alphaSortingJob.waitForCompletion();
 
 		for (int i = alphaModels.size() - 1; i >= 0; --i) {
