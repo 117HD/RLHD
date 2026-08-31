@@ -443,7 +443,7 @@ void main() {
         underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut;
 
         #if DISPLAY_LIGHTING
-            FragColor = vec4(compositeLight, 1.0);
+            FragColor = vec4(pointLightsOut, 1.0);
             if (DISPLAY_LIGHTING == 1) return; // Redundant, for syntax highlighting in IntelliJ
         #endif
 

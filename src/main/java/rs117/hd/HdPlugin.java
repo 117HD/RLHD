@@ -87,6 +87,7 @@ import rs117.hd.config.ShadowMode;
 import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
+import rs117.hd.opengl.shader.StaticShadowBlitProgram;
 import rs117.hd.opengl.shader.TiledLightingShaderProgram;
 import rs117.hd.opengl.shader.UIShaderProgram;
 import rs117.hd.opengl.uniforms.UBOCompute;
@@ -171,6 +172,7 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_POSITIONAL_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -309,6 +311,9 @@ public class HdPlugin extends Plugin {
 	@Inject
 	public TiledLightingShaderProgram tiledLightingImageStoreProgram;
 
+	@Inject
+	public StaticShadowBlitProgram staticShadowBlitProgram;
+
 	public final List<TiledLightingShaderProgram> tiledLightingShaderPrograms = new ArrayList<>();
 
 	@Inject
@@ -407,6 +412,7 @@ public class HdPlugin extends Plugin {
 	public boolean configModelBatching;
 	public boolean configModelCaching;
 	public boolean configShadowsEnabled;
+	public boolean configPositionalShadows;
 	public boolean configRoofShadows;
 	public boolean configExpandShadowDraw;
 	public boolean configUseFasterModelHashing;
@@ -972,6 +978,7 @@ public class HdPlugin extends Plugin {
 
 		renderer.initializeShaders(includes);
 		uiProgram.compile(includes);
+		staticShadowBlitProgram.compile(includes);
 
 		if (configDynamicLights != DynamicLights.NONE && configTiledLighting) {
 			if (!AMD_GPU && configTiledLightingImageLoadStore &&
@@ -1599,8 +1606,8 @@ public class HdPlugin extends Plugin {
 	}
 
 	/**
-	 * Convert the front framebuffer to an Image
-	 */
+     * Convert the front framebuffer to an Image
+     */
 	public Image screenshot() {
 		if (uiResolution == null)
 			return null;
@@ -1646,6 +1653,7 @@ public class HdPlugin extends Plugin {
 		configExpandedMapLoadingChunks = config.expandedMapLoadingChunks();
 		configShadowMode = config.shadowMode();
 		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
+		configPositionalShadows = config.positionalShadows();
 		configRoofShadows = config.roofShadows();
 		configGroundTextures = config.groundTextures();
 		var groundBlending = config.groundBlending();
@@ -1825,6 +1833,7 @@ public class HdPlugin extends Plugin {
 							case KEY_WIREFRAME:
 							case KEY_SHADOW_FILTERING:
 							case KEY_WINDOWS_HDR_CORRECTION:
+							case KEY_SHADOW_POSITIONAL:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:

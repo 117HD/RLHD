@@ -54,12 +54,12 @@ public class WorldViewContext {
 	@Inject
 	private SceneManager sceneManager;
 
-	final int worldViewId;
-	final int sizeX, sizeZ;
+	public final int worldViewId;
+	public final int sizeX, sizeZ;
 	@Nullable
 	WorldViewStruct uboWorldViewStruct;
-	ZoneSceneContext sceneContext;
-	Zone[][] zones;
+	public ZoneSceneContext sceneContext;
+	public Zone[][] zones;
 	GLBuffer vboM;
 	boolean isLoading = true;
 
@@ -69,8 +69,8 @@ public class WorldViewContext {
 	private final Comparator<Zone> alphaSortComparator = Comparator.comparingInt((Zone z) -> z.dist).reversed();
 	private final List<Zone> alphaZones = new ArrayList<>();
 
-	CommandBuffer vaoSceneCmd;
-	CommandBuffer vaoDirectionalCmd;
+	public CommandBuffer vaoSceneCmd;
+	public CommandBuffer vaoDirectionalCmd;
 	final DynamicModelVAO[][] dynamicModelVaos = new DynamicModelVAO[FRAMES_IN_FLIGHT][VAO_COUNT];
 
 	public long loadTime;

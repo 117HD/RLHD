@@ -87,6 +87,68 @@ public class Mat4 {
 		};
 	}
 
+	public static float[] lookAt(
+		float eyeX, float eyeY, float eyeZ,
+		float centerX, float centerY, float centerZ,
+		float upX, float upY, float upZ) {
+		float fx = centerX - eyeX;
+		float fy = centerY - eyeY;
+		float fz = centerZ - eyeZ;
+		float fl = sqrt(fx * fx + fy * fy + fz * fz);
+		fx /= fl;
+		fy /= fl;
+		fz /= fl;
+
+		float sx = fy * upZ - fz * upY;
+		float sy = fz * upX - fx * upZ;
+		float sz = fx * upY - fy * upX;
+		float sl = sqrt(sx * sx + sy * sy + sz * sz);
+		sx /= sl;
+		sy /= sl;
+		sz /= sl;
+
+		float ux = sy * fz - sz * fy;
+		float uy = sz * fx - sx * fz;
+		float uz = sx * fy - sy * fx;
+
+		return new float[] {
+			sx, ux, -fx, 0,
+			sy, uy, -fy, 0,
+			sz, uz, -fz, 0,
+			-(sx * eyeX + sy * eyeY + sz * eyeZ),
+			-(ux * eyeX + uy * eyeY + uz * eyeZ),
+			fx * eyeX + fy * eyeY + fz * eyeZ,
+			1
+		};
+	}
+
+	public static float[] lookAtRotation(float dirX, float dirY, float dirZ, float upX, float upY, float upZ) {
+		float fLen = sqrt(dirX * dirX + dirY * dirY + dirZ * dirZ);
+		float fx = dirX / fLen, fy = dirY / fLen, fz = dirZ / fLen;
+
+		// right = forward x up
+		float sx = fy * upZ - fz * upY;
+		float sy = fz * upX - fx * upZ;
+		float sz = fx * upY - fy * upX;
+		float sLen = sqrt(sx * sx + sy * sy + sz * sz);
+		sx /= sLen;
+		sy /= sLen;
+		sz /= sLen;
+
+		// true up = right x forward
+		float ux = sy * fz - sz * fy;
+		float uy = sz * fx - sx * fz;
+		float uz = sx * fy - sy * fx;
+
+		// Column-major storage (m[col*4+row]), matching rotateX/rotateY's convention
+		return new float[] {
+			sx, ux, -fx, 0,
+			sy, uy, -fy, 0,
+			sz, uz, -fz, 0,
+			0,  0,   0, 1,
+		};
+	}
+
 	/**
 	 * Infinite far plane, Reverse-Z perspective matrix.
 	 * Depth = 1 at near plane, 0 infinitely far away.

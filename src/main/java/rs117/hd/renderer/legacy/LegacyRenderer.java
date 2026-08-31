@@ -713,7 +713,7 @@ public class LegacyRenderer implements Renderer {
 
 			frameTimer.begin(Timer.UPDATE_LIGHTS);
 			final float[] lightPosition = new float[4];
-			final float[] lightColor = new float[4];
+			final float[] lightColor = new float[3];
 			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
 				final Light light = sceneContext.lights.get(i);
 				final float lightRadiusSq = light.radius * light.radius;
@@ -725,7 +725,6 @@ public class LegacyRenderer implements Renderer {
 				lightColor[0] = light.color[0] * light.strength;
 				lightColor[1] = light.color[1] * light.strength;
 				lightColor[2] = light.color[2] * light.strength;
-				lightColor[3] = 0.0f;
 
 				plugin.uboLights.setLight(i, lightPosition, lightColor);
 

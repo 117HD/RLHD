@@ -431,12 +431,24 @@ public interface HdPluginConfig extends Config
 		return ShadowFiltering.SMOOTH;
 	}
 
+	String KEY_SHADOW_POSITIONAL = "enablePositionalShadows";
+	@ConfigItem(
+		keyName = KEY_SHADOW_POSITIONAL,
+		name = "Positional Shadows",
+		description = "Enables shadows for lights placed within the scene.",
+		position = 4,
+		section = shadowSettings
+	)
+	default boolean positionalShadows() {
+		return true;
+	}
+
 	String KEY_SHADOW_TRANSPARENCY = "enableShadowTransparency";
 	@ConfigItem(
 		keyName = KEY_SHADOW_TRANSPARENCY,
 		name = "Shadow transparency",
 		description = "Enable partial support for taking model transparency into account.",
-		position = 4,
+		position = 5,
 		section = shadowSettings
 	)
 	default boolean shadowTransparency() {
@@ -448,7 +460,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_ROOF_SHADOWS,
 		name = "Roof shadows",
 		description = "Always cast shadows from roofs, even when they are hidden.",
-		position = 5,
+		position = 6,
 		section = shadowSettings
 	)
 	default boolean roofShadows() {
@@ -462,7 +474,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Reduces shadows popping in and out at the edge of the screen by rendering<br>" +
 			"shadows for a larger portion of the scene, at the cost of higher GPU usage.",
-		position = 6,
+		position = 7,
 		section = shadowSettings
 	)
 	default boolean expandShadowDraw() {

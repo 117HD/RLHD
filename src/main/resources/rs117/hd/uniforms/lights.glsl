@@ -1,11 +1,14 @@
 #pragma once
 
 #include <utils/constants.glsl>
+#include <utils/misc.glsl>
 
 #if DYNAMIC_LIGHTS
 struct PointLight {
-    vec4 position;
-    vec4 color;
+    vec3 position;
+    int packedRadiusNear;
+    vec3 color;
+    int packedShadowData;
 };
 
 layout(std140) uniform UBOLights {
@@ -28,5 +31,18 @@ ivec2 decodePackedLight(uint packedValue) {
     } else {
         return ivec2(int(packedValue & 0x7FFFu) - 1, -1);
     }
+}
+
+float getLightRadius(PointLight light) {
+    return unpackFloat2x16(light.packedRadiusNear).x;
+}
+
+float getLightRadiusSq(PointLight light) {
+    float radius = getLightRadius(light);
+    return radius * radius;
+}
+
+float getLightNearPlane(PointLight light) {
+    return unpackFloat2x16(light.packedRadiusNear).y;
 }
 #endif

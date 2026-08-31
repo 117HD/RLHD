@@ -3,6 +3,7 @@ package rs117.hd.scene.lights;
 import com.google.gson.annotations.JsonAdapter;
 import java.util.HashSet;
 import javax.annotation.Nullable;
+import rs117.hd.config.PositionalShadowMode;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.utils.ColorUtils;
@@ -16,10 +17,12 @@ public class LightDefinition {
 	public float[] offset = new float[3];
 	public int height;
 	public int radius = 300;
+	public float shadowNearPlane = 10.0f;
 	public float strength = 5;
 	@JsonAdapter(ColorUtils.SrgbToLinearAdapter.class)
 	public float[] color;
 	public LightType type = LightType.STATIC;
+	public PositionalShadowMode shadowMode = PositionalShadowMode.DYNAMIC;
 	public float duration;
 	public float range;
 	public int fadeInDuration = 50;

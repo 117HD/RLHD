@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -326,18 +327,10 @@ public class Zone implements Destructible {
 		copyTo(glDrawLength, drawEnd, 0, drawIdx);
 	}
 
-	void renderOpaque(CommandBuffer cmd, WorldViewContext ctx, boolean roofShadows) {
+	public void renderOpaque(CommandBuffer cmd, int currentLevel, int minLevel, int maxLevel, Set<Integer> hiddenRoofIds) {
 		drawIdx = 0;
 
-		int currentLevel = ctx.level;
-		int maxLevel = ctx.maxLevel;
-		var hiddenRoofIds = ctx.hideRoofIds;
-		if (roofShadows) {
-			maxLevel = 3;
-			hiddenRoofIds = Collections.emptySet();
-		}
-
-		for (int level = ctx.minLevel; level <= maxLevel; ++level) {
+		for (int level = minLevel; level <= maxLevel; ++level) {
 			int[] rids = this.rids[level];
 			int[] roofStart = this.roofStart[level];
 			int[] roofEnd = this.roofEnd[level];
@@ -381,6 +374,19 @@ public class Zone implements Destructible {
 		lastVao = glVao;
 		lastTboF = tboF.getTexId();
 		flush(cmd);
+	}
+
+	public void renderOpaque(CommandBuffer cmd, WorldViewContext ctx, boolean roofShadows) {
+		int currentLevel = ctx.level;
+		int maxLevel = ctx.maxLevel;
+		var hiddenRoofIds = ctx.hideRoofIds;
+
+		if (roofShadows) {
+			maxLevel = 3;
+			hiddenRoofIds = Collections.emptySet();
+		}
+
+		renderOpaque(cmd, currentLevel, ctx.minLevel, maxLevel, hiddenRoofIds);
 	}
 
 	void renderOpaqueLevel(CommandBuffer cmd, int level) {
