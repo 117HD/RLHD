@@ -153,8 +153,6 @@ public abstract class Job {
 
 	protected abstract void onRun() throws InterruptedException;
 
-	protected boolean canStart() { return true; }
-
 	protected void onCompletion() {}
 
 	protected void onCancel() {}

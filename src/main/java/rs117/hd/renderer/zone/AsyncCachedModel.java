@@ -312,7 +312,6 @@ public final class AsyncCachedModel extends Job implements Model {
 		return success;
 	}
 
-	@Override
 	protected boolean canStart() {
 		if (isProcessing.get()) // Work has been stolen, so pop it off the queue
 			return true;
