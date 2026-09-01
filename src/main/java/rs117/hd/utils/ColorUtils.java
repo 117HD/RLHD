@@ -12,6 +12,8 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
@@ -406,6 +408,14 @@ public class ColorUtils {
 
 	public static String rgbToHex(float... linearRgb) {
 		return srgbToHex(linearToSrgb(linearRgb));
+	}
+
+	public static float[] averageSrgb(BufferedImage image) {
+		BufferedImage scaledImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+		Graphics2D g = scaledImage.createGraphics();
+		g.drawImage(image, 0, 0, 1, 1, null);
+		g.dispose();
+		return srgb(scaledImage.getRGB(0, 0));
 	}
 
 	@Slf4j

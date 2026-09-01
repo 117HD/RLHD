@@ -38,6 +38,7 @@ import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.api.HdEvent;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.utils.FileWatcher;
@@ -64,6 +65,10 @@ public class EnvironmentManager {
 
 	@Inject
 	private HdPluginConfig config;
+
+	// TODO: Move all minimap handling into the MinimapManager
+	@Inject
+	private MinimapManager minimapManager;
 
 	private static final float TRANSITION_DURATION = 3; // seconds
 	// distance in tiles to skip transition (e.g. entering cave, teleporting)
@@ -289,6 +294,7 @@ public class EnvironmentManager {
 		}
 
 		updateLightning();
+		minimapManager.updateMinimapLighting(sceneContext);
 	}
 
 	/**
@@ -376,6 +382,7 @@ public class EnvironmentManager {
 			if (abs(diff) > PI)
 				targetSunAngles[i] += TWO_PI * sign(diff);
 		}
+		minimapManager.prepareScene(plugin.getSceneContext());
 	}
 
 	public void updateTargetSkyColor() {
@@ -416,6 +423,7 @@ public class EnvironmentManager {
 
 		// Fall back to the default environment
 		sceneContext.environments.add(Environment.DEFAULT);
+		minimapManager.updateMinimapLighting = true;
 	}
 
 	/* lightning */
