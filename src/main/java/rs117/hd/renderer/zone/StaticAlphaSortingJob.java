@@ -1,24 +1,30 @@
 package rs117.hd.renderer.zone;
 
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicIntegerArray;
+import java.util.ArrayDeque;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import lombok.RequiredArgsConstructor;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.zone.Zone.AlphaModel;
 import rs117.hd.utils.Camera;
+import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.Job;
 
 import static net.runelite.api.Perspective.*;
-import static rs117.hd.utils.MathUtils.*;
 
 @RequiredArgsConstructor
-public final class StaticAlphaSortingJob extends Job {
+final class StaticAlphaSortingJob extends Job {
+	private static final int UNSORTED = 0;
+	private static final int SORTING = 1;
+	private static final int SORTED = 2;
+	private static final AtomicIntegerFieldUpdater<AlphaModel> SORTING_STATE =
+		AtomicIntegerFieldUpdater.newUpdater(AlphaModel.class, "sortingState");
+
 	private FrameTimer frameTimer;
 
-	private AlphaModel[] models = new AlphaModel[16];
-	private AtomicIntegerArray states = new AtomicIntegerArray(16);
-	private int size = 0;
+	private final ArrayDeque<AlphaModel> models = new ArrayDeque<>();
+	private boolean sorting;
 
 	private int yaw;
 	private int yawSin;
@@ -27,20 +33,12 @@ public final class StaticAlphaSortingJob extends Job {
 	private int pitchSin;
 	private int pitchCos;
 
-	public void addAlphaModel(AlphaModel m) {
-		if (size == models.length) {
-			final int newCapacity = ceilPow2(models.length * 2);
-			models = Arrays.copyOf(models, newCapacity);
-			states = new AtomicIntegerArray(newCapacity);
-		}
-
-		m.asyncSortIdx = size;
-		states.set(size, 0);
-		models[size] = m;
-		size++;
+	synchronized void addAlphaModel(AlphaModel m) {
+		m.sortingState = UNSORTED;
+		models.add(m);
 	}
 
-	public void queue(Camera camera) {
+	void queue(Camera camera) {
 		if (frameTimer == null)
 			frameTimer = getInjector().getInstance(FrameTimer.class);
 		yaw = camera.getFixedYaw();
@@ -49,22 +47,61 @@ public final class StaticAlphaSortingJob extends Job {
 		pitch = camera.getFixedPitch();
 		pitchSin = SINE14[pitch];
 		pitchCos = COSINE14[pitch];
+		synchronized (this) {
+			sorting = true;
+		}
 		queue();
 	}
 
-	public void reset() {
-		size = 0;
+	synchronized void reset() {
+		models.clear();
+	}
+
+	void queueAdditionalModels(List<AlphaModel> candidates, Camera camera) {
+		boolean shouldQueue;
+		synchronized (this) {
+			boolean added = false;
+			for (int i = 0; i < candidates.size(); i++) {
+				AlphaModel m = candidates.get(i);
+				if ((m.flags & AlphaModel.SKIP) != 0 || m.isTemp() || m.tempSortedFaces != null)
+					continue;
+
+				m.tempSortedFaces = PooledArrayType.INT.borrow((m.packedFaces.length + m.doubleSidedCount) * 3);
+				m.sortingState = UNSORTED;
+				models.add(m);
+				added = true;
+			}
+			if (!added)
+				return;
+
+			shouldQueue = !sorting;
+			sorting = true;
+		}
+		if (shouldQueue)
+			queue(camera);
 	}
 
 	@Override
 	protected void onRun() {
 		long start = System.nanoTime();
 		try (FacePrioritySorter sorter = FacePrioritySorter.POOL.acquire()) {
-			for (int i = 0; i < size; i++) {
-				if (!states.compareAndSet(i, 0, 1))
-					continue;
-				processModel(sorter, models[i]);
+			while (true) {
+				AlphaModel m;
+				synchronized (this) {
+					m = models.poll();
+					if (m == null) {
+						sorting = false;
+						break;
+					}
+				}
+				if (SORTING_STATE.compareAndSet(m, UNSORTED, SORTING))
+					processModel(sorter, m);
 			}
+		} catch (RuntimeException | Error ex) {
+			synchronized (this) {
+				sorting = false;
+			}
+			throw ex;
 		}
 		frameTimer.add(Timer.STATIC_ALPHA_SORT, System.nanoTime() - start);
 	}
@@ -73,16 +110,16 @@ public final class StaticAlphaSortingJob extends Job {
 		m.sortedFacesLen = 0;
 		sorter.sortStaticModelFacesByDistance(m, yawCos, yawSin, pitchCos, pitchSin);
 		m.setSorted();
+		m.sortingState = SORTED;
 	}
 
 	public boolean forceProcessModelClient(AlphaModel m) {
-		if (m.asyncSortIdx < 0 || m.asyncSortIdx >= size) return false;
-		if (states.compareAndSet(m.asyncSortIdx, 0, 1)) {
-			try (FacePrioritySorter sorter = FacePrioritySorter.POOL.acquire()) {
-				processModel(sorter, models[m.asyncSortIdx]);
-			}
-			return true;
+		if (!SORTING_STATE.compareAndSet(m, UNSORTED, SORTING))
+			return false;
+
+		try (FacePrioritySorter sorter = FacePrioritySorter.POOL.acquire()) {
+			processModel(sorter, m);
 		}
-		return false;
+		return true;
 	}
 }

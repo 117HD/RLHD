@@ -968,6 +968,7 @@ public class ZoneRenderer implements Renderer {
 				z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
 
 			modelStreamingManager.ensureAsyncUploadsComplete(z);
+			z.queueLateAlphaModels(sceneCamera);
 
 			final boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
 			if (hasAlpha) {
