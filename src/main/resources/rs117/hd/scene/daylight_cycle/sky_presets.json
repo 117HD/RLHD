@@ -3,6 +3,7 @@
     "name": "GIELINOR",
     "moonDiskColor": "#E1E5FF",
     "moonDiskStrength": 3,
+    "moonLightColor": [ 228.46, 259.86, 287.43 ],
     "gradient": {
       "zenith": [
         {
