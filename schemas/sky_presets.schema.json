@@ -37,9 +37,6 @@
       "hideMoon": {
         "type": "boolean"
       },
-      "permanentNight": {
-        "type": "boolean"
-      },
       "gradient": {
         "$ref": "environments.schema.json#/$defs/skyGradient"
       },
@@ -59,9 +56,6 @@
           "LAST_QUARTER",
           "WANING_CRESCENT"
         ]
-      },
-      "forceMoonActive": {
-        "type": "boolean"
       },
       "moonDirectionalStrength": {
         "type": "number",

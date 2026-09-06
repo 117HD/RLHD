@@ -20,7 +20,6 @@ public final class SkyState {
 	public float moonIllumination;
 	public float sunAltitudeDegrees;
 	public float moonAltitudeDegrees;
-	public boolean hidesMoon;
-	public boolean permanentNight;
+	public float moonVisibility;
 	public float auroraStrength;
 }

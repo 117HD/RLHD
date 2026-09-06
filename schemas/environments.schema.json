@@ -451,10 +451,6 @@
                 "type": "boolean",
                 "description": "Hide the moon disk."
               },
-              "permanentNight": {
-                "type": "boolean",
-                "description": "Use permanent-night moon phase and aurora timing with fixed sun angles."
-              },
               "gradient": {
                 "$ref": "#/$defs/skyGradient"
               },
@@ -463,7 +459,7 @@
               },
               "forceMoonPhase": {
                 "type": "string",
-                "description": "Moon phase to force in this area, overriding the player's setting and showing the moon when the configured behavior is Disabled. REALISTIC forces an advancing phase even when the player has locked one; omit to use the player's setting. Only applies when the cycle is enabled.",
+                "description": "Moon phase to force in this area, overriding the player's setting and showing the moon even when the configured behavior is Disabled. REALISTIC forces an advancing phase even when the player has locked one; omit to use the player's setting. Only applies when the cycle is enabled.",
                 "enum": [
                   "REALISTIC",
                   "NEW_MOON",
@@ -475,10 +471,6 @@
                   "LAST_QUARTER",
                   "WANING_CRESCENT"
                 ]
-              },
-              "forceMoonActive": {
-                "type": "boolean",
-                "description": "Show the moon when the configured behavior is Disabled without forcing its phase. Does not change its position or `moonVisibility`."
               },
               "moonDirectionalStrength": {
                 "type": "number",

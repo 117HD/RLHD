@@ -314,14 +314,14 @@ public class SkyRenderer {
 			mix(skySample.sunGlowSrgb, transitionSkySample.sunGlowSrgb, skySample.sunGlowSrgb, transition);
 		}
 
-		float litMoonIllumination = max(moonIllumination, sky.minMoonIllumination);
+		float litMoonIllumination = max(moonIllumination, sky.minMoonIllumination) * state.moonVisibility;
 		float shadowVisibility = computeShadowVisibility(sky, sunAltDeg, moonAltDeg, litMoonIllumination);
 		float moonInfluence = computeMoonInfluence(sunAltDeg, moonAltDeg, litMoonIllumination);
 		applyMoonLighting(sky, state.moonDirectionalStrength, skySample, moonInfluence);
 		directionalStrength *= brightnessMultiplier * sky.sunlightStrength;
 		copyTo(fogColorSrgb, skySample.horizonSrgb);
 		copyTo(waterColor, ColorUtils.srgbToLinear(skySample.horizonSrgb));
-		applyAmbientFloor(sky, moonAltDeg, moonIllumination);
+		applyAmbientFloor(sky, moonAltDeg, litMoonIllumination);
 		applySkyFill(sunAltDeg, shadowVisibility);
 		updateSkyUbo(sky, state, skySample, moonIllumination);
 	}
@@ -435,7 +435,7 @@ public class SkyRenderer {
 		float moonStrengthFloor = 0;
 		if (sunAltDeg < 5) {
 			float moonAltDeg = state.moonAltitudeDegrees;
-			float moonIllumination = state.moonIllumination;
+			float moonIllumination = state.moonIllumination * state.moonVisibility;
 			if (moonAltDeg > -5 && moonIllumination > .01f) {
 				float sunFade = saturate((5 - sunAltDeg) / 10);
 				float moonElevation = saturate((moonAltDeg + 5) / 25);
@@ -584,7 +584,7 @@ public class SkyRenderer {
 		ubo.skyMoonPhaseLightDirection.set(state.moonPhaseLightDirection);
 		ubo.skyMoonLibration.set(state.moonLibration);
 		ubo.skyMoonPhaseReversed.set(state.moonPhaseReversed ? 1 : 0);
-		ubo.moonVisibility.set(state.hidesMoon ? 0 : configuration.moonVisibility);
+		ubo.moonVisibility.set(state.moonVisibility);
 		ubo.moonSizeMult.set(configuration.moonSizeMult);
 		ubo.starHorizonHeight.set(configuration.starHorizonHeight);
 		ubo.starVisibility.set(config.enableStarMap() ? configuration.starVisibility : 0);

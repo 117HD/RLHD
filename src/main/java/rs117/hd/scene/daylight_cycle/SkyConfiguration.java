@@ -17,10 +17,10 @@ import rs117.hd.config.MoonPhase;
 import rs117.hd.scene.SkyManager;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.ColorUtils.SrgbToLinearAdapter;
-import rs117.hd.utils.GsonUtils.DegreesToRadians;
 import rs117.hd.utils.GsonUtils;
+import rs117.hd.utils.GsonUtils.DegreesToRadians;
 
-import static rs117.hd.utils.MathUtils.vec;
+import static rs117.hd.utils.MathUtils.*;
 
 /** Complete sky definition resolved from a named preset and environment override. */
 public class SkyConfiguration {
@@ -35,10 +35,8 @@ public class SkyConfiguration {
 	@JsonAdapter(DegreesToRadians.class)
 	public float[] moonAngles;
 	public boolean hideMoon;
-	public boolean permanentNight;
 	@Nullable
 	public MoonPhase forceMoonPhase;
-	public boolean forceMoonActive;
 	public float moonDirectionalStrength = -1;
 	public float moonShadowStrength = 1;
 	public float minMoonIllumination;
@@ -112,9 +110,7 @@ public class SkyConfiguration {
 	 * Merge JSON overrides into a resolved sky preset. Objects merge recursively; arrays and values replace.
 	 */
 	public static void merge(JsonObject target, JsonObject overrides) {
-		var entries = overrides.entrySet().iterator();
-		while (entries.hasNext()) {
-			var entry = entries.next();
+		for (var entry : overrides.entrySet()) {
 			JsonElement value = entry.getValue();
 			JsonElement existing = target.get(entry.getKey());
 			if (existing != null && existing.isJsonObject() && value.isJsonObject())
@@ -125,9 +121,9 @@ public class SkyConfiguration {
 	}
 
 	private static void removeMatching(JsonObject target, JsonObject base) {
-		var entries = target.entrySet().iterator();
-		while (entries.hasNext()) {
-			var entry = entries.next();
+		var iter = target.entrySet().iterator();
+		while (iter.hasNext()) {
+			var entry = iter.next();
 			JsonElement baseValue = base.get(entry.getKey());
 			if (baseValue == null)
 				continue;
@@ -135,9 +131,9 @@ public class SkyConfiguration {
 			if (value.isJsonObject() && baseValue.isJsonObject()) {
 				removeMatching(value.getAsJsonObject(), baseValue.getAsJsonObject());
 				if (value.getAsJsonObject().size() == 0)
-					entries.remove();
+					iter.remove();
 			} else if (value.equals(baseValue)) {
-				entries.remove();
+				iter.remove();
 			}
 		}
 	}
@@ -263,11 +259,8 @@ public class SkyConfiguration {
 
 					JsonObject serialized = new JsonObject();
 					serialized.addProperty("preset", preset);
-					var entries = values.entrySet().iterator();
-					while (entries.hasNext()) {
-						var entry = entries.next();
+					for (var entry : values.entrySet())
 						serialized.add(entry.getKey(), entry.getValue());
-					}
 					jsonElementAdapter.write(out, serialized);
 				}
 			};

@@ -285,7 +285,8 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 
 						// Compute a vector from the camera to the target mouse position
 						Mat4.projectVec(point, inverseProjection, point);
-						subtract(v1, point, p1);
+						for (int j = 0; j < 3; j++)
+							v1[j] = point[j] - p1[j];
 
 						if (numFrozenAxes == 1) {
 							// restrict to basis plane
@@ -356,7 +357,9 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 
 					int gridSize = isCtrlHeld ? 128 / (isShiftHeld ? 8 : 1) : 1;
 
-					float[] relativePos = subtract(newLightPos, l.origin);
+					float[] relativePos = new float[3];
+					for (int j = 0; j < 3; j++)
+						relativePos[j] = newLightPos[j] - l.origin[j];
 
 					x = relativePos[0];
 					z = relativePos[2];

@@ -925,6 +925,22 @@ public final class MathUtils {
 		return (float) Math.tan(rad);
 	}
 
+	public static float acos(float cos) {
+		return (float) Math.acos(cos);
+	}
+
+	public static float asin(float sin) {
+		return (float) Math.asin(sin);
+	}
+
+	public static float atan(float yOverX) {
+		return (float) Math.atan(yOverX);
+	}
+
+	public static float atan(float y, float x) {
+		return (float) Math.atan2(y, x);
+	}
+
 	public static short normShort(float f) {
 		return (short) round(clamp(f, -1, 1) * Short.MAX_VALUE);
 	}
