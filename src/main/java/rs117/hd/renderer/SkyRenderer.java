@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
@@ -38,6 +39,7 @@ import static rs117.hd.utils.ColorUtils.linearSrgbLuma;
 import static rs117.hd.utils.ColorUtils.linearToSrgb;
 import static rs117.hd.utils.MathUtils.*;
 
+@Slf4j
 @Singleton
 public class SkyRenderer {
 	private static final float[] BLACK = { 0, 0, 0 };
@@ -329,7 +331,7 @@ public class SkyRenderer {
 	private void applyMoonLighting(SkyConfiguration configuration, float moonDirectionalStrength, Sample sky, float moonInfluence) {
 		if (moonInfluence == 0)
 			return;
-		mix(directionalColor, configuration.moonLightColor, moonInfluence);
+		mix(directionalColor, directionalColor, configuration.moonLightColor, moonInfluence);
 		tintNightSky(configuration, sky, moonInfluence);
 		directionalStrength = mix(
 			directionalStrength, moonDirectionalStrength,
