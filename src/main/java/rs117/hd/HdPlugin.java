@@ -1942,14 +1942,6 @@ public class HdPlugin extends Plugin {
 							case KEY_ATMOSPHERIC_LIGHTING:
 							case KEY_POH_THEME_ENVIRONMENTS:
 							case KEY_LEGACY_TOB_ENVIRONMENT:
-							case KEY_DAYLIGHT_CYCLE:
-							case KEY_CUSTOM_CYCLE_DURATION:
-							case KEY_CUSTOM_NIGHT_PERCENTAGE:
-							case KEY_NIGHT_BRIGHTNESS:
-							case KEY_STARS:
-							case KEY_NEBULAS:
-							case KEY_MOON_BEHAVIOR:
-							case KEY_MOON_PHASE:
 								reloadEnvironments = true;
 								break;
 							case KEY_SEASONAL_THEME:
