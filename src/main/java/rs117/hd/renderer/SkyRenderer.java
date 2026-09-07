@@ -586,6 +586,7 @@ public class SkyRenderer {
 		ubo.skyMoonPhaseLightDirection.set(state.moonPhaseLightDirection);
 		ubo.skyMoonLibration.set(state.moonLibration);
 		ubo.skyMoonPhaseReversed.set(state.moonPhaseReversed ? 1 : 0);
+		ubo.skyVisibility.set(configuration.skyVisibility);
 		ubo.moonVisibility.set(state.moonVisibility);
 		ubo.moonSizeMult.set(configuration.moonSizeMult);
 		ubo.starHorizonHeight.set(configuration.starHorizonHeight);

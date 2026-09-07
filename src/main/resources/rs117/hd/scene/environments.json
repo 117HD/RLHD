@@ -85,7 +85,7 @@
     "windSpeed": 10,
     "windStrength": 20,
     "sky": {
-      "starVisibility": 0.01,
+      "skyVisibility": 0.01,
       "moonVisibility": 0.1,
       "sunStrength": 0.05,
       "sunlightStrength": 0.5,
@@ -104,7 +104,7 @@
     "windSpeed": 15,
     "windStrength": 40,
     "sky": {
-      "starVisibility": 0.3,
+      "skyVisibility": 0.3,
       "moonVisibility": 0.3,
       "sunStrength": 0.1,
       "sunlightStrength": 0.7,
@@ -126,7 +126,7 @@
     "windSpeed": 15,
     "windStrength": 25,
     "sky": {
-      "starVisibility": 0.2,
+      "skyVisibility": 0.2,
       "moonVisibility": 0.2,
       "sunStrength": 0.05,
       "sunlightStrength": 0.5,
@@ -404,7 +404,7 @@
     "sky": {
       "moonDiskColor": "#FF0000",
       "moonLightColor": "#FF6D6D",
-      "starVisibility": 0.3,
+      "skyVisibility": 0.3,
       "sunStrength": 0.020,
       "sunlightStrength": 0.4,
       "minBrightnessBoost": 3
@@ -443,7 +443,7 @@
     "sky": {
       "moonDiskColor": "#FF0000",
       "moonLightColor": "#FF6D6D",
-      "starVisibility": 0.3,
+      "skyVisibility": 0.3,
       "sunStrength": 0.020,
       "sunlightStrength": 0.4,
       "minBrightnessBoost": 3
@@ -588,7 +588,7 @@
     "windSpeed": 7,
     "windStrength": 26,
     "sky": {
-      "starVisibility": 0.25,
+      "skyVisibility": 0.25,
       "moonVisibility": 0.35,
       "sunStrength": 0.025,
       "sunlightStrength": 0.15,
@@ -625,7 +625,7 @@
     "windStrength": 30,
     "sky": {
       "moonDiskColor": "#FF0000",
-      "starVisibility": 0.3,
+      "skyVisibility": 0.3,
       "auroraVisibility": 0,
       "sunStrength": 0.020,
       "sunriseSunsetStrength": 0.2,
@@ -647,7 +647,7 @@
     "windSpeed": 10,
     "windStrength": 30,
     "sky": {
-      "starVisibility": 0.05,
+      "skyVisibility": 0.05,
       "moonVisibility": 0.4,
       "sunStrength": 0.04,
       "sunlightStrength": 0.15,
@@ -695,7 +695,7 @@
     "sky": {
       "preset": "BLOOD_MOON",
       "nightSkyColorStrength": 4.5,
-      "starVisibility": 0.9,
+      "skyVisibility": 0.9,
       "minBrightnessBoost": 1.25
     }
   },
@@ -789,7 +789,7 @@
     "windSpeed": 7,
     "windStrength": 26,
     "sky": {
-      "starVisibility": 0.25,
+      "skyVisibility": 0.25,
       "moonVisibility": 0.35,
       "sunStrength": 0.01,
       "sunlightStrength": 0.25,
@@ -1072,7 +1072,7 @@
     "fogColor": "#aebde0",
     "fogDepth": 50,
     "sky": {
-      "starVisibility": 0.4,
+      "skyVisibility": 0.4,
       "moonVisibility": 0.4,
       "sunStrength": 0.6,
       "sunlightStrength": 0.7
@@ -1087,7 +1087,7 @@
     "fogColor": "#aebde0",
     "fogDepth": 50,
     "sky": {
-      "starVisibility": 0.4,
+      "skyVisibility": 0.4,
       "moonVisibility": 0.4,
       "sunStrength": 0.6,
       "sunlightStrength": 0.7
@@ -1126,7 +1126,7 @@
     "groundFogEnd": -900,
     "groundFogOpacity": 0.4,
     "sky": {
-      "starVisibility": 0.5,
+      "skyVisibility": 0.5,
       "moonVisibility": 0.5,
       "sunStrength": 0.6,
       "sunlightStrength": 0.4,
@@ -1144,7 +1144,7 @@
     "groundFogEnd": -1600,
     "groundFogOpacity": 0.5,
     "sky": {
-      "starVisibility": 0.5,
+      "skyVisibility": 0.5,
       "moonVisibility": 0.5,
       "sunStrength": 0.6,
       "sunlightStrength": 0.4,
@@ -1164,7 +1164,7 @@
     "windSpeed": 17.5,
     "windStrength": 60,
     "sky": {
-      "starVisibility": 0.5,
+      "skyVisibility": 0.5,
       "moonVisibility": 0.5,
       "sunStrength": 0.6,
       "sunlightStrength": 0.4,
@@ -1223,7 +1223,7 @@
     "windAngle": 45,
     "windSpeed": 22.5,
     "sky": {
-      "starVisibility": 0.8,
+      "skyVisibility": 0.8,
       "moonVisibility": 0.8,
       "sunStrength": 0.8,
       "sunlightStrength": 0.9
@@ -1283,7 +1283,7 @@
     "fogColor": "#adb9c4",
     "fogDepth": 45,
     "sky": {
-      "starVisibility": 0.2,
+      "skyVisibility": 0.2,
       "moonVisibility": 0.1,
       "sunStrength": 0.02,
       "sunlightStrength": 0.8
@@ -1302,7 +1302,7 @@
     "fogColor": "#adb9c4",
     "fogDepth": 45,
     "sky": {
-      "starVisibility": 0.2,
+      "skyVisibility": 0.2,
       "moonVisibility": 0.1,
       "sunStrength": 0.02,
       "sunlightStrength": 0.6
@@ -1354,7 +1354,7 @@
     "fogColor": "#e2e6ed",
     "fogDepth": 40,
     "sky": {
-      "starVisibility": 0.2,
+      "skyVisibility": 0.2,
       "moonVisibility": 0.1,
       "sunStrength": 0.02,
       "sunlightStrength": 0.6
@@ -1418,7 +1418,7 @@
     "windSpeed": 10,
     "windStrength": 40,
     "sky": {
-      "starVisibility": 0.3,
+      "skyVisibility": 0.3,
       "moonVisibility": 0.3,
       "sunStrength": 0.1,
       "sunlightStrength": 0.7,
@@ -1592,7 +1592,7 @@
     "fogColor": "#aebde0",
     "fogDepth": 50,
     "sky": {
-      "starVisibility": 0.3,
+      "skyVisibility": 0.3,
       "moonVisibility": 0.3,
       "sunStrength": 0.1,
       "sunlightStrength": 0.8
@@ -1615,7 +1615,7 @@
     "groundFogEnd": -2250,
     "groundFogOpacity": 0.65,
     "sky": {
-      "starVisibility": 0.3,
+      "skyVisibility": 0.3,
       "sunStrength": 0.1,
       "sunlightStrength": 0.8
     }
@@ -1641,7 +1641,7 @@
     "fogColor": "#150a05",
     "fogDepth": 40,
     "sky": {
-      "starVisibility": 0.05,
+      "skyVisibility": 0.05,
       "moonVisibility": 0.01,
       "sunStrength": 0.1,
       "sunriseSunsetStrength": 0.2,
@@ -1670,7 +1670,7 @@
     "fogColor": "#af979f",
     "fogDepth": 35,
     "sky": {
-      "starVisibility": 0.3,
+      "skyVisibility": 0.3,
       "sunStrength": 0.8,
       "sunlightStrength": 0.8
     }
@@ -1808,7 +1808,7 @@
     "groundFogEnd": -300,
     "groundFogOpacity": 0.3,
     "sky": {
-      "starVisibility": 0.2,
+      "skyVisibility": 0.2,
       "moonVisibility": 0.1,
       "sunStrength": 0.02,
       "sunlightStrength": 0.8
@@ -1822,7 +1822,7 @@
     "fogColor": "#99AECC",
     "fogDepth": 10,
     "sky": {
-      "starVisibility": 0.2,
+      "skyVisibility": 0.2,
       "moonVisibility": 0.1,
       "sunStrength": 0.02,
       "sunlightStrength": 0.8
@@ -1843,7 +1843,7 @@
     "groundFogEnd": -300,
     "groundFogOpacity": 0.25,
     "sky": {
-      "starVisibility": 0.2,
+      "skyVisibility": 0.2,
       "moonVisibility": 0.1,
       "sunStrength": 0.02,
       "sunlightStrength": 0.8
@@ -2436,7 +2436,7 @@
     "groundFogOpacity": 0.3,
     "groundFogEnd": -1800,
     "sky": {
-      "starVisibility": 0.5,
+      "skyVisibility": 0.5,
       "moonVisibility": 0.5,
       "sunStrength": 0.6,
       "sunlightStrength": 0.4,
@@ -2452,7 +2452,7 @@
     "fogColor": "#aebde0",
     "fogDepth": 50,
     "sky": {
-      "starVisibility": 0.5,
+      "skyVisibility": 0.5,
       "moonVisibility": 0.5,
       "sunStrength": 0.6,
       "sunlightStrength": 0.4,
@@ -2468,7 +2468,7 @@
     "fogColor": "#aebde0",
     "fogDepth": 30,
     "sky": {
-      "starVisibility": 0.5,
+      "skyVisibility": 0.5,
       "moonVisibility": 0.5,
       "sunStrength": 0.6,
       "sunlightStrength": 0.4,
@@ -2688,7 +2688,7 @@
     "sky": {
       "preset": "DUSK",
       "nightSkyColor": "#FF0000",
-      "starVisibility": 0.8,
+      "skyVisibility": 0.8,
       "auroraVisibility": 0,
       "sunStrength": 0.075,
       "sunriseSunsetStrength": 0.2,
@@ -2712,7 +2712,7 @@
     "sky": {
       "moonDirectionalStrength": 3,
       "nightSkyColor": "#FF0000",
-      "starVisibility": 0.8,
+      "skyVisibility": 0.8,
       "auroraVisibility": 0,
       "sunStrength": 0.075,
       "sunriseSunsetStrength": 0.2,
@@ -2725,7 +2725,7 @@
     "sky": {
       "preset": "DUSK",
       "nightSkyColor": "#FF0000",
-      "starVisibility": 0.8,
+      "skyVisibility": 0.8,
       "auroraVisibility": 0,
       "sunStrength": 0.075,
       "sunriseSunsetStrength": 0.2,
@@ -2747,7 +2747,7 @@
     "fogColor": "#160404",
     "sky": {
       "nightSkyColor": "#FF0000",
-      "starVisibility": 0.8,
+      "skyVisibility": 0.8,
       "auroraVisibility": 0,
       "sunStrength": 0.01,
       "sunriseSunsetStrength": 0.2,
@@ -2772,7 +2772,7 @@
     "windStrength": 20,
     "sky": {
       "preset": "NIGHT",
-      "starVisibility": 0.55,
+      "skyVisibility": 0.55,
       "moonVisibility": 0.7,
       "sunStrength": 0.05,
       "sunlightStrength": 0.8
@@ -2792,7 +2792,7 @@
     "windSpeed": 17.5,
     "windStrength": 60,
     "sky": {
-      "starVisibility": 0.5,
+      "skyVisibility": 0.5,
       "moonVisibility": 0.5,
       "sunStrength": 0.6,
       "sunlightStrength": 0.4,
@@ -2815,7 +2815,7 @@
     "windSpeed": 7,
     "windStrength": 26,
     "sky": {
-      "starVisibility": 0.25,
+      "skyVisibility": 0.25,
       "moonVisibility": 0.35,
       "sunStrength": 0.025,
       "sunlightStrength": 0.15,
@@ -2833,7 +2833,7 @@
     "fogDepth": 25,
     "sky": {
       "preset": "NIGHT",
-      "starVisibility": 0.5
+      "skyVisibility": 0.5
     }
   },
   {
@@ -2846,7 +2846,7 @@
     "fogColor": "#aebde0",
     "fogDepth": 50,
     "sky": {
-      "starVisibility": 0.4,
+      "skyVisibility": 0.4,
       "moonVisibility": 0.4,
       "sunStrength": 0.6,
       "sunlightStrength": 0.7
@@ -2865,7 +2865,7 @@
     "windSpeed": 17.5,
     "windStrength": 60,
     "sky": {
-      "starVisibility": 0.5,
+      "skyVisibility": 0.5,
       "moonVisibility": 1,
       "sunStrength": 0.5,
       "sunlightStrength": 0.55,

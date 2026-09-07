@@ -48,10 +48,11 @@ public class SkyConfiguration {
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] nightSkyColor;
 	public float nightSkyColorStrength = 1;
-	public float starVisibility = 1;
+	public float skyVisibility = 1;
 	public float moonVisibility = 1;
-	public float auroraVisibility = -1;
+	public float starVisibility = -1;
 	public float nebulaVisibility = 1;
+	public float auroraVisibility = -1;
 	public float moonSizeMult = 1;
 	public float starHorizonHeight = 1;
 	public float sunStrength = 1;
@@ -69,8 +70,10 @@ public class SkyConfiguration {
 			moonLightColor = moonDiskColor;
 		if (nightSkyColor == null)
 			nightSkyColor = moonDiskColor;
+		if (starVisibility == -1)
+			starVisibility = skyVisibility;
 		if (auroraVisibility == -1)
-			auroraVisibility = starVisibility;
+			auroraVisibility = skyVisibility;
 		return this;
 	}
 
@@ -92,10 +95,11 @@ public class SkyConfiguration {
 		moonDiskStrength = from.moonDiskStrength * (1 - t) + to.moonDiskStrength * t;
 		nightSkyColor = interpolate(nightSkyColor, from.nightSkyColor, to.nightSkyColor, t);
 		nightSkyColorStrength = from.nightSkyColorStrength * (1 - t) + to.nightSkyColorStrength * t;
-		starVisibility = from.starVisibility * (1 - t) + to.starVisibility * t;
+		skyVisibility = from.skyVisibility * (1 - t) + to.skyVisibility * t;
 		moonVisibility = from.moonVisibility * (1 - t) + to.moonVisibility * t;
-		auroraVisibility = from.auroraVisibility * (1 - t) + to.auroraVisibility * t;
+		starVisibility = from.starVisibility * (1 - t) + to.starVisibility * t;
 		nebulaVisibility = from.nebulaVisibility * (1 - t) + to.nebulaVisibility * t;
+		auroraVisibility = from.auroraVisibility * (1 - t) + to.auroraVisibility * t;
 		moonSizeMult = from.moonSizeMult * (1 - t) + to.moonSizeMult * t;
 		starHorizonHeight = from.starHorizonHeight * (1 - t) + to.starHorizonHeight * t;
 		sunStrength = from.sunStrength * (1 - t) + to.sunStrength * t;

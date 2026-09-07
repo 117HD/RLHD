@@ -537,9 +537,9 @@
                 "description": "Strength of the `nightSkyColor` tint. Defaults to 1. Higher values increase the tint without overshooting the target color.",
                 "minimum": 0
               },
-              "starVisibility": {
+              "skyVisibility": {
                 "type": "number",
-                "description": "Star visibility multiplier for this area (0 to 1). Defaults to 1. Also defaults `auroraVisibility`. Stars still appear only at night and fade with daylight.",
+                "description": "Sky visibility, obscuring the sky in fog, inverse from 0 to 1. Defaults to 1.",
                 "minimum": 0,
                 "maximum": 1
               },
@@ -549,9 +549,21 @@
                 "minimum": 0,
                 "maximum": 1
               },
+              "starVisibility": {
+                "type": "number",
+                "description": "Star visibility multiplier for this area (0 to 1). Defaults to 1. Stars still appear only at night and fade with daylight.",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "nebulaVisibility": {
+                "type": "number",
+                "description": "Nebula visibility multiplier (0 to 1). Defaults to 1. Cannot enable nebulas when the Nebulas option is off.",
+                "minimum": 0,
+                "maximum": 1
+              },
               "auroraVisibility": {
                 "type": "number",
-                "description": "Aurora visibility multiplier for this area (0 to 1). Defaults to `starVisibility`; set explicitly to control auroras independently. Auroras still appear only on aurora nights and fade with daylight.",
+                "description": "Aurora visibility multiplier for this area (0 to 1). Defaults to `skyVisibility`; set explicitly to control auroras independently. Auroras still appear only on aurora nights and fade with daylight.",
                 "minimum": 0,
                 "maximum": 1
               },
@@ -593,12 +605,6 @@
                 "type": "number",
                 "description": "Night-time ambient-floor boost, as a fraction of the player's minimum brightness. Scales with missing moonlight: strongest for a new or set moon, weakest for a full overhead moon. 0 (default) disables it.",
                 "minimum": 0
-              },
-              "nebulaVisibility": {
-                "type": "number",
-                "description": "Nebula visibility multiplier (0 to 1). Defaults to 1. Cannot enable nebulas when the Nebulas option is off.",
-                "minimum": 0,
-                "maximum": 1
               }
             }
           }

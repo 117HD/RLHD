@@ -85,7 +85,7 @@ void main() {
     float osc = (s1 + s2) * 0.5; // [-1, 1]
     float twinkle = 1.0 + twinkleAmt * osc; // swing around baseline
 
-    vBrightness = aStarBright * visibility * twinkle;
+    vBrightness = min(aStarBright, .4) * visibility * twinkle;
 
     // Size in screen pixels, then enforce the same anti-flicker floor in FBO pixels.
     float viewportHeight = max(float(viewportSize.y), 1.0);

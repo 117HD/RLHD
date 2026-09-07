@@ -27,10 +27,12 @@ public class UBOSky extends UniformBuffer<GLBuffer> {
 	public Property skyMoonPhaseReversed = addProperty(PropertyType.Float, "skyMoonPhaseReversed");
 
 	// Environment visibility controls
+	public Property skyVisibility = addProperty(PropertyType.Float, "skyVisibility");
+	public Property moonVisibility = addProperty(PropertyType.Float, "moonVisibility");
 	public Property starVisibility = addProperty(PropertyType.Float, "starVisibility");
 	public Property nebulaVisibility = addProperty(PropertyType.Float, "nebulaVisibility");
-	public Property moonVisibility = addProperty(PropertyType.Float, "moonVisibility");
 	public Property auroraVisibility = addProperty(PropertyType.Float, "auroraVisibility");
+
 	public Property moonSizeMult = addProperty(PropertyType.Float, "moonSizeMult");
 	public Property starHorizonHeight = addProperty(PropertyType.Float, "starHorizonHeight");
 

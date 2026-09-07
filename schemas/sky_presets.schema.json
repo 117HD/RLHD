@@ -87,7 +87,7 @@
         "type": "number",
         "minimum": 0
       },
-      "starVisibility": {
+      "skyVisibility": {
         "type": "number",
         "minimum": 0,
         "maximum": 1
@@ -97,12 +97,17 @@
         "minimum": 0,
         "maximum": 1
       },
-      "auroraVisibility": {
+      "starVisibility": {
         "type": "number",
         "minimum": 0,
         "maximum": 1
       },
       "nebulaVisibility": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "auroraVisibility": {
         "type": "number",
         "minimum": 0,
         "maximum": 1

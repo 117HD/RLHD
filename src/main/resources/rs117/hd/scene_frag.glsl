@@ -582,7 +582,7 @@ void main() {
                 skyColorAtFragment = sky.color;
 
                 // Match the night sky's star-free horizon color.
-                float nightSkyBlend = (1.0 - sky.nightFade) * starVisibility;
+                float nightSkyBlend = (1.0 - sky.nightFade) * skyVisibility;
                 if (nightSkyBlend > 0.001) {
                     skyColorAtFragment = mix(skyColorAtFragment, skyZenithColor, nightSkyBlend);
                 }

@@ -71,8 +71,9 @@ void main() {
     // Stars appear first opposite the sun, then spread across the low-sun sky.
     float baseProgress = 1.0 - sky.nightFade;
     float sunProximity = sky.sunSideBlend * (1.0 - sky.zenithBlend);
-    // Aurora visibility is independent of the star field's environment override.
+    // Aurora visibility is independent of the night-sky background.
     float nightFactor = pow(baseProgress, mix(0.4, 0.9, sunProximity));
+    float skyBlend = nightFactor * skyVisibility;
     float starBlend = nightFactor * starVisibility;
     // Rotate the night sky about the local celestial pole using simulated time.
     float celestialAngle = skyCelestialRotation;
@@ -80,7 +81,7 @@ void main() {
     float celestialCos = cos(celestialAngle);
     float celestialSin = sin(celestialAngle);
     vec3 shootingStarColor = vec3(0.0);
-    if (nightFactor > 0.001) {
+    if (skyBlend > 0.001) {
         vec3 starDir = viewDir;
         starDir = starDir * celestialCos + cross(celestialAxis, starDir) * celestialSin +
             celestialAxis * dot(celestialAxis, starDir) * (1.0 - celestialCos);
@@ -90,14 +91,11 @@ void main() {
 
         // Converge to the fog-matched gradient at the horizon.
         float horizonStarFade = nightSkyHorizonFade(sky.upAmount, horizonShift);
-        skyColor = mix(skyColor, nightSkyColor, nightFactor * horizonStarFade);
-
-        // Shooting stars are atmospheric, so they do not follow celestial rotation.
-        // Composite them after the moon so they remain in the foreground.
-        if (-viewDir.y > 0.05 + horizonShift) {
-            shootingStarColor = shootingStars(viewDir, elapsedTime) * starBlend;
-        }
+        skyColor = mix(skyColor, nightSkyColor, skyBlend * horizonStarFade);
     }
+    // Shooting stars are atmospheric and render in front of the moon.
+    if (starBlend > 0.001 && -viewDir.y > 0.05 + horizonShift)
+        shootingStarColor = shootingStars(viewDir, elapsedTime) * starBlend;
 
     // === MOON DISK ===
     if (moonVisibility > 0.001) {
@@ -280,9 +278,9 @@ void main() {
 
                 // The opaque disk occludes stars and nebulas while its dark side matches the night sky.
                 vec3 moonDarkSide = skyColorPreStars;
-                if (nightFactor > 0.001) {
+                if (skyBlend > 0.001) {
                     float horizonStarFade = nightSkyHorizonFade(sky.upAmount, horizonShift);
-                    moonDarkSide = mix(moonDarkSide, STARFIELD_BACKGROUND_COLOR, nightFactor * horizonStarFade);
+                    moonDarkSide = mix(moonDarkSide, STARFIELD_BACKGROUND_COLOR, skyBlend * horizonStarFade);
                 }
 
                 // Keep the disk opaque so stars and the sky gradient cannot show through crescents.
@@ -302,7 +300,6 @@ void main() {
         }
     }
 
-    // Shooting stars are atmospheric and render in front of the moon.
     skyColor += shootingStarColor;
 
     // Aurora visibility is independent of stars and renders in front of the moon.
