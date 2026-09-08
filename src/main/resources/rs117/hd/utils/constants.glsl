@@ -4,8 +4,12 @@
 #define PI 3.14159265f // max 32-bit float precision
 #define HALF_PI (.5*PI)
 #define TAU (2*PI)
+#define EPSILON 0.00001
 
 #define SHORT_MAX 32767 // 2^15 - 1
+
+#define TILE_SIZE 128
+#define CHUNK_SIZE (TILE_SIZE * 8)
 
 #include SHADER_TYPE
 #include LEGACY_RENDERER

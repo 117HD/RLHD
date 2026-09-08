@@ -8,6 +8,7 @@
 uniform usampler2DArray tiledLightingArray;
 
 #include <utils/constants.glsl>
+#include <utils/misc.glsl>
 
 in vec2 fUv;
 
@@ -39,8 +40,7 @@ void main() {
 
     if (tiledLightCount > 0) {
         if (tiledLightCount < TILED_LIGHTING_MAX_TILE_LIGHT_COUNT) {
-            float level = tiledLightCount / float(TILED_LIGHTING_MAX_TILE_LIGHT_COUNT) * HALF_PI;
-            c = vec4(sin(level), sin(level * 2), cos(level), 0.3);
+            c = heatmap(tiledLightCount, TILED_LIGHTING_MAX_TILE_LIGHT_COUNT);
         } else {
             c = vec4(1, 0, 1, 0.6);
         }

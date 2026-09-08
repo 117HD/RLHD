@@ -33,7 +33,7 @@ import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
-import static rs117.hd.HdPlugin.checkGLErrors;
+import static rs117.hd.opengl.Utils.checkGLErrors;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.renderer.zone.ZoneRenderer.eboAlpha;
 import static rs117.hd.utils.MathUtils.*;
@@ -93,6 +93,7 @@ public class Zone implements Destructible {
 
 	public IntHashSet animatedDynamicObjectIds = new IntHashSet();
 
+	private final EboAlphaWriterJob sortedAlphaFacesUpload = new EboAlphaWriterJob();
 	final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob();
 	ZoneUploadJob uploadJob;
 
@@ -104,6 +105,7 @@ public class Zone implements Destructible {
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 	final ConcurrentLinkedQueue<AsyncCachedModel> pendingModelJobs = new ConcurrentLinkedQueue<>();
+	private boolean alphaModelsSortedByDrawCall;
 
 	public void initialize(GLBuffer o, GLBuffer a, GLTextureBuffer f) {
 		assert glVao == 0;
@@ -204,6 +206,7 @@ public class Zone implements Destructible {
 		rids = null;
 		roofStart = null;
 		roofEnd = null;
+		alphaModelsSortedByDrawCall = false;
 
 		// don't add permanent alphamodels to the cache as permanent alphamodels are always allocated
 		// to avoid having to synchronize the cache
@@ -377,7 +380,7 @@ public class Zone implements Destructible {
 		if (drawIdx == 0)
 			return;
 
-		lastDrawMode = STATIC_UNSORTED;
+		lastDrawMode = STATIC_VAO;
 		lastVao = glVao;
 		lastTboF = tboF.getTexId();
 		flush(cmd);
@@ -391,7 +394,7 @@ public class Zone implements Destructible {
 		if (drawIdx == 0)
 			return;
 
-		lastDrawMode = STATIC_UNSORTED;
+		lastDrawMode = STATIC_VAO;
 		lastVao = glVao;
 		lastTboF = tboF.getTexId();
 		flush(cmd);
@@ -437,10 +440,12 @@ public class Zone implements Destructible {
 		int sortedFacesLen;
 		int[] tempSortedFaces;
 
-		static final int SKIP = 1; // temporary model is in a closer zone
-		static final int TEMP = 2; // temporary model added to a closer zone
-		static final int SORT_COMPLETED = 4;
-
+		static final int SKIP = 1;
+		static final int DYNAMIC = 2;
+		static final int MUTLI_LOC = 4;
+		static final int ALPHA_DISCARD = 8;
+		static final int SORT_COMPLETED = 16;
+		
 		void setSorted() {
 			flags |= SORT_COMPLETED;
 		}
@@ -449,9 +454,9 @@ public class Zone implements Destructible {
 			return (flags & SORT_COMPLETED) == 0;
 		}
 
-		boolean isTemp() {
-			return packedFaces == null;
-		}
+		boolean isTemp() { return packedFaces == null; }
+
+		boolean isAlphaDiscard() { return (flags & ALPHA_DISCARD) != 0; }
 
 		int calculateDepth(int cx, int cy, int cz, int zx, int zz) {
 			final int mx = (x + ((zx - zofx) << 10));
@@ -617,6 +622,9 @@ public class Zone implements Destructible {
 
 			if (faceOverride.hide)
 				continue;
+				
+			if (material.alphaDiscard)
+				m.flags |= AlphaModel.ALPHA_DISCARD;
 
 			if (faceOverride.modifiesAlpha)
 				transparency = 255 - faceOverride.modifyAlpha(255 - transparency);
@@ -652,6 +660,7 @@ public class Zone implements Destructible {
 		m.doubleSidedCount = doubleSidedCount;
 
 		alphaModels.add(m);
+		alphaModelsSortedByDrawCall = false;
 
 		PooledArrayType.INT.release(packedFaces);
 		PooledArrayType.INT.release(doubleSidedBitSet);
@@ -666,9 +675,10 @@ public class Zone implements Destructible {
 		m.z = (short) z;
 		m.level = (byte) level;
 		m.vao = m.tboF = m.rid = m.lx = m.lz = m.ux = m.uz = -1;
-		m.flags = 0;
+		m.flags = AlphaModel.DYNAMIC;
 		m.zofx = m.zofz = 0;
 		alphaModels.add(m);
+		alphaModelsSortedByDrawCall = false;
 		return m;
 	}
 
@@ -681,7 +691,7 @@ public class Zone implements Destructible {
 			m.asyncSortIdx = -1;
 			m.flags &= ~(AlphaModel.SKIP | AlphaModel.SORT_COMPLETED);
 
-			if (m.isTemp() || (m.flags & AlphaModel.TEMP) != 0) {
+			if ((m.flags & (AlphaModel.DYNAMIC | AlphaModel.MUTLI_LOC)) != 0) {
 				alphaModels.remove(i);
 				m.packedFaces = null;
 				m.doubleSidedBitSet = null;
@@ -693,10 +703,14 @@ public class Zone implements Destructible {
 			m.tempSortedFaces = null;
 		}
 	}
+	
+	public static final int ALPHA_DRAW_ROOF = 1;
+	public static final int ALPHA_DRAW_DISCARD_ONLY = 2;
+	public static final int ALPHA_DRAW_BLEND_ONLY = 4;
 
-	private static final int STATIC = 1;
-	private static final int TEMP = 2;
-	private static final int STATIC_UNSORTED = 3;
+	private static final int DYNAMIC_VAO = 0;
+	private static final int STATIC_VAO = 1;
+	private static final int ELEMENTS_VAO = 2;
 
 	private static int alphaFaceCount;
 	private static int eboAlphaOffset;
@@ -719,12 +733,39 @@ public class Zone implements Destructible {
 	}
 
 	private static final AlphaModelComparator alphaModelComparator = new AlphaModelComparator();
-	private final EboAlphaWriterJob sortedAlphaFacesUpload = new EboAlphaWriterJob();
+	private static final Comparator<AlphaModel> alphaDrawCallComparator = (modelA, modelB) -> {
+		int compare = Boolean.compare(
+			(modelA.flags & AlphaModel.DYNAMIC) != 0,
+			(modelB.flags & AlphaModel.DYNAMIC) != 0
+		);
+		if (compare != 0)
+			return compare;
 
-	synchronized void alphaSort(int zx, int zz, Camera camera) {
-		final int alphaModelCount = alphaModels.size();
-		if (alphaModelCount <= 1)
+		compare = Integer.compare(modelA.vao, modelB.vao);
+		if (compare != 0)
+			return compare;
+
+		compare = Integer.compare(modelA.tboF, modelB.tboF);
+		if (compare != 0)
+			return compare;
+
+		compare = Byte.compare(modelA.zofx, modelB.zofx);
+		if (compare != 0)
+			return compare;
+
+		return Byte.compare(modelA.zofz, modelB.zofz);
+	};
+
+	synchronized void alphaSort(int zx, int zz, Camera camera, boolean isOIT) {
+		if (alphaModels.size() <= 1)
 			return;
+
+		if (isOIT) {
+			if (!alphaModelsSortedByDrawCall)
+				quickSort(alphaModels, alphaDrawCallComparator);
+			alphaModelsSortedByDrawCall = true;
+			return;
+		}
 
 		alphaModelComparator.cx = (int) camera.getPositionX();
 		alphaModelComparator.cy = (int) camera.getPositionY();
@@ -733,6 +774,7 @@ public class Zone implements Destructible {
 		alphaModelComparator.zz = zz;
 
 		quickSort(alphaModels, alphaModelComparator);
+		alphaModelsSortedByDrawCall = false;
 	}
 
 	void alphaStaticModelSort(Camera camera) {
@@ -748,7 +790,58 @@ public class Zone implements Destructible {
 		alphaSortingJob.queue(camera);
 	}
 
-	void renderAlpha(
+	void renderAlphaModels(
+		CommandBuffer cmd,
+		int zx,
+		int zz,
+		int level,
+		WorldViewContext ctx,
+		int flags
+	) {
+		if (alphaModels.isEmpty())
+			return;
+
+		int minLevel = ctx.minLevel;
+		int currentLevel = ctx.level;
+		int maxLevel = ctx.maxLevel;
+		var hiddenRoofIds = ctx.hideRoofIds;
+		if ((flags & ALPHA_DRAW_ROOF) == ALPHA_DRAW_ROOF) {
+			maxLevel = 3;
+			hiddenRoofIds = Collections.emptySet();
+		}
+
+		drawIdx = 0;
+
+		for (int i = 0; i < alphaModels.size(); i++) {
+			final AlphaModel m = alphaModels.get(i);
+			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level || m.vao == -1)
+				continue;
+
+			if((flags & (ALPHA_DRAW_DISCARD_ONLY | ALPHA_DRAW_BLEND_ONLY)) != 0) {
+				if (m.isAlphaDiscard() != ((flags & ALPHA_DRAW_DISCARD_ONLY) == ALPHA_DRAW_DISCARD_ONLY))
+					continue;
+			}
+
+			if (level < minLevel || level > maxLevel ||
+				level > currentLevel && !hiddenRoofIds.isEmpty() && hiddenRoofIds.contains((int) m.rid))
+				continue;
+
+			final int drawMode = (m.flags & AlphaModel.DYNAMIC) != 0 ? DYNAMIC_VAO : STATIC_VAO;
+			if (drawIdx > 0 && (lastDrawMode != drawMode || lastVao != m.vao || lastTboF != m.tboF || lastzx != (zx - m.zofx) || lastzz != (zz - m.zofz)))
+				flush(cmd);
+
+			pushRange(m.startpos, m.endpos);
+			lastDrawMode = drawMode;
+			lastVao = m.vao;
+			lastTboF = m.tboF;
+			lastzx = zx - m.zofx;
+			lastzz = zz - m.zofz;
+		}
+
+		flush(cmd);
+	}
+
+	void renderSortedAlpha(
 		CommandBuffer cmd,
 		int zx,
 		int zz,
@@ -784,12 +877,11 @@ public class Zone implements Destructible {
 				level > currentLevel && !hiddenRoofIds.isEmpty() && hiddenRoofIds.contains((int) m.rid))
 				continue;
 
-			int drawMode = STATIC;
+			int drawMode = ELEMENTS_VAO;
 			if (m.isTemp()) {
-				// these are already sorted and so just requires a glMultiDrawArrays() from the active vao
-				drawMode = TEMP;
+				drawMode = DYNAMIC_VAO;
 			} else if (depthOnly || m.asyncSortIdx < 0) {
-				drawMode = STATIC_UNSORTED;
+				drawMode = STATIC_VAO;
 			}
 
 			if (lastDrawMode != drawMode ||
@@ -806,7 +898,7 @@ public class Zone implements Destructible {
 				lastzz = zz - m.zofz;
 			}
 
-			if (drawMode != STATIC) {
+			if (drawMode != ELEMENTS_VAO) {
 				pushRange(m.startpos, m.endpos);
 				continue;
 			}
@@ -825,7 +917,7 @@ public class Zone implements Destructible {
 
 			eboAlphaOffset += m.sortedFacesLen;
 			alphaFaceCount += m.sortedFacesLen / 3;
-			lastDrawMode = STATIC;
+			lastDrawMode = ELEMENTS_VAO;
 		}
 
 		if (eboAlphaOffset > eboAlphaStart && !sortedAlphaFacesUpload.alphaModels.isEmpty()) {
@@ -837,7 +929,7 @@ public class Zone implements Destructible {
 	}
 
 	private void flush(CommandBuffer cmd) {
-		if (lastDrawMode == STATIC) {
+		if (lastDrawMode == ELEMENTS_VAO) {
 			if (alphaFaceCount > 0 && lastVao != 0) {
 				int vertexCount = alphaFaceCount * 3;
 				long byteOffset = 4L * (eboAlphaOffset - vertexCount);
@@ -852,7 +944,7 @@ public class Zone implements Destructible {
 			}
 			alphaFaceCount = 0;
 		} else if (drawIdx != 0) {
-			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : DynamicModelVAO.VERT_SIZE);
+			convertForDraw(lastDrawMode == STATIC_VAO ? VERT_SIZE : DynamicModelVAO.VERT_SIZE);
 			cmd.BindVertexArray(lastVao);
 			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 			if (drawIdx == 1) {
@@ -868,8 +960,8 @@ public class Zone implements Destructible {
 					cmd.MultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength, drawIdx);
 				}
 			}
-			drawIdx = 0;
 		}
+		drawIdx = 0;
 	}
 
 	synchronized void multizoneLocs(SceneContext ctx, int zx, int zz, Camera camera, Zone[][] zones) {
@@ -940,11 +1032,14 @@ public class Zone implements Destructible {
 				m2.asyncSortIdx = m.asyncSortIdx;
 				m2.tempSortedFaces = m.tempSortedFaces;
 				m2.sortedFacesLen = m.sortedFacesLen;
+				m2.flags = AlphaModel.MUTLI_LOC;
 
-				m2.flags = AlphaModel.TEMP;
+				if(m.isAlphaDiscard())
+					m2.flags |= AlphaModel.ALPHA_DISCARD;
+
 				m.flags |= AlphaModel.SKIP;
-
 				z.alphaModels.add(m2);
+				z.alphaModelsSortedByDrawCall = false;
 			}
 		}
 	}

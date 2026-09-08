@@ -28,7 +28,6 @@ package rs117.hd;
 
 import com.google.gson.Gson;
 import com.google.inject.Binder;
-import com.google.inject.Provider;
 import com.google.inject.Provides;
 import java.awt.Canvas;
 import java.awt.Dimension;
@@ -85,6 +84,7 @@ import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.VanillaShadowMode;
+import rs117.hd.opengl.Utils;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.TiledLightingShaderProgram;
@@ -137,6 +137,8 @@ import rs117.hd.utils.jobs.JobSystem;
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.opengl.Utils.checkGLErrors;
+import static rs117.hd.opengl.Utils.clearGLErrors;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 import static rs117.hd.utils.buffer.GLBuffer.DEBUG_MAC_OS;
@@ -325,7 +327,6 @@ public class HdPlugin extends Plugin {
 
 	public Renderer renderer;
 
-	public static boolean SKIP_GL_ERROR_CHECKS;
 	public static GLCapabilities GL_CAPS;
 	public static boolean AMD_GPU;
 	public static boolean INTEL_GPU;
@@ -375,7 +376,10 @@ public class HdPlugin extends Plugin {
 	public int[] sceneResolution;
 	public int fboScene;
 	private int rboSceneColor;
-	private int rboSceneDepth;
+	@Getter
+	private int texSceneDepth;
+	@Getter
+	private int texSceneDepthResolve;
 	public int fboSceneResolve;
 	private int rboSceneResolveColor;
 
@@ -420,6 +424,7 @@ public class HdPlugin extends Plugin {
 	public boolean configHideVanillaWaterEffects;
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
+	public boolean configUseOIT;
 	public int configDetailDrawDistance;
 	public int configExpandedMapLoadingChunks;
 	public DynamicLights configDynamicLights;
@@ -539,7 +544,8 @@ public class HdPlugin extends Plugin {
 
 				fboScene = 0;
 				rboSceneColor = 0;
-				rboSceneDepth = 0;
+				texSceneDepth = 0;
+				texSceneDepthResolve = 0;
 				fboSceneResolve = 0;
 				rboSceneResolveColor = 0;
 				fboShadowMap = 0;
@@ -555,7 +561,7 @@ public class HdPlugin extends Plugin {
 				// to be created.
 				Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("lwjgl-rl");
 
-				SKIP_GL_ERROR_CHECKS = false;
+				Utils.SKIP_GL_ERROR_CHECKS = false;
 				GL_CAPS = GL.createCapabilities();
 				useLowMemoryMode = config.lowMemoryMode();
 				BUFFER_GROWTH_MULTIPLIER = useLowMemoryMode ? 1.333f : 2;
@@ -1298,7 +1304,7 @@ public class HdPlugin extends Plugin {
 		int defaultFramebuffer = awtContext.getFramebuffer(false);
 		glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);
 		final int forcedAASamples = glGetInteger(GL_SAMPLES);
-		msaaSamples = forcedAASamples != 0 ? forcedAASamples : min(config.antiAliasingMode().getSamples(), glGetInteger(GL_MAX_SAMPLES));
+		msaaSamples = forcedAASamples != 0 ? forcedAASamples : min(config.antiAliasingMode().getSamples(), glGetInteger(GL_MAX_SAMPLES));;
 
 		// Since there's seemingly no reliable way to check if the default framebuffer will do sRGB conversions with GL_FRAMEBUFFER_SRGB
 		// enabled, we always replace the default framebuffer with an sRGB one. We could technically support rendering to the default
@@ -1349,11 +1355,25 @@ public class HdPlugin extends Plugin {
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneColor);
 		checkGLErrors();
 
-		// Create depth render buffer
-		rboSceneDepth = glGenRenderbuffers();
-		glBindRenderbuffer(GL_RENDERBUFFER, rboSceneDepth);
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, GL_DEPTH_COMPONENT32F, sceneResolution[0], sceneResolution[1]);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboSceneDepth);
+		texSceneDepth = glGenTextures();
+		if (msaaSamples > 1) {
+			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texSceneDepth);
+			glTexImage2DMultisample(
+				GL_TEXTURE_2D_MULTISAMPLE, msaaSamples, GL_DEPTH_COMPONENT32F,
+				sceneResolution[0], sceneResolution[1], true
+			);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, texSceneDepth, 0);
+		} else {
+			glBindTexture(GL_TEXTURE_2D, texSceneDepth);
+			glTexImage2D(
+				GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F,
+				sceneResolution[0], sceneResolution[1],
+				0, GL_DEPTH_COMPONENT, GL_FLOAT, 0
+			);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texSceneDepth, 0);
+		}
 		checkGLErrors();
 
 		// If necessary, create an FBO for resolving multisampling
@@ -1367,9 +1387,23 @@ public class HdPlugin extends Plugin {
 			checkGLErrors();
 		}
 
+		if (msaaSamples > 1) {
+			texSceneDepthResolve = glGenTextures();
+			glBindTexture(GL_TEXTURE_2D, texSceneDepthResolve);
+			glTexImage2D(
+				GL_TEXTURE_2D, 0, GL_R32F,
+				sceneResolution[0], sceneResolution[1],
+				0, GL_RED, GL_FLOAT, 0
+			);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		}
+
 		// Reset
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 	}
 
 	private void destroySceneFbo() {
@@ -1383,9 +1417,13 @@ public class HdPlugin extends Plugin {
 			glDeleteRenderbuffers(rboSceneColor);
 		rboSceneColor = 0;
 
-		if (rboSceneDepth != 0)
-			glDeleteRenderbuffers(rboSceneDepth);
-		rboSceneDepth = 0;
+		if (texSceneDepth != 0)
+			glDeleteTextures(texSceneDepth);
+		texSceneDepth = 0;
+
+		if (texSceneDepthResolve != 0)
+			glDeleteTextures(texSceneDepthResolve);
+		texSceneDepthResolve = 0;
 
 		if (fboSceneResolve != 0)
 			glDeleteFramebuffers(fboSceneResolve);
@@ -1663,6 +1701,7 @@ public class HdPlugin extends Plugin {
 		configModelCaching = config.modelCaching();
 		configDynamicLights = config.dynamicLights();
 		configTiledLighting = config.tiledLighting();
+		configUseOIT = config.useOIT();
 		configTiledLightingImageLoadStore = config.tiledLightingImageLoadStore();
 		configDetailDrawDistance = config.detailDrawDistance();
 		configExpandShadowDraw = config.expandShadowDraw();
@@ -1988,7 +2027,7 @@ public class HdPlugin extends Plugin {
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
-		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
+		Utils.SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
 
 		frame = (frame + 1) & Integer.MAX_VALUE;
 
@@ -2056,63 +2095,6 @@ public class HdPlugin extends Plugin {
 	@Subscribe
 	public void onFocusChanged(FocusChanged event) {
 		isClientInFocus = event.isFocused();
-	}
-
-	@SuppressWarnings("StatementWithEmptyBody")
-	public static void clearGLErrors() {
-		// @formatter:off
-		while (glGetError() != GL_NO_ERROR);
-		// @formatter:on
-	}
-
-	public static boolean checkGLErrors() {
-		return checkGLErrors(null);
-	}
-
-	public static boolean checkGLErrors(@Nullable Provider<String> contextProvider) {
-		if (SKIP_GL_ERROR_CHECKS)
-			return false;
-
-		boolean hasGLError = false;
-		String context = null;
-		while (true) {
-			int err = glGetError();
-			if (err == GL_NO_ERROR)
-				return hasGLError;
-
-			String errStr;
-			switch (err) {
-				case GL_INVALID_ENUM:
-					errStr = "INVALID_ENUM";
-					break;
-				case GL_INVALID_VALUE:
-					errStr = "INVALID_VALUE";
-					break;
-				case GL_STACK_OVERFLOW:
-					errStr = "STACK_OVERFLOW";
-					break;
-				case GL_STACK_UNDERFLOW:
-					errStr = "STACK_UNDERFLOW";
-					break;
-				case GL_INVALID_OPERATION:
-					errStr = "INVALID_OPERATION";
-					break;
-				case GL_INVALID_FRAMEBUFFER_OPERATION:
-					errStr = "INVALID_FRAMEBUFFER_OPERATION";
-					break;
-				default:
-					errStr = String.format("Error code: %d", err);
-					break;
-			}
-			if (contextProvider != null && context == null)
-				context = contextProvider.get();
-			if (context != null) {
-				log.debug("glGetError({}):", context, new Exception(errStr));
-			} else {
-				log.debug("GL error:", new Exception(errStr));
-			}
-			hasGLError = true;
-		}
 	}
 
 	private void displayUpdateMessage() {

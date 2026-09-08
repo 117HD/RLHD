@@ -1133,6 +1133,17 @@ public interface HdPluginConfig extends Config
 	)
 	String experimentalSettings = "experimentalSettings";
 
+	String KEY_OIT = "experimentalOIT";
+	@ConfigItem(
+		keyName = KEY_OIT,
+		name = "Use Order Independent Transparency",
+		description = ".",
+		section = experimentalSettings
+	)
+	default boolean useOIT() {
+		return true;
+	}
+
 	String KEY_FASTER_MODEL_HASHING = "experimentalFasterModelHashing";
 	@ConfigItem(
 		keyName = KEY_FASTER_MODEL_HASHING,

@@ -29,6 +29,7 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.nio.IntBuffer;
+import java.util.HashSet;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -43,6 +44,7 @@ import org.lwjgl.opengl.*;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
+import rs117.hd.utils.collections.IntHashSet;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.utils.MathUtils.*;
@@ -73,7 +75,11 @@ public class TextureManager {
 	// Temporary variables for texture loading and generating material uniforms
 	private IntBuffer pixelBuffer;
 	private BufferedImage scaledImage;
+	private BufferedImage nearestNeighborImage;
 	private BufferedImage vanillaImage;
+	private final HashSet<String> alphaMaskTextures = new HashSet<>();
+	private final IntHashSet alphaMaskVanillaTextures = new IntHashSet();
+	private boolean currentTextureIsAlphaMask;
 
 	private ScheduledFuture<?> debounce;
 
@@ -105,7 +111,11 @@ public class TextureManager {
 	public void shutDown() {
 		pixelBuffer = null;
 		scaledImage = null;
+		nearestNeighborImage = null;
 		vanillaImage = null;
+		alphaMaskVanillaTextures.clear();
+		alphaMaskTextures.clear();
+		currentTextureIsAlphaMask = false;
 	}
 
 	public boolean vanillaTexturesAvailable() {
@@ -130,12 +140,23 @@ public class TextureManager {
 		return true;
 	}
 
+	public boolean isAlphasMaskTexture(@Nullable String filename, int fallbackVanillaIndex) {
+		return (filename != null && alphaMaskTextures.contains(filename)) || alphaMaskVanillaTextures.contains(fallbackVanillaIndex);
+	}
+
 	@Nullable
 	public BufferedImage loadTexture(@Nullable String filename, int fallbackVanillaIndex) {
 		if (filename != null) {
 			var image = loadTexture(filename);
-			if (image != null)
+			if (image != null) {
+				currentTextureIsAlphaMask = isAlphaMaskTexture(image);
+				if(currentTextureIsAlphaMask) {
+					alphaMaskTextures.add(filename);
+				} else {
+					alphaMaskTextures.remove(filename);
+				}
 				return image;
+			}
 			if (fallbackVanillaIndex == -1) {
 				log.warn("Missing texture: '{}'", filename);
 				return null;
@@ -164,11 +185,22 @@ public class TextureManager {
 			return null;
 		}
 
+		boolean hasTransparentPixel = false;
+		boolean hasOpaquePixel = false;
 		for (int j = 0; j < pixels.length; j++) {
 			int rgb = pixels[j];
 			// Black is considered transparent in vanilla, with anything else being fully opaque
 			int alpha = rgb == 0 ? 0 : 0xFF;
 			vanillaImage.setRGB(j % 128, j / 128, alpha << 24 | rgb & 0xFFFFFF);
+			hasTransparentPixel |= alpha == 0;
+			hasOpaquePixel |= alpha == 0xFF;
+		}
+
+		currentTextureIsAlphaMask = hasTransparentPixel && hasOpaquePixel;
+		if (currentTextureIsAlphaMask) {
+			alphaMaskVanillaTextures.add(fallbackVanillaIndex);
+		} else {
+			alphaMaskVanillaTextures.remove(fallbackVanillaIndex);
 		}
 
 		return vanillaImage;
@@ -195,8 +227,11 @@ public class TextureManager {
 		int numPixels = product(textureSize);
 		if (pixelBuffer == null || pixelBuffer.capacity() < numPixels)
 			pixelBuffer = BufferUtils.createIntBuffer(numPixels);
-		if (scaledImage == null || scaledImage.getWidth() != textureSize[0] || scaledImage.getHeight() != textureSize[1])
+
+		if (scaledImage == null || scaledImage.getWidth() != textureSize[0] || scaledImage.getHeight() != textureSize[1]) {
 			scaledImage = new BufferedImage(textureSize[0], textureSize[1], BufferedImage.TYPE_INT_ARGB);
+			nearestNeighborImage = new BufferedImage(textureSize[0], textureSize[1], BufferedImage.TYPE_INT_ARGB);
+		}
 
 		// TODO: scale and transform on the GPU for better performance (would save 400+ ms)
 		AffineTransform t = new AffineTransform();
@@ -209,8 +244,17 @@ public class TextureManager {
 		AffineTransformOp scaleOp = new AffineTransformOp(t, AffineTransformOp.TYPE_BICUBIC);
 		scaleOp.filter(image, scaledImage);
 
-		int[] pixels = ((DataBufferInt) scaledImage.getRaster().getDataBuffer()).getData();
-		pixelBuffer.clear().put(pixels).flip();
+		final int[] scaledPixels = ((DataBufferInt) scaledImage.getRaster().getDataBuffer()).getData();
+		if (currentTextureIsAlphaMask) {
+			AffineTransformOp alphaScaleOp = new AffineTransformOp(t, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+			alphaScaleOp.filter(image, nearestNeighborImage);
+
+			int[] nearestNeighborPixels = ((DataBufferInt) nearestNeighborImage.getRaster().getDataBuffer()).getData();
+			for (int i = 0; i < scaledPixels.length; i++)
+				scaledPixels[i] = (scaledPixels[i] & 0x00FFFFFF) | (nearestNeighborPixels[i] & 0xFF000000);
+		}
+
+		pixelBuffer.clear().put(scaledPixels).flip();
 
 		// Go from TYPE_4BYTE_ABGR in the BufferedImage to RGBA
 		glTexSubImage3D(
@@ -218,6 +262,25 @@ public class TextureManager {
 			textureLayer, textureSize[0], textureSize[1], 1,
 			GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, pixelBuffer
 		);
+	}
+
+	private static boolean isAlphaMaskTexture(BufferedImage image) {
+		boolean hasTransparentPixel = false;
+		boolean hasOpaquePixel = false;
+
+		for (int y = 0; y < image.getHeight(); y++) {
+			for (int x = 0; x < image.getWidth(); x++) {
+				int alpha = image.getRGB(x, y) >>> 24;
+				if (alpha == 0)
+					hasTransparentPixel = true;
+				else if (alpha == 0xFF)
+					hasOpaquePixel = true;
+				else
+					return false;
+			}
+		}
+
+		return hasTransparentPixel && hasOpaquePixel;
 	}
 
 	public void setAnisotropicFilteringLevel() {

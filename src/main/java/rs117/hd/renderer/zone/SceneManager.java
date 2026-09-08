@@ -39,7 +39,7 @@ import rs117.hd.utils.jobs.GenericJob;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.SCENE_SIZE;
-import static rs117.hd.HdPlugin.checkGLErrors;
+import static rs117.hd.opengl.Utils.checkGLErrors;
 import static rs117.hd.renderer.zone.WorldViewContext.DYNAMIC_MODEL_VAO_POOL;
 import static rs117.hd.renderer.zone.WorldViewContext.DYNAMIC_MODEL_VAO_STAGING_POOL;
 import static rs117.hd.utils.MathUtils.*;

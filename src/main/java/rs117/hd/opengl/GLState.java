@@ -70,6 +70,27 @@ public abstract class GLState {
 		protected abstract void applyValue(int value);
 	}
 
+	public abstract static class Float extends GLState {
+		@Getter
+		private float value;
+		private float appliedValue;
+
+		public final void set(float v) {
+			hasValue = true;
+			value = v;
+		}
+
+		@Override
+		protected void internalApply() {
+			if (!hasApplied || value != appliedValue) {
+				applyValue(value);
+				appliedValue = value;
+			}
+		}
+
+		protected abstract void applyValue(float value);
+	}
+
 	public abstract static class Object<T> extends GLState {
 		@Getter
 		private T value;
@@ -169,5 +190,107 @@ public abstract class GLState {
 		}
 
 		protected abstract void applyTarget(int target);
+	}
+
+	public abstract static class IndexedInt extends GLState {
+		private final int[] values;
+		private final int[] appliedValues;
+		private int indices;
+
+		@SuppressWarnings("unchecked")
+		protected IndexedInt(int size) {
+			values = new int[size];
+			appliedValues = new int[size];
+		}
+
+		protected final void setValue(int index, int value) {
+			if (index < 0 || index >= values.length)
+				throw new IllegalArgumentException("Invalid index: " + index);
+
+			hasValue = true;
+			values[index] = value;
+			indices |= 1 << index;
+		}
+
+		@Override
+		protected final void internalApply() {
+			for (int index = 0; index < values.length; index++) {
+				if ((indices & 1 << index) == 0)
+					continue;
+
+				int value = values[index];
+				if (!hasApplied || !Objects.equals(value, appliedValues[index])) {
+					applyValue(index, value);
+					appliedValues[index] = value;
+				}
+			}
+		}
+
+		protected abstract void applyValue(int attachment, int value);
+
+		@Override
+		public void reset() {
+			super.reset();
+			indices = 0;
+		}
+	}
+
+	public abstract static class IndexedIntArray extends GLState {
+		private static final int MAX_ATTACHMENTS = 8;
+
+		private final int perIndex;
+		private final int[] values;
+		private final int[] appliedValues;
+		private int indices;
+
+		protected IndexedIntArray(int perIndex) {
+			this.perIndex = perIndex;
+			values = new int[MAX_ATTACHMENTS * perIndex];
+			appliedValues = new int[MAX_ATTACHMENTS * perIndex];
+		}
+
+		protected final void setValue(int index, int... v) {
+			if (index < 0 || index >= MAX_ATTACHMENTS)
+				throw new IllegalArgumentException("Invalid index: " + index);
+			if (v.length != perIndex)
+				throw new IllegalArgumentException("Expected " + perIndex + " values, got " + v.length);
+
+			hasValue = true;
+			System.arraycopy(v, 0, values, index * perIndex, perIndex);
+			indices |= 1 << index;
+		}
+
+		@Override
+		protected final void internalApply() {
+			for (int index = 0; index < MAX_ATTACHMENTS; index++) {
+				if ((indices & 1 << index) == 0)
+					continue;
+
+				int offset = index * perIndex;
+				boolean changed = !hasApplied;
+				if (!changed) {
+					for (int i = 0; i < perIndex; i++) {
+						if (values[offset + i] != appliedValues[offset + i]) {
+							changed = true;
+							break;
+						}
+					}
+				}
+				if (changed) {
+					applyValue(index, values, offset);
+					System.arraycopy(values, offset, appliedValues, offset, perIndex);
+				}
+			}
+		}
+
+		protected abstract void applyValue(int attachment, int[] values, int offset);
+
+		@Override
+		public void reset() {
+			super.reset();
+			Arrays.fill(values, 0);
+			Arrays.fill(appliedValues, 0);
+			indices = 0;
+		}
 	}
 }

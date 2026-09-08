@@ -2,8 +2,8 @@
 
 #include "scene_common.glsl"
 
-out vec4 FragColor;
+out vec3 FragColor;
 
 void main() {
-    FragColor = shadeFragment();
+    FragColor = shadeFragment().rgb;
 }

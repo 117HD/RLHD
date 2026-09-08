@@ -50,6 +50,10 @@
         "type": "number",
         "description": "If specified, the material will override the given vanilla texture ID."
       },
+      "alphaDiscard": {
+        "type": "boolean",
+        "description": "Indicates whether the texture should be treated as alpha discard."
+      },
       "hasTransparency": {
         "type": "boolean",
         "description": "Indicates whether the texture includes transparency."

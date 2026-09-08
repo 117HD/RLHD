@@ -67,8 +67,8 @@ import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILE_HEIGHT_MAP;
-import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.opengl.Utils.checkGLErrors;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j

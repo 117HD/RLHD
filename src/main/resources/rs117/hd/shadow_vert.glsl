@@ -41,6 +41,8 @@ layout (location = 0) in vec3 vPosition;
 
     uniform isamplerBuffer textureFaces;
 
+    #include <scene_common.glsl>
+
     #if SHADOW_MODE == SHADOW_MODE_DETAILED
         out vec4 fUvw;
         flat out int fMaterialData;
@@ -51,16 +53,13 @@ layout (location = 0) in vec3 vPosition;
     #endif
 
     void main() {
-        int vertex = gl_VertexID % 3;
+        SceneVertex sv = resolveSceneVertex(vPosition, vTextureFaceIdx, vSceneBase, vWorldViewId);
+        int vertex = sv.vertex;
+        int faceIdx = sv.faceIdx;
 
-        int faceIdx = vTextureFaceIdx & 0x7FFFFFFF;
-        bool windingReversed = vTextureFaceIdx < 0;
-        if (windingReversed)
-            vertex = 2 - vertex;
-
-        int alphaBiasHsl = texelFetch(textureFaces, faceIdx)[vertex];
-        int materialData = texelFetch(textureFaces, faceIdx + 1)[vertex];
-        int terrainData = texelFetch(textureFaces, faceIdx + 2)[vertex];
+        int alphaBiasHsl = sv.faceAlphaBiasHsl[vertex];
+        int materialData = sv.faceMaterialData[vertex];
+        int terrainData = sv.faceTerrainData[vertex];
 
         int waterTypeIndex = terrainData >> 3 & 0xFF;
         float opacity = 1 - (alphaBiasHsl >> 24 & 0xFF) / float(0xFF);
@@ -100,12 +99,7 @@ layout (location = 0) in vec3 vPosition;
 
         int shouldCastShadow = isShadowDisabled ? 0 : 1;
 
-        vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
-        vec3 worldPosition = sceneOffset + vPosition;
-        if (vWorldViewId != -1) {
-            mat4x3 worldViewProjection = mat4x3(getWorldViewProjection(vWorldViewId));
-            worldPosition = worldViewProjection * vec4(worldPosition, 1.0);;
-        }
+        vec3 worldPosition = sv.worldPosition;
 
         #if SHADOW_TRANSPARENCY
             fOpacity = opacity;

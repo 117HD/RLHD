@@ -108,6 +108,9 @@ public class GLMappedBufferIntWriter implements Destructible {
 	}
 
 	public synchronized long flush() {
+		if(mappedBuffer == null || !mappedBuffer.isMapped())
+			return 0;
+
 		mappedBuffer.setPositionBytes(writtenMappedInts * Integer.BYTES);
 		mappedBuffer.unmap();
 
