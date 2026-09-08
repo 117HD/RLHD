@@ -2,6 +2,7 @@ package rs117.hd.scene.environments;
 
 import com.google.gson.annotations.JsonAdapter;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.scene.AreaManager;
@@ -19,7 +20,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 @Setter(value = AccessLevel.PRIVATE)
 public class Environment {
-	public static final float[] DEFAULT_SHADOW_ANGLES = HDUtils.sunAngles(52, 235);
+	private static final float[] DEFAULT_SHADOW_ANGLES = HDUtils.sunAngles(52, 235);
 	private static final float[] DEFAULT_FOG_COLOR = rgb("#000000");
 	private static final float[] DEFAULT_WATER_COLOR = rgb("#66eaff");
 	public static final Environment DEFAULT = new Environment()
@@ -52,23 +53,30 @@ public class Environment {
 	@JsonAdapter(ExpressionParser.PredicateAdapter.class)
 	public ExpressionPredicate varpCondition = ExpressionPredicate.TRUE;
 	@JsonAdapter(SrgbToLinearAdapter.class)
-	public float[] ambientColor = rgb("#ffffff");
+	@Getter
+	private float[] ambientColor = rgb("#ffffff");
 	public float ambientStrength = 1;
 	@JsonAdapter(SrgbToLinearAdapter.class)
-	public float[] directionalColor = rgb("#ffffff");
+	@Getter
+	private float[] directionalColor = rgb("#ffffff");
 	public float directionalStrength = .25f;
 	@JsonAdapter(SrgbToLinearAdapter.class)
-	public float[] waterColor;
+	@Getter
+	private float[] waterColor;
 	@JsonAdapter(SrgbToLinearAdapter.class)
-	public float[] waterCausticsColor;
+	@Getter
+	private float[] waterCausticsColor;
 	public float waterCausticsStrength = -1;
 	@JsonAdapter(SrgbToLinearAdapter.class)
-	public float[] underglowColor = rgb("#000000");
+	@Getter
+	private float[] underglowColor = rgb("#000000");
 	public float underglowStrength = 0;
 	@JsonAdapter(DegreesToRadians.class)
-	public float[] shadowAngles; // horizontal coordinate system, in radians
+	@Getter
+	private float[] shadowAngles; // horizontal coordinate system, in radians
 	@JsonAdapter(SrgbToLinearAdapter.class)
-	public float[] fogColor;
+	@Getter
+	private float[] fogColor;
 	public float fogDepth = 25;
 	public float groundFogStart = -200;
 	public float groundFogEnd = -500;

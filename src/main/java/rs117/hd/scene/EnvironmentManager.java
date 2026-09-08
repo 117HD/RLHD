@@ -267,8 +267,8 @@ public class EnvironmentManager {
 
 		if (transitionComplete) {
 			// Always write fog and water color, since they're affected by lightning
-			copyTo(state.current.fogColor, state.to.fogColor);
-			copyTo(state.current.waterColor, state.to.waterColor);
+			copyTo(state.current.getFogColor(), state.to.getFogColor());
+			copyTo(state.current.getWaterColor(), state.to.getWaterColor());
 		} else {
 			transitionProgress = smoothstep(0, 1, (float) (plugin.elapsedTime - transitionStartTime) / TRANSITION_DURATION);
 			state.current.interpolate(state.from, state.to, transitionProgress);
@@ -306,7 +306,7 @@ public class EnvironmentManager {
 		transitionStartTime = plugin.elapsedTime - (skipTransition ? TRANSITION_DURATION : 0);
 
 		state.current.copyTo(state.from);
-		mod(state.from.shadowAngles, state.current.shadowAngles, TWO_PI);
+		mod(state.from.getShadowAngles(), state.current.getShadowAngles(), TWO_PI);
 
 		Environment areaEnvironment = getResolvedTargetEnvironment();
 		Environment lightingEnvironment = areaEnvironment;
@@ -319,33 +319,33 @@ public class EnvironmentManager {
 		state.to.groundFogOpacity = areaEnvironment.groundFogOpacity;
 		lightningEnabled = areaEnvironment.lightningEffects;
 
-		state.to.shadowAngles = mix(areaEnvironment.shadowAngles, areaEnvironment.shadowAngles, 0);
+		copyTo(state.to.getShadowAngles(), areaEnvironment.getShadowAngles());
 		updateTargetSkyColor(areaEnvironment);
 
 		// Prevent transitions from taking the long way around
 		for (int i = 0; i < 2; i++) {
-			float diff = state.from.shadowAngles[i] - state.to.shadowAngles[i];
+			float diff = state.from.getShadowAngles()[i] - state.to.getShadowAngles()[i];
 			if (abs(diff) > PI)
-				state.to.shadowAngles[i] += TWO_PI * sign(diff);
+				state.to.getShadowAngles()[i] += TWO_PI * sign(diff);
 		}
 	}
 
 	private void updateTargetSkyColor(Environment env) {
-		state.to.fogColor = getFogColor(env);
+		copyTo(state.to.getFogColor(), getFogColor(env));
 		if (usesDefaultSkyColor(env)) {
 			DefaultSkyColor sky = plugin.configDefaultSkyColor;
 			if (sky == DefaultSkyColor.OSRS)
 				sky = DefaultSkyColor.DEFAULT;
-			state.to.waterColor = sky.getRgb(client);
+			copyTo(state.to.getWaterColor(), sky.getRgb(client));
 		} else {
-			state.to.waterColor = env.fogColor;
+			copyTo(state.to.getWaterColor(), env.getFogColor());
 		}
 
 		// Override with decoupled water/sky color if present
 		if (env.hasWaterColorOverride) {
-			state.to.waterColor = env.waterColor;
+			copyTo(state.to.getWaterColor(), env.getWaterColor());
 		} else if (config.decoupleSkyAndWaterColor()) {
-			state.to.waterColor = DefaultSkyColor.DEFAULT.getRgb(client);
+			copyTo(state.to.getWaterColor(), DefaultSkyColor.DEFAULT.getRgb(client));
 		}
 	}
 
@@ -354,7 +354,7 @@ public class EnvironmentManager {
 	}
 
 	public float[] getFogColor(Environment env) {
-		return usesDefaultSkyColor(env) ? plugin.configDefaultSkyColor.getRgb(client) : env.fogColor;
+		return usesDefaultSkyColor(env) ? plugin.configDefaultSkyColor.getRgb(client) : env.getFogColor();
 	}
 
 	/**
@@ -411,8 +411,8 @@ public class EnvironmentManager {
 
 		if (lightningEnabled && config.flashingEffects()) {
 			float t = clamp(lightningBrightness, 0, 1);
-			state.current.fogColor = mix(state.current.fogColor, LIGHTNING_COLOR, t);
-			state.current.waterColor = mix(state.current.waterColor, LIGHTNING_COLOR, t);
+			mix(state.current.getFogColor(), state.current.getFogColor(), LIGHTNING_COLOR, t);
+			mix(state.current.getWaterColor(), state.current.getWaterColor(), LIGHTNING_COLOR, t);
 		} else {
 			lightningBrightness = 0f;
 		}

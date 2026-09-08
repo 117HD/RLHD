@@ -155,10 +155,10 @@ public class SkyRenderer {
 		shouldRenderSky = skyManager.isCycleActive();
 
 		Environment env = environmentManager.getCurrentEnvironment();
-		copyTo(directionalColor, env.directionalColor);
-		copyTo(ambientColor, env.ambientColor);
-		copyTo(waterColor, env.waterColor);
-		copyTo(fogColorSrgb, ColorUtils.linearToSrgb(env.fogColor));
+		copyTo(directionalColor, env.getDirectionalColor());
+		copyTo(ambientColor, env.getAmbientColor());
+		copyTo(waterColor, env.getWaterColor());
+		copyTo(fogColorSrgb, ColorUtils.linearToSrgb(env.getFogColor()));
 		directionalStrength = env.directionalStrength;
 		ambientStrength = env.ambientStrength;
 
@@ -304,12 +304,12 @@ public class SkyRenderer {
 		float moonIllumination = state.moonIllumination;
 		sampleSkyGradient(
 			skySample, sunAltDeg, toSky.gradient, toProfile,
-			env.fogColor, toSky.sunStrength, toSky.sunriseSunsetStrength, toSky.skyColorTakeoverAngle
+			env.getFogColor(), toSky.sunStrength, toSky.sunriseSunsetStrength, toSky.skyColorTakeoverAngle
 		);
 		if (transition < 1) {
 			sampleSkyGradient(
 				transitionSkySample, sunAltDeg, fromSky.gradient, fromProfile,
-				env.fogColor, fromSky.sunStrength, fromSky.sunriseSunsetStrength, fromSky.skyColorTakeoverAngle
+				env.getFogColor(), fromSky.sunStrength, fromSky.sunriseSunsetStrength, fromSky.skyColorTakeoverAngle
 			);
 			mix(skySample.zenithSrgb, transitionSkySample.zenithSrgb, skySample.zenithSrgb, transition);
 			mix(skySample.horizonSrgb, transitionSkySample.horizonSrgb, skySample.horizonSrgb, transition);

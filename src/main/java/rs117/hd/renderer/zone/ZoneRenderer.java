@@ -469,8 +469,9 @@ public class ZoneRenderer implements Renderer {
 				skyManager.updateDirectionalCamera(directionalCamera);
 			} else {
 				Environment env = environmentManager.getCurrentEnvironment();
-				directionalCamera.setPitch(env.shadowAngles[0]);
-				directionalCamera.setYaw(PI - env.shadowAngles[1]);
+				float[] shadowAngles = env.getShadowAngles();
+				directionalCamera.setPitch(shadowAngles[0]);
+				directionalCamera.setYaw(PI - shadowAngles[1]);
 			}
 
 			boolean hasDirectionalCameraChanged = directionalCamera.isViewDirty() || directionalCamera.isProjDirty();
@@ -632,7 +633,7 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboGlobal.gammaCorrection.set(plugin.getGammaCorrection());
 
 		plugin.uboGlobal.underglowStrength.set(env.underglowStrength);
-		plugin.uboGlobal.underglowColor.set(env.underglowColor);
+		plugin.uboGlobal.underglowColor.set(env.getUnderglowColor());
 
 		plugin.uboGlobal.groundFogStart.set(env.groundFogStart);
 		plugin.uboGlobal.groundFogEnd.set(env.groundFogEnd);
@@ -647,7 +648,7 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboGlobal.contrast.set(config.contrast() / 100f);
 		plugin.uboGlobal.underwaterEnvironment.set(environmentManager.getTargetEnvironment().isUnderwater ? 1 : 0);
 		plugin.uboGlobal.underwaterCaustics.set(config.underwaterCaustics() ? 1 : 0);
-		plugin.uboGlobal.underwaterCausticsColor.set(env.waterCausticsColor);
+		plugin.uboGlobal.underwaterCausticsColor.set(env.getWaterCausticsColor());
 		plugin.uboGlobal.underwaterCausticsStrength.set(env.waterCausticsStrength);
 		plugin.uboGlobal.elapsedTime.set((float) (plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
 		plugin.uboGlobal.orthographicProjection.set(plugin.orthographicProjection ? 1 : 0);

@@ -1033,7 +1033,7 @@ public class LegacyRenderer implements Renderer {
 			plugin.uboGlobal.gammaCorrection.set(plugin.getGammaCorrection());
 
 			plugin.uboGlobal.underglowStrength.set(env.underglowStrength);
-			plugin.uboGlobal.underglowColor.set(env.underglowColor);
+			plugin.uboGlobal.underglowColor.set(env.getUnderglowColor());
 
 			plugin.uboGlobal.groundFogStart.set(env.groundFogStart);
 			plugin.uboGlobal.groundFogEnd.set(env.groundFogEnd);
@@ -1049,11 +1049,11 @@ public class LegacyRenderer implements Renderer {
 			plugin.uboGlobal.contrast.set(config.contrast() / 100f);
 			plugin.uboGlobal.underwaterEnvironment.set(environmentManager.getTargetEnvironment().isUnderwater ? 1 : 0);
 			plugin.uboGlobal.underwaterCaustics.set(config.underwaterCaustics() ? 1 : 0);
-			plugin.uboGlobal.underwaterCausticsColor.set(env.waterCausticsColor);
+			plugin.uboGlobal.underwaterCausticsColor.set(env.getWaterCausticsColor());
 			plugin.uboGlobal.underwaterCausticsStrength.set(env.waterCausticsStrength);
 			plugin.uboGlobal.elapsedTime.set((float) (plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
 
-			float[] shadowAngles = skyManager.isCycleActive() ? skyManager.getState().shadowAngles : env.shadowAngles;
+			float[] shadowAngles = skyManager.isCycleActive() ? skyManager.getState().shadowAngles : env.getShadowAngles();
 			float[] lightViewMatrix = Mat4.rotateX(shadowAngles[0]);
 			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - shadowAngles[1]));
 			// Extract the 3rd column from the light view matrix (the float array is column-major).
