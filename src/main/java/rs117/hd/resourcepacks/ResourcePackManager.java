@@ -710,7 +710,7 @@ public final class ResourcePackManager {
 	}
 
 	private static boolean isCommitHash(String commit) {
-		return commit != null && commit.matches("[0-9a-fA-F]{7,64}");
+		return commit != null && commit.matches("(?:[0-9a-fA-F]{40}|[0-9a-fA-F]{64})");
 	}
 
 	private static boolean isSha256(String sha256) {
