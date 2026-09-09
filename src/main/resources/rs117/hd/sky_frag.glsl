@@ -99,7 +99,7 @@ void main() {
         // Daylight lowers lunar contrast rather than making the disk transparent.
         // Scale against the local sky brightness so the moon remains subtly visible
         // in daytime, but naturally becomes prominent as the sky darkens.
-        float skyLuminance = linearSrgbLuma(skyColorPreStars);
+        float skyLuminance = linearSrgbLuminance(skyColorPreStars);
         float moonDayVisibility = 1.0 / (1.0 + skyLuminance * 12.0);
 
         // Fade the moon near the sun.

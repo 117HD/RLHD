@@ -36,7 +36,7 @@ import rs117.hd.utils.RenderState;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPluginConfig.*;
-import static rs117.hd.utils.ColorUtils.linearSrgbLuma;
+import static rs117.hd.utils.ColorUtils.linearSrgbLuminance;
 import static rs117.hd.utils.ColorUtils.linearToSrgb;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -432,8 +432,8 @@ public class SkyRenderer {
 		SkyConfiguration sky = skyManager.getSkyConfiguration(environment);
 		Sample lighting = sampleEnvironmentalLighting(state, environment, sky);
 		float[] authoredColor = light.def.color;
-		float defLuma = linearSrgbLuma(authoredColor);
-		float noonLuma = max(linearSrgbLuma(lighting.noonHorizonLinear), 1e-4f);
+		float defLuma = linearSrgbLuminance(authoredColor);
+		float noonLuma = max(linearSrgbLuminance(lighting.noonHorizonLinear), 1e-4f);
 		float[] lightColor = copy(lighting.horizonLinear);
 		float sunAltDeg = state.sunAltitudeDegrees;
 
@@ -453,11 +453,11 @@ public class SkyRenderer {
 
 		if (sunAltDeg > 0) {
 			float desaturation = smoothstep(0, 90, sunAltDeg) * .75f;
-			float luma = linearSrgbLuma(lightColor);
+			float luma = linearSrgbLuminance(lightColor);
 			mix(lightColor, lightColor, vec(luma), desaturation);
 		}
 
-		float horizonLuma = linearSrgbLuma(lightColor);
+		float horizonLuma = linearSrgbLuminance(lightColor);
 		float middayFactor = smoothstep(15, 30, sunAltDeg);
 		if (middayFactor > 0)
 			lightColor = mix(lightColor, authoredColor, middayFactor);

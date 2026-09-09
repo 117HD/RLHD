@@ -10,7 +10,7 @@
 
 #include <utils/constants.glsl>
 
-const vec3 LINEAR_SRGB_LUMA_COEFFICIENTS = vec3(.2126f, .7152f, .0722f);
+const vec3 LINEAR_SRGB_LUMINANCE_COEFFICIENTS = vec3(.2126f, .7152f, .0722f);
 
 /**
  * Transforms between CIE XYZ (D65) and linear sRGB.
@@ -109,8 +109,9 @@ float linearToSrgb(float rgb) {
     step(0.0031308, rgb));
 }
 
-float linearSrgbLuma(vec3 linearSrgb) {
-    return dot(linearSrgb, LINEAR_SRGB_LUMA_COEFFICIENTS);
+// Calculate linear perceptual luminance from a linear sRGB color
+float linearSrgbLuminance(vec3 linearSrgb) {
+    return dot(linearSrgb, LINEAR_SRGB_LUMINANCE_COEFFICIENTS);
 }
 
 // https://web.archive.org/web/20230619214343/https://en.wikipedia.org/wiki/HSL_and_HSV#Color_conversion_formulae
