@@ -382,16 +382,19 @@ public final class ResourcePackManager {
 					return;
 				}
 
+					var validManifests = Arrays.stream(manifests)
+						.filter(ResourcePackManager::isValidOfficialManifest)
+						.toArray(Manifest[]::new);
+					if (validManifests.length == 0) {
+						setStatus("Malformed Manifest", "The official resource-pack list contains no valid entries.");
+						return;
+					}
+
 					SwingUtilities.invokeLater(() -> {
 						downloadablePacks.clear();
-
-						Arrays.sort(manifests, (left, right) -> left.getDisplayName().compareToIgnoreCase(right.getDisplayName()));
-					for (var manifest : manifests) {
-						if (isValidOfficialManifest(manifest))
+						Arrays.sort(validManifests, (left, right) -> left.getDisplayName().compareToIgnoreCase(right.getDisplayName()));
+						for (var manifest : validManifests)
 							downloadablePacks.put(manifest.getInternalName(), manifest);
-						else
-							log.warn("Ignoring malformed official resource pack entry '{}'.", manifest.getInternalName());
-					}
 						reconcileOfficialPacks();
 
 						setStatus(null, null);
@@ -758,7 +761,7 @@ public final class ResourcePackManager {
 		HttpUrl url = HttpUrl.parse(link);
 		if (url == null || !url.isHttps() || !"github.com".equals(url.host()) || url.username().length() > 0 || url.password().length() > 0)
 			return null;
-		return url.pathSize() >= 2 ? url : null;
+		return url.pathSize() == 2 && url.querySize() == 0 && url.fragment() == null ? url : null;
 	}
 
 	private static void deleteFileQuietly(File file) {

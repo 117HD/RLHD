@@ -54,6 +54,8 @@ final class ResourcePackDownloader {
 					byte[] buffer = new byte[4096];
 					try (InputStream input = body.byteStream(); FileOutputStream output = new FileOutputStream(destination)) {
 						for (int read; (read = input.read(buffer)) != -1;) {
+							if (expectedFileSize != null && bytesRead + read > expectedFileSize)
+								throw new IOException("Downloaded more than the expected " + expectedFileSize + " bytes");
 							output.write(buffer, 0, read);
 							digest.update(buffer, 0, read);
 							bytesRead += read;
