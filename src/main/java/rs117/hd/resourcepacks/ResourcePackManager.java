@@ -2,8 +2,10 @@ package rs117.hd.resourcepacks;
 
 import com.google.gson.Gson;
 import java.awt.Color;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.FileVisitResult;
@@ -55,6 +57,7 @@ import static rs117.hd.HdPluginConfig.*;
 public final class ResourcePackManager {
 	private static final int MAX_UPDATE_CHECK_INTERVAL = 600000; // 10 minutes
 	private static final long MAX_OFFICIAL_ARCHIVE_SIZE = 512L * 1024 * 1024;
+	private static final int MAX_OFFICIAL_MANIFEST_SIZE = 1024 * 1024;
 
 	@Inject
 	private OkHttpClient okHttpClient;
@@ -356,7 +359,9 @@ public final class ResourcePackManager {
 					if (res.body() == null)
 						throw new IllegalStateException("Manifest is null");
 
-					manifests = gson.fromJson(res.body().string(), Manifest[].class);
+					if (res.body().contentLength() > MAX_OFFICIAL_MANIFEST_SIZE)
+						throw new IOException("Manifest exceeds " + MAX_OFFICIAL_MANIFEST_SIZE + " bytes");
+					manifests = gson.fromJson(readLimited(res.body().byteStream(), MAX_OFFICIAL_MANIFEST_SIZE), Manifest[].class);
 					if (manifests == null)
 						throw new IllegalStateException("Manifest is empty");
 				} catch (Exception ex) {
@@ -714,6 +719,18 @@ public final class ResourcePackManager {
 
 	private static boolean isSafeInternalName(String internalName) {
 		return internalName != null && internalName.matches("[a-z0-9_-]+");
+	}
+
+	private static String readLimited(InputStream input, int limit) throws IOException {
+		try (InputStream ignored = input; ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+			byte[] buffer = new byte[4096];
+			for (int read; (read = input.read(buffer)) != -1;) {
+				if (output.size() + read > limit)
+					throw new IOException("Response exceeds " + limit + " bytes");
+				output.write(buffer, 0, read);
+			}
+			return output.toString(java.nio.charset.StandardCharsets.UTF_8.name());
+		}
 	}
 
 	private static boolean isCommitHash(String commit) {
