@@ -75,19 +75,10 @@ void main() {
     float nightFactor = pow(baseProgress, mix(0.4, 0.9, sunProximity));
     float skyBlend = nightFactor * skyVisibility;
     float starBlend = nightFactor * starVisibility;
-    // Rotate the night sky about the local celestial pole using simulated time.
-    float celestialAngle = skyCelestialRotation;
-    vec3 celestialAxis = skyCelestialPole;
-    float celestialCos = cos(celestialAngle);
-    float celestialSin = sin(celestialAngle);
     vec3 shootingStarColor = vec3(0.0);
     if (skyBlend > 0.001) {
-        vec3 starDir = viewDir;
-        starDir = starDir * celestialCos + cross(celestialAxis, starDir) * celestialSin +
-            celestialAxis * dot(celestialAxis, starDir) * (1.0 - celestialCos);
-
         // Individual stars are drawn separately as point sprites.
-        vec3 nightSkyColor = proceduralStarfieldBackground(starDir);
+        vec3 nightSkyColor = nightSkyBackground(viewDir);
 
         // Converge to the fog-matched gradient at the horizon.
         float horizonStarFade = nightSkyHorizonFade(sky.upAmount, horizonShift);

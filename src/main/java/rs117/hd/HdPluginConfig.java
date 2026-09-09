@@ -54,6 +54,7 @@ import rs117.hd.config.ShadowDistance;
 import rs117.hd.config.ShadowFiltering;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.ShadowResolution;
+import rs117.hd.config.StarMode;
 import rs117.hd.config.TextureResolution;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
@@ -638,12 +639,16 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_STARS,
 		name = "Stars",
-		description = "Show stars in the sky at night.",
+		description =
+			"'Off' hides stars.<br>" +
+			"'Realistic' follows the sky's celestial rotation.<br>" +
+			"'Artistic' rotates horizontally with some parallax.<br>" +
+			"'Static' keeps the realistic star field fixed in place.",
 		position = 1,
 		section = daylightCycleSettings
 	)
-	default boolean enableStarMap() {
-		return true;
+	default StarMode starMode() {
+		return StarMode.REALISTIC;
 	}
 
 	String KEY_NEBULAS = "nebulas";

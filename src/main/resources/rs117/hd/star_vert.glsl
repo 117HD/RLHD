@@ -9,6 +9,7 @@ layout(location = 0) in vec3 aStarDir;     // field-space unit direction
 layout(location = 1) in float aStarSize;   // relative size
 layout(location = 2) in float aStarBright; // base brightness
 layout(location = 3) in vec3 aStarColor;   // tint
+layout(location = 4) in float aStarRotationSpeed;
 
 out vec3 vColor;
 out float vBrightness;
@@ -16,15 +17,7 @@ out float vBrightness;
 const float SKY_HORIZON_OFFSET = 0.087;
 
 void main() {
-    // Apply the inverse celestial rotation so point stars remain aligned with the nebula.
-    float celestialAngle = -skyCelestialRotation;
-    vec3 celestialAxis = skyCelestialPole;
-    float celestialCos = cos(celestialAngle);
-    float celestialSin = sin(celestialAngle);
-
-    vec3 dir = aStarDir;
-    dir = dir * celestialCos + cross(celestialAxis, dir) * celestialSin +
-        celestialAxis * dot(celestialAxis, dir) * (1.0 - celestialCos);
+    vec3 dir = inverseRotateStarfield(aStarDir, aStarRotationSpeed);
 
     // Softly occlude additively blended stars behind the opaque moon disk.
     float moonOcclusion = 1.0;
@@ -76,7 +69,7 @@ void main() {
     // Stable per-star hashes give each deliberate twinkle its own phase, rate, and depth.
     float starHash = fract(sin(dot(aStarDir, vec3(12.9898, 78.233, 37.719))) * 43758.5453);
     float starHash2 = fract(sin(dot(aStarDir, vec3(93.989, 41.123, 19.37))) * 24634.6345);
-    float twinklePhase = starHash * 6.2831853;
+    float twinklePhase = starHash * TAU;
     float twinkleRate = mix(4.0, 13.2, starHash2);
     float twinkleAmt = mix(0.35, 0.5, starHash);
     // Two incommensurate oscillators keep the shimmer from visibly repeating.

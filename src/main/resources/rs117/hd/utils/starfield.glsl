@@ -359,3 +359,10 @@ vec3 proceduralStarfieldBackground(vec3 dir) {
         color += sampleNebula(dir) * nebulaVisibility;
     return color;
 }
+
+// The static background needs neither a celestial rotation nor a nebula lookup.
+vec3 nightSkyBackground(vec3 viewDir) {
+    return nebulaVisibility == 0.0 ?
+        STARFIELD_BACKGROUND_COLOR :
+        proceduralStarfieldBackground(rotateStarfield(viewDir, 1.0));
+}

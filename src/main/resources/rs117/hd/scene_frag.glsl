@@ -581,10 +581,16 @@ void main() {
                 SkyGradient sky = computeSkyGradient(fogViewDir);
                 skyColorAtFragment = sky.color;
 
-                // Match the night sky's star-free horizon color.
-                float nightSkyBlend = (1.0 - sky.nightFade) * skyVisibility;
+                float baseProgress = 1.0 - sky.nightFade;
+                float sunProximity = sky.sunSideBlend * (1.0 - sky.zenithBlend);
+                float nightSkyBlend = pow(baseProgress, mix(0.4, 0.9, sunProximity)) * skyVisibility;
                 if (nightSkyBlend > 0.001) {
-                    skyColorAtFragment = mix(skyColorAtFragment, skyZenithColor, nightSkyBlend);
+                    float horizonFade = smoothstep(-0.1 + nightHorizonOffset(), 0.07 + nightHorizonOffset(), sky.upAmount);
+                    skyColorAtFragment = mix(
+                        skyColorAtFragment,
+                        nightSkyBackground(fogViewDir),
+                        nightSkyBlend * horizonFade
+                    );
                 }
 
                 skyColorAtFragment = applySkyHaze(skyColorAtFragment, sky.upAmount, sky.sunSideBlend, sky.zenithBlend);

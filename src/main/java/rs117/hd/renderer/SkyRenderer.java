@@ -11,6 +11,7 @@ import net.runelite.api.*;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.config.StarMode;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.SkyShaderProgram;
@@ -228,7 +229,7 @@ public class SkyRenderer {
 		commandBuffer.BindVertexArray(plugin.vaoTri);
 		commandBuffer.DrawArrays(GL_TRIANGLES, 0, 3);
 
-		if (config.enableStarMap() && starProgram.isValid() && starField.getVaoStars() != 0) {
+		if (config.starMode() != StarMode.OFF && starProgram.isValid() && starField.getVaoStars() != 0) {
 			commandBuffer.SetShader(starProgram);
 			commandBuffer.Enable(GL_PROGRAM_POINT_SIZE);
 			if (!GL_CAPS.forwardCompatible)
@@ -569,7 +570,12 @@ public class SkyRenderer {
 		mix(sky.horizonSrgb, sky.horizonSrgb, configuration.nightSkyColor, skyTint);
 	}
 
-	private void updateSkyUbo(SkyConfiguration configuration, SkyState state, Sample sky, float moonIllumination) {
+	private void updateSkyUbo(
+		SkyConfiguration configuration,
+		SkyState state,
+		Sample sky,
+		float moonIllumination
+	) {
 		var ubo = plugin.uboSky;
 		ubo.skyGradientEnabled.set(1);
 		ubo.skyZenithColor.set(sky.zenithSrgb);
@@ -578,6 +584,7 @@ public class SkyRenderer {
 		ubo.skySunDir.set(state.sunDirection);
 		ubo.skyCelestialPole.set(state.celestialPole[0], -state.celestialPole[1], state.celestialPole[2]);
 		ubo.skyCelestialRotation.set(state.celestialRotation);
+		ubo.skyStarRotationMode.set(config.starMode().ordinal());
 		ubo.skyMoonDir.set(state.moonDirection);
 		ubo.skyMoonDiskColor.set(
 			configuration.moonDiskColor[0] * configuration.moonDiskStrength,
@@ -592,7 +599,7 @@ public class SkyRenderer {
 		ubo.moonVisibility.set(state.moonVisibility);
 		ubo.moonSizeMult.set(configuration.moonSizeMult);
 		ubo.starHorizonHeight.set(configuration.starHorizonHeight);
-		ubo.starVisibility.set(config.enableStarMap() ? configuration.starVisibility : 0);
+		ubo.starVisibility.set(config.starMode() == StarMode.OFF ? 0 : configuration.starVisibility);
 		ubo.nebulaVisibility.set(config.enableNebulas() ? configuration.nebulaVisibility : 0);
 		ubo.auroraVisibility.set(state.auroraStrength * configuration.auroraVisibility);
 		ubo.upload();

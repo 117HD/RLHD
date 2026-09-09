@@ -39,8 +39,8 @@ public final class StarField {
 		new Color(0.70f, 0.80f, 1.0f)  // cool blue
 	};
 
-	// VBO layout: direction.xyz, size, brightness, color.rgb.
-	private static final int FLOATS_PER_STAR = 8;
+	// VBO layout: direction.xyz, size, brightness, color.rgb, artistic rotation speed.
+	private static final int FLOATS_PER_STAR = 9;
 
 	// Match the old field's density independently of screen resolution.
 	private static final int BRIGHT_STAR_COUNT = 350;   // layer 0: sparse/bright/large
@@ -89,7 +89,7 @@ public final class StarField {
 		vboStars.bind();
 
 		int stride = FLOATS_PER_STAR * Float.BYTES;
-		// direction.xyz, size, brightness, color.rgb
+		// direction.xyz, size, brightness, color.rgb, artistic rotation speed
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0L);
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(1, 1, GL_FLOAT, false, stride, 3L * Float.BYTES);
@@ -98,6 +98,8 @@ public final class StarField {
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(3, 3, GL_FLOAT, false, stride, 5L * Float.BYTES);
 		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(4, 1, GL_FLOAT, false, stride, 8L * Float.BYTES);
+		glEnableVertexAttribArray(4);
 
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -144,11 +146,11 @@ public final class StarField {
 
 		FloatBuffer vertexData = BufferUtils.createFloatBuffer(MAX_STAR_COUNT * FLOATS_PER_STAR);
 
-		generateLayer(vertexData, BRIGHT_STAR_COUNT, 1.2f, 1.0f);
-		generateLayer(vertexData, DIM_STAR_COUNT, 0.4f, 0.8f);
+		generateLayer(vertexData, BRIGHT_STAR_COUNT, 1.2f, 1.0f, 1);
+		generateLayer(vertexData, DIM_STAR_COUNT, 0.4f, 0.8f, .7f);
 
 		if (config.enableNebulas())
-			generateClusteredLayer(vertexData, CLUSTER_STAR_COUNT, CLUSTER_COUNT, CLUSTER_ANGULAR_SPREAD, 0.5f, 0.5f);
+			generateClusteredLayer(vertexData, CLUSTER_STAR_COUNT, CLUSTER_COUNT, CLUSTER_ANGULAR_SPREAD, 0.5f, 0.5f, 1);
 
 		starCount = vertexData.position() / FLOATS_PER_STAR;
 		vboStars.upload(vertexData.flip());
@@ -199,17 +201,17 @@ public final class StarField {
 		starfieldGenerated = false;
 	}
 
-	private void generateLayer(FloatBuffer vertexBuffer, int count, float maxBrightness, float sizeScale) {
+	private void generateLayer(FloatBuffer vertexBuffer, int count, float maxBrightness, float sizeScale, float artisticRotationSpeed) {
 		final float[] center = new float[3];
 		for (int i = 0; i < count; i++) {
 			randomPointOnSphere(center, random);
-			writeStar(vertexBuffer, center[0], center[1], center[2], maxBrightness, sizeScale, 1.0f);
+			writeStar(vertexBuffer, center[0], center[1], center[2], maxBrightness, sizeScale, artisticRotationSpeed, 1);
 		}
 	}
 
 	private void generateClusteredLayer(
 		FloatBuffer vertexBuffer, int count, int clusterCount,
-		float angularSpread, float maxBrightness, float sizeScale
+		float angularSpread, float maxBrightness, float sizeScale, float artisticRotationSpeed
 	) {
 		final float[][] clusterCenters = new float[clusterCount][3];
 		final float[][] clusterTangentU = new float[clusterCount][3];
@@ -247,7 +249,7 @@ public final class StarField {
 			float dy = cosR * dir[1] + sinR * (cosT * u[1] + sinT * v[1]);
 			float dz = cosR * dir[2] + sinR * (cosT * u[2] + sinT * v[2]);
 
-			writeStar(vertexBuffer, dx, dy, dz, maxBrightness, sizeScale, 0.5f);
+			writeStar(vertexBuffer, dx, dy, dz, maxBrightness, sizeScale, artisticRotationSpeed, .5f);
 		}
 	}
 
@@ -258,6 +260,7 @@ public final class StarField {
 		float dz,
 		float maxBrightness,
 		float sizeScale,
+		float artisticRotationSpeed,
 		float brightnessScale
 	) {
 		// Power-law brightness: many dim, few bright (matches pow(seed, 2.5)).
@@ -281,6 +284,7 @@ public final class StarField {
 			.put(brightness)
 			.put(starColor.getRed() / 255.0f)
 			.put(starColor.getGreen() / 255.0f)
-			.put(starColor.getBlue() / 255.0f);
+			.put(starColor.getBlue() / 255.0f)
+			.put(artisticRotationSpeed);
 	}
 }
