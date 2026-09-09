@@ -210,8 +210,10 @@ public class SkyRenderer {
 
 	public void render() {
 		clear(false);
-		if (canRenderSky(false))
+		if (canRenderSky(false)) {
+			localRenderState.reset();
 			commandBuffer.execute(localRenderState);
+		}
 	}
 
 	private void updateCommandBuffer() {
