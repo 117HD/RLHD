@@ -40,18 +40,23 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -127,6 +132,8 @@ public class ResourcePackPanel extends JPanel {
 	private static final String DOWNLOAD_CARD_ID = "downloadCardId";
 	private static final String DOWNLOAD_MANIFEST = "downloadManifest";
 	private static final String DOWNLOAD_ACTION_BUTTON = "downloadActionButton";
+	private static final int MAX_REMOTE_ICON_BYTES = 1024 * 1024;
+	private static final long MAX_REMOTE_ICON_PIXELS = 1024L * 1024;
 
 	static {
 		FADE = new ImageIcon(ImageUtil.loadImageResource(HdSidebar.class, "fade.png"));
@@ -1174,16 +1181,16 @@ public class ResourcePackPanel extends JPanel {
 					try (Response ignored = res) {
 						if (!res.isSuccessful() || res.body() == null)
 							throw new IOException("Unexpected icon response: " + res.code());
-						bytes = res.body().bytes();
+						if (res.body().contentLength() > MAX_REMOTE_ICON_BYTES)
+							throw new IOException("Icon response exceeds " + MAX_REMOTE_ICON_BYTES + " bytes");
+						bytes = readLimited(res.body().byteStream(), MAX_REMOTE_ICON_BYTES);
 					} catch (IOException ex) {
 						log.warn("Unable to download regular icon for pack \"{}\"", manifest.getInternalName(), ex);
 						return;
 					}
 					BufferedImage img;
 					try {
-						synchronized (ImageIO.class) {
-							img = ImageIO.read(new ByteArrayInputStream(bytes));
-						}
+						img = decodeIcon(bytes);
 					} catch (IOException ex) {
 						log.warn("Unable to decode regular icon for pack \"{}\"", manifest.getInternalName(), ex);
 						return;
@@ -1203,5 +1210,40 @@ public class ResourcePackPanel extends JPanel {
 					}
 				}
 			});
+	}
+
+	private static byte[] readLimited(InputStream input, int limit) throws IOException {
+		try (InputStream ignored = input; ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+			byte[] buffer = new byte[4096];
+			for (int read; (read = input.read(buffer)) != -1;) {
+				if (output.size() + read > limit)
+					throw new IOException("Icon response exceeds " + limit + " bytes");
+				output.write(buffer, 0, read);
+			}
+			return output.toByteArray();
+		}
+	}
+
+	private static BufferedImage decodeIcon(byte[] bytes) throws IOException {
+		try (ImageInputStream input = ImageIO.createImageInputStream(new ByteArrayInputStream(bytes))) {
+			if (input == null)
+				throw new IOException("Unable to read icon data");
+
+			Iterator<ImageReader> readers = ImageIO.getImageReaders(input);
+			if (!readers.hasNext())
+				throw new IOException("Icon is not a supported image");
+
+			ImageReader reader = readers.next();
+			try {
+				reader.setInput(input, true, true);
+				int width = reader.getWidth(0);
+				int height = reader.getHeight(0);
+				if (width <= 0 || height <= 0 || (long) width * height > MAX_REMOTE_ICON_PIXELS)
+					throw new IOException("Icon dimensions exceed " + MAX_REMOTE_ICON_PIXELS + " pixels");
+				return reader.read(0);
+			} finally {
+				reader.dispose();
+			}
+		}
 	}
 }
