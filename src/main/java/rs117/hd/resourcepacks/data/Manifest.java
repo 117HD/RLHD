@@ -18,13 +18,11 @@ public class Manifest {
 	private String description;
 	private String link = "";
 	private String sha256 = "";
-	private PackType packType;
 
 	public Manifest(String name, String description, String author) {
 		this.displayName = name;
 		this.author = author;
 		this.description = description;
-		this.packType = PackType.RESOURCE;
 	}
 
 	private String version = "";
@@ -47,18 +45,6 @@ public class Manifest {
 
 	public boolean hasSha256() {
 		return sha256 != null && !sha256.isEmpty();
-	}
-
-	public PackType getPackType() {
-		return packType != null ? packType : PackType.RESOURCE;
-	}
-
-	public boolean isResourcePack() {
-		return getPackType() == PackType.RESOURCE;
-	}
-
-	public boolean isAddonPack() {
-		return getPackType() == PackType.ADDON;
 	}
 
 }

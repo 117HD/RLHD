@@ -54,6 +54,7 @@ import static rs117.hd.HdPluginConfig.*;
 @Slf4j
 public final class ResourcePackManager {
 	private static final int MAX_UPDATE_CHECK_INTERVAL = 600000; // 10 minutes
+	private static final long MAX_OFFICIAL_ARCHIVE_SIZE = 512L * 1024 * 1024;
 
 	@Inject
 	private OkHttpClient okHttpClient;
@@ -380,9 +381,12 @@ public final class ResourcePackManager {
 						downloadablePacks.clear();
 
 						Arrays.sort(manifests, (left, right) -> left.getDisplayName().compareToIgnoreCase(right.getDisplayName()));
-						for (var manifest : manifests) {
+					for (var manifest : manifests) {
+						if (isValidOfficialManifest(manifest))
 							downloadablePacks.put(manifest.getInternalName(), manifest);
-						}
+						else
+							log.warn("Ignoring malformed official resource pack entry '{}'.", manifest.getInternalName());
+					}
 						reconcileOfficialPacks();
 
 						setStatus(null, null);
@@ -606,8 +610,11 @@ public final class ResourcePackManager {
 			log.warn("Refusing to download resource pack with unsafe internal name: {}", internalName);
 			return "The resource pack has an invalid internal identifier.";
 		}
-		if (manifest.hasSha256() && !isSha256(manifest.getSha256()))
+		if (!isSha256(manifest.getSha256()))
 			return "The resource pack has an invalid official checksum.";
+		Long fileSize = manifest.getFileSize();
+		if (fileSize == null || fileSize <= 0 || fileSize > MAX_OFFICIAL_ARCHIVE_SIZE)
+			return "The resource pack has an invalid official archive size.";
 
 		return null;
 	}
@@ -639,7 +646,7 @@ public final class ResourcePackManager {
 	}
 
 	private void installDownloadedPack(Manifest manifest, File temporaryFile, File zipFile, String sha256, boolean updating, boolean replaceCustomArchive) throws IOException {
-		if (manifest.hasSha256() && !manifest.getSha256().equalsIgnoreCase(sha256))
+		if (!manifest.getSha256().equalsIgnoreCase(sha256))
 			throw new IOException("Downloaded archive does not match the official SHA-256 checksum");
 		AbstractResourcePack validatedPack = repository.createPack(temporaryFile);
 		if (!validatedPack.isValid()) {
@@ -715,6 +722,17 @@ public final class ResourcePackManager {
 
 	private static boolean isSha256(String sha256) {
 		return sha256 != null && sha256.matches("[0-9a-fA-F]{64}");
+	}
+
+	private static boolean isValidOfficialManifest(Manifest manifest) {
+		return manifest != null
+			&& isSafeInternalName(manifest.getInternalName())
+			&& isCommitHash(manifest.getCommit())
+			&& isSha256(manifest.getSha256())
+			&& githubRepositoryUrl(manifest.getLink()) != null
+			&& manifest.getFileSize() != null
+			&& manifest.getFileSize() > 0
+			&& manifest.getFileSize() <= MAX_OFFICIAL_ARCHIVE_SIZE;
 	}
 
 	private static HttpUrl githubRepositoryUrl(String link) {
@@ -841,11 +859,7 @@ public final class ResourcePackManager {
 		Manifest availablePack = downloadablePacks.get(pack.getManifest().getInternalName());
 		if (availablePack == null)
 			return false;
-		if (availablePack.hasSha256() && isSha256(availablePack.getSha256()))
-			return !availablePack.getSha256().equalsIgnoreCase(packState.sha256ByPack.get(pack.getManifest().getInternalName()));
-		String installedCommit = pack.getManifest().getCommit();
-		return !installedCommit.isEmpty() && !availablePack.getCommit().isEmpty()
-			&& !installedCommit.equals(availablePack.getCommit());
+		return !availablePack.getSha256().equalsIgnoreCase(packState.sha256ByPack.get(pack.getManifest().getInternalName()));
 	}
 
 	public void updateResourcePack(AbstractResourcePack pack) {
