@@ -5,8 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,6 +28,7 @@ import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.utils.AstronomyUtils;
 import rs117.hd.utils.Camera;
+import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Props;
@@ -103,8 +102,8 @@ public class SkyManager {
 	private MoonPhase configMoonPhase;
 	private MoonBehavior configMoonBehavior;
 	private float configCycleDuration;
+	private double[] configLatLon;
 
-	private final double[] currentLatLong = { 0, 0 };
 	@Nullable
 	private SkyConfiguration gielinorSky;
 	private Map<String, SkyConfiguration> configurations = Map.of();
@@ -122,10 +121,6 @@ public class SkyManager {
 	// Retain the frame's wall clock because currentInstant is often simulated.
 	private long frameWallClockMillis;
 	private Instant frameWallClockInstant;
-
-	// Local time at startup, then a continuously advancing Unix timestamp.
-	private long realTimeStartEpochMillis = Long.MIN_VALUE;
-	private long realTimeSessionStartMillis;
 
 	private float scheduleSunAltitude;
 	private float previousScheduleSunAltitude = Float.NaN;
@@ -147,6 +142,21 @@ public class SkyManager {
 		configMoonBehavior = config.moonBehavior();
 		configMoonPhase = config.moonPhase();
 		configCycleDuration = max(1e-6f, (float) config.customCycleDurationMinutes());
+
+		if (configCycle == DaylightCycle.DEFAULT) {
+			configLatLon = NORTHERN_LAT_LONG;
+		} else {
+			String latLonString = config.latLon();
+			double[] latLon = DeveloperTools.parseLatLon(latLonString);
+			if (latLon == null) {
+				if (!latLonString.isEmpty())
+					log.warn("Ignoring invalid latitude & longitude coordinates: {}", latLon);
+
+				latLon = plugin.configSeasonalHemisphere == SeasonalHemisphere.SOUTHERN ?
+					SOUTHERN_LAT_LONG : NORTHERN_LAT_LONG;
+			}
+			configLatLon = latLon;
+		}
 	}
 
 	public void startUp() {
@@ -268,14 +278,6 @@ public class SkyManager {
 		return environment.hasSkyOverride ? environment.sky : getGielinorSky();
 	}
 
-	private void resolveSeasonalHemisphere() {
-		double[] latLong = configCycle.forcesNorthernHemisphere || plugin.configSeasonalHemisphere != SeasonalHemisphere.SOUTHERN
-			? NORTHERN_LAT_LONG
-			: SOUTHERN_LAT_LONG;
-		currentLatLong[0] = latLong[0];
-		currentLatLong[1] = latLong[1];
-	}
-
 	private static float[] anglesToSkyDirection(float altitude, float azimuth) {
 		return normalize(
 			sin(azimuth) * cos(altitude),
@@ -358,7 +360,7 @@ public class SkyManager {
 			cycleTime = currentInstant.toEpochMilli() / (double) DAY_MS;
 			eventStart = ASTRONOMICAL_NIGHT_START;
 			if (configCycle.usesPresetSunAngles)
-				sunAltitude = (float) AstronomyUtils.getSunAngles(currentInstant.toEpochMilli(), currentLatLong)[0];
+				sunAltitude = (float) AstronomyUtils.getSunAngles(currentInstant.toEpochMilli(), configLatLon)[0];
 		} else {
 			cycleTime = completedCycles + accumulatedCycleTime;
 			eventStart = 1 - configNightFraction;
@@ -380,21 +382,6 @@ public class SkyManager {
 	}
 
 	// ===== Frame update and simulated clock ======================================
-
-	/**
-	 * Anchor local time once to avoid daylight-saving discontinuities.
-	 */
-	private void initializeRealTimeClock() {
-		if (realTimeStartEpochMillis != Long.MIN_VALUE)
-			return;
-
-		realTimeStartEpochMillis = frameWallClockInstant
-			.atZone(ZoneId.systemDefault())
-			.toLocalDateTime()
-			.toInstant(ZoneOffset.UTC)
-			.toEpochMilli();
-		realTimeSessionStartMillis = frameWallClockMillis;
-	}
 
 	/**
 	 * Map cycle position to the project's dawn- and sunset-weighted hours since midnight.
@@ -424,11 +411,9 @@ public class SkyManager {
 
 	public void update() {
 		resolveSkyConfiguration();
-		resolveSeasonalHemisphere();
 
 		frameWallClockMillis = System.currentTimeMillis();
 		frameWallClockInstant = Instant.ofEpochMilli(frameWallClockMillis);
-		initializeRealTimeClock();
 		currentInstant = frameWallClockInstant;
 		advanceCycle(frameWallClockMillis);
 		currentInstant = resolveCurrentInstant();
@@ -437,13 +422,13 @@ public class SkyManager {
 	}
 
 	private void resolveSkyState() {
-		float[] astronomicalSunAngles = vec(AstronomyUtils.getSunAngles(currentInstant.toEpochMilli(), currentLatLong));
+		float[] astronomicalSunAngles = vec(AstronomyUtils.getSunAngles(currentInstant.toEpochMilli(), configLatLon));
 		state.sunAngles = interpolateAngles(
 			fromSunAnglesOverride, sunAnglesOverride, astronomicalSunAngles, state.configurationTransition);
 		Instant moonInstant = resolveMoonInstant();
 		float[] astronomicalMoonAngles = configMoonBehavior.mirrorsSun
 			? mirrorAngles(state.sunAngles)
-			: vec(AstronomyUtils.getMoonPosition(moonInstant.toEpochMilli(), currentLatLong));
+			: vec(AstronomyUtils.getMoonPosition(moonInstant.toEpochMilli(), configLatLon));
 		state.moonAngles = interpolateAngles(
 			fromMoonAnglesOverride, moonAnglesOverride, astronomicalMoonAngles, state.configurationTransition);
 		state.sunAltitudeDegrees = state.sunAngles[0] * RAD_TO_DEG;
@@ -503,7 +488,7 @@ public class SkyManager {
 				sin((float) (days / DRACONIC_MONTH_DAYS) * TWO_PI) * LATITUDE_LIBRATION_DEG * DEG_TO_RAD
 			);
 		}
-		state.celestialPole = anglesToSkyDirection((float) currentLatLong[0] * DEG_TO_RAD, 0);
+		state.celestialPole = anglesToSkyDirection((float) configLatLon[0] * DEG_TO_RAD, 0);
 		state.celestialRotation = (currentInstant.toEpochMilli() % DAY_MS) / (float) DAY_MS * TWO_PI;
 		resolveAuroraStrength();
 	}
@@ -591,11 +576,8 @@ public class SkyManager {
 
 		switch (configCycle) {
 			case OFF:
-				return frameWallClockInstant;
 			case REAL_TIME:
-				// The session-local timestamp advances in Unix time, so daylight-saving changes
-				// cannot cause a discontinuity in the sun, moon, or seasonal date.
-				return Instant.ofEpochMilli(realTimeStartEpochMillis + frameWallClockMillis - realTimeSessionStartMillis);
+				return frameWallClockInstant;
 			case CUSTOM:
 				// Custom night duration controls the cycle's night share before low-sun-weighted mapping.
 				double cyclePosition = applyNightDurationWarp(accumulatedCycleTime);
@@ -604,6 +586,7 @@ public class SkyManager {
 					.plus(completedCycles, ChronoUnit.DAYS);
 				return startOfDay.plusMillis((long) (mappedHour * HOUR_MS));
 		}
+
 		throw new IllegalStateException("Unhandled daylight cycle mode: " + configCycle);
 	}
 

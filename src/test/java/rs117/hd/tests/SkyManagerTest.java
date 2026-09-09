@@ -24,6 +24,9 @@ public class SkyManagerTest {
 			public void setPluginUpdateMessage(int version) {}
 
 			@Override
+			public void setLatLon(String coordinates) {}
+
+			@Override
 			public void tiledLighting(boolean enabled) {}
 		});
 

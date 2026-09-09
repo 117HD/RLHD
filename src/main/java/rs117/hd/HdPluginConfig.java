@@ -1432,4 +1432,12 @@ public interface HdPluginConfig extends Config
 	default int getPluginUpdateMessage() {
 		return 0;
 	}
+
+	String KEY_LAT_LON = "latLon";
+	@ConfigItem(keyName = KEY_LAT_LON, hidden = true, name = "", description = "")
+	default String latLon() {
+		return "";
+	}
+	@ConfigItem(keyName = KEY_LAT_LON, hidden = true, name = "", description = "")
+	void setLatLon(String coordinates);
 }
