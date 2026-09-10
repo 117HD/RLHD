@@ -178,19 +178,19 @@ public class EnvironmentManager {
 	}
 
 	public void reload() {
-		reload(false);
-	}
-
-	public void reloadImmediately() {
 		reload(true);
 	}
 
-	private void reload(boolean instant) {
+	public void reloadAndSmoothlyTransition() {
+		reload(false);
+	}
+
+	private void reload(boolean instantTransition) {
 		var previous = state.target;
 		shutDown();
 		startUp();
 		forceNextTransition = true;
-		forceNextTransitionInstant = instant;
+		forceNextTransitionInstant = instantTransition;
 		state.target = previous;
 	}
 

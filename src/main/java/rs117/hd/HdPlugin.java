@@ -2015,7 +2015,7 @@ public class HdPlugin extends Plugin {
 					}
 
 					if (reloadEnvironments)
-						environmentManager.reload();
+						environmentManager.reloadAndSmoothlyTransition();
 				}
 			} catch (Throwable ex) {
 				log.error("Error while changing settings:", ex);

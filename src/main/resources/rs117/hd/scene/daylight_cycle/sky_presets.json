@@ -4,7 +4,7 @@
     "moonDiskColor": "#E1E5FF",
     "moonDiskStrength": 3,
     "moonLightColor": [ 228.46, 259.86, 287.43 ],
-    "gradient": {
+    "profile": {
       "zenith": [
         {
           "altitude": -30,
@@ -134,9 +134,7 @@
           "altitude": 90,
           "color": "#FFFFFA"
         }
-      ]
-    },
-    "lighting": {
+      ],
       "ambientColor": [
         {
           "altitude": -5,

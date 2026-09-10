@@ -10,7 +10,7 @@ import rs117.hd.config.MoonPhase;
 import rs117.hd.renderer.SkyRenderer;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration.Keyframe;
-import rs117.hd.scene.daylight_cycle.SkyConfiguration.SkyLightingProfile;
+import rs117.hd.scene.daylight_cycle.SkyConfiguration.SkyProfile;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -24,24 +24,24 @@ import static rs117.hd.utils.MathUtils.*;
  * the constant keyframe tables; any drift beyond 1e-6 indicates a behavior change.
  */
 public class SkyRendererTest {
-	private static final SkyLightingProfile LIGHTING_PROFILE = loadLightingProfile();
+	private static final SkyProfile SKY_PROFILE = loadSkyProfile();
 
-	private static SkyLightingProfile loadLightingProfile() {
+	private static SkyProfile loadSkyProfile() {
 		var resource = Objects.requireNonNull(SkyRendererTest.class.getResourceAsStream("/rs117/hd/scene/daylight_cycle/sky_presets.json"));
 		SkyConfiguration[] presets = new Gson().fromJson(new InputStreamReader(resource, StandardCharsets.UTF_8), SkyConfiguration[].class);
-		return presets[0].lighting;
+		return presets[0].profile;
 	}
 
 	private static float[] getAmbientColor(float altitudeDegrees) throws ReflectiveOperationException {
 		Method method = SkyRenderer.class.getDeclaredMethod("interpolate", float.class, Keyframe[].class);
 		method.setAccessible(true);
-		return (float[]) method.invoke(null, altitudeDegrees, LIGHTING_PROFILE.ambientColor);
+		return (float[]) method.invoke(null, altitudeDegrees, SKY_PROFILE.ambientColor);
 	}
 
 	private static float[] getDirectionalLight(float altitudeDegrees) throws ReflectiveOperationException {
-		Method method = SkyRenderer.class.getDeclaredMethod("getDirectionalLight", float.class, SkyLightingProfile.class);
+		Method method = SkyRenderer.class.getDeclaredMethod("getDirectionalLight", float.class, SkyProfile.class);
 		method.setAccessible(true);
-		return (float[]) method.invoke(null, altitudeDegrees * DEG_TO_RAD, LIGHTING_PROFILE);
+		return (float[]) method.invoke(null, altitudeDegrees * DEG_TO_RAD, SKY_PROFILE);
 	}
 
 	private static <T> T getField(Object object, String name, Class<T> type) throws ReflectiveOperationException {
@@ -141,34 +141,37 @@ public class SkyRendererTest {
 	@Test
 	public void skyMoonDirectionalStrengthDefaultsToEnvironmentDirectionalStrength() {
 		Gson gson = new Gson();
-		SkyConfiguration unset = gson.fromJson("{}", SkyConfiguration.class).normalize();
+		SkyConfiguration unset = gson.fromJson("{}", SkyConfiguration.class);
+		unset.normalize();
 		assertEquals(-1, unset.moonDirectionalStrength, 0);
 
 		SkyConfiguration set = gson
-			.fromJson("{\"moonDirectionalStrength\": 0.2}", SkyConfiguration.class)
-			.normalize();
+			.fromJson("{\"moonDirectionalStrength\": 0.2}", SkyConfiguration.class);
+		set.normalize();
 		assertEquals(.2f, set.moonDirectionalStrength, 0);
 
 		SkyConfiguration zero = gson
-			.fromJson("{\"moonDirectionalStrength\": 0}", SkyConfiguration.class)
-			.normalize();
+			.fromJson("{\"moonDirectionalStrength\": 0}", SkyConfiguration.class);
+		zero.normalize();
 		assertEquals(0, zero.moonDirectionalStrength, 0);
 	}
 
 	@Test
 	public void skyMoonShadowFieldsDefaultToPreviousBehavior() {
 		Gson gson = new Gson();
-		SkyConfiguration unset = gson.fromJson("{}", SkyConfiguration.class).normalize();
+		SkyConfiguration unset = gson.fromJson("{}", SkyConfiguration.class);
+		unset.normalize();
 		assertEquals(1, unset.moonShadowStrength, 0);
 		assertEquals(0, unset.minMoonIllumination, 0);
 
 		SkyConfiguration set = gson
-			.fromJson("{\"moonShadowStrength\": 3, \"minMoonIllumination\": 0.35}", SkyConfiguration.class)
-			.normalize();
+			.fromJson("{\"moonShadowStrength\": 3, \"minMoonIllumination\": 0.35}", SkyConfiguration.class);
+		set.normalize();
 		assertEquals(3, set.moonShadowStrength, 0);
 		assertEquals(.35f, set.minMoonIllumination, 0);
 
-		SkyConfiguration zero = gson.fromJson("{\"moonShadowStrength\": 0}", SkyConfiguration.class).normalize();
+		SkyConfiguration zero = gson.fromJson("{\"moonShadowStrength\": 0}", SkyConfiguration.class);
+		zero.normalize();
 		assertEquals(0, zero.moonShadowStrength, 0);
 	}
 

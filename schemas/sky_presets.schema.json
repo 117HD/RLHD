@@ -37,11 +37,8 @@
       "hideMoon": {
         "type": "boolean"
       },
-      "gradient": {
-        "$ref": "environments.schema.json#/$defs/skyGradient"
-      },
-      "lighting": {
-        "$ref": "environments.schema.json#/$defs/skyLighting"
+      "profile": {
+        "$ref": "environments.schema.json#/$defs/skyProfile"
       },
       "forceMoonPhase": {
         "type": "string",

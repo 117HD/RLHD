@@ -1,5 +1,6 @@
 package rs117.hd.scene.daylight_cycle;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -19,15 +20,18 @@ import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.ColorUtils.SrgbToLinearAdapter;
 import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.GsonUtils.DegreesToRadians;
+import rs117.hd.utils.HDUtils;
 
 import static rs117.hd.utils.MathUtils.*;
 
-/** Complete sky definition resolved from a named preset and environment override. */
 public class SkyConfiguration {
-	public static final String DEFAULT_PRESET = "GIELINOR";
+	public static SkyConfiguration DEFAULT_PRESET;
 
 	@Nullable
-	public String preset;
+	public String name;
+	@Nullable
+	public String parent;
+	public SkyProfile profile;
 	@Nullable
 	@JsonAdapter(DegreesToRadians.class)
 	public float[] sunAngles;
@@ -60,10 +64,8 @@ public class SkyConfiguration {
 	public float skyColorTakeoverAngle = 40;
 	public float sunlightStrength = 1;
 	public float minBrightnessBoost;
-	public SkyGradient gradient;
-	public SkyLightingProfile lighting;
 
-	public SkyConfiguration normalize() {
+	public void normalize() {
 		if (moonDiskColor == null)
 			moonDiskColor = ColorUtils.colorTemperatureToLinearRgb(8000);
 		if (moonLightColor == null)
@@ -74,7 +76,46 @@ public class SkyConfiguration {
 			starVisibility = skyVisibility;
 		if (auroraVisibility == -1)
 			auroraVisibility = skyVisibility;
-		return this;
+
+		if (sunAngles != null)
+			sunAngles = HDUtils.ensureArrayLength(sunAngles, 2);
+		if (moonAngles != null)
+			moonAngles = HDUtils.ensureArrayLength(moonAngles, 2);
+		moonDiskColor = HDUtils.ensureArrayLength(moonDiskColor, 3);
+		moonLightColor = HDUtils.ensureArrayLength(moonLightColor, 3);
+		nightSkyColor = HDUtils.ensureArrayLength(nightSkyColor, 3);
+		if (profile == null ||
+			profile.nightSkyColor == null ||
+			profile.brightness == null ||
+			profile.brightness.nightAltitude >= profile.brightness.lowSunAltitude ||
+			profile.brightness.lowSunAltitude >= profile.brightness.horizonAltitude)
+			throw new IllegalStateException("Invalid sky profile");
+		profile.nightSkyColor = HDUtils.ensureArrayLength(profile.nightSkyColor, 3);
+		normalizeKeyframes(profile.zenith, true);
+		normalizeKeyframes(profile.horizon, true);
+		normalizeKeyframes(profile.sunGlow, true);
+		normalizeKeyframes(profile.ambientColor, true);
+		normalizeKeyframes(profile.directionalTemperature, false);
+		normalizeKeyframes(profile.regionalBlend, false);
+	}
+
+	private static void normalizeKeyframes(@Nullable Keyframe[] keyframes, boolean colors) {
+		if (keyframes == null || keyframes.length == 0)
+			throw new IllegalStateException("Missing sky keyframes");
+		float previousAltitude = Float.NEGATIVE_INFINITY;
+		for (int i = 0; i < keyframes.length; i++) {
+			Keyframe keyframe = keyframes[i];
+			if (keyframe == null || keyframe.altitude <= previousAltitude)
+				throw new IllegalStateException("Sky keyframes must be ordered by altitude");
+			if (colors) {
+				if (keyframe.value != null || keyframe.color == null)
+					throw new IllegalStateException("Expected a sky color keyframe");
+				keyframe.color = HDUtils.ensureArrayLength(keyframe.color, 3);
+			} else if (keyframe.color != null || keyframe.value == null) {
+				throw new IllegalStateException("Expected a scalar sky keyframe");
+			}
+			previousAltitude = keyframe.altitude;
+		}
 	}
 
 	private static float[] interpolate(float[] out, float[] from, float[] to, float t) {
@@ -86,7 +127,6 @@ public class SkyConfiguration {
 		return out;
 	}
 
-	/** Interpolate render controls without mutating either source configuration. */
 	public SkyConfiguration interpolate(SkyConfiguration from, SkyConfiguration to, float t) {
 		moonShadowStrength = from.moonShadowStrength * (1 - t) + to.moonShadowStrength * t;
 		minMoonIllumination = from.minMoonIllumination * (1 - t) + to.minMoonIllumination * t;
@@ -110,58 +150,10 @@ public class SkyConfiguration {
 		return this;
 	}
 
-	/**
-	 * Merge JSON overrides into a resolved sky preset. Objects merge recursively; arrays and values replace.
-	 */
-	public static void merge(JsonObject target, JsonObject overrides) {
-		for (var entry : overrides.entrySet()) {
-			JsonElement value = entry.getValue();
-			JsonElement existing = target.get(entry.getKey());
-			if (existing != null && existing.isJsonObject() && value.isJsonObject())
-				merge(existing.getAsJsonObject(), value.getAsJsonObject());
-			else
-				target.add(entry.getKey(), value.deepCopy());
-		}
-	}
-
-	private static void removeMatching(JsonObject target, JsonObject base) {
-		var iter = target.entrySet().iterator();
-		while (iter.hasNext()) {
-			var entry = iter.next();
-			JsonElement baseValue = base.get(entry.getKey());
-			if (baseValue == null)
-				continue;
-			JsonElement value = entry.getValue();
-			if (value.isJsonObject() && baseValue.isJsonObject()) {
-				removeMatching(value.getAsJsonObject(), baseValue.getAsJsonObject());
-				if (value.getAsJsonObject().size() == 0)
-					iter.remove();
-			} else if (value.equals(baseValue)) {
-				iter.remove();
-			}
-		}
-	}
-
-	public static class SkyGradient {
+	public static class SkyProfile {
 		public Keyframe[] zenith;
 		public Keyframe[] horizon;
 		public Keyframe[] sunGlow;
-	}
-
-	/** A value sampled at a sun altitude in degrees. */
-	public static class Keyframe {
-		public float altitude;
-		@JsonAdapter(SrgbToLinearAdapter.class)
-		public float[] color;
-		public Float value;
-
-		public float[] values() {
-			return color != null ? color : vec(value);
-		}
-	}
-
-	/** Tunable procedural lighting curves for the sky. */
-	public static class SkyLightingProfile {
 		public Keyframe[] ambientColor;
 		public Keyframe[] directionalTemperature;
 		public Keyframe[] regionalBlend;
@@ -182,17 +174,36 @@ public class SkyConfiguration {
 		}
 	}
 
+	public static class Keyframe {
+		public float altitude;
+		@JsonAdapter(SrgbToLinearAdapter.class)
+		public float[] color;
+		public Float value;
+
+		public float[] values() {
+			return color != null ? color : vec(value);
+		}
+	}
+
 	@Slf4j
 	public static class Adapter implements TypeAdapterFactory {
 		@Override
 		@SuppressWarnings("unchecked")
-		public <T> TypeAdapter<T> create(com.google.gson.Gson gson, TypeToken<T> typeToken) {
+		public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
 			if (typeToken.getRawType() != SkyConfiguration.class)
 				return null;
 
 			TypeAdapter<SkyConfiguration> delegate = gson.getDelegateAdapter(this, TypeToken.get(SkyConfiguration.class));
 			TypeAdapter<JsonElement> jsonElementAdapter = gson.getAdapter(JsonElement.class);
 			return (TypeAdapter<T>) new TypeAdapter<SkyConfiguration>() {
+				@Nullable
+				private SkyConfiguration resolveParent(String name, String location) {
+					SkyConfiguration parent = SkyManager.PRESETS.get(name);
+					if (parent == null)
+						log.error("Unknown sky parent '{}' at {}; ignoring sky", name, location);
+					return parent;
+				}
+
 				@Override
 				public SkyConfiguration read(JsonReader in) throws IOException {
 					JsonToken token = in.peek();
@@ -202,70 +213,61 @@ public class SkyConfiguration {
 					}
 
 					String location = GsonUtils.location(in);
-					JsonObject override;
-					if (token == JsonToken.STRING) {
-						override = new JsonObject();
-						override.addProperty("preset", in.nextString());
-					} else if (token == JsonToken.BEGIN_OBJECT) {
-						override = new JsonParser().parse(in).getAsJsonObject();
-					} else {
+					if (token == JsonToken.STRING)
+						return resolveParent(in.nextString(), location);
+
+					if (token != JsonToken.BEGIN_OBJECT) {
 						log.error("Expected a sky preset or object at {}; ignoring value", location);
 						in.skipValue();
 						return null;
 					}
 
-					String preset = DEFAULT_PRESET;
-					JsonElement presetElement = override.get("preset");
-					if (presetElement != null) {
-						if (!presetElement.isJsonPrimitive() || !presetElement.getAsJsonPrimitive().isString()) {
-							log.error("Sky preset must be a string at {}; ignoring sky", location);
+					JsonObject override = new JsonParser().parse(in).getAsJsonObject();
+
+					JsonElement parentElement = override.get("parent");
+					SkyConfiguration parent = DEFAULT_PRESET;
+					if (parentElement != null) {
+						if (!parentElement.isJsonPrimitive() || !parentElement.getAsJsonPrimitive().isString()) {
+							log.error("Sky parent must be a string at {}; ignoring sky", location);
 							return null;
 						}
-						preset = presetElement.getAsString();
+						parent = resolveParent(parentElement.getAsString(), location);
+						if (parent == null)
+							return null;
+						if (override.size() == 1)
+							return parent;
 					}
 
-					JsonObject base = SkyManager.getPresetJson(preset);
-					if (base == null) {
-						log.error("Unknown sky preset '{}' at {}; ignoring sky", preset, location);
+					var parentJson = delegate.toJsonTree(parent).getAsJsonObject();
+					GsonUtils.removeNulls(parentJson);
+					parentJson.remove("name");
+					parentJson.remove("parent");
+					GsonUtils.deepInheritFrom(override, parentJson);
+					try {
+						return delegate.fromJsonTree(override);
+					} catch (RuntimeException ex) {
+						log.error("Invalid sky configuration at {}; ignoring sky: {}", location, ex.getMessage());
 						return null;
 					}
-					JsonObject resolved = base.deepCopy();
-					merge(resolved, override);
-					if (override.has("moonDiskColor")) {
-						if (!override.has("moonLightColor"))
-							resolved.remove("moonLightColor");
-						if (!override.has("moonDiskStrength"))
-							resolved.remove("moonDiskStrength");
-						if (!override.has("nightSkyColor"))
-							resolved.remove("nightSkyColor");
-					}
-					resolved.addProperty("preset", preset);
-					return delegate.fromJsonTree(resolved).normalize();
 				}
 
 				@Override
 				public void write(JsonWriter out, SkyConfiguration sky) throws IOException {
-					String preset = sky.preset == null ? DEFAULT_PRESET : sky.preset;
-					JsonObject values = delegate.toJsonTree(sky).getAsJsonObject();
-					values.remove("preset");
-					JsonObject base = SkyManager.getPresetJson(preset);
-					if (base != null) {
-						SkyConfiguration baseConfiguration = delegate.fromJsonTree(base).normalize();
-						JsonObject baseValues = delegate.toJsonTree(baseConfiguration).getAsJsonObject();
-						baseValues.remove("preset");
-						removeMatching(values, baseValues);
+					JsonObject json = delegate.toJsonTree(sky).getAsJsonObject();
+					var base = DEFAULT_PRESET;
+					if (sky.parent != null)
+						base = SkyManager.PRESETS.getOrDefault(sky.parent, base);
+					JsonObject baseJson = delegate.toJsonTree(base).getAsJsonObject();
+					GsonUtils.removeMatching(json, baseJson);
+					if (json.size() == 0) {
+						if (sky.parent == null || sky.parent.equals(DEFAULT_PRESET.name)) {
+							out.nullValue();
+						} else {
+							out.value(sky.parent);
+						}
+					} else {
+						jsonElementAdapter.write(out, json);
 					}
-
-					if (values.size() == 0) {
-						out.value(preset);
-						return;
-					}
-
-					JsonObject serialized = new JsonObject();
-					serialized.addProperty("preset", preset);
-					for (var entry : values.entrySet())
-						serialized.add(entry.getKey(), entry.getValue());
-					jsonElementAdapter.write(out, serialized);
 				}
 			};
 		}

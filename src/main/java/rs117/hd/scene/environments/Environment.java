@@ -1,6 +1,7 @@
 package rs117.hd.scene.environments;
 
 import com.google.gson.annotations.JsonAdapter;
+import javax.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -87,27 +88,37 @@ public class Environment {
 	public float windStrength = 0.0f;
 	public float windCeiling = 1280.0f;
 	@JsonAdapter(SkyConfiguration.Adapter.class)
-	public SkyConfiguration sky;
+	@Nullable
+	private SkyConfiguration sky;
 	public boolean hideVanillaSkyboxes = false;
 
 	public transient boolean hasWaterColorOverride;
 	public transient boolean hasFogColorOverride;
-	public transient boolean hasSkyOverride;
 
 	public Environment normalize() {
-		if (area == null) area = Area.NONE;
-		if (varbitCondition == null) varbitCondition = ExpressionPredicate.TRUE;
-		if (varpCondition == null) varpCondition = ExpressionPredicate.TRUE;
-		if (ambientColor == null) ambientColor = rgb("#ffffff");
-		if (directionalColor == null) directionalColor = rgb("#ffffff");
-		if (underglowColor == null) underglowColor = rgb("#000000");
+		if (area == null)
+			area = Area.NONE;
+		if (varbitCondition == null)
+			varbitCondition = ExpressionPredicate.TRUE;
+		if (varpCondition == null)
+			varpCondition = ExpressionPredicate.TRUE;
+		if (ambientColor == null)
+			ambientColor = rgb("#ffffff");
+		if (directionalColor == null)
+			directionalColor = rgb("#ffffff");
+		if (underglowColor == null)
+			underglowColor = rgb("#000000");
 
-		if (fogColor == null) fogColor = DEFAULT_FOG_COLOR;
-		else hasFogColorOverride = true;
-		if (waterColor == null) waterColor = DEFAULT_WATER_COLOR;
-		else hasWaterColorOverride = true;
-		if (sky == null) sky = new SkyConfiguration();
-		else hasSkyOverride = true;
+		if (fogColor == null) {
+			fogColor = DEFAULT_FOG_COLOR;
+		} else {
+			hasFogColorOverride = true;
+		}
+		if (waterColor == null) {
+			waterColor = DEFAULT_WATER_COLOR;
+		} else {
+			hasWaterColorOverride = true;
+		}
 
 		if (area != Area.ALL && area != Area.NONE) {
 			isOverworld = Area.OVERWORLD.intersects(area);
@@ -131,10 +142,14 @@ public class Environment {
 		if (waterCausticsStrength == -1)
 			waterCausticsStrength = directionalStrength;
 
-		if (hasSkyOverride)
+		if (sky != null)
 			sky.normalize();
 
 		return this;
+	}
+
+	public SkyConfiguration getSky() {
+		return sky != null ? sky : SkyConfiguration.DEFAULT_PRESET;
 	}
 
 	public Environment copy() {
@@ -175,7 +190,6 @@ public class Environment {
 		windStrength = mix(from.windStrength, to.windStrength, t);
 		windCeiling = mix(from.windCeiling, to.windCeiling, t);
 		sky = t == 1 ? to.sky : from.sky;
-		hasSkyOverride = t == 1 ? to.hasSkyOverride : from.hasSkyOverride;
 		return this;
 	}
 

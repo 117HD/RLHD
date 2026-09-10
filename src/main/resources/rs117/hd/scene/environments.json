@@ -693,7 +693,7 @@
     "groundFogEnd": -350,
     "groundFogOpacity": 0.425,
     "sky": {
-      "preset": "BLOOD_MOON",
+      "parent": "BLOOD_MOON",
       "nightSkyColorStrength": 4.5,
       "skyVisibility": 0.9,
       "minBrightnessBoost": 1.25
@@ -887,7 +887,7 @@
     "waterCausticsStrength": 0,
     "fogDepth": 50,
     "sky": {
-      "preset": "NIGHT",
+      "parent": "NIGHT",
       "moonDirectionalStrength": 2,
       "nightSkyColor": "#ADADAD",
       "minBrightnessBoost": 0.35
@@ -1475,7 +1475,7 @@
     "fogColor": "#000000",
     "directionalStrength": 4,
     "sky": {
-      "preset": "NIGHT",
+      "parent": "NIGHT",
       "nightSkyColor": "#ff0000",
       "nightSkyColorStrength": 5,
       "moonVisibility": 0,
@@ -2669,7 +2669,7 @@
     "windStrength": 50,
     "fogColor": "#330D0D",
     "sky": {
-      "preset": "BLOOD_MOON",
+      "parent": "BLOOD_MOON",
       "moonAngles": [
         14.05,
         89.85
@@ -2686,7 +2686,7 @@
     "description": "Environment for Vampyrium during the quest, set to fixed twilight to simulate being on the cusp of the blood moon rising",
     "varbitCondition": "MYQ6 >= 80 && MYQ6 != 178",
     "sky": {
-      "preset": "DUSK",
+      "parent": "DUSK",
       "nightSkyColor": "#FF0000",
       "skyVisibility": 0.8,
       "auroraVisibility": 0,
@@ -2723,7 +2723,7 @@
   {
     "area": "VAMPYRIUM_FOREST_INSTANCE",
     "sky": {
-      "preset": "DUSK",
+      "parent": "DUSK",
       "nightSkyColor": "#FF0000",
       "skyVisibility": 0.8,
       "auroraVisibility": 0,
@@ -2771,7 +2771,7 @@
     "windSpeed": 10,
     "windStrength": 20,
     "sky": {
-      "preset": "NIGHT",
+      "parent": "NIGHT",
       "skyVisibility": 0.55,
       "moonVisibility": 0.7,
       "sunStrength": 0.05,
@@ -2832,7 +2832,7 @@
     "fogColor": "#000000",
     "fogDepth": 25,
     "sky": {
-      "preset": "NIGHT",
+      "parent": "NIGHT",
       "skyVisibility": 0.5
     }
   },

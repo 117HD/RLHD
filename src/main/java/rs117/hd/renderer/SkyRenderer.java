@@ -23,8 +23,7 @@ import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.SkyManager;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration.Keyframe;
-import rs117.hd.scene.daylight_cycle.SkyConfiguration.SkyGradient;
-import rs117.hd.scene.daylight_cycle.SkyConfiguration.SkyLightingProfile;
+import rs117.hd.scene.daylight_cycle.SkyConfiguration.SkyProfile;
 import rs117.hd.scene.daylight_cycle.SkyState;
 import rs117.hd.scene.daylight_cycle.StarField;
 import rs117.hd.scene.environments.Environment;
@@ -276,8 +275,8 @@ public class SkyRenderer {
 		SkyConfiguration toSky = state.toConfiguration;
 		float transition = state.configurationTransition;
 		SkyConfiguration sky = transition < 1 ? currentSky.interpolate(fromSky, toSky, transition) : toSky;
-		SkyLightingProfile fromProfile = fromSky.lighting;
-		SkyLightingProfile toProfile = toSky.lighting;
+		SkyProfile fromProfile = fromSky.profile;
+		SkyProfile toProfile = toSky.profile;
 		float sunAltDeg = state.sunAltitudeDegrees;
 		float regionalBlend = mix(
 			interpolate(sunAltDeg, fromProfile.regionalBlend)[0],
@@ -306,12 +305,12 @@ public class SkyRenderer {
 		float moonAltDeg = state.moonAltitudeDegrees;
 		float moonIllumination = state.moonIllumination;
 		sampleSkyGradient(
-			skySample, sunAltDeg, toSky.gradient, toProfile,
+			skySample, sunAltDeg, toProfile,
 			env.getFogColor(), toSky.sunStrength, toSky.sunriseSunsetStrength, toSky.skyColorTakeoverAngle
 		);
 		if (transition < 1) {
 			sampleSkyGradient(
-				transitionSkySample, sunAltDeg, fromSky.gradient, fromProfile,
+				transitionSkySample, sunAltDeg, fromProfile,
 				env.getFogColor(), fromSky.sunStrength, fromSky.sunriseSunsetStrength, fromSky.skyColorTakeoverAngle
 			);
 			mix(skySample.zenithSrgb, transitionSkySample.zenithSrgb, skySample.zenithSrgb, transition);
@@ -357,8 +356,7 @@ public class SkyRenderer {
 	}
 
 	private void sampleSkyGradient(
-		Sample out, float sunAltitude, SkyGradient profile,
-		SkyLightingProfile lightingProfile, float[] fogColor, float sunStrength,
+		Sample out, float sunAltitude, SkyProfile profile, float[] fogColor, float sunStrength,
 		float sunriseSunsetStrength, float skyColorTakeoverAngle
 	) {
 		float takeover = max(0, skyColorTakeoverAngle);
@@ -369,7 +367,7 @@ public class SkyRenderer {
 			float window = sunAltitude >= 0 ? 1 : smoothstep(-25, 0, sunAltitude);
 			float suppression = (1 - sunStrength) * window;
 			if (suppression > 0) {
-				float[] target = mix(fogColor, lightingProfile.nightSkyColor, smoothstep(5, -5, sunAltitude));
+				float[] target = mix(fogColor, profile.nightSkyColor, smoothstep(5, -5, sunAltitude));
 				blendSky(zenith, horizon, target, suppression);
 				multiply(sunGlow, sunGlow, 1 - suppression);
 			}
@@ -389,13 +387,13 @@ public class SkyRenderer {
 		}
 		float nightBlend = smoothstep(0, -15, sunAltitude);
 		if (nightBlend > 0)
-			blendSky(zenith, horizon, lightingProfile.nightSkyColor, nightBlend);
+			blendSky(zenith, horizon, profile.nightSkyColor, nightBlend);
 		out.zenithSrgb = linearToSrgb(zenith);
 		out.horizonSrgb = linearToSrgb(horizon);
 		out.sunGlowSrgb = linearToSrgb(sunGlow);
 	}
 
-	private float getBrightnessMultiplier(float sunAltitudeDegrees, SkyLightingProfile profile) {
+	private float getBrightnessMultiplier(float sunAltitudeDegrees, SkyProfile profile) {
 		float minBrightness = plugin.configMinimumBrightness / 100f;
 		var curve = profile.brightness;
 		float horizonBrightness = minBrightness + curve.horizonBoost;
@@ -419,7 +417,7 @@ public class SkyRenderer {
 	public void applyOutdoorLighting(Light light) {
 		SkyState state = skyManager.getState();
 		copyTo(light.color, light.def.color);
-		if (light.def.outdoorLighting == null || !skyManager.isCycleConfigured())
+		if (light.def.outdoorLighting == null || skyManager.isCycleDisabled())
 			return;
 
 		Environment environment = environmentManager.getOverworldEnvironment();
@@ -429,7 +427,7 @@ public class SkyRenderer {
 			if (sampledEnvironment != null)
 				environment = sampledEnvironment;
 		}
-		SkyConfiguration sky = skyManager.getSkyConfiguration(environment);
+		SkyConfiguration sky = environment.getSky();
 		Sample lighting = sampleEnvironmentalLighting(state, environment, sky);
 		float[] authoredColor = light.def.color;
 		float defLuma = linearSrgbLuminance(authoredColor);
@@ -481,20 +479,20 @@ public class SkyRenderer {
 		environmentSample.environment = environment;
 		environmentSample.minBrightness = plugin.configMinimumBrightness;
 		environmentSample.frame = plugin.frame;
-		SkyGradient gradient = sky.gradient;
-		SkyLightingProfile profile = sky.lighting;
+		SkyProfile profile = sky.profile;
 		float[] fogColor = environmentManager.getFogColor(environment);
+		float sunAltitudeDegrees = sky.sunAngles != null ? sky.sunAngles[0] * RAD_TO_DEG : state.sunAltitudeDegrees;
 		sampleSkyGradient(
-			environmentSample, state.sunAltitudeDegrees, gradient, profile, fogColor,
+			environmentSample, sunAltitudeDegrees, profile, fogColor,
 			sky.sunStrength, sky.sunriseSunsetStrength, sky.skyColorTakeoverAngle
 		);
 		environmentSample.horizonLinear = ColorUtils.srgbToLinear(environmentSample.horizonSrgb);
 		environmentSample.noonHorizonLinear = fogColor;
-		environmentSample.brightnessMultiplier = getBrightnessMultiplier(state.sunAltitudeDegrees, profile);
+		environmentSample.brightnessMultiplier = getBrightnessMultiplier(sunAltitudeDegrees, profile);
 		return environmentSample;
 	}
 
-	private static float[] getDirectionalLight(float sunAltitude, SkyLightingProfile profile) {
+	private static float[] getDirectionalLight(float sunAltitude, SkyProfile profile) {
 		float[] directionalLight = multiply(
 			ColorUtils.colorTemperatureToLinearRgb(profile.directionalBaseTemperature),
 			profile.directionalBaseStrength

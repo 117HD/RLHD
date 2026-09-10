@@ -7,9 +7,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -30,6 +28,7 @@ import rs117.hd.utils.AstronomyUtils;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
+import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -45,9 +44,11 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 @Singleton
 public class SkyManager {
+	public static Map<String, SkyConfiguration> PRESETS = Map.of();
+
+	private static final String DEFAULT_PRESET_NAME = "GIELINOR";
 	private static final ResourcePath SKY_PRESETS_PATH = Props
 		.getFile("rlhd.sky-presets-path", () -> path(SkyConfiguration.class, "sky_presets.json"));
-	private static volatile Map<String, JsonObject> presetJson = Map.of();
 
 	@Inject
 	private ClientThread clientThread;
@@ -104,9 +105,6 @@ public class SkyManager {
 	private float configCycleDuration;
 	private double[] configLatLon;
 
-	@Nullable
-	private SkyConfiguration gielinorSky;
-	private Map<String, SkyConfiguration> configurations = Map.of();
 	private MoonPhase fromMoonPhase = MoonPhase.REALISTIC;
 	private MoonPhase toMoonPhase = MoonPhase.REALISTIC;
 	@Nullable
@@ -134,7 +132,83 @@ public class SkyManager {
 	@Getter
 	private final SkyState state = new SkyState();
 
-	// ===== Configuration and celestial state =====================================
+	public void startUp() {
+		fileWatcher = SKY_PRESETS_PATH.watch((path, first) -> {
+			try {
+				loadPresets(path);
+				if (!first)
+					clientThread.invoke(environmentManager::reload);
+			} catch (IOException ex) {
+				log.error("Failed to load sky presets:", ex);
+			}
+		});
+	}
+
+	public void shutDown() {
+		if (fileWatcher != null)
+			fileWatcher.unregister();
+		fileWatcher = null;
+		SkyConfiguration.DEFAULT_PRESET = null;
+		PRESETS = Map.of();
+	}
+
+	private void loadPresets(ResourcePath path) throws IOException {
+		var gson = plugin.getGson();
+		JsonArray rawDefinitions = path.loadJson(gson, JsonArray.class);
+		if (rawDefinitions == null)
+			throw new IOException("Empty or invalid: " + path);
+
+		var rawDefinitionMap = new HashMap<String, JsonObject>();
+		for (int i = 0; i < rawDefinitions.size(); i++) {
+			JsonElement element = rawDefinitions.get(i);
+			if (!element.isJsonObject()) {
+				log.error("Sky preset at index {} is not an object", i);
+				continue;
+			}
+			JsonObject definition = element.getAsJsonObject();
+			JsonElement name = definition.get("name");
+			if (name == null || !name.isJsonPrimitive() || !name.getAsJsonPrimitive().isString()) {
+				log.error("Sky preset at index {} lacks a name", i);
+				continue;
+			}
+			if (rawDefinitionMap.putIfAbsent(name.getAsString(), definition) != null)
+				log.error("Ignoring duplicate sky preset '{}' at index {}", name.getAsString(), i);
+		}
+
+		var resolvedDefinitions = GsonUtils.resolveParentDefinitions(
+			rawDefinitionMap, "sky preset", null, GsonUtils::deepInheritFrom);
+
+		var allPresets = new HashMap<String, SkyConfiguration>();
+		for (var entry : resolvedDefinitions.entrySet()) {
+			String name = entry.getKey();
+			try {
+				var preset = gson.fromJson(entry.getValue(), SkyConfiguration.class);
+				preset.normalize();
+				allPresets.put(name, preset);
+			} catch (RuntimeException ex) {
+				log.error("Ignoring invalid sky preset '{}': {}", name, ex.getMessage());
+			}
+		}
+
+		SkyConfiguration preset = allPresets.get(DEFAULT_PRESET_NAME);
+		if (preset == null)
+			throw new IOException("Missing or invalid " + DEFAULT_PRESET_NAME + " sky preset");
+
+		PRESETS = Map.copyOf(allPresets);
+		SkyConfiguration.DEFAULT_PRESET = preset;
+	}
+
+	public boolean isCycleDisabled() {
+		return configCycle == DaylightCycle.OFF;
+	}
+
+	private static float[] anglesToSkyDirection(float altitude, float azimuth) {
+		return normalize(
+			sin(azimuth) * cos(altitude),
+			sin(altitude),
+			cos(azimuth) * cos(altitude)
+		);
+	}
 
 	public void updateConfig(HdPluginConfig config) {
 		configCycle = config.daylightCycle();
@@ -157,133 +231,6 @@ public class SkyManager {
 			}
 			configLatLon = latLon;
 		}
-	}
-
-	public void startUp() {
-		fileWatcher = SKY_PRESETS_PATH.watch((path, first) -> {
-			try {
-				loadPresets(path);
-				if (!first)
-					clientThread.invoke(environmentManager::reloadImmediately);
-			} catch (IOException ex) {
-				log.error("Failed to load sky presets:", ex);
-			}
-		});
-	}
-
-	public void shutDown() {
-		if (fileWatcher != null)
-			fileWatcher.unregister();
-		fileWatcher = null;
-		configurations = Map.of();
-		presetJson = Map.of();
-		gielinorSky = null;
-	}
-
-	/**
-	 * Whether the player has selected a daylight-cycle mode other than Off.
-	 */
-	public boolean isCycleConfigured() {
-		return configCycle != DaylightCycle.OFF;
-	}
-
-	private void loadPresets(ResourcePath path) throws IOException {
-		var gson = plugin.getGson();
-		JsonArray rawPresets = path.loadJson(gson, JsonArray.class);
-		if (rawPresets == null)
-			throw new IOException("Empty or invalid: " + path);
-
-		var rawPresetMap = new HashMap<String, JsonObject>();
-		for (int i = 0; i < rawPresets.size(); i++) {
-			JsonElement element = rawPresets.get(i);
-			if (!element.isJsonObject()) {
-				log.error("Sky preset at index {} is not an object", i);
-				continue;
-			}
-			JsonObject preset = element.getAsJsonObject();
-			JsonElement name = preset.get("name");
-			if (name == null || !name.isJsonPrimitive() || !name.getAsJsonPrimitive().isString()) {
-				log.error("Sky preset at index {} has no string name", i);
-				continue;
-			}
-			if (rawPresetMap.putIfAbsent(name.getAsString(), preset) != null)
-				log.error("Duplicate sky preset '{}'", name.getAsString());
-		}
-
-		var resolved = new HashMap<String, JsonObject>();
-		for (String s : rawPresetMap.keySet())
-			resolveSkyPreset(s, rawPresetMap, resolved, new HashSet<>());
-		presetJson = Map.copyOf(resolved);
-
-		var parsed = new HashMap<String, SkyConfiguration>();
-		for (var entry : resolved.entrySet()) {
-			SkyConfiguration configuration = gson.fromJson(entry.getValue(), SkyConfiguration.class).normalize();
-			configuration.preset = entry.getKey();
-			parsed.put(entry.getKey(), configuration);
-		}
-		configurations = Map.copyOf(parsed);
-		gielinorSky = configurations.get(SkyConfiguration.DEFAULT_PRESET);
-	}
-
-	@Nullable
-	public static JsonObject getPresetJson(String name) {
-		return presetJson.get(name);
-	}
-
-	@Nullable
-	private JsonObject resolveSkyPreset(
-		String name,
-		Map<String, JsonObject> raw,
-		Map<String, JsonObject> resolved,
-		HashSet<String> resolving
-	) {
-		JsonObject result = resolved.get(name);
-		if (result != null)
-			return result;
-		JsonObject preset = raw.get(name);
-		if (preset == null) {
-			log.error("Unknown sky preset '{}'", name);
-			return null;
-		}
-		if (!resolving.add(name)) {
-			log.error("Sky preset '{}' contains a preset loop", name);
-			return null;
-		}
-		result = new JsonObject();
-		JsonElement parent = preset.get("parent");
-		if (parent != null && parent.isJsonPrimitive() && parent.getAsJsonPrimitive().isString()) {
-			JsonObject base = resolveSkyPreset(parent.getAsString(), raw, resolved, resolving);
-			if (base != null)
-				SkyConfiguration.merge(result, base);
-		} else if (parent != null) {
-			log.error("Sky preset '{}' has a non-string parent", name);
-		}
-		SkyConfiguration.merge(result, preset);
-		result.remove("name");
-		result.remove("parent");
-		resolving.remove(name);
-		resolved.put(name, result);
-		return result;
-	}
-
-	@Nonnull
-	SkyConfiguration getGielinorSky() {
-		if (gielinorSky == null)
-			throw new IllegalStateException("Missing " + SkyConfiguration.DEFAULT_PRESET + " sky preset");
-		return gielinorSky;
-	}
-
-	@Nonnull
-	public SkyConfiguration getSkyConfiguration(Environment environment) {
-		return environment.hasSkyOverride ? environment.sky : getGielinorSky();
-	}
-
-	private static float[] anglesToSkyDirection(float altitude, float azimuth) {
-		return normalize(
-			sin(azimuth) * cos(altitude),
-			sin(altitude),
-			cos(azimuth) * cos(altitude)
-		);
 	}
 
 	/**
@@ -511,8 +458,8 @@ public class SkyManager {
 	private void resolveSkyConfiguration() {
 		Environment from = environmentManager.getFromEnvironment();
 		Environment to = environmentManager.getToEnvironment();
-		state.fromConfiguration = getSkyConfiguration(from);
-		state.toConfiguration = getSkyConfiguration(to);
+		state.fromConfiguration = from.getSky();
+		state.toConfiguration = to.getSky();
 		state.configurationTransition = environmentManager.getTransitionProgress();
 		float fromMoonStrength = state.fromConfiguration.moonDirectionalStrength;
 		if (fromMoonStrength < 0)
@@ -532,18 +479,18 @@ public class SkyManager {
 		float fromMoonVisibility = isMoonHidden(fromSky) ? 0 : fromSky.moonVisibility;
 		float toMoonVisibility = isMoonHidden(toSky) ? 0 : toSky.moonVisibility;
 		state.moonVisibility = mix(fromMoonVisibility, toMoonVisibility, state.configurationTransition);
-		cycleActive = environmentManager.getTargetEnvironment().isOverworld && isCycleConfigured();
+		cycleActive = environmentManager.getTargetEnvironment().isOverworld && !isCycleDisabled();
 	}
 
 	@Nullable
 	private float[] getSunAnglesOverride(SkyConfiguration sky) {
 		float[] angles = sky.sunAngles;
 		if (angles == null && configCycle.skyPreset != null) {
-			SkyConfiguration cycleSky = configurations.get(configCycle.skyPreset);
+			SkyConfiguration cycleSky = PRESETS.get(configCycle.skyPreset);
 			if (cycleSky != null)
 				angles = cycleSky.sunAngles;
 		}
-		return isCycleConfigured() && angles != null && (sky.sunAngles != null || configCycle.usesPresetSunAngles) ? angles : null;
+		return !isCycleDisabled() && angles != null && (sky.sunAngles != null || configCycle.usesPresetSunAngles) ? angles : null;
 	}
 
 	@Nullable
@@ -642,7 +589,7 @@ public class SkyManager {
 	private float getScheduleActivation(Light light) {
 		if (light.def.schedule == null)
 			return 1;
-		if (!isCycleConfigured())
+		if (isCycleDisabled())
 			return 0;
 
 		float randomOffset = (getScheduleRandomOffset(light) * 2 - 1) * light.def.schedule.randomOffset;
