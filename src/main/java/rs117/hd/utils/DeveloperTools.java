@@ -182,15 +182,15 @@ public class DeveloperTools implements KeyListener {
 			case "colorpicker":
 				toggleColorPicker();
 				break;
+			case "latlon":
+				handleLatLonCommand(args);
+				break;
 		}
 
 		if (!developerMode)
 			return;
 
 		switch (action) {
-			case "latlon":
-				handleLatLonCommand(args);
-				break;
 			case "varbit":
 			case "varp":
 				handleVarCommand(action, args);
