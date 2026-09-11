@@ -545,7 +545,7 @@ public class SkyManager {
 		double cyclePosition = (frameWallClockMillis % SYNCED_DAYS_PERIOD_MS) / (double) SYNCED_DAYS_PERIOD_MS;
 		long day = frameWallClockMillis / SYNCED_DAYS_PERIOD_MS;
 		return Instant.EPOCH.plus(day, ChronoUnit.DAYS)
-			.plusMillis((long) (cyclePositionToHour(cyclePosition) * HOUR_MS));
+			.plusMillis((long) (cyclePosition * DAY_MS));
 	}
 
 	private Instant resolveMoonInstant() {
