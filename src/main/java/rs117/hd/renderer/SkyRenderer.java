@@ -67,7 +67,7 @@ public class SkyRenderer {
 	 */
 	private static final class Sample {
 		private Environment environment;
-		private int minBrightness;
+		private float minBrightness;
 		private int frame;
 		private float[] zenithSrgb;
 		private float[] horizonSrgb;

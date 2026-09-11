@@ -26,7 +26,9 @@ public enum DaylightCycle {
 	/** Named fixed sky preset, or null to use astronomical angles. */
 	@Nullable
 	public final String skyPreset;
-	/** Use Default's UTC-synchronised simulated time. */
+	/**
+	 * Use Default's UTC-synchronized simulated time.
+	 */
 	public final boolean usesDefaultCycleTime;
 	/** Advance using the configured Custom duration. */
 	public final boolean usesCustomCycleTime;

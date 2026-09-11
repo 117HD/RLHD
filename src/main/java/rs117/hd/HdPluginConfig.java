@@ -698,24 +698,24 @@ public interface HdPluginConfig extends Config
 	}
 
 	String KEY_NIGHT_BRIGHTNESS = "nightBrightness";
-	@Range(min = 10, max = 200)
+	@Range(min = 0, max = 300)
 	@Units(Units.PERCENT)
 	@ConfigItem(
 		keyName = KEY_NIGHT_BRIGHTNESS,
 		name = "Night brightness",
 		description =
 			"Sets the minimum brightness during nighttime.<br>" +
-			"'10%' makes nights very dark.<br>" +
-			"'25%' is dark, but playable.<br>" +
-			"'35%' is dark, but comfortable.<br>" +
-			"'50%' provides balanced darkness.<br>" +
-			"'70%' is the default, with good visibility at night.<br>" +
-			"'100%' causes no brightness change at night.",
+			"'15%' makes nights very dark.<br>" +
+			"'35%' is dark, but playable.<br>" +
+			"'50%' is dark, but comfortable.<br>" +
+			"'70%' provides balanced darkness.<br>" +
+			"'100%' is the default, with good visibility at night.<br>" +
+			"'150%' gives night-time high visibility.",
 		position = 5,
 		section = daylightCycleSettings
 	)
 	default int nightBrightness() {
-		return 70;
+		return 100;
 	}
 
 	String KEY_REPLACE_VANILLA_SKYBOXES = "replaceVanillaSkyboxes";
