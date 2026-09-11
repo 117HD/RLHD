@@ -427,8 +427,8 @@ public class SkyRenderer {
 			if (sampledEnvironment != null)
 				environment = sampledEnvironment;
 		}
+		Sample lighting = sampleEnvironmentalLighting(environment);
 		SkyConfiguration sky = environment.getSky();
-		Sample lighting = sampleEnvironmentalLighting(state, environment, sky);
 		float[] authoredColor = light.def.color;
 		float defLuma = linearSrgbLuminance(authoredColor);
 		float noonLuma = max(linearSrgbLuminance(lighting.noonHorizonLinear), 1e-4f);
@@ -471,17 +471,20 @@ public class SkyRenderer {
 		light.strength *= mix(outdoorLightScale, 1, middayFactor);
 	}
 
-	private Sample sampleEnvironmentalLighting(SkyState state, Environment environment, SkyConfiguration sky) {
+	private Sample sampleEnvironmentalLighting(Environment env) {
 		assert client.isClientThread() : "Not thread-safe, as the sample is reused";
-		if (environment == environmentSample.environment && plugin.configMinimumBrightness == environmentSample.minBrightness
-			&& plugin.frame == environmentSample.frame)
+		if (env == environmentSample.environment &&
+			plugin.configMinimumBrightness == environmentSample.minBrightness &&
+			plugin.frame == environmentSample.frame)
 			return environmentSample;
-		environmentSample.environment = environment;
+		environmentSample.environment = env;
 		environmentSample.minBrightness = plugin.configMinimumBrightness;
 		environmentSample.frame = plugin.frame;
+
+		var sky = env.getSky();
 		SkyProfile profile = sky.profile;
-		float[] fogColor = environmentManager.getFogColor(environment);
-		float sunAltitudeDegrees = sky.sunAngles != null ? sky.sunAngles[0] * RAD_TO_DEG : state.sunAltitudeDegrees;
+		float[] fogColor = environmentManager.getFogColor(env);
+		float sunAltitudeDegrees = skyManager.getSunAltitude(sky) * RAD_TO_DEG;
 		sampleSkyGradient(
 			environmentSample, sunAltitudeDegrees, profile, fogColor,
 			sky.sunStrength, sky.sunriseSunsetStrength, sky.skyColorTakeoverAngle

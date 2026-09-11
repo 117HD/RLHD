@@ -493,6 +493,13 @@ public class SkyManager {
 		return !isCycleDisabled() && angles != null && (sky.sunAngles != null || configCycle.usesPresetSunAngles) ? angles : null;
 	}
 
+	public float getSunAltitude(SkyConfiguration sky) {
+		float[] angles = getSunAnglesOverride(sky);
+		if (angles != null)
+			return angles[0];
+		return (float) AstronomyUtils.getSunAngles(currentInstant.toEpochMilli(), configLatLon)[0];
+	}
+
 	@Nullable
 	private float[] getMoonAnglesOverride(SkyConfiguration sky) {
 		return sky.moonAngles != null ? sky.moonAngles : configMoonBehavior.isStatic ? DEFAULT_STATIC_MOON_ANGLES : null;
