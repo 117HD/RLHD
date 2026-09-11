@@ -66,7 +66,6 @@ public class SkyManager {
 	private static final long DAY_MS = 24L * 60 * 60 * 1000;
 	private static final long HOUR_MS = 60L * 60 * 1000;
 	// 5am–7pm occupies the first 70% of the unwarped cycle.
-	private static final float NATURAL_DAY_BOUNDARY = .7f;
 	private static final float ASTRONOMICAL_NIGHT_START = 19 / 24f;
 
 	// One event per 24 simulated nights on average, lasting 20 ± 10 minutes at 2σ.
@@ -74,6 +73,9 @@ public class SkyManager {
 	private static final float AURORA_EVENT_MEAN_DURATION_SECONDS = 20 * 60;
 	private static final float AURORA_EVENT_DURATION_STD_DEV_SECONDS = 5 * 60;
 	private static final float AURORA_EVENT_FADE_FRACTION = .2f;
+
+	private static final float BASIC_SUN_TILT = 23.5f * DEG_TO_RAD;
+	private static final float BASIC_MOON_PHASE_PERIOD_DAYS = 29.53059f;
 
 	// Used by the Static moon behavior when an environment provides no moon position.
 	private static final float[] DEFAULT_STATIC_MOON_ANGLES = HDUtils.sunAngles(15, 30);
@@ -205,12 +207,14 @@ public class SkyManager {
 
 	public void updateConfig(HdPluginConfig config) {
 		configCycle = config.daylightCycle();
-		configNightFraction = clamp(config.customNightPercentage(), 0, 100) / 100f;
 		configMoonBehavior = config.moonBehavior();
+		if (configMoonBehavior == MoonBehavior.REALISTIC && configCycle == DaylightCycle.CUSTOM_BASIC)
+			configMoonBehavior = MoonBehavior.MIRRORED;
 		configMoonPhase = config.moonPhase();
 		configCycleDuration = max(1e-6f, (float) config.customCycleDurationMinutes());
+		configNightFraction = clamp(config.basicNightPercentage(), 0, 100) / 100f;
 
-		if (configCycle == DaylightCycle.REAL_TIME || configCycle == DaylightCycle.CUSTOM) {
+		if (configCycle == DaylightCycle.REAL_TIME || configCycle == DaylightCycle.CUSTOM_REALISTIC) {
 			configLatLon[0] = clamp(config.latitude(), -90, 90);
 			configLatLon[1] = clamp(config.longitude(), -180, 180);
 		} else {
@@ -220,18 +224,27 @@ public class SkyManager {
 	}
 
 	/**
-	 * Remap a linear cycle position so night occupies the configured share.
+	 * Remap a linear basic cycle so night occupies the configured share without changing speed abruptly.
 	 */
-	private double applyNightDurationWarp(double cyclePosition) {
+	private float applyBasicNightDurationWarp(float cyclePosition) {
 		float dayFraction = 1 - configNightFraction;
-		if (abs(dayFraction - NATURAL_DAY_BOUNDARY) < 1e-6f)
+		if (dayFraction <= 0)
+			return .5f + cyclePosition * .5f;
+		if (dayFraction >= 1)
+			return cyclePosition * .5f;
+		if (abs(dayFraction - .5f) < 1e-6f)
 			return cyclePosition;
 
-		if (cyclePosition < dayFraction) {
-			return (cyclePosition / dayFraction) * NATURAL_DAY_BOUNDARY;
-		}
-		double nightProgress = (cyclePosition - dayFraction) / (1 - dayFraction);
-		return NATURAL_DAY_BOUNDARY + nightProgress * (1 - NATURAL_DAY_BOUNDARY);
+		float daySlope = .5f / dayFraction;
+		float nightSlope = .5f / (1 - dayFraction);
+		float slope = min(1, 3 * min(daySlope, nightSlope));
+		boolean isDay = cyclePosition < dayFraction;
+		float fromPosition = isDay ? 0 : dayFraction;
+		float length = (isDay ? dayFraction : 1) - fromPosition;
+		float t = (cyclePosition - fromPosition) / length;
+		return (isDay ? 0 : .5f) +
+			   .5f * t * t * (3 - 2 * t) +
+			   length * slope * t * (1 - t) * (1 - 2 * t);
 	}
 
 	// ===== Sun and shadow directions =============================================
@@ -289,10 +302,10 @@ public class SkyManager {
 		double cycleTime;
 		float eventStart;
 		float sunAltitude = state.sunAngles[0];
-		if (!configCycle.usesCustomNightDuration) {
+		if (configCycle != DaylightCycle.CUSTOM_BASIC) {
 			cycleTime = currentInstant.toEpochMilli() / (double) DAY_MS;
 			eventStart = ASTRONOMICAL_NIGHT_START;
-			if (configCycle.usesPresetSunAngles)
+			if (configCycle.skyPreset != null)
 				sunAltitude = (float) AstronomyUtils.getSunAngles(currentInstant.toEpochMilli(), configLatLon)[0];
 		} else {
 			cycleTime = completedCycles + customCycleTime;
@@ -322,7 +335,7 @@ public class SkyManager {
 		frameWallClockMillis = System.currentTimeMillis();
 		frameWallClockInstant = Instant.ofEpochMilli(frameWallClockMillis);
 		currentInstant = frameWallClockInstant;
-		if (configCycle == DaylightCycle.CUSTOM)
+		if (configCycle.usesCustomCycleTime)
 			advanceCustomCycle();
 		currentInstant = resolveCurrentInstant();
 		resolveSkyState();
@@ -330,12 +343,16 @@ public class SkyManager {
 	}
 
 	private void resolveSkyState() {
-		float[] astronomicalSunAngles = vec(AstronomyUtils.getSunAngles(currentInstant.toEpochMilli(), configLatLon));
+		float[] astronomicalSunAngles = configCycle == DaylightCycle.CUSTOM_BASIC
+			? getBasicSunAngles()
+			: vec(AstronomyUtils.getSunAngles(currentInstant.toEpochMilli(), configLatLon));
 		state.sunAngles = interpolateAngles(
 			fromSunAnglesOverride, sunAnglesOverride, astronomicalSunAngles, state.configurationTransition);
-		Instant moonInstant = resolveMoonInstant();
+		Instant moonInstant = currentInstant;
 		float[] astronomicalMoonAngles = configMoonBehavior.mirrorsSun
 			? mirrorAngles(state.sunAngles)
+			: configCycle == DaylightCycle.CUSTOM_BASIC
+			? DEFAULT_STATIC_MOON_ANGLES
 			: vec(AstronomyUtils.getMoonPosition(moonInstant.toEpochMilli(), configLatLon));
 		state.moonAngles = interpolateAngles(
 			fromMoonAnglesOverride, moonAnglesOverride, astronomicalMoonAngles, state.configurationTransition);
@@ -345,11 +362,12 @@ public class SkyManager {
 		state.moonDirection = anglesToSkyDirection(state.moonAngles[0], state.moonAngles[1]);
 		boolean useSyntheticMoonPhase = configCycle == DaylightCycle.NIGHT || configMoonBehavior.mirrorsSun;
 
-		boolean useAstronomicalMoonIllumination = sunAnglesOverride == null || useSyntheticMoonPhase;
-		float naturalMoonIllumination = useAstronomicalMoonIllumination
-			? (float) AstronomyUtils.getMoonIllumination(moonInstant.toEpochMilli())[0]
-			// Fixed visible suns should determine the moon phase rendered beneath them.
-			: saturate((1 - dot(state.sunDirection, state.moonDirection)) * .5f);
+		float naturalMoonIllumination = configCycle == DaylightCycle.CUSTOM_BASIC ?
+			.5f - .5f * cos(getBasicMoonPhase() * TWO_PI) :
+			sunAnglesOverride == null || useSyntheticMoonPhase
+				? (float) AstronomyUtils.getMoonIllumination(moonInstant.toEpochMilli())[0]
+				// Fixed visible suns should determine the moon phase rendered beneath them.
+				: saturate((1 - dot(state.sunDirection, state.moonDirection)) * .5f);
 		float fromMoonIllumination = fromMoonPhase.isLocked ? fromMoonPhase.illumination : naturalMoonIllumination;
 		float toMoonIllumination = toMoonPhase.isLocked ? toMoonPhase.illumination : naturalMoonIllumination;
 		state.moonIllumination = mix(fromMoonIllumination, toMoonIllumination, state.configurationTransition);
@@ -396,7 +414,9 @@ public class SkyManager {
 				sin((float) (days / DRACONIC_MONTH_DAYS) * TWO_PI) * LATITUDE_LIBRATION_DEG * DEG_TO_RAD
 			);
 		}
-		state.celestialPole = anglesToSkyDirection((float) configLatLon[0] * DEG_TO_RAD, 0);
+		state.celestialPole = configCycle == DaylightCycle.CUSTOM_BASIC
+			? anglesToSkyDirection(BASIC_SUN_TILT, 0)
+			: anglesToSkyDirection((float) configLatLon[0] * DEG_TO_RAD, 0);
 		state.celestialRotation = (currentInstant.toEpochMilli() % DAY_MS) / (float) DAY_MS * TWO_PI;
 		resolveAuroraStrength();
 	}
@@ -411,9 +431,16 @@ public class SkyManager {
 		float[] orbitTangent = normalize(add(moonRight, multiply(moonUp, NIGHT_MOON_PHASE_TILT)));
 		float phaseCos = state.moonIllumination * 2 - 1;
 		float phaseSin = sqrt(max(0, 1 - phaseCos * phaseCos));
-		if (sin((float) AstronomyUtils.getMoonIllumination(moonInstant.toEpochMilli())[1] * TWO_PI) < 0)
+		float phase = configCycle == DaylightCycle.CUSTOM_BASIC
+			? getBasicMoonPhase()
+			: (float) AstronomyUtils.getMoonIllumination(moonInstant.toEpochMilli())[1];
+		if (sin(phase * TWO_PI) < 0)
 			phaseSin = -phaseSin;
 		return normalize(add(multiply(state.moonDirection, phaseCos), multiply(orbitTangent, phaseSin)));
+	}
+
+	private float getBasicMoonPhase() {
+		return (float) ((completedCycles + customCycleTime) / BASIC_MOON_PHASE_PERIOD_DAYS % 1);
 	}
 
 	private void resolveSkyConfiguration() {
@@ -451,13 +478,15 @@ public class SkyManager {
 			if (cycleSky != null)
 				angles = cycleSky.sunAngles;
 		}
-		return !isCycleDisabled() && angles != null && (sky.sunAngles != null || configCycle.usesPresetSunAngles) ? angles : null;
+		return !isCycleDisabled() && angles != null && (sky.sunAngles != null || configCycle.skyPreset != null) ? angles : null;
 	}
 
 	public float getSunAltitude(SkyConfiguration sky) {
 		float[] angles = getSunAnglesOverride(sky);
 		if (angles != null)
 			return angles[0];
+		if (configCycle == DaylightCycle.CUSTOM_BASIC)
+			return getBasicSunAngles()[0];
 		return (float) AstronomyUtils.getSunAngles(currentInstant.toEpochMilli(), configLatLon)[0];
 	}
 
@@ -480,20 +509,32 @@ public class SkyManager {
 		}
 	}
 
+	private float[] getBasicSunAngles() {
+		float cyclePosition = applyBasicNightDurationWarp((float) customCycleTime);
+		float orbitAngle = cyclePosition * TWO_PI;
+		return vec(
+			asin(sin(orbitAngle) * cos(BASIC_SUN_TILT)),
+			atan(cos(orbitAngle), -sin(orbitAngle) * sin(BASIC_SUN_TILT))
+		);
+	}
+
 	private Instant resolveCurrentInstant() {
-		if (sunAnglesOverride != null || configCycle.usesDefaultCycleTime)
+		// Fixed environment angles use Default's slow synchronized time as a stable tuning baseline.
+		if (configCycle.usesDefaultCycleTime || sunAnglesOverride != null && configCycle != DaylightCycle.CUSTOM_BASIC)
 			return getDefaultInstant();
 
 		switch (configCycle) {
 			case OFF:
 			case REAL_TIME:
 				return frameWallClockInstant;
-			case CUSTOM:
-				// Custom night duration controls the cycle's night share before low-sun-weighted mapping.
-				double cyclePosition = applyNightDurationWarp(customCycleTime);
+			case CUSTOM_REALISTIC:
 				Instant startOfDay = frameWallClockInstant.truncatedTo(ChronoUnit.DAYS)
 					.plus(completedCycles, ChronoUnit.DAYS);
-				return startOfDay.plusMillis((long) (cyclePosition * DAY_MS));
+				return startOfDay.plusMillis((long) (customCycleTime * DAY_MS));
+			case CUSTOM_BASIC:
+				float cyclePosition = applyBasicNightDurationWarp((float) customCycleTime);
+				return Instant.EPOCH.plus(completedCycles, ChronoUnit.DAYS)
+					.plusMillis((long) (cyclePosition * DAY_MS));
 		}
 
 		throw new IllegalStateException("Unhandled daylight cycle mode: " + configCycle);
@@ -507,15 +548,6 @@ public class SkyManager {
 		long day = frameWallClockMillis / SYNCED_DAYS_PERIOD_MS;
 		return Instant.EPOCH.plus(day, ChronoUnit.DAYS)
 			.plusMillis((long) (cyclePosition * DAY_MS));
-	}
-
-	private Instant resolveMoonInstant() {
-		if (sunAnglesOverride != null || !configCycle.usesCustomNightDuration)
-			return currentInstant;
-
-		double cyclePosition = applyNightDurationWarp(customCycleTime);
-		long offsetMillis = (long) ((completedCycles + cyclePosition) * DAY_MS);
-		return frameWallClockInstant.truncatedTo(ChronoUnit.DAYS).plusMillis(offsetMillis);
 	}
 
 	// ===== Light schedule ========================================================

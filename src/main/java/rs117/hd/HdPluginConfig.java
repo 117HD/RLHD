@@ -628,7 +628,8 @@ public interface HdPluginConfig extends Config
 			"'Sunset' shows a constant sunset.<br>" +
 			"'Dusk' shows the sky just after sunset.<br>" +
 			"'Night' shows constant night-time.<br>" +
-			"'Custom' lets you control the cycle via the custom duration & night portion settings below.",
+			"'Custom Realistic' follows the sun and moon at the configured location, using Custom duration.<br>" +
+			"'Custom Basic' moves a synthetic sun directly overhead, using Custom duration and Basic night portion.",
 		position = 0,
 		section = daylightCycleSettings
 	)
@@ -739,7 +740,7 @@ public interface HdPluginConfig extends Config
 		name = "Latitude",
 		description =
 			"Advanced: sets the observer latitude for realistic sun and moon movement at a location on Earth.<br>" +
-			"Only applies to Real-Time and Custom. Defaults to Jagex's offices in Cambridge, England.",
+			"Only applies to Real-Time and Custom Realistic. Defaults to Jagex's offices in Cambridge, England.",
 		position = 7,
 		section = daylightCycleSettings
 	)
@@ -753,7 +754,7 @@ public interface HdPluginConfig extends Config
 		name = "Longitude",
 		description =
 			"Advanced: sets the observer longitude for realistic sun and moon movement at a location on Earth.<br>" +
-			"Only applies to Real-Time and Custom. Defaults to Jagex's offices in Cambridge, England.",
+			"Only applies to Real-Time and Custom Realistic. Defaults to Jagex's offices in Cambridge, England.",
 		position = 8,
 		section = daylightCycleSettings
 	)
@@ -762,11 +763,11 @@ public interface HdPluginConfig extends Config
 	}
 
 	String KEY_CUSTOM_CYCLE_DURATION = "customCycleDurationMinutes";
-	@Range(min = 1, max = 720)
+	@Range(min = 1)
 	@Units(Units.MINUTES)
 	@ConfigItem(
 		keyName = KEY_CUSTOM_CYCLE_DURATION,
-		name = "Custom duration",
+		name = "Custom cycle duration",
 		description = "Configures how long each Custom day & night cycle lasts.",
 		position = 9,
 		section = daylightCycleSettings
@@ -775,17 +776,17 @@ public interface HdPluginConfig extends Config
 		return 60;
 	}
 
-	String KEY_CUSTOM_NIGHT_PERCENTAGE = "customNightPercentage";
+	String KEY_BASIC_NIGHT_PERCENTAGE = "basicNightPercentage";
 	@Range(min = 0, max = 100)
 	@Units(Units.PERCENT)
 	@ConfigItem(
-		keyName = KEY_CUSTOM_NIGHT_PERCENTAGE,
-		name = "Custom night portion",
-		description = "Sets the share of each Custom cycle spent at night, without changing its duration.",
+		keyName = KEY_BASIC_NIGHT_PERCENTAGE,
+		name = "Basic night portion",
+		description = "Sets the share of each Custom Basic cycle spent at night, without changing its duration.",
 		position = 10,
 		section = daylightCycleSettings
 	)
-	default int customNightPercentage() {
+	default int basicNightPercentage() {
 		return 50;
 	}
 
