@@ -328,32 +328,6 @@ public class SkyManager {
 
 	// ===== Frame update and simulated clock ======================================
 
-	/**
-	 * Map cycle position to the project's dawn- and sunset-weighted hours since midnight.
-	 * The final segment extends past midnight so the result remains continuous at the cycle wrap.
-	 */
-	private double cyclePositionToHour(double cyclePosition) {
-		// 0.0-0.15  dawn               -> 5am-7am
-		// 0.15-0.35 morning            -> 7am-12pm
-		// 0.35-0.55 afternoon          -> 12pm-5pm
-		// 0.55-0.70 sunset             -> 5pm-7pm
-		// 0.70-0.85 early night        -> 7pm-12am
-		// 0.85-1.0  late night         -> 12am-5am on the following day
-		if (cyclePosition < .15) {
-			return 5 + cyclePosition / .15 * 2;
-		} else if (cyclePosition < .35) {
-			return 7 + (cyclePosition - .15) / .2 * 5;
-		} else if (cyclePosition < .55) {
-			return 12 + (cyclePosition - .35) / .2 * 5;
-		} else if (cyclePosition < .7) {
-			return 17 + (cyclePosition - .55) / .15 * 2;
-		} else if (cyclePosition < .85) {
-			return 19 + (cyclePosition - .7) / .15 * 5;
-		} else {
-			return 24 + (cyclePosition - .85) / .15 * 5;
-		}
-	}
-
 	public void update() {
 		resolveSkyConfiguration();
 
@@ -529,10 +503,9 @@ public class SkyManager {
 			case CUSTOM:
 				// Custom night duration controls the cycle's night share before low-sun-weighted mapping.
 				double cyclePosition = applyNightDurationWarp(customCycleTime);
-				double mappedHour = cyclePositionToHour(cyclePosition);
 				Instant startOfDay = frameWallClockInstant.truncatedTo(ChronoUnit.DAYS)
 					.plus(completedCycles, ChronoUnit.DAYS);
-				return startOfDay.plusMillis((long) (mappedHour * HOUR_MS));
+				return startOfDay.plusMillis((long) (cyclePosition * DAY_MS));
 		}
 
 		throw new IllegalStateException("Unhandled daylight cycle mode: " + configCycle);
