@@ -5,7 +5,9 @@ import rs117.hd.utils.ColorUtils;
 
 import static rs117.hd.utils.MathUtils.*;
 
-/** Mutable per-frame sky snapshot. {@code SkyManager} resolves it before renderers consume it. */
+/**
+ * Celestial state is resolved by {@code SkyManager}; {@code SkyRenderer} then resolves shadow eligibility.
+ */
 public final class SkyState {
 	/** Reusable output from the sky gradient and brightness curves. */
 	public static final class LightingSample {
@@ -27,7 +29,7 @@ public final class SkyState {
 	public float moonDirectionalStrength;
 	public float[] sunAngles;
 	public float[] moonAngles;
-	/** The sun while above the horizon, otherwise the moon while above it. */
+	/** Cycle shadow source, or the environment's shadow angles when the cycle is inactive. */
 	public float[] shadowAngles;
 	public float[] sunDirection;
 	public float[] moonDirection;
@@ -42,26 +44,24 @@ public final class SkyState {
 	public float moonVisibility;
 	public float auroraStrength;
 
-	public static void sampleLighting(
-		LightingSample out, float sunAltitude, SkyProfile profile, float[] fogColor, float sunStrength,
-		float sunriseSunsetStrength, float skyColorTakeoverAngle, float minBrightness
-	) {
-		float takeover = max(0, skyColorTakeoverAngle);
+	public static void sampleLighting(LightingSample out, float sunAltitude, SkyConfiguration sky, float[] fogColor, float minBrightness) {
+		SkyProfile profile = sky.profile;
+		float takeover = max(0, sky.skyColorTakeoverAngle);
 		float[] zenith = interpolate(sunAltitude, profile.zenith);
 		float[] horizon = interpolate(sunAltitude, profile.horizon);
 		float[] sunGlow = interpolate(sunAltitude, profile.sunGlow);
-		if (fogColor != null && sunStrength < 1) {
+		if (fogColor != null && sky.sunStrength < 1) {
 			float window = sunAltitude >= 0 ? 1 : smoothstep(-25, 0, sunAltitude);
-			float suppression = (1 - sunStrength) * window;
+			float suppression = (1 - sky.sunStrength) * window;
 			if (suppression > 0) {
 				float[] target = mix(fogColor, profile.nightSkyColor, smoothstep(5, -5, sunAltitude));
 				blendSky(zenith, horizon, target, suppression);
 				multiply(sunGlow, sunGlow, 1 - suppression);
 			}
 		}
-		if (fogColor != null && sunriseSunsetStrength < 1) {
+		if (fogColor != null && sky.sunriseSunsetStrength < 1) {
 			float window = sunAltitude < 0 ? smoothstep(-15, 0, sunAltitude) : takeover == 0 ? 0 : smoothstep(takeover, 0, sunAltitude);
-			float suppression = (1 - sunriseSunsetStrength) * window;
+			float suppression = (1 - sky.sunriseSunsetStrength) * window;
 			if (suppression > 0) {
 				blendSky(zenith, horizon, fogColor, suppression);
 				multiply(sunGlow, sunGlow, 1 - suppression);
@@ -81,21 +81,16 @@ public final class SkyState {
 		out.brightnessMultiplier = getBrightnessMultiplier(sunAltitude, profile, minBrightness);
 	}
 
-	public static float getBrightnessMultiplier(float sunAltitudeDegrees, SkyProfile profile, float minBrightness) {
+	private static float getBrightnessMultiplier(float sunAltitudeDegrees, SkyProfile profile, float minBrightness) {
 		var curve = profile.brightness;
-		float horizonBrightness = minBrightness + curve.horizonBoost;
 		if (sunAltitudeDegrees <= curve.nightAltitude)
 			return minBrightness;
-		if (sunAltitudeDegrees <= curve.lowSunAltitude) {
-			float lowSunBrightness = minBrightness + curve.lowSunBoost;
+		float lowSunBrightness = minBrightness + curve.lowSunBoost;
+		if (sunAltitudeDegrees <= curve.lowSunAltitude)
 			return mix(minBrightness, lowSunBrightness, smoothstep(curve.nightAltitude, curve.lowSunAltitude, sunAltitudeDegrees));
-		}
-		if (sunAltitudeDegrees <= curve.horizonAltitude) {
-			float lowSunBrightness = minBrightness + curve.lowSunBoost;
-			float earlyDayBrightness = horizonBrightness + curve.earlyDayBoost;
+		float earlyDayBrightness = minBrightness + curve.horizonBoost + curve.earlyDayBoost;
+		if (sunAltitudeDegrees <= curve.horizonAltitude)
 			return mix(lowSunBrightness, earlyDayBrightness, smoothstep(curve.lowSunAltitude, curve.horizonAltitude, sunAltitudeDegrees));
-		}
-		float earlyDayBrightness = horizonBrightness + curve.earlyDayBoost;
 		float sineAtHorizon = sin(curve.horizonAltitude * DEG_TO_RAD);
 		float normalizedSine = max(0, (sin(sunAltitudeDegrees * DEG_TO_RAD) - sineAtHorizon) / (1 - sineAtHorizon));
 		return mix(earlyDayBrightness, curve.daytimeStrength, normalizedSine);

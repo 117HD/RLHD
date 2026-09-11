@@ -90,9 +90,6 @@ public class SkyManager {
 
 	private FileWatcher.UnregisterCallback fileWatcher;
 
-	private double customCycleTime = .35;
-	private long completedCycles = 0; // Each completed cycle = one simulated day
-
 	private DaylightCycle configCycle;
 	private float configNightFraction;
 	private MoonPhase configMoonPhase;
@@ -113,6 +110,8 @@ public class SkyManager {
 
 	private long frameUtcMillis;
 	private Instant frameUtcInstant;
+
+	private double customCycleElapsedDays = .35;
 
 	private float scheduleSunAltitude;
 	private float previousScheduleSunAltitude = Float.NaN;
@@ -308,7 +307,7 @@ public class SkyManager {
 			if (configCycle.skyPreset != null)
 				sunAltitude = (float) AstronomyUtils.getSunAngles(currentInstant.toEpochMilli(), configLatLon)[0];
 		} else {
-			cycleTime = completedCycles + customCycleTime;
+			cycleTime = customCycleElapsedDays;
 			eventStart = 1 - configNightFraction;
 		}
 		// The sky shader supplies the near-horizon fade; skip when the sun is above the horizon.
@@ -330,7 +329,6 @@ public class SkyManager {
 
 		frameUtcMillis = System.currentTimeMillis();
 		frameUtcInstant = Instant.ofEpochMilli(frameUtcMillis);
-		currentInstant = frameUtcInstant;
 		if (configCycle.usesCustomCycleTime)
 			advanceCustomCycle();
 		currentInstant = resolveCurrentInstant();
@@ -443,7 +441,7 @@ public class SkyManager {
 	}
 
 	private float getBasicMoonPhase() {
-		return (float) ((completedCycles + customCycleTime) / BASIC_MOON_PHASE_PERIOD_DAYS % 1);
+		return (float) fract(customCycleElapsedDays / BASIC_MOON_PHASE_PERIOD_DAYS);
 	}
 
 	private void resolveSkyConfiguration() {
@@ -481,7 +479,7 @@ public class SkyManager {
 			if (cycleSky != null)
 				angles = cycleSky.sunAngles;
 		}
-		return !isCycleDisabled() && angles != null && (sky.sunAngles != null || configCycle.skyPreset != null) ? angles : null;
+		return isCycleDisabled() ? null : angles;
 	}
 
 	public float getSunAltitude(SkyConfiguration sky) {
@@ -504,16 +502,11 @@ public class SkyManager {
 
 	private void advanceCustomCycle() {
 		double cycleDurationMillis = configCycleDuration * 60.0 * 1000.0;
-		customCycleTime += plugin.deltaTimeMs / cycleDurationMillis;
-		long cyclesElapsed = (long) customCycleTime;
-		if (cyclesElapsed > 0) {
-			customCycleTime -= cyclesElapsed;
-			completedCycles += cyclesElapsed;
-		}
+		customCycleElapsedDays += plugin.deltaTimeMs / cycleDurationMillis;
 	}
 
 	private float[] getBasicSunAngles() {
-		float cyclePosition = applyBasicNightDurationWarp((float) customCycleTime);
+		float cyclePosition = applyBasicNightDurationWarp((float) fract(customCycleElapsedDays));
 		float orbitAngle = cyclePosition * TWO_PI;
 		return vec(
 			asin(sin(orbitAngle) * cos(BASIC_SUN_TILT)),
@@ -532,11 +525,11 @@ public class SkyManager {
 				return frameUtcInstant;
 			case CUSTOM_REALISTIC:
 				Instant startOfDay = frameUtcInstant.truncatedTo(ChronoUnit.DAYS)
-					.plus(completedCycles, ChronoUnit.DAYS);
-				return startOfDay.plusMillis((long) (customCycleTime * DAY_MS));
+					.plus(floor(customCycleElapsedDays), ChronoUnit.DAYS);
+				return startOfDay.plusMillis((long) (fract(customCycleElapsedDays) * DAY_MS));
 			case CUSTOM_BASIC:
-				float cyclePosition = applyBasicNightDurationWarp((float) customCycleTime);
-				return Instant.EPOCH.plus(completedCycles, ChronoUnit.DAYS)
+				float cyclePosition = applyBasicNightDurationWarp((float) fract(customCycleElapsedDays));
+				return Instant.EPOCH.plus(floor(customCycleElapsedDays), ChronoUnit.DAYS)
 					.plusMillis((long) (cyclePosition * DAY_MS));
 		}
 
@@ -566,32 +559,30 @@ public class SkyManager {
 	}
 
 	public void prepareLightSchedule(Light light) {
-		light.daylightCycleActivation = 1;
+		float activation = 1;
 		if (light.def.schedule != null) {
-			light.daylightCycleActivation = getScheduleActivation(light);
-			if (light.daylightCycleActivation < .001f)
+			activation = 0;
+			if (!isCycleDisabled()) {
+				float randomOffset = (getScheduleRandomOffset(light) * 2 - 1) * light.def.schedule.randomOffset;
+				activation = light.def.schedule.getActivation(scheduleSunAltitude, sunDescending, randomOffset);
+			}
+			if (activation < .001f)
 				light.visible = false;
 		}
-		light.daylightCycleRadiusScale = getNightRadiusScale(light);
-	}
 
-	public void applyLightSchedule(Light light) {
-		if (!state.cycleActive && light.def.schedule == null)
+		light.daylightCycleStrengthScale = activation;
+		light.daylightCycleRadiusScale = activation;
+		if (!state.cycleActive)
 			return;
 
-		float nightScale = state.cycleActive ? mix(1, light.def.nightMultiplier, nightFactor) : 1;
-		light.strength *= nightScale * light.daylightCycleActivation;
-		light.radius *= light.daylightCycleRadiusScale;
-	}
-
-	private float getScheduleActivation(Light light) {
-		if (light.def.schedule == null)
-			return 1;
-		if (isCycleDisabled())
-			return 0;
-
-		float randomOffset = (getScheduleRandomOffset(light) * 2 - 1) * light.def.schedule.randomOffset;
-		return light.def.schedule.getActivation(scheduleSunAltitude, sunDescending, randomOffset);
+		float multiplier = light.def.nightMultiplier;
+		light.daylightCycleStrengthScale *= mix(1, multiplier, nightFactor);
+		if (multiplier <= 0) {
+			light.daylightCycleRadiusScale = light.def.schedule != null ? 0 : mix(1, 0, nightFactor);
+		} else {
+			// Radius uses a smaller boost than strength to limit how far night lighting spreads.
+			light.daylightCycleRadiusScale *= mix(1, multiplier, nightFactor * NIGHT_RADIUS_BOOST_FRACTION);
+		}
 	}
 
 	private float getScheduleRandomOffset(Light light) {
@@ -606,16 +597,5 @@ public class SkyManager {
 		hash *= 0xc2b2ae35;
 		hash ^= hash >>> 16;
 		return (hash & 0x7FFFFFFF) / 2147483647f;
-	}
-
-	private float getNightRadiusScale(Light light) {
-		float multiplier = light.def.nightMultiplier;
-		if (!state.cycleActive)
-			return light.daylightCycleActivation;
-		if (multiplier <= 0)
-			return light.def.schedule != null ? 0 : mix(1, 0, nightFactor);
-
-		// Unscheduled lights retain their authored culling radius unless boosted at night.
-		return light.daylightCycleActivation * mix(1, multiplier, nightFactor * NIGHT_RADIUS_BOOST_FRACTION);
 	}
 }

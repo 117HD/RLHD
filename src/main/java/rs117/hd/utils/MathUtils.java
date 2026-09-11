@@ -614,6 +614,10 @@ public final class MathUtils {
 		return (int) Math.floor(v);
 	}
 
+	public static long floor(double v) {
+		return (long) Math.floor(v);
+	}
+
 	public static int[] floor(int[] out, float... v) {
 		for (int i = 0; i < out.length; i++)
 			out[i] = floor(v[i % v.length]);
@@ -885,7 +889,11 @@ public final class MathUtils {
 	}
 
 	public static float fract(float v) {
-		return mod(v, 1);
+		return v - floor(v);
+	}
+
+	public static double fract(double v) {
+		return v - floor(v);
 	}
 
 	public static float[] fract(float[] out, float... v) {

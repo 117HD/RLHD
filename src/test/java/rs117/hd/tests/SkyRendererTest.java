@@ -9,8 +9,8 @@ import org.junit.Test;
 import rs117.hd.config.MoonPhase;
 import rs117.hd.renderer.SkyRenderer;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration;
-import rs117.hd.scene.daylight_cycle.SkyConfiguration.Keyframe;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration.SkyProfile;
+import rs117.hd.scene.daylight_cycle.SkyState;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -32,10 +32,8 @@ public class SkyRendererTest {
 		return presets[0].profile;
 	}
 
-	private static float[] getAmbientColor(float altitudeDegrees) throws ReflectiveOperationException {
-		Method method = SkyRenderer.class.getDeclaredMethod("interpolate", float.class, Keyframe[].class);
-		method.setAccessible(true);
-		return (float[]) method.invoke(null, altitudeDegrees, SKY_PROFILE.ambientColor);
+	private static float[] getAmbientColor(float altitudeDegrees) {
+		return SkyState.interpolate(altitudeDegrees, SKY_PROFILE.ambientColor);
 	}
 
 	private static float[] getDirectionalLight(float altitudeDegrees) throws ReflectiveOperationException {
@@ -44,14 +42,8 @@ public class SkyRendererTest {
 		return (float[]) method.invoke(null, altitudeDegrees * DEG_TO_RAD, SKY_PROFILE);
 	}
 
-	private static <T> T getField(Object object, String name, Class<T> type) throws ReflectiveOperationException {
-		var field = object.getClass().getDeclaredField(name);
-		field.setAccessible(true);
-		return type.cast(field.get(object));
-	}
-
 	@Test
-	public void ambientColorMatchesGolden() throws ReflectiveOperationException {
+	public void ambientColorMatchesGolden() {
 		assertArrayEquals(
 			new float[] { 0.165132225f, 0.262250721f, 0.456411064f },
 			getAmbientColor(-8), 1e-6f

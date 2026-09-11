@@ -52,7 +52,7 @@ public class Light
 	public float[] pos = new float[3];
 	public int orientation;
 	public float distanceSquared;
-	public float daylightCycleActivation;
+	public float daylightCycleStrengthScale = 1;
 	public float daylightCycleRadiusScale = 1;
 
 	public Actor actor;

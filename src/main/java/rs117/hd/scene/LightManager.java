@@ -60,16 +60,16 @@ import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.LightDefinition;
 import rs117.hd.scene.lights.LightType;
-import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ColorUtils;
+import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
-import static rs117.hd.utils.HDUtils.isSphereIntersectingFrustum;
 import static rs117.hd.utils.ColorUtils.linearSrgbLuminance;
+import static rs117.hd.utils.HDUtils.isSphereIntersectingFrustum;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 import static rs117.hd.utils.collections.Util.quickSort;
@@ -556,7 +556,8 @@ public class LightManager {
 				light.radius = light.def.radius;
 			}
 
-			skyManager.applyLightSchedule(light);
+			light.strength *= light.daylightCycleStrengthScale;
+			light.radius *= light.daylightCycleRadiusScale;
 			applyOutdoorLighting(light);
 
 			// Spawn & despawn fade-in and fade-out
@@ -654,11 +655,7 @@ public class LightManager {
 		SkyConfiguration sky = environment.getSky();
 		float[] fogColor = environmentManager.getFogColor(environment);
 		float sunAltitudeDegrees = skyManager.getSunAltitude(sky) * RAD_TO_DEG;
-		SkyState.sampleLighting(
-			outdoorLightingSample, sunAltitudeDegrees, sky.profile, fogColor,
-			sky.sunStrength, sky.sunriseSunsetStrength, sky.skyColorTakeoverAngle,
-			plugin.configMinimumBrightness / 100f
-		);
+		SkyState.sampleLighting(outdoorLightingSample, sunAltitudeDegrees, sky, fogColor, plugin.configMinimumBrightness);
 		outdoorLightingSample.horizonLinear = ColorUtils.srgbToLinear(outdoorLightingSample.horizonSrgb);
 		outdoorLightingSample.noonHorizonLinear = fogColor;
 		return outdoorLightingSample;
