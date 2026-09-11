@@ -62,6 +62,7 @@ import rs117.hd.config.VanillaShadowMode;
 import static rs117.hd.HdPlugin.MAX_DISTANCE;
 import static rs117.hd.HdPlugin.MAX_FOG_DEPTH;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.scene.SkyManager.DEFAULT_LATLON;
 import static rs117.hd.utils.MathUtils.*;
 
 @ConfigGroup(CONFIG_GROUP)
@@ -732,6 +733,34 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_LATITUDE = "latitude";
+	@ConfigItem(
+		keyName = KEY_LATITUDE,
+		name = "Latitude",
+		description =
+			"Advanced: sets the observer latitude for realistic sun and moon movement at a location on Earth.<br>" +
+			"Only applies to Real-Time and Custom. Defaults to Jagex's offices in Cambridge, England.",
+		position = 7,
+		section = daylightCycleSettings
+	)
+	default double latitude() {
+		return DEFAULT_LATLON[0];
+	}
+
+	String KEY_LONGITUDE = "longitude";
+	@ConfigItem(
+		keyName = KEY_LONGITUDE,
+		name = "Longitude",
+		description =
+			"Advanced: sets the observer longitude for realistic sun and moon movement at a location on Earth.<br>" +
+			"Only applies to Real-Time and Custom. Defaults to Jagex's offices in Cambridge, England.",
+		position = 8,
+		section = daylightCycleSettings
+	)
+	default double longitude() {
+		return DEFAULT_LATLON[1];
+	}
+
 	String KEY_CUSTOM_CYCLE_DURATION = "customCycleDurationMinutes";
 	@Range(min = 1, max = 720)
 	@Units(Units.MINUTES)
@@ -739,7 +768,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_CUSTOM_CYCLE_DURATION,
 		name = "Custom duration",
 		description = "Configures how long each Custom day & night cycle lasts.",
-		position = 7,
+		position = 9,
 		section = daylightCycleSettings
 	)
 	default double customCycleDurationMinutes() {
@@ -753,7 +782,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_CUSTOM_NIGHT_PERCENTAGE,
 		name = "Custom night portion",
 		description = "Sets the share of each Custom cycle spent at night, without changing its duration.",
-		position = 8,
+		position = 10,
 		section = daylightCycleSettings
 	)
 	default int customNightPercentage() {
@@ -1437,12 +1466,4 @@ public interface HdPluginConfig extends Config
 	default int getPluginUpdateMessage() {
 		return 0;
 	}
-
-	String KEY_LAT_LON = "latLon";
-	@ConfigItem(keyName = KEY_LAT_LON, hidden = true, name = "", description = "")
-	default String latLon() {
-		return "";
-	}
-	@ConfigItem(keyName = KEY_LAT_LON, hidden = true, name = "", description = "")
-	void setLatLon(String coordinates);
 }

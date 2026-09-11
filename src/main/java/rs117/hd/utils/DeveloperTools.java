@@ -2,7 +2,6 @@ package rs117.hd.utils;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import lombok.Getter;
@@ -18,7 +17,6 @@ import net.runelite.client.input.KeyManager;
 import net.runelite.client.ui.components.colorpicker.ColorPickerManager;
 import net.runelite.client.ui.components.colorpicker.RuneliteColorPicker;
 import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
 import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
@@ -64,9 +62,6 @@ public class DeveloperTools implements KeyListener {
 
 	@Inject
 	private HdPlugin plugin;
-
-	@Inject
-	private HdPluginConfig config;
 
 	@Inject
 	private GamevalManager gamevalManager;
@@ -182,9 +177,6 @@ public class DeveloperTools implements KeyListener {
 			case "colorpicker":
 				toggleColorPicker();
 				break;
-			case "latlon":
-				handleLatLonCommand(args);
-				break;
 		}
 
 		if (!developerMode)
@@ -196,51 +188,6 @@ public class DeveloperTools implements KeyListener {
 				handleVarCommand(action, args);
 				break;
 		}
-	}
-
-	private void handleLatLonCommand(String[] args) {
-		if (args.length == 1) {
-			String current = config.latLon();
-			postMessage("Current latitude & longitude: " + (current.isEmpty() ? "not specified" : current));
-		} else if (args.length == 2 && args[1].equalsIgnoreCase("reset")) {
-			config.setLatLon("");
-			postMessage("Reset latitude & longitude coordinates");
-		} else if (args.length == 3) {
-			double[] latLon = parseLatLon(args[1] + ',' + args[2]);
-			if (latLon == null) {
-				postMessage("Latitude & longitude must be numbers within ±90 and ±180 degrees respectively");
-				return;
-			}
-
-			config.setLatLon(latLon[0] + "," + latLon[1]);
-			postMessage("Changed latitude & longitude to " + latLon[0] + ", " + latLon[1]);
-		} else {
-			postMessage("Usage: ::117hd latlon <lt>latitude<gt> <lt>longitude<gt> / reset");
-		}
-	}
-
-	@Nullable
-	public static double[] parseLatLon(String coordinates) {
-		if (coordinates == null || coordinates.isEmpty())
-			return null;
-
-		String[] values = coordinates.split(",", 3);
-		if (values.length != 2)
-			return null;
-
-		try {
-			double latitude = Double.parseDouble(values[0]);
-			double longitude = Double.parseDouble(values[1]);
-			if (Double.isFinite(latitude) &&
-				Double.isFinite(longitude) &&
-				Math.abs(latitude) <= 90 &&
-				Math.abs(longitude) <= 180
-			) {
-				return new double[] { latitude, longitude };
-			}
-		} catch (NumberFormatException ignored) {
-		}
-		return null;
 	}
 
 	private void handleVarCommand(String type, String[] args) {

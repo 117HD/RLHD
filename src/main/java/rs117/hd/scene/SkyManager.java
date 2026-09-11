@@ -19,14 +19,12 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.MoonBehavior;
 import rs117.hd.config.MoonPhase;
-import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration;
 import rs117.hd.scene.daylight_cycle.SkyState;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.utils.AstronomyUtils;
 import rs117.hd.utils.Camera;
-import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
@@ -45,6 +43,7 @@ import static rs117.hd.utils.ResourcePath.path;
 @Singleton
 public class SkyManager {
 	public static Map<String, SkyConfiguration> PRESETS = Map.of();
+	public static final double[] DEFAULT_LATLON = { 52.2347902, .1407562 }; // Jagex's offices, Cambridge
 
 	private static final String DEFAULT_PRESET_NAME = "GIELINOR";
 	private static final ResourcePath SKY_PRESETS_PATH = Props
@@ -79,10 +78,6 @@ public class SkyManager {
 	// Used by the Static moon behavior when an environment provides no moon position.
 	private static final float[] DEFAULT_STATIC_MOON_ANGLES = HDUtils.sunAngles(15, 30);
 
-	// Representative seasonal latitudes; longitude is irrelevant to the simulated clock.
-	private static final double[] NORTHERN_LAT_LONG = { 52.2347902, 0.1407562 }; // Jagex office, Cambridge
-	private static final double[] SOUTHERN_LAT_LONG = { -33.8472331, 150.6016524 }; // Sidney, Australia
-
 	private static final double ANOMALISTIC_MONTH_DAYS = 27.55455;
 	private static final double DRACONIC_MONTH_DAYS = 27.21222;
 	private static final float LONGITUDE_LIBRATION_DEG = 7.9f;
@@ -101,7 +96,7 @@ public class SkyManager {
 	private MoonPhase configMoonPhase;
 	private MoonBehavior configMoonBehavior;
 	private float configCycleDuration;
-	private double[] configLatLon;
+	private final double[] configLatLon = new double[2];
 
 	private MoonPhase fromMoonPhase = MoonPhase.REALISTIC;
 	private MoonPhase toMoonPhase = MoonPhase.REALISTIC;
@@ -215,19 +210,12 @@ public class SkyManager {
 		configMoonPhase = config.moonPhase();
 		configCycleDuration = max(1e-6f, (float) config.customCycleDurationMinutes());
 
-		if (configCycle == DaylightCycle.DEFAULT) {
-			configLatLon = NORTHERN_LAT_LONG;
+		if (configCycle == DaylightCycle.REAL_TIME || configCycle == DaylightCycle.CUSTOM) {
+			configLatLon[0] = clamp(config.latitude(), -90, 90);
+			configLatLon[1] = clamp(config.longitude(), -180, 180);
 		} else {
-			String latLonString = config.latLon();
-			double[] latLon = DeveloperTools.parseLatLon(latLonString);
-			if (latLon == null) {
-				if (!latLonString.isEmpty())
-					log.warn("Ignoring invalid latitude & longitude coordinates: {}", latLon);
-
-				latLon = plugin.configSeasonalHemisphere == SeasonalHemisphere.SOUTHERN ?
-					SOUTHERN_LAT_LONG : NORTHERN_LAT_LONG;
-			}
-			configLatLon = latLon;
+			configLatLon[0] = DEFAULT_LATLON[0];
+			configLatLon[1] = DEFAULT_LATLON[1];
 		}
 	}
 
