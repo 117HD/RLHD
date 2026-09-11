@@ -18,6 +18,7 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.renderer.zone.renderpass.SilhouettePass;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -71,6 +72,9 @@ public class ModelStreamingManager {
 
 	@Inject
 	private ZoneRenderer renderer;
+
+	@Inject
+	private SilhouettePass silhouettePass;
 
 	private final ArrayList<AsyncCachedModel> pending = new ArrayList<>();
 	private final StreamingContext[] streamingContexts = new StreamingContext[RL_RENDER_THREADS + 1];
@@ -429,6 +433,9 @@ public class ModelStreamingManager {
 					opaqueView,
 					alphaView
 				);
+
+				if (isActor && silhouettePass.isSilhouetteEnabled((Actor) renderable))
+					silhouettePass.addSilhouetteDraw((GameObject) tileObject, (Actor) renderable, opaqueView, (int)x, (int)y, (int)z);
 
 				if (opaqueView != alphaView && alphaView.getEndOffset() > alphaView.getStartOffset()) {
 					alphaModel.setView(alphaView);

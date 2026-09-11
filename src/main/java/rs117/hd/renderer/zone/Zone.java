@@ -34,6 +34,8 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.checkGLErrors;
+import static rs117.hd.renderer.zone.ZoneRenderer.CANOPY_STENCIL_REF;
+import static rs117.hd.renderer.zone.ZoneRenderer.OPAQUE_STENCIL_REF;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.renderer.zone.ZoneRenderer.eboAlpha;
 import static rs117.hd.utils.MathUtils.*;
@@ -380,6 +382,7 @@ public class Zone implements Destructible {
 		lastDrawMode = STATIC_UNSORTED;
 		lastVao = glVao;
 		lastTboF = tboF.getTexId();
+		lastStencil = OPAQUE_STENCIL_REF;
 		flush(cmd);
 	}
 
@@ -425,6 +428,7 @@ public class Zone implements Destructible {
 		byte lx, lz, ux, uz; // lower/upper zone coords
 		byte zofx, zofz; // for temp alpha models, offset of source zone from target zone
 		byte flags;
+		byte stencil;
 
 		// only set for static geometry as they require sorting
 		int radius;
@@ -524,6 +528,7 @@ public class Zone implements Destructible {
 		int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
 		int maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE, maxZ = Integer.MIN_VALUE;
 
+		boolean isCanopy = false;
 		for (int f = 0; f < faceCount; ++f) {
 			if (color3[f] == -2)
 				continue;
@@ -629,6 +634,7 @@ public class Zone implements Destructible {
 			final int fy = (((int) (vertexY[indices1[f]] + vertexY[indices2[f]] + vertexY[indices3[f]]) / 3) - cy) >> shift;
 			final int fz = (((int) (vertexZ[indices1[f]] + vertexZ[indices2[f]] + vertexZ[indices3[f]]) / 3) - cz) >> shift;
 
+			isCanopy = isCanopy || material.isCanopy;
 			radius = Math.max(radius, fx * fx + fy * fy + fz * fz);
 			packedFaces[bufferIdx] = ((fx & ((1 << 11) - 1)) << 21)
 			                         | ((fy & ((1 << 10) - 1)) << 11)
@@ -642,6 +648,7 @@ public class Zone implements Destructible {
 			bufferIdx++;
 		}
 
+		m.stencil = CANOPY_STENCIL_REF;
 		assert packedFaces.length > 0;
 		// Normally these will be equal, but transparency is used to hide faces in the TzHaar reskin
 		assert bufferIdx <= packedFaces.length : String.format("%d > %d", (int) bufferIdx, packedFaces.length);
@@ -668,6 +675,7 @@ public class Zone implements Destructible {
 		m.vao = m.tboF = m.rid = m.lx = m.lz = m.ux = m.uz = -1;
 		m.flags = 0;
 		m.zofx = m.zofz = 0;
+		m.stencil = 0;
 		alphaModels.add(m);
 		return m;
 	}
@@ -685,6 +693,7 @@ public class Zone implements Destructible {
 				alphaModels.remove(i);
 				m.packedFaces = null;
 				m.doubleSidedBitSet = null;
+				m.stencil = 0;
 				ALPHA_MODEL_POOL.recycle(m);
 			}
 
@@ -704,6 +713,7 @@ public class Zone implements Destructible {
 	private static int lastVao;
 	private static int lastTboF;
 	private static int lastzx, lastzz;
+	private static byte lastStencil;
 
 	static class AlphaModelComparator implements Comparator<AlphaModel> {
 		int zx, zz;
@@ -771,6 +781,7 @@ public class Zone implements Destructible {
 
 		drawIdx = 0;
 
+		cmd.DepthMask(false);
 		if (!depthOnly)
 			sortedAlphaFacesUpload.waitForCompletion();
 
@@ -795,6 +806,7 @@ public class Zone implements Destructible {
 			if (lastDrawMode != drawMode ||
 				lastVao != m.vao ||
 				lastTboF != m.tboF ||
+				lastStencil != m.stencil ||
 				lastzx != (zx - m.zofx) ||
 				lastzz != (zz - m.zofz)
 			) {
@@ -802,6 +814,7 @@ public class Zone implements Destructible {
 				lastDrawMode = drawMode;
 				lastVao = m.vao;
 				lastTboF = m.tboF;
+				lastStencil = m.stencil;
 				lastzx = zx - m.zofx;
 				lastzz = zz - m.zofz;
 			}
@@ -843,6 +856,7 @@ public class Zone implements Destructible {
 				long byteOffset = 4L * (eboAlphaOffset - vertexCount);
 				cmd.BindVertexArray(lastVao, eboAlpha);
 				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
+				cmd.StencilFunc(GL_ALWAYS, lastStencil, 0xFF);
 				// The EBO & IDO is bound by in ZoneRenderer
 				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
 					cmd.DrawElementsIndirect(GL_TRIANGLES, vertexCount, (int) (byteOffset / 4L), ZoneRenderer.indirectDrawCmdsStaging);
@@ -855,6 +869,7 @@ public class Zone implements Destructible {
 			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : DynamicModelVAO.VERT_SIZE);
 			cmd.BindVertexArray(lastVao);
 			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
+			cmd.StencilFunc(GL_ALWAYS, lastStencil, 0xFF);
 			if (drawIdx == 1) {
 				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
 					cmd.DrawArraysIndirect(GL_TRIANGLES, drawOff[0], drawEnd[0], ZoneRenderer.indirectDrawCmdsStaging);
@@ -932,6 +947,7 @@ public class Zone implements Destructible {
 				m2.uz = m.uz;
 				m2.zofx = (byte) (closestZoneX - zx);
 				m2.zofz = (byte) (closestZoneZ - zz);
+				m2.stencil = m.stencil;
 
 				m2.packedFaces = m.packedFaces;
 				m2.doubleSidedBitSet = m.doubleSidedBitSet;

@@ -50,6 +50,9 @@ layout(std140) uniform UBOGlobal {
     mat4 invProjectionMatrix;
     mat4 lightProjectionMatrix;
 
+    vec3 playerPosition;
+    float playerHeight;
+    float canopyFadeStrength;
     float lightningBrightness;
     float elapsedTime;
 };
