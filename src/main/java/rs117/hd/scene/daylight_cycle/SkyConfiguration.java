@@ -259,7 +259,7 @@ public class SkyConfiguration {
 		public float[] color;
 		public Float value;
 
-		public float[] values() {
+		private float[] values() {
 			return color != null ? color : vec(value);
 		}
 	}
@@ -317,6 +317,10 @@ public class SkyConfiguration {
 							return parent;
 					}
 
+					if (parent == null) {
+						log.error("No default sky preset at {}; ignoring sky", location);
+						return null;
+					}
 					var parentJson = delegate.toJsonTree(parent).getAsJsonObject();
 					GsonUtils.removeNulls(parentJson);
 					parentJson.remove("name");
@@ -332,14 +336,22 @@ public class SkyConfiguration {
 
 				@Override
 				public void write(JsonWriter out, SkyConfiguration sky) throws IOException {
+					if (sky == null) {
+						out.nullValue();
+						return;
+					}
 					JsonObject json = delegate.toJsonTree(sky).getAsJsonObject();
 					var base = DEFAULT_PRESET;
 					if (sky.parent != null)
 						base = SkyManager.PRESETS.getOrDefault(sky.parent, base);
+					if (base == null) {
+						jsonElementAdapter.write(out, json);
+						return;
+					}
 					JsonObject baseJson = delegate.toJsonTree(base).getAsJsonObject();
 					GsonUtils.removeMatching(json, baseJson);
 					if (json.size() == 0) {
-						if (sky.parent == null || sky.parent.equals(DEFAULT_PRESET.name)) {
+						if (sky.parent == null || base == DEFAULT_PRESET) {
 							out.nullValue();
 						} else {
 							out.value(sky.parent);

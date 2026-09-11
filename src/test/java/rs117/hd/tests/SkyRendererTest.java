@@ -30,7 +30,7 @@ public class SkyRendererTest {
 	}
 
 	private static float[] getAmbientColor(float altitudeDegrees) {
-		return SKY_PROFILE.interpolate(altitudeDegrees, SKY_PROFILE.ambientColor);
+		return SkyProfile.interpolate(altitudeDegrees, SKY_PROFILE.ambientColor);
 	}
 
 	private static float[] getDirectionalLight(float altitudeDegrees) {

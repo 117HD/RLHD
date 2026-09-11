@@ -600,7 +600,7 @@ public class LightManager {
 		SkyConfiguration sky = environment.getSky();
 		float[] authoredColor = light.def.color;
 		float defLuma = linearSrgbLuminance(authoredColor);
-		float noonLuma = max(linearSrgbLuminance(lighting.referenceFogColorLinear), 1e-4f);
+		float referenceLuma = max(linearSrgbLuminance(lighting.referenceFogColorLinear), 1e-4f);
 		float[] lightColor = copy(lighting.horizonLinear);
 		float sunAltDeg = lighting.sunAltitudeDegrees;
 
@@ -610,11 +610,10 @@ public class LightManager {
 			float moonIllumination = lighting.visibleMoonIllumination;
 			if (moonAltDeg > -5 && moonIllumination > .01f) {
 				float sunFade = saturate((5 - sunAltDeg) / 10);
-				float moonElevation = saturate((moonAltDeg + 5) / 25);
-				float moonElevationSmooth = moonElevation * moonElevation * (3 - 2 * moonElevation);
-				float moonBlend = moonIllumination * .25f * moonElevationSmooth * sunFade;
-				lightColor = mix(lightColor, sky.moonLightColor, moonBlend);
-				moonStrengthFloor = moonIllumination * .12f * moonElevationSmooth;
+				float moonElevation = smoothstep(-5, 20, moonAltDeg);
+				float moonBlend = moonIllumination * .25f * moonElevation * sunFade;
+				mix(lightColor, lightColor, sky.moonLightColor, moonBlend);
+				moonStrengthFloor = moonIllumination * .12f * moonElevation;
 			}
 		}
 
@@ -627,11 +626,11 @@ public class LightManager {
 		float horizonLuma = linearSrgbLuminance(lightColor);
 		float middayFactor = smoothstep(15, 30, sunAltDeg);
 		if (middayFactor > 0)
-			lightColor = mix(lightColor, authoredColor, middayFactor);
+			mix(lightColor, lightColor, authoredColor, middayFactor);
 
 		copyTo(light.color, lightColor);
-		float peakScale = defLuma / noonLuma;
-		float timeScale = max(min(horizonLuma / noonLuma, 1) * lighting.brightnessMultiplier, moonStrengthFloor);
+		float peakScale = defLuma / referenceLuma;
+		float timeScale = max(min(horizonLuma / referenceLuma, 1) * lighting.brightnessMultiplier, moonStrengthFloor);
 		float outdoorLightScale = peakScale * timeScale;
 		if (outdoorLightScale > 1) {
 			float scaleRange = MAX_OUTDOOR_LIGHT_SCALE - 1;
@@ -645,13 +644,12 @@ public class LightManager {
 			plugin.configMinimumBrightness == outdoorLightingMinBrightness &&
 			plugin.frame == outdoorLightingFrame)
 			return outdoorLightingSample;
-		outdoorLightingEnvironment = environment;
-		outdoorLightingMinBrightness = plugin.configMinimumBrightness;
-		outdoorLightingFrame = plugin.frame;
-
 		SkyConfiguration sky = environment.getSky();
 		float[] fogColor = environmentManager.getFogColor(environment);
 		skyManager.sampleLighting(outdoorLightingSample, sky, fogColor, plugin.configMinimumBrightness);
+		outdoorLightingEnvironment = environment;
+		outdoorLightingMinBrightness = plugin.configMinimumBrightness;
+		outdoorLightingFrame = plugin.frame;
 		return outdoorLightingSample;
 	}
 
