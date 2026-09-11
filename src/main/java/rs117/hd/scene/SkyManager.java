@@ -104,7 +104,9 @@ public class SkyManager {
 	private float[] sunAnglesOverride;
 	@Nullable
 	private float[] fromSunAnglesOverride;
+	@Nullable
 	private float[] moonAnglesOverride;
+	@Nullable
 	private float[] fromMoonAnglesOverride;
 
 	private Instant currentInstant;
@@ -231,18 +233,14 @@ public class SkyManager {
 	private void resolveSkyConfiguration() {
 		Environment from = environmentManager.getFromEnvironment();
 		Environment to = environmentManager.getToEnvironment();
-		state.fromConfiguration = from.getSky();
-		state.toConfiguration = to.getSky();
+		SkyConfiguration fromSky = from.getSky();
+		SkyConfiguration toSky = to.getSky();
+		state.fromConfiguration = fromSky;
+		state.toConfiguration = toSky;
 		state.configurationTransition = environmentManager.getTransitionProgress();
-		float fromMoonStrength = state.fromConfiguration.moonDirectionalStrength;
-		if (fromMoonStrength < 0)
-			fromMoonStrength = from.directionalStrength;
-		float toMoonStrength = state.toConfiguration.moonDirectionalStrength;
-		if (toMoonStrength < 0)
-			toMoonStrength = to.directionalStrength;
+		float fromMoonStrength = fromSky.moonDirectionalStrength < 0 ? from.directionalStrength : fromSky.moonDirectionalStrength;
+		float toMoonStrength = toSky.moonDirectionalStrength < 0 ? to.directionalStrength : toSky.moonDirectionalStrength;
 		state.moonDirectionalStrength = mix(fromMoonStrength, toMoonStrength, state.configurationTransition);
-		SkyConfiguration fromSky = state.fromConfiguration;
-		SkyConfiguration toSky = state.toConfiguration;
 		fromMoonPhase = fromSky.forceMoonPhase != null ? fromSky.forceMoonPhase : configMoonPhase;
 		toMoonPhase = toSky.forceMoonPhase != null ? toSky.forceMoonPhase : configMoonPhase;
 		fromSunAnglesOverride = getSunAnglesOverride(fromSky);
@@ -447,17 +445,13 @@ public class SkyManager {
 	/** Returns illuminated fraction and orbital phase; fixed-direction lighting needs only the fraction. */
 	private float[] getNaturalMoonPhase(long millis, @Nullable float[] sunOverride, float[] sunDirection, float[] moonDirection) {
 		if (configCycle == DaylightCycle.CUSTOM_BASIC) {
-			float phase = getBasicMoonPhase();
+			float phase = (float) fract(customCycleElapsedDays / BASIC_MOON_PHASE_PERIOD_DAYS);
 			return vec(.5f - .5f * cos(phase * TWO_PI), phase);
 		}
 		if (sunOverride == null || configCycle == DaylightCycle.NIGHT || configMoonBehavior.mirrorsSun)
 			return vec(AstronomyUtils.getMoonIllumination(millis));
 		// Fixed visible suns determine the phase rendered beneath them.
 		return vec(saturate((1 - dot(sunDirection, moonDirection)) * .5f), 0);
-	}
-
-	private float getBasicMoonPhase() {
-		return (float) fract(customCycleElapsedDays / BASIC_MOON_PHASE_PERIOD_DAYS);
 	}
 
 	/**

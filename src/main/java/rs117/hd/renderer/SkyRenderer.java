@@ -255,21 +255,13 @@ public class SkyRenderer {
 		SkyProfile fromProfile = fromSky.profile;
 		SkyProfile toProfile = toSky.profile;
 		float sunAltDeg = state.sunAltitudeDegrees;
-		float regionalBlend = mix(
-			SkyProfile.interpolate(sunAltDeg, fromProfile.regionalBlend)[0],
-			SkyProfile.interpolate(sunAltDeg, toProfile.regionalBlend)[0],
-			transition
-		);
+		float regionalBlend = mix(fromProfile.getRegionalBlend(sunAltDeg), toProfile.getRegionalBlend(sunAltDeg), transition);
 		float[] directionalLight = mix(
 			fromProfile.getDirectionalLight(state.sunAngles[0]),
 			toProfile.getDirectionalLight(state.sunAngles[0]),
 			transition
 		);
-		float[] ambientLight = mix(
-			SkyProfile.interpolate(sunAltDeg, fromProfile.ambientColor),
-			SkyProfile.interpolate(sunAltDeg, toProfile.ambientColor),
-			transition
-		);
+		float[] ambientLight = mix(fromProfile.getAmbientLight(sunAltDeg), toProfile.getAmbientLight(sunAltDeg), transition);
 		mix(directionalColor, directionalLight, directionalColor, regionalBlend);
 		mix(ambientColor, ambientLight, ambientColor, regionalBlend);
 
@@ -336,7 +328,7 @@ public class SkyRenderer {
 		return saturate(smoothstep(SUN_SHADOW_CUTOFF_DEG, MOON_TINT_SUN_END_DEG, sunAltitude) * moonBaseShadow);
 	}
 
-	private float computeMoonInfluence(float sunAltDeg, float moonAltDeg, float moonIllumination) {
+	private static float computeMoonInfluence(float sunAltDeg, float moonAltDeg, float moonIllumination) {
 		if (sunAltDeg >= MOON_TINT_SUN_START_DEG || !isMoonLighting(moonAltDeg, moonIllumination))
 			return 0;
 		float influence = sunAltDeg >= 0

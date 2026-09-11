@@ -60,9 +60,9 @@ public class SkyConfiguration {
 	public float auroraVisibility = -1;
 	public float moonSizeMult = 1;
 	public float starHorizonHeight = 1;
-	public float sunStrength = 1;
-	public float sunriseSunsetStrength = 1;
-	public float skyColorTakeoverAngle = 40;
+	private float sunStrength = 1;
+	private float sunriseSunsetStrength = 1;
+	private float skyColorTakeoverAngle = 40;
 	public float sunlightStrength = 1;
 	public float minBrightnessBoost;
 
@@ -154,7 +154,7 @@ public class SkyConfiguration {
 		float[] horizon = SkyProfile.interpolate(sunAltitudeDegrees, profile.horizon);
 		float[] sunGlow = SkyProfile.interpolate(sunAltitudeDegrees, profile.sunGlow);
 		if (fogColor != null && sunStrength < 1) {
-			float window = sunAltitudeDegrees >= 0 ? 1 : smoothstep(-25, 0, sunAltitudeDegrees);
+			float window = smoothstep(-25, 0, sunAltitudeDegrees);
 			float suppression = (1 - sunStrength) * window;
 			if (suppression > 0) {
 				float[] target = mix(fogColor, profile.nightSkyColor, smoothstep(5, -5, sunAltitudeDegrees));
@@ -190,17 +190,17 @@ public class SkyConfiguration {
 	}
 
 	public static class SkyProfile {
-		public Keyframe[] zenith;
-		public Keyframe[] horizon;
-		public Keyframe[] sunGlow;
-		public Keyframe[] ambientColor;
-		public Keyframe[] directionalTemperature;
-		public Keyframe[] regionalBlend;
+		private Keyframe[] zenith;
+		private Keyframe[] horizon;
+		private Keyframe[] sunGlow;
+		private Keyframe[] ambientColor;
+		private Keyframe[] directionalTemperature;
+		private Keyframe[] regionalBlend;
 		@JsonAdapter(SrgbToLinearAdapter.class)
-		public float[] nightSkyColor;
-		public float directionalBaseTemperature;
-		public float directionalBaseStrength;
-		public BrightnessCurve brightness;
+		private float[] nightSkyColor;
+		private float directionalBaseTemperature;
+		private float directionalBaseStrength;
+		private BrightnessCurve brightness;
 
 		public float[] getDirectionalLight(float sunAltitude) {
 			float[] directionalLight = multiply(
@@ -216,7 +216,15 @@ public class SkyConfiguration {
 			return directionalLight;
 		}
 
-		public static float[] interpolate(float altitude, Keyframe[] keyframes) {
+		public float[] getAmbientLight(float sunAltitudeDegrees) {
+			return interpolate(sunAltitudeDegrees, ambientColor);
+		}
+
+		public float getRegionalBlend(float sunAltitudeDegrees) {
+			return interpolate(sunAltitudeDegrees, regionalBlend)[0];
+		}
+
+		private static float[] interpolate(float altitude, Keyframe[] keyframes) {
 			int end = keyframes.length - 1;
 			int i = 0;
 			while (i < end && altitude > keyframes[i + 1].altitude)
@@ -225,10 +233,10 @@ public class SkyConfiguration {
 			if (i == end)
 				return copy(from.values());
 			Keyframe to = keyframes[i + 1];
-			return mix(from.values(), to.values(), clamp((altitude - from.altitude) / (to.altitude - from.altitude), 0, 1));
+			return mix(from.values(), to.values(), saturate((altitude - from.altitude) / (to.altitude - from.altitude)));
 		}
 
-		public float getBrightnessMultiplier(float sunAltitude, float minBrightness) {
+		private float getBrightnessMultiplier(float sunAltitude, float minBrightness) {
 			if (sunAltitude <= brightness.nightAltitude)
 				return minBrightness;
 			float lowSunBrightness = minBrightness + brightness.lowSunBoost;
@@ -242,22 +250,22 @@ public class SkyConfiguration {
 			return mix(earlyDayBrightness, brightness.daytimeStrength, normalizedSine);
 		}
 
-		public static class BrightnessCurve {
-			public float nightAltitude;
-			public float lowSunAltitude;
-			public float horizonAltitude;
-			public float lowSunBoost;
-			public float horizonBoost;
-			public float earlyDayBoost;
-			public float daytimeStrength;
+		private static class BrightnessCurve {
+			private float nightAltitude;
+			private float lowSunAltitude;
+			private float horizonAltitude;
+			private float lowSunBoost;
+			private float horizonBoost;
+			private float earlyDayBoost;
+			private float daytimeStrength;
 		}
 	}
 
 	public static class Keyframe {
-		public float altitude;
+		private float altitude;
 		@JsonAdapter(SrgbToLinearAdapter.class)
-		public float[] color;
-		public Float value;
+		private float[] color;
+		private Float value;
 
 		private float[] values() {
 			return color != null ? color : vec(value);

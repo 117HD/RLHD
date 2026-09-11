@@ -71,7 +71,6 @@ public final class StarField {
 	@Getter
 	private int vaoStars = 0;
 
-	@Getter
 	public int starCount;
 
 	private GLBuffer vboStars;

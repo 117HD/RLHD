@@ -14,18 +14,18 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class LightSchedule {
-	public static final float DEFAULT_RANDOM_OFFSET = 2.7f;
+	private static final float DEFAULT_RANDOM_OFFSET = 2.7f;
 
-	public Turn turn = Turn.ON;
-	public Range[] during;
+	private Turn turn = Turn.ON;
+	private Range[] during;
 	public float randomOffset = DEFAULT_RANDOM_OFFSET;
 
-	public enum Turn {
+	private enum Turn {
 		ON,
 		OFF
 	}
 
-	public enum Phase {
+	private enum Phase {
 		DAWN(-2, -8.8f, Range.Mode.ASCENDING),
 		SUNRISE(5, -2, Range.Mode.ASCENDING),
 		DAY(-2, 5, Range.Mode.BOTH),
@@ -37,23 +37,23 @@ public class LightSchedule {
 
 		private static final Phase[] VALUES = values();
 
-		final Range[] ranges;
+		private final Range[] ranges;
 
 		Phase(float from, float through, Range.Mode mode) {
 			ranges = new Range[] { new Range(from, through, mode) };
 		}
 	}
 
-	public static class Range {
-		public enum Mode {
+	private static class Range {
+		private enum Mode {
 			BOTH,
 			ASCENDING,
 			DESCENDING
 		}
 
-		public final float from;
-		public final float through;
-		public final Mode mode;
+		private final float from;
+		private final float through;
+		private final Mode mode;
 
 		private Range(float from, float through, Mode mode) {
 			this.from = from;
@@ -103,16 +103,8 @@ public class LightSchedule {
 
 			var schedule = new LightSchedule();
 			if (in.peek() == JsonToken.STRING) {
-				String name = in.nextString();
-				Phase phase;
-				try {
-					phase = Phase.valueOf(name);
-				} catch (IllegalArgumentException ex) {
-					log.error("Unknown light schedule phase '{}' at {}; ignoring schedule", name, scheduleLocation);
-					return null;
-				}
-				schedule.during = phase.ranges;
-				return schedule;
+				schedule.during = readRange(in);
+				return schedule.during == null ? null : schedule;
 			}
 
 			boolean valid = true;
@@ -136,21 +128,18 @@ public class LightSchedule {
 						}
 						break;
 					case "during":
+						if (in.peek() != JsonToken.BEGIN_ARRAY) {
+							schedule.during = readRange(in);
+							break;
+						}
 						var ranges = new ArrayList<Range>();
-						boolean array = in.peek() == JsonToken.BEGIN_ARRAY;
-						if (array) {
-							in.beginArray();
-							while (in.hasNext()) {
-								Range[] range = readRange(in);
-								if (range != null)
-									Collections.addAll(ranges, range);
-							}
-							in.endArray();
-						} else {
+						in.beginArray();
+						while (in.hasNext()) {
 							Range[] range = readRange(in);
 							if (range != null)
 								Collections.addAll(ranges, range);
 						}
+						in.endArray();
 						schedule.during = ranges.toArray(Range[]::new);
 						break;
 					case "randomOffset":
@@ -182,8 +171,7 @@ public class LightSchedule {
 			if (in.peek() == JsonToken.STRING) {
 				String name = in.nextString();
 				try {
-					Phase phase = Phase.valueOf(name);
-					return phase.ranges;
+					return Phase.valueOf(name).ranges;
 				} catch (IllegalArgumentException ex) {
 					log.error("Unknown light schedule phase '{}' at {}; ignoring range", name, location);
 					return null;
