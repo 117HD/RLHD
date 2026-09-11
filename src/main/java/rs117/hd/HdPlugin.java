@@ -500,6 +500,7 @@ public class HdPlugin extends Plugin {
 	public double elapsedTime;
 	public double elapsedClientTime;
 	public float deltaTime;
+	public long deltaTimeMs;
 	public float deltaClientTime;
 	private long lastFrameTimeMillis;
 	private double lastFrameClientTime;
@@ -2096,7 +2097,8 @@ public class HdPlugin extends Plugin {
 		}
 
 		if (lastFrameTimeMillis > 0) {
-			deltaTime = (float) ((System.currentTimeMillis() - lastFrameTimeMillis) / 1000.);
+			deltaTimeMs = System.currentTimeMillis() - lastFrameTimeMillis;
+			deltaTime = (float) (deltaTimeMs / 1000.);
 
 			// Restart the to avoid potential buffer corruption if the computer has likely resumed from suspension
 			if (deltaTime > 300) {

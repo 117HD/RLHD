@@ -93,9 +93,7 @@ public class SkyManager {
 
 	private FileWatcher.UnregisterCallback fileWatcher;
 
-	private long lastUpdateTime = 0;
-	// Start Custom at midday.
-	private double accumulatedCycleTime = .35;
+	private double customCycleTime = .35;
 	private long completedCycles = 0; // Each completed cycle = one simulated day
 
 	private DaylightCycle configCycle;
@@ -309,7 +307,7 @@ public class SkyManager {
 			if (configCycle.usesPresetSunAngles)
 				sunAltitude = (float) AstronomyUtils.getSunAngles(currentInstant.toEpochMilli(), configLatLon)[0];
 		} else {
-			cycleTime = completedCycles + accumulatedCycleTime;
+			cycleTime = completedCycles + customCycleTime;
 			eventStart = 1 - configNightFraction;
 		}
 		// The sky shader supplies the near-horizon fade; skip when the sun is above the horizon.
@@ -362,7 +360,8 @@ public class SkyManager {
 		frameWallClockMillis = System.currentTimeMillis();
 		frameWallClockInstant = Instant.ofEpochMilli(frameWallClockMillis);
 		currentInstant = frameWallClockInstant;
-		advanceCycle(frameWallClockMillis);
+		if (configCycle == DaylightCycle.CUSTOM)
+			advanceCustomCycle();
 		currentInstant = resolveCurrentInstant();
 		resolveSkyState();
 		resolveLightScheduleState();
@@ -509,19 +508,14 @@ public class SkyManager {
 		return sky.hideMoon || configMoonBehavior.isDisabled && sky.forceMoonPhase == null;
 	}
 
-	private void advanceCycle(long currentTimeMillis) {
-		if (lastUpdateTime == 0)
-			lastUpdateTime = currentTimeMillis;
-
+	private void advanceCustomCycle() {
 		double cycleDurationMillis = configCycleDuration * 60.0 * 1000.0;
-		long elapsedMillis = currentTimeMillis - lastUpdateTime;
-		accumulatedCycleTime += elapsedMillis / cycleDurationMillis;
-		long cyclesElapsed = (long) accumulatedCycleTime;
+		customCycleTime += plugin.deltaTimeMs / cycleDurationMillis;
+		long cyclesElapsed = (long) customCycleTime;
 		if (cyclesElapsed > 0) {
-			accumulatedCycleTime -= cyclesElapsed;
+			customCycleTime -= cyclesElapsed;
 			completedCycles += cyclesElapsed;
 		}
-		lastUpdateTime = currentTimeMillis;
 	}
 
 	private Instant resolveCurrentInstant() {
@@ -534,7 +528,7 @@ public class SkyManager {
 				return frameWallClockInstant;
 			case CUSTOM:
 				// Custom night duration controls the cycle's night share before low-sun-weighted mapping.
-				double cyclePosition = applyNightDurationWarp(accumulatedCycleTime);
+				double cyclePosition = applyNightDurationWarp(customCycleTime);
 				double mappedHour = cyclePositionToHour(cyclePosition);
 				Instant startOfDay = frameWallClockInstant.truncatedTo(ChronoUnit.DAYS)
 					.plus(completedCycles, ChronoUnit.DAYS);
@@ -558,7 +552,7 @@ public class SkyManager {
 		if (sunAnglesOverride != null || !configCycle.usesCustomNightDuration)
 			return currentInstant;
 
-		double cyclePosition = applyNightDurationWarp(accumulatedCycleTime);
+		double cyclePosition = applyNightDurationWarp(customCycleTime);
 		long offsetMillis = (long) ((completedCycles + cyclePosition) * DAY_MS);
 		return frameWallClockInstant.truncatedTo(ChronoUnit.DAYS).plusMillis(offsetMillis);
 	}
