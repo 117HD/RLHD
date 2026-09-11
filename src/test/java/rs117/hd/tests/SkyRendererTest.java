@@ -73,27 +73,27 @@ public class SkyRendererTest {
 	@Test
 	public void directionalLightMatchesGolden() throws ReflectiveOperationException {
 		assertArrayEquals(
-			new float[] { 0.116922617f, 0.096754856f, 0.066591375f },
+			new float[] { .13896565f, .09286611f, .055899985f },
 			getDirectionalLight(-8), 1e-6f
 		);
 		assertArrayEquals(
-			new float[] { 0.116922617f, 0.096754856f, 0.066591375f },
+			new float[] { .13896565f, .09286611f, .055899985f },
 			getDirectionalLight(0), 1e-6f
 		);
 		assertArrayEquals(
-			new float[] { 0.302544773f, 0.215248346f, 0.120878309f },
+			new float[] { .36123133f, .20414308f, .09520696f },
 			getDirectionalLight(12), 1e-6f
 		);
 		assertArrayEquals(
-			new float[] { 1.009382844f, 0.819268167f, 0.548119307f },
+			new float[] { 1.1999731f, .78566045f, .45654672f },
 			getDirectionalLight(30), 1e-6f
 		);
 		assertArrayEquals(
-			new float[] { 2.343648672f, 2.354422808f, 2.118747473f },
+			new float[] { 2.790303f, 2.2654557f, 1.8906446f },
 			getDirectionalLight(60), 1e-6f
 		);
 		assertArrayEquals(
-			new float[] { 2.864768744f, 3.122953415f, 3.115890741f },
+			new float[] { 3.4223082f, 2.999315f, 2.832426f },
 			getDirectionalLight(85), 1e-6f
 		);
 	}
@@ -134,17 +134,14 @@ public class SkyRendererTest {
 	public void skyMoonDirectionalStrengthDefaultsToEnvironmentDirectionalStrength() {
 		Gson gson = new Gson();
 		SkyConfiguration unset = gson.fromJson("{}", SkyConfiguration.class);
-		unset.normalize();
 		assertEquals(-1, unset.moonDirectionalStrength, 0);
 
 		SkyConfiguration set = gson
 			.fromJson("{\"moonDirectionalStrength\": 0.2}", SkyConfiguration.class);
-		set.normalize();
 		assertEquals(.2f, set.moonDirectionalStrength, 0);
 
 		SkyConfiguration zero = gson
 			.fromJson("{\"moonDirectionalStrength\": 0}", SkyConfiguration.class);
-		zero.normalize();
 		assertEquals(0, zero.moonDirectionalStrength, 0);
 	}
 
@@ -152,18 +149,15 @@ public class SkyRendererTest {
 	public void skyMoonShadowFieldsDefaultToPreviousBehavior() {
 		Gson gson = new Gson();
 		SkyConfiguration unset = gson.fromJson("{}", SkyConfiguration.class);
-		unset.normalize();
 		assertEquals(1, unset.moonShadowStrength, 0);
 		assertEquals(0, unset.minMoonIllumination, 0);
 
 		SkyConfiguration set = gson
 			.fromJson("{\"moonShadowStrength\": 3, \"minMoonIllumination\": 0.35}", SkyConfiguration.class);
-		set.normalize();
 		assertEquals(3, set.moonShadowStrength, 0);
 		assertEquals(.35f, set.minMoonIllumination, 0);
 
 		SkyConfiguration zero = gson.fromJson("{\"moonShadowStrength\": 0}", SkyConfiguration.class);
-		zero.normalize();
 		assertEquals(0, zero.moonShadowStrength, 0);
 	}
 

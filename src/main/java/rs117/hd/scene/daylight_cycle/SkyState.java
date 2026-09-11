@@ -15,7 +15,8 @@ public final class SkyState {
 		public float[] horizonSrgb;
 		public float[] sunGlowSrgb;
 		public float[] horizonLinear;
-		public float[] noonHorizonLinear;
+		/** Environment fog before the sky gradient is applied. */
+		public float[] referenceFogColorLinear;
 		public float brightnessMultiplier;
 	}
 
@@ -78,6 +79,8 @@ public final class SkyState {
 		out.zenithSrgb = ColorUtils.linearToSrgb(zenith);
 		out.horizonSrgb = ColorUtils.linearToSrgb(horizon);
 		out.sunGlowSrgb = ColorUtils.linearToSrgb(sunGlow);
+		out.horizonLinear = ColorUtils.srgbToLinear(out.horizonSrgb);
+		out.referenceFogColorLinear = fogColor;
 		out.brightnessMultiplier = getBrightnessMultiplier(sunAltitude, profile, minBrightness);
 	}
 

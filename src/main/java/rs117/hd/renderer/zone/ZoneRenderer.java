@@ -1071,11 +1071,7 @@ public class ZoneRenderer implements Renderer {
 
 					sceneCmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
 
-					if (skyRenderer.shouldRenderSky() &&
-						!shouldRenderVanillaSkybox &&
-						!plugin.orthographicProjection &&
-						sceneManager.isRoot(ctx)
-					) {
+					if (skyRenderer.canRenderSky(shouldRenderVanillaSkybox) && sceneManager.isRoot(ctx)) {
 						// Draw the sky after drawing top-level scene opaque
 						skyRenderer.appendTo(sceneCmd);
 						sceneCmd.SetShader(sceneProgram);

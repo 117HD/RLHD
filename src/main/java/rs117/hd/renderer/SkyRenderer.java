@@ -150,7 +150,8 @@ public class SkyRenderer {
 		return shouldRenderSky && skyProgram.isValid();
 	}
 
-	private boolean canRenderSky(boolean hasVanillaSkybox) {
+	/** Whether this frame can draw the gradient sky instead of a solid clear or vanilla skybox. */
+	public boolean canRenderSky(boolean hasVanillaSkybox) {
 		return shouldRenderSky() && !plugin.orthographicProjection && !hasVanillaSkybox;
 	}
 
@@ -246,7 +247,7 @@ public class SkyRenderer {
 		SkyConfiguration fromSky = state.fromConfiguration;
 		SkyConfiguration toSky = state.toConfiguration;
 		float transition = state.configurationTransition;
-		SkyConfiguration sky = transition < 1 ? currentSky.interpolate(fromSky, toSky, transition) : toSky;
+		SkyConfiguration sky = transition < 1 ? currentSky.interpolateLightingParameters(fromSky, toSky, transition) : toSky;
 		SkyProfile fromProfile = fromSky.profile;
 		SkyProfile toProfile = toSky.profile;
 		float sunAltDeg = state.sunAltitudeDegrees;

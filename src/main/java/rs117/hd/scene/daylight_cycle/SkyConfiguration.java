@@ -127,26 +127,30 @@ public class SkyConfiguration {
 		return out;
 	}
 
-	public SkyConfiguration interpolate(SkyConfiguration from, SkyConfiguration to, float t) {
-		moonShadowStrength = from.moonShadowStrength * (1 - t) + to.moonShadowStrength * t;
-		minMoonIllumination = from.minMoonIllumination * (1 - t) + to.minMoonIllumination * t;
+	/**
+	 * Interpolate the properties evaluated outside of {@link SkyProfile}. Profile curves and celestial overrides
+	 * are resolved separately.
+	 */
+	public SkyConfiguration interpolateLightingParameters(SkyConfiguration from, SkyConfiguration to, float t) {
+		moonShadowStrength = mix(from.moonShadowStrength, to.moonShadowStrength, t);
+		minMoonIllumination = mix(from.minMoonIllumination, to.minMoonIllumination, t);
 		moonDiskColor = interpolate(moonDiskColor, from.moonDiskColor, to.moonDiskColor, t);
 		moonLightColor = interpolate(moonLightColor, from.moonLightColor, to.moonLightColor, t);
-		moonDiskStrength = from.moonDiskStrength * (1 - t) + to.moonDiskStrength * t;
+		moonDiskStrength = mix(from.moonDiskStrength, to.moonDiskStrength, t);
 		nightSkyColor = interpolate(nightSkyColor, from.nightSkyColor, to.nightSkyColor, t);
-		nightSkyColorStrength = from.nightSkyColorStrength * (1 - t) + to.nightSkyColorStrength * t;
-		skyVisibility = from.skyVisibility * (1 - t) + to.skyVisibility * t;
-		moonVisibility = from.moonVisibility * (1 - t) + to.moonVisibility * t;
-		starVisibility = from.starVisibility * (1 - t) + to.starVisibility * t;
-		nebulaVisibility = from.nebulaVisibility * (1 - t) + to.nebulaVisibility * t;
-		auroraVisibility = from.auroraVisibility * (1 - t) + to.auroraVisibility * t;
-		moonSizeMult = from.moonSizeMult * (1 - t) + to.moonSizeMult * t;
-		starHorizonHeight = from.starHorizonHeight * (1 - t) + to.starHorizonHeight * t;
-		sunStrength = from.sunStrength * (1 - t) + to.sunStrength * t;
-		sunriseSunsetStrength = from.sunriseSunsetStrength * (1 - t) + to.sunriseSunsetStrength * t;
-		skyColorTakeoverAngle = from.skyColorTakeoverAngle * (1 - t) + to.skyColorTakeoverAngle * t;
-		sunlightStrength = from.sunlightStrength * (1 - t) + to.sunlightStrength * t;
-		minBrightnessBoost = from.minBrightnessBoost * (1 - t) + to.minBrightnessBoost * t;
+		nightSkyColorStrength = mix(from.nightSkyColorStrength, to.nightSkyColorStrength, t);
+		skyVisibility = mix(from.skyVisibility, to.skyVisibility, t);
+		moonVisibility = mix(from.moonVisibility, to.moonVisibility, t);
+		starVisibility = mix(from.starVisibility, to.starVisibility, t);
+		nebulaVisibility = mix(from.nebulaVisibility, to.nebulaVisibility, t);
+		auroraVisibility = mix(from.auroraVisibility, to.auroraVisibility, t);
+		moonSizeMult = mix(from.moonSizeMult, to.moonSizeMult, t);
+		starHorizonHeight = mix(from.starHorizonHeight, to.starHorizonHeight, t);
+		sunStrength = mix(from.sunStrength, to.sunStrength, t);
+		sunriseSunsetStrength = mix(from.sunriseSunsetStrength, to.sunriseSunsetStrength, t);
+		skyColorTakeoverAngle = mix(from.skyColorTakeoverAngle, to.skyColorTakeoverAngle, t);
+		sunlightStrength = mix(from.sunlightStrength, to.sunlightStrength, t);
+		minBrightnessBoost = mix(from.minBrightnessBoost, to.minBrightnessBoost, t);
 		return this;
 	}
 

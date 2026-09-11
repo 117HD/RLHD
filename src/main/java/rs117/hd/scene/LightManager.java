@@ -60,7 +60,6 @@ import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.LightDefinition;
 import rs117.hd.scene.lights.LightType;
-import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.Props;
@@ -603,7 +602,7 @@ public class LightManager {
 		SkyState state = skyManager.getState();
 		float[] authoredColor = light.def.color;
 		float defLuma = linearSrgbLuminance(authoredColor);
-		float noonLuma = max(linearSrgbLuminance(lighting.noonHorizonLinear), 1e-4f);
+		float noonLuma = max(linearSrgbLuminance(lighting.referenceFogColorLinear), 1e-4f);
 		float[] lightColor = copy(lighting.horizonLinear);
 		float sunAltDeg = state.sunAltitudeDegrees;
 
@@ -656,8 +655,6 @@ public class LightManager {
 		float[] fogColor = environmentManager.getFogColor(environment);
 		float sunAltitudeDegrees = skyManager.getSunAltitude(sky) * RAD_TO_DEG;
 		SkyState.sampleLighting(outdoorLightingSample, sunAltitudeDegrees, sky, fogColor, plugin.configMinimumBrightness);
-		outdoorLightingSample.horizonLinear = ColorUtils.srgbToLinear(outdoorLightingSample.horizonSrgb);
-		outdoorLightingSample.noonHorizonLinear = fogColor;
 		return outdoorLightingSample;
 	}
 
