@@ -17,6 +17,10 @@ public final class SkyState {
 		public float[] horizonLinear;
 		/** Environment fog before the sky gradient is applied. */
 		public float[] referenceFogColorLinear;
+		public float sunAltitudeDegrees;
+		/** Celestial inputs populated by SkyManager when sampling an authored environment. */
+		public float moonAltitudeDegrees;
+		public float visibleMoonIllumination;
 		public float brightnessMultiplier;
 	}
 
@@ -45,23 +49,23 @@ public final class SkyState {
 	public float moonVisibility;
 	public float auroraStrength;
 
-	public static void sampleLighting(LightingSample out, float sunAltitude, SkyConfiguration sky, float[] fogColor, float minBrightness) {
+	public static void sampleLighting(LightingSample out, float sunAltitudeDegrees, SkyConfiguration sky, float[] fogColor, float minBrightness) {
 		SkyProfile profile = sky.profile;
 		float takeover = max(0, sky.skyColorTakeoverAngle);
-		float[] zenith = profile.interpolate(sunAltitude, profile.zenith);
-		float[] horizon = profile.interpolate(sunAltitude, profile.horizon);
-		float[] sunGlow = profile.interpolate(sunAltitude, profile.sunGlow);
+		float[] zenith = profile.interpolate(sunAltitudeDegrees, profile.zenith);
+		float[] horizon = profile.interpolate(sunAltitudeDegrees, profile.horizon);
+		float[] sunGlow = profile.interpolate(sunAltitudeDegrees, profile.sunGlow);
 		if (fogColor != null && sky.sunStrength < 1) {
-			float window = sunAltitude >= 0 ? 1 : smoothstep(-25, 0, sunAltitude);
+			float window = sunAltitudeDegrees >= 0 ? 1 : smoothstep(-25, 0, sunAltitudeDegrees);
 			float suppression = (1 - sky.sunStrength) * window;
 			if (suppression > 0) {
-				float[] target = mix(fogColor, profile.nightSkyColor, smoothstep(5, -5, sunAltitude));
+				float[] target = mix(fogColor, profile.nightSkyColor, smoothstep(5, -5, sunAltitudeDegrees));
 				blendSky(zenith, horizon, target, suppression);
 				multiply(sunGlow, sunGlow, 1 - suppression);
 			}
 		}
 		if (fogColor != null && sky.sunriseSunsetStrength < 1) {
-			float window = sunAltitude < 0 ? smoothstep(-15, 0, sunAltitude) : takeover == 0 ? 0 : smoothstep(takeover, 0, sunAltitude);
+			float window = sunAltitudeDegrees < 0 ? smoothstep(-15, 0, sunAltitudeDegrees) : takeover == 0 ? 0 : smoothstep(takeover, 0, sunAltitudeDegrees);
 			float suppression = (1 - sky.sunriseSunsetStrength) * window;
 			if (suppression > 0) {
 				blendSky(zenith, horizon, fogColor, suppression);
@@ -69,11 +73,11 @@ public final class SkyState {
 			}
 		}
 		if (fogColor != null) {
-			float blend = sunAltitude < 0 ? 0 : takeover == 0 ? 1 : smoothstep(0, takeover, sunAltitude);
+			float blend = sunAltitudeDegrees < 0 ? 0 : takeover == 0 ? 1 : smoothstep(0, takeover, sunAltitudeDegrees);
 			if (blend > 0)
 				blendSky(zenith, horizon, fogColor, blend);
 		}
-		float nightBlend = smoothstep(0, -15, sunAltitude);
+		float nightBlend = smoothstep(0, -15, sunAltitudeDegrees);
 		if (nightBlend > 0)
 			blendSky(zenith, horizon, profile.nightSkyColor, nightBlend);
 		out.zenithSrgb = ColorUtils.linearToSrgb(zenith);
@@ -81,7 +85,8 @@ public final class SkyState {
 		out.sunGlowSrgb = ColorUtils.linearToSrgb(sunGlow);
 		out.horizonLinear = ColorUtils.srgbToLinear(out.horizonSrgb);
 		out.referenceFogColorLinear = fogColor;
-		out.brightnessMultiplier = profile.getBrightnessMultiplier(sunAltitude, minBrightness);
+		out.sunAltitudeDegrees = sunAltitudeDegrees;
+		out.brightnessMultiplier = profile.getBrightnessMultiplier(sunAltitudeDegrees, minBrightness);
 	}
 
 	private static void blendSky(float[] zenith, float[] horizon, float[] color, float t) {

@@ -53,7 +53,6 @@ import rs117.hd.config.DynamicLights;
 import rs117.hd.data.ObjectType;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration;
-import rs117.hd.scene.daylight_cycle.SkyState;
 import rs117.hd.scene.daylight_cycle.SkyState.LightingSample;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Alignment;
@@ -599,17 +598,16 @@ public class LightManager {
 
 		LightingSample lighting = sampleOutdoorLighting(environment);
 		SkyConfiguration sky = environment.getSky();
-		SkyState state = skyManager.getState();
 		float[] authoredColor = light.def.color;
 		float defLuma = linearSrgbLuminance(authoredColor);
 		float noonLuma = max(linearSrgbLuminance(lighting.referenceFogColorLinear), 1e-4f);
 		float[] lightColor = copy(lighting.horizonLinear);
-		float sunAltDeg = state.sunAltitudeDegrees;
+		float sunAltDeg = lighting.sunAltitudeDegrees;
 
 		float moonStrengthFloor = 0;
 		if (sunAltDeg < 5) {
-			float moonAltDeg = state.moonAltitudeDegrees;
-			float moonIllumination = state.moonIllumination * state.moonVisibility;
+			float moonAltDeg = lighting.moonAltitudeDegrees;
+			float moonIllumination = lighting.visibleMoonIllumination;
 			if (moonAltDeg > -5 && moonIllumination > .01f) {
 				float sunFade = saturate((5 - sunAltDeg) / 10);
 				float moonElevation = saturate((moonAltDeg + 5) / 25);
@@ -653,8 +651,7 @@ public class LightManager {
 
 		SkyConfiguration sky = environment.getSky();
 		float[] fogColor = environmentManager.getFogColor(environment);
-		float sunAltitudeDegrees = skyManager.getSunAltitude(sky) * RAD_TO_DEG;
-		SkyState.sampleLighting(outdoorLightingSample, sunAltitudeDegrees, sky, fogColor, plugin.configMinimumBrightness);
+		skyManager.sampleLighting(outdoorLightingSample, sky, fogColor, plugin.configMinimumBrightness);
 		return outdoorLightingSample;
 	}
 
