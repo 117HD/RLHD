@@ -16,6 +16,7 @@ import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.config.MoonPhase;
 import rs117.hd.scene.SkyManager;
+import rs117.hd.scene.daylight_cycle.SkyState.GradientSample;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.ColorUtils.SrgbToLinearAdapter;
 import rs117.hd.utils.GsonUtils;
@@ -118,15 +119,6 @@ public class SkyConfiguration {
 		}
 	}
 
-	private static float[] interpolate(float[] out, float[] from, float[] to, float t) {
-		int length = Math.max(from.length, to.length);
-		if (out == null || out.length != length)
-			out = new float[length];
-		for (int i = 0; i < length; i++)
-			out[i] = from[i % from.length] * (1 - t) + to[i % to.length] * t;
-		return out;
-	}
-
 	/**
 	 * Interpolate the properties evaluated outside of {@link SkyProfile}. Profile curves and celestial overrides
 	 * are resolved separately.
@@ -134,24 +126,67 @@ public class SkyConfiguration {
 	public SkyConfiguration interpolateLightingParameters(SkyConfiguration from, SkyConfiguration to, float t) {
 		moonShadowStrength = mix(from.moonShadowStrength, to.moonShadowStrength, t);
 		minMoonIllumination = mix(from.minMoonIllumination, to.minMoonIllumination, t);
-		moonDiskColor = interpolate(moonDiskColor, from.moonDiskColor, to.moonDiskColor, t);
-		moonLightColor = interpolate(moonLightColor, from.moonLightColor, to.moonLightColor, t);
+		if (moonDiskColor == null)
+			moonDiskColor = new float[3];
+		mix(moonDiskColor, from.moonDiskColor, to.moonDiskColor, t);
+		if (moonLightColor == null)
+			moonLightColor = new float[3];
+		mix(moonLightColor, from.moonLightColor, to.moonLightColor, t);
 		moonDiskStrength = mix(from.moonDiskStrength, to.moonDiskStrength, t);
-		nightSkyColor = interpolate(nightSkyColor, from.nightSkyColor, to.nightSkyColor, t);
+		if (nightSkyColor == null)
+			nightSkyColor = new float[3];
+		mix(nightSkyColor, from.nightSkyColor, to.nightSkyColor, t);
 		nightSkyColorStrength = mix(from.nightSkyColorStrength, to.nightSkyColorStrength, t);
 		skyVisibility = mix(from.skyVisibility, to.skyVisibility, t);
-		moonVisibility = mix(from.moonVisibility, to.moonVisibility, t);
 		starVisibility = mix(from.starVisibility, to.starVisibility, t);
 		nebulaVisibility = mix(from.nebulaVisibility, to.nebulaVisibility, t);
 		auroraVisibility = mix(from.auroraVisibility, to.auroraVisibility, t);
 		moonSizeMult = mix(from.moonSizeMult, to.moonSizeMult, t);
 		starHorizonHeight = mix(from.starHorizonHeight, to.starHorizonHeight, t);
-		sunStrength = mix(from.sunStrength, to.sunStrength, t);
-		sunriseSunsetStrength = mix(from.sunriseSunsetStrength, to.sunriseSunsetStrength, t);
-		skyColorTakeoverAngle = mix(from.skyColorTakeoverAngle, to.skyColorTakeoverAngle, t);
 		sunlightStrength = mix(from.sunlightStrength, to.sunlightStrength, t);
 		minBrightnessBoost = mix(from.minBrightnessBoost, to.minBrightnessBoost, t);
 		return this;
+	}
+
+	public void evaluateGradient(GradientSample out, float sunAltitudeDegrees, float[] fogColor, float minBrightness) {
+		float takeover = max(0, skyColorTakeoverAngle);
+		float[] zenith = SkyProfile.interpolate(sunAltitudeDegrees, profile.zenith);
+		float[] horizon = SkyProfile.interpolate(sunAltitudeDegrees, profile.horizon);
+		float[] sunGlow = SkyProfile.interpolate(sunAltitudeDegrees, profile.sunGlow);
+		if (fogColor != null && sunStrength < 1) {
+			float window = sunAltitudeDegrees >= 0 ? 1 : smoothstep(-25, 0, sunAltitudeDegrees);
+			float suppression = (1 - sunStrength) * window;
+			if (suppression > 0) {
+				float[] target = mix(fogColor, profile.nightSkyColor, smoothstep(5, -5, sunAltitudeDegrees));
+				blendSky(zenith, horizon, target, suppression);
+				multiply(sunGlow, sunGlow, 1 - suppression);
+			}
+		}
+		if (fogColor != null && sunriseSunsetStrength < 1) {
+			float window = sunAltitudeDegrees < 0 ? smoothstep(-15, 0, sunAltitudeDegrees) : takeover == 0 ? 0 : smoothstep(takeover, 0, sunAltitudeDegrees);
+			float suppression = (1 - sunriseSunsetStrength) * window;
+			if (suppression > 0) {
+				blendSky(zenith, horizon, fogColor, suppression);
+				multiply(sunGlow, sunGlow, 1 - suppression);
+			}
+		}
+		if (fogColor != null) {
+			float blend = sunAltitudeDegrees < 0 ? 0 : takeover == 0 ? 1 : smoothstep(0, takeover, sunAltitudeDegrees);
+			if (blend > 0)
+				blendSky(zenith, horizon, fogColor, blend);
+		}
+		float nightBlend = smoothstep(0, -15, sunAltitudeDegrees);
+		if (nightBlend > 0)
+			blendSky(zenith, horizon, profile.nightSkyColor, nightBlend);
+		out.zenithSrgb = ColorUtils.linearToSrgb(zenith);
+		out.horizonSrgb = ColorUtils.linearToSrgb(horizon);
+		out.sunGlowSrgb = ColorUtils.linearToSrgb(sunGlow);
+		out.brightnessMultiplier = profile.getBrightnessMultiplier(sunAltitudeDegrees, minBrightness);
+	}
+
+	private static void blendSky(float[] zenith, float[] horizon, float[] color, float t) {
+		mix(zenith, zenith, color, t);
+		mix(horizon, horizon, color, t);
 	}
 
 	public static class SkyProfile {
@@ -167,7 +202,21 @@ public class SkyConfiguration {
 		public float directionalBaseStrength;
 		public BrightnessCurve brightness;
 
-		public float[] interpolate(float altitude, Keyframe[] keyframes) {
+		public float[] getDirectionalLight(float sunAltitude) {
+			float[] directionalLight = multiply(
+				ColorUtils.colorTemperatureToLinearRgb(directionalBaseTemperature),
+				directionalBaseStrength
+			);
+			if (sunAltitude >= 0) {
+				float temperature = interpolate(sunAltitude * RAD_TO_DEG, directionalTemperature)[0];
+				float strength = sin(sunAltitude);
+				strength *= strength * 3;
+				add(directionalLight, directionalLight, multiply(ColorUtils.colorTemperatureToLinearRgb(temperature), strength));
+			}
+			return directionalLight;
+		}
+
+		public static float[] interpolate(float altitude, Keyframe[] keyframes) {
 			int end = keyframes.length - 1;
 			int i = 0;
 			while (i < end && altitude > keyframes[i + 1].altitude)

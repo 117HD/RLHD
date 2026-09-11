@@ -21,7 +21,7 @@ import rs117.hd.scene.SkyManager;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration.SkyProfile;
 import rs117.hd.scene.daylight_cycle.SkyState;
-import rs117.hd.scene.daylight_cycle.SkyState.LightingSample;
+import rs117.hd.scene.daylight_cycle.SkyState.GradientSample;
 import rs117.hd.scene.daylight_cycle.StarField;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.utils.ColorUtils;
@@ -86,8 +86,8 @@ public class SkyRenderer {
 	private final float[] ambientColor = new float[3];
 	private final float[] waterColor = new float[3];
 	private final SkyConfiguration currentSky = new SkyConfiguration();
-	private final LightingSample skySample = new LightingSample();
-	private final LightingSample transitionSkySample = new LightingSample();
+	private final GradientSample skySample = new GradientSample();
+	private final GradientSample transitionSkySample = new GradientSample();
 	private final float[] fogColorSrgb = new float[3];
 	private float directionalStrength;
 	private float ambientStrength;
@@ -123,6 +123,10 @@ public class SkyRenderer {
 			commandBuffer.reset();
 	}
 
+	/**
+	 * Complete lighting and shadow eligibility after SkyManager.update, before drawing shadows.
+	 * Upload sky resources here; the caller owns the global UBO upload.
+	 */
 	public void prepareFrame(UBOGlobal uboGlobal) {
 		shouldRenderSky = skyManager.getState().cycleActive;
 
@@ -252,18 +256,18 @@ public class SkyRenderer {
 		SkyProfile toProfile = toSky.profile;
 		float sunAltDeg = state.sunAltitudeDegrees;
 		float regionalBlend = mix(
-			fromProfile.interpolate(sunAltDeg, fromProfile.regionalBlend)[0],
-			toProfile.interpolate(sunAltDeg, toProfile.regionalBlend)[0],
+			SkyProfile.interpolate(sunAltDeg, fromProfile.regionalBlend)[0],
+			SkyProfile.interpolate(sunAltDeg, toProfile.regionalBlend)[0],
 			transition
 		);
 		float[] directionalLight = mix(
-			getDirectionalLight(state.sunAngles[0], fromProfile),
-			getDirectionalLight(state.sunAngles[0], toProfile),
+			fromProfile.getDirectionalLight(state.sunAngles[0]),
+			toProfile.getDirectionalLight(state.sunAngles[0]),
 			transition
 		);
 		float[] ambientLight = mix(
-			fromProfile.interpolate(sunAltDeg, fromProfile.ambientColor),
-			toProfile.interpolate(sunAltDeg, toProfile.ambientColor),
+			SkyProfile.interpolate(sunAltDeg, fromProfile.ambientColor),
+			SkyProfile.interpolate(sunAltDeg, toProfile.ambientColor),
 			transition
 		);
 		mix(directionalColor, directionalLight, directionalColor, regionalBlend);
@@ -271,9 +275,9 @@ public class SkyRenderer {
 
 		float moonAltDeg = state.moonAltitudeDegrees;
 		float moonIllumination = state.moonIllumination;
-		SkyState.sampleLighting(skySample, sunAltDeg, toSky, env.getFogColor(), plugin.configMinimumBrightness);
+		toSky.evaluateGradient(skySample, sunAltDeg, env.getFogColor(), plugin.configMinimumBrightness);
 		if (transition < 1) {
-			SkyState.sampleLighting(transitionSkySample, sunAltDeg, fromSky, env.getFogColor(), plugin.configMinimumBrightness);
+			fromSky.evaluateGradient(transitionSkySample, sunAltDeg, env.getFogColor(), plugin.configMinimumBrightness);
 			mix(skySample.zenithSrgb, transitionSkySample.zenithSrgb, skySample.zenithSrgb, transition);
 			mix(skySample.horizonSrgb, transitionSkySample.horizonSrgb, skySample.horizonSrgb, transition);
 			mix(skySample.sunGlowSrgb, transitionSkySample.sunGlowSrgb, skySample.sunGlowSrgb, transition);
@@ -307,19 +311,6 @@ public class SkyRenderer {
 		updateSkyUbo(sky, state, skySample, moonIllumination);
 	}
 
-	private static float[] getDirectionalLight(float sunAltitude, SkyProfile profile) {
-		float[] directionalLight = multiply(
-			ColorUtils.colorTemperatureToLinearRgb(profile.directionalBaseTemperature),
-			profile.directionalBaseStrength
-		);
-		if (sunAltitude >= 0) {
-			float temperature = profile.interpolate(sunAltitude * RAD_TO_DEG, profile.directionalTemperature)[0];
-			float strength = sin(sunAltitude);
-			strength *= strength * 3;
-			add(directionalLight, directionalLight, multiply(ColorUtils.colorTemperatureToLinearRgb(temperature), strength));
-		}
-		return directionalLight;
-	}
 
 	private static float getSunShadowVisibility(float sunAltitude) {
 		if (sunAltitude <= SUN_SHADOW_MIDPOINT_DEG)
@@ -354,7 +345,7 @@ public class SkyRenderer {
 		return influence * moonElevationFade(moonAltDeg) * moonIllumination;
 	}
 
-	private void updateSkyUbo(SkyConfiguration configuration, SkyState state, LightingSample sky, float moonIllumination) {
+	private void updateSkyUbo(SkyConfiguration configuration, SkyState state, GradientSample sky, float moonIllumination) {
 		var ubo = plugin.uboSky;
 		ubo.skyGradientEnabled.set(1);
 		ubo.skyZenithColor.set(sky.zenithSrgb);

@@ -2,12 +2,10 @@ package rs117.hd.tests;
 
 import com.google.gson.Gson;
 import java.io.InputStreamReader;
-import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import org.junit.Test;
 import rs117.hd.config.MoonPhase;
-import rs117.hd.renderer.SkyRenderer;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration.SkyProfile;
 
@@ -35,10 +33,8 @@ public class SkyRendererTest {
 		return SKY_PROFILE.interpolate(altitudeDegrees, SKY_PROFILE.ambientColor);
 	}
 
-	private static float[] getDirectionalLight(float altitudeDegrees) throws ReflectiveOperationException {
-		Method method = SkyRenderer.class.getDeclaredMethod("getDirectionalLight", float.class, SkyProfile.class);
-		method.setAccessible(true);
-		return (float[]) method.invoke(null, altitudeDegrees * DEG_TO_RAD, SKY_PROFILE);
+	private static float[] getDirectionalLight(float altitudeDegrees) {
+		return SKY_PROFILE.getDirectionalLight(altitudeDegrees * DEG_TO_RAD);
 	}
 
 	@Test
@@ -70,7 +66,7 @@ public class SkyRendererTest {
 	}
 
 	@Test
-	public void directionalLightMatchesGolden() throws ReflectiveOperationException {
+	public void directionalLightMatchesGolden() {
 		assertArrayEquals(
 			new float[] { .13896565f, .09286611f, .055899985f },
 			getDirectionalLight(-8), 1e-6f

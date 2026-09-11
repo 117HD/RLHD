@@ -25,6 +25,7 @@ import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.utils.AstronomyUtils;
 import rs117.hd.utils.Camera;
+import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
@@ -122,6 +123,8 @@ public class SkyManager {
 	@Getter
 	private final SkyState state = new SkyState();
 
+	// Lifecycle and configuration
+
 	public void startUp() {
 		fileWatcher = SKY_PRESETS_PATH.watch((path, first) -> {
 			try {
@@ -188,18 +191,6 @@ public class SkyManager {
 		SkyConfiguration.DEFAULT_PRESET = preset;
 	}
 
-	public boolean isCycleDisabled() {
-		return configCycle == DaylightCycle.OFF;
-	}
-
-	private static float[] anglesToSkyDirection(float altitude, float azimuth) {
-		return normalize(
-			sin(azimuth) * cos(altitude),
-			sin(altitude),
-			cos(azimuth) * cos(altitude)
-		);
-	}
-
 	public void updateConfig(HdPluginConfig config) {
 		configCycle = config.daylightCycle();
 		configMoonBehavior = config.moonBehavior();
@@ -216,6 +207,111 @@ public class SkyManager {
 			configLatLon[0] = DEFAULT_LATLON[0];
 			configLatLon[1] = DEFAULT_LATLON[1];
 		}
+	}
+
+	public boolean isCycleDisabled() {
+		return configCycle == DaylightCycle.OFF;
+	}
+
+	// Frame resolution
+
+	/** Resolve celestial and schedule state before lights are updated; SkyRenderer.prepareFrame completes lighting. */
+	public void update() {
+		resolveSkyConfiguration();
+
+		frameUtcMillis = System.currentTimeMillis();
+		frameUtcInstant = Instant.ofEpochMilli(frameUtcMillis);
+		if (configCycle.usesCustomCycleTime)
+			advanceCustomCycle();
+		currentInstant = resolveCurrentInstant(sunAnglesOverride);
+		resolveSkyState();
+		resolveLightScheduleState();
+	}
+
+	private void resolveSkyConfiguration() {
+		Environment from = environmentManager.getFromEnvironment();
+		Environment to = environmentManager.getToEnvironment();
+		state.fromConfiguration = from.getSky();
+		state.toConfiguration = to.getSky();
+		state.configurationTransition = environmentManager.getTransitionProgress();
+		float fromMoonStrength = state.fromConfiguration.moonDirectionalStrength;
+		if (fromMoonStrength < 0)
+			fromMoonStrength = from.directionalStrength;
+		float toMoonStrength = state.toConfiguration.moonDirectionalStrength;
+		if (toMoonStrength < 0)
+			toMoonStrength = to.directionalStrength;
+		state.moonDirectionalStrength = mix(fromMoonStrength, toMoonStrength, state.configurationTransition);
+		SkyConfiguration fromSky = state.fromConfiguration;
+		SkyConfiguration toSky = state.toConfiguration;
+		fromMoonPhase = fromSky.forceMoonPhase != null ? fromSky.forceMoonPhase : configMoonPhase;
+		toMoonPhase = toSky.forceMoonPhase != null ? toSky.forceMoonPhase : configMoonPhase;
+		fromSunAnglesOverride = getSunAnglesOverride(fromSky);
+		sunAnglesOverride = getSunAnglesOverride(toSky);
+		fromMoonAnglesOverride = getMoonAnglesOverride(fromSky);
+		moonAnglesOverride = getMoonAnglesOverride(toSky);
+		float fromMoonVisibility = isMoonHidden(fromSky) ? 0 : fromSky.moonVisibility;
+		float toMoonVisibility = isMoonHidden(toSky) ? 0 : toSky.moonVisibility;
+		state.moonVisibility = mix(fromMoonVisibility, toMoonVisibility, state.configurationTransition);
+		state.cycleActive = environmentManager.getTargetEnvironment().isOverworld && !isCycleDisabled();
+	}
+
+	@Nullable
+	private float[] getSunAnglesOverride(SkyConfiguration sky) {
+		float[] angles = sky.sunAngles;
+		if (angles == null && configCycle.skyPreset != null) {
+			SkyConfiguration cycleSky = PRESETS.get(configCycle.skyPreset);
+			if (cycleSky != null)
+				angles = cycleSky.sunAngles;
+		}
+		return isCycleDisabled() ? null : angles;
+	}
+
+	@Nullable
+	private float[] getMoonAnglesOverride(SkyConfiguration sky) {
+		return sky.moonAngles != null ? sky.moonAngles : configMoonBehavior.isStatic ? DEFAULT_STATIC_MOON_ANGLES : null;
+	}
+
+	private boolean isMoonHidden(SkyConfiguration sky) {
+		return sky.hideMoon || configMoonBehavior.isDisabled && sky.forceMoonPhase == null;
+	}
+
+	// Cycle clocks
+
+	private Instant resolveCurrentInstant(@Nullable float[] sunOverride) {
+		// Fixed environment angles use Default's slow synchronized time as a stable tuning baseline.
+		if (configCycle.usesDefaultCycleTime || sunOverride != null && configCycle != DaylightCycle.CUSTOM_BASIC)
+			return getDefaultInstant();
+
+		switch (configCycle) {
+			case OFF:
+			case REAL_TIME:
+				return frameUtcInstant;
+			case CUSTOM_REALISTIC:
+				Instant startOfDay = frameUtcInstant.truncatedTo(ChronoUnit.DAYS)
+					.plus(floor(customCycleElapsedDays), ChronoUnit.DAYS);
+				return startOfDay.plusMillis((long) (fract(customCycleElapsedDays) * DAY_MS));
+			case CUSTOM_BASIC:
+				float cyclePosition = applyBasicNightDurationWarp((float) fract(customCycleElapsedDays));
+				return Instant.EPOCH.plus(floor(customCycleElapsedDays), ChronoUnit.DAYS)
+					.plusMillis((long) (cyclePosition * DAY_MS));
+		}
+
+		throw new IllegalStateException("Unhandled daylight cycle mode: " + configCycle);
+	}
+
+	/**
+	 * A full UTC-synchronized day per real hour, independent of Custom settings.
+	 */
+	private Instant getDefaultInstant() {
+		double cyclePosition = (frameUtcMillis % SYNCED_DAYS_PERIOD_MS) / (double) SYNCED_DAYS_PERIOD_MS;
+		long day = frameUtcMillis / SYNCED_DAYS_PERIOD_MS;
+		return Instant.EPOCH.plus(day, ChronoUnit.DAYS)
+			.plusMillis((long) (cyclePosition * DAY_MS));
+	}
+
+	private void advanceCustomCycle() {
+		double cycleDurationMillis = configCycleDuration * 60.0 * 1000.0;
+		customCycleElapsedDays += plugin.deltaTimeMs / cycleDurationMillis;
 	}
 
 	/**
@@ -242,99 +338,7 @@ public class SkyManager {
 			   length * slope * t * (1 - t) * (1 - 2 * t);
 	}
 
-	// ===== Sun and shadow directions =============================================
-
-	/**
-	 * Update directional shadows only after a perceptible angle change.
-	 */
-	public void updateDirectionalCamera(Camera directionalCamera) {
-		float[] angles = state.shadowAngles;
-		float[] orientation = { PI - angles[1], angles[0] };
-		if (!state.cycleActive) {
-			directionalCamera.setOrientation(orientation);
-			return;
-		}
-		float diff = max(abs(angleDiff(orientation, directionalCamera.getOrientation())));
-		float cycleDuration = sunAnglesOverride != null || configCycle.usesDefaultCycleTime ?
-			SYNCED_DAYS_PERIOD_MS / (float) (60 * 1000) :
-			configCycle == DaylightCycle.REAL_TIME ? 24 * 60 : configCycleDuration;
-		if (diff >= DIRECTIONAL_ANGLE_UPDATE_THRESHOLD * saturate(cycleDuration / 300f))
-			directionalCamera.setOrientation(orientation);
-	}
-
-	// ===== Aurora ================================================================
-
-	private static float getAuroraEventRoll(long eventIndex, long salt) {
-		long h = SEED + eventIndex * 0x9E3779B97F4A7C15L + salt * 0xBF58476D1CE4E5B9L;
-		h ^= (h >>> 30);
-		h *= 0xBF58476D1CE4E5B9L;
-		h ^= (h >>> 27);
-		h *= 0x94D049BB133111EBL;
-		h ^= (h >>> 31);
-		return (h >>> 40) * (1f / (1 << 24));
-	}
-
-	private float getAuroraEventStrength(double cycleTime, float eventStart) {
-		long eventIndex = (long) Math.floor(cycleTime);
-		if (getAuroraEventRoll(eventIndex, 0) >= AURORA_EVENT_CHANCE)
-			return 0;
-
-		double gaussian =
-			Math.sqrt(-2 * Math.log(Math.max(1e-6f, getAuroraEventRoll(eventIndex, 2)))) *
-			Math.cos(TWO_PI * getAuroraEventRoll(eventIndex, 3));
-		float eventDuration = clamp(
-			(AURORA_EVENT_MEAN_DURATION_SECONDS + (float) gaussian * AURORA_EVENT_DURATION_STD_DEV_SECONDS) / (HOUR_MS / 1000f),
-			(AURORA_EVENT_MEAN_DURATION_SECONDS - 2 * AURORA_EVENT_DURATION_STD_DEV_SECONDS) / (HOUR_MS / 1000f),
-			(AURORA_EVENT_MEAN_DURATION_SECONDS + 2 * AURORA_EVENT_DURATION_STD_DEV_SECONDS) / (HOUR_MS / 1000f)
-		);
-		float eventElapsed = (float) (cycleTime - eventIndex) - eventStart;
-		if (eventElapsed < 0 || eventElapsed >= eventDuration)
-			return 0;
-
-		float fadeDuration = eventDuration * AURORA_EVENT_FADE_FRACTION;
-		return
-			smoothstep(0, fadeDuration, eventElapsed) *
-			(1 - smoothstep(eventDuration - fadeDuration, eventDuration, eventElapsed));
-	}
-
-	private void resolveAuroraStrength() {
-		double cycleTime;
-		float eventStart;
-		float sunAltitude = state.sunAngles[0];
-		if (configCycle != DaylightCycle.CUSTOM_BASIC) {
-			cycleTime = currentInstant.toEpochMilli() / (double) DAY_MS;
-			eventStart = ASTRONOMICAL_NIGHT_START;
-			if (configCycle.skyPreset != null)
-				sunAltitude = (float) AstronomyUtils.getSunAngles(currentInstant.toEpochMilli(), configLatLon)[0];
-		} else {
-			cycleTime = customCycleElapsedDays;
-			eventStart = 1 - configNightFraction;
-		}
-		// The sky shader supplies the near-horizon fade; skip when the sun is above the horizon.
-		state.auroraStrength = sunAltitude < 0 ? getAuroraEventStrength(cycleTime, eventStart) : 0;
-	}
-
-	private static float[] interpolateAngles(float[] from, float[] to, float[] fallback, float t) {
-		if (from == null)
-			from = fallback;
-		if (to == null)
-			to = fallback;
-		return vec(mix(from[0], to[0], t), from[1] + angleDiff(to[1], from[1]) * t);
-	}
-
-	// ===== Frame update and simulated clock ======================================
-
-	public void update() {
-		resolveSkyConfiguration();
-
-		frameUtcMillis = System.currentTimeMillis();
-		frameUtcInstant = Instant.ofEpochMilli(frameUtcMillis);
-		if (configCycle.usesCustomCycleTime)
-			advanceCustomCycle();
-		currentInstant = resolveCurrentInstant(sunAnglesOverride);
-		resolveSkyState();
-		resolveLightScheduleState();
-	}
+	// Celestial state
 
 	private void resolveSkyState() {
 		// Resolve the celestial positions, applying any environment overrides through the transition.
@@ -354,18 +358,8 @@ public class SkyManager {
 
 		// Resolve the moon's phase, illumination, and the source used for directional shadows.
 		boolean useSyntheticMoonPhase = configCycle == DaylightCycle.NIGHT || configMoonBehavior.mirrorsSun;
-		float syntheticMoonPhase = configCycle == DaylightCycle.CUSTOM_BASIC ? getBasicMoonPhase() : 0;
-		boolean hasAstronomicalMoonIllumination = usesAstronomicalMoonIllumination(sunAnglesOverride);
-		float astronomicalMoonIllumination = 0;
-		if (hasAstronomicalMoonIllumination) {
-			double[] moonIllumination = AstronomyUtils.getMoonIllumination(currentMillis);
-			astronomicalMoonIllumination = (float) moonIllumination[0];
-			if (useSyntheticMoonPhase)
-				syntheticMoonPhase = (float) moonIllumination[1];
-		}
-
-		float naturalMoonIllumination = getNaturalMoonIllumination(
-			sunAnglesOverride, astronomicalMoonIllumination, state.sunDirection, state.moonDirection);
+		float[] naturalMoonPhase = getNaturalMoonPhase(currentMillis, sunAnglesOverride, state.sunDirection, state.moonDirection);
+		float naturalMoonIllumination = naturalMoonPhase[0];
 		float fromMoonIllumination = fromMoonPhase.isLocked ? fromMoonPhase.illumination : naturalMoonIllumination;
 		float toMoonIllumination = toMoonPhase.isLocked ? toMoonPhase.illumination : naturalMoonIllumination;
 		state.moonIllumination = mix(fromMoonIllumination, toMoonIllumination, state.configurationTransition);
@@ -376,12 +370,8 @@ public class SkyManager {
 				? state.moonAngles
 				: state.sunAngles :
 			environmentManager.getCurrentEnvironment().getShadowAngles();
-		float[] moonPhaseLightDirection;
-		if (useSyntheticMoonPhase) {
-			moonPhaseLightDirection = getSyntheticMoonPhaseLightDirection(syntheticMoonPhase);
-		} else {
-			moonPhaseLightDirection = state.sunDirection;
-		}
+		float[] moonPhaseLightDirection = useSyntheticMoonPhase ?
+			getSyntheticMoonPhaseLightDirection(naturalMoonPhase[1]) : state.sunDirection;
 		if (state.configurationTransition == 0) {
 			state.moonPhaseLightDirection = moonPhaseLightDirection;
 			state.moonPhaseReversed = fromMoonPhase.reversesTerminator;
@@ -423,6 +413,53 @@ public class SkyManager {
 		resolveAuroraStrength();
 	}
 
+	private static float[] interpolateAngles(float[] from, float[] to, float[] fallback, float t) {
+		if (from == null)
+			from = fallback;
+		if (to == null)
+			to = fallback;
+		return vec(mix(from[0], to[0], t), from[1] + angleDiff(to[1], from[1]) * t);
+	}
+
+	private static float[] anglesToSkyDirection(float altitude, float azimuth) {
+		return normalize(
+			sin(azimuth) * cos(altitude),
+			sin(altitude),
+			cos(azimuth) * cos(altitude)
+		);
+	}
+
+	private float[] getBasicSunAngles() {
+		float cyclePosition = applyBasicNightDurationWarp((float) fract(customCycleElapsedDays));
+		float orbitAngle = cyclePosition * TWO_PI;
+		return vec(
+			asin(sin(orbitAngle) * cos(BASIC_SUN_TILT)),
+			atan(cos(orbitAngle), -sin(orbitAngle) * sin(BASIC_SUN_TILT))
+		);
+	}
+
+	private float[] getMovingMoonAngles(long millis, float[] sunAngles) {
+		return configMoonBehavior.mirrorsSun ? vec(-sunAngles[0], sunAngles[1] + PI) :
+			configCycle == DaylightCycle.CUSTOM_BASIC ? DEFAULT_STATIC_MOON_ANGLES :
+			vec(AstronomyUtils.getMoonPosition(millis, configLatLon));
+	}
+
+	/** Returns illuminated fraction and orbital phase; fixed-direction lighting needs only the fraction. */
+	private float[] getNaturalMoonPhase(long millis, @Nullable float[] sunOverride, float[] sunDirection, float[] moonDirection) {
+		if (configCycle == DaylightCycle.CUSTOM_BASIC) {
+			float phase = getBasicMoonPhase();
+			return vec(.5f - .5f * cos(phase * TWO_PI), phase);
+		}
+		if (sunOverride == null || configCycle == DaylightCycle.NIGHT || configMoonBehavior.mirrorsSun)
+			return vec(AstronomyUtils.getMoonIllumination(millis));
+		// Fixed visible suns determine the phase rendered beneath them.
+		return vec(saturate((1 - dot(sunDirection, moonDirection)) * .5f), 0);
+	}
+
+	private float getBasicMoonPhase() {
+		return (float) fract(customCycleElapsedDays / BASIC_MOON_PHASE_PERIOD_DAYS);
+	}
+
 	/**
 	 * Keep Night and mirrored moons on a fixed diagonal phase orbit around the moon.
 	 */
@@ -438,47 +475,7 @@ public class SkyManager {
 		return normalize(add(multiply(state.moonDirection, phaseCos), multiply(orbitTangent, phaseSin)));
 	}
 
-	private float getBasicMoonPhase() {
-		return (float) fract(customCycleElapsedDays / BASIC_MOON_PHASE_PERIOD_DAYS);
-	}
-
-	private void resolveSkyConfiguration() {
-		Environment from = environmentManager.getFromEnvironment();
-		Environment to = environmentManager.getToEnvironment();
-		state.fromConfiguration = from.getSky();
-		state.toConfiguration = to.getSky();
-		state.configurationTransition = environmentManager.getTransitionProgress();
-		float fromMoonStrength = state.fromConfiguration.moonDirectionalStrength;
-		if (fromMoonStrength < 0)
-			fromMoonStrength = from.directionalStrength;
-		float toMoonStrength = state.toConfiguration.moonDirectionalStrength;
-		if (toMoonStrength < 0)
-			toMoonStrength = to.directionalStrength;
-		state.moonDirectionalStrength = mix(fromMoonStrength, toMoonStrength, state.configurationTransition);
-		SkyConfiguration fromSky = state.fromConfiguration;
-		SkyConfiguration toSky = state.toConfiguration;
-		fromMoonPhase = fromSky.forceMoonPhase != null ? fromSky.forceMoonPhase : configMoonPhase;
-		toMoonPhase = toSky.forceMoonPhase != null ? toSky.forceMoonPhase : configMoonPhase;
-		fromSunAnglesOverride = getSunAnglesOverride(fromSky);
-		sunAnglesOverride = getSunAnglesOverride(toSky);
-		fromMoonAnglesOverride = getMoonAnglesOverride(fromSky);
-		moonAnglesOverride = getMoonAnglesOverride(toSky);
-		float fromMoonVisibility = isMoonHidden(fromSky) ? 0 : fromSky.moonVisibility;
-		float toMoonVisibility = isMoonHidden(toSky) ? 0 : toSky.moonVisibility;
-		state.moonVisibility = mix(fromMoonVisibility, toMoonVisibility, state.configurationTransition);
-		state.cycleActive = environmentManager.getTargetEnvironment().isOverworld && !isCycleDisabled();
-	}
-
-	@Nullable
-	private float[] getSunAnglesOverride(SkyConfiguration sky) {
-		float[] angles = sky.sunAngles;
-		if (angles == null && configCycle.skyPreset != null) {
-			SkyConfiguration cycleSky = PRESETS.get(configCycle.skyPreset);
-			if (cycleSky != null)
-				angles = cycleSky.sunAngles;
-		}
-		return isCycleDisabled() ? null : angles;
-	}
+	// Sampling and shadows
 
 	/** Sample an authored sky independently of the current area's celestial overrides and transition. */
 	public void sampleLighting(SkyState.LightingSample out, SkyConfiguration sky, float[] fogColor, float minBrightness) {
@@ -492,93 +489,36 @@ public class SkyManager {
 		MoonPhase phase = sky.forceMoonPhase != null ? sky.forceMoonPhase : configMoonPhase;
 		float illumination = phase.illumination;
 		if (!phase.isLocked) {
-			float astronomicalIllumination = usesAstronomicalMoonIllumination(sunOverride) ?
-				(float) AstronomyUtils.getMoonIllumination(millis)[0] : 0;
-			illumination = getNaturalMoonIllumination(sunOverride, astronomicalIllumination,
-				anglesToSkyDirection(sunAngles[0], sunAngles[1]), anglesToSkyDirection(moonAngles[0], moonAngles[1]));
+			illumination = getNaturalMoonPhase(millis, sunOverride,
+				anglesToSkyDirection(sunAngles[0], sunAngles[1]), anglesToSkyDirection(moonAngles[0], moonAngles[1]))[0];
 		}
-		SkyState.sampleLighting(out, sunAngles[0] * RAD_TO_DEG, sky, fogColor, minBrightness);
+		sky.evaluateGradient(out, sunAngles[0] * RAD_TO_DEG, fogColor, minBrightness);
+		out.horizonLinear = ColorUtils.srgbToLinear(out.horizonSrgb);
+		out.referenceFogColorLinear = fogColor;
+		out.sunAltitudeDegrees = sunAngles[0] * RAD_TO_DEG;
 		out.moonAltitudeDegrees = moonAngles[0] * RAD_TO_DEG;
 		out.visibleMoonIllumination = isMoonHidden(sky) ? 0 : illumination * sky.moonVisibility;
 	}
 
-	private float[] getMovingMoonAngles(long millis, float[] sunAngles) {
-		return configMoonBehavior.mirrorsSun ? vec(-sunAngles[0], sunAngles[1] + PI) :
-			configCycle == DaylightCycle.CUSTOM_BASIC ? DEFAULT_STATIC_MOON_ANGLES :
-			vec(AstronomyUtils.getMoonPosition(millis, configLatLon));
-	}
-
-	private boolean usesAstronomicalMoonIllumination(@Nullable float[] sunOverride) {
-		return configCycle != DaylightCycle.CUSTOM_BASIC &&
-			(sunOverride == null || configCycle == DaylightCycle.NIGHT || configMoonBehavior.mirrorsSun);
-	}
-
-	private float getNaturalMoonIllumination(
-		@Nullable float[] sunOverride, float astronomicalIllumination, float[] sunDirection, float[] moonDirection
-	) {
-		if (configCycle == DaylightCycle.CUSTOM_BASIC)
-			return .5f - .5f * cos(getBasicMoonPhase() * TWO_PI);
-		// Fixed visible suns determine the phase rendered beneath them.
-		return usesAstronomicalMoonIllumination(sunOverride) ? astronomicalIllumination :
-			saturate((1 - dot(sunDirection, moonDirection)) * .5f);
-	}
-
-	@Nullable
-	private float[] getMoonAnglesOverride(SkyConfiguration sky) {
-		return sky.moonAngles != null ? sky.moonAngles : configMoonBehavior.isStatic ? DEFAULT_STATIC_MOON_ANGLES : null;
-	}
-
-	private boolean isMoonHidden(SkyConfiguration sky) {
-		return sky.hideMoon || configMoonBehavior.isDisabled && sky.forceMoonPhase == null;
-	}
-
-	private void advanceCustomCycle() {
-		double cycleDurationMillis = configCycleDuration * 60.0 * 1000.0;
-		customCycleElapsedDays += plugin.deltaTimeMs / cycleDurationMillis;
-	}
-
-	private float[] getBasicSunAngles() {
-		float cyclePosition = applyBasicNightDurationWarp((float) fract(customCycleElapsedDays));
-		float orbitAngle = cyclePosition * TWO_PI;
-		return vec(
-			asin(sin(orbitAngle) * cos(BASIC_SUN_TILT)),
-			atan(cos(orbitAngle), -sin(orbitAngle) * sin(BASIC_SUN_TILT))
-		);
-	}
-
-	private Instant resolveCurrentInstant(@Nullable float[] sunOverride) {
-		// Fixed environment angles use Default's slow synchronized time as a stable tuning baseline.
-		if (configCycle.usesDefaultCycleTime || sunOverride != null && configCycle != DaylightCycle.CUSTOM_BASIC)
-			return getDefaultInstant();
-
-		switch (configCycle) {
-			case OFF:
-			case REAL_TIME:
-				return frameUtcInstant;
-			case CUSTOM_REALISTIC:
-				Instant startOfDay = frameUtcInstant.truncatedTo(ChronoUnit.DAYS)
-					.plus(floor(customCycleElapsedDays), ChronoUnit.DAYS);
-				return startOfDay.plusMillis((long) (fract(customCycleElapsedDays) * DAY_MS));
-			case CUSTOM_BASIC:
-				float cyclePosition = applyBasicNightDurationWarp((float) fract(customCycleElapsedDays));
-				return Instant.EPOCH.plus(floor(customCycleElapsedDays), ChronoUnit.DAYS)
-					.plusMillis((long) (cyclePosition * DAY_MS));
-		}
-
-		throw new IllegalStateException("Unhandled daylight cycle mode: " + configCycle);
-	}
-
 	/**
-	 * A full UTC-synchronized day per real hour, independent of Custom settings.
+	 * Update directional shadows only after a perceptible angle change.
 	 */
-	private Instant getDefaultInstant() {
-		double cyclePosition = (frameUtcMillis % SYNCED_DAYS_PERIOD_MS) / (double) SYNCED_DAYS_PERIOD_MS;
-		long day = frameUtcMillis / SYNCED_DAYS_PERIOD_MS;
-		return Instant.EPOCH.plus(day, ChronoUnit.DAYS)
-			.plusMillis((long) (cyclePosition * DAY_MS));
+	public void updateDirectionalCamera(Camera directionalCamera) {
+		float[] angles = state.shadowAngles;
+		float[] orientation = { PI - angles[1], angles[0] };
+		if (!state.cycleActive) {
+			directionalCamera.setOrientation(orientation);
+			return;
+		}
+		float diff = max(abs(angleDiff(orientation, directionalCamera.getOrientation())));
+		float cycleDuration = sunAnglesOverride != null || configCycle.usesDefaultCycleTime ?
+			SYNCED_DAYS_PERIOD_MS / (float) (60 * 1000) :
+			configCycle == DaylightCycle.REAL_TIME ? 24 * 60 : configCycleDuration;
+		if (diff >= DIRECTIONAL_ANGLE_UPDATE_THRESHOLD * saturate(cycleDuration / 300f))
+			directionalCamera.setOrientation(orientation);
 	}
 
-	// ===== Light schedule ========================================================
+	// Light schedules
 
 	private void resolveLightScheduleState() {
 		scheduleSunAltitude = state.sunAltitudeDegrees;
@@ -630,5 +570,57 @@ public class SkyManager {
 		hash *= 0xc2b2ae35;
 		hash ^= hash >>> 16;
 		return (hash & 0x7FFFFFFF) / 2147483647f;
+	}
+
+	// Auroras
+
+	private void resolveAuroraStrength() {
+		double cycleTime;
+		float eventStart;
+		float sunAltitude = state.sunAngles[0];
+		if (configCycle != DaylightCycle.CUSTOM_BASIC) {
+			cycleTime = currentInstant.toEpochMilli() / (double) DAY_MS;
+			eventStart = ASTRONOMICAL_NIGHT_START;
+			if (configCycle.skyPreset != null)
+				sunAltitude = (float) AstronomyUtils.getSunAngles(currentInstant.toEpochMilli(), configLatLon)[0];
+		} else {
+			cycleTime = customCycleElapsedDays;
+			eventStart = 1 - configNightFraction;
+		}
+		// The sky shader supplies the near-horizon fade; skip when the sun is above the horizon.
+		state.auroraStrength = sunAltitude < 0 ? getAuroraEventStrength(cycleTime, eventStart) : 0;
+	}
+
+	private float getAuroraEventStrength(double cycleTime, float eventStart) {
+		long eventIndex = (long) Math.floor(cycleTime);
+		if (getAuroraEventRoll(eventIndex, 0) >= AURORA_EVENT_CHANCE)
+			return 0;
+
+		double gaussian =
+			Math.sqrt(-2 * Math.log(Math.max(1e-6f, getAuroraEventRoll(eventIndex, 2)))) *
+			Math.cos(TWO_PI * getAuroraEventRoll(eventIndex, 3));
+		float eventDuration = clamp(
+			(AURORA_EVENT_MEAN_DURATION_SECONDS + (float) gaussian * AURORA_EVENT_DURATION_STD_DEV_SECONDS) / (HOUR_MS / 1000f),
+			(AURORA_EVENT_MEAN_DURATION_SECONDS - 2 * AURORA_EVENT_DURATION_STD_DEV_SECONDS) / (HOUR_MS / 1000f),
+			(AURORA_EVENT_MEAN_DURATION_SECONDS + 2 * AURORA_EVENT_DURATION_STD_DEV_SECONDS) / (HOUR_MS / 1000f)
+		);
+		float eventElapsed = (float) (cycleTime - eventIndex) - eventStart;
+		if (eventElapsed < 0 || eventElapsed >= eventDuration)
+			return 0;
+
+		float fadeDuration = eventDuration * AURORA_EVENT_FADE_FRACTION;
+		return
+			smoothstep(0, fadeDuration, eventElapsed) *
+			(1 - smoothstep(eventDuration - fadeDuration, eventDuration, eventElapsed));
+	}
+
+	private static float getAuroraEventRoll(long eventIndex, long salt) {
+		long h = SEED + eventIndex * 0x9E3779B97F4A7C15L + salt * 0xBF58476D1CE4E5B9L;
+		h ^= (h >>> 30);
+		h *= 0xBF58476D1CE4E5B9L;
+		h ^= (h >>> 27);
+		h *= 0x94D049BB133111EBL;
+		h ^= (h >>> 31);
+		return (h >>> 40) * (1f / (1 << 24));
 	}
 }
