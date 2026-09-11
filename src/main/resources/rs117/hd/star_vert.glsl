@@ -5,6 +5,8 @@
 #include <uniforms/global.glsl>
 #include <uniforms/sky.glsl>
 
+#include <utils/starfield.glsl>
+
 layout(location = 0) in vec3 aStarDir;     // field-space unit direction
 layout(location = 1) in float aStarSize;   // relative size
 layout(location = 2) in float aStarBright; // base brightness
@@ -17,7 +19,7 @@ out float vBrightness;
 const float SKY_HORIZON_OFFSET = 0.087;
 
 void main() {
-    vec3 dir = inverseRotateStarfield(aStarDir, aStarRotationSpeed);
+    vec3 dir = inverseRotateStarfield(aStarDir, elapsedTime, aStarRotationSpeed);
 
     // Softly occlude additively blended stars behind the opaque moon disk.
     float moonOcclusion = 1.0;
@@ -59,7 +61,7 @@ void main() {
     float nightSkyBlend = pow(baseProgress, mix(0.4, 0.9, sunProximity)) * starVisibility;
 
     // Fade stars just above the nebula horizon band.
-    float horizonShift = nightHorizonOffset();
+    float horizonShift = nightHorizonOffset(starHorizonHeight);
     float horizonStarFade = smoothstep(horizonShift, 0.12 + horizonShift, upAmount);
 
     float visibility = nightSkyBlend * horizonStarFade * moonOcclusion;

@@ -66,7 +66,7 @@ void main() {
     vec3 skyColorPreStars = skyColor;
 
     // Shift the shared night-sky horizon line.
-    float horizonShift = nightHorizonOffset();
+    float horizonShift = nightHorizonOffset(starHorizonHeight);
 
     // Stars appear first opposite the sun, then spread across the low-sun sky.
     float baseProgress = 1.0 - sky.nightFade;
@@ -78,7 +78,7 @@ void main() {
     vec3 shootingStarColor = vec3(0.0);
     if (skyBlend > 0.001) {
         // Individual stars are drawn separately as point sprites.
-        vec3 nightSkyColor = nightSkyBackground(viewDir);
+        vec3 nightSkyColor = nightSkyBackground(viewDir, elapsedTime);
 
         // Converge to the fog-matched gradient at the horizon.
         float horizonStarFade = nightSkyHorizonFade(sky.upAmount, horizonShift);

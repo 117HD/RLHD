@@ -1,6 +1,73 @@
 #pragma once
 
+#include <utils/constants.glsl>
+
 #define STARFIELD_BACKGROUND_COLOR vec3(0.00304, 0.00304, 0.00521)
+
+// These helpers require the sky UBO. elapsedSeconds remains explicit because the
+// artistic rotation is independent of the renderer's global animation clock.
+vec3 rotateStarfield(vec3 direction, float elapsedSeconds, float artisticRotationSpeed) {
+    if (skyStarRotationMode == STAR_MODE_ARTISTIC) {
+        float rotY = elapsedSeconds * (TAU / 3600.0) * artisticRotationSpeed;
+        float rotX = elapsedSeconds * (TAU / 10800.0) * artisticRotationSpeed;
+        float cosY = cos(rotY);
+        float sinY = sin(rotY);
+        float cosX = cos(rotX);
+        float sinX = sin(rotX);
+        direction = vec3(cosY * direction.x + sinY * direction.z, direction.y, -sinY * direction.x + cosY * direction.z);
+        return vec3(direction.x, cosX * direction.y - sinX * direction.z, sinX * direction.y + cosX * direction.z);
+    }
+
+    if (skyStarRotationMode == STAR_MODE_REALISTIC) {
+        float cosRotation = cos(skyCelestialRotation);
+        float sinRotation = sin(skyCelestialRotation);
+        return direction * cosRotation + cross(skyCelestialPole, direction) * sinRotation +
+            skyCelestialPole * dot(skyCelestialPole, direction) * (1.0 - cosRotation);
+    }
+
+    return direction;
+}
+
+vec3 inverseRotateStarfield(vec3 direction, float elapsedSeconds, float artisticRotationSpeed) {
+    if (skyStarRotationMode == STAR_MODE_ARTISTIC) {
+        float rotY = -elapsedSeconds * (TAU / 3600.0) * artisticRotationSpeed;
+        float rotX = -elapsedSeconds * (TAU / 10800.0) * artisticRotationSpeed;
+        float cosY = cos(rotY);
+        float sinY = sin(rotY);
+        float cosX = cos(rotX);
+        float sinX = sin(rotX);
+        direction = vec3(direction.x, cosX * direction.y - sinX * direction.z, sinX * direction.y + cosX * direction.z);
+        return vec3(cosY * direction.x + sinY * direction.z, direction.y, -sinY * direction.x + cosY * direction.z);
+    }
+
+    if (skyStarRotationMode == STAR_MODE_REALISTIC) {
+        float cosRotation = cos(skyCelestialRotation);
+        float sinRotation = -sin(skyCelestialRotation);
+        return direction * cosRotation + cross(skyCelestialPole, direction) * sinRotation +
+            skyCelestialPole * dot(skyCelestialPole, direction) * (1.0 - cosRotation);
+    }
+
+    return direction;
+}
+
+// Vertical shift applied to every night-sky horizon fade band (stars, nebula, moon,
+// shooting stars), in upAmount units (upAmount = -viewDir.y, so -1 is straight down
+// and +1 straight up). A height of 1 is the default; 0 leaves the night sky unmasked
+// and 2 masks it completely.
+float nightHorizonOffset(float height) {
+    return (height - 1.0) * 1.2;
+}
+
+float nebulaClusterInfluence(vec3 dir) {
+    float influence = 0.0;
+    for (int i = 0; i < NEBULA_CLUSTER_COUNT; i++) {
+        vec3 c = nebulaClusters[i].xyz;
+        float sigma = nebulaClusters[i].w * 6.0;
+        float angleSq = max(0.0, (1.0 - dot(dir, c)) * 2.0);
+        influence = max(influence, exp(-angleSq / (2.0 * sigma * sigma)));
+    }
+    return influence;
+}
 
 // Procedural starfield generator
 // Operates on a 3D direction vector for seamless spherical mapping
@@ -361,8 +428,8 @@ vec3 proceduralStarfieldBackground(vec3 dir) {
 }
 
 // The static background needs neither a celestial rotation nor a nebula lookup.
-vec3 nightSkyBackground(vec3 viewDir) {
+vec3 nightSkyBackground(vec3 viewDir, float elapsedSeconds) {
     return nebulaVisibility == 0.0 ?
         STARFIELD_BACKGROUND_COLOR :
-        proceduralStarfieldBackground(rotateStarfield(viewDir, 1.0));
+        proceduralStarfieldBackground(rotateStarfield(viewDir, elapsedSeconds, 1.0));
 }

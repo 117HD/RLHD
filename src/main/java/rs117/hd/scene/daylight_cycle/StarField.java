@@ -76,10 +76,11 @@ public final class StarField {
 
 	private GLBuffer vboStars;
 
-	private boolean starfieldGenerated = false;
+	private boolean starGeometryCurrent;
+	private boolean nebulaMapCurrent;
 
 	public void initialize() {
-		starfieldGenerated = false;
+		resetStarfield();
 
 		vaoStars = glGenVertexArrays();
 		glBindVertexArray(vaoStars);
@@ -127,7 +128,10 @@ public final class StarField {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 
-	public void resetStarfield() { starfieldGenerated = false; }
+	public void resetStarfield() {
+		starGeometryCurrent = false;
+		nebulaMapCurrent = false;
+	}
 
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
 		nebulaBakeProgram.compile(includes);
@@ -137,26 +141,26 @@ public final class StarField {
 		nebulaBakeProgram.destroy();
 	}
 
-	public boolean update() {
-		if (starfieldGenerated)
-			return false;
+	public boolean rebuildIfNeeded() {
+		boolean rebuilt = false;
+		if (!starGeometryCurrent) {
+			random.setSeed(SEED);
+			FloatBuffer vertexData = BufferUtils.createFloatBuffer(MAX_STAR_COUNT * FLOATS_PER_STAR);
 
-		starfieldGenerated = true;
-		random.setSeed(SEED);
+			generateLayer(vertexData, BRIGHT_STAR_COUNT, 1.2f, 1.0f, 1);
+			generateLayer(vertexData, DIM_STAR_COUNT, 0.4f, 0.8f, .7f);
 
-		FloatBuffer vertexData = BufferUtils.createFloatBuffer(MAX_STAR_COUNT * FLOATS_PER_STAR);
+			if (config.enableNebulas())
+				generateClusteredLayer(vertexData, CLUSTER_STAR_COUNT, CLUSTER_COUNT, CLUSTER_ANGULAR_SPREAD, 0.5f, 0.5f, 1);
 
-		generateLayer(vertexData, BRIGHT_STAR_COUNT, 1.2f, 1.0f, 1);
-		generateLayer(vertexData, DIM_STAR_COUNT, 0.4f, 0.8f, .7f);
+			starCount = vertexData.position() / FLOATS_PER_STAR;
+			vboStars.upload(vertexData.flip());
+			starGeometryCurrent = true;
+			rebuilt = true;
+		}
 
-		if (config.enableNebulas())
-			generateClusteredLayer(vertexData, CLUSTER_STAR_COUNT, CLUSTER_COUNT, CLUSTER_ANGULAR_SPREAD, 0.5f, 0.5f, 1);
-
-		starCount = vertexData.position() / FLOATS_PER_STAR;
-		vboStars.upload(vertexData.flip());
-
-		if (fboNebulaBake == 0 || texNebulaCubemap == 0 || !nebulaBakeProgram.isValid() || !config.enableNebulas())
-			return true;
+		if (!config.enableNebulas() || nebulaMapCurrent || fboNebulaBake == 0 || texNebulaCubemap == 0 || !nebulaBakeProgram.isValid())
+			return rebuilt;
 
 		nebulaBakeRenderState.framebuffer.set(GL_FRAMEBUFFER, fboNebulaBake);
 		nebulaBakeRenderState.viewport.set(0, 0, NEBULA_CUBE_MAP_RESOLUTION, NEBULA_CUBE_MAP_RESOLUTION);
@@ -178,6 +182,7 @@ public final class StarField {
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		nebulaBakeRenderState.reset();
+		nebulaMapCurrent = true;
 		return true;
 	}
 
@@ -198,7 +203,7 @@ public final class StarField {
 			glDeleteTextures(texNebulaCubemap);
 		texNebulaCubemap = 0;
 
-		starfieldGenerated = false;
+		resetStarfield();
 	}
 
 	private void generateLayer(FloatBuffer vertexBuffer, int count, float maxBrightness, float sizeScale, float artisticRotationSpeed) {

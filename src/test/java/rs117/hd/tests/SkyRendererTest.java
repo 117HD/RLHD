@@ -10,7 +10,6 @@ import rs117.hd.config.MoonPhase;
 import rs117.hd.renderer.SkyRenderer;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration.SkyProfile;
-import rs117.hd.scene.daylight_cycle.SkyState;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -33,7 +32,7 @@ public class SkyRendererTest {
 	}
 
 	private static float[] getAmbientColor(float altitudeDegrees) {
-		return SkyState.interpolate(altitudeDegrees, SKY_PROFILE.ambientColor);
+		return SKY_PROFILE.interpolate(altitudeDegrees, SKY_PROFILE.ambientColor);
 	}
 
 	private static float[] getDirectionalLight(float altitudeDegrees) throws ReflectiveOperationException {

@@ -585,10 +585,11 @@ void main() {
                 float sunProximity = sky.sunSideBlend * (1.0 - sky.zenithBlend);
                 float nightSkyBlend = pow(baseProgress, mix(0.4, 0.9, sunProximity)) * skyVisibility;
                 if (nightSkyBlend > 0.001) {
-                    float horizonFade = smoothstep(-0.1 + nightHorizonOffset(), 0.07 + nightHorizonOffset(), sky.upAmount);
+                    float horizonShift = nightHorizonOffset(starHorizonHeight);
+                    float horizonFade = smoothstep(-0.1 + horizonShift, 0.07 + horizonShift, sky.upAmount);
                     skyColorAtFragment = mix(
                         skyColorAtFragment,
-                        nightSkyBackground(fogViewDir),
+                        nightSkyBackground(fogViewDir, elapsedTime),
                         nightSkyBlend * horizonFade
                     );
                 }

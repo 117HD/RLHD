@@ -167,6 +167,32 @@ public class SkyConfiguration {
 		public float directionalBaseStrength;
 		public BrightnessCurve brightness;
 
+		public float[] interpolate(float altitude, Keyframe[] keyframes) {
+			int end = keyframes.length - 1;
+			int i = 0;
+			while (i < end && altitude > keyframes[i + 1].altitude)
+				i++;
+			Keyframe from = keyframes[i];
+			if (i == end)
+				return copy(from.values());
+			Keyframe to = keyframes[i + 1];
+			return mix(from.values(), to.values(), clamp((altitude - from.altitude) / (to.altitude - from.altitude), 0, 1));
+		}
+
+		public float getBrightnessMultiplier(float sunAltitude, float minBrightness) {
+			if (sunAltitude <= brightness.nightAltitude)
+				return minBrightness;
+			float lowSunBrightness = minBrightness + brightness.lowSunBoost;
+			if (sunAltitude <= brightness.lowSunAltitude)
+				return mix(minBrightness, lowSunBrightness, smoothstep(brightness.nightAltitude, brightness.lowSunAltitude, sunAltitude));
+			float earlyDayBrightness = minBrightness + brightness.horizonBoost + brightness.earlyDayBoost;
+			if (sunAltitude <= brightness.horizonAltitude)
+				return mix(lowSunBrightness, earlyDayBrightness, smoothstep(brightness.lowSunAltitude, brightness.horizonAltitude, sunAltitude));
+			float sineAtHorizon = sin(brightness.horizonAltitude * DEG_TO_RAD);
+			float normalizedSine = max(0, (sin(sunAltitude * DEG_TO_RAD) - sineAtHorizon) / (1 - sineAtHorizon));
+			return mix(earlyDayBrightness, brightness.daytimeStrength, normalizedSine);
+		}
+
 		public static class BrightnessCurve {
 			public float nightAltitude;
 			public float lowSunAltitude;

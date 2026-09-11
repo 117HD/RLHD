@@ -48,9 +48,9 @@ public final class SkyState {
 	public static void sampleLighting(LightingSample out, float sunAltitude, SkyConfiguration sky, float[] fogColor, float minBrightness) {
 		SkyProfile profile = sky.profile;
 		float takeover = max(0, sky.skyColorTakeoverAngle);
-		float[] zenith = interpolate(sunAltitude, profile.zenith);
-		float[] horizon = interpolate(sunAltitude, profile.horizon);
-		float[] sunGlow = interpolate(sunAltitude, profile.sunGlow);
+		float[] zenith = profile.interpolate(sunAltitude, profile.zenith);
+		float[] horizon = profile.interpolate(sunAltitude, profile.horizon);
+		float[] sunGlow = profile.interpolate(sunAltitude, profile.sunGlow);
 		if (fogColor != null && sky.sunStrength < 1) {
 			float window = sunAltitude >= 0 ? 1 : smoothstep(-25, 0, sunAltitude);
 			float suppression = (1 - sky.sunStrength) * window;
@@ -81,34 +81,7 @@ public final class SkyState {
 		out.sunGlowSrgb = ColorUtils.linearToSrgb(sunGlow);
 		out.horizonLinear = ColorUtils.srgbToLinear(out.horizonSrgb);
 		out.referenceFogColorLinear = fogColor;
-		out.brightnessMultiplier = getBrightnessMultiplier(sunAltitude, profile, minBrightness);
-	}
-
-	private static float getBrightnessMultiplier(float sunAltitudeDegrees, SkyProfile profile, float minBrightness) {
-		var curve = profile.brightness;
-		if (sunAltitudeDegrees <= curve.nightAltitude)
-			return minBrightness;
-		float lowSunBrightness = minBrightness + curve.lowSunBoost;
-		if (sunAltitudeDegrees <= curve.lowSunAltitude)
-			return mix(minBrightness, lowSunBrightness, smoothstep(curve.nightAltitude, curve.lowSunAltitude, sunAltitudeDegrees));
-		float earlyDayBrightness = minBrightness + curve.horizonBoost + curve.earlyDayBoost;
-		if (sunAltitudeDegrees <= curve.horizonAltitude)
-			return mix(lowSunBrightness, earlyDayBrightness, smoothstep(curve.lowSunAltitude, curve.horizonAltitude, sunAltitudeDegrees));
-		float sineAtHorizon = sin(curve.horizonAltitude * DEG_TO_RAD);
-		float normalizedSine = max(0, (sin(sunAltitudeDegrees * DEG_TO_RAD) - sineAtHorizon) / (1 - sineAtHorizon));
-		return mix(earlyDayBrightness, curve.daytimeStrength, normalizedSine);
-	}
-
-	public static float[] interpolate(float x, SkyConfiguration.Keyframe[] keyframes) {
-		int end = keyframes.length - 1;
-		int i = 0;
-		while (i < end && x > keyframes[i + 1].altitude)
-			i++;
-		SkyConfiguration.Keyframe from = keyframes[i];
-		if (i == end)
-			return copy(from.values());
-		SkyConfiguration.Keyframe to = keyframes[i + 1];
-		return mix(from.values(), to.values(), clamp((x - from.altitude) / (to.altitude - from.altitude), 0, 1));
+		out.brightnessMultiplier = profile.getBrightnessMultiplier(sunAltitude, minBrightness);
 	}
 
 	private static void blendSky(float[] zenith, float[] horizon, float[] color, float t) {

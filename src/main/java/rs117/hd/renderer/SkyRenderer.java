@@ -190,7 +190,7 @@ public class SkyRenderer {
 	}
 
 	private void updateCommandBuffer() {
-		boolean starfieldChanged = starField.update();
+		boolean starfieldChanged = starField.rebuildIfNeeded();
 		if (!starfieldChanged && !commandBuffer.isEmpty())
 			return;
 
@@ -252,8 +252,8 @@ public class SkyRenderer {
 		SkyProfile toProfile = toSky.profile;
 		float sunAltDeg = state.sunAltitudeDegrees;
 		float regionalBlend = mix(
-			SkyState.interpolate(sunAltDeg, fromProfile.regionalBlend)[0],
-			SkyState.interpolate(sunAltDeg, toProfile.regionalBlend)[0],
+			fromProfile.interpolate(sunAltDeg, fromProfile.regionalBlend)[0],
+			toProfile.interpolate(sunAltDeg, toProfile.regionalBlend)[0],
 			transition
 		);
 		float[] directionalLight = mix(
@@ -262,8 +262,8 @@ public class SkyRenderer {
 			transition
 		);
 		float[] ambientLight = mix(
-			SkyState.interpolate(sunAltDeg, fromProfile.ambientColor),
-			SkyState.interpolate(sunAltDeg, toProfile.ambientColor),
+			fromProfile.interpolate(sunAltDeg, fromProfile.ambientColor),
+			toProfile.interpolate(sunAltDeg, toProfile.ambientColor),
 			transition
 		);
 		mix(directionalColor, directionalLight, directionalColor, regionalBlend);
@@ -313,7 +313,7 @@ public class SkyRenderer {
 			profile.directionalBaseStrength
 		);
 		if (sunAltitude >= 0) {
-			float temperature = SkyState.interpolate(sunAltitude * RAD_TO_DEG, profile.directionalTemperature)[0];
+			float temperature = profile.interpolate(sunAltitude * RAD_TO_DEG, profile.directionalTemperature)[0];
 			float strength = sin(sunAltitude);
 			strength *= strength * 3;
 			add(directionalLight, directionalLight, multiply(ColorUtils.colorTemperatureToLinearRgb(temperature), strength));
