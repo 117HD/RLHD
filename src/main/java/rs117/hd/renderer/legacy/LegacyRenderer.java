@@ -1010,7 +1010,7 @@ public class LegacyRenderer implements Renderer {
 				GL43C.glMemoryBarrier(GL43C.GL_SHADER_STORAGE_BARRIER_BIT);
 			}
 
-			skyRenderer.update(plugin.uboGlobal);
+			skyRenderer.prepareFrame(plugin.uboGlobal);
 			Environment env = environmentManager.getCurrentEnvironment();
 
 			float fogDepth = 0;
@@ -1053,7 +1053,7 @@ public class LegacyRenderer implements Renderer {
 			plugin.uboGlobal.underwaterCausticsStrength.set(env.waterCausticsStrength);
 			plugin.uboGlobal.elapsedTime.set((float) (plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
 
-			float[] shadowAngles = skyManager.isCycleActive() ? skyManager.getState().shadowAngles : env.getShadowAngles();
+			float[] shadowAngles = skyManager.getState().shadowAngles;
 			float[] lightViewMatrix = Mat4.rotateX(shadowAngles[0]);
 			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - shadowAngles[1]));
 			// Extract the 3rd column from the light view matrix (the float array is column-major).
@@ -1068,7 +1068,7 @@ public class LegacyRenderer implements Renderer {
 				plugin.uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 			}
 
-			if (plugin.configShadowsEnabled && plugin.fboShadowMap != 0 && skyRenderer.castsShadows()) {
+			if (plugin.configShadowsEnabled && plugin.fboShadowMap != 0 && skyManager.getState().castsShadows) {
 				frameTimer.begin(Timer.RENDER_SHADOWS);
 
 				// Render to the shadow depth map
@@ -1131,7 +1131,7 @@ public class LegacyRenderer implements Renderer {
 			}
 			glViewport(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
 
-			skyRenderer.render();
+			skyRenderer.renderImmediately();
 
 			frameTimer.begin(Timer.RENDER_SCENE);
 			sceneProgram.use();

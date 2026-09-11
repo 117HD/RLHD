@@ -53,6 +53,7 @@ public class Light
 	public int orientation;
 	public float distanceSquared;
 	public float daylightCycleActivation;
+	public float daylightCycleRadiusScale = 1;
 
 	public Actor actor;
 	public Projectile projectile;

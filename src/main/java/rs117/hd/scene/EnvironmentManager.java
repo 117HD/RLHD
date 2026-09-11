@@ -95,9 +95,12 @@ public class EnvironmentManager {
 	private int[] previousPosition = new int[3];
 
 	private static final class State {
+		// Mutable result consumed by renderers.
 		final Environment current = Environment.DEFAULT.copy();
+		// Snapshots at either end of the active transition.
 		final Environment from = Environment.DEFAULT.copy();
 		final Environment to = Environment.DEFAULT.copy();
+		// Area-selected definition, before lighting fallbacks are applied to {@code to}.
 		Environment target = Environment.NONE;
 	}
 
@@ -440,18 +443,22 @@ public class EnvironmentManager {
 		return state.target;
 	}
 
+	/** Environment at the beginning of the current transition. */
 	Environment getFromEnvironment() {
 		return state.from;
 	}
 
+	/** Resolved environment at the end of the current transition. */
 	Environment getToEnvironment() {
 		return state.to;
 	}
 
+	/** Mutable, interpolated environment used for the current frame. */
 	public Environment getCurrentEnvironment() {
 		return state.current;
 	}
 
+	/** Area-selected environment definition, before atmospheric-lighting fallbacks. */
 	public Environment getTargetEnvironment() {
 		return state.target;
 	}

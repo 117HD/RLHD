@@ -465,14 +465,7 @@ public class ZoneRenderer implements Renderer {
 				return;
 			}
 
-			if (skyManager.isCycleActive()) {
-				skyManager.updateDirectionalCamera(directionalCamera);
-			} else {
-				Environment env = environmentManager.getCurrentEnvironment();
-				float[] shadowAngles = env.getShadowAngles();
-				directionalCamera.setPitch(shadowAngles[0]);
-				directionalCamera.setYaw(PI - shadowAngles[1]);
-			}
+			skyManager.updateDirectionalCamera(directionalCamera);
 
 			boolean hasDirectionalCameraChanged = directionalCamera.isViewDirty() || directionalCamera.isProjDirty();
 
@@ -602,11 +595,11 @@ public class ZoneRenderer implements Renderer {
 		if (client.getGameState().getState() >= GameState.LOGGED_IN.getState())
 			plugin.hasLoggedIn = true;
 
-		skyRenderer.update(plugin.uboGlobal);
+		skyRenderer.prepareFrame(plugin.uboGlobal);
 		Environment env = environmentManager.getCurrentEnvironment();
 
 		boolean replaceVanillaSkybox =
-			skyRenderer.shouldRender() &&
+			skyRenderer.shouldRenderSky() &&
 			config.replaceVanillaSkyboxes() &&
 			environmentManager.getTargetEnvironment().hideVanillaSkyboxes;
 		shouldRenderVanillaSkybox = scene.getSkybox() != null && !replaceVanillaSkybox;
@@ -765,7 +758,7 @@ public class ZoneRenderer implements Renderer {
 		final boolean shouldRenderShadows =
 			plugin.configShadowsEnabled &&
 			plugin.fboShadowMap != 0 &&
-			skyRenderer.castsShadows();
+			skyManager.getState().castsShadows;
 
 		if (shouldRenderShadows || shouldClearShadowFbo) {
 			if (plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0) {
@@ -968,7 +961,7 @@ public class ZoneRenderer implements Renderer {
 			}
 
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
-			if (skyRenderer.castsShadows() && !isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
+			if (skyManager.getState().castsShadows && !isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 				if (!z.onlyWater || z.modelCount > 0) {
 					directionalCmd.SetShader(fastShadowProgram);
 					z.renderOpaque(directionalCmd, ctx, shouldDrawRoofShadows);
@@ -1018,7 +1011,7 @@ public class ZoneRenderer implements Renderer {
 					z.alphaSort(zx - offset, zz - offset, sceneCamera);
 
 				final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
-				if (skyRenderer.castsShadows() && !isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
+				if (skyManager.getState().castsShadows && !isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 					directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
 					z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, shouldDrawRoofShadows);
 				}
@@ -1078,13 +1071,13 @@ public class ZoneRenderer implements Renderer {
 
 					sceneCmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
 
-					if (skyRenderer.shouldRender() &&
+					if (skyRenderer.shouldRenderSky() &&
 						!shouldRenderVanillaSkybox &&
 						!plugin.orthographicProjection &&
 						sceneManager.isRoot(ctx)
 					) {
 						// Draw the sky after drawing top-level scene opaque
-						skyRenderer.renderTo(sceneCmd);
+						skyRenderer.appendTo(sceneCmd);
 						sceneCmd.SetShader(sceneProgram);
 					}
 					break;

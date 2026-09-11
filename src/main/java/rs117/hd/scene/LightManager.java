@@ -52,12 +52,16 @@ import rs117.hd.HdPlugin;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.data.ObjectType;
 import rs117.hd.opengl.uniforms.UBOLights;
-import rs117.hd.renderer.SkyRenderer;
+import rs117.hd.scene.daylight_cycle.SkyConfiguration;
+import rs117.hd.scene.daylight_cycle.SkyState;
+import rs117.hd.scene.daylight_cycle.SkyState.LightingSample;
+import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.LightDefinition;
 import rs117.hd.scene.lights.LightType;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -65,6 +69,7 @@ import rs117.hd.utils.ResourcePath;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.utils.HDUtils.isSphereIntersectingFrustum;
+import static rs117.hd.utils.ColorUtils.linearSrgbLuminance;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 import static rs117.hd.utils.collections.Util.quickSort;
@@ -74,6 +79,7 @@ import static rs117.hd.utils.collections.Util.quickSort;
 public class LightManager {
 	private static final ResourcePath LIGHTS_PATH = Props
 		.getFile("rlhd.lights-path", () -> path(LightManager.class, "lights.json"));
+	private static final float MAX_OUTDOOR_LIGHT_SCALE = 4;
 
 	@Inject
 	private Client client;
@@ -103,7 +109,7 @@ public class LightManager {
 	private SkyManager skyManager;
 
 	@Inject
-	private SkyRenderer skyRenderer;
+	private EnvironmentManager environmentManager;
 
 	@Inject
 	private EntityHiderPlugin entityHiderPlugin;
@@ -115,6 +121,10 @@ public class LightManager {
 	private final ListMultimap<Integer, LightDefinition> GRAPHICS_OBJECT_LIGHTS = ArrayListMultimap.create();
 
 	private final Renderable[] imposterRenderables = new Renderable[2];
+	private final LightingSample outdoorLightingSample = new LightingSample();
+	private Environment outdoorLightingEnvironment;
+	private float outdoorLightingMinBrightness;
+	private int outdoorLightingFrame;
 	private boolean reloadLights;
 	private EntityHiderConfig entityHiderConfig;
 	private int currentPlane;
@@ -460,7 +470,7 @@ public class LightManager {
 				light.distanceSquared = distX * distX + distZ * distZ;
 
 				skyManager.prepareLightSchedule(light);
-				float maxRadius = light.def.radius * skyManager.getNightRadiusScale(light);
+				float maxRadius = light.def.radius * light.daylightCycleRadiusScale;
 				switch (light.def.type) {
 					case FLICKER:
 						maxRadius *= 1.5f;
@@ -547,7 +557,7 @@ public class LightManager {
 			}
 
 			skyManager.applyLightSchedule(light);
-			skyRenderer.applyOutdoorLighting(light);
+			applyOutdoorLighting(light);
 
 			// Spawn & despawn fade-in and fade-out
 			if (light.fadeInDuration > 0)
@@ -572,6 +582,86 @@ public class LightManager {
 					sceneContext.knownProjectiles.remove(light.projectile);
 			}
 		}
+	}
+
+	private void applyOutdoorLighting(Light light) {
+		copyTo(light.color, light.def.color);
+		if (light.def.outdoorLighting == null || skyManager.isCycleDisabled())
+			return;
+
+		Environment environment = environmentManager.getOverworldEnvironment();
+		int[] sampleWorldPos = light.def.outdoorLighting.sampleWorldPos;
+		if (sampleWorldPos != null) {
+			Environment sampledEnvironment = environmentManager.getEnvironmentAt(sampleWorldPos);
+			if (sampledEnvironment != null)
+				environment = sampledEnvironment;
+		}
+
+		LightingSample lighting = sampleOutdoorLighting(environment);
+		SkyConfiguration sky = environment.getSky();
+		SkyState state = skyManager.getState();
+		float[] authoredColor = light.def.color;
+		float defLuma = linearSrgbLuminance(authoredColor);
+		float noonLuma = max(linearSrgbLuminance(lighting.noonHorizonLinear), 1e-4f);
+		float[] lightColor = copy(lighting.horizonLinear);
+		float sunAltDeg = state.sunAltitudeDegrees;
+
+		float moonStrengthFloor = 0;
+		if (sunAltDeg < 5) {
+			float moonAltDeg = state.moonAltitudeDegrees;
+			float moonIllumination = state.moonIllumination * state.moonVisibility;
+			if (moonAltDeg > -5 && moonIllumination > .01f) {
+				float sunFade = saturate((5 - sunAltDeg) / 10);
+				float moonElevation = saturate((moonAltDeg + 5) / 25);
+				float moonElevationSmooth = moonElevation * moonElevation * (3 - 2 * moonElevation);
+				float moonBlend = moonIllumination * .25f * moonElevationSmooth * sunFade;
+				lightColor = mix(lightColor, sky.moonLightColor, moonBlend);
+				moonStrengthFloor = moonIllumination * .12f * moonElevationSmooth;
+			}
+		}
+
+		if (sunAltDeg > 0) {
+			float desaturation = smoothstep(0, 90, sunAltDeg) * .75f;
+			float luma = linearSrgbLuminance(lightColor);
+			mix(lightColor, lightColor, vec(luma), desaturation);
+		}
+
+		float horizonLuma = linearSrgbLuminance(lightColor);
+		float middayFactor = smoothstep(15, 30, sunAltDeg);
+		if (middayFactor > 0)
+			lightColor = mix(lightColor, authoredColor, middayFactor);
+
+		copyTo(light.color, lightColor);
+		float peakScale = defLuma / noonLuma;
+		float timeScale = max(min(horizonLuma / noonLuma, 1) * lighting.brightnessMultiplier, moonStrengthFloor);
+		float outdoorLightScale = peakScale * timeScale;
+		if (outdoorLightScale > 1) {
+			float scaleRange = MAX_OUTDOOR_LIGHT_SCALE - 1;
+			outdoorLightScale = 1 + scaleRange * (1 - exp(-(outdoorLightScale - 1) / scaleRange));
+		}
+		light.strength *= mix(outdoorLightScale, 1, middayFactor);
+	}
+
+	private LightingSample sampleOutdoorLighting(Environment environment) {
+		if (environment == outdoorLightingEnvironment &&
+			plugin.configMinimumBrightness == outdoorLightingMinBrightness &&
+			plugin.frame == outdoorLightingFrame)
+			return outdoorLightingSample;
+		outdoorLightingEnvironment = environment;
+		outdoorLightingMinBrightness = plugin.configMinimumBrightness;
+		outdoorLightingFrame = plugin.frame;
+
+		SkyConfiguration sky = environment.getSky();
+		float[] fogColor = environmentManager.getFogColor(environment);
+		float sunAltitudeDegrees = skyManager.getSunAltitude(sky) * RAD_TO_DEG;
+		SkyState.sampleLighting(
+			outdoorLightingSample, sunAltitudeDegrees, sky.profile, fogColor,
+			sky.sunStrength, sky.sunriseSunsetStrength, sky.skyColorTakeoverAngle,
+			plugin.configMinimumBrightness / 100f
+		);
+		outdoorLightingSample.horizonLinear = ColorUtils.srgbToLinear(outdoorLightingSample.horizonSrgb);
+		outdoorLightingSample.noonHorizonLinear = fogColor;
+		return outdoorLightingSample;
 	}
 
 	private boolean isActorLightVisible(@Nonnull Actor actor) {

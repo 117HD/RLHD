@@ -111,18 +111,14 @@ public class SkyManager {
 
 	private Instant currentInstant;
 
-	// Retain the frame's wall clock because currentInstant is often simulated.
-	private long frameWallClockMillis;
-	private Instant frameWallClockInstant;
+	private long frameUtcMillis;
+	private Instant frameUtcInstant;
 
 	private float scheduleSunAltitude;
 	private float previousScheduleSunAltitude = Float.NaN;
 	private boolean sunDescending;
 	private long scheduleNightIndex;
 	private float nightFactor = 1;
-
-	@Getter
-	private boolean cycleActive;
 
 	@Getter
 	private final SkyState state = new SkyState();
@@ -255,6 +251,10 @@ public class SkyManager {
 	public void updateDirectionalCamera(Camera directionalCamera) {
 		float[] angles = state.shadowAngles;
 		float[] orientation = { PI - angles[1], angles[0] };
+		if (!state.cycleActive) {
+			directionalCamera.setOrientation(orientation);
+			return;
+		}
 		float diff = max(abs(angleDiff(orientation, directionalCamera.getOrientation())));
 		float cycleDuration = sunAnglesOverride != null || configCycle.usesDefaultCycleTime ?
 			SYNCED_DAYS_PERIOD_MS / (float) (60 * 1000) :
@@ -315,10 +315,6 @@ public class SkyManager {
 		state.auroraStrength = sunAltitude < 0 ? getAuroraEventStrength(cycleTime, eventStart) : 0;
 	}
 
-	private static float[] mirrorAngles(float[] angles) {
-		return vec(-angles[0], angles[1] + PI);
-	}
-
 	private static float[] interpolateAngles(float[] from, float[] to, float[] fallback, float t) {
 		if (from == null)
 			from = fallback;
@@ -332,9 +328,9 @@ public class SkyManager {
 	public void update() {
 		resolveSkyConfiguration();
 
-		frameWallClockMillis = System.currentTimeMillis();
-		frameWallClockInstant = Instant.ofEpochMilli(frameWallClockMillis);
-		currentInstant = frameWallClockInstant;
+		frameUtcMillis = System.currentTimeMillis();
+		frameUtcInstant = Instant.ofEpochMilli(frameUtcMillis);
+		currentInstant = frameUtcInstant;
 		if (configCycle.usesCustomCycleTime)
 			advanceCustomCycle();
 		currentInstant = resolveCurrentInstant();
@@ -343,6 +339,7 @@ public class SkyManager {
 	}
 
 	private void resolveSkyState() {
+		// Resolve the celestial positions, applying any environment overrides through the transition.
 		float[] astronomicalSunAngles = configCycle == DaylightCycle.CUSTOM_BASIC
 			? getBasicSunAngles()
 			: vec(AstronomyUtils.getSunAngles(currentInstant.toEpochMilli(), configLatLon));
@@ -350,7 +347,7 @@ public class SkyManager {
 			fromSunAnglesOverride, sunAnglesOverride, astronomicalSunAngles, state.configurationTransition);
 		Instant moonInstant = currentInstant;
 		float[] astronomicalMoonAngles = configMoonBehavior.mirrorsSun
-			? mirrorAngles(state.sunAngles)
+			? vec(-state.sunAngles[0], state.sunAngles[1] + PI)
 			: configCycle == DaylightCycle.CUSTOM_BASIC
 			? DEFAULT_STATIC_MOON_ANGLES
 			: vec(AstronomyUtils.getMoonPosition(moonInstant.toEpochMilli(), configLatLon));
@@ -360,6 +357,8 @@ public class SkyManager {
 		state.moonAltitudeDegrees = state.moonAngles[0] * RAD_TO_DEG;
 		state.sunDirection = anglesToSkyDirection(state.sunAngles[0], state.sunAngles[1]);
 		state.moonDirection = anglesToSkyDirection(state.moonAngles[0], state.moonAngles[1]);
+
+		// Resolve the moon's phase, illumination, and the source used for directional shadows.
 		boolean useSyntheticMoonPhase = configCycle == DaylightCycle.NIGHT || configMoonBehavior.mirrorsSun;
 
 		float naturalMoonIllumination = configCycle == DaylightCycle.CUSTOM_BASIC ?
@@ -373,9 +372,11 @@ public class SkyManager {
 		state.moonIllumination = mix(fromMoonIllumination, toMoonIllumination, state.configurationTransition);
 		if (state.moonVisibility == 0)
 			state.moonIllumination = 0;
-		state.shadowAngles = state.sunAngles[0] < 0 && state.moonAngles[0] > 0 && state.moonIllumination > 0
-			? state.moonAngles
-			: state.sunAngles;
+		state.shadowAngles = state.cycleActive ?
+			state.sunAngles[0] < 0 && state.moonAngles[0] > 0 && state.moonIllumination > 0
+				? state.moonAngles
+				: state.sunAngles :
+			environmentManager.getCurrentEnvironment().getShadowAngles();
 		float[] moonPhaseLightDirection;
 		if (useSyntheticMoonPhase) {
 			moonPhaseLightDirection = getSyntheticMoonPhaseLightDirection(moonInstant);
@@ -404,6 +405,8 @@ public class SkyManager {
 			}
 			state.moonPhaseReversed = false;
 		}
+
+		// Resolve the remaining shared celestial state consumed by the sky shaders.
 		// Approximate the Moon's visible east/west and north/south rocking over a month.
 		if (moonAnglesOverride != null || configMoonBehavior.mirrorsSun) {
 			state.moonLibration = vec(0, 0);
@@ -467,7 +470,7 @@ public class SkyManager {
 		float fromMoonVisibility = isMoonHidden(fromSky) ? 0 : fromSky.moonVisibility;
 		float toMoonVisibility = isMoonHidden(toSky) ? 0 : toSky.moonVisibility;
 		state.moonVisibility = mix(fromMoonVisibility, toMoonVisibility, state.configurationTransition);
-		cycleActive = environmentManager.getTargetEnvironment().isOverworld && !isCycleDisabled();
+		state.cycleActive = environmentManager.getTargetEnvironment().isOverworld && !isCycleDisabled();
 	}
 
 	@Nullable
@@ -526,9 +529,9 @@ public class SkyManager {
 		switch (configCycle) {
 			case OFF:
 			case REAL_TIME:
-				return frameWallClockInstant;
+				return frameUtcInstant;
 			case CUSTOM_REALISTIC:
-				Instant startOfDay = frameWallClockInstant.truncatedTo(ChronoUnit.DAYS)
+				Instant startOfDay = frameUtcInstant.truncatedTo(ChronoUnit.DAYS)
 					.plus(completedCycles, ChronoUnit.DAYS);
 				return startOfDay.plusMillis((long) (customCycleTime * DAY_MS));
 			case CUSTOM_BASIC:
@@ -544,8 +547,8 @@ public class SkyManager {
 	 * A full UTC-synchronized day per real hour, independent of Custom settings.
 	 */
 	private Instant getDefaultInstant() {
-		double cyclePosition = (frameWallClockMillis % SYNCED_DAYS_PERIOD_MS) / (double) SYNCED_DAYS_PERIOD_MS;
-		long day = frameWallClockMillis / SYNCED_DAYS_PERIOD_MS;
+		double cyclePosition = (frameUtcMillis % SYNCED_DAYS_PERIOD_MS) / (double) SYNCED_DAYS_PERIOD_MS;
+		long day = frameUtcMillis / SYNCED_DAYS_PERIOD_MS;
 		return Instant.EPOCH.plus(day, ChronoUnit.DAYS)
 			.plusMillis((long) (cyclePosition * DAY_MS));
 	}
@@ -558,26 +561,27 @@ public class SkyManager {
 		previousScheduleSunAltitude = scheduleSunAltitude;
 		// Change offsets at noon, keeping each dusk-to-dawn schedule stable through midnight.
 		scheduleNightIndex = Math.floorDiv(currentInstant.toEpochMilli() - DAY_MS / 2, DAY_MS);
-		if (cycleActive)
+		if (state.cycleActive)
 			nightFactor = smoothstep(5, -18, scheduleSunAltitude);
 	}
 
 	public void prepareLightSchedule(Light light) {
 		light.daylightCycleActivation = 1;
-		if (light.def.schedule == null)
-			return;
-
-		light.daylightCycleActivation = getScheduleActivation(light);
-		if (light.daylightCycleActivation < .001f)
-			light.visible = false;
+		if (light.def.schedule != null) {
+			light.daylightCycleActivation = getScheduleActivation(light);
+			if (light.daylightCycleActivation < .001f)
+				light.visible = false;
+		}
+		light.daylightCycleRadiusScale = getNightRadiusScale(light);
 	}
 
 	public void applyLightSchedule(Light light) {
-		if (!cycleActive && light.def.schedule == null)
+		if (!state.cycleActive && light.def.schedule == null)
 			return;
 
-		light.strength *= getNightStrengthScale(light);
-		light.radius *= getNightRadiusScale(light);
+		float nightScale = state.cycleActive ? mix(1, light.def.nightMultiplier, nightFactor) : 1;
+		light.strength *= nightScale * light.daylightCycleActivation;
+		light.radius *= light.daylightCycleRadiusScale;
 	}
 
 	private float getScheduleActivation(Light light) {
@@ -604,14 +608,9 @@ public class SkyManager {
 		return (hash & 0x7FFFFFFF) / 2147483647f;
 	}
 
-	public float getNightStrengthScale(Light light) {
-		float nightScale = cycleActive ? mix(1, light.def.nightMultiplier, nightFactor) : 1;
-		return nightScale * light.daylightCycleActivation;
-	}
-
-	public float getNightRadiusScale(Light light) {
+	private float getNightRadiusScale(Light light) {
 		float multiplier = light.def.nightMultiplier;
-		if (!cycleActive)
+		if (!state.cycleActive)
 			return light.daylightCycleActivation;
 		if (multiplier <= 0)
 			return light.def.schedule != null ? 0 : mix(1, 0, nightFactor);
