@@ -150,7 +150,6 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     vec3 specularComposite = mix(lightSpecularOut, vec3(0.0), foamAmount);
     float flatFresnel = (1.0 - dot(viewDir, vec3(0, -1, 0))) * 1.0;
     finalFresnel = max(finalFresnel, flatFresnel);
-    finalFresnel -= finalFresnel * shadow * 0.2;
     baseColor += pointLightsSpecularOut + lightSpecularOut / 3;
 
     float alpha = max(waterType.baseOpacity, max(foamAmount, max(finalFresnel, length(specularComposite / 3))));
