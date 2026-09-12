@@ -14,7 +14,7 @@ vec2 getShadowDitherOffset(vec3 fragPos, int i) {
 float fetchShadowTexel(sampler2D tex, bool hasTransparency, ivec2 pixelCoord, float fragDepth, vec3 fragPos, int i) {
     pixelCoord += ivec2(getShadowDitherOffset(fragPos, i));
 
-    if(hasTransparency) {
+    if (hasTransparency) {
         int alphaDepth = int(texelFetch(tex, pixelCoord, 0).r * SHADOW_COMBINED_MAX);
         float depth = float(alphaDepth & SHADOW_DEPTH_MAX) / SHADOW_DEPTH_MAX;
         float alpha = 1 - float(alphaDepth >> SHADOW_DEPTH_BITS) / SHADOW_ALPHA_MAX;

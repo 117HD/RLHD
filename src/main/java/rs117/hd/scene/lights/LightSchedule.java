@@ -20,10 +20,7 @@ public class LightSchedule {
 	private Range[] during;
 	public float randomOffset = DEFAULT_RANDOM_OFFSET;
 
-	private enum Turn {
-		ON,
-		OFF
-	}
+	private enum Turn { ON, OFF }
 
 	private enum Phase {
 		DAWN(-2, -8.8f, Range.Mode.ASCENDING),

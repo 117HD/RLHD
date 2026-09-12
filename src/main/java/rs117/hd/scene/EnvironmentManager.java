@@ -236,9 +236,6 @@ public class EnvironmentManager {
 			environment.varpCondition.test(varpVariableSupplier);
 	}
 
-	/**
-	 * Resolve and interpolate the environment at the camera's focal point.
-	 */
 	public void update(SceneContext sceneContext) {
 		assert client.isClientThread();
 
@@ -282,9 +279,6 @@ public class EnvironmentManager {
 		updateLightning();
 	}
 
-	/**
-	 * Begin a transition to {@code newEnvironment}.
-	 */
 	private void changeEnvironment(Environment newEnvironment, boolean skipTransition) {
 		// Skip changing the environment unless the transition is forced, since reapplying
 		// the overworld environment is required when switching between seasonal themes
@@ -360,9 +354,6 @@ public class EnvironmentManager {
 		return usesDefaultSkyColor(env) ? plugin.configDefaultSkyColor.getRgb(client) : env.getFogColor();
 	}
 
-	/**
-	 * Add the environments which can intersect the current scene.
-	 */
 	public void loadSceneEnvironments(SceneContext sceneContext) {
 		log.debug("Loading environments for scene: {}", sceneContext.sceneBounds);
 
@@ -438,9 +429,14 @@ public class EnvironmentManager {
 	}
 
 	private Environment getResolvedTargetEnvironment() {
-		if (state.target == Environment.OVERWORLD)
-			return getOverworldEnvironment();
-		return state.target;
+		return state.target == Environment.OVERWORLD ? getOverworldEnvironment() : state.target;
+	}
+
+	/**
+	 * Mutable, interpolated environment used for the current frame.
+	 */
+	public Environment getCurrentEnvironment() {
+		return state.current;
 	}
 
 	/** Environment at the beginning of the current transition. */
@@ -451,11 +447,6 @@ public class EnvironmentManager {
 	/** Resolved environment at the end of the current transition. */
 	Environment getToEnvironment() {
 		return state.to;
-	}
-
-	/** Mutable, interpolated environment used for the current frame. */
-	public Environment getCurrentEnvironment() {
-		return state.current;
 	}
 
 	/** Area-selected environment definition, before atmospheric-lighting fallbacks. */

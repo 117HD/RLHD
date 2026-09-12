@@ -2,6 +2,11 @@
 
 #include NEBULA_CLUSTER_COUNT
 
+#define STAR_MODE_OFF 0
+#define STAR_MODE_REALISTIC 1
+#define STAR_MODE_ARTISTIC 2
+#define STAR_MODE_STATIC 3
+
 layout(std140) uniform UBOSky {
     bool skyGradientEnabled;
     vec3 skyZenithColor;
@@ -31,8 +36,3 @@ layout(std140) uniform UBOSky {
 
     vec4 nebulaClusters[NEBULA_CLUSTER_COUNT];
 };
-
-#define STAR_MODE_OFF 0
-#define STAR_MODE_REALISTIC 1
-#define STAR_MODE_ARTISTIC 2
-#define STAR_MODE_STATIC 3

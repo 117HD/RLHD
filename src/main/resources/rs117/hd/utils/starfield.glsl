@@ -1,6 +1,7 @@
 #pragma once
 
 #include <uniforms/sky.glsl>
+
 #include <utils/constants.glsl>
 
 #define STARFIELD_BACKGROUND_COLOR vec3(0.00304, 0.00304, 0.00521)
@@ -21,7 +22,9 @@ vec3 rotateStarfield(vec3 direction, float elapsedSeconds, float artisticRotatio
     if (skyStarRotationMode == STAR_MODE_REALISTIC) {
         float cosRotation = cos(skyCelestialRotation);
         float sinRotation = sin(skyCelestialRotation);
-        return direction * cosRotation + cross(skyCelestialPole, direction) * sinRotation +
+        return
+            direction * cosRotation +
+            cross(skyCelestialPole, direction) * sinRotation +
             skyCelestialPole * dot(skyCelestialPole, direction) * (1.0 - cosRotation);
     }
 
@@ -43,7 +46,9 @@ vec3 inverseRotateStarfield(vec3 direction, float elapsedSeconds, float artistic
     if (skyStarRotationMode == STAR_MODE_REALISTIC) {
         float cosRotation = cos(skyCelestialRotation);
         float sinRotation = -sin(skyCelestialRotation);
-        return direction * cosRotation + cross(skyCelestialPole, direction) * sinRotation +
+        return
+            direction * cosRotation +
+            cross(skyCelestialPole, direction) * sinRotation +
             skyCelestialPole * dot(skyCelestialPole, direction) * (1.0 - cosRotation);
     }
 
@@ -90,10 +95,16 @@ float sf_noise(vec3 p) {
     f = f * f * f * (f * (f * 6.0 - 15.0) + 10.0);
 
     return mix(
-        mix(mix(sf_hash(i + vec3(0,0,0)), sf_hash(i + vec3(1,0,0)), f.x),
-            mix(sf_hash(i + vec3(0,1,0)), sf_hash(i + vec3(1,1,0)), f.x), f.y),
-        mix(mix(sf_hash(i + vec3(0,0,1)), sf_hash(i + vec3(1,0,1)), f.x),
-            mix(sf_hash(i + vec3(0,1,1)), sf_hash(i + vec3(1,1,1)), f.x), f.y),
+        mix(
+            mix(sf_hash(i + vec3(0,0,0)), sf_hash(i + vec3(1,0,0)), f.x),
+            mix(sf_hash(i + vec3(0,1,0)), sf_hash(i + vec3(1,1,0)), f.x),
+            f.y
+        ),
+        mix(
+            mix(sf_hash(i + vec3(0,0,1)), sf_hash(i + vec3(1,0,1)), f.x),
+            mix(sf_hash(i + vec3(0,1,1)), sf_hash(i + vec3(1,1,1)), f.x),
+            f.y
+        ),
         f.z
     );
 }

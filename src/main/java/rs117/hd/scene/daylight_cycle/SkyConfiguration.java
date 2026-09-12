@@ -85,43 +85,133 @@ public class SkyConfiguration {
 		moonDiskColor = HDUtils.ensureArrayLength(moonDiskColor, 3);
 		moonLightColor = HDUtils.ensureArrayLength(moonLightColor, 3);
 		nightSkyColor = HDUtils.ensureArrayLength(nightSkyColor, 3);
-		if (profile == null ||
-			profile.nightSkyColor == null ||
-			profile.brightness == null ||
-			profile.brightness.nightAltitude >= profile.brightness.lowSunAltitude ||
-			profile.brightness.lowSunAltitude >= profile.brightness.horizonAltitude)
+		if (profile == null)
 			throw new IllegalStateException("Invalid sky profile");
-		profile.nightSkyColor = HDUtils.ensureArrayLength(profile.nightSkyColor, 3);
-		normalizeKeyframes(profile.zenith, true);
-		normalizeKeyframes(profile.horizon, true);
-		normalizeKeyframes(profile.sunGlow, true);
-		normalizeKeyframes(profile.ambientColor, true);
-		normalizeKeyframes(profile.directionalTemperature, false);
-		normalizeKeyframes(profile.regionalBlend, false);
+		profile.normalize();
 	}
 
-	private static void normalizeKeyframes(@Nullable Keyframe[] keyframes, boolean colors) {
-		if (keyframes == null || keyframes.length == 0)
-			throw new IllegalStateException("Missing sky keyframes");
-		float previousAltitude = Float.NEGATIVE_INFINITY;
-		for (int i = 0; i < keyframes.length; i++) {
-			Keyframe keyframe = keyframes[i];
-			if (keyframe == null || keyframe.altitude <= previousAltitude)
-				throw new IllegalStateException("Sky keyframes must be ordered by altitude");
-			if (colors) {
-				if (keyframe.value != null || keyframe.color == null)
-					throw new IllegalStateException("Expected a sky color keyframe");
-				keyframe.color = HDUtils.ensureArrayLength(keyframe.color, 3);
-			} else if (keyframe.color != null || keyframe.value == null) {
-				throw new IllegalStateException("Expected a scalar sky keyframe");
+	public static class SkyProfile {
+		private Keyframe[] zenith;
+		private Keyframe[] horizon;
+		private Keyframe[] sunGlow;
+		private Keyframe[] ambientColor;
+		private Keyframe[] directionalTemperature;
+		private Keyframe[] regionalBlend;
+		@JsonAdapter(SrgbToLinearAdapter.class)
+		private float[] nightSkyColor;
+		private float directionalBaseTemperature;
+		private float directionalBaseStrength;
+		private BrightnessCurve brightness;
+
+		private static class Keyframe {
+			private float altitude;
+			@JsonAdapter(SrgbToLinearAdapter.class)
+			private float[] color;
+			private Float value;
+
+			private float[] values() {
+				return color != null ? color : vec(value);
 			}
-			previousAltitude = keyframe.altitude;
+		}
+
+		private static class BrightnessCurve {
+			private float nightAltitude;
+			private float lowSunAltitude;
+			private float horizonAltitude;
+			private float lowSunBoost;
+			private float horizonBoost;
+			private float earlyDayBoost;
+			private float daytimeStrength;
+		}
+
+		public void normalize() {
+			if (nightSkyColor == null ||
+				brightness == null ||
+				brightness.nightAltitude >= brightness.lowSunAltitude ||
+				brightness.lowSunAltitude >= brightness.horizonAltitude)
+				throw new IllegalStateException("Invalid sky profile");
+			nightSkyColor = HDUtils.ensureArrayLength(nightSkyColor, 3);
+			normalizeKeyframes(zenith, true);
+			normalizeKeyframes(horizon, true);
+			normalizeKeyframes(sunGlow, true);
+			normalizeKeyframes(ambientColor, true);
+			normalizeKeyframes(directionalTemperature, false);
+			normalizeKeyframes(regionalBlend, false);
+		}
+
+		private static void normalizeKeyframes(@Nullable Keyframe[] keyframes, boolean colors) {
+			if (keyframes == null || keyframes.length == 0)
+				throw new IllegalStateException("Missing sky keyframes");
+			float previousAltitude = Float.NEGATIVE_INFINITY;
+			for (int i = 0; i < keyframes.length; i++) {
+				Keyframe keyframe = keyframes[i];
+				if (keyframe == null || keyframe.altitude <= previousAltitude)
+					throw new IllegalStateException("Sky keyframes must be ordered by altitude");
+				if (colors) {
+					if (keyframe.value != null || keyframe.color == null)
+						throw new IllegalStateException("Expected a sky color keyframe");
+					keyframe.color = HDUtils.ensureArrayLength(keyframe.color, 3);
+				} else if (keyframe.color != null || keyframe.value == null) {
+					throw new IllegalStateException("Expected a scalar sky keyframe");
+				}
+				previousAltitude = keyframe.altitude;
+			}
+		}
+
+		public float[] getDirectionalLight(float sunAltitude) {
+			float[] directionalLight = ColorUtils.colorTemperatureToLinearRgb(directionalBaseTemperature);
+			multiply(directionalLight, directionalLight, directionalBaseStrength);
+			if (sunAltitude >= 0) {
+				float temperature = interpolate(sunAltitude * RAD_TO_DEG, directionalTemperature)[0];
+				float strength = sin(sunAltitude);
+				strength *= strength * 3;
+				add(directionalLight, directionalLight, multiply(ColorUtils.colorTemperatureToLinearRgb(temperature), strength));
+			}
+			return directionalLight;
+		}
+
+		public float[] getAmbientLight(float sunAltitudeDegrees) {
+			return interpolate(sunAltitudeDegrees, ambientColor);
+		}
+
+		public float getRegionalBlend(float sunAltitudeDegrees) {
+			return interpolate(sunAltitudeDegrees, regionalBlend)[0];
+		}
+
+		private static float[] interpolate(float altitude, Keyframe[] keyframes) {
+			int end = keyframes.length - 1;
+			int i = 0;
+			while (i < end && altitude > keyframes[i + 1].altitude)
+				i++;
+			Keyframe from = keyframes[i];
+			if (i == end)
+				return copy(from.values());
+			Keyframe to = keyframes[i + 1];
+			return mix(from.values(), to.values(), saturate((altitude - from.altitude) / (to.altitude - from.altitude)));
+		}
+
+		private float getBrightnessMultiplier(float sunAltitude, float minBrightness) {
+			if (sunAltitude <= brightness.nightAltitude)
+				return minBrightness;
+			float lowSunBrightness = minBrightness + brightness.lowSunBoost;
+			if (sunAltitude <= brightness.lowSunAltitude)
+				return mix(minBrightness, lowSunBrightness, smoothstep(brightness.nightAltitude, brightness.lowSunAltitude, sunAltitude));
+			float earlyDayBrightness = minBrightness + brightness.horizonBoost + brightness.earlyDayBoost;
+			if (sunAltitude <= brightness.horizonAltitude)
+				return mix(
+					lowSunBrightness,
+					earlyDayBrightness,
+					smoothstep(brightness.lowSunAltitude, brightness.horizonAltitude, sunAltitude)
+				);
+			float sineAtHorizon = sin(brightness.horizonAltitude * DEG_TO_RAD);
+			float normalizedSine = max(0, (sin(sunAltitude * DEG_TO_RAD) - sineAtHorizon) / (1 - sineAtHorizon));
+			return mix(earlyDayBrightness, brightness.daytimeStrength, normalizedSine);
 		}
 	}
 
 	/**
-	 * Interpolate the properties evaluated outside of {@link SkyProfile}. Profile curves and celestial overrides
-	 * are resolved separately.
+	 * Interpolate the properties evaluated outside of {@link SkyProfile}.
+	 * Profile curves and celestial overrides are resolved separately.
 	 */
 	public SkyConfiguration interpolateLightingParameters(SkyConfiguration from, SkyConfiguration to, float t) {
 		moonShadowStrength = mix(from.moonShadowStrength, to.moonShadowStrength, t);
@@ -163,7 +253,9 @@ public class SkyConfiguration {
 			}
 		}
 		if (fogColor != null && sunriseSunsetStrength < 1) {
-			float window = sunAltitudeDegrees < 0 ? smoothstep(-15, 0, sunAltitudeDegrees) : takeover == 0 ? 0 : smoothstep(takeover, 0, sunAltitudeDegrees);
+			float window = sunAltitudeDegrees < 0 ?
+				smoothstep(-15, 0, sunAltitudeDegrees) :
+				takeover == 0 ? 0 : smoothstep(takeover, 0, sunAltitudeDegrees);
 			float suppression = (1 - sunriseSunsetStrength) * window;
 			if (suppression > 0) {
 				blendSky(zenith, horizon, fogColor, suppression);
@@ -187,89 +279,6 @@ public class SkyConfiguration {
 	private static void blendSky(float[] zenith, float[] horizon, float[] color, float t) {
 		mix(zenith, zenith, color, t);
 		mix(horizon, horizon, color, t);
-	}
-
-	public static class SkyProfile {
-		private Keyframe[] zenith;
-		private Keyframe[] horizon;
-		private Keyframe[] sunGlow;
-		private Keyframe[] ambientColor;
-		private Keyframe[] directionalTemperature;
-		private Keyframe[] regionalBlend;
-		@JsonAdapter(SrgbToLinearAdapter.class)
-		private float[] nightSkyColor;
-		private float directionalBaseTemperature;
-		private float directionalBaseStrength;
-		private BrightnessCurve brightness;
-
-		public float[] getDirectionalLight(float sunAltitude) {
-			float[] directionalLight = multiply(
-				ColorUtils.colorTemperatureToLinearRgb(directionalBaseTemperature),
-				directionalBaseStrength
-			);
-			if (sunAltitude >= 0) {
-				float temperature = interpolate(sunAltitude * RAD_TO_DEG, directionalTemperature)[0];
-				float strength = sin(sunAltitude);
-				strength *= strength * 3;
-				add(directionalLight, directionalLight, multiply(ColorUtils.colorTemperatureToLinearRgb(temperature), strength));
-			}
-			return directionalLight;
-		}
-
-		public float[] getAmbientLight(float sunAltitudeDegrees) {
-			return interpolate(sunAltitudeDegrees, ambientColor);
-		}
-
-		public float getRegionalBlend(float sunAltitudeDegrees) {
-			return interpolate(sunAltitudeDegrees, regionalBlend)[0];
-		}
-
-		private static float[] interpolate(float altitude, Keyframe[] keyframes) {
-			int end = keyframes.length - 1;
-			int i = 0;
-			while (i < end && altitude > keyframes[i + 1].altitude)
-				i++;
-			Keyframe from = keyframes[i];
-			if (i == end)
-				return copy(from.values());
-			Keyframe to = keyframes[i + 1];
-			return mix(from.values(), to.values(), saturate((altitude - from.altitude) / (to.altitude - from.altitude)));
-		}
-
-		private float getBrightnessMultiplier(float sunAltitude, float minBrightness) {
-			if (sunAltitude <= brightness.nightAltitude)
-				return minBrightness;
-			float lowSunBrightness = minBrightness + brightness.lowSunBoost;
-			if (sunAltitude <= brightness.lowSunAltitude)
-				return mix(minBrightness, lowSunBrightness, smoothstep(brightness.nightAltitude, brightness.lowSunAltitude, sunAltitude));
-			float earlyDayBrightness = minBrightness + brightness.horizonBoost + brightness.earlyDayBoost;
-			if (sunAltitude <= brightness.horizonAltitude)
-				return mix(lowSunBrightness, earlyDayBrightness, smoothstep(brightness.lowSunAltitude, brightness.horizonAltitude, sunAltitude));
-			float sineAtHorizon = sin(brightness.horizonAltitude * DEG_TO_RAD);
-			float normalizedSine = max(0, (sin(sunAltitude * DEG_TO_RAD) - sineAtHorizon) / (1 - sineAtHorizon));
-			return mix(earlyDayBrightness, brightness.daytimeStrength, normalizedSine);
-		}
-
-		private static class BrightnessCurve {
-			private float nightAltitude;
-			private float lowSunAltitude;
-			private float horizonAltitude;
-			private float lowSunBoost;
-			private float horizonBoost;
-			private float earlyDayBoost;
-			private float daytimeStrength;
-		}
-	}
-
-	public static class Keyframe {
-		private float altitude;
-		@JsonAdapter(SrgbToLinearAdapter.class)
-		private float[] color;
-		private Float value;
-
-		private float[] values() {
-			return color != null ? color : vec(value);
-		}
 	}
 
 	@Slf4j

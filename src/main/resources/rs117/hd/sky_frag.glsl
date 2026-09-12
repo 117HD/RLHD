@@ -88,7 +88,7 @@ void main() {
     if (starBlend > 0.001 && -viewDir.y > 0.05 + horizonShift)
         shootingStarColor = shootingStars(viewDir, elapsedTime) * starBlend;
 
-    // === MOON DISK ===
+    // Render the moon disk
     if (moonVisibility > 0.001) {
         // Apply the sun's perceived-horizon offset.
         vec3 moonDir = normalize(vec3(skyMoonDir.x, -skyMoonDir.y + HORIZON_OFFSET, skyMoonDir.z));
@@ -243,9 +243,7 @@ void main() {
                 }
 
                 float lambert = dot(moonSurfaceNormal, moonLightDir);
-                float terminatorJitter =
-                    (surfaceNoise - 0.85) * 0.01 +
-                    (fineTerrain - 0.5) * 0.03;
+                float terminatorJitter = (surfaceNoise - 0.85) * 0.01 + (fineTerrain - 0.5) * 0.03;
                 // Surface relief only perturbs incidence near the terminator.
                 float terminatorRoughness =
                     (1.0 - smoothstep(0.05, 0.35, abs(lambert))) *

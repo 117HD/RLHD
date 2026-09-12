@@ -205,7 +205,7 @@
             }
           }
         ],
-        "description": "Sample lighting from either the outdoor environment if true, or specify a world position to sample environmental lighting from. Defaults to false."
+        "description": "Sample the default overworld lighting if true, or specify a world position to sample. Defaults to false."
       },
       "areas": {
         "type": "array",

@@ -91,7 +91,7 @@ public class SkyRenderer {
 	private final float[] fogColorSrgb = new float[3];
 	private float directionalStrength;
 	private float ambientStrength;
-	private boolean shouldRenderSky;
+	private boolean skyEnabled;
 
 	public void initialize() {
 		commandBuffer.setFrameTimer(frameTimer);
@@ -128,7 +128,7 @@ public class SkyRenderer {
 	 * Upload sky resources here; the caller owns the global UBO upload.
 	 */
 	public void prepareFrame(UBOGlobal uboGlobal) {
-		shouldRenderSky = skyManager.getState().cycleActive;
+		skyEnabled = skyManager.getState().cycleActive;
 
 		Environment env = environmentManager.getCurrentEnvironment();
 		copyTo(directionalColor, env.getDirectionalColor());
@@ -138,7 +138,7 @@ public class SkyRenderer {
 		directionalStrength = env.directionalStrength;
 		ambientStrength = env.ambientStrength;
 
-		if (shouldRenderSky)
+		if (skyEnabled)
 			updateSky(skyManager.getState());
 		else {
 			plugin.uboSky.skyGradientEnabled.set(0);
@@ -146,17 +146,12 @@ public class SkyRenderer {
 		}
 		updateGlobalUbo(uboGlobal);
 
-		if (shouldRenderSky)
+		if (skyEnabled)
 			updateCommandBuffer();
 	}
 
-	public boolean shouldRenderSky() {
-		return shouldRenderSky && skyProgram.isValid();
-	}
-
-	/** Whether this frame can draw the gradient sky instead of a solid clear or vanilla skybox. */
-	public boolean canRenderSky(boolean hasVanillaSkybox) {
-		return shouldRenderSky() && !plugin.orthographicProjection && !hasVanillaSkybox;
+	public boolean shouldRenderSky(boolean hasVanillaSkybox) {
+		return skyEnabled && skyProgram.isValid() && !plugin.orthographicProjection && !hasVanillaSkybox;
 	}
 
 	public void clear(boolean hasVanillaSkybox) {
@@ -164,7 +159,7 @@ public class SkyRenderer {
 
 		glClearDepth(0);
 
-		if (canRenderSky(hasVanillaSkybox)) {
+		if (shouldRenderSky(hasVanillaSkybox)) {
 			glClear(GL_DEPTH_BUFFER_BIT);
 		} else {
 			float[] fogColor = hasVanillaSkybox ? BLACK : fogColorSrgb;
@@ -187,7 +182,7 @@ public class SkyRenderer {
 
 	public void renderImmediately() {
 		clear(false);
-		if (canRenderSky(false)) {
+		if (shouldRenderSky(false)) {
 			localRenderState.reset();
 			commandBuffer.execute(localRenderState);
 		}
@@ -279,16 +274,19 @@ public class SkyRenderer {
 		ambientStrength = brightnessMultiplier;
 
 		float litMoonIllumination = max(moonIllumination, sky.minMoonIllumination) * state.moonVisibility;
-		float shadowVisibility = sunAltDeg >= 0
-			? getSunShadowVisibility(sunAltDeg)
-			: getMoonShadowVisibility(sky, sunAltDeg, moonAltDeg, litMoonIllumination);
+		float shadowVisibility = sunAltDeg >= 0 ? getSunShadowVisibility(sunAltDeg) :
+			getMoonShadowVisibility(sky, sunAltDeg, moonAltDeg, litMoonIllumination);
 		float moonInfluence = computeMoonInfluence(sunAltDeg, moonAltDeg, litMoonIllumination);
 		if (moonInfluence > 0) {
 			mix(directionalColor, directionalColor, sky.moonLightColor, moonInfluence);
 			float skyTint = min(1, moonInfluence * NIGHT_SKY_TINT_SCALE * sky.nightSkyColorStrength);
 			mix(skySample.zenithSrgb, skySample.zenithSrgb, sky.nightSkyColor, skyTint);
 			mix(skySample.horizonSrgb, skySample.horizonSrgb, sky.nightSkyColor, skyTint);
-			directionalStrength = mix(directionalStrength, state.moonDirectionalStrength, min(1, moonInfluence / MAX_MOON_COLOR_INFLUENCE));
+			directionalStrength = mix(
+				directionalStrength,
+				state.moonDirectionalStrength,
+				min(1, moonInfluence / MAX_MOON_COLOR_INFLUENCE)
+			);
 		}
 		directionalStrength *= brightnessMultiplier * sky.sunlightStrength;
 		copyTo(fogColorSrgb, skySample.horizonSrgb);
@@ -309,7 +307,8 @@ public class SkyRenderer {
 			return sunAltitude / SUN_SHADOW_MIDPOINT_DEG * SUN_SHADOW_MIDPOINT_VISIBILITY;
 		if (sunAltitude <= SUN_SHADOW_FULL_DEG)
 			return mix(
-				SUN_SHADOW_MIDPOINT_VISIBILITY, SUN_SHADOW_DAYTIME_FLOOR,
+				SUN_SHADOW_MIDPOINT_VISIBILITY,
+				SUN_SHADOW_DAYTIME_FLOOR,
 				(sunAltitude - SUN_SHADOW_MIDPOINT_DEG) / (SUN_SHADOW_FULL_DEG - SUN_SHADOW_MIDPOINT_DEG)
 			);
 		return clamp(sin(sunAltitude * DEG_TO_RAD), SUN_SHADOW_DAYTIME_FLOOR, 1);
@@ -324,16 +323,19 @@ public class SkyRenderer {
 		float moonBaseShadow = 0;
 		if (isMoonLighting(moonAltitude, moonIllumination))
 			moonBaseShadow =
-				sqrt(moonIllumination) * MOON_SHADOW_STRENGTH * moonElevationFade(moonAltitude) * configuration.moonShadowStrength;
+				sqrt(moonIllumination) *
+				MOON_SHADOW_STRENGTH *
+				moonElevationFade(moonAltitude) *
+				configuration.moonShadowStrength;
 		return saturate(smoothstep(SUN_SHADOW_CUTOFF_DEG, MOON_TINT_SUN_END_DEG, sunAltitude) * moonBaseShadow);
 	}
 
 	private static float computeMoonInfluence(float sunAltDeg, float moonAltDeg, float moonIllumination) {
 		if (sunAltDeg >= MOON_TINT_SUN_START_DEG || !isMoonLighting(moonAltDeg, moonIllumination))
 			return 0;
-		float influence = sunAltDeg >= 0
-			? smoothstep(MOON_TINT_SUN_START_DEG, 0, sunAltDeg) * MOON_INFLUENCE_AT_HORIZON
-			: mix(MOON_INFLUENCE_AT_HORIZON, MAX_MOON_COLOR_INFLUENCE, smoothstep(0, MOON_TINT_SUN_END_DEG, sunAltDeg));
+		float influence = sunAltDeg >= 0 ?
+			smoothstep(MOON_TINT_SUN_START_DEG, 0, sunAltDeg) * MOON_INFLUENCE_AT_HORIZON :
+			mix(MOON_INFLUENCE_AT_HORIZON, MAX_MOON_COLOR_INFLUENCE, smoothstep(0, MOON_TINT_SUN_END_DEG, sunAltDeg));
 		return influence * moonElevationFade(moonAltDeg) * moonIllumination;
 	}
 
@@ -372,7 +374,9 @@ public class SkyRenderer {
 	}
 
 	private static float moonPresence(float moonAltDeg, float moonIllumination) {
-		return isMoonLighting(moonAltDeg, moonIllumination) ? clamp(moonIllumination * moonElevationFade(moonAltDeg), 0, 1) : 0;
+		if (isMoonLighting(moonAltDeg, moonIllumination))
+			return clamp(moonIllumination * moonElevationFade(moonAltDeg), 0, 1);
+		return 0;
 	}
 
 	private static float moonElevationFade(float moonAltDeg) {

@@ -112,9 +112,15 @@ public final class StarField {
 
 		for (int face = 0; face < 6; face++)
 			glTexImage2D(
-				GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA16F,
+				GL_TEXTURE_CUBE_MAP_POSITIVE_X + face,
+				0,
+				GL_RGBA16F,
 				NEBULA_CUBE_MAP_RESOLUTION,
-				NEBULA_CUBE_MAP_RESOLUTION, 0, GL_RGBA, GL_FLOAT, 0
+				NEBULA_CUBE_MAP_RESOLUTION,
+				0,
+				GL_RGBA,
+				GL_FLOAT,
+				0
 			);
 
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -127,9 +133,24 @@ public final class StarField {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 
-	public void resetStarfield() {
-		starGeometryCurrent = false;
-		nebulaMapCurrent = false;
+	public void destroy() {
+		if (vboStars != null)
+			vboStars.destroy();
+		vboStars = null;
+
+		if (vaoStars != 0)
+			glDeleteVertexArrays(vaoStars);
+		vaoStars = 0;
+
+		if (fboNebulaBake != 0)
+			glDeleteFramebuffers(fboNebulaBake);
+		fboNebulaBake = 0;
+
+		if (texNebulaCubemap != 0)
+			glDeleteTextures(texNebulaCubemap);
+		texNebulaCubemap = 0;
+
+		resetStarfield();
 	}
 
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
@@ -138,6 +159,11 @@ public final class StarField {
 
 	public void destroyShaders() {
 		nebulaBakeProgram.destroy();
+	}
+
+	public void resetStarfield() {
+		starGeometryCurrent = false;
+		nebulaMapCurrent = false;
 	}
 
 	public boolean rebuildIfNeeded() {
@@ -174,8 +200,13 @@ public final class StarField {
 		nebulaBakeProgram.use();
 		for (int face = 0; face < 6; face++) {
 			nebulaBakeProgram.uniCubeFace.set(face);
-
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, texNebulaCubemap, 0);
+			glFramebufferTexture2D(
+				GL_FRAMEBUFFER,
+				GL_COLOR_ATTACHMENT0,
+				GL_TEXTURE_CUBE_MAP_POSITIVE_X + face,
+				texNebulaCubemap,
+				0
+			);
 			glDrawArrays(GL_TRIANGLES, 0, 3);
 		}
 
@@ -183,26 +214,6 @@ public final class StarField {
 		nebulaBakeRenderState.reset();
 		nebulaMapCurrent = true;
 		return true;
-	}
-
-	public void destroy() {
-		if (vboStars != null)
-			vboStars.destroy();
-		vboStars = null;
-
-		if (vaoStars != 0)
-			glDeleteVertexArrays(vaoStars);
-		vaoStars = 0;
-
-		if (fboNebulaBake != 0)
-			glDeleteFramebuffers(fboNebulaBake);
-		fboNebulaBake = 0;
-
-		if (texNebulaCubemap != 0)
-			glDeleteTextures(texNebulaCubemap);
-		texNebulaCubemap = 0;
-
-		resetStarfield();
 	}
 
 	private void generateLayer(FloatBuffer vertexBuffer, int count, float maxBrightness, float sizeScale, float artisticRotationSpeed) {
@@ -214,8 +225,13 @@ public final class StarField {
 	}
 
 	private void generateClusteredLayer(
-		FloatBuffer vertexBuffer, int count, int clusterCount,
-		float angularSpread, float maxBrightness, float sizeScale, float artisticRotationSpeed
+		FloatBuffer vertexBuffer,
+		int count,
+		int clusterCount,
+		float angularSpread,
+		float maxBrightness,
+		float sizeScale,
+		float artisticRotationSpeed
 	) {
 		final float[][] clusterCenters = new float[clusterCount][3];
 		final float[][] clusterTangentU = new float[clusterCount][3];

@@ -1,6 +1,8 @@
 package rs117.hd.scene.lights;
 
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.JsonAdapter;
+import com.google.gson.annotations.SerializedName;
 import java.util.HashSet;
 import javax.annotation.Nullable;
 import rs117.hd.scene.GamevalManager;
@@ -37,8 +39,11 @@ public class LightDefinition {
 	@JsonAdapter(LightSchedule.Adapter.class)
 	public LightSchedule schedule;
 	@Nullable
-	@JsonAdapter(OutdoorLighting.Adapter.class)
-	public OutdoorLighting outdoorLighting;
+	@SerializedName("outdoorLighting")
+	private JsonElement outdoorLightingRaw;
+	public transient boolean outdoorLighting;
+	@Nullable
+	public transient int[] outdoorLightingSampleWorldPos;
 
 	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] areas = {};
@@ -69,5 +74,31 @@ public class LightDefinition {
 			color = new float[3];
 		if (type == null)
 			type = LightType.STATIC;
+
+		if (outdoorLightingRaw == null || outdoorLightingRaw.isJsonNull()) {
+			outdoorLightingRaw = null;
+		} else if (outdoorLightingRaw.isJsonPrimitive()) {
+			if (!outdoorLightingRaw.getAsJsonPrimitive().isBoolean())
+				throw new IllegalStateException("outdoorLighting must be a boolean or [ worldX, worldY, plane ]");
+			outdoorLighting = outdoorLightingRaw.getAsBoolean();
+			if (!outdoorLighting)
+				outdoorLightingRaw = null;
+		} else {
+			if (!outdoorLightingRaw.isJsonArray() || outdoorLightingRaw.getAsJsonArray().size() != 3)
+				throw new IllegalStateException("outdoorLighting position must contain three coordinates");
+
+			var sampleWorldPos = outdoorLightingRaw.getAsJsonArray();
+			outdoorLightingSampleWorldPos = new int[3];
+			for (int i = 0; i < outdoorLightingSampleWorldPos.length; i++) {
+				JsonElement coordinate = sampleWorldPos.get(i);
+				if (!coordinate.isJsonPrimitive() || !coordinate.getAsJsonPrimitive().isNumber())
+					throw new IllegalStateException("outdoorLighting position must contain integer coordinates");
+				int value = coordinate.getAsInt();
+				if (value != coordinate.getAsDouble())
+					throw new IllegalStateException("outdoorLighting position must contain integer coordinates");
+				outdoorLightingSampleWorldPos[i] = value;
+			}
+			outdoorLighting = true;
+		}
 	}
 }

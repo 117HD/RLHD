@@ -77,7 +77,6 @@ import static rs117.hd.utils.collections.Util.quickSort;
 public class LightManager {
 	private static final ResourcePath LIGHTS_PATH = Props
 		.getFile("rlhd.lights-path", () -> path(LightManager.class, "lights.json"));
-	private static final float MAX_OUTDOOR_LIGHT_SCALE = 4;
 
 	@Inject
 	private Client client;
@@ -149,7 +148,12 @@ public class LightManager {
 
 			for (int i = 0; i < lights.length; i++) {
 				LightDefinition def = lights[i];
-				def.normalize();
+				try {
+					def.normalize();
+				} catch (RuntimeException ex) {
+					log.error("Ignoring invalid light at index {}: {}", i, ex.getMessage());
+					continue;
+				}
 
 				if (def.worldX != null && def.worldY != null) {
 					Light light = new Light(def);
@@ -168,7 +172,7 @@ public class LightManager {
 
 			log.debug("Loaded {} lights", lights.length);
 
-			// Reload after startup or hot-swapping so existing NPCs receive lights.
+			// Reload after startup or hot-swapping so existing NPCs receive lights
 			reloadLights = true;
 		});
 	}
@@ -235,9 +239,23 @@ public class LightManager {
 		}
 
 		for (Light light : sceneContext.lights) {
-			// Animation, completion, actor invalidation, despawn events, and fixed lifetimes may remove lights.
-			// Fade follows the parent while it exists, unless the light is deprioritized.
-			// An unmarked parent is presumed to exist.
+			// Ways lights may get deleted:
+			// - animation-specific:
+			//   effectively spawn when the animation they're attached to starts playing, and despawns when it stops,
+			//   but they are typically replayable, so they don't fully despawn until marked for removal by something else
+			// - spotanim & projectile lights:
+			//   automatically marked for removal upon completion
+			// - actor lights:
+			//   may be automatically marked for removal if the actor becomes invalid
+			// - other lights:
+			//   despawn when marked for removal by a RuneLite despawn event
+			// - fixed lifetime && !replayable:
+			//   All non-replayable lights with a fixed lifetime will be automatically marked for removal when done playing
+
+			// Light fade-in and fade-out are based on whether the parent currently exists
+			// Additionally, lights have an overruling fade-out when being deprioritized
+
+			// Whatever the light is attached to is presumed to exist if it's not marked for removal yet
 			boolean parentExists = !light.markedForRemoval;
 			boolean hiddenTemporarily = light.hiddenTemporarily && !light.hiddenByPlane;
 			boolean hiddenByPlane = false;
@@ -527,14 +545,15 @@ public class LightManager {
 
 			if (light.def.type == LightType.FLICKER) {
 				float t = TWO_PI * (mod(plugin.elapsedTime, 60) / 60 + light.randomOffset);
-				float flicker = (
-									pow(cos(11 * t), 3) +
-									pow(cos(17 * t), 6) +
-									pow(cos(23 * t), 2) +
-									pow(cos(31 * t), 6) +
-									pow(cos(71 * t), 4) +
-									pow(cos(151 * t), 6) / 2
-								) / 4.335f;
+				float flicker =
+					(
+						pow(cos(11 * t), 3) +
+						pow(cos(17 * t), 6) +
+						pow(cos(23 * t), 2) +
+						pow(cos(31 * t), 6) +
+						pow(cos(71 * t), 4) +
+						pow(cos(151 * t), 6) / 2
+					) / 4.335f;
 
 				float maxFlicker = 1f + (light.def.range / 100f);
 				float minFlicker = 1f - (light.def.range / 100f);
@@ -585,11 +604,11 @@ public class LightManager {
 
 	private void applyOutdoorLighting(Light light) {
 		copyTo(light.color, light.def.color);
-		if (light.def.outdoorLighting == null || skyManager.isCycleDisabled())
+		if (!light.def.outdoorLighting || skyManager.isCycleDisabled())
 			return;
 
 		Environment environment = environmentManager.getOverworldEnvironment();
-		int[] sampleWorldPos = light.def.outdoorLighting.sampleWorldPos;
+		int[] sampleWorldPos = light.def.outdoorLightingSampleWorldPos;
 		if (sampleWorldPos != null) {
 			Environment sampledEnvironment = environmentManager.getEnvironmentAt(sampleWorldPos);
 			if (sampledEnvironment != null)
@@ -599,8 +618,8 @@ public class LightManager {
 		LightingSample lighting = sampleOutdoorLighting(environment);
 		SkyConfiguration sky = environment.getSky();
 		float[] authoredColor = light.def.color;
-		float defLuma = linearSrgbLuminance(authoredColor);
-		float referenceLuma = max(linearSrgbLuminance(lighting.referenceFogColorLinear), 1e-4f);
+		float defLuminance = linearSrgbLuminance(authoredColor);
+		float referenceLuminance = max(linearSrgbLuminance(lighting.referenceFogColorLinear), 1e-4f);
 		float[] lightColor = copy(lighting.horizonLinear);
 		float sunAltDeg = lighting.sunAltitudeDegrees;
 
@@ -619,37 +638,39 @@ public class LightManager {
 
 		if (sunAltDeg > 0) {
 			float desaturation = smoothstep(0, 90, sunAltDeg) * .75f;
-			float luma = linearSrgbLuminance(lightColor);
-			mix(lightColor, lightColor, vec(luma), desaturation);
+			float luminance = linearSrgbLuminance(lightColor);
+			mix(lightColor, lightColor, vec(luminance), desaturation);
 		}
 
-		float horizonLuma = linearSrgbLuminance(lightColor);
+		float horizonLuminance = linearSrgbLuminance(lightColor);
 		float middayFactor = smoothstep(15, 30, sunAltDeg);
 		if (middayFactor > 0)
 			mix(lightColor, lightColor, authoredColor, middayFactor);
 
 		copyTo(light.color, lightColor);
-		float peakScale = defLuma / referenceLuma;
-		float timeScale = max(min(horizonLuma / referenceLuma, 1) * lighting.brightnessMultiplier, moonStrengthFloor);
+		float peakScale = defLuminance / referenceLuminance;
+		float timeScale = max(min(horizonLuminance / referenceLuminance, 1) * lighting.brightnessMultiplier, moonStrengthFloor);
 		float outdoorLightScale = peakScale * timeScale;
 		if (outdoorLightScale > 1) {
-			float scaleRange = MAX_OUTDOOR_LIGHT_SCALE - 1;
+			float scaleRange = 3;
 			outdoorLightScale = 1 + scaleRange * (1 - exp(-(outdoorLightScale - 1) / scaleRange));
 		}
 		light.strength *= mix(outdoorLightScale, 1, middayFactor);
 	}
 
 	private LightingSample sampleOutdoorLighting(Environment environment) {
-		if (environment == outdoorLightingEnvironment &&
-			plugin.configMinimumBrightness == outdoorLightingMinBrightness &&
-			plugin.frame == outdoorLightingFrame)
-			return outdoorLightingSample;
-		SkyConfiguration sky = environment.getSky();
-		float[] fogColor = environmentManager.getFogColor(environment);
-		skyManager.sampleLighting(outdoorLightingSample, sky, fogColor, plugin.configMinimumBrightness);
-		outdoorLightingEnvironment = environment;
-		outdoorLightingMinBrightness = plugin.configMinimumBrightness;
-		outdoorLightingFrame = plugin.frame;
+		if (environment != outdoorLightingEnvironment ||
+			plugin.configMinimumBrightness != outdoorLightingMinBrightness ||
+			plugin.frame != outdoorLightingFrame
+		) {
+			SkyConfiguration sky = environment.getSky();
+			float[] fogColor = environmentManager.getFogColor(environment);
+			skyManager.sampleLighting(outdoorLightingSample, sky, fogColor, plugin.configMinimumBrightness);
+			outdoorLightingEnvironment = environment;
+			outdoorLightingMinBrightness = plugin.configMinimumBrightness;
+			outdoorLightingFrame = plugin.frame;
+		}
+
 		return outdoorLightingSample;
 	}
 

@@ -596,14 +596,14 @@ public class ZoneRenderer implements Renderer {
 			plugin.hasLoggedIn = true;
 
 		skyRenderer.prepareFrame(plugin.uboGlobal);
-		Environment env = environmentManager.getCurrentEnvironment();
 
 		boolean replaceVanillaSkybox =
-			skyRenderer.shouldRenderSky() &&
+			skyRenderer.shouldRenderSky(false) &&
 			config.replaceVanillaSkyboxes() &&
 			environmentManager.getTargetEnvironment().hideVanillaSkyboxes;
 		shouldRenderVanillaSkybox = scene.getSkybox() != null && !replaceVanillaSkybox;
 
+		Environment env = environmentManager.getCurrentEnvironment();
 		float fogDepth = 0;
 		if (!shouldRenderVanillaSkybox) {
 			switch (config.fogDepthMode()) {
@@ -630,9 +630,7 @@ public class ZoneRenderer implements Renderer {
 
 		plugin.uboGlobal.groundFogStart.set(env.groundFogStart);
 		plugin.uboGlobal.groundFogEnd.set(env.groundFogEnd);
-		plugin.uboGlobal.groundFogOpacity.set(config.groundFog() ?
-			env.groundFogOpacity :
-			0);
+		plugin.uboGlobal.groundFogOpacity.set(config.groundFog() ? env.groundFogOpacity : 0);
 
 		// Lights & lightning
 		plugin.uboGlobal.lightningBrightness.set(environmentManager.getLightningBrightness());
@@ -1071,7 +1069,7 @@ public class ZoneRenderer implements Renderer {
 
 					sceneCmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
 
-					if (skyRenderer.canRenderSky(shouldRenderVanillaSkybox) && sceneManager.isRoot(ctx)) {
+					if (skyRenderer.shouldRenderSky(shouldRenderVanillaSkybox) && sceneManager.isRoot(ctx)) {
 						// Draw the sky after drawing top-level scene opaque
 						skyRenderer.appendTo(sceneCmd);
 						sceneCmd.SetShader(sceneProgram);

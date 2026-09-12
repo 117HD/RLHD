@@ -134,8 +134,11 @@ public class Environment {
 			}
 		}
 
-		if (shadowAngles == null) shadowAngles = DEFAULT_SHADOW_ANGLES;
-		else shadowAngles = HDUtils.ensureArrayLength(shadowAngles, 2);
+		if (shadowAngles == null) {
+			shadowAngles = DEFAULT_SHADOW_ANGLES;
+		} else {
+			shadowAngles = HDUtils.ensureArrayLength(shadowAngles, 2);
+		}
 
 		if (waterCausticsColor == null)
 			waterCausticsColor = directionalColor;
