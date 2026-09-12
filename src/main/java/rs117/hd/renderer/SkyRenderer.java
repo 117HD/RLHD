@@ -38,23 +38,15 @@ import static rs117.hd.utils.MathUtils.*;
 @Singleton
 public class SkyRenderer {
 	private static final float[] BLACK = { 0, 0, 0 };
-	private static final float SUN_SHADOW_CUTOFF_DEG = 2;
-	private static final float SUN_SHADOW_MIDPOINT_DEG = 12;
-	private static final float SUN_SHADOW_FULL_DEG = 15;
-	private static final float SUN_SHADOW_MIDPOINT_VISIBILITY = .6f;
-	private static final float SUN_SHADOW_DAYTIME_FLOOR = .9f;
 	private static final float MOON_HORIZON_CUTOFF_DEG = -10;
 	private static final float MIN_MOON_ILLUMINATION = .01f;
 	private static final float MOON_ELEVATION_FADE_START_DEG = -10;
 	private static final float MOON_ELEVATION_FADE_END_DEG = 20;
-	private static final float MOON_SHADOW_STRENGTH = .2f;
 	private static final float MIN_BRIGHTNESS_BOOST_RESIDUAL = .2f;
 	private static final float MAX_MOON_COLOR_INFLUENCE = .8f;
 	private static final float MOON_INFLUENCE_AT_HORIZON = .05f;
 	private static final float MOON_TINT_SUN_START_DEG = 5;
 	private static final float MOON_TINT_SUN_END_DEG = -15;
-	private static final float NIGHT_SKY_TINT_SCALE = .05f;
-	private static final float SKY_FILL_FADE_END_DEG = 45;
 
 	@Inject
 	private HdPlugin plugin;
@@ -101,6 +93,7 @@ public class SkyRenderer {
 
 	public void destroy() {
 		starField.destroy();
+		commandBuffer.reset();
 	}
 
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
@@ -108,6 +101,7 @@ public class SkyRenderer {
 		starField.initializeShaders(includes);
 		starProgram.compile(includes);
 		starField.resetStarfield();
+		commandBuffer.reset();
 	}
 
 	public void destroyShaders() {
@@ -151,7 +145,11 @@ public class SkyRenderer {
 	}
 
 	public boolean shouldRenderSky(boolean hasVanillaSkybox) {
-		return skyEnabled && skyProgram.isValid() && !plugin.orthographicProjection && !hasVanillaSkybox;
+		return
+			skyEnabled &&
+			skyProgram.isValid() &&
+			!plugin.orthographicProjection &&
+			!hasVanillaSkybox;
 	}
 
 	public void clear(boolean hasVanillaSkybox) {
@@ -195,6 +193,7 @@ public class SkyRenderer {
 
 		commandBuffer.reset();
 		commandBuffer.PushTimer(Timer.RENDER_SKY);
+		commandBuffer.Disable(GL_BLEND);
 		commandBuffer.SetShader(skyProgram);
 		commandBuffer.DepthMask(false);
 		commandBuffer.BindVertexArray(plugin.vaoTri);
@@ -274,16 +273,32 @@ public class SkyRenderer {
 		ambientStrength = brightnessMultiplier;
 
 		float litMoonIllumination = max(moonIllumination, sky.minMoonIllumination) * state.moonVisibility;
-		float shadowVisibility = sunAltDeg >= 0 ? getSunShadowVisibility(sunAltDeg) :
-			getMoonShadowVisibility(sky, sunAltDeg, moonAltDeg, litMoonIllumination);
 		float moonInfluence = computeMoonInfluence(sunAltDeg, moonAltDeg, litMoonIllumination);
-		float moonTintInfluence = computeMoonInfluence(sunAltDeg, moonAltDeg, max(moonIllumination, sky.minMoonIllumination));
-		float skyTint = min(1, moonTintInfluence * NIGHT_SKY_TINT_SCALE * sky.nightSkyColorStrength);
-		if (skyTint > 0) {
-			// Blend linear light, independently of whether the moon disk is visible.
-			mix(skySample.zenithLinear, skySample.zenithLinear, sky.nightSkyColor, skyTint);
-			mix(skySample.horizonLinear, skySample.horizonLinear, sky.nightSkyColor, skyTint);
-		}
+		// fogDepth is an artistic density control, not a physical extinction coefficient.
+		float defaultDensity = max(0, env.fogDepth) / 100;
+		float fogDensity = mix(
+			fromSky.skyFogDensity < 0 ? defaultDensity : fromSky.skyFogDensity,
+			toSky.skyFogDensity < 0 ? defaultDensity : toSky.skyFogDensity,
+			transition
+		);
+		plugin.uboSky.skyFogDensity.set(max(0, fogDensity));
+		plugin.uboSky.skyVisibility.set(mix(saturate(fromSky.skyVisibility), saturate(toSky.skyVisibility), transition));
+		float[] lightingFogColor = skySample.horizonLinear;
+		float[] fromFogColor = fromSky.skyFogColor == null ? lightingFogColor : mix(
+			lightingFogColor,
+			fromSky.skyFogColor,
+			saturate(fromSky.skyFogColorMix)
+		);
+		float[] toFogColor = toSky.skyFogColor == null ? lightingFogColor : mix(
+			lightingFogColor,
+			toSky.skyFogColor,
+			saturate(toSky.skyFogColorMix)
+		);
+		plugin.uboSky.skyFogColor.set(mix(
+			fromFogColor,
+			toFogColor,
+			transition
+		));
 		if (moonInfluence > 0) {
 			mix(directionalColor, directionalColor, sky.moonLightColor, moonInfluence);
 			directionalStrength = mix(
@@ -299,39 +314,35 @@ public class SkyRenderer {
 		float boostFraction = MIN_BRIGHTNESS_BOOST_RESIDUAL + (1 - MIN_BRIGHTNESS_BOOST_RESIDUAL) * (1 - moonPresenceFactor);
 		ambientStrength = max(ambientStrength, plugin.configMinimumBrightness * (1 + sky.minBrightnessBoost * boostFraction));
 
-		float skyFill = 1 - smoothstep(0, SKY_FILL_FADE_END_DEG, sunAltDeg);
-		add(ambientColor, ambientColor, multiply(directionalColor, (1 - shadowVisibility) * skyFill));
-		directionalStrength *= shadowVisibility;
+		applyShadowBlur(
+			sunAltDeg >= 0 ? sunAltDeg : moonAltDeg,
+			sunAltDeg >= 0 ? .533f : 2 * acos(.99945f) * RAD_TO_DEG * sky.moonSizeMult,
+			sunAltDeg >= 0 ? 1 : isMoonLighting(moonAltDeg, litMoonIllumination) ? saturate(sky.moonShadowStrength) : 0
+		);
 		updateSkyUbo(sky, state, skySample, moonIllumination);
 	}
 
-
-	private static float getSunShadowVisibility(float sunAltitude) {
-		if (sunAltitude <= SUN_SHADOW_MIDPOINT_DEG)
-			return sunAltitude / SUN_SHADOW_MIDPOINT_DEG * SUN_SHADOW_MIDPOINT_VISIBILITY;
-		if (sunAltitude <= SUN_SHADOW_FULL_DEG)
-			return mix(
-				SUN_SHADOW_MIDPOINT_VISIBILITY,
-				SUN_SHADOW_DAYTIME_FLOOR,
-				(sunAltitude - SUN_SHADOW_MIDPOINT_DEG) / (SUN_SHADOW_FULL_DEG - SUN_SHADOW_MIDPOINT_DEG)
-			);
-		return clamp(sin(sunAltitude * DEG_TO_RAD), SUN_SHADOW_DAYTIME_FLOOR, 1);
-	}
-
-	private static float getMoonShadowVisibility(
-		SkyConfiguration configuration,
-		float sunAltitude,
-		float moonAltitude,
-		float moonIllumination
-	) {
-		float moonBaseShadow = 0;
-		if (isMoonLighting(moonAltitude, moonIllumination))
-			moonBaseShadow =
-				sqrt(moonIllumination) *
-				MOON_SHADOW_STRENGTH *
-				moonElevationFade(moonAltitude) *
-				configuration.moonShadowStrength;
-		return saturate(smoothstep(SUN_SHADOW_CUTOFF_DEG, MOON_TINT_SUN_END_DEG, sunAltitude) * moonBaseShadow);
+	private void applyShadowBlur(float altitudeDegrees, float diameterDegrees, float shadowStrength) {
+		float visibility = 0;
+		if (altitudeDegrees > 0) {
+			// A 10 m caster projects a disk-shaped penumbra. Approximate its long-axis
+			// variance with a Gaussian and retain its contrast at a 1 m feature wavelength.
+			float elevation = sin(altitudeDegrees * DEG_TO_RAD);
+			float sigma = 10 * diameterDegrees * DEG_TO_RAD / (4 * elevation * elevation);
+			visibility = exp(-2 * PI * PI * sigma * sigma) * shadowStrength;
+		}
+		float transferredStrength = directionalStrength * (1 - visibility);
+		// The spherical average of max(dot(normal, light), 0) is 1/4. Preserve that
+		// average irradiance, including both colors' magnitudes, when making it ambient.
+		float ambientTransfer = transferredStrength * .25f;
+		float combinedStrength = ambientStrength + ambientTransfer;
+		if (combinedStrength > 0) {
+			multiply(ambientColor, ambientColor, ambientStrength);
+			add(ambientColor, ambientColor, multiply(directionalColor, ambientTransfer));
+			divide(ambientColor, ambientColor, combinedStrength);
+		}
+		ambientStrength = combinedStrength;
+		directionalStrength *= visibility;
 	}
 
 	private static float computeMoonInfluence(float sunAltDeg, float moonAltDeg, float moonIllumination) {
@@ -349,6 +360,12 @@ public class SkyRenderer {
 		ubo.skyZenithColor.set(sky.zenithLinear);
 		ubo.skyHorizonColor.set(sky.horizonLinear);
 		ubo.skySunColor.set(sky.sunGlowLinear);
+		ubo.skyCustomGradient.set(mix(
+			state.fromConfiguration.customGradient ? 1f : 0,
+			state.toConfiguration.customGradient ? 1f : 0,
+			state.configurationTransition
+		));
+		ubo.skyHorizonWidth.set(sin(clamp(configuration.horizonWidth, .001f, 90) * DEG_TO_RAD));
 		ubo.skySunDir.set(state.sunDirection);
 		ubo.skyCelestialPole.set(state.celestialPole[0], -state.celestialPole[1], state.celestialPole[2]);
 		ubo.skyCelestialRotation.set(state.celestialRotation);
@@ -363,7 +380,6 @@ public class SkyRenderer {
 		ubo.skyMoonPhaseLightDirection.set(state.moonPhaseLightDirection);
 		ubo.skyMoonLibration.set(state.moonLibration);
 		ubo.skyMoonPhaseReversed.set(state.moonPhaseReversed ? 1 : 0);
-		ubo.skyVisibility.set(configuration.skyVisibility);
 		ubo.moonVisibility.set(state.moonVisibility);
 		ubo.moonSizeMult.set(configuration.moonSizeMult);
 		ubo.starHorizonHeight.set(configuration.starHorizonHeight);

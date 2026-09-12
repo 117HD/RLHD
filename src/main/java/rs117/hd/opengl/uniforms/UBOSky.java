@@ -15,6 +15,8 @@ public class UBOSky extends UniformBuffer<GLBuffer> {
 	public Property skyZenithColor = addProperty(PropertyType.FVec3, "skyZenithColor");
 	public Property skyHorizonColor = addProperty(PropertyType.FVec3, "skyHorizonColor");
 	public Property skySunColor = addProperty(PropertyType.FVec3, "skySunColor");
+	public Property skyCustomGradient = addProperty(PropertyType.Float, "skyCustomGradient");
+	public Property skyHorizonWidth = addProperty(PropertyType.Float, "skyHorizonWidth");
 	public Property skySunDir = addProperty(PropertyType.FVec3, "skySunDir");
 	public Property skyCelestialPole = addProperty(PropertyType.FVec3, "skyCelestialPole");
 	public Property skyCelestialRotation = addProperty(PropertyType.Float, "skyCelestialRotation");
@@ -28,6 +30,8 @@ public class UBOSky extends UniformBuffer<GLBuffer> {
 	public Property skyMoonPhaseReversed = addProperty(PropertyType.Float, "skyMoonPhaseReversed");
 
 	// Environment visibility controls
+	public Property skyFogColor = addProperty(PropertyType.FVec3, "skyFogColor");
+	public Property skyFogDensity = addProperty(PropertyType.Float, "skyFogDensity");
 	public Property skyVisibility = addProperty(PropertyType.Float, "skyVisibility");
 	public Property moonVisibility = addProperty(PropertyType.Float, "moonVisibility");
 	public Property starVisibility = addProperty(PropertyType.Float, "starVisibility");

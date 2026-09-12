@@ -38,6 +38,8 @@
 #include <uniforms/materials.glsl>
 #include <uniforms/water_types.glsl>
 
+#include <utils/sky_fog.glsl>
+
 #include GAP_FILLER
 #include MATERIAL_CONSTANTS
 
@@ -559,18 +561,18 @@ void main() {
 
                 float baseProgress = 1.0 - sky.nightFade;
                 float sunProximity = sky.sunSideBlend * (1.0 - sky.zenithBlend);
-                float nightSkyBlend = pow(baseProgress, mix(0.4, 0.9, sunProximity)) * skyVisibility;
+                float nightSkyBlend = pow(baseProgress, mix(0.4, 0.9, sunProximity));
                 if (nightSkyBlend > 0.001) {
                     float horizonShift = nightHorizonOffset(starHorizonHeight);
                     float horizonFade = smoothstep(-0.1 + horizonShift, 0.07 + horizonShift, sky.upAmount);
-                    skyColorAtFragment = mix(
+                    skyColorAtFragment = blendSkyBackground(
                         skyColorAtFragment,
                         nightSkyBackground(fogViewDir, elapsedTime),
                         nightSkyBlend * horizonFade
                     );
                 }
 
-                skyColorAtFragment = applySkyHaze(skyColorAtFragment, sky.upAmount, sky.sunSideBlend, sky.zenithBlend);
+                skyColorAtFragment = applySkyFog(skyColorAtFragment, sky.upAmount);
                 // Scene fog is composed after the scene's sRGB conversion.
                 skyColorAtFragment = linearToSrgb(skyColorAtFragment);
             }

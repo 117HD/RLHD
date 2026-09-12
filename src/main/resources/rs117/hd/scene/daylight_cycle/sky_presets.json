@@ -2,7 +2,7 @@
   {
     "name": "GIELINOR",
     "moonDiskColor": "#E1E5FF",
-    "moonDiskStrength": 3,
+    "moonDiskStrength": 5,
     "moonLightColor": [ 228.46, 259.86, 287.43 ],
     "profile": {
       "zenith": [
@@ -266,6 +266,36 @@
     "sunAngles": [ -90, 0 ]
   },
   {
+    "name": "VOID",
+    "parent": "NIGHT",
+    "customGradient": true,
+    "hideMoon": true,
+    "skyVisibility": 1,
+    "skyFogDensity": 0,
+    "starHorizonHeight": 0,
+    "auroraVisibility": 0,
+    "profile": {
+      "zenith": [
+        {
+          "altitude": 0,
+          "color": "#000000"
+        }
+      ],
+      "horizon": [
+        {
+          "altitude": 0,
+          "color": "#000000"
+        }
+      ],
+      "sunGlow": [
+        {
+          "altitude": 0,
+          "color": "#000000"
+        }
+      ]
+    }
+  },
+  {
     "name": "BLOOD_MOON",
     "parent": "NIGHT",
     "moonAngles": [
@@ -273,13 +303,16 @@
       89.75
     ],
     "forceMoonPhase": "FULL_MOON",
-    "moonDiskColor": "#ED3D3D",
-    "moonDiskStrength": 1.75,
+    "moonDiskColor": "#E82B20",
+    "moonDiskStrength": 1.5,
     "moonLightColor": "#ED8B8B",
-    "nightSkyColor": "#FF0000",
-    "nightSkyColorStrength": 2.5,
-    "skyVisibility": 0.8,
+    "skyFogDensity": 0.1,
+    "skyVisibility": 0.85,
+    "starVisibility": 0.71,
     "auroraVisibility": 0,
-    "moonSizeMult": 3.05
+    "moonSizeMult": 3.05,
+    "profile": {
+      "nightSkyColor": "#1E060E"
+    }
   }
 ]

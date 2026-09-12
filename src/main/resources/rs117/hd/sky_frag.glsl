@@ -2,12 +2,13 @@
 
 #include <uniforms/global.glsl>
 #include <uniforms/sky.glsl>
-
 #include <utils/output_transform.glsl>
+
 #include <utils/misc.glsl>
 #include <utils/starfield.glsl>
 #include <utils/aurora.glsl>
 #include <utils/sky.glsl>
+#include <utils/sky_fog.glsl>
 
 in vec2 fScreenPos;
 
@@ -73,7 +74,7 @@ void main() {
     float sunProximity = sky.sunSideBlend * (1.0 - sky.zenithBlend);
     // Aurora visibility is independent of the night-sky background.
     float nightFactor = pow(baseProgress, mix(0.4, 0.9, sunProximity));
-    float skyBlend = nightFactor * skyVisibility;
+    float skyBlend = nightFactor;
     float starBlend = nightFactor * starVisibility;
     vec3 shootingStarColor = vec3(0.0);
     if (skyBlend > 0.001) {
@@ -82,11 +83,23 @@ void main() {
 
         // Converge to the fog-matched gradient at the horizon.
         float horizonStarFade = nightSkyHorizonFade(sky.upAmount, horizonShift);
-        skyColor = mix(skyColor, nightSkyColor, skyBlend * horizonStarFade);
+        skyColor = blendSkyBackground(skyColor, nightSkyColor, skyBlend * horizonStarFade);
     }
     // Shooting stars are atmospheric and render in front of the moon.
     if (starBlend > 0.001 && -viewDir.y > 0.05 + horizonShift)
         shootingStarColor = shootingStars(viewDir, elapsedTime) * starBlend;
+
+    // Match the moon's default apparent size. Reuse the authored sun-glow color
+    // so environmental suppression and sunset colors still apply.
+    float sunDot = dot(viewDir, sky.sunDir);
+    float sunRadius = acos(0.99945);
+    float sunEdge = cos(sunRadius);
+    float sunAntialias = max(fwidth(sunDot), 1e-7);
+    float sunDisk = smoothstep(sunEdge - sunAntialias, sunEdge + sunAntialias, sunDot);
+    float sunHorizon = smoothstep(-0.002, 0.002, -viewDir.y + HORIZON_OFFSET);
+    float sunMu = sqrt(clamp((sunDot - sunEdge) / (1.0 - sunEdge), 0.0, 1.0));
+    // Mild limb darkening; the moon is composited afterward and can cover the sun.
+    skyColor += skySunColor * sunDisk * sunHorizon * mix(0.6, 1.0, sunMu);
 
     // Render the moon disk
     if (moonVisibility > 0.001) {
@@ -261,15 +274,18 @@ void main() {
                 float crescentEdgeFade = smoothstep(0.0, 0.25, moonLocalZ);
                 isLit *= mix(1.0, crescentEdgeFade, terminatorProximity);
 
-                float surfaceDetail = mix(0.7, 1.0, smoothstep(0.7, 0.95, surfaceNoise));
-                surfaceDetail = mix(surfaceDetail, 1.0, impactHighlight) * surfaceNoise;
+                // Keep surface contrast below the output's clipping threshold.
+                // Ejecta raise reflectance toward the same peak.
+                float surfaceContrast = smoothstep(0.65, 0.95, surfaceNoise);
+                float surfaceDetail = mix(0.12, 0.48, surfaceContrast);
+                surfaceDetail = mix(surfaceDetail, 0.48, impactHighlight * 0.8);
                 vec3 moonBrightSide = skyMoonDiskColor * surfaceDetail;
 
                 // The opaque disk occludes stars and nebulas while its dark side matches the night sky.
                 vec3 moonDarkSide = skyColorPreStars;
                 if (skyBlend > 0.001) {
                     float horizonStarFade = nightSkyHorizonFade(sky.upAmount, horizonShift);
-                    moonDarkSide = mix(moonDarkSide, STARFIELD_BACKGROUND_COLOR, skyBlend * horizonStarFade);
+                    moonDarkSide = blendSkyBackground(moonDarkSide, STARFIELD_BACKGROUND_COLOR, skyBlend * horizonStarFade);
                 }
 
                 // Keep the disk opaque so stars and the sky gradient cannot show through crescents.
@@ -282,10 +298,18 @@ void main() {
                 skyColor = mix(skyColor, moonColor, moonAlpha);
             }
 
-            // Scale the glow with the disk and reduce it in daylight.
-            float glowHorizonFade = nightSkyHorizonFade(sky.upAmount, horizonShift);
-            float moonGlow = pow(moonDot, 256.0 / max(moonSizeMult, 0.001)) * 0.05 * skyMoonIllumination * moonDayVisibility * moonVisibility * glowHorizonFade;
-            skyColor += skyMoonDiskColor * moonGlow;
+            // Cheap bloom-like halo, biased toward the illuminated side of a crescent.
+            float rimDistance = max(0.0, acos(clamp(moonDot, 0.0, 1.0)) /
+                max(moonBaseRadius * moonSizeMult, 0.001) - 1.0);
+            vec3 toRim = viewDir - moonDir * moonDot;
+            vec3 toLight = moonSunDir - moonDir * dot(moonSunDir, moonDir);
+            float litSide = dot(toRim, toLight) / max(length(toRim) * length(toLight), 1e-5);
+            litSide *= skyMoonPhaseReversed > 0.5 ? -1.0 : 1.0;
+            float phaseCos = 2.0 * skyMoonIllumination - 1.0;
+            float phaseWeight = mix(1.0, smoothstep(-0.2, 0.5, litSide), sqrt(max(0.0, 1.0 - phaseCos * phaseCos)));
+            float halo = 0.0015 * exp(-8.0 * rimDistance * rimDistance) + 0.00015 * exp(-2.0 * rimDistance);
+            halo *= (1.0 - moonDisk) * skyMoonIllumination * phaseWeight * moonDayVisibility * moonVisibility;
+            skyColor += skyMoonDiskColor * halo * nightSkyHorizonFade(sky.upAmount, horizonShift);
         }
     }
 
@@ -295,15 +319,9 @@ void main() {
     if (auroraVisibility > 0.001 && nightFactor > 0.001)
         skyColor += proceduralAurora(viewDir, elapsedTime) * nightFactor * auroraVisibility;
 
-    skyColor = applySkyHaze(skyColor, sky.upAmount, sky.sunSideBlend, sky.zenithBlend);
-
-    skyColor = linearToSrgb(skyColor);
-    skyColor = applyColorAdjustments(skyColor);
+    skyColor = applySkyFog(skyColor, sky.upAmount);
+    skyColor = applyColorAdjustments(linearToSrgb(skyColor));
     skyColor = applyOutputCorrection(skyColor);
-
-    // Break up 8-bit gradient bands with ±0.5/255 noise.
     float dither = moonHash(gl_FragCoord.xy) - 0.5;
-    skyColor += dither / 255.0;
-
-    FragColor = vec4(skyColor, 1.0);
+    FragColor = vec4(skyColor + dither / 255.0, 1.0);
 }

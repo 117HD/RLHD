@@ -7,7 +7,7 @@ float skyFogTransmittance(float upAmount) {
     // path approximation has a smooth, flat slope at the horizon and stays positive.
     float elevation = max(upAmount, 0.0) / 0.16;
     float pathLength = 1.0 / (1.0 + elevation * elevation);
-    return exp(-skyFogDensity * pathLength);
+    return skyVisibility * exp(-skyFogDensity * pathLength);
 }
 
 vec3 applySkyFog(vec3 color, float upAmount) {

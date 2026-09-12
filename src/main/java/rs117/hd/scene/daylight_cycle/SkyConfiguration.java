@@ -33,6 +33,8 @@ public class SkyConfiguration {
 	@Nullable
 	public String parent;
 	public SkyProfile profile;
+	public boolean customGradient;
+	public float horizonWidth = 15;
 	@Nullable
 	@JsonAdapter(DegreesToRadians.class)
 	public float[] sunAngles;
@@ -51,13 +53,15 @@ public class SkyConfiguration {
 	public float[] moonLightColor;
 	public float moonDiskStrength = 1;
 	@JsonAdapter(SrgbToLinearAdapter.class)
-	public float[] nightSkyColor;
-	public float nightSkyColorStrength = 1;
+	@Nullable
+	public float[] skyFogColor;
+	public float skyFogColorMix = 1;
+	public float skyFogDensity = -1;
 	public float skyVisibility = 1;
 	public float moonVisibility = 1;
-	public float starVisibility = -1;
+	public float starVisibility = 1;
 	public float nebulaVisibility = 1;
-	public float auroraVisibility = -1;
+	public float auroraVisibility = 1;
 	public float moonSizeMult = 1;
 	public float starHorizonHeight = 1;
 	private float sunStrength = 1;
@@ -71,12 +75,6 @@ public class SkyConfiguration {
 			moonDiskColor = ColorUtils.colorTemperatureToLinearRgb(8000);
 		if (moonLightColor == null)
 			moonLightColor = moonDiskColor;
-		if (nightSkyColor == null)
-			nightSkyColor = moonDiskColor;
-		if (starVisibility == -1)
-			starVisibility = skyVisibility;
-		if (auroraVisibility == -1)
-			auroraVisibility = skyVisibility;
 
 		if (sunAngles != null)
 			sunAngles = HDUtils.ensureArrayLength(sunAngles, 2);
@@ -84,7 +82,8 @@ public class SkyConfiguration {
 			moonAngles = HDUtils.ensureArrayLength(moonAngles, 2);
 		moonDiskColor = HDUtils.ensureArrayLength(moonDiskColor, 3);
 		moonLightColor = HDUtils.ensureArrayLength(moonLightColor, 3);
-		nightSkyColor = HDUtils.ensureArrayLength(nightSkyColor, 3);
+		if (skyFogColor != null)
+			skyFogColor = HDUtils.ensureArrayLength(skyFogColor, 3);
 		if (profile == null)
 			throw new IllegalStateException("Invalid sky profile");
 		profile.normalize();
@@ -223,11 +222,8 @@ public class SkyConfiguration {
 			moonLightColor = new float[3];
 		mix(moonLightColor, from.moonLightColor, to.moonLightColor, t);
 		moonDiskStrength = mix(from.moonDiskStrength, to.moonDiskStrength, t);
-		if (nightSkyColor == null)
-			nightSkyColor = new float[3];
-		mix(nightSkyColor, from.nightSkyColor, to.nightSkyColor, t);
-		nightSkyColorStrength = mix(from.nightSkyColorStrength, to.nightSkyColorStrength, t);
-		skyVisibility = mix(from.skyVisibility, to.skyVisibility, t);
+		horizonWidth = mix(from.horizonWidth, to.horizonWidth, t);
+		// Sky fog defaults are resolved against the environment before interpolation by the renderer.
 		starVisibility = mix(from.starVisibility, to.starVisibility, t);
 		nebulaVisibility = mix(from.nebulaVisibility, to.nebulaVisibility, t);
 		auroraVisibility = mix(from.auroraVisibility, to.auroraVisibility, t);
@@ -243,6 +239,13 @@ public class SkyConfiguration {
 		float[] zenith = SkyProfile.interpolate(sunAltitudeDegrees, profile.zenith);
 		float[] horizon = SkyProfile.interpolate(sunAltitudeDegrees, profile.horizon);
 		float[] sunGlow = SkyProfile.interpolate(sunAltitudeDegrees, profile.sunGlow);
+		out.zenithLinear = zenith;
+		out.horizonLinear = horizon;
+		out.sunGlowLinear = sunGlow;
+		out.brightnessMultiplier = profile.getBrightnessMultiplier(sunAltitudeDegrees, minBrightness);
+		// Authored gradients bypass the automatic fog takeover and night-color replacement.
+		if (customGradient)
+			return;
 		if (fogColor != null && sunStrength < 1) {
 			float window = smoothstep(-25, 0, sunAltitudeDegrees);
 			float suppression = (1 - sunStrength) * window;
@@ -270,10 +273,6 @@ public class SkyConfiguration {
 		float nightBlend = smoothstep(0, -15, sunAltitudeDegrees);
 		if (nightBlend > 0)
 			blendSky(zenith, horizon, profile.nightSkyColor, nightBlend);
-		out.zenithLinear = zenith;
-		out.horizonLinear = horizon;
-		out.sunGlowLinear = sunGlow;
-		out.brightnessMultiplier = profile.getBrightnessMultiplier(sunAltitudeDegrees, minBrightness);
 	}
 
 	private static void blendSky(float[] zenith, float[] horizon, float[] color, float t) {

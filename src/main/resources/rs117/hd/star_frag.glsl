@@ -27,7 +27,6 @@ void main() {
     starColor = linearToSrgb(starColor);
     starColor = applyColorAdjustments(starColor);
     starColor = applyOutputCorrection(starColor);
-
-    // Alpha carries edge antialiasing for additive blending.
-    FragColor = vec4(starColor, falloff);
+    // Additive sprites preserve the background alpha.
+    FragColor = vec4(starColor, 0.0);
 }

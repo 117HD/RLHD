@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import org.junit.Test;
 import rs117.hd.config.MoonPhase;
+import rs117.hd.renderer.SkyRenderer;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration.SkyProfile;
 
@@ -184,14 +185,32 @@ public class SkyRendererTest {
 	}
 
 	@Test
-	public void moonShadowPhaseResponseIsCompressed() {
-		assertEquals(0, phaseShadowFactor(0), 0);
-		assertEquals(1, phaseShadowFactor(1), 1e-6);
-		assertTrue(phaseShadowFactor(.5f) > .65f);
-		assertTrue(phaseShadowFactor(.25f) > .4f);
-		assertTrue(phaseShadowFactor(.75f) > phaseShadowFactor(.5f));
-		assertTrue(phaseShadowFactor(.5f) > phaseShadowFactor(.25f));
-		assertTrue(phaseShadowFactor(.75f) < 1);
+	public void shadowBlurPreservesAverageIrradianceWithUnequalColorsAndStrengths() throws Exception {
+		float[] altitudes = { -5, 0, 5, 30, 90 };
+		for (int i = 0; i < altitudes.length; i++) {
+			SkyRenderer renderer = new SkyRenderer();
+			setLightingField(renderer, "ambientColor", new float[] { .2f, 1.5f, .7f });
+			setLightingField(renderer, "directionalColor", new float[] { 2, .3f, 4 });
+			setLightingField(renderer, "ambientStrength", .7f);
+			setLightingField(renderer, "directionalStrength", 4f);
+			float[] before = averageIrradiance(renderer);
+			var blur = SkyRenderer.class.getDeclaredMethod("applyShadowBlur", float.class, float.class, float.class);
+			blur.setAccessible(true);
+			blur.invoke(renderer, altitudes[i], .533f, 1f);
+			assertArrayEquals(before, averageIrradiance(renderer), 1e-6f);
+		}
+	}
+
+	@Test
+	public void shadowBlurTransfersLightIntoInitiallyZeroAmbient() throws Exception {
+		SkyRenderer renderer = new SkyRenderer();
+		setLightingField(renderer, "directionalColor", new float[] { 2, 1, .5f });
+		setLightingField(renderer, "directionalStrength", 4f);
+		var blur = SkyRenderer.class.getDeclaredMethod("applyShadowBlur", float.class, float.class, float.class);
+		blur.setAccessible(true);
+		blur.invoke(renderer, 0f, .533f, 1f);
+		assertEquals(0, (float) getLightingField(renderer, "directionalStrength"), 0);
+		assertArrayEquals(new float[] { 2, 1, .5f }, averageIrradiance(renderer), 1e-6f);
 	}
 
 	@Test
@@ -202,8 +221,26 @@ public class SkyRendererTest {
 		assertTrue(moonPresence(-.001, .5f) > 0);
 	}
 
-	private static float phaseShadowFactor(float illumination) {
-		return (float) Math.pow(illumination, .5f);
+	private static float[] averageIrradiance(SkyRenderer renderer) throws Exception {
+		return add(
+			multiply((float[]) getLightingField(renderer, "ambientColor"), (float) getLightingField(renderer, "ambientStrength")),
+			multiply((float[]) getLightingField(renderer, "directionalColor"), (float) getLightingField(renderer, "directionalStrength") / 4)
+		);
+	}
+
+	private static Object getLightingField(SkyRenderer renderer, String name) throws Exception {
+		var field = SkyRenderer.class.getDeclaredField(name);
+		field.setAccessible(true);
+		return field.get(renderer);
+	}
+
+	private static void setLightingField(SkyRenderer renderer, String name, Object value) throws Exception {
+		var field = SkyRenderer.class.getDeclaredField(name);
+		field.setAccessible(true);
+		if (value instanceof float[])
+			copyTo((float[]) field.get(renderer), (float[]) value);
+		else
+			field.set(renderer, value);
 	}
 
 	private static float moonPresence(double moonAltitudeDegrees, float moonIllumination) {

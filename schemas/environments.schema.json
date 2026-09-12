@@ -240,7 +240,8 @@
               "SUNSET",
               "DUSK",
               "NIGHT",
-              "BLOOD_MOON"
+              "BLOOD_MOON",
+              "VOID"
             ]
           },
           {
@@ -257,7 +258,8 @@
                   "SUNSET",
                   "DUSK",
                   "NIGHT",
-                  "BLOOD_MOON"
+                  "BLOOD_MOON",
+                  "VOID"
                 ]
               },
               "sunAngles": {
@@ -272,6 +274,16 @@
               },
               "profile": {
                 "$ref": "#/$defs/skyProfile"
+              },
+              "customGradient": {
+                "type": "boolean",
+                "description": "Use profile colors directly, without automatic fog/night replacement or sun-facing bias. Stars remain visible at any sun altitude. Defaults to false."
+              },
+              "horizonWidth": {
+                "type": "number",
+                "minimum": 0.001,
+                "maximum": 90,
+                "description": "Degrees above and below the horizon where a custom gradient reaches its zenith color. Defaults to 15."
               },
               "forceMoonPhase": {
                 "type": "string",
@@ -295,7 +307,7 @@
               },
               "moonShadowStrength": {
                 "type": "number",
-                "description": "Moon shadow visibility multiplier. Defaults to 1. Reduced directional light becomes ambient sky fill, so this adjusts moon-shadow contrast without changing total brightness. Does not affect sunlight.",
+                "description": "Moon shadow contrast multiplier, clamped to 0-1. Defaults to 1. Faded directional light becomes ambient while preserving irradiance averaged over surface orientations. Does not affect sunlight.",
                 "minimum": 0
               },
               "minMoonIllumination": {
@@ -335,12 +347,12 @@
                 "description": "Lit moon-disk brightness multiplier. Defaults to 1.",
                 "minimum": 0
               },
-              "nightSkyColor": {
+              "skyFogColor": {
                 "type": [
                   "string",
                   "array"
                 ],
-                "description": "Night-sky tint in sRGB. Its influence follows moon phase and altitude, independently of moon visibility. Defaults to `moonDiskColor`.",
+                "description": "Fog color in sRGB. Omit to follow the sky's horizon color. Blends with that color using skyFogColorMix.",
                 "pattern": "^#[A-Fa-f0-9]{6}$",
                 "minItems": 3,
                 "maxItems": 3,
@@ -348,14 +360,20 @@
                   "type": "number"
                 }
               },
-              "nightSkyColorStrength": {
+              "skyFogColorMix": {
                 "type": "number",
-                "description": "Strength of the `nightSkyColor` tint. Defaults to 1. Higher values increase the tint without overshooting the target color.",
+                "description": "Color blend: 0 follows the horizon color; 1 uses skyFogColor. Defaults to 1. Does not change fog opacity.",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "skyFogDensity": {
+                "type": "number",
+                "description": "Additional horizon optical depth: 0 disables horizon fog; 0.69 halves transmission at the horizon. Fades upward. Defaults to environment fogDepth / 100; ground fog is independent.",
                 "minimum": 0
               },
               "skyVisibility": {
                 "type": "number",
-                "description": "Sky visibility, obscuring the sky in fog, inverse from 0 to 1. Defaults to 1.",
+                "description": "Transmission through uniform sky haze: 1 is clear; 0.25 lets 25% of linear light through; 0 is opaque. Multiplies the transmission through horizon fog. Affects the sky and all celestial objects.",
                 "minimum": 0,
                 "maximum": 1
               },
@@ -379,7 +397,7 @@
               },
               "auroraVisibility": {
                 "type": "number",
-                "description": "Aurora visibility multiplier for this area (0 to 1). Defaults to `skyVisibility`; set explicitly to control auroras independently. Auroras still appear only on aurora nights and fade with daylight.",
+                "description": "Aurora brightness multiplier (0 to 1), before sky fog. Defaults to 1. Auroras appear only during aurora events and fade with daylight.",
                 "minimum": 0,
                 "maximum": 1
               },
@@ -452,7 +470,7 @@
     },
     "skyGradientKeyframes": {
       "type": "array",
-      "minItems": 2,
+      "minItems": 1,
       "items": {
         "type": "object",
         "additionalProperties": false,

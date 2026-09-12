@@ -13,6 +13,8 @@ layout(std140) uniform UBOSky {
     vec3 skyZenithColor;
     vec3 skyHorizonColor;
     vec3 skySunColor;
+    float skyCustomGradient;
+    float skyHorizonWidth;
     vec3 skySunDir;
     vec3 skyCelestialPole;
     float skyCelestialRotation;
@@ -25,6 +27,8 @@ layout(std140) uniform UBOSky {
     vec2 skyMoonLibration;
     float skyMoonPhaseReversed;
 
+    vec3 skyFogColor;
+    float skyFogDensity;
     float skyVisibility;
     float moonVisibility;
     float starVisibility;

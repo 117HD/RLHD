@@ -36,12 +36,16 @@ SkyGradient computeSkyGradient(vec3 viewDir) {
     vec3 darkSideColor = mix(skyZenithColor * darkSideDim, skyHorizonColor, daytimeFactor);
     vec3 sunSideColor = skyHorizonColor;
 
-    g.nightFade = smoothstep(-0.26, 0.0, skySunDir.y);
+    g.nightFade = smoothstep(-0.26, 0.0, skySunDir.y) * (1.0 - skyCustomGradient);
 
     vec3 horizonColor = mix(darkSideColor, sunSideColor, g.sunSideBlend);
     horizonColor = mix(skyZenithColor, horizonColor, g.nightFade);
 
     g.color = mix(horizonColor, skyZenithColor, g.zenithBlend);
+    // Custom skies have a symmetric horizon band independent of the sun's direction.
+    vec3 customColor = mix(skyHorizonColor, skyZenithColor,
+        smoothstep(0.0, skyHorizonWidth, abs(g.upAmount)));
+    g.color = mix(g.color, customColor, skyCustomGradient);
 
     // Use multiply/sqrt equivalents of pow for the glow falloffs.
     float sunDot = dot(viewDir, g.sunDir);
@@ -62,15 +66,7 @@ SkyGradient computeSkyGradient(vec3 viewDir) {
     return g;
 }
 
-// Apply horizon haze and atmospheric scattering in linear sRGB.
-vec3 applySkyHaze(vec3 skyColor, float upAmount, float sunSideBlend, float zenithBlend) {
-    float horizonHaze = 1.0 - abs(upAmount);
-    horizonHaze = horizonHaze * horizonHaze * sqrt(horizonHaze) * 0.15; // ^2.5
-    vec3 hazeColor = mix(skyHorizonColor * 0.8, skyHorizonColor * 1.3, sunSideBlend);
-    skyColor = mix(skyColor, hazeColor, horizonHaze);
-
-    float atmosphericScatter = sunSideBlend * (1.0 - zenithBlend) * 0.2;
-    skyColor = mix(skyColor, skySunColor * 0.5 + skyHorizonColor * 0.5, atmosphericScatter);
-
-    return skyColor;
+vec3 blendSkyBackground(vec3 gradient, vec3 background, float amount) {
+    // Keep an authored gradient visible behind stars and nebulas, including below the horizon.
+    return mix(gradient, background + gradient * skyCustomGradient, amount);
 }

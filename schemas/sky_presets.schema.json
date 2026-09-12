@@ -40,6 +40,16 @@
       "profile": {
         "$ref": "environments.schema.json#/$defs/skyProfile"
       },
+      "customGradient": {
+        "type": "boolean",
+        "description": "Use profile colors directly, without automatic fog/night replacement or sun-facing bias. Stars remain visible at any sun altitude. Defaults to false."
+      },
+      "horizonWidth": {
+        "type": "number",
+        "minimum": 0.001,
+        "maximum": 90,
+        "description": "Degrees above and below the horizon where a custom gradient reaches its zenith color. Defaults to 15."
+      },
       "forceMoonPhase": {
         "type": "string",
         "enum": [
@@ -60,6 +70,7 @@
       },
       "moonShadowStrength": {
         "type": "number",
+        "description": "Moon shadow contrast multiplier, clamped to 0-1. Defaults to 1. Faded directional light becomes ambient while preserving irradiance averaged over surface orientations.",
         "minimum": 0
       },
       "minMoonIllumination": {
@@ -77,16 +88,24 @@
         "type": "number",
         "minimum": 0
       },
-      "nightSkyColor": {
+      "skyFogColor": {
         "$ref": "#/$defs/color",
-        "description": "Night-sky tint in sRGB. Its influence follows moon phase and altitude, independently of moon visibility."
+        "description": "Fog color in sRGB. Omit to follow the sky's horizon color. Blends with that color using skyFogColorMix."
       },
-      "nightSkyColorStrength": {
+      "skyFogColorMix": {
         "type": "number",
+        "description": "Color blend: 0 follows the horizon color; 1 uses skyFogColor. Defaults to 1. Does not change fog opacity.",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "skyFogDensity": {
+        "type": "number",
+        "description": "Additional horizon optical depth: 0 disables horizon fog; 0.69 halves transmission at the horizon. Fades upward. Defaults to environment fogDepth / 100; ground fog is independent.",
         "minimum": 0
       },
       "skyVisibility": {
         "type": "number",
+        "description": "Transmission through uniform sky haze: 1 is clear; 0.25 lets 25% of linear light through; 0 is opaque. Multiplies the transmission through horizon fog. Affects the sky and all celestial objects.",
         "minimum": 0,
         "maximum": 1
       },

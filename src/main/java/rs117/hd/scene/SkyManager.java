@@ -243,12 +243,17 @@ public class SkyManager {
 		return sky.hideMoon || configMoonBehavior.isDisabled && sky.forceMoonPhase == null;
 	}
 
-	private Instant resolveCurrentInstant(@Nullable float[] sunOverride) {
+	private DaylightCycle resolveCycle(@Nullable float[] sunOverride) {
 		// Fixed environment angles use Default's slower time as a stable tuning baseline.
-		if (configCycle.usesDefaultCycleTime || sunOverride != null && configCycle != DaylightCycle.CUSTOM_BASIC)
+		return sunOverride != null ? DaylightCycle.DEFAULT : configCycle;
+	}
+
+	private Instant resolveCurrentInstant(@Nullable float[] sunOverride) {
+		DaylightCycle cycle = resolveCycle(sunOverride);
+		if (cycle.usesDefaultCycleTime)
 			return getDefaultInstant();
 
-		switch (configCycle) {
+		switch (cycle) {
 			case OFF:
 			case REAL_TIME:
 				return frameUtcInstant;
@@ -264,7 +269,7 @@ public class SkyManager {
 					.plusMillis((long) (cyclePosition * DAY_MS));
 		}
 
-		throw new IllegalStateException("Unhandled daylight cycle mode: " + configCycle);
+		throw new IllegalStateException("Unhandled daylight cycle mode: " + cycle);
 	}
 
 	/**
@@ -399,7 +404,7 @@ public class SkyManager {
 				sin((float) (days / DRACONIC_MONTH_DAYS) * TWO_PI) * LATITUDE_LIBRATION_DEG * DEG_TO_RAD
 			);
 		}
-		state.celestialPole = configCycle == DaylightCycle.CUSTOM_BASIC
+		state.celestialPole = resolveCycle(sunAnglesOverride) == DaylightCycle.CUSTOM_BASIC
 			? anglesToSkyDirection(BASIC_SUN_TILT, 0)
 			: anglesToSkyDirection((float) configLatLon[0] * DEG_TO_RAD, 0);
 		state.celestialRotation = (currentInstant.toEpochMilli() % DAY_MS) / (float) DAY_MS * TWO_PI;
@@ -517,7 +522,7 @@ public class SkyManager {
 		sunDescending = Float.isNaN(previousScheduleSunAltitude) || scheduleSunAltitude <= previousScheduleSunAltitude;
 		previousScheduleSunAltitude = scheduleSunAltitude;
 		// Change offsets at solar noon, outside every dusk-to-dawn schedule. Basic starts at sunrise.
-		long scheduleOffset = configCycle == DaylightCycle.CUSTOM_BASIC ? DAY_MS / 4 : DAY_MS / 2;
+		long scheduleOffset = resolveCycle(sunAnglesOverride) == DaylightCycle.CUSTOM_BASIC ? DAY_MS / 4 : DAY_MS / 2;
 		scheduleNightIndex = Math.floorDiv(currentInstant.toEpochMilli() - scheduleOffset, DAY_MS);
 		if (state.cycleActive)
 			nightFactor = smoothstep(5, -18, scheduleSunAltitude);
@@ -568,7 +573,7 @@ public class SkyManager {
 		double cycleTime;
 		float eventStart;
 		float sunAltitude = state.sunAngles[0];
-		if (configCycle != DaylightCycle.CUSTOM_BASIC) {
+		if (resolveCycle(sunAnglesOverride) != DaylightCycle.CUSTOM_BASIC) {
 			cycleTime = currentInstant.toEpochMilli() / (double) DAY_MS;
 			eventStart = ASTRONOMICAL_NIGHT_START;
 			if (configCycle.skyPreset != null)

@@ -6,6 +6,7 @@
 #include <uniforms/sky.glsl>
 
 #include <utils/starfield.glsl>
+#include <utils/sky_fog.glsl>
 
 layout(location = 0) in vec3 aStarDir;     // field-space unit direction
 layout(location = 1) in float aStarSize;   // relative size
@@ -54,7 +55,7 @@ void main() {
     float sunSideBlend = smoothstep(0.0, 1.0, (sunFacing + 1.0) * 0.5);
 
     float zenithBlend = smoothstep(-0.1, 0.7, upAmount);
-    float nightFade = smoothstep(-0.26, 0.0, skySunDir.y);
+    float nightFade = smoothstep(-0.26, 0.0, skySunDir.y) * (1.0 - skyCustomGradient);
 
     float baseProgress = 1.0 - nightFade;
     float sunProximity = sunSideBlend * (1.0 - zenithBlend);
@@ -89,5 +90,6 @@ void main() {
     float sizePixels = max(screenSize * renderScale, 2.0);
     float actualScreenSize = sizePixels / max(renderScale, 1e-6);
     vBrightness *= min(1.0, (screenSize / actualScreenSize) * (screenSize / actualScreenSize));
+    vBrightness *= skyFogTransmittance(upAmount);
     gl_PointSize = visibility > 0.001 ? sizePixels : 0.0;
 }
