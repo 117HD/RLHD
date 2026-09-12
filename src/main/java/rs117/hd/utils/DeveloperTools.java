@@ -40,6 +40,7 @@ public class DeveloperTools implements KeyListener {
 	private static final Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, CTRL_DOWN_MASK);
 	private static final Keybind KEY_RELOAD_SCENE = new Keybind(KeyEvent.VK_R, CTRL_DOWN_MASK);
+	private static final Keybind KEY_COLOR_PICKER = new Keybind(KeyEvent.VK_P, CTRL_DOWN_MASK | SHIFT_DOWN_MASK);
 
 	@Inject
 	@Named("developerMode")
@@ -280,6 +281,7 @@ public class DeveloperTools implements KeyListener {
 				var rgb = ColorUtils.rgb(c); // linear
 				plugin.uboGlobal.colorPicker.set(rgb[0], rgb[1], rgb[2], c.getAlpha() / 255.f);
 			}));
+			colorPicker.setOnClose(e -> colorPicker = null);
 			colorPicker.setVisible(true);
 		} else {
 			colorPicker.setVisible(false);
@@ -318,6 +320,8 @@ public class DeveloperTools implements KeyListener {
 			hideUiEnabled = !hideUiEnabled;
 		} else if (KEY_RELOAD_SCENE.matches(e)) {
 			plugin.renderer.reloadScene();
+		} else if (KEY_COLOR_PICKER.matches(e)) {
+			toggleColorPicker();
 		} else {
 			return;
 		}
