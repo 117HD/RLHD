@@ -476,11 +476,11 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String KEY_TERRAIN_SHADOWS = "experimentalTerrainShadows";
+	String KEY_TERRAIN_SHADOWS = "terrainShadows";
 	@ConfigItem(
 		keyName = KEY_TERRAIN_SHADOWS,
 		name = "Terrain Shadows",
-		description = "Allow terrain to cast shadows on other terrain. May cause visual artifacts on slopes.",
+		description = "Allow terrain to cast shadows. May cause visual artifacts on slopes.",
 		position = 7,
 		section = shadowSettings
 	)
@@ -628,8 +628,8 @@ public interface HdPluginConfig extends Config
 			"'Sunset' shows a constant sunset.<br>" +
 			"'Dusk' shows the sky just after sunset.<br>" +
 			"'Night' shows constant night-time.<br>" +
-			"'Custom Realistic' follows the sun and moon at the configured location, using Custom duration.<br>" +
-			"'Custom Basic' moves a synthetic sun directly overhead, using Custom duration and Basic night portion.",
+			"'Custom Realistic' follows the sun and moon at the configured location, respecting the Custom duration.<br>" +
+			"'Custom Basic' moves the sun on a circular cycle, respecting the Custom duration and Basic night portion.",
 		position = 0,
 		section = daylightCycleSettings
 	)
@@ -644,7 +644,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"'Off' hides stars.<br>" +
 			"'Realistic' follows the sky's celestial rotation.<br>" +
-			"'Artistic' rotates horizontally with some parallax.<br>" +
+			"'Artistic' rotates horizontally with slight parallax.<br>" +
 			"'Static' keeps the realistic star field fixed in place.",
 		position = 1,
 		section = daylightCycleSettings
@@ -722,11 +722,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_REPLACE_VANILLA_SKYBOXES,
 		name = "Replace vanilla skyboxes",
-		description =
-			"Allows areas that opt in to hide the game's built-in skybox models (such as the one added for Blood " +
-			"Moon Rises) so the day & night cycle's own sky is shown in their place.<br>" +
-			"When enabled, vanilla skyboxes are hidden only in areas configured to hide them.<br>" +
-			"When disabled, vanilla skyboxes are always shown, even in those areas.",
+		description = "Replace the game's built-in skybox models with 117 HD's own implementation.",
 		position = 6,
 		section = daylightCycleSettings
 	)
@@ -782,7 +778,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_BASIC_NIGHT_PERCENTAGE,
 		name = "Basic night portion",
-		description = "Sets the share of each Custom Basic cycle spent at night, without changing its duration.",
+		description = "Decides how much of the Custom Basic cycle should be dedicated to night-time.",
 		position = 10,
 		section = daylightCycleSettings
 	)
