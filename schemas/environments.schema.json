@@ -340,7 +340,7 @@
                   "string",
                   "array"
                 ],
-                "description": "Night-sky tint color in sRGB, specified as a hex color code or an array in the range 0-255. Defaults to `moonDiskColor`.",
+                "description": "Night-sky tint in sRGB. Its influence follows moon phase and altitude, independently of moon visibility. Defaults to `moonDiskColor`.",
                 "pattern": "^#[A-Fa-f0-9]{6}$",
                 "minItems": 3,
                 "maxItems": 3,

@@ -277,11 +277,15 @@ public class SkyRenderer {
 		float shadowVisibility = sunAltDeg >= 0 ? getSunShadowVisibility(sunAltDeg) :
 			getMoonShadowVisibility(sky, sunAltDeg, moonAltDeg, litMoonIllumination);
 		float moonInfluence = computeMoonInfluence(sunAltDeg, moonAltDeg, litMoonIllumination);
-		if (moonInfluence > 0) {
-			mix(directionalColor, directionalColor, sky.moonLightColor, moonInfluence);
-			float skyTint = min(1, moonInfluence * NIGHT_SKY_TINT_SCALE * sky.nightSkyColorStrength);
+		float moonTintInfluence = computeMoonInfluence(sunAltDeg, moonAltDeg, max(moonIllumination, sky.minMoonIllumination));
+		float skyTint = min(1, moonTintInfluence * NIGHT_SKY_TINT_SCALE * sky.nightSkyColorStrength);
+		if (skyTint > 0) {
+			// Blend linear light, independently of whether the moon disk is visible.
 			mix(skySample.zenithLinear, skySample.zenithLinear, sky.nightSkyColor, skyTint);
 			mix(skySample.horizonLinear, skySample.horizonLinear, sky.nightSkyColor, skyTint);
+		}
+		if (moonInfluence > 0) {
+			mix(directionalColor, directionalColor, sky.moonLightColor, moonInfluence);
 			directionalStrength = mix(
 				directionalStrength,
 				state.moonDirectionalStrength,

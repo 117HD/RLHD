@@ -78,7 +78,8 @@
         "minimum": 0
       },
       "nightSkyColor": {
-        "$ref": "#/$defs/color"
+        "$ref": "#/$defs/color",
+        "description": "Night-sky tint in sRGB. Its influence follows moon phase and altitude, independently of moon visibility."
       },
       "nightSkyColorStrength": {
         "type": "number",
