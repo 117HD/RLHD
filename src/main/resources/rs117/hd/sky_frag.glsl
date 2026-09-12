@@ -3,7 +3,7 @@
 #include <uniforms/global.glsl>
 #include <uniforms/sky.glsl>
 
-#include <utils/color_blindness.glsl>
+#include <utils/output_transform.glsl>
 #include <utils/misc.glsl>
 #include <utils/starfield.glsl>
 #include <utils/aurora.glsl>
@@ -297,36 +297,9 @@ void main() {
 
     skyColor = applySkyHaze(skyColor, sky.upAmount, sky.sunSideBlend, sky.zenithBlend);
 
-    skyColor.rgb = clamp(skyColor.rgb, 0, 1);
-
-    // Skip unnecessary color conversion if possible
-    if (saturation != 1 || contrast != 1) {
-        vec3 hsv = srgbToHsv(skyColor.rgb);
-
-        // Apply saturation setting
-        hsv.y *= saturation;
-
-        // Apply contrast setting
-        if (hsv.z > 0.5) {
-            hsv.z = 0.5 + ((hsv.z - 0.5) * contrast);
-        } else {
-            hsv.z = 0.5 - ((0.5 - hsv.z) * contrast);
-        }
-
-        skyColor.rgb = hsvToSrgb(hsv);
-    }
-
-    skyColor = colorBlindnessCompensation(skyColor);
-
-    #if APPLY_COLOR_FILTER
-        outputColor.rgb = applyColorFilter(outputColor.rgb);
-    #endif
-
-    skyColor = pow(skyColor, vec3(gammaCorrection));
-
-    #if WINDOWS_HDR_CORRECTION
-        outputColor.rgb = windowsHdrCorrection(outputColor.rgb);
-    #endif
+    skyColor = linearToSrgb(skyColor);
+    skyColor = applyColorAdjustments(skyColor);
+    skyColor = applyOutputCorrection(skyColor);
 
     // Break up 8-bit gradient bands with ±0.5/255 noise.
     float dither = moonHash(gl_FragCoord.xy) - 0.5;

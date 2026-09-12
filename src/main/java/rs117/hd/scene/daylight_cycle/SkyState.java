@@ -24,14 +24,14 @@ public final class SkyState {
 	public float auroraStrength;
 
 	public static class GradientSample {
-		public float[] zenithSrgb;
-		public float[] horizonSrgb;
-		public float[] sunGlowSrgb;
+		// Keep evaluated colors linear through transitions, moon tinting, and UBO upload.
+		public float[] zenithLinear;
+		public float[] horizonLinear;
+		public float[] sunGlowLinear;
 		public float brightnessMultiplier;
 	}
 
 	public static final class LightingSample extends GradientSample {
-		public float[] horizonLinear;
 		public float[] referenceFogColorLinear;
 		public float sunAltitudeDegrees;
 		public float moonAltitudeDegrees;

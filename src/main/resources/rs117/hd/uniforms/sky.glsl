@@ -8,6 +8,7 @@
 #define STAR_MODE_STATIC 3
 
 layout(std140) uniform UBOSky {
+    // All color fields are linear sRGB.
     bool skyGradientEnabled;
     vec3 skyZenithColor;
     vec3 skyHorizonColor;

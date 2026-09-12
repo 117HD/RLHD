@@ -270,9 +270,9 @@ public class SkyConfiguration {
 		float nightBlend = smoothstep(0, -15, sunAltitudeDegrees);
 		if (nightBlend > 0)
 			blendSky(zenith, horizon, profile.nightSkyColor, nightBlend);
-		out.zenithSrgb = ColorUtils.linearToSrgb(zenith);
-		out.horizonSrgb = ColorUtils.linearToSrgb(horizon);
-		out.sunGlowSrgb = ColorUtils.linearToSrgb(sunGlow);
+		out.zenithLinear = zenith;
+		out.horizonLinear = horizon;
+		out.sunGlowLinear = sunGlow;
 		out.brightnessMultiplier = profile.getBrightnessMultiplier(sunAltitudeDegrees, minBrightness);
 	}
 

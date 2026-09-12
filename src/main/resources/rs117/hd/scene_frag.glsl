@@ -74,7 +74,7 @@ vec2 worldUvs(float scale) {
 
 #include <utils/constants.glsl>
 #include <utils/misc.glsl>
-#include <utils/color_blindness.glsl>
+#include <utils/output_transform.glsl>
 #include <utils/caustics.glsl>
 #include <utils/color_utils.glsl>
 #include <utils/normals.glsl>
@@ -82,7 +82,6 @@ vec2 worldUvs(float scale) {
 #include <utils/displacement.glsl>
 #include <utils/shadows.glsl>
 #include <utils/water.glsl>
-#include <utils/color_filters.glsl>
 #include <utils/fog.glsl>
 #include <utils/wireframe.glsl>
 #include <utils/lights.glsl>
@@ -427,7 +426,7 @@ void main() {
         calculateLighting(IN.position, normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength, pointLightsOut, pointLightsSpecularOut);
 
         // sky light
-        vec3 skyLightColor = fogColor;
+        vec3 skyLightColor = srgbToLinear(fogColor);
         float skyLightStrength = 0.5;
         float skyDotNormals = downDotNormals;
         vec3 skyLightOut = max(skyDotNormals, 0.0) * skyLightColor * skyLightStrength;
@@ -526,30 +525,7 @@ void main() {
         }
     #endif
 
-    outputColor.rgb = clamp(outputColor.rgb, 0, 1);
-
-    // Skip unnecessary color conversion if possible
-    if (saturation != 1 || contrast != 1) {
-        vec3 hsv = srgbToHsv(outputColor.rgb);
-
-        // Apply saturation setting
-        hsv.y *= saturation;
-
-        // Apply contrast setting
-        if (hsv.z > 0.5) {
-            hsv.z = 0.5 + ((hsv.z - 0.5) * contrast);
-        } else {
-            hsv.z = 0.5 - ((0.5 - hsv.z) * contrast);
-        }
-
-        outputColor.rgb = hsvToSrgb(hsv);
-    }
-
-    outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
-
-    #if APPLY_COLOR_FILTER
-        outputColor.rgb = applyColorFilter(outputColor.rgb);
-    #endif
+    outputColor.rgb = applyColorAdjustments(outputColor.rgb);
 
     #if WIREFRAME
         outputColor.rgb *= wireframeMask();
@@ -595,6 +571,8 @@ void main() {
                 }
 
                 skyColorAtFragment = applySkyHaze(skyColorAtFragment, sky.upAmount, sky.sunSideBlend, sky.zenithBlend);
+                // Scene fog is composed after the scene's sRGB conversion.
+                skyColorAtFragment = linearToSrgb(skyColorAtFragment);
             }
 
             outputColor.rgb = mix(outputColor.rgb, skyColorAtFragment, combinedFog);
@@ -607,11 +585,7 @@ void main() {
         }
     }
 
-    outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));
-
-    #if WINDOWS_HDR_CORRECTION
-        outputColor.rgb = windowsHdrCorrection(outputColor.rgb);
-    #endif
+    outputColor.rgb = applyOutputCorrection(outputColor.rgb);
 
     FragColor = outputColor;
 }

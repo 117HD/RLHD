@@ -265,9 +265,9 @@ public class SkyRenderer {
 		toSky.evaluateGradient(skySample, sunAltDeg, env.getFogColor(), plugin.configMinimumBrightness);
 		if (transition < 1) {
 			fromSky.evaluateGradient(transitionSkySample, sunAltDeg, env.getFogColor(), plugin.configMinimumBrightness);
-			mix(skySample.zenithSrgb, transitionSkySample.zenithSrgb, skySample.zenithSrgb, transition);
-			mix(skySample.horizonSrgb, transitionSkySample.horizonSrgb, skySample.horizonSrgb, transition);
-			mix(skySample.sunGlowSrgb, transitionSkySample.sunGlowSrgb, skySample.sunGlowSrgb, transition);
+			mix(skySample.zenithLinear, transitionSkySample.zenithLinear, skySample.zenithLinear, transition);
+			mix(skySample.horizonLinear, transitionSkySample.horizonLinear, skySample.horizonLinear, transition);
+			mix(skySample.sunGlowLinear, transitionSkySample.sunGlowLinear, skySample.sunGlowLinear, transition);
 			skySample.brightnessMultiplier = mix(transitionSkySample.brightnessMultiplier, skySample.brightnessMultiplier, transition);
 		}
 		float brightnessMultiplier = skySample.brightnessMultiplier;
@@ -280,8 +280,8 @@ public class SkyRenderer {
 		if (moonInfluence > 0) {
 			mix(directionalColor, directionalColor, sky.moonLightColor, moonInfluence);
 			float skyTint = min(1, moonInfluence * NIGHT_SKY_TINT_SCALE * sky.nightSkyColorStrength);
-			mix(skySample.zenithSrgb, skySample.zenithSrgb, sky.nightSkyColor, skyTint);
-			mix(skySample.horizonSrgb, skySample.horizonSrgb, sky.nightSkyColor, skyTint);
+			mix(skySample.zenithLinear, skySample.zenithLinear, sky.nightSkyColor, skyTint);
+			mix(skySample.horizonLinear, skySample.horizonLinear, sky.nightSkyColor, skyTint);
 			directionalStrength = mix(
 				directionalStrength,
 				state.moonDirectionalStrength,
@@ -289,8 +289,8 @@ public class SkyRenderer {
 			);
 		}
 		directionalStrength *= brightnessMultiplier * sky.sunlightStrength;
-		copyTo(fogColorSrgb, skySample.horizonSrgb);
-		copyTo(waterColor, ColorUtils.srgbToLinear(skySample.horizonSrgb));
+		copyTo(fogColorSrgb, linearToSrgb(skySample.horizonLinear));
+		copyTo(waterColor, skySample.horizonLinear);
 		float moonPresenceFactor = moonPresence(moonAltDeg, litMoonIllumination);
 		float boostFraction = MIN_BRIGHTNESS_BOOST_RESIDUAL + (1 - MIN_BRIGHTNESS_BOOST_RESIDUAL) * (1 - moonPresenceFactor);
 		ambientStrength = max(ambientStrength, plugin.configMinimumBrightness * (1 + sky.minBrightnessBoost * boostFraction));
@@ -342,9 +342,9 @@ public class SkyRenderer {
 	private void updateSkyUbo(SkyConfiguration configuration, SkyState state, GradientSample sky, float moonIllumination) {
 		var ubo = plugin.uboSky;
 		ubo.skyGradientEnabled.set(1);
-		ubo.skyZenithColor.set(sky.zenithSrgb);
-		ubo.skyHorizonColor.set(sky.horizonSrgb);
-		ubo.skySunColor.set(sky.sunGlowSrgb);
+		ubo.skyZenithColor.set(sky.zenithLinear);
+		ubo.skyHorizonColor.set(sky.horizonLinear);
+		ubo.skySunColor.set(sky.sunGlowLinear);
 		ubo.skySunDir.set(state.sunDirection);
 		ubo.skyCelestialPole.set(state.celestialPole[0], -state.celestialPole[1], state.celestialPole[2]);
 		ubo.skyCelestialRotation.set(state.celestialRotation);

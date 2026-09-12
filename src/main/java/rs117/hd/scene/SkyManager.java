@@ -25,7 +25,6 @@ import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.utils.AstronomyUtils;
 import rs117.hd.utils.Camera;
-import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
@@ -489,7 +488,6 @@ public class SkyManager {
 			)[0];
 		}
 		sky.evaluateGradient(out, sunAngles[0] * RAD_TO_DEG, fogColor, minBrightness);
-		out.horizonLinear = ColorUtils.srgbToLinear(out.horizonSrgb);
 		out.referenceFogColorLinear = fogColor;
 		out.sunAltitudeDegrees = sunAngles[0] * RAD_TO_DEG;
 		out.moonAltitudeDegrees = moonAngles[0] * RAD_TO_DEG;

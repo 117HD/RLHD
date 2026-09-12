@@ -6,7 +6,7 @@ struct SkyGradient {
     float sunSideBlend;  // 0 = facing away from sun, 1 = facing toward sun
     float zenithBlend;   // 0 = horizon, 1 = zenith
     float nightFade;     // 0 = deep night, 1 = sun at/above horizon
-    vec3 color;          // base horizon/zenith gradient + sun glow (no haze/scatter/stars/moon yet)
+    vec3 color;          // linear sRGB gradient + sun glow (before haze/stars/moon)
 };
 
 // The camera makes the perceived horizon about 5° below astronomical 0°.
@@ -62,7 +62,7 @@ SkyGradient computeSkyGradient(vec3 viewDir) {
     return g;
 }
 
-// Apply horizon haze and atmospheric scattering to a sky-gradient color.
+// Apply horizon haze and atmospheric scattering in linear sRGB.
 vec3 applySkyHaze(vec3 skyColor, float upAmount, float sunSideBlend, float zenithBlend) {
     float horizonHaze = 1.0 - abs(upAmount);
     horizonHaze = horizonHaze * horizonHaze * sqrt(horizonHaze) * 0.15; // ^2.5
