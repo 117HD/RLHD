@@ -1552,7 +1552,7 @@
     "windSpeed": 10
   },
   {
-    "area": "KEBOS_LOWLANDS",
+    "area": "KEBOS_LOWLANDS_SWAMP",
     "ambientColor": "#ffd785",
     "ambientStrength": 0.8,
     "directionalColor": "#cfe5b5",
