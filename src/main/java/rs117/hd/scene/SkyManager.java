@@ -566,8 +566,6 @@ public class SkyManager {
 		return (hash & 0x7FFFFFFF) / 2147483647f;
 	}
 
-	// Auroras
-
 	private void resolveAuroraStrength() {
 		double cycleTime;
 		float eventStart;

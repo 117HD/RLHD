@@ -16,7 +16,7 @@ public class Light
 	/**
 	 * Linear color space RGBA in the range [0, 1]
 	 */
-	public float[] color;
+	public final float[] color = new float[3];
 	public float animation = 0.5f;
 	public float duration;
 	public float fadeInDuration;
@@ -47,9 +47,9 @@ public class Light
 	public int plane;
 	public int prevPlane = -1;
 	public Alignment alignment;
-	public float[] origin = new float[3];
-	public float[] offset = new float[3];
-	public float[] pos = new float[3];
+	public final float[] origin = new float[3];
+	public final float[] offset = new float[3];
+	public final float[] pos = new float[3];
 	public int orientation;
 	public float distanceSquared;
 	public float daylightCycleStrengthScale = 1;
@@ -69,12 +69,12 @@ public class Light
 	public Light(LightDefinition def) {
 		this.def = def;
 		copyTo(offset, def.offset);
+		copyTo(color, def.color);
 		duration = max(0, def.duration) / 1000f;
 		fadeInDuration = max(0, def.fadeInDuration) / 1000f;
 		fadeOutDuration = max(0, def.fadeOutDuration) / 1000f;
 		spawnDelay = max(0, def.spawnDelay) / 1000f;
 		despawnDelay = max(0, def.despawnDelay) / 1000f;
-		color = copy(def.color);
 		radius = def.radius;
 		strength = def.strength;
 		alignment = def.alignment;
