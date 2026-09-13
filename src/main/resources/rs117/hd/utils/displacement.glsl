@@ -46,20 +46,27 @@ void sampleDisplacementMap(
 
     float scale = material.displacementScale;
 
+    vec3 viewDir = normalize(tsViewDir);
+    float viewZ = abs(viewDir.z);
+    float grazingFade = smoothstep(0.02, 0.2, viewZ);
+    scale *= grazingFade;
+
+    if (scale <= 0.0)
+        return;
+
     // TODO: consider anti-aliasing to fit more nicely with MSAA
     // TODO: improve close-up accuracy
     const float minLayers = 1;
     const float maxLayers = 16;
-    float cosView = normalize(tsViewDir).z;
-    float numLayers = mix(minLayers, maxLayers, 1 - clamp(cosView * cosView, 0, 1));
+    float numLayers = mix(minLayers, maxLayers, 1 - clamp(viewZ * viewZ, 0, 1));
     float heightPerLayer = 1. / numLayers;
 
-    vec2 deltaXyPerZ = tsViewDir.xy / tsViewDir.z * scale;
+    float safeViewZ = max(viewZ, 0.02);
+    vec2 deltaXyPerZ = viewDir.xy / safeViewZ * scale;
 
     // Shift UVs so half displacement is the same height as the surface
     // This avoids some shadowing artifacts from the surface casting a shadow onto itself
     uv += deltaXyPerZ * .5;
-    fragDelta -= vec3(deltaXyPerZ, scale) * .5;
 
     float height = 0;
     float prevHeight = 0;
@@ -75,24 +82,27 @@ void sampleDisplacementMap(
     float undershoot = (layer + heightPerLayer) - prevHeight;
     height = mix(height, prevHeight, overshoot / (overshoot + undershoot));
 
-    vec3 tsDelta = vec3(deltaXyPerZ, scale) * height;
-    uv -= tsDelta.xy;
-    fragDelta += tsDelta;
+    vec2 parallaxOffset = deltaXyPerZ * height;
+    uv -= parallaxOffset;
+    fragDelta.z += scale * height;
 
     // TODO: fix self-shadowing at steep angles
 //    #undef PARALLAX_OCCLUSION_MAPPING
 //    #define PARALLAX_OCCLUSION_MAPPING 2
     #if PARALLAX_OCCLUSION_MAPPING >= 2 // self-shadowing
-        float cosLight = normalize(tsLightDir).z;
-        float shadowBias = max(.0001, pow(1 - cosLight, 5.) * scale);
+        vec3 lightDir = normalize(tsLightDir);
+        float lightZ = abs(lightDir.z);
+        float shadowBias = max(.0001, pow(1 - lightZ, 5.) * scale);
 
         // Prepare for shadow steps
-        deltaXyPerZ = tsLightDir.xy / tsLightDir.z * scale;
+        float safeLightZ = max(lightZ, 0.02);
+        deltaXyPerZ = lightDir.xy / safeLightZ * scale;
         layer = height;
 
         #if PARALLAX_OCCLUSION_MAPPING == 2 // hard shadows
-            for (; layer <= 1 && height <= layer; layer += heightPerLayer)
-                height = sampleHeight(material, uv - deltaXyPerZ * layer) - shadowBias;
+            float sHeight = height;
+            for (; layer <= 1 && sHeight <= layer; layer += heightPerLayer)
+                sHeight = sampleHeight(material, uv - deltaXyPerZ * layer) - shadowBias;
 
             if (layer <= 1)
                 selfShadowing++;
