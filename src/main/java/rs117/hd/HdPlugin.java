@@ -440,6 +440,7 @@ public class HdPlugin extends Plugin {
 
 	@Getter
 	private boolean isPluginStopPending;
+	private Throwable shutdownException;
 	@Getter
 	private boolean isActive;
 	private boolean lwjglInitialized;
@@ -818,11 +819,39 @@ public class HdPlugin extends Plugin {
 		});
 	}
 
-	public void requestPluginStop() {
+	public void requestPluginStop() { requestPluginStop(null); }
+
+	public void requestPluginStop(Throwable ex) {
 		if (isPluginStopPending)
 			return;
 		log.debug("Requesting plugin to stop when safe");
 		isPluginStopPending = true;
+		shutdownException = ex;
+	}
+
+	private boolean handleShutdownRequest() {
+		if (!isPluginStopPending)
+			return false;
+
+		try {
+			log.debug("Shutdown has been requested, stopping plugin");
+			stopPlugin();
+
+			final Throwable shutdownException = this.shutdownException;
+			if (shutdownException != null) {
+				clientThread.invoke((Runnable) () -> {
+					log.debug("Reporting exception to RuneLite");
+					RuntimeException reported = new RuntimeException("117HD - Shutdown caused by Exception: " + shutdownException.getMessage(), shutdownException);
+					reported.setStackTrace(shutdownException.getStackTrace());
+					throw reported;
+				});
+			}
+
+			return true;
+		} finally {
+			isPluginStopPending = false;
+			shutdownException = null;
+		}
 	}
 
 	public void stopPlugin() {
@@ -1599,8 +1628,8 @@ public class HdPlugin extends Plugin {
 	}
 
 	/**
-	 * Convert the front framebuffer to an Image
-	 */
+     * Convert the front framebuffer to an Image
+     */
 	public Image screenshot() {
 		if (uiResolution == null)
 			return null;
@@ -1988,16 +2017,11 @@ public class HdPlugin extends Plugin {
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
-		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
-
-		frame = (frame + 1) & Integer.MAX_VALUE;
-
-		if (isPluginStopPending) {
-			log.debug("Shutdown has been requested, stopping plugin");
-			isPluginStopPending = false;
-			stopPlugin();
+		if(handleShutdownRequest())
 			return;
-		}
+
+		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
+		frame = (frame + 1) & Integer.MAX_VALUE;
 
 		if (lastFrameTimeMillis > 0) {
 			deltaTime = (float) ((System.currentTimeMillis() - lastFrameTimeMillis) / 1000.);
