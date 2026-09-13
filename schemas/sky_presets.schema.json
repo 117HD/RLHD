@@ -35,7 +35,8 @@
         "$ref": "environments.schema.json#/$defs/celestialAngles"
       },
       "hideMoon": {
-        "type": "boolean"
+        "type": "boolean",
+        "description": "Hide the moon disk and halo without changing moonlight or shadows."
       },
       "profile": {
         "$ref": "environments.schema.json#/$defs/skyProfile"
@@ -111,6 +112,13 @@
       },
       "moonVisibility": {
         "type": "number",
+        "description": "Moon disk and halo visibility multiplier. Does not affect moonlight or shadows.",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "moonLightVisibility": {
+        "type": "number",
+        "description": "Moonlight visibility multiplier for scene lighting and moon shadows. Independent of moonVisibility.",
         "minimum": 0,
         "maximum": 1
       },

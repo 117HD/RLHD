@@ -38,6 +38,7 @@ public class SkyManagerTest {
 		setInjectedField(manager, "sunAnglesOverride", new float[] { -1, 0 });
 		manager.getState().moonVisibility = 0;
 		manager.getState().moonIllumination = 0;
+		manager.getState().moonLightIllumination = 0;
 		manager.getState().moonAltitudeDegrees = -80;
 
 		SkyConfiguration sky = loadDefaultPreset();
@@ -48,19 +49,23 @@ public class SkyManagerTest {
 			Instant.parse("2026-06-21T18:00:00Z").toEpochMilli(), new double[2])[0] * RAD_TO_DEG;
 		assertEquals(expectedAltitude, sample.sunAltitudeDegrees, 1e-5f);
 		assertEquals(-expectedAltitude, sample.moonAltitudeDegrees, 1e-5f);
-		assertEquals(MoonPhase.FULL_MOON.illumination, sample.visibleMoonIllumination, 0);
+		assertEquals(MoonPhase.FULL_MOON.illumination, sample.moonLightIllumination, 0);
 
 		sky.sunAngles = new float[] { -30 * DEG_TO_RAD, 0 };
 		sky.moonAngles = new float[] { 20 * DEG_TO_RAD, 0 };
 		sky.forceMoonPhase = MoonPhase.FIRST_QUARTER;
 		sky.moonVisibility = .5f;
+		sky.moonLightVisibility = .5f;
 		manager.sampleLighting(sample, sky, new float[] { 1, 1, 1 }, .7f);
 		assertEquals(-30, sample.sunAltitudeDegrees, 1e-5f);
 		assertEquals(20, sample.moonAltitudeDegrees, 1e-5f);
-		assertEquals(.25f, sample.visibleMoonIllumination, 0);
+		assertEquals(.25f, sample.moonLightIllumination, 0);
 		sky.hideMoon = true;
 		manager.sampleLighting(sample, sky, new float[] { 1, 1, 1 }, .7f);
-		assertEquals(0, sample.visibleMoonIllumination, 0);
+		assertEquals(.25f, sample.moonLightIllumination, 0);
+		sky.moonLightVisibility = 0;
+		manager.sampleLighting(sample, sky, new float[] { 1, 1, 1 }, .7f);
+		assertEquals(0, sample.moonLightIllumination, 0);
 	}
 
 	@Test

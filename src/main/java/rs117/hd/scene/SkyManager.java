@@ -240,7 +240,11 @@ public class SkyManager {
 	}
 
 	private boolean isMoonHidden(SkyConfiguration sky) {
-		return sky.hideMoon || configMoonBehavior.isDisabled && sky.forceMoonPhase == null;
+		return sky.hideMoon || isMoonDisabled(sky);
+	}
+
+	private boolean isMoonDisabled(SkyConfiguration sky) {
+		return configMoonBehavior.isDisabled && sky.forceMoonPhase == null;
 	}
 
 	private DaylightCycle resolveCycle(@Nullable float[] sunOverride) {
@@ -357,10 +361,13 @@ public class SkyManager {
 		float fromMoonIllumination = fromMoonPhase.isLocked ? fromMoonPhase.illumination : naturalMoonIllumination;
 		float toMoonIllumination = toMoonPhase.isLocked ? toMoonPhase.illumination : naturalMoonIllumination;
 		state.moonIllumination = mix(fromMoonIllumination, toMoonIllumination, state.configurationTransition);
-		if (state.moonVisibility == 0)
-			state.moonIllumination = 0;
+		float fromMoonLightIllumination = isMoonDisabled(fromSky) ? 0 :
+			max(fromMoonIllumination, fromSky.minMoonIllumination) * fromSky.moonLightVisibility;
+		float toMoonLightIllumination = isMoonDisabled(toSky) ? 0 :
+			max(toMoonIllumination, toSky.minMoonIllumination) * toSky.moonLightVisibility;
+		state.moonLightIllumination = mix(fromMoonLightIllumination, toMoonLightIllumination, state.configurationTransition);
 		state.shadowAngles = state.cycleActive ?
-			state.sunAngles[0] < 0 && state.moonAngles[0] > 0 && state.moonIllumination > 0
+			state.sunAngles[0] < 0 && state.moonAngles[0] > 0 && state.moonLightIllumination > 0
 				? state.moonAngles
 				: state.sunAngles :
 			environmentManager.getCurrentEnvironment().getShadowAngles();
@@ -496,7 +503,8 @@ public class SkyManager {
 		out.referenceFogColorLinear = fogColor;
 		out.sunAltitudeDegrees = sunAngles[0] * RAD_TO_DEG;
 		out.moonAltitudeDegrees = moonAngles[0] * RAD_TO_DEG;
-		out.visibleMoonIllumination = isMoonHidden(sky) ? 0 : illumination * sky.moonVisibility;
+		out.moonLightIllumination = isMoonDisabled(sky) ? 0 :
+			max(illumination, sky.minMoonIllumination) * sky.moonLightVisibility;
 	}
 
 	/**

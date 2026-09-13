@@ -270,7 +270,7 @@
               },
               "hideMoon": {
                 "type": "boolean",
-                "description": "Hide the moon disk."
+                "description": "Hide the moon disk and halo without changing moonlight or shadows."
               },
               "profile": {
                 "$ref": "#/$defs/skyProfile"
@@ -379,7 +379,13 @@
               },
               "moonVisibility": {
                 "type": "number",
-                "description": "Moon visibility multiplier for this area (0 to 1). Defaults to 1.",
+                "description": "Moon disk and halo visibility multiplier (0 to 1). Defaults to 1; it does not affect moonlight or shadows.",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "moonLightVisibility": {
+                "type": "number",
+                "description": "Moonlight visibility multiplier for scene lighting and moon shadows (0 to 1). Defaults to 1 and is independent of moonVisibility.",
                 "minimum": 0,
                 "maximum": 1
               },

@@ -18,6 +18,7 @@ public final class SkyState {
 	public float[] celestialPole;
 	public float celestialRotation;
 	public float moonIllumination;
+	public float moonLightIllumination;
 	public float sunAltitudeDegrees;
 	public float moonAltitudeDegrees;
 	public float moonVisibility;
@@ -35,6 +36,6 @@ public final class SkyState {
 		public float[] referenceFogColorLinear;
 		public float sunAltitudeDegrees;
 		public float moonAltitudeDegrees;
-		public float visibleMoonIllumination;
+		public float moonLightIllumination;
 	}
 }

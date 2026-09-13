@@ -272,8 +272,8 @@ public class SkyRenderer {
 		float brightnessMultiplier = skySample.brightnessMultiplier;
 		ambientStrength = brightnessMultiplier;
 
-		float litMoonIllumination = max(moonIllumination, sky.minMoonIllumination) * state.moonVisibility;
-		float moonInfluence = computeMoonInfluence(sunAltDeg, moonAltDeg, litMoonIllumination);
+		float moonLightIllumination = state.moonLightIllumination;
+		float moonInfluence = computeMoonInfluence(sunAltDeg, moonAltDeg, moonLightIllumination);
 		// fogDepth is an artistic density control, not a physical extinction coefficient.
 		float defaultDensity = max(0, env.fogDepth) / 100;
 		float fogDensity = mix(
@@ -300,24 +300,30 @@ public class SkyRenderer {
 			transition
 		));
 		if (moonInfluence > 0) {
-			mix(directionalColor, directionalColor, sky.moonLightColor, moonInfluence);
-			directionalStrength = mix(
-				directionalStrength,
-				state.moonDirectionalStrength,
-				min(1, moonInfluence / MAX_MOON_COLOR_INFLUENCE)
-			);
+			// A single directional channel carries both sources. Add their radiances before
+			// converting back to the color-and-strength representation used by the renderer.
+			float moonStrength = state.moonDirectionalStrength * moonInfluence / MAX_MOON_COLOR_INFLUENCE;
+			float combinedStrength = directionalStrength + moonStrength;
+			if (combinedStrength > 0) {
+				float[] radiance = add(
+					multiply(directionalColor, directionalStrength),
+					multiply(sky.moonLightColor, moonStrength)
+				);
+				divide(directionalColor, radiance, combinedStrength);
+				directionalStrength = combinedStrength;
+			}
 		}
 		directionalStrength *= brightnessMultiplier * sky.sunlightStrength;
 		copyTo(fogColorSrgb, linearToSrgb(skySample.horizonLinear));
 		copyTo(waterColor, skySample.horizonLinear);
-		float moonPresenceFactor = moonPresence(moonAltDeg, litMoonIllumination);
+		float moonPresenceFactor = moonPresence(moonAltDeg, moonLightIllumination);
 		float boostFraction = MIN_BRIGHTNESS_BOOST_RESIDUAL + (1 - MIN_BRIGHTNESS_BOOST_RESIDUAL) * (1 - moonPresenceFactor);
 		ambientStrength = max(ambientStrength, plugin.configMinimumBrightness * (1 + sky.minBrightnessBoost * boostFraction));
 
 		applyShadowBlur(
 			sunAltDeg >= 0 ? sunAltDeg : moonAltDeg,
 			sunAltDeg >= 0 ? .533f : 2 * acos(.99945f) * RAD_TO_DEG * sky.moonSizeMult,
-			sunAltDeg >= 0 ? 1 : isMoonLighting(moonAltDeg, litMoonIllumination) ? saturate(sky.moonShadowStrength) : 0
+			sunAltDeg >= 0 ? 1 : isMoonLighting(moonAltDeg, moonLightIllumination) ? saturate(sky.moonShadowStrength) : 0
 		);
 		updateSkyUbo(sky, state, skySample, moonIllumination);
 	}

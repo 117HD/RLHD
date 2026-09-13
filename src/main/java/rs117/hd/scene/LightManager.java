@@ -626,7 +626,7 @@ public class LightManager {
 		float moonStrengthFloor = 0;
 		if (sunAltDeg < 5) {
 			float moonAltDeg = lighting.moonAltitudeDegrees;
-			float moonIllumination = lighting.visibleMoonIllumination;
+			float moonIllumination = lighting.moonLightIllumination;
 			if (moonAltDeg > -5 && moonIllumination > .01f) {
 				float sunFade = saturate((5 - sunAltDeg) / 10);
 				float moonElevation = smoothstep(-5, 20, moonAltDeg);
