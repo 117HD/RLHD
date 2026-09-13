@@ -260,7 +260,6 @@ public class SkyRenderer {
 		mix(ambientColor, ambientLight, ambientColor, regionalBlend);
 
 		float moonAltDeg = state.moonAltitudeDegrees;
-		float moonIllumination = state.moonIllumination;
 		toSky.evaluateGradient(skySample, sunAltDeg, env.getFogColor(), plugin.configMinimumBrightness);
 		if (transition < 1) {
 			fromSky.evaluateGradient(transitionSkySample, sunAltDeg, env.getFogColor(), plugin.configMinimumBrightness);
@@ -273,7 +272,12 @@ public class SkyRenderer {
 		ambientStrength = brightnessMultiplier;
 
 		float moonLightIllumination = state.moonLightIllumination;
-		float moonInfluence = computeMoonInfluence(sunAltDeg, moonAltDeg, moonLightIllumination);
+		float moonPresence = isMoonLighting(moonAltDeg, moonLightIllumination) ?
+			moonLightIllumination * smoothstep(MOON_ELEVATION_FADE_START_DEG, MOON_ELEVATION_FADE_END_DEG, moonAltDeg) : 0;
+		float moonInfluence = sunAltDeg >= 0 ?
+			smoothstep(MOON_TINT_SUN_START_DEG, 0, sunAltDeg) * MOON_INFLUENCE_AT_HORIZON :
+			mix(MOON_INFLUENCE_AT_HORIZON, MAX_MOON_COLOR_INFLUENCE, smoothstep(0, MOON_TINT_SUN_END_DEG, sunAltDeg));
+		moonInfluence *= moonPresence;
 		// fogDepth is an artistic density control, not a physical extinction coefficient.
 		float defaultDensity = max(0, env.fogDepth) / 100;
 		float fogDensity = mix(
@@ -316,8 +320,7 @@ public class SkyRenderer {
 		directionalStrength *= brightnessMultiplier * sky.sunlightStrength;
 		copyTo(fogColorSrgb, linearToSrgb(skySample.horizonLinear));
 		copyTo(waterColor, skySample.horizonLinear);
-		float moonPresenceFactor = moonPresence(moonAltDeg, moonLightIllumination);
-		float boostFraction = MIN_BRIGHTNESS_BOOST_RESIDUAL + (1 - MIN_BRIGHTNESS_BOOST_RESIDUAL) * (1 - moonPresenceFactor);
+		float boostFraction = mix(1, MIN_BRIGHTNESS_BOOST_RESIDUAL, saturate(moonPresence));
 		ambientStrength = max(ambientStrength, plugin.configMinimumBrightness * (1 + sky.minBrightnessBoost * boostFraction));
 
 		applyShadowBlur(
@@ -325,7 +328,7 @@ public class SkyRenderer {
 			sunAltDeg >= 0 ? .533f : 2 * acos(.99945f) * RAD_TO_DEG * sky.moonSizeMult,
 			sunAltDeg >= 0 ? 1 : isMoonLighting(moonAltDeg, moonLightIllumination) ? saturate(sky.moonShadowStrength) : 0
 		);
-		updateSkyUbo(sky, state, skySample, moonIllumination);
+		updateSkyUbo(sky, state, skySample);
 	}
 
 	private void applyShadowBlur(float altitudeDegrees, float diameterDegrees, float shadowStrength) {
@@ -351,16 +354,7 @@ public class SkyRenderer {
 		directionalStrength *= visibility;
 	}
 
-	private static float computeMoonInfluence(float sunAltDeg, float moonAltDeg, float moonIllumination) {
-		if (sunAltDeg >= MOON_TINT_SUN_START_DEG || !isMoonLighting(moonAltDeg, moonIllumination))
-			return 0;
-		float influence = sunAltDeg >= 0 ?
-			smoothstep(MOON_TINT_SUN_START_DEG, 0, sunAltDeg) * MOON_INFLUENCE_AT_HORIZON :
-			mix(MOON_INFLUENCE_AT_HORIZON, MAX_MOON_COLOR_INFLUENCE, smoothstep(0, MOON_TINT_SUN_END_DEG, sunAltDeg));
-		return influence * moonElevationFade(moonAltDeg) * moonIllumination;
-	}
-
-	private void updateSkyUbo(SkyConfiguration configuration, SkyState state, GradientSample sky, float moonIllumination) {
+	private void updateSkyUbo(SkyConfiguration configuration, SkyState state, GradientSample sky) {
 		var ubo = plugin.uboSky;
 		ubo.skyGradientEnabled.set(1);
 		ubo.skyZenithColor.set(sky.zenithLinear);
@@ -382,7 +376,7 @@ public class SkyRenderer {
 			configuration.moonDiskColor[1] * configuration.moonDiskStrength,
 			configuration.moonDiskColor[2] * configuration.moonDiskStrength
 		);
-		ubo.skyMoonIllumination.set(moonIllumination);
+		ubo.skyMoonIllumination.set(state.moonIllumination);
 		ubo.skyMoonPhaseLightDirection.set(state.moonPhaseLightDirection);
 		ubo.skyMoonLibration.set(state.moonLibration);
 		ubo.skyMoonPhaseReversed.set(state.moonPhaseReversed ? 1 : 0);
@@ -397,15 +391,5 @@ public class SkyRenderer {
 
 	private static boolean isMoonLighting(float moonAltDeg, float moonIllumination) {
 		return moonAltDeg > MOON_HORIZON_CUTOFF_DEG && moonIllumination > MIN_MOON_ILLUMINATION;
-	}
-
-	private static float moonPresence(float moonAltDeg, float moonIllumination) {
-		if (isMoonLighting(moonAltDeg, moonIllumination))
-			return clamp(moonIllumination * moonElevationFade(moonAltDeg), 0, 1);
-		return 0;
-	}
-
-	private static float moonElevationFade(float moonAltDeg) {
-		return smoothstep(MOON_ELEVATION_FADE_START_DEG, MOON_ELEVATION_FADE_END_DEG, moonAltDeg);
 	}
 }

@@ -226,7 +226,7 @@ public class SkyManager {
 		}
 
 		if (configCycle.usesCustomCycleTime)
-			advanceCustomCycle();
+			customCycleElapsedDays += plugin.deltaTimeMs / (configCycleDuration * 60.0 * 1000);
 
 		resolveSkyState();
 		resolveLightScheduleState();
@@ -302,11 +302,6 @@ public class SkyManager {
 		long day = frameUtcMillis / SYNCED_DAYS_PERIOD_MS;
 		return Instant.EPOCH.plus(day, ChronoUnit.DAYS)
 			.plusMillis((long) (cyclePosition * DAY_MS));
-	}
-
-	private void advanceCustomCycle() {
-		double cycleDurationMillis = configCycleDuration * 60.0 * 1000.0;
-		customCycleElapsedDays += plugin.deltaTimeMs / cycleDurationMillis;
 	}
 
 	/**
