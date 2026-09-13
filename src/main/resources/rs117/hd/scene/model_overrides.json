@@ -68,10 +68,6 @@
       "SLAYER_GARGOYLE_DEAD",
       "SLAYER_BANSHEE_1",
       "SLAYER_DUSTDEVIL",
-      "SLAYER_PYREFIEND_1",
-      "SLAYER_PYREFIEND_2",
-      "SLAYER_PYREFIEND_3",
-      "SLAYER_PYREFIEND_4",
       "SLAYER_KILLERWATT_BALL",
       "GHOST8_UNAGGRESSIVE",
       "HOUSE_GHOST",
@@ -469,8 +465,6 @@
       "SUPERIOR_NECHRYAEL_MELEE_SPAWN",
       "SUPERIOR_NECHRYAEL_RANGED_SPAWN",
       "GRAB_POSTMAN",
-      "SLAYER_PYREBEAST_1",
-      "SLAYER_PYREBEAST_2",
       "BAT_UNAGGRESSIVE",
       "ARCEUUS_REANIMATED_BEAR",
       "ARCEUUS_REANIMATED_UNICORN",
@@ -507,7 +501,6 @@
       "FAIRY2_REPAIR_1OP",
       "FAIRY2_REPAIR_2OPS",
       "SUPERIOR_KOUREND_BANSHEE",
-      "SUPERIOR_PYREFIEND",
       "SUPERIOR_BLOODVELD",
       "SUPERIOR_KOUREND_BLOODVELD",
       "SUPERIOR_CAVE_HORROR",
@@ -1231,6 +1224,16 @@
     "objectIds": [
       "ROOF_WOODEN",
       "OLDROOF_WOODEN"
+    ]
+  },
+  {
+    "description": "Ardougne Smithing Furnace - Wooden Roof - Offset Fix",
+    "areas": [ "EAST_ARDOUGNE_OFFSET_FIX_SMITHING_FURNACE_HUT" ],
+    "doubleSidedFaces": true,
+    "heightOffset": -2,
+    "objectIds": [
+      "ROOF_WOODEN",
+      "ROOFEDGE_WOODEN"
     ]
   },
   {
@@ -4571,7 +4574,7 @@
     ]
   },
   {
-    "description": "Varrok Roofs - DoubleSided",
+    "description": "Varrock Roofs - DoubleSided",
     "doubleSidedFaces": true,
     "objectIds": [
       "FAI_VARROCK_ROOFKIT_SLATE",
@@ -4585,6 +4588,42 @@
       "FAI_VARROCK_ROOFKIT_SLATE_WALL_CUT",
       "FAI_VARROCK_ROOFKIT_SLATE_HORIZ_CUT",
       "FAI_VARROCK_ROOFKIT_SLATE_HORIZ_CUT_CORNER"
+    ]
+  },
+  {
+    "description": "Varrock Roofs - Offset Fix 1",
+    "areas": [ "VARROCK_ROOF_OFFSET_FIX_1" ],
+    "doubleSidedFaces": true,
+    "heightOffset": 16,
+    "objectIds": [
+      "FAI_VARROCK_ROOFKIT_SLATE"
+    ]
+  },
+  {
+    "description": "Varrock Roofs - Offset Fix 2",
+    "areas": [ "VARROCK_ROOF_OFFSET_FIX_2" ],
+    "doubleSidedFaces": true,
+    "heightOffset": 32,
+    "objectIds": [
+      "FAI_VARROCK_ROOFKIT_SLATE"
+    ]
+  },
+  {
+    "description": "Varrock Roofs - Offset Fix 3",
+    "areas": [ "VARROCK_ROOF_OFFSET_FIX_3" ],
+    "doubleSidedFaces": true,
+    "heightOffset": 30,
+    "objectIds": [
+      "FAI_VARROCK_ROOFKIT_SLATE"
+    ]
+  },
+  {
+    "description": "Varrock Roofs - Offset Fix 4",
+    "areas": [ "VARROCK_ROOF_OFFSET_FIX_4" ],
+    "doubleSidedFaces": true,
+    "heightOffset": 14,
+    "objectIds": [
+      "FAI_VARROCK_ROOFKIT_SLATE"
     ]
   },
   {
@@ -5958,6 +5997,15 @@
         "uvOrientation": 512,
         "uvScale": 0.6
       }
+    ]
+  },
+  {
+    "description": "Seers Village - Roofs - Double Sided Faces",
+    "doubleSidedFaces": true,
+    "objectIds": [
+      "KR_SEERS_VILLAGE_ROOFKIT_SLATE",
+      "KR_SEERS_VILLAGE_ROOFKIT_SLATE_CUT",
+      "KR_SEERS_VILLAGE_ROOFKIT_SLATE_CUT_MIRROR"
     ]
   },
   {
@@ -8503,6 +8551,8 @@
       "DORGESH_ROCKS_DARK3",
       "DORGESH_ROCKS_DARK4",
       "DORGESH_ROCKS_DARK5",
+      "MOLANISK_CAVEWALL_STONES01",
+      "DORGESH_CAVES_WALL_STEP_ROCKS_TOP",
       "ATJUN_DUGUPSOIL_SQUISHED_3",
       "BRUT_ROCKS_LVL1A",
       "BRUT_ROCKS_LVL1B",
@@ -9366,17 +9416,30 @@
       "LOST_TRIBE_CELLAR_HOLE_BLOCKING",
       "DTTD_WALL_HAM_TOP5_OUTER2",
       "DTTD_WALL_HAM_TOP5_OUTER",
-      "DTTD_WALL_HAM_TOP_OUTER"
+      "DTTD_WALL_HAM_TOP_OUTER",
+      "LOTG_GOBLIN_CAVE_TERMINATOR_M",
+      "MOLANISK_CAVEWALL01",
+      "LOTG_GOBLIN_CAVE_WALL_FIX",
+      "MOLANISK_CAVEWALL01_MIRROR",
+      "DORGESH_CAVES_PIPE_AGILITY2",
+      "DORGESH_CAVES_PIPE_AGILITY_SIDE_2",
+      "DORGESH_CAVES_PIPE_AGILITY_INSIDECORNER2",
+      "DORGESH_CAVES_PIPE_AGILITY_INSIDECORNER",
+      "DORGESH_CAVE_JUTTINGWALL",
+      "DORGESH_CAVES_SQUEEZE_OPPOSITE",
+      "DORGESH_CAVEWALL_SQUEEZE1",
+      "DORGESH_CAVEWALL_SQUEEZE1R",
+      "DORGESH_CAVES_WALL_STEP_ROCKS"
     ],
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.7,
     "uvOrientation": 100
   },
   {
     "description": "Dorgeh-Kaan Agility Area - Rock - Metal - Climbable Walls And walls with cables",
     "baseMaterial": "ROCK_2",
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.7,
     "uvOrientation": 100,
     "colorOverrides": [
       {
@@ -9440,7 +9503,8 @@
       {
         "colors": "h == 7",
         "baseMaterial": "BONE",
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "uvScale": 0.35
       },
       {
         "colors": "h == 17",
@@ -9448,6 +9512,31 @@
         "uvType": "BOX",
         "uvScale": 0.5,
         "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "LUMBRIDGE_CAVE_WALLS_KALPHITE_SHORTCUT",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      "DORGESH_CAVES_KALPHITE_R",
+      "DORGESH_CAVES_KALPHITE_L",
+      "DORGESH_CAVES_KALPHITE_L_OPEN",
+      "DORGESH_CAVES_KALPHITE_R_OPEN"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 7 || h == 8",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvScale": 0.35
       }
     ]
   },
@@ -9462,9 +9551,20 @@
   },
   {
     "description": "LUMBRIDGE_CAVE_SWAMP_WATERFALL",
+    "baseMaterial": "TRANSPARENT",
+    "castShadows": false,
     "textureMaterial": "SWAMP_WATER_FLAT_FLOW",
+    "shiftAlpha": -10,
+    "setHue": 29,
+    "setSaturation": 2,
     "objectIds": [
       "GOBLIN_CAVEWALL_FLOWINGGUNGYWATER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
     ]
   },
   {
@@ -12240,7 +12340,8 @@
       "DEEPFIN_CAVE_ENTRANCE",
       "WILD_FALLOFF_CAVEENTRANCE",
       "TLATI_DRAGON_NEST_CAVE_ENTRY",
-      "RANTZOGRECAVEENTRANCE"
+      "RANTZOGRECAVEENTRANCE",
+      "YNYSDAIL_CAVE_ENTRANCE"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -17171,7 +17272,9 @@
       "AREA_SANGUINE_MINE_DUGUPSOIL_04",
       "AREA_SANGUINE_MINE_DUGUPSOIL_05",
       "AREA_SANGUINE_MINE_DUGUPSOIL_06",
-      "AREA_SANGUINE_MINE_DUGUPSOIL_07"
+      "AREA_SANGUINE_MINE_DUGUPSOIL_07",
+      "GHORROCK_DUGUPSOIL_1",
+      "GHORROCK_DUGUPSOIL_2"
     ],
     "uvType": "BOX",
     "uvScale": 0.45
@@ -21940,21 +22043,10 @@
     "baseMaterial": "BARK",
     "objectIds": [
       "TK1",
-      "TK2",
-      "TK3",
-      "TK4",
-      "TK_R",
-      "TK_L",
-      "TK_END",
-      "TK_END2",
-      "TK_TOP",
-      "TK_TOP2",
-      "TK_NS",
       "DEADTREE2_WEB_R",
       "DEADTREE2_WEB_L",
       "DEADTREE_BURNT",
       "DEADTREE_BURNT_INACTIVE",
-      "GRANDTREE_CLIMBTREE",
       "GRANDTREE_DOWNTREE",
       "WILD3_TREE_A",
       "WILD3_TREE_B",
@@ -21969,20 +22061,76 @@
       "WILD6_TREE_B_SNOW",
       "WILD6_TREE_C",
       "WILD_BURNT_TREE",
-      "CLIMBING_BRANCH",
       "SLICE_HIDING_CRATES",
-      "CLIMBING_TREE2",
       "DRAGON_SLAYER_QIP_BURNT_TREE",
       "DRAGON_SLAYER_QIP_BURNT_FALLEN_TREE",
-      "MM2_GLOUGH_BRANCH_UP_HIDDEN",
       "AVIUM_DEADTREE_1",
-      "MM2_GLOUGH_BRANCH_DOWN",
       "DRAGON_SLAYER_QIP_WILD5_TREE_A",
-      "DRAGON_SLAYER_QIP_WILD5_TREE_B",
-      "MM2_DOWNTREE_SEARCHABLE",
+      "DRAGON_SLAYER_QIP_WILD5_TREE_B"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Gnome Stronghold Tree - Trunk - Middle - Shift Down Slightly",
+    "baseMaterial": "BARK",
+    "heightOffset": 2,
+    "objectIds": [
+      "TK2",
+      "GRANDTREE_CLIMBTREE",
+      "MM2_DOWNTREE_SEARCHABLE"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Gnome Stronghold Tree - Trunk - Upper - Shift Down Slightly More",
+    "baseMaterial": "BARK",
+    "heightOffset": 7,
+    "objectIds": [
+      "TK3",
+      "TK_NS",
+      "TK_R",
+      "TK_L",
+      "TK_END2",
+      "TK_END",
+      "CLIMBING_TREE2",
+      "CLIMBING_TREE",
+      "CLIMBING_BRANCH",
+      "MM2_GLOUGH_BRANCH_DOWN",
+      "MM2_GLOUGH_BRANCH_UP_HIDDEN",
       "MM2_GLOUGH_BRANCH_UP_ACTIVE"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Gnome Stronghold Tree - Trunk - Top - Shift Down A lot",
+    "areas": [ "TREE_GNOME_STRONGHOLD_BRANCH_OFFSET_FIX" ],
+    "baseMaterial": "BARK",
+    "heightOffset": 34,
+    "objectIds": [
+      "TK_TOP",
+      "TK_TOP2"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Gnome Stronghold Tree - Trunk - Top - Shift Down Slightly",
+    "baseMaterial": "BARK",
+    "heightOffset": 18,
+    "objectIds": [
+      "TK_TOP",
+      "TK_TOP2",
+      "TK4",
+      "TKBUSH_R"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Tree Gnome Village - Hide Floating Branches",
+    "areas": [ "TREE_GNOME_VILLAGE_HIDE_FLOATING_BRANCHES" ],
+    "hide": true,
+    "objectIds": [
+      "TK_TOP"
+    ]
   },
   {
     "description": "Gnome Stronghold - Objects - Tree - Fake Dead Tree",
@@ -22065,8 +22213,9 @@
     "uvType": "WORLD_XZ",
     "colorOverrides": [
       {
-        "colors": "h == 5",
+        "colors": "h == 5 || h == 6",
         "baseMaterial": "WOOD_GRAIN_3",
+        "setHue": 5,
         "uvType": "BOX",
         "uvScale": 0.5,
         "uvOrientationY": 512,
@@ -35902,6 +36051,253 @@
     ]
   },
   {
+    "description": "Objects - Hay - Roof - Offset Fix 1 - Windmill",
+    "areas": [ "LUMBRIDGE_ROOF_OFFSET_FIX_WINDMILL_1" ],
+    "heightOffset": -60,
+    "textureMaterial": "HD_HAY",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "WATTLE_1_DARK",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "ROOFEDGE_THATCHED"
+    ]
+  },
+  {
+    "description": "Objects - Hay - Roof - Offset Fix 2 - Windmill",
+    "areas": [ "LUMBRIDGE_ROOF_OFFSET_FIX_WINDMILL_2" ],
+    "heightOffset": -66,
+    "textureMaterial": "HD_HAY",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "WATTLE_1_DARK",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "ROOFEDGE_THATCHED"
+    ]
+  },
+  {
+    "description": "Objects - Hay - Roof - Offset Fix 3 - Windmill",
+    "areas": [ "LUMBRIDGE_ROOF_OFFSET_FIX_WINDMILL_3" ],
+    "heightOffset": -68,
+    "textureMaterial": "HD_HAY",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "WATTLE_1_DARK",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "ROOFEDGE_THATCHED"
+    ]
+  },
+  {
+    "description": "Objects - Hay - Roof - Offset Fix 4 - Windmill",
+    "areas": [ "LUMBRIDGE_ROOF_OFFSET_FIX_WINDMILL_4" ],
+    "heightOffset": -70,
+    "textureMaterial": "HD_HAY",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "WATTLE_1_DARK",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "ROOFEDGE_THATCHED"
+    ]
+  },
+  {
+    "description": "Objects - Hay - Roof - Offset Fix 1 - Farmyard",
+    "areas": [ "LUMBRIDGE_ROOF_OFFSET_FIX_FARMYARD_1" ],
+    "upwardsNormals": true,
+    "shiftLightness": -9,
+    "heightOffset": -12,
+    "textureMaterial": "HD_HAY",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "WATTLE_1_DARK",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "ROOFEDGE_THATCHED"
+    ]
+  },
+  {
+    "description": "Objects - Hay - Roof - Offset Fix 2 - Farmyard",
+    "areas": [ "LUMBRIDGE_ROOF_OFFSET_FIX_FARMYARD_2" ],
+    "upwardsNormals": true,
+    "shiftLightness": -9,
+    "heightOffset": -10,
+    "textureMaterial": "HD_HAY",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "WATTLE_1_DARK",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "ROOFEDGE_THATCHED"
+    ]
+  },
+  {
+    "description": "Objects - Hay - Roof - Offset Fix 3 - Farmyard",
+    "areas": [ "LUMBRIDGE_ROOF_OFFSET_FIX_FARMYARD_3" ],
+    "upwardsNormals": true,
+    "shiftLightness": -9,
+    "heightOffset": -6,
+    "textureMaterial": "HD_HAY",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "WATTLE_1_DARK",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "ROOFEDGE_THATCHED"
+    ]
+  },
+  {
+    "description": "Objects - Hay - Roof - Offset Fix 4 - Farmyard",
+    "areas": [ "LUMBRIDGE_ROOF_OFFSET_FIX_FARMYARD_4" ],
+    "upwardsNormals": true,
+    "shiftLightness": -9,
+    "heightOffset": -2,
+    "textureMaterial": "HD_HAY",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "WATTLE_1_DARK",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "ROOFEDGE_THATCHED"
+    ]
+  },
+  {
+    "description": "Objects - Hay - Roof - Offset Fix 5 - Farmyard",
+    "areas": [ "LUMBRIDGE_ROOF_OFFSET_FIX_FARMYARD_5" ],
+    "upwardsNormals": true,
+    "shiftLightness": -9,
+    "heightOffset": -4,
+    "textureMaterial": "HD_HAY",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "WATTLE_1_DARK",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "ROOFEDGE_THATCHED"
+    ]
+  },
+  {
+    "description": "Objects - Hay - Roof - Lumbridge Farmyard",
+    "areas": [ "LUMBRIDGE_FARMYARD" ],
+    "textureMaterial": "HD_HAY",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": -9,
+    "upwardsNormals": true,
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "WATTLE_1_DARK",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "ROOFEDGE_THATCHED",
+      "THATCHED_TIMBERROOF",
+      "THATCHED_TIMBERROOF_BROWN",
+      "THATCHED_TIMBERROOF_FILL_BROWN"
+    ]
+  },
+  {
+    "description": "Objects - Hay - Roof - Offset Fix - Ardougne Pottery Hut",
+    "areas": [ "EAST_ARDOUGNE_OFFSET_FIX_POTTERY_HUT" ],
+    "heightOffset": -18,
+    "flatNormals": true,
+    "shiftLightness": -32,
+    "setHue": 11,
+    "textureMaterial": "HD_HAY",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "WATTLE_1_DARK",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "ROOFEDGE_THATCHED"
+    ]
+  },
+  {
+    "description": "Objects - Hay - Roof - Offset Fix - Ardougne Pub",
+    "areas": [ "EAST_ARDOUGNE_OFFSET_FIX_PUB" ],
+    "heightOffset": -12,
+    "textureMaterial": "HD_HAY",
+    "upwardsNormals": true,
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": -6,
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "WATTLE_1_DARK",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "ROOFEDGE_THATCHED"
+    ]
+  },
+  {
     "description": "Objects - Hay - Haystack",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
     "textureMaterial": "HD_HAY",
@@ -48583,6 +48979,78 @@
     "flatNormals": true
   },
   {
+    "description": "Sheep Shearer Fred the Farmers house Roof - Offset Fix 1",
+    "areas": [ "LUMBRIDGE_ROOF_OFFSET_FIX_FRED" ],
+    "heightOffset": -10,
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "QIP_SHEEP_SHEARER_ROOFTOPEDGE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "flatNormals": true
+  },
+  {
+    "description": "Sheep Shearer Fred the Farmers house Roof - Offset Fix 2",
+    "areas": [ "LUMBRIDGE_ROOF_OFFSET_FIX_FRED" ],
+    "heightOffset": -12,
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "QIP_SHEEP_SHEARER_ROOFTOP1",
+      "QIP_SHEEP_SHEARER_ROOFTOP2_MIRROR"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "flatNormals": true
+  },
+  {
+    "description": "Sheep Shearer Fred the Farmers house Roof - Offset Fix 3",
+    "areas": [ "LUMBRIDGE_ROOF_OFFSET_FIX_FRED" ],
+    "heightOffset": -14,
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "QIP_SHEEP_SHEARER_ROOFTOP2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "flatNormals": true
+  },
+  {
+    "description": "Sheep Shearer Fred the Farmers house Roof - Offset Fix 4",
+    "areas": [ "LUMBRIDGE_ROOF_OFFSET_FIX_FRED" ],
+    "heightOffset": -16,
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "QIP_SHEEP_SHEARER_ROOFTOP3",
+      "QIP_SHEEP_SHEARER_ROOFTOP3_MIRROR"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "flatNormals": true
+  },
+  {
+    "description": "Sheep Shearer Fred the Farmers house Roof - Offset Fix 5",
+    "areas": [ "LUMBRIDGE_ROOF_OFFSET_FIX_FRED" ],
+    "heightOffset": -4,
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "QIP_SHEEP_SHEARER_ROOFTOP1_MIRROR"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "flatNormals": true
+  },
+  {
     "description": "Textured hay carpet",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ "POORRUG2CORNER", "POORRUG2SIDE" ],
@@ -48913,8 +49381,25 @@
   },
   {
     "description": "Disable shadows for fishing spots at Molch",
-    "npcIds": [ "FISHING_SPOT_AERIAL" ],
+    "npcIds": [
+      "FISHING_SPOT_AERIAL",
+      "FISHING_SPOT_AERIAL_LARGE"],
+    "depthBias": 100,
+    "shiftAlpha": -25,
+    "minAlpha": 50,
     "castShadows": false
+  },
+  {
+    "description": "Disable shadows for fishing spots at Molch - Splash",
+    "graphicsObjectIds": [ "AERIAL_FISHING_SPLASH" ],
+    "colorOverrides": [
+      {
+        "description": "Part that shouldn't cast shadows",
+        "colors": [ "h == 42 && l == 3" ],
+        "baseMaterial": "NONE",
+        "castShadows": false
+      }
+    ]
   },
   {
     "description": "Disable shadows for Colosseum entrance walls",
@@ -49591,6 +50076,42 @@
     "uvOrientation": 1024
   },
   {
+    "description": "Sheep Herder Furnace Hut - Offset Fix 1",
+    "areas": [ "EAST_ARDOUGNE_OFFSET_FIX_SHEEP_HERDER_1" ],
+    "heightOffset": -4,
+    "objectIds": [ "ROOFEDGE_WOODEN" ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvOrientation": 1024
+  },
+  {
+    "description": "Sheep Herder Furnace Hut - Offset Fix 2",
+    "areas": [ "EAST_ARDOUGNE_OFFSET_FIX_SHEEP_HERDER_2" ],
+    "heightOffset": -10,
+    "objectIds": [ "ROOFEDGE_WOODEN" ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvOrientation": 1024
+  },
+  {
+    "description": "Sheep Herder Furnace Hut - Offset Fix 3",
+    "areas": [ "EAST_ARDOUGNE_OFFSET_FIX_SHEEP_HERDER_3" ],
+    "heightOffset": -14,
+    "objectIds": [ "ROOFEDGE_WOODEN" ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvOrientation": 1024
+  },
+  {
+    "description": "Sheep Herder Furnace Hut - Offset Fix 4",
+    "areas": [ "EAST_ARDOUGNE_OFFSET_FIX_SHEEP_HERDER_4" ],
+    "heightOffset": -8,
+    "objectIds": [ "ROOFEDGE_WOODEN" ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvOrientation": 1024
+  },
+  {
     "description": "Rimmington House Walls",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -49630,6 +50151,19 @@
       "RIMMINGTON_ROOFTOPEDGE",
       "RIMMINGTON_ROOFTOPEDGE_MIRROR",
       "RIMMINGTON_ROOFTOP2X2",
+      "RIMMINGTON_ROOFTOP2X2_MIRROR"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "flatNormals": true
+  },
+  {
+    "description": "Rimmington House Roof - Corner - Offset Fix 1",
+    "areas": [ "RIMMINGTON_ROOF_OFFSET_FIX_1" ],
+    "heightOffset": -8,
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
       "RIMMINGTON_ROOFTOP2X2_MIRROR"
     ],
     "uvType": "BOX",
@@ -81215,7 +81749,8 @@
       "SEASLUG_CRATE_IN_WATER2",
       "SEASLUG_CRATE_IN_WATER",
       "SEASLUG_MESSGAE_BOTTLE",
-      "LOTR_MINE_CRATE_IN_WATER"
+      "LOTR_MINE_CRATE_IN_WATER",
+      "OLAF_BOAT_DRIFTWOOD"
     ],
     "colorOverrides": [
       {
@@ -81838,8 +82373,26 @@
     "uvOrientationX": 512,
     "uvOrientationZ": 256,
     "objectIds": [
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_PORT_MIDSHIPS_DOWN_WOOD",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_PORT_MIDSHIPS_UP_WOOD",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_PORT_STERN_DOWN_WOOD",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_PORT_STERN_UP_WOOD",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_STARBOARD_MIDSHIPS_DOWN_WOOD",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_STARBOARD_MIDSHIPS_UP_WOOD",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_STARBOARD_STERN_DOWN_WOOD",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_STARBOARD_STERN_UP_WOOD",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_PORT_MIDSHIPS_DOWN_OAK",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_PORT_MIDSHIPS_UP_OAK",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_PORT_STERN_DOWN_OAK",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_PORT_STERN_UP_OAK",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_STARBOARD_MIDSHIPS_DOWN_OAK",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_STARBOARD_MIDSHIPS_UP_OAK",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_STARBOARD_STERN_DOWN_OAK",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_STARBOARD_STERN_UP_OAK",
       "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_PORT_STERN_DOWN_TEAK",
       "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_PORT_STERN_UP_TEAK",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_PORT_MIDSHIPS_DOWN_TEAK",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_PORT_MIDSHIPS_UP_TEAK",
       "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_STARBOARD_MIDSHIPS_DOWN_TEAK",
       "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_STARBOARD_MIDSHIPS_UP_TEAK",
       "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_STARBOARD_STERN_DOWN_TEAK",
@@ -82254,6 +82807,68 @@
         "description": "Metal",
         "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
         "colors": "h == 0 || h > 10"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Trawling Net",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
+    "objectIds": [
+      "SAILING_ROPE_TRAWLING_NET",
+      "SAILING_ROPE_TRAWLING_NET_3X8_STARBOARD",
+      "SAILING_ROPE_TRAWLING_NET_3X8_PORT",
+      "SAILING_HEMP_TRAWLING_NET",
+      "SAILING_HEMP_TRAWLING_NET_3X8_STARBOARD",
+      "SAILING_HEMP_TRAWLING_NET_3X8_PORT",
+      "SAILING_LINEN_TRAWLING_NET",
+      "SAILING_LINEN_TRAWLING_NET_3X8_STARBOARD",
+      "SAILING_LINEN_TRAWLING_NET_3X8_PORT",
+      "SAILING_COTTON_TRAWLING_NET",
+      "SAILING_COTTON_TRAWLING_NET_3X8_STARBOARD",
+      "SAILING_COTTON_TRAWLING_NET_3X8_PORT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "colors": "h == 0 || h > 10 || h == 4"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Chum Spreader",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "CHUM_SPREADER_2X5A",
+      "CHUM_SPREADER_2X5B",
+      "CHUM_SPREADER_3X8A",
+      "CHUM_SPREADER_3X8B"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.05,
+        "colors": "h == 0"
+      },
+      {
+        "description": "Fish Guts",
+        "baseMaterial": "GRUNGE_1",
+        "colors": "h == 3"
       }
     ]
   },
@@ -89873,6 +90488,83 @@
     ]
   },
   {
+    "description": "Ynysdail Cavern - Walls",
+    "baseMaterial": "SMOOTH_STONE",
+    "shiftLightness": 1,
+    "uvType": "BOX",
+    "uvOrientation": 200,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "YNYSDAIL_CAVE_WALL_LOWER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Ynysdail Cavern - Walls",
+    "baseMaterial": "SMOOTH_STONE",
+    "shiftLightness": 1,
+    "uvType": "BOX",
+    "uvOrientation": 200,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "YNYSDAIL_CAVE_EXIT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 37 && l > 50",
+        "baseMaterial": "GRAY_200"
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Ynysdail Cavern - Disable Shadows on Wall Filler",
+    "areas": [ "YNYSDAIL_CAVERN" ],
+    "baseMaterial": "BLACK",
+    "castShadows": false,
+    "objectIds": [
+      "CAVEKIT_ROCK01_DEFAULT05_WALLTOP"
+    ]
+  },
+  {
+    "description": "Ynysdail Cavern - Stalgtites",
+    "baseMaterial": "STONE_NORMALED",
+    "maxLightness": 15,
+    "uvType": "BOX",
+    "uvOrientation": 200,
+    "objectIds": [
+      "YNYSDAIL_STALAGTITE_02",
+      "YNYSDAIL_STALAGTITE_01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Ynysdail Cavern - Water Drops",
+    "areas": [ "YNYSDAIL_CAVERN" ],
+    "shiftAlpha": -150,
+    "minAlpha": 30,
+    "depthBias": 1,
+    "setSaturation": 4,
+    "shiftLightness": -27,
+    "setHue": 37,
+    "objectIds": [
+      "MAH3_SEWER_WATER_DROPS"
+    ]
+  },
+  {
     "description": "Relleka Hunter Iceberg",
     "baseMaterial": "SMOOTH_SNOW_SEMI_DARK",
     "uvType": "BOX",
@@ -90128,6 +90820,22 @@
       "SUPERIOR_ABBERANT_SPECTRE",
       "KOUREND_SPECTRE",
       "SUPERIOR_KOUREND_SPECTRE"
+    ]
+  },
+  {
+    "description": "PYREFIEND",
+    "hideVanillaShadows": true,
+    "shiftHue": 1,
+    "shiftAlpha": -40,
+    "baseMaterial": "UNLIT_125",
+    "npcIds": [
+      "SLAYER_PYREFIEND_1",
+      "SLAYER_PYREFIEND_2",
+      "SLAYER_PYREFIEND_3",
+      "SLAYER_PYREFIEND_4",
+      "SLAYER_PYREBEAST_1",
+      "SLAYER_PYREBEAST_2",
+      "SUPERIOR_PYREFIEND"
     ]
   },
   {
@@ -99285,7 +99993,7 @@
     ]
   },
   {
-    "description": "Vampyrium Blood Wood Trees",
+    "description": "Vampyrium Bloodwood Trees",
     "baseMaterial": "BARK",
     "uvType": "BOX",
     "undoVanillaShading": false,
@@ -99301,11 +100009,40 @@
     "colorOverrides": [
       {
         "description": "Blood",
-        "colors": "s == 6",
+        "colors": "s > 5",
         "baseMaterial": "WATER_FOUNTAIN_FLAT",
         "uvType": "BOX",
         "uvScale": 0.5,
         "uvOrientation": 900,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium Bloodwood Bucket",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "minLightness": 14,
+    "maxLightness": 20,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "BLOODWOOD_BUCKET_EMPTY",
+      "BLOODWOOD_BUCKET_FULL"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Blood",
+        "colors": " h == 0 && s > 5",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "minLightness": 28,
+        "maxLightness": 40,
         "undoVanillaShading": false
       }
     ]
