@@ -270,11 +270,7 @@ public class SkyManager {
 	}
 
 	private boolean isMoonHidden(SkyConfiguration sky) {
-		return sky.hideMoon || isMoonDisabled(sky);
-	}
-
-	private boolean isMoonDisabled(SkyConfiguration sky) {
-		return configMoonBehavior.isDisabled && sky.forceMoonPhase == null;
+		return sky.hideMoon || configMoonBehavior.isDisabled && sky.forceMoonPhase == null;
 	}
 
 	private Instant resolveCurrentInstant(DaylightCycle cycle) {
@@ -286,10 +282,10 @@ public class SkyManager {
 			case REAL_TIME:
 				return frameUtcInstant;
 			case CUSTOM_REALISTIC:
-				Instant startOfDay = customCycleStart.plus(floor(customCycleElapsedDays), ChronoUnit.DAYS);
-				return startOfDay.plusMillis((long) (fract(customCycleElapsedDays) * DAY_MS));
 			case CUSTOM_BASIC:
-				float cyclePosition = applyBasicNightDurationWarp((float) fract(customCycleElapsedDays));
+				double cyclePosition = fract(customCycleElapsedDays);
+				if (cycle == DaylightCycle.CUSTOM_BASIC)
+					cyclePosition = applyBasicNightDurationWarp((float) cyclePosition);
 				return customCycleStart
 					.plus(floor(customCycleElapsedDays), ChronoUnit.DAYS)
 					.plusMillis((long) (cyclePosition * DAY_MS));
@@ -346,34 +342,35 @@ public class SkyManager {
 		SkyConfiguration toSky = to.getSky();
 		state.fromConfiguration = fromSky;
 		state.toConfiguration = toSky;
-		state.configurationTransition = environmentManager.getTransitionProgress();
+		float t = state.configurationTransition = environmentManager.getTransitionProgress();
 
 		// Fixed environment angles use Default's slower time as a stable tuning baseline.
 		effectiveCycle = getCycle(toSky);
+		DaylightCycle fromCycle = getCycle(fromSky);
 		currentInstant = resolveCurrentInstant(effectiveCycle);
 		long millis = currentInstant.toEpochMilli();
-		long fromMillis = resolveCurrentInstant(getCycle(fromSky)).toEpochMilli();
+		long fromMillis = resolveCurrentInstant(fromCycle).toEpochMilli();
 
 		// Resolve the celestial positions, applying any environment overrides through the transition.
 		float[] fromSunAngles = getSunAngles(fromSky, fromMillis);
 		float[] toSunAngles = getSunAngles(toSky, millis);
-		state.sunAngles = interpolateAngles(fromSunAngles, toSunAngles, state.configurationTransition);
+		state.sunAngles = interpolateAngles(fromSunAngles, toSunAngles, t);
 		state.sunAltitudeDegrees = state.sunAngles[0] * RAD_TO_DEG;
 		state.sunDirection = anglesToSkyDirection(state.sunAngles[0], state.sunAngles[1]);
 
 		float[] fromMoonAngles = getMoonAngles(fromSky, fromMillis, fromSunAngles);
 		float[] toMoonAngles = getMoonAngles(toSky, millis, toSunAngles);
-		state.moonAngles = interpolateAngles(fromMoonAngles, toMoonAngles, state.configurationTransition);
+		state.moonAngles = interpolateAngles(fromMoonAngles, toMoonAngles, t);
 		state.moonAltitudeDegrees = state.moonAngles[0] * RAD_TO_DEG;
 		state.moonDirection = anglesToSkyDirection(state.moonAngles[0], state.moonAngles[1]);
 
 		float fromMoonVisibility = isMoonHidden(fromSky) ? 0 : fromSky.moonVisibility;
 		float toMoonVisibility = isMoonHidden(toSky) ? 0 : toSky.moonVisibility;
-		state.moonVisibility = mix(fromMoonVisibility, toMoonVisibility, state.configurationTransition);
+		state.moonVisibility = mix(fromMoonVisibility, toMoonVisibility, t);
 
 		float fromMoonStrength = fromSky.moonDirectionalStrength < 0 ? from.directionalStrength : fromSky.moonDirectionalStrength;
 		float toMoonStrength = toSky.moonDirectionalStrength < 0 ? to.directionalStrength : toSky.moonDirectionalStrength;
-		state.moonDirectionalStrength = mix(fromMoonStrength, toMoonStrength, state.configurationTransition);
+		state.moonDirectionalStrength = mix(fromMoonStrength, toMoonStrength, t);
 		MoonPhase fromMoonPhase = fromSky.forceMoonPhase != null ? fromSky.forceMoonPhase : configMoonPhase;
 		MoonPhase toMoonPhase = toSky.forceMoonPhase != null ? toSky.forceMoonPhase : configMoonPhase;
 
@@ -382,18 +379,17 @@ public class SkyManager {
 		ResolvedMoonPhase moonPhase = resolveMoonPhase(millis, hasFixedSunAngles(toSky), toSunAngles, toMoonAngles);
 		float fromMoonIllumination = fromMoonPhase.isLocked ? fromMoonPhase.illumination : fromPhase.illumination;
 		float toMoonIllumination = toMoonPhase.isLocked ? toMoonPhase.illumination : moonPhase.illumination;
-		state.moonIllumination = mix(fromMoonIllumination, toMoonIllumination, state.configurationTransition);
+		state.moonIllumination = mix(fromMoonIllumination, toMoonIllumination, t);
 		float fromMoonLightIllumination = fromSky.hideMoon ? 0 :
 			max(fromMoonIllumination, fromSky.minMoonIllumination) * fromSky.moonLightVisibility;
 		float toMoonLightIllumination = toSky.hideMoon ? 0 :
 			max(toMoonIllumination, toSky.minMoonIllumination) * toSky.moonLightVisibility;
-		state.moonLightIllumination = mix(fromMoonLightIllumination, toMoonLightIllumination, state.configurationTransition);
+		state.moonLightIllumination = mix(fromMoonLightIllumination, toMoonLightIllumination, t);
 		state.shadowAngles = state.cycleActive ?
 			state.sunAngles[0] < 0 && state.moonAngles[0] > 0 && state.moonLightIllumination > 0
 				? state.moonAngles
 				: state.sunAngles :
 			environmentManager.getCurrentEnvironment().getShadowAngles();
-		float t = state.configurationTransition;
 		float phaseOrbit = fromPhase.orbit + angleDiff(moonPhase.orbit * TWO_PI, fromPhase.orbit * TWO_PI) / TWO_PI * t;
 		state.moonPhaseLightDirection = moonPhase.usesOrbitalDirection ?
 			getSyntheticMoonPhaseLightDirection(phaseOrbit) : state.sunDirection;
@@ -429,7 +425,6 @@ public class SkyManager {
 				sin((float) (days / DRACONIC_MONTH_DAYS) * TWO_PI) * LATITUDE_LIBRATION_DEG * DEG_TO_RAD
 			);
 		}
-		DaylightCycle fromCycle = getCycle(fromSky);
 		float fromPole = fromCycle == DaylightCycle.CUSTOM_BASIC ? BASIC_SUN_TILT : (float) getCoordinates(fromCycle)[0] * DEG_TO_RAD;
 		float toPole = effectiveCycle == DaylightCycle.CUSTOM_BASIC ? BASIC_SUN_TILT : (float) getCoordinates(effectiveCycle)[0] * DEG_TO_RAD;
 		state.celestialPole = anglesToSkyDirection(mix(fromPole, toPole, t), 0);
