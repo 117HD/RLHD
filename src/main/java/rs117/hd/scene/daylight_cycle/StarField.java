@@ -197,21 +197,24 @@ public final class StarField {
 
 		plugin.uboSky.upload();
 
-		nebulaBakeProgram.use();
-		for (int face = 0; face < 6; face++) {
-			nebulaBakeProgram.uniCubeFace.set(face);
-			glFramebufferTexture2D(
-				GL_FRAMEBUFFER,
-				GL_COLOR_ATTACHMENT0,
-				GL_TEXTURE_CUBE_MAP_POSITIVE_X + face,
-				texNebulaCubemap,
-				0
-			);
-			glDrawArrays(GL_TRIANGLES, 0, 3);
+		try {
+			nebulaBakeProgram.use();
+			for (int face = 0; face < 6; face++) {
+				nebulaBakeProgram.uniCubeFace.set(face);
+				glFramebufferTexture2D(
+					GL_FRAMEBUFFER,
+					GL_COLOR_ATTACHMENT0,
+					GL_TEXTURE_CUBE_MAP_POSITIVE_X + face,
+					texNebulaCubemap,
+					0
+				);
+				glDrawArrays(GL_TRIANGLES, 0, 3);
+			}
+		} finally {
+			// Baking runs during frame preparation; both renderers establish drawing state afterward.
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			nebulaBakeRenderState.reset();
 		}
-
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		nebulaBakeRenderState.reset();
 		nebulaMapCurrent = true;
 		return true;
 	}

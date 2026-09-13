@@ -13,7 +13,6 @@ import rs117.hd.scene.daylight_cycle.SkyConfiguration.SkyProfile;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static rs117.hd.utils.MathUtils.*;
 
 /**
@@ -158,33 +157,6 @@ public class SkyRendererTest {
 	}
 
 	@Test
-	public void nightBoostTreatsNewMoonAndSetMoonAlike() {
-		float newMoonHigh = moonPresence(60, 0);
-		float fullMoonSet = moonPresence(-20, 1);
-		float fullMoonHigh = moonPresence(60, 1);
-
-		assertEquals(0, newMoonHigh, 0);
-		assertEquals(0, fullMoonSet, 0);
-		assertEquals(newMoonHigh, fullMoonSet, 0);
-		assertEquals(1, fullMoonHigh, 1e-6);
-		assertTrue(moonPresence(60, .5f) > moonPresence(60, .25f));
-		assertTrue(moonPresence(30, 1) > moonPresence(0, 1));
-		assertTrue(moonPresence(-9, 1) < .05f);
-	}
-
-	@Test
-	public void fullMoonKeepsPartOfTheBrightnessBoost() {
-		float newMoon = boostFraction(60, 0);
-		float fullMoonHigh = boostFraction(60, 1);
-
-		assertEquals(1, newMoon, 1e-6);
-		assertEquals(.2f, fullMoonHigh, 1e-6);
-		assertTrue(boostFraction(60, .25f) > fullMoonHigh);
-		assertTrue(boostFraction(60, 1) < boostFraction(0, 1));
-		assertEquals(newMoon, boostFraction(-20, 1), 0);
-	}
-
-	@Test
 	public void shadowBlurPreservesAverageIrradianceWithUnequalColorsAndStrengths() throws Exception {
 		float[] altitudes = { -5, 0, 5, 30, 90 };
 		for (int i = 0; i < altitudes.length; i++) {
@@ -213,14 +185,6 @@ public class SkyRendererTest {
 		assertArrayEquals(new float[] { 2, 1, .5f }, averageIrradiance(renderer), 1e-6f);
 	}
 
-	@Test
-	public void moonPresenceIsZeroForNewOrSetMoon() {
-		assertEquals(0, moonPresence(60, 0), 0);
-		assertEquals(0, moonPresence(-10, .5f), 0);
-		assertEquals(0, moonPresence(-10, 1), 0);
-		assertTrue(moonPresence(-.001, .5f) > 0);
-	}
-
 	private static float[] averageIrradiance(SkyRenderer renderer) throws Exception {
 		return add(
 			multiply((float[]) getLightingField(renderer, "ambientColor"), (float) getLightingField(renderer, "ambientStrength")),
@@ -241,16 +205,5 @@ public class SkyRendererTest {
 			copyTo((float[]) field.get(renderer), (float[]) value);
 		else
 			field.set(renderer, value);
-	}
-
-	private static float moonPresence(double moonAltitudeDegrees, float moonIllumination) {
-		if (moonAltitudeDegrees <= -10 || moonIllumination <= .01f)
-			return 0;
-		float t = saturate((float) ((moonAltitudeDegrees + 10) / 30));
-		return saturate(moonIllumination * (t * t * (3 - 2 * t)));
-	}
-
-	private static float boostFraction(double moonAltitudeDegrees, float moonIllumination) {
-		return .2f + .8f * (1 - moonPresence(moonAltitudeDegrees, moonIllumination));
 	}
 }

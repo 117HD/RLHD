@@ -94,6 +94,7 @@ public class Environment {
 
 	public transient boolean hasWaterColorOverride;
 	public transient boolean hasFogColorOverride;
+	private transient boolean normalized;
 
 	public Environment normalize() {
 		if (area == null)
@@ -109,15 +110,15 @@ public class Environment {
 		if (underglowColor == null)
 			underglowColor = rgb("#000000");
 
+		if (!normalized) {
+			hasFogColorOverride = fogColor != null;
+			hasWaterColorOverride = waterColor != null;
+		}
 		if (fogColor == null) {
 			fogColor = DEFAULT_FOG_COLOR;
-		} else {
-			hasFogColorOverride = true;
 		}
 		if (waterColor == null) {
 			waterColor = DEFAULT_WATER_COLOR;
-		} else {
-			hasWaterColorOverride = true;
 		}
 
 		if (area != Area.ALL && area != Area.NONE) {
@@ -148,6 +149,7 @@ public class Environment {
 		if (sky != null)
 			sky.normalize();
 
+		normalized = true;
 		return this;
 	}
 

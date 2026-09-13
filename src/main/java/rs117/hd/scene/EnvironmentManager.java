@@ -288,13 +288,17 @@ public class EnvironmentManager {
 		if (state.target == Environment.NONE) {
 			skipTransition = true;
 		} else if (forceNextTransition) {
-			forceNextTransition = false;
 			skipTransition = forceNextTransitionInstant;
-			forceNextTransitionInstant = false;
 		}
 
 		if (state.target.instantTransition || newEnvironment.instantTransition)
 			skipTransition = true;
+
+		// Finish the current fade before changing its endpoints. The latest area is checked every frame.
+		if (!transitionComplete && !skipTransition)
+			return;
+		forceNextTransition = false;
+		forceNextTransitionInstant = false;
 
 		log.debug("changing environment from {} to {} (instant: {})", state.target, newEnvironment, skipTransition);
 		state.target = newEnvironment;

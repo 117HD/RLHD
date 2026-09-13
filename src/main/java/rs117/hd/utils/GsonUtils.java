@@ -81,6 +81,7 @@ public class GsonUtils {
 		var resolved = new HashMap<String, JsonObject>();
 		for (String name : definitions.keySet())
 			resolveParentDefinition(name, definitions, resolved, new HashSet<>(), type, rootParent, inherit);
+		resolved.values().removeIf(Objects::isNull);
 		return resolved;
 	}
 
@@ -95,7 +96,7 @@ public class GsonUtils {
 		BiConsumer<JsonObject, JsonObject> inherit
 	) {
 		JsonObject result = resolved.get(name);
-		if (result != null)
+		if (resolved.containsKey(name))
 			return result;
 		JsonObject definition = definitions.get(name);
 		if (definition == null)
@@ -110,16 +111,20 @@ public class GsonUtils {
 		if (parent != null) {
 			if (!parent.isJsonPrimitive() || !parent.getAsJsonPrimitive().isString()) {
 				log.error("{} '{}' has a non-string parent", type, name);
+				result = null;
 			} else {
 				String parentName = parent.getAsString();
 				if (!parentName.equals(rootParent)) {
 					if (!definitions.containsKey(parentName)) {
 						log.error("{} '{}' has an unknown parent '{}'", type, name, parentName);
+						result = null;
 					} else {
 						JsonObject base = resolveParentDefinition(
 							parentName, definitions, resolved, resolving, type, rootParent, inherit);
 						if (base != null)
 							inherit.accept(result, base);
+						else
+							result = null;
 					}
 				}
 			}
