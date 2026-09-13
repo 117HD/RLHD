@@ -1,9 +1,12 @@
 package rs117.hd.opengl.shader;
 
+import java.io.IOException;
+
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILED_LIGHTING_MAP;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_MODEL_DATA;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 
 public class SceneShaderProgram extends ShaderProgram {
@@ -11,6 +14,9 @@ public class SceneShaderProgram extends ShaderProgram {
 	protected final UniformTexture uniShadowMap = addUniformTexture("shadowMap");
 	protected final UniformTexture uniTiledLightingTextureArray = addUniformTexture("tiledLightingArray");
 	protected final UniformTexture uniTextureFaces = addUniformTexture("textureFaces");
+	protected final UniformTexture uniModelData = addUniformTexture("modelData");
+
+	protected boolean allowDiscard = false;
 
 	public SceneShaderProgram() {
 		super(t -> t
@@ -20,17 +26,28 @@ public class SceneShaderProgram extends ShaderProgram {
 	}
 
 	@Override
+	public void compile(ShaderIncludes includes) throws ShaderException, IOException {
+		super.compile(includes.copy().define("ALLOW_DISCARD", allowDiscard));
+	}
+
+	@Override
 	protected void initialize() {
 		uniTextureArray.set(TEXTURE_UNIT_GAME);
 		uniShadowMap.set(TEXTURE_UNIT_SHADOW_MAP);
 		uniTiledLightingTextureArray.set(TEXTURE_UNIT_TILED_LIGHTING_MAP);
 		uniTextureFaces.set(TEXTURE_UNIT_TEXTURED_FACES);
+		uniModelData.set(TEXTURE_UNIT_MODEL_DATA);
+	}
+
+	public static class Discard extends SceneShaderProgram {
+		Discard() { allowDiscard = true; }
 	}
 
 	public static class Legacy extends SceneShaderProgram {
 		Legacy() {
 			shaderTemplate.add(GL_GEOMETRY_SHADER, "scene_geom.glsl");
 			uniTextureFaces.ignoreMissing = true;
+			uniModelData.ignoreMissing = true;
 		}
 	}
 }

@@ -19,8 +19,8 @@ import rs117.hd.utils.collections.Int2IntHashMap;
 import rs117.hd.utils.collections.Int2ObjectHashMap;
 
 import static net.runelite.api.Constants.*;
-import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.utils.HDUtils.EXTENDED_SCENE_OFFSET;
 import static rs117.hd.utils.MathUtils.*;
 
 public class SceneContext {
@@ -81,7 +81,7 @@ public class SceneContext {
 		this.scene = scene;
 		this.expandedMapLoadingChunks = scene.isInstance() ? 0 : expandedMapLoadingChunks;
 		sizeX = sizeZ = EXTENDED_SCENE_SIZE;
-		sceneOffset = (EXTENDED_SCENE_SIZE - SCENE_SIZE) / 2;
+		sceneOffset = EXTENDED_SCENE_OFFSET;
 		sceneBase = findSceneBase();
 		sceneBounds = findSceneBounds(sceneBase);
 	}

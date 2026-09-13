@@ -27,20 +27,26 @@
 
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
+#include <uniforms/texture_faces.glsl>
+#include <uniforms/model_data.glsl>
+#include <uniforms/displacement.glsl>
 
 #include <utils/constants.glsl>
 #include <utils/uvs.glsl>
+#include <utils/misc.glsl>
+#include <utils/wind_character_displacement.glsl>
 
 layout (location = 0) in vec3 vPosition;
 
 #if ZONE_RENDERER
     layout (location = 1) in vec4 vUv;
     layout (location = 2) in vec4 vNormal;
-    layout (location = 3) in int vTextureFaceIdx;
+    layout (location = 3) in int vPackedTextureFace;
     layout (location = 6) in int vWorldViewId;
     layout (location = 7) in ivec2 vSceneBase;
-
-    uniform isamplerBuffer textureFaces;
+    #if DITHER_FADE
+        layout (location = 8) in float vFade;
+    #endif
 #else
     layout (location = 1) in vec3 vUv;
     layout (location = 2) in vec3 vNormal;
@@ -51,6 +57,9 @@ layout (location = 0) in vec3 vPosition;
 
 #if ZONE_RENDERER
     flat out int fWorldViewId;
+    #if DITHER_FADE
+        flat out float fFade;
+    #endif
     flat out ivec3 fAlphaBiasHsl;
     flat out ivec3 fMaterialData;
     flat out ivec3 fTerrainData;
@@ -68,52 +77,82 @@ layout (location = 0) in vec3 vPosition;
 
     void main() {
         int vertex = gl_VertexID % 3;
-        bool isProvoking = vertex == 2;
-
-        int faceIdx = vTextureFaceIdx & 0x7FFFFFFF;
-        bool windingReversed = vTextureFaceIdx < 0;
-        if (windingReversed)
+        if (isFaceWindingReversed(vPackedTextureFace))
             vertex = 2 - vertex;
 
         int materialData = 0;
         int alphaBiasHsl = 0;
-        if (isProvoking) {
-            // Only the Provoking vertex needs to fetch the face data
-            fAlphaBiasHsl = texelFetch(textureFaces, faceIdx).xyz;
-            fMaterialData = texelFetch(textureFaces, faceIdx + 1).xyz;
-            fWorldViewId = vWorldViewId;
-            alphaBiasHsl = fAlphaBiasHsl[vertex];
-            materialData = fMaterialData[vertex];
+        if (isModelFace(vPackedTextureFace)) {
+            ModelFaceData faceData = getModelFaceData(getFaceOffset(vPackedTextureFace));
+            fAlphaBiasHsl = faceData.AlphaBiasHsl;
+            fMaterialData = ivec3(faceData.MaterialData);
+            fTerrainData = ivec3(0);
+            alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
+            materialData = faceData.MaterialData;
         } else {
-            // All outputs must be written to for macOS compatibility
-            fAlphaBiasHsl = ivec3(0);
-            fMaterialData = ivec3(0);
-            fWorldViewId  = 0;
-            alphaBiasHsl = texelFetch(textureFaces, faceIdx)[vertex];
-            materialData = texelFetch(textureFaces, faceIdx + 1)[vertex];
+            StaticFaceData faceData = getStaticFaceData(getFaceOffset(vPackedTextureFace));
+            fAlphaBiasHsl = faceData.AlphaBiasHsl;
+            fMaterialData = faceData.MaterialData;
+            fTerrainData = faceData.TerrainData;
+            alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
+            materialData = faceData.MaterialData[vertex];
         }
-        fTerrainData = texelFetch(textureFaces, faceIdx + 2).xyz;
 
+        #if DITHER_FADE
+            fFade = vFade;
+        #endif
+
+        int worldViewIdx = vWorldViewId;
         vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
+        ModelData modelData;
+
+        int modelIdx = int(vNormal.w);
+        if (modelIdx > 0) {
+            modelData = getModelData(modelIdx);
+            #if DITHER_FADE
+                fFade = max(modelData.fade, fFade);
+            #endif
+            if (isModelDynamic(modelData)) {
+                worldViewIdx = modelData.worldViewIdx;
+                sceneOffset = modelData.position;
+            }
+        }
+
         vec3 worldNormal = vNormal.xyz;
-        vec3 worldPosition = sceneOffset + vPosition;
-        if (vWorldViewId != -1) {
-            mat4x3 worldViewProjection = mat4x3(getWorldViewProjection(vWorldViewId));
+        vec3 worldPosition = vPosition + sceneOffset;
+
+        if (modelIdx > 0) {
+            if(isDisplacementEnabled(materialData)) {
+                ObjectWindSample windSample = computeWindSample(modelData.position, modelData.height);
+                worldPosition += applyWindDisplacementVertex(
+                    windSample,
+                    materialData,
+                    float(modelData.height),
+                    worldPosition,
+                    worldPosition - modelData.position,
+                    vNormal.xyz
+                );
+            }
+        } else {
+            // Clamp underwater vertices to the water surface along the draw distance border, excluding
+            // waterDepth == 1, which is used when the geometry already sits flush with the surface
+            int waterDepth = fTerrainData[vertex] >> 11 & 0xFFF;
+            if (waterDepth > 1) {
+                const int TILE_SIZE = 128;
+                const int CHUNK_SIZE = TILE_SIZE * 8;
+                ivec2 cam = ivec2(cameraPos.xz / CHUNK_SIZE) * CHUNK_SIZE + CHUNK_SIZE / 2;
+                ivec2 d = ivec2(abs(worldPosition.xz - cam) / TILE_SIZE);
+                if (max(d.x, d.y) > int(drawDistance / 8) * 8 + 3)
+                    worldPosition.y -= waterDepth;
+            }
+        }
+
+        if (worldViewIdx != -1) {
+            mat4x3 worldViewProjection = mat4x3(getWorldViewProjection(worldViewIdx));
             worldPosition = worldViewProjection * vec4(worldPosition, 1.0);
             worldNormal = mat3(worldViewProjection) * worldNormal;
         }
-
-        // Clamp underwater vertices to the water surface along the draw distance border, excluding
-        // waterDepth == 1, which is used when the geometry already sits flush with the surface
-        int waterDepth = fTerrainData[vertex] >> 11 & 0xFFF;
-        if (waterDepth > 1) {
-            const int TILE_SIZE = 128;
-            const int CHUNK_SIZE = TILE_SIZE * 8;
-            ivec2 cam = ivec2(cameraPos.xz / CHUNK_SIZE) * CHUNK_SIZE + CHUNK_SIZE / 2;
-            ivec2 d = ivec2(abs(worldPosition.xz - cam) / TILE_SIZE);
-            if (max(d.x, d.y) > int(drawDistance / 8) * 8 + 3)
-                worldPosition.y -= waterDepth;
-        }
+        fWorldViewId = worldViewIdx;
 
         OUT.position = worldPosition;
         OUT.uv = computeVertexUvs(materialData, worldPosition, vUv.xyz);

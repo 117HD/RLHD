@@ -1251,6 +1251,18 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_DITHER_FADE = "experimentalDitherFade";
+	@ConfigItem(
+		keyName = KEY_DITHER_FADE,
+		name = "Dither fade",
+		description = "Let objects and chunks fade gradually, at the expense of GPU performance.",
+		section = experimentalSettings
+	)
+	default boolean ditherFade() {
+		return false;
+	}
+
+
 	/*====== Internal settings ======*/
 
 	@ConfigItem(keyName = "pluginUpdateMessage", hidden = true, name = "", description = "")

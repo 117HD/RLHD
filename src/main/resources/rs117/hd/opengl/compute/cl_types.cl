@@ -43,7 +43,7 @@ struct UBOCompute {
   float windOffset;
 
   int characterPositionCount;
-  float3 characterPositions[MAX_CHARACTER_POSITION_COUNT];
+  float4 characterPositions[MAX_CHARACTER_POSITION_COUNT];
 };
 
 struct shared_data {

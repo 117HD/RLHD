@@ -9,6 +9,9 @@ import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.jobs.Job;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.renderer.zone.Zone.MODEL_DATA_NUM_BYTES;
+import static rs117.hd.renderer.zone.Zone.STATIC_FACE_NUM_BYTES;
+import static rs117.hd.renderer.zone.Zone.ZONE_VERTEX_NUM_BYTES;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
 
 @Slf4j
@@ -20,7 +23,6 @@ public final class ZoneUploadJob extends Job {
 
 	Zone zone;
 	int x, z;
-	long revealAfterTimestampMs;
 	boolean shouldUnmap;
 
 	@Override
@@ -55,14 +57,14 @@ public final class ZoneUploadJob extends Job {
 	private void mapZoneVertexBuffers() {
 		try {
 			GLBuffer o = null, a = null;
-			int sz = zone.sizeO * Zone.VERT_SIZE * 3;
+			int sz = zone.sizeO * ZONE_VERTEX_NUM_BYTES * 3;
 			if (sz > 0) {
 				o = new GLBuffer("Zone::VBO::Opaque", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 				o.initialize(sz);
 				o.map(MAP_WRITE);
 			}
 
-			sz = zone.sizeA * Zone.VERT_SIZE * 3;
+			sz = zone.sizeA * ZONE_VERTEX_NUM_BYTES * 3;
 			if (sz > 0) {
 				a = new GLBuffer("Zone::VBO::Alpha", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 				a.initialize(sz);
@@ -70,14 +72,22 @@ public final class ZoneUploadJob extends Job {
 			}
 
 			GLTextureBuffer f = null;
-			sz = zone.sizeF * Zone.TEXTURE_SIZE;
+			sz = zone.sizeF * STATIC_FACE_NUM_BYTES;
 			if (sz > 0) {
-				f = new GLTextureBuffer("Zone::TBO", GL_STATIC_DRAW);
+				f = new GLTextureBuffer("Zone::TexturedFaces", GL_STATIC_DRAW);
 				f.initialize(sz);
 				f.map(MAP_WRITE);
 			}
 
-			zone.initialize(o, a, f);
+			GLTextureBuffer m = null;
+			sz = zone.sizeM * MODEL_DATA_NUM_BYTES;
+			if (sz > 0) {
+				m = new GLTextureBuffer("Zone::ModelData", GL_STATIC_DRAW);
+				m.initialize(sz);
+				m.map(MAP_WRITE);
+			}
+
+			zone.initialize(o, a, f, m);
 			zone.setMetadata(viewContext, sceneContext, x, z);
 		} catch (Throwable ex) {
 			log.warn(
@@ -108,7 +118,6 @@ public final class ZoneUploadJob extends Job {
 		sceneContext = null;
 		zone.uploadJob = null;
 		zone = null;
-		revealAfterTimestampMs = 0;
 		POOL.recycle(this);
 	}
 
