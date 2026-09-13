@@ -33,6 +33,7 @@ public class SkyManagerTest {
 		setInjectedField(manager, "currentInstant", Instant.EPOCH);
 		setInjectedField(manager, "configCycle", DaylightCycle.CUSTOM_REALISTIC);
 		setInjectedField(manager, "customCycleElapsedDays", .75);
+		setInjectedField(manager, "customCycleStart", Instant.parse("2026-06-21T00:00:00Z"));
 		setInjectedField(manager, "configMoonBehavior", MoonBehavior.MIRRORED);
 		setInjectedField(manager, "configMoonPhase", MoonPhase.FULL_MOON);
 		manager.getState().moonVisibility = 0;
@@ -61,7 +62,7 @@ public class SkyManagerTest {
 		assertEquals(.25f, sample.moonLightIllumination, 0);
 		sky.hideMoon = true;
 		manager.sampleLighting(sample, sky, new float[] { 1, 1, 1 }, .7f);
-		assertEquals(.25f, sample.moonLightIllumination, 0);
+		assertEquals(0, sample.moonLightIllumination, 0);
 		sky.moonLightVisibility = 0;
 		manager.sampleLighting(sample, sky, new float[] { 1, 1, 1 }, .7f);
 		assertEquals(0, sample.moonLightIllumination, 0);

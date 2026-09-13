@@ -671,7 +671,7 @@ public interface HdPluginConfig extends Config
 		name = "Moon behavior",
 		description =
 			"Controls how the moon moves across the sky.<br>" +
-			"'Disabled' gets rid of the moon entirely.<br>" +
+			"'Disabled' hides the moon, keeping half-moon illumination for scene lighting.<br>" +
 			"'Realistic' makes the moon orbit naturally, independent of the sun.<br>" +
 			"'Mirrored' keeps the moon at the opposite side of the sun.<br>" +
 			"'Static' keeps the moon at a fixed point in the sky.",
