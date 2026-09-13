@@ -76,8 +76,6 @@ public class SkyManager {
 	private static final float LONGITUDE_LIBRATION_DEG = 7.9f;
 	private static final float LATITUDE_LIBRATION_DEG = 6.7f;
 	private static final float NIGHT_MOON_PHASE_TILT = -.35f;
-	// Suppress sub-pixel shadow-camera movement; faster cycles use a smaller threshold.
-	private static final float DIRECTIONAL_ANGLE_UPDATE_THRESHOLD = .25f * DEG_TO_RAD;
 
 	@Inject
 	private ClientThread clientThread;
@@ -112,6 +110,7 @@ public class SkyManager {
 
 	private long frameUtcMillis;
 	private Instant frameUtcInstant;
+	private long lastDirectionalCameraUpdateMillis;
 
 	private double customCycleElapsedDays = .35;
 
@@ -513,22 +512,19 @@ public class SkyManager {
 			max(illumination, sky.minMoonIllumination) * sky.moonLightVisibility;
 	}
 
-	/**
-	 * Update directional shadows only after a perceptible angle change.
-	 */
 	public void updateDirectionalCamera(Camera directionalCamera) {
 		float[] angles = state.shadowAngles;
 		float[] orientation = { PI - angles[1], angles[0] };
-		if (!state.cycleActive) {
-			directionalCamera.setOrientation(orientation);
-			return;
+		if (state.cycleActive) {
+			final float angleThreshold = 0.0005f;
+			final float timeThresholdMs = 125;
+			float angleDiff = max(abs(angleDiff(orientation, directionalCamera.getOrientation())));
+			if (angleDiff < angleThreshold && frameUtcMillis - lastDirectionalCameraUpdateMillis < timeThresholdMs)
+				return;
 		}
-		float diff = max(abs(angleDiff(orientation, directionalCamera.getOrientation())));
-		float cycleDuration = sunAnglesOverride != null || configCycle.usesDefaultCycleTime ?
-			SYNCED_DAYS_PERIOD_MS / (float) (60 * 1000) :
-			configCycle == DaylightCycle.REAL_TIME ? 24 * 60 : configCycleDuration;
-		if (diff >= DIRECTIONAL_ANGLE_UPDATE_THRESHOLD * saturate(cycleDuration / 300f))
-			directionalCamera.setOrientation(orientation);
+
+		directionalCamera.setOrientation(orientation);
+		lastDirectionalCameraUpdateMillis = frameUtcMillis;
 	}
 
 	private void resolveLightScheduleState() {
