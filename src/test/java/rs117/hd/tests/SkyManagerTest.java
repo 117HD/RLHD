@@ -35,7 +35,6 @@ public class SkyManagerTest {
 		setInjectedField(manager, "customCycleElapsedDays", .75);
 		setInjectedField(manager, "configMoonBehavior", MoonBehavior.MIRRORED);
 		setInjectedField(manager, "configMoonPhase", MoonPhase.FULL_MOON);
-		setInjectedField(manager, "sunAnglesOverride", new float[] { -1, 0 });
 		manager.getState().moonVisibility = 0;
 		manager.getState().moonIllumination = 0;
 		manager.getState().moonLightIllumination = 0;
