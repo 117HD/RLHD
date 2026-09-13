@@ -34,6 +34,7 @@ import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.scene.tile_overrides.TileOverride;
+import rs117.hd.scene.tile_overrides.TileOverrideVariables;
 import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.collections.ConcurrentPool;
@@ -84,6 +85,7 @@ public class ProceduralGenerator {
 	@Inject
 	private WaterTypeManager waterTypeManager;
 
+	private final TileOverrideVariables tileVar = new TileOverrideVariables();
 	private final ConcurrentPool<GeneratorContext> GENERATOR_POOL = new ConcurrentPool<>(GeneratorContext::new);
 
 	final class GeneratorContext implements AutoCloseable {
@@ -555,9 +557,13 @@ public class ProceduralGenerator {
 
 			sceneContext.extendedSceneToWorld(tileExX, tileExY, tileZ, worldPos);
 
-			overrides[0] = tileOverrideManager.getOverride(sceneContext, tile, worldPos, ids);
-			overrides[1] = tileOverrideManager.getOverride(sceneContext, tile, worldPos, ids[1]);
-			overrides[2] = tileOverrideManager.getOverride(sceneContext, tile, worldPos, ids[0]);
+			try {
+				overrides[0] = tileOverrideManager.getOverride(sceneContext, tileVar, worldPos, ids);
+				overrides[1] = tileOverrideManager.getOverride(sceneContext, tileVar, worldPos, ids[1]);
+				overrides[2] = tileOverrideManager.getOverride(sceneContext, tileVar, worldPos, ids[0]);
+			} finally {
+				tileVar.setTile(null);
+			}
 
 			sceneContext.setTileOverride(tileZ, tileExX, tileExY, overrides);
 		}
