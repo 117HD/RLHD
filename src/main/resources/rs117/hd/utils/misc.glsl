@@ -210,3 +210,8 @@ vec2 getPoissonDisk(int idx) {
         default: return vec2( 0.14383161,  -0.14100790);
     }
 }
+
+float checkerboard(vec3 fragPos, float size) {
+    vec2 p = floor(fragPos.xz / size);
+    return mod(p.x + mod(p.y, 2.0), 2.0);
+}
