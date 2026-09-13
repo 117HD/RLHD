@@ -20,6 +20,7 @@ import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
+import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.JobGroup;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -65,6 +66,9 @@ public class WorldViewContext {
 
 	int minLevel, level, maxLevel;
 	Set<Integer> hideRoofIds;
+
+	final EboAlphaWriterJob sortedAlphaFacesUpload = new EboAlphaWriterJob(this);
+	int[] eboAlphaIndices;
 
 	private final Comparator<Zone> alphaSortComparator = Comparator.comparingInt((Zone z) -> z.dist).reversed();
 	private final List<Zone> alphaZones = new ArrayList<>();
@@ -177,14 +181,29 @@ public class WorldViewContext {
 				final int dx = camPosX - ((zx - offset) << 10);
 				final int dz = camPosZ - ((zz - offset) << 10);
 				z.dist = dx * dx + dz * dz;
+				z.alphaSortingJob.setup(camera, zx, zz);
 				alphaZones.add(z);
 			}
 		}
 
 		if (!alphaZones.isEmpty()) {
 			quickSort(alphaZones, alphaSortComparator);
+			int alphaFaceCount = 0;
+			for (int i = 0; i < alphaZones.size(); i++) {
+				final Zone z = alphaZones.get(i);
+				alphaFaceCount += z.setupAlphaModelSort(alphaFaceCount);
+			}
+
+			if(alphaFaceCount <= 0)
+				return;
+
+			eboAlphaIndices = PooledArrayType.INT.ensureCapacity(eboAlphaIndices, alphaFaceCount);
 			for (int i = 0; i < alphaZones.size(); i++)
-				alphaZones.get(i).alphaStaticModelSort(camera);
+				alphaZones.get(i).alphaSortingJob.queue(eboAlphaIndices);
+		} else {
+			if(eboAlphaIndices != null)
+				PooledArrayType.INT.release(eboAlphaIndices);
+			eboAlphaIndices = null;
 		}
 	}
 
@@ -272,6 +291,7 @@ public class WorldViewContext {
 	void free() {
 		sceneLoadGroup.cancel();
 		streamingGroup.cancel();
+		sortedAlphaFacesUpload.cancel();
 
 		if (sceneContext != null)
 			sceneContext.destroy();
@@ -280,6 +300,10 @@ public class WorldViewContext {
 		if (uboWorldViewStruct != null)
 			uboWorldViewStruct.free();
 		uboWorldViewStruct = null;
+
+		if(eboAlphaIndices != null)
+			PooledArrayType.INT.release(eboAlphaIndices);
+		eboAlphaIndices = null;
 
 		for (int i = 0; i < VAO_COUNT; i++) {
 			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {

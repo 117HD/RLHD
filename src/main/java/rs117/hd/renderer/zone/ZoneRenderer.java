@@ -69,6 +69,7 @@ import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLMappedBufferIntWriter;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
+import rs117.hd.utils.jobs.JobGroup;
 import rs117.hd.utils.jobs.JobSystem;
 
 import static net.runelite.api.Constants.*;
@@ -158,6 +159,7 @@ public class ZoneRenderer implements Renderer {
 	private GLBuffer indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
 
+	private final JobGroup<EboAlphaWriterJob> eboAlphaUploadGroup = new JobGroup<>(true, true);
 	public static GLBuffer.EBO eboAlpha;
 	public static GLMappedBufferIntWriter eboAlphaWriter;
 
@@ -262,6 +264,7 @@ public class ZoneRenderer implements Renderer {
 			eboAlpha.destroy();
 		eboAlpha = null;
 
+		eboAlphaUploadGroup.cancel();
 		if (eboAlphaWriter != null)
 			eboAlphaWriter.destroy();
 		eboAlphaWriter = null;
@@ -690,8 +693,10 @@ public class ZoneRenderer implements Renderer {
 		// Upload world views before rendering
 		uboWorldViews.upload();
 
-		if (eboAlphaWriter != null)
+		if (eboAlphaWriter != null) {
+			eboAlphaUploadGroup.complete();
 			eboAlphaWriter.flush();
+		}
 
 		// Scene draw state to apply before all recorded commands
 		if (indirectDrawCmdsStaging.position() > 0) {
@@ -962,45 +967,46 @@ public class ZoneRenderer implements Renderer {
 			if (renderWater)
 				z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
 
-			modelStreamingManager.ensureAsyncUploadsComplete(z);
-
 			final boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
 			if (hasAlpha) {
 				final int offset = ctx.sceneContext.sceneOffset >> 3;
 				// Only sort if the alpha will be directly visible, since shadows don't require sorting
 				if (level == 0 && (!sceneManager.isRoot(ctx) || z.inSceneFrustum))
-					z.alphaSort(zx - offset, zz - offset, sceneCamera);
+					z.alphaSort();
 
-				final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
-				if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
-					directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
-					z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, shouldDrawRoofShadows);
-				}
+				// Check if there is any alpha models for this level in the zone
+				if((z.alphaLevelMask & (1 << level)) != 0) {
+					final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
+					if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
+						directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
+						z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, shouldDrawRoofShadows);
+					}
 
-				if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
-					if (renderWater) {
-						// Water is currently drawn with depth writes & depth testing enabled, and as such, alpha models and the water plane
-						// can Z-fight depending on draw order. To avoid alpha models above water causing the water surface to fail its
-						// depth test, we disable depth writes for alpha models and rely on correct back to front ordering of the zones
-						sceneCmd.DepthMask(false);
-						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
-						sceneCmd.DepthMask(true);
-					} else {
-						// Draw alpha models in two passes, first blending colors correctly, then writing depth for subsequent opaque models
-						// to test against. This is necessary because opaque models on higher planes can be drawn later
+					if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
+						if (renderWater) {
+							// Water is currently drawn with depth writes & depth testing enabled, and as such, alpha models and the water plane
+							// can Z-fight depending on draw order. To avoid alpha models above water causing the water surface to fail its
+							// depth test, we disable depth writes for alpha models and rely on correct back to front ordering of the zones
+							sceneCmd.DepthMask(false);
+							z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
+							sceneCmd.DepthMask(true);
+						} else {
+							// Draw alpha models in two passes, first blending colors correctly, then writing depth for subsequent opaque models
+							// to test against. This is necessary because opaque models on higher planes can be drawn later
 
-						// Write color without depth writes
-						sceneCmd.DepthMask(false);
-						sceneCmd.ColorMask(true, true, true, true);
-						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
+							// Write color without depth writes
+							sceneCmd.DepthMask(false);
+							sceneCmd.ColorMask(true, true, true, true);
+							z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
 
-						// Write depth without color
-						sceneCmd.DepthMask(true);
-						sceneCmd.ColorMask(false, false, false, false);
-						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, true, false);
+							// Write depth without color
+							sceneCmd.DepthMask(true);
+							sceneCmd.ColorMask(false, false, false, false);
+							z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, true, false);
 
-						// Restore color writes
-						sceneCmd.ColorMask(true, true, true, true);
+							// Restore color writes
+							sceneCmd.ColorMask(true, true, true, true);
+						}
 					}
 				}
 			}
@@ -1020,7 +1026,13 @@ public class ZoneRenderer implements Renderer {
 
 		try {
 			WorldViewContext ctx = sceneManager.getContext(scene);
-			if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
+			if(ctx == null)
+				return;
+
+			if(pass == DrawCallbacks.PASS_ALPHA)
+				ctx.sortedAlphaFacesUpload.queue(eboAlphaUploadGroup);
+
+			if (!sceneManager.isRoot(ctx) && ctx.isLoading)
 				return;
 
 			frameTimer.begin(Timer.DRAW_PASS);
@@ -1033,7 +1045,7 @@ public class ZoneRenderer implements Renderer {
 					sceneCmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
 					break;
 				case DrawCallbacks.PASS_ALPHA:
-					modelStreamingManager.ensureAsyncUploadsComplete(null);
+					modelStreamingManager.ensureAsyncUploadsComplete();
 
 					if (sceneManager.isRoot(ctx))
 						frameTimer.begin(Timer.UNMAP_ROOT_CTX);
