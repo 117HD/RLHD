@@ -241,8 +241,13 @@ public class SkyManager {
 		}
 		if (angles != null)
 			return angles;
-		if (configCycle == DaylightCycle.CUSTOM_BASIC)
-			return getBasicSunAngles();
+		if (configCycle == DaylightCycle.CUSTOM_BASIC) {
+			float orbitAngle = (millis % DAY_MS) / (float) DAY_MS * TWO_PI;
+			return vec(
+				asin(sin(orbitAngle) * cos(BASIC_SUN_TILT)),
+				atan(cos(orbitAngle), -sin(orbitAngle) * sin(BASIC_SUN_TILT))
+			);
+		}
 		return vec(AstronomyUtils.getSunAngles(millis, getCoordinates(getCycle(sky))));
 	}
 
@@ -275,7 +280,8 @@ public class SkyManager {
 
 	private Instant resolveCurrentInstant(DaylightCycle cycle) {
 		if (cycle.usesDefaultCycleTime)
-			return getDefaultInstant();
+			// One simulated day per real hour, synchronized to the Unix epoch.
+			return Instant.ofEpochMilli(frameUtcMillis * (DAY_MS / SYNCED_DAYS_PERIOD_MS));
 
 		switch (cycle) {
 			case OFF:
@@ -292,16 +298,6 @@ public class SkyManager {
 		}
 
 		throw new IllegalStateException("Unhandled daylight cycle mode: " + cycle);
-	}
-
-	/**
-	 * A full UTC-synchronized day per real hour, independent of custom settings.
-	 */
-	private Instant getDefaultInstant() {
-		double cyclePosition = (frameUtcMillis % SYNCED_DAYS_PERIOD_MS) / (double) SYNCED_DAYS_PERIOD_MS;
-		long day = frameUtcMillis / SYNCED_DAYS_PERIOD_MS;
-		return Instant.EPOCH.plus(day, ChronoUnit.DAYS)
-			.plusMillis((long) (cyclePosition * DAY_MS));
 	}
 
 	/**
@@ -441,15 +437,6 @@ public class SkyManager {
 		);
 	}
 
-	private float[] getBasicSunAngles() {
-		float cyclePosition = applyBasicNightDurationWarp((float) fract(customCycleElapsedDays));
-		float orbitAngle = cyclePosition * TWO_PI;
-		return vec(
-			asin(sin(orbitAngle) * cos(BASIC_SUN_TILT)),
-			atan(cos(orbitAngle), -sin(orbitAngle) * sin(BASIC_SUN_TILT))
-		);
-	}
-
 	private ResolvedMoonPhase resolveMoonPhase(long millis, boolean fixedSunAngles, float[] sunAngles, float[] moonAngles) {
 		boolean usesOrbitalDirection = configCycle == DaylightCycle.NIGHT || configMoonBehavior.mirrorsSun;
 		if (!fixedSunAngles || usesOrbitalDirection) {
@@ -514,7 +501,7 @@ public class SkyManager {
 		scheduleSunAltitude = state.sunAltitudeDegrees;
 		// Use the orbit's local slope, independent of config changes and environment transitions.
 		if (effectiveCycle == DaylightCycle.CUSTOM_BASIC) {
-			sunDescending = cos(applyBasicNightDurationWarp((float) fract(customCycleElapsedDays)) * TWO_PI) <= 0;
+			sunDescending = cos((currentInstant.toEpochMilli() % DAY_MS) / (float) DAY_MS * TWO_PI) <= 0;
 		} else {
 			double[] coordinates = getCoordinates(effectiveCycle);
 			long millis = currentInstant.toEpochMilli();
