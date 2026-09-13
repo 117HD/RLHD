@@ -24,6 +24,7 @@
  */
 package rs117.hd.renderer.zone;
 
+import java.util.Arrays;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -117,6 +118,7 @@ public class SceneUploader implements AutoCloseable {
 	public OnBeforeProcessTileFunc onBeforeProcessTile;
 
 	private int basex, basez, rid, level;
+	private int minY, maxY;
 
 	private final PrimitiveIntArray roofIds = new PrimitiveIntArray();
 	private Scene currentScene;
@@ -234,8 +236,12 @@ public class SceneUploader implements AutoCloseable {
 		zone.roofStart = new int[4][roofIds.length];
 		zone.roofEnd = new int[4][roofIds.length];
 
+		Arrays.fill(zone.levelMinMaxY, 0);
+
 		for (int z = 0; z <= 3; ++z) {
 			this.level = z;
+			this.minY = Integer.MAX_VALUE;
+			this.maxY = Integer.MIN_VALUE;
 
 			if (z == 0) {
 				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, vb, ab, fb);
@@ -246,6 +252,9 @@ public class SceneUploader implements AutoCloseable {
 			} else {
 				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, vb, ab, fb);
 			}
+
+			zone.levelMinMaxY[z * 2] = this.minY;
+			zone.levelMinMaxY[z * 2 + 1] = this.maxY;
 
 			if (vb != null)
 				zone.levelOffsets[z] = vb.position();
@@ -854,6 +863,18 @@ public class SceneUploader implements AutoCloseable {
 		}
 	}
 
+	private void putStaticVertex(
+		VertexWriteCache vb,
+		int x, int y, int z,
+		float u, float v, float w,
+		int nx, int ny, int nz,
+		int texturedFaceIdx, boolean flip
+	) {
+		minY = min(minY, y);
+		maxY = max(maxY, y);
+		vb. putStaticVertex(x, y, z, u, v, w, nx, ny, nz, texturedFaceIdx, flip);
+	}
+
 	@SuppressWarnings({ "UnnecessaryLocalVariable" })
 	private void uploadTilePaint(
 		ZoneSceneContext ctx,
@@ -1074,21 +1095,21 @@ public class SceneUploader implements AutoCloseable {
 			neTerrainData, nwTerrainData, seTerrainData
 		);
 
-		vb.putStaticVertex(
+		putStaticVertex(vb,
 			lx2, neHeight, lz2,
 			uvx, uvy, 0,
 			neNormals[0], neNormals[1], neNormals[2],
 			texturedFaceIdx, false
 		);
 
-		vb.putStaticVertex(
+		putStaticVertex(vb,
 			lx3, nwHeight, lz3,
 			uvx - uvcos, uvy - uvsin, 0,
 			nwNormals[0], nwNormals[1], nwNormals[2],
 			texturedFaceIdx, false
 		);
 
-		vb.putStaticVertex(
+		putStaticVertex(vb,
 			lx1, seHeight, lz1,
 			uvx + uvsin, uvy - uvcos, 0,
 			seNormals[0], seNormals[1], seNormals[2],
@@ -1097,21 +1118,21 @@ public class SceneUploader implements AutoCloseable {
 
 		boolean isDoubleSided = !onlyWaterSurface && (tileZ != 0 || override.doubleSidedFaces);
 		if (isDoubleSided) {
-			vb.putStaticVertex(
+			putStaticVertex(vb,
 				lx1, seHeight, lz1,
 				uvx + uvsin, uvy - uvcos, 0,
 				-seNormals[0], -seNormals[1], -seNormals[2],
 				texturedFaceIdx, true
 			);
 
-			vb.putStaticVertex(
+			putStaticVertex(vb,
 				lx3, nwHeight, lz3,
 				uvx - uvcos, uvy - uvsin, 0,
 				-nwNormals[0], -nwNormals[1], -nwNormals[2],
 				texturedFaceIdx, true
 			);
 
-			vb.putStaticVertex(
+			putStaticVertex(vb,
 				lx2, neHeight, lz2,
 				uvx, uvy, 0,
 				-neNormals[0], -neNormals[1], -neNormals[2],
@@ -1125,21 +1146,21 @@ public class SceneUploader implements AutoCloseable {
 			swTerrainData, seTerrainData, nwTerrainData
 		);
 
-		vb.putStaticVertex(
+		putStaticVertex(vb,
 			lx0, swHeight, lz0,
 			uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0,
 			swNormals[0], swNormals[1], swNormals[2],
 			texturedFaceIdx, false
 		);
 
-		vb.putStaticVertex(
+		putStaticVertex(vb,
 			lx1, seHeight, lz1,
 			uvx + uvsin, uvy - uvcos, 0,
 			seNormals[0], seNormals[1], seNormals[2],
 			texturedFaceIdx, false
 		);
 
-		vb.putStaticVertex(
+		putStaticVertex(vb,
 			lx3, nwHeight, lz3,
 			uvx - uvcos, uvy - uvsin, 0,
 			nwNormals[0], nwNormals[1], nwNormals[2],
@@ -1147,21 +1168,21 @@ public class SceneUploader implements AutoCloseable {
 		);
 
 		if (isDoubleSided) {
-			vb.putStaticVertex(
+			putStaticVertex(vb,
 				lx3, nwHeight, lz3,
 				uvx - uvcos, uvy - uvsin, 0,
 				-nwNormals[0], -nwNormals[1], -nwNormals[2],
 				texturedFaceIdx, true
 			);
 
-			vb.putStaticVertex(
+			putStaticVertex(vb,
 				lx1, seHeight, lz1,
 				uvx + uvsin, uvy - uvcos, 0,
 				-seNormals[0], -seNormals[1], -seNormals[2],
 				texturedFaceIdx, true
 			);
 
-			vb.putStaticVertex(
+			putStaticVertex(vb,
 				lx0, swHeight, lz0,
 				uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0,
 				-swNormals[0], -swNormals[1], -swNormals[2],
@@ -1443,21 +1464,21 @@ public class SceneUploader implements AutoCloseable {
 				terrainDataA, terrainDataB, terrainDataC
 			);
 
-			vb.putStaticVertex(
+			putStaticVertex(vb,
 				lx0, ly0, lz0,
 				uvAx, uvAy, 0,
 				normalsA[0], normalsA[1], normalsA[2],
 				texturedFaceIdx, false
 			);
 
-			vb.putStaticVertex(
+			putStaticVertex(vb,
 				lx1, ly1, lz1,
 				uvBx, uvBy, 0,
 				normalsB[0], normalsB[1], normalsB[2],
 				texturedFaceIdx, false
 			);
 
-			vb.putStaticVertex(
+			putStaticVertex(vb,
 				lx2, ly2, lz2,
 				uvCx, uvCy, 0,
 				normalsC[0], normalsC[1], normalsC[2],
@@ -1466,21 +1487,21 @@ public class SceneUploader implements AutoCloseable {
 
 			boolean isDoubleSided = !onlyWaterSurface && (tileZ != 0 || override.doubleSidedFaces);
 			if (isDoubleSided) {
-				vb.putStaticVertex(
+				putStaticVertex(vb,
 					lx2, ly2, lz2,
 					uvCx, uvCy, 0,
 					-normalsC[0], -normalsC[1], -normalsC[2],
 					texturedFaceIdx, true
 				);
 
-				vb.putStaticVertex(
+				putStaticVertex(vb,
 					lx1, ly1, lz1,
 					uvBx, uvBy, 0,
 					-normalsB[0], -normalsB[1], -normalsB[2],
 					texturedFaceIdx, true
 				);
 
-				vb.putStaticVertex(
+				putStaticVertex(vb,
 					lx0, ly0, lz0,
 					uvAx, uvAy, 0,
 					-normalsA[0], -normalsA[1], -normalsA[2],
@@ -1837,21 +1858,21 @@ public class SceneUploader implements AutoCloseable {
 				0, 0, 0
 			);
 
-			vb.putStaticVertex(
+			putStaticVertex(vb,
 				vx1, vy1, vz1,
 				faceUVs[0], faceUVs[1], faceUVs[2],
 				modelNormals[0], modelNormals[1], modelNormals[2],
 				texturedFaceIdx, false
 			);
 
-			vb.putStaticVertex(
+			putStaticVertex(vb,
 				vx2, vy2, vz2,
 				faceUVs[4], faceUVs[5], faceUVs[6],
 				modelNormals[3], modelNormals[4], modelNormals[5],
 				texturedFaceIdx, false
 			);
 
-			vb.putStaticVertex(
+			putStaticVertex(vb,
 				vx3, vy3, vz3,
 				faceUVs[8], faceUVs[9], faceUVs[10],
 				modelNormals[6], modelNormals[7], modelNormals[8],
@@ -1859,21 +1880,21 @@ public class SceneUploader implements AutoCloseable {
 			);
 
 			if (faceOverride.doubleSidedFaces || material.doubleSidedFaces) {
-				vb.putStaticVertex(
+				putStaticVertex(vb,
 					vx3, vy3, vz3,
 					faceUVs[8], faceUVs[9], faceUVs[10],
 					-modelNormals[6], -modelNormals[7], -modelNormals[8],
 					texturedFaceIdx, true
 				);
 
-				vb.putStaticVertex(
+				putStaticVertex(vb,
 					vx2, vy2, vz2,
 					faceUVs[4], faceUVs[5], faceUVs[6],
 					-modelNormals[3], -modelNormals[4], -modelNormals[5],
 					texturedFaceIdx, true
 				);
 
-				vb.putStaticVertex(
+				putStaticVertex(vb,
 					vx1, vy1, vz1,
 					faceUVs[0], faceUVs[1], faceUVs[2],
 					-modelNormals[0], -modelNormals[1], -modelNormals[2],
@@ -2533,9 +2554,9 @@ public class SceneUploader implements AutoCloseable {
 			packedMaterial, packedMaterial, packedMaterial,
 			terrainData, terrainData, terrainData
 		);
-		vb.putStaticVertex(x0, y0, z0, u0, v0, 0, 0, -1, 0, faceIdx, false);
-		vb.putStaticVertex(x1, y1, z1, u1, v1, 0, 0, -1, 0, faceIdx, false);
-		vb.putStaticVertex(x2, y2, z2, u2, v2, 0, 0, -1, 0, faceIdx, false);
+		putStaticVertex(vb,x0, y0, z0, u0, v0, 0, 0, -1, 0, faceIdx, false);
+		putStaticVertex(vb,x1, y1, z1, u1, v1, 0, 0, -1, 0, faceIdx, false);
+		putStaticVertex(vb,x2, y2, z2, u2, v2, 0, 0, -1, 0, faceIdx, false);
 	}
 
 	public static void calculateFaceNormalInt(

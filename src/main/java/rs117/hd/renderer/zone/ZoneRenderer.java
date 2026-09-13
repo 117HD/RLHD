@@ -845,6 +845,9 @@ public class ZoneRenderer implements Renderer {
 			if (!sceneManager.isTopLevelValid())
 				return false;
 
+			if (plugin.orthographicProjection)
+				return true;
+
 			WorldViewContext ctx = sceneManager.getRoot();
 			if (plugin.enableDetailedTimers) frameTimer.begin(Timer.VISIBILITY_CHECK);
 			int minX = zx * CHUNK_SIZE - ctx.sceneContext.sceneOffset;
@@ -860,9 +863,9 @@ public class ZoneRenderer implements Renderer {
 				}
 			}
 
-			Zone zone = ctx.zones[zx][zz];
+			final Zone zone = ctx.zones[zx][zz];
 			if (plugin.freezeCulling)
-				return zone.inSceneFrustum || zone.inShadowFrustum;
+				return zone.isVisible();
 
 			minX *= LOCAL_TILE_SIZE;
 			minZ *= LOCAL_TILE_SIZE;
@@ -873,33 +876,44 @@ public class ZoneRenderer implements Renderer {
 				minY -= ProceduralGenerator.MAX_DEPTH;
 			}
 
-			final int PADDING = 4 * LOCAL_TILE_SIZE;
-			zone.inSceneFrustum = sceneCamera.intersectsAABB(
-				minX - PADDING, minY, minZ - PADDING, maxX + PADDING, maxY, maxZ + PADDING);
+			zone.resetVisibility();
 
-			if (zone.inSceneFrustum) {
+			final int PADDING = 4 * LOCAL_TILE_SIZE;
+			zone.setVisibility(Zone.SCENE_VISIBILITY, sceneCamera.intersectsAABB(
+				minX - PADDING, minY, minZ - PADDING, maxX + PADDING, maxY, maxZ + PADDING));
+
+			if (zone.isVisible(Zone.SCENE_VISIBILITY)) {
+				for (int level = 0; level < Zone.LEVEL_COUNT; level++) {
+					final int lvlMinY = zone.levelMinMaxY[level * 2];
+					final int lvlMaxY = zone.levelMinMaxY[level * 2 + 1];
+					if(lvlMinY == 0 && lvlMaxY == 0)
+						continue;
+					zone.setVisibility(Zone.SCENE_LEVEL_VISIBILITY + level,
+						sceneCamera.intersectsAABB(
+							minX - PADDING, lvlMinY, minZ - PADDING, maxX + PADDING, lvlMaxY, maxZ + PADDING)
+					);
+				}
+
 				if (plugin.enableDetailedTimers)
 					frameTimer.end(Timer.VISIBILITY_CHECK);
-				return zone.inShadowFrustum = true;
+				return zone.setVisibility(Zone.DIRECTIONAL_VISIBILITY, true);
 			}
 
 			if (plugin.configShadowsEnabled && plugin.configExpandShadowDraw) {
-				zone.inShadowFrustum = directionalCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
-				if (zone.inShadowFrustum) {
+				zone.setVisibility(Zone.DIRECTIONAL_VISIBILITY, directionalCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ));
+				if (zone.isVisible(Zone.DIRECTIONAL_VISIBILITY)) {
 					int centerX = minX + (maxX - minX) / 2;
 					int centerY = minY + (maxY - minY) / 2;
 					int centerZ = minZ + (maxZ - minZ) / 2;
-					zone.inShadowFrustum = directionalShadowCasterVolume.intersectsPoint(centerX, centerY, centerZ);
+					zone.setVisibility(Zone.DIRECTIONAL_VISIBILITY, directionalShadowCasterVolume.intersectsPoint(centerX, centerY, centerZ));
 				}
 				if (plugin.enableDetailedTimers)
 					frameTimer.end(Timer.VISIBILITY_CHECK);
-				return zone.inShadowFrustum;
+				return zone.isVisible();
 			}
 
 			if (plugin.enableDetailedTimers)
 				frameTimer.end(Timer.VISIBILITY_CHECK);
-			if (plugin.orthographicProjection)
-				return zone.inSceneFrustum = true;
 		} catch (Throwable ex) {
 			log.error("Error in zoneInFrustum({}, {}, {}, {}):", zx, zz, maxY, minY, ex);
 			plugin.requestPluginStop();
@@ -922,17 +936,17 @@ public class ZoneRenderer implements Renderer {
 				return;
 
 			frameTimer.begin(Timer.DRAW_ZONE_OPAQUE);
-			if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
-				z.renderOpaque(sceneCmd, ctx, false);
+			if (!sceneManager.isRoot(ctx) || z.isVisible(Zone.SCENE_VISIBILITY)) {
+				z.renderOpaque(sceneCmd, ctx, true, false);
 
 				if (z.hasGapFiller)
 					z.renderOpaqueLevel(gapFillerCmd, Zone.LEVEL_GAP_FILLER);
 			}
 
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
-			if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
+			if (!isSquashed && (!sceneManager.isRoot(ctx) || z.isVisible(Zone.DIRECTIONAL_VISIBILITY))) {
 				directionalCmd.SetShader(fastShadowProgram);
-				z.renderOpaque(directionalCmd, ctx, shouldDrawRoofShadows);
+				z.renderOpaque(directionalCmd, ctx, false, shouldDrawRoofShadows);
 			}
 			frameTimer.end(Timer.DRAW_ZONE_OPAQUE);
 
@@ -958,26 +972,27 @@ public class ZoneRenderer implements Renderer {
 				return;
 
 			frameTimer.begin(Timer.DRAW_ZONE_ALPHA);
-			final boolean renderWater = z.inSceneFrustum && level == 0 && z.hasWater;
+			final boolean renderWater = z.isVisible(Zone.DIRECTIONAL_VISIBILITY) && level == 0 && z.hasWater;
 			if (renderWater)
 				z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
 
 			modelStreamingManager.ensureAsyncUploadsComplete(z);
 
 			final boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
+			final boolean isSceneVisible = !sceneManager.isRoot(ctx) || (z.isVisible(Zone.SCENE_LEVEL_VISIBILITY + level));
 			if (hasAlpha) {
 				final int offset = ctx.sceneContext.sceneOffset >> 3;
 				// Only sort if the alpha will be directly visible, since shadows don't require sorting
-				if (level == 0 && (!sceneManager.isRoot(ctx) || z.inSceneFrustum))
+				if (level == 0 && isSceneVisible)
 					z.alphaSort(zx - offset, zz - offset, sceneCamera);
 
 				final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
-				if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
+				if (!isSquashed && (!sceneManager.isRoot(ctx) || z.isVisible(Zone.DIRECTIONAL_VISIBILITY))) {
 					directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
 					z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, shouldDrawRoofShadows);
 				}
 
-				if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
+				if (isSceneVisible) {
 					if (renderWater) {
 						// Water is currently drawn with depth writes & depth testing enabled, and as such, alpha models and the water plane
 						// can Z-fight depending on draw order. To avoid alpha models above water causing the water surface to fail its

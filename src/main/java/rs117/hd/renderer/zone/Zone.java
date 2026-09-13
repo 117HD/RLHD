@@ -46,6 +46,9 @@ public class Zone implements Destructible {
 	@Inject
 	private Client client;
 
+	@Inject
+	private HdPlugin plugin;
+
 	// Zone vertex format
 	// pos short vec3(x, y, z)
 	// uvw short vec3(u, v, w)
@@ -67,6 +70,10 @@ public class Zone implements Destructible {
 	public static final int LEVEL_WATER_SURFACE = LEVEL_COUNT++;
 	public static final int LEVEL_GAP_FILLER = LEVEL_COUNT++;
 
+	public static final int DIRECTIONAL_VISIBILITY = 0;
+	public static final int SCENE_VISIBILITY = 1;
+	public static final int SCENE_LEVEL_VISIBILITY = 2;
+
 	public int glVao;
 	int bufLen;
 	int dist;
@@ -87,16 +94,17 @@ public class Zone implements Destructible {
 	public boolean hasWater; // whether the zone has any water tiles
 	public boolean onlyWater; // whether the zone only contains water tiles
 	public boolean hasGapFiller; // whether the zone has any gap filler geometry
-	public boolean inSceneFrustum; // whether the zone is visible to the scene camera
-	public boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
 	public boolean isFirstLoadingAttempt = true;
+
+	public int visibility = -1;
 
 	public IntHashSet animatedDynamicObjectIds = new IntHashSet();
 
 	final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob();
 	ZoneUploadJob uploadJob;
 
-	int[] levelOffsets = new int[LEVEL_COUNT]; // buffer pos in ints for the end of the level
+	final int[] levelMinMaxY = new int[LEVEL_COUNT * 2];
+	final int[] levelOffsets = new int[LEVEL_COUNT]; // buffer pos in ints for the end of the level
 
 	int[][] rids;
 	int[][] roofStart;
@@ -197,8 +205,6 @@ public class Zone implements Destructible {
 		hasWater = false;
 		onlyWater = false;
 		hasGapFiller = false;
-		inSceneFrustum = false;
-		inShadowFrustum = false;
 
 		Arrays.fill(levelOffsets, 0);
 		rids = null;
@@ -275,6 +281,27 @@ public class Zone implements Destructible {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
+	public void resetVisibility() {
+		visibility = 0;
+	}
+
+	public boolean setVisibility(int id, boolean visible) {
+		if(visible) {
+			visibility |= (1 << id);
+		} else {
+			visibility &= ~(1 << id);
+		}
+		return visible;
+	}
+
+	public boolean isVisible(int id) {
+		return plugin.orthographicProjection || (visibility & (1 << id)) != 0;
+	}
+
+	public boolean isVisible() {
+		return plugin.orthographicProjection || visibility != 0;
+	}
+
 	public void setMetadata(WorldViewContext viewContext, SceneContext sceneContext, int mx, int mz) {
 		if (vboM == null)
 			return;
@@ -326,7 +353,7 @@ public class Zone implements Destructible {
 		copyTo(glDrawLength, drawEnd, 0, drawIdx);
 	}
 
-	void renderOpaque(CommandBuffer cmd, WorldViewContext ctx, boolean roofShadows) {
+	void renderOpaque(CommandBuffer cmd, WorldViewContext ctx, boolean isSceneDraw, boolean roofShadows) {
 		drawIdx = 0;
 
 		int currentLevel = ctx.level;
@@ -338,6 +365,9 @@ public class Zone implements Destructible {
 		}
 
 		for (int level = ctx.minLevel; level <= maxLevel; ++level) {
+			if(isSceneDraw && !isVisible(SCENE_LEVEL_VISIBILITY + level))
+				continue;
+
 			int[] rids = this.rids[level];
 			int[] roofStart = this.roofStart[level];
 			int[] roofEnd = this.roofEnd[level];
@@ -385,7 +415,6 @@ public class Zone implements Destructible {
 
 	void renderOpaqueLevel(CommandBuffer cmd, int level) {
 		drawIdx = 0;
-
 		pushRange(this.levelOffsets[level - 1], this.levelOffsets[level]);
 
 		if (drawIdx == 0)
@@ -735,10 +764,13 @@ public class Zone implements Destructible {
 		quickSort(alphaModels, alphaModelComparator);
 	}
 
-	void alphaStaticModelSort(Camera camera) {
+	void alphaStaticModelSort(Camera camera, boolean isTopLevel) {
 		alphaSortingJob.reset();
 		for (AlphaModel m : alphaModels) {
 			if ((m.flags & AlphaModel.SKIP) != 0 || m.isTemp())
+				continue;
+
+			if(isTopLevel && !isVisible(SCENE_LEVEL_VISIBILITY + m.level))
 				continue;
 
 			m.dist = dist;
@@ -895,7 +927,7 @@ public class Zone implements Destructible {
 						int zx2 = (centerX >> 10) + offset;
 						int zz2 = (centerZ >> 10) + offset;
 						if (zx2 >= 0 && zx2 < zones.length && zz2 >= 0 && zz2 < zones[0].length) {
-							if (zones[zx2][zz2].inSceneFrustum && zones[zx2][zz2].initialized) {
+							if (zones[zx2][zz2].isVisible(SCENE_VISIBILITY) && zones[zx2][zz2].initialized) {
 								max = distance;
 								closestZoneX = centerX >> 10;
 								closestZoneZ = centerZ >> 10;

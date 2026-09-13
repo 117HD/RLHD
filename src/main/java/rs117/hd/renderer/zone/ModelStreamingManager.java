@@ -245,7 +245,7 @@ public class ModelStreamingManager {
 
 		final boolean hasAlpha =
 			(modelOverride.mightHaveTransparency || isAlphaModel(m)) &&
-			(!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
+			(!sceneManager.isRoot(ctx) || zone.isVisible(Zone.SCENE_VISIBILITY));
 		final Zone.AlphaModel alphaModel = hasAlpha ?
 			zone.requestTempAlphaModel(
 				modelOverride,
@@ -390,7 +390,7 @@ public class ModelStreamingManager {
 			if (culledFaces.length > 0 &&
 				modelOverride.castShadows &&
 				plugin.configShadowMode != ShadowMode.OFF &&
-				(!sceneManager.isRoot(ctx) || zone != null && zone.inShadowFrustum)
+				(!sceneManager.isRoot(ctx) || zone != null && zone.isVisible(Zone.DIRECTIONAL_VISIBILITY))
 			) {
 				final DynamicModelVAO.View shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
 				sceneUploader.uploadTempModel(

@@ -171,7 +171,7 @@ public class WorldViewContext {
 		for (int zx = 0; zx < sizeX; zx++) {
 			for (int zz = 0; zz < sizeZ; zz++) {
 				final Zone z = zones[zx][zz];
-				if (z.alphaModels.isEmpty() || (worldViewId == WorldView.TOPLEVEL && !z.inSceneFrustum))
+				if (z.alphaModels.isEmpty() || (worldViewId == WorldView.TOPLEVEL && !z.isVisible(Zone.SCENE_VISIBILITY)))
 					continue;
 
 				final int dx = camPosX - ((zx - offset) << 10);
@@ -184,7 +184,7 @@ public class WorldViewContext {
 		if (!alphaZones.isEmpty()) {
 			quickSort(alphaZones, alphaSortComparator);
 			for (int i = 0; i < alphaZones.size(); i++)
-				alphaZones.get(i).alphaStaticModelSort(camera);
+				alphaZones.get(i).alphaStaticModelSort(camera, worldViewId == WorldView.TOPLEVEL);
 		}
 	}
 
@@ -214,8 +214,7 @@ public class WorldViewContext {
 				clientThread.invoke(curZone::unmap);
 
 				if (prevZone != curZone) {
-					curZone.inSceneFrustum = prevZone.inSceneFrustum;
-					curZone.inShadowFrustum = prevZone.inShadowFrustum;
+					curZone.visibility = prevZone.visibility;
 					DestructibleHandler.queueDestruction(prevZone);
 				}
 
