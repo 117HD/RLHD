@@ -200,12 +200,18 @@ public class SkyManager {
 		configNightFraction = clamp(config.basicNightPercentage(), 0, 100) / 100f;
 
 		if (configCycle == DaylightCycle.REAL_TIME || configCycle == DaylightCycle.CUSTOM_REALISTIC) {
-			configLatLon[0] = clamp(config.latitude(), -90, 90);
-			configLatLon[1] = clamp(config.longitude(), -180, 180);
+			configLatLon[0] = degreesAndArcminutes(config.latitudeDegrees(), config.latitudeArcminutes(), 90);
+			configLatLon[1] = degreesAndArcminutes(config.longitudeDegrees(), config.longitudeArcminutes(), 180);
 		} else {
 			configLatLon[0] = DEFAULT_LATLON[0];
 			configLatLon[1] = DEFAULT_LATLON[1];
 		}
+	}
+
+	private static double degreesAndArcminutes(int degrees, int arcminutes, int maxDegrees) {
+		double magnitude = min(abs(degrees), maxDegrees) + min(abs(arcminutes), 59) / 60.0;
+		boolean negative = degrees < 0 || degrees == 0 && arcminutes < 0;
+		return clamp(negative ? -magnitude : magnitude, -maxDegrees, maxDegrees);
 	}
 
 	public boolean isCycleDisabled() {

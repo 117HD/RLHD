@@ -730,34 +730,6 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	String KEY_LATITUDE = "latitude";
-	@ConfigItem(
-		keyName = KEY_LATITUDE,
-		name = "Latitude",
-		description =
-			"Advanced: sets the observer latitude for realistic sun and moon movement at a location on Earth.<br>" +
-			"Only applies to Real-Time and Custom Realistic. Defaults to Jagex's offices in Cambridge, England.",
-		position = 7,
-		section = daylightCycleSettings
-	)
-	default double latitude() {
-		return DEFAULT_LATLON[0];
-	}
-
-	String KEY_LONGITUDE = "longitude";
-	@ConfigItem(
-		keyName = KEY_LONGITUDE,
-		name = "Longitude",
-		description =
-			"Advanced: sets the observer longitude for realistic sun and moon movement at a location on Earth.<br>" +
-			"Only applies to Real-Time and Custom Realistic. Defaults to Jagex's offices in Cambridge, England.",
-		position = 8,
-		section = daylightCycleSettings
-	)
-	default double longitude() {
-		return DEFAULT_LATLON[1];
-	}
-
 	String KEY_CUSTOM_CYCLE_DURATION = "customCycleDurationMinutes";
 	@Range(min = 1)
 	@Units(Units.MINUTES)
@@ -765,7 +737,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_CUSTOM_CYCLE_DURATION,
 		name = "Custom cycle duration",
 		description = "Configures how long each Custom day & night cycle lasts.",
-		position = 9,
+		position = 7,
 		section = daylightCycleSettings
 	)
 	default double customCycleDurationMinutes() {
@@ -779,13 +751,80 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_BASIC_NIGHT_PERCENTAGE,
 		name = "Basic night portion",
 		description = "Decides how much of the Custom Basic cycle should be dedicated to night-time.",
-		position = 10,
+		position = 8,
 		section = daylightCycleSettings
 	)
 	default int basicNightPercentage() {
 		return 50;
 	}
 
+	String KEY_LATITUDE_DEGREES = "latitudeDegrees";
+	@Range(min = -90, max = 90)
+	@Units("°")
+	@ConfigItem(
+		keyName = KEY_LATITUDE_DEGREES,
+		name = "Latitude degrees",
+		description =
+			"Advanced: sets the observer latitude for realistic sun and moon movement at a location on Earth.<br>" +
+			"Positive values are north and negative values are south. Combine with Latitude arcminutes for higher accuracy.<br>" +
+			"Only applies to Real-Time and Custom Realistic. Defaults to Jagex's offices in Cambridge, England.",
+		position = 9,
+		section = daylightCycleSettings
+	)
+	default int latitudeDegrees() {
+		return (int) DEFAULT_LATLON[0];
+	}
+
+	String KEY_LATITUDE_ARCMINUTES = "latitudeArcminutes";
+	@Range(min = -59, max = 59)
+	@Units("′")
+	@ConfigItem(
+		keyName = KEY_LATITUDE_ARCMINUTES,
+		name = "Latitude arcminutes",
+		description =
+			"Advanced: adds arcminutes to Latitude degrees for realistic sun and moon movement.<br>" +
+			"The degree sign determines north or south; when degrees are zero, a negative value selects south.<br>" +
+			"Only applies to Real-Time and Custom Realistic. Defaults to Jagex's offices in Cambridge, England.",
+		position = 10,
+		section = daylightCycleSettings
+	)
+	default int latitudeArcminutes() {
+		return (int) Math.round((DEFAULT_LATLON[0] % 1) * 60);
+	}
+
+	String KEY_LONGITUDE_DEGREES = "longitudeDegrees";
+	@Range(min = -180, max = 180)
+	@Units("°")
+	@ConfigItem(
+		keyName = KEY_LONGITUDE_DEGREES,
+		name = "Longitude degrees",
+		description =
+			"Advanced: sets the observer longitude for realistic sun and moon movement at a location on Earth.<br>" +
+			"Positive values are east and negative values are west. Combine with Longitude arcminutes for higher accuracy.<br>" +
+			"Only applies to Real-Time and Custom Realistic. Defaults to Jagex's offices in Cambridge, England.",
+		position = 11,
+		section = daylightCycleSettings
+	)
+	default int longitudeDegrees() {
+		return (int) DEFAULT_LATLON[1];
+	}
+
+	String KEY_LONGITUDE_ARCMINUTES = "longitudeArcminutes";
+	@Range(min = -59, max = 59)
+	@Units("′")
+	@ConfigItem(
+		keyName = KEY_LONGITUDE_ARCMINUTES,
+		name = "Longitude arcminutes",
+		description =
+			"Advanced: adds arcminutes to Longitude degrees for realistic sun and moon movement.<br>" +
+			"The degree sign determines east or west; when degrees are zero, a negative value selects west.<br>" +
+			"Only applies to Real-Time and Custom Realistic. Defaults to Jagex's offices in Cambridge, England.",
+		position = 12,
+		section = daylightCycleSettings
+	)
+	default int longitudeArcminutes() {
+		return (int) Math.round((DEFAULT_LATLON[1] % 1) * 60);
+	}
 
 
 	/*====== Environment settings ======*/
