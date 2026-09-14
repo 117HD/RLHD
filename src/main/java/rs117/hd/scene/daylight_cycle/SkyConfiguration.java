@@ -216,7 +216,6 @@ public class SkyConfiguration {
 	 */
 	public SkyConfiguration interpolateLightingParameters(SkyConfiguration from, SkyConfiguration to, float t) {
 		moonShadowStrength = mix(from.moonShadowStrength, to.moonShadowStrength, t);
-		minMoonIllumination = mix(from.minMoonIllumination, to.minMoonIllumination, t);
 		if (moonDiskColor == null)
 			moonDiskColor = new float[3];
 		mix(moonDiskColor, from.moonDiskColor, to.moonDiskColor, t);

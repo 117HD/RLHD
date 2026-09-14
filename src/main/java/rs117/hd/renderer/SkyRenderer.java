@@ -84,6 +84,7 @@ public class SkyRenderer {
 	private float directionalStrength;
 	private float ambientStrength;
 	private boolean skyEnabled;
+	public boolean castsShadows;
 
 	public void initialize() {
 		commandBuffer.setFrameTimer(frameTimer);
@@ -233,7 +234,7 @@ public class SkyRenderer {
 			effectiveAmbientStrength *= factor;
 			effectiveDirectionalStrength *= factor;
 		}
-		skyManager.getState().castsShadows = effectiveDirectionalStrength > 0;
+		castsShadows = effectiveDirectionalStrength > 0;
 		ubo.ambientStrength.set(effectiveAmbientStrength);
 		ubo.ambientColor.set(ambientColor);
 		ubo.lightStrength.set(effectiveDirectionalStrength);

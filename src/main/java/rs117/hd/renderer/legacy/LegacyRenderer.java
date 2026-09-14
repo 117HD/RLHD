@@ -1068,7 +1068,7 @@ public class LegacyRenderer implements Renderer {
 				plugin.uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 			}
 
-			if (plugin.configShadowsEnabled && plugin.fboShadowMap != 0 && skyManager.getState().castsShadows) {
+			if (plugin.configShadowsEnabled && plugin.fboShadowMap != 0 && skyRenderer.castsShadows) {
 				frameTimer.begin(Timer.RENDER_SHADOWS);
 
 				// Render to the shadow depth map

@@ -102,7 +102,6 @@ public class SkyManager {
 	private double customCycleElapsedDays = .35;
 	private Instant customCycleStart;
 
-	private float scheduleSunAltitude;
 	private boolean sunDescending;
 	private long scheduleNightIndex;
 	private float nightFactor = 1;
@@ -111,6 +110,14 @@ public class SkyManager {
 	private final SkyState state = new SkyState();
 
 	private final Random random = new Random(SEED);
+
+	@RequiredArgsConstructor
+	private static final class ResolvedSun {
+		private final DaylightCycle cycle;
+		private final long utcMillis;
+		private final float[] angles;
+		private final boolean fixed;
+	}
 
 	@RequiredArgsConstructor
 	private static final class ResolvedMoon {
@@ -122,6 +129,13 @@ public class SkyManager {
 		private final MoonPhase phase;
 		private final float orbit;
 		private final boolean usesSyntheticLightDirection;
+	}
+
+	@RequiredArgsConstructor
+	private static final class ResolvedEndpoint {
+		private final SkyConfiguration sky;
+		private final ResolvedSun sun;
+		private final ResolvedMoon moon;
 	}
 
 	public void startUp() {
@@ -236,32 +250,34 @@ public class SkyManager {
 		resolveLightScheduleState();
 	}
 
-	private float[] getSunAngles(SkyConfiguration sky, long millis) {
+	private ResolvedSun resolveSun(SkyConfiguration sky) {
 		float[] angles = sky.sunAngles;
 		if (angles == null && configCycle.skyPreset != null) {
 			var preset = PRESETS.get(configCycle.skyPreset);
 			if (preset != null)
 				angles = preset.sunAngles;
 		}
+		// Fixed environment angles use Default's slower time as a stable tuning baseline.
+		DaylightCycle cycle = angles == null ? configCycle : DaylightCycle.DEFAULT;
+		long utcMillis = resolveCurrentUtcMillis(cycle);
 		if (angles != null)
-			return angles;
-		if (configCycle == DaylightCycle.CUSTOM_BASIC) {
-			float orbitAngle = (millis % DAY_MS) / (float) DAY_MS * TWO_PI;
-			return vec(
+			return new ResolvedSun(cycle, utcMillis, angles, true);
+		if (cycle == DaylightCycle.CUSTOM_BASIC) {
+			float orbitAngle = (utcMillis % DAY_MS) / (float) DAY_MS * TWO_PI;
+			angles = vec(
 				asin(sin(orbitAngle) * cos(BASIC_SUN_TILT)),
 				atan(cos(orbitAngle), -sin(orbitAngle) * sin(BASIC_SUN_TILT))
 			);
+		} else {
+			angles = vec(AstronomyUtils.getSunAngles(utcMillis, getCoordinates(cycle)));
 		}
-		return vec(AstronomyUtils.getSunAngles(millis, getCoordinates(resolveCycle(sky))));
+		return new ResolvedSun(cycle, utcMillis, angles, false);
 	}
 
-	private DaylightCycle resolveCycle(SkyConfiguration sky) {
-		return hasFixedSunAngles(sky) ? DaylightCycle.DEFAULT : configCycle;
-	}
-
-	private boolean hasFixedSunAngles(SkyConfiguration sky) {
-		SkyConfiguration preset = configCycle.skyPreset == null ? null : PRESETS.get(configCycle.skyPreset);
-		return sky.sunAngles != null || preset != null && preset.sunAngles != null;
+	private ResolvedEndpoint resolveEndpoint(Environment environment) {
+		SkyConfiguration sky = environment.getSky();
+		ResolvedSun sun = resolveSun(sky);
+		return new ResolvedEndpoint(sky, sun, resolveMoon(sky, environment.directionalStrength, sun));
 	}
 
 	private double[] getCoordinates(DaylightCycle cycle) {
@@ -337,31 +353,29 @@ public class SkyManager {
 		boolean allowsCycle,
 		float[] fallbackShadowAngles
 	) {
-		SkyConfiguration fromSky = from.getSky();
-		SkyConfiguration toSky = to.getSky();
+		ResolvedEndpoint fromEndpoint = resolveEndpoint(from);
+		ResolvedEndpoint toEndpoint = from.getSky() == to.getSky() && from.directionalStrength == to.directionalStrength ?
+			fromEndpoint : resolveEndpoint(to);
+		SkyConfiguration fromSky = fromEndpoint.sky;
+		SkyConfiguration toSky = toEndpoint.sky;
 		out.cycleActive = !isCycleDisabled() && allowsCycle;
 		out.fromConfiguration = fromSky;
 		out.toConfiguration = toSky;
 		out.configurationTransition = t;
 
-		// Fixed environment angles use Default's slower time as a stable tuning baseline.
-		DaylightCycle targetCycle = resolveCycle(toSky);
-		DaylightCycle fromCycle = resolveCycle(fromSky);
-		out.cycle = targetCycle;
-		out.utcMillis = resolveCurrentUtcMillis(targetCycle);
-		long millis = out.utcMillis;
-		long fromMillis = resolveCurrentUtcMillis(fromCycle);
+		ResolvedSun fromSun = fromEndpoint.sun;
+		ResolvedSun toSun = toEndpoint.sun;
+		out.cycle = toSun.cycle;
+		out.utcMillis = toSun.utcMillis;
 
 		// Resolve and blend celestial positions, moon lighting, and shadow direction.
 		{
-			float[] fromSunAngles = getSunAngles(fromSky, fromMillis);
-			float[] toSunAngles = getSunAngles(toSky, millis);
-			out.sunAngles = interpolateAngles(fromSunAngles, toSunAngles, t);
+			out.sunAngles = interpolateAngles(fromSun.angles, toSun.angles, t);
 			out.sunAltitudeDegrees = out.sunAngles[0] * RAD_TO_DEG;
 			out.sunDirection = anglesToSkyDirection(out.sunAngles[0], out.sunAngles[1]);
 
-			ResolvedMoon fromMoon = resolveMoon(fromSky, from.directionalStrength, fromCycle, fromMillis, fromSunAngles);
-			ResolvedMoon toMoon = resolveMoon(toSky, to.directionalStrength, targetCycle, millis, toSunAngles);
+			ResolvedMoon fromMoon = fromEndpoint.moon;
+			ResolvedMoon toMoon = toEndpoint.moon;
 			out.moonAngles = interpolateAngles(fromMoon.angles, toMoon.angles, t);
 			out.moonAltitudeDegrees = out.moonAngles[0] * RAD_TO_DEG;
 			out.moonDirection = anglesToSkyDirection(out.moonAngles[0], out.moonAngles[1]);
@@ -370,11 +384,12 @@ public class SkyManager {
 			out.moonDirectionalStrength = mix(fromMoon.directionalStrength, toMoon.directionalStrength, t);
 			out.moonIllumination = mix(fromMoon.illumination, toMoon.illumination, t);
 			out.moonLightIllumination = mix(fromMoon.lightIllumination, toMoon.lightIllumination, t);
-			out.shadowAngles = out.cycleActive ?
-				out.sunAngles[0] < 0 && out.moonAngles[0] > 0 && out.moonLightIllumination > 0
-					? out.moonAngles
-					: out.sunAngles :
-				fallbackShadowAngles == null ? out.sunAngles : fallbackShadowAngles;
+			out.shadowAngles = fallbackShadowAngles;
+			if (out.cycleActive) {
+				out.shadowAngles = out.sunAngles;
+				if (out.sunAngles[0] < 0 && out.moonAngles[0] > 0 && out.moonLightIllumination > 0)
+					out.shadowAngles = out.moonAngles;
+			}
 
 			float phaseOrbit = fromMoon.orbit + angleDiff(toMoon.orbit * TWO_PI, fromMoon.orbit * TWO_PI) / TWO_PI * t;
 			out.moonPhaseLightDirection = toMoon.usesSyntheticLightDirection ?
@@ -406,17 +421,17 @@ public class SkyManager {
 		if (toSky.moonAngles != null || configMoonBehavior.isStatic || configMoonBehavior.mirrorsSun) {
 			out.moonLibration = vec(0, 0);
 		} else {
-			double days = (fromMillis + (millis - fromMillis) * (double) t) / DAY_MS;
+			double days = (fromSun.utcMillis + (toSun.utcMillis - fromSun.utcMillis) * (double) t) / DAY_MS;
 			out.moonLibration = vec(
 				sin((float) (days / ANOMALISTIC_MONTH_DAYS) * TWO_PI) * LONGITUDE_LIBRATION_DEG * DEG_TO_RAD,
 				sin((float) (days / DRACONIC_MONTH_DAYS) * TWO_PI) * LATITUDE_LIBRATION_DEG * DEG_TO_RAD
 			);
 		}
-		float fromPole = fromCycle == DaylightCycle.CUSTOM_BASIC ? BASIC_SUN_TILT : (float) getCoordinates(fromCycle)[0] * DEG_TO_RAD;
-		float toPole = targetCycle == DaylightCycle.CUSTOM_BASIC ? BASIC_SUN_TILT : (float) getCoordinates(targetCycle)[0] * DEG_TO_RAD;
+		float fromPole = fromSun.cycle == DaylightCycle.CUSTOM_BASIC ? BASIC_SUN_TILT : (float) getCoordinates(fromSun.cycle)[0] * DEG_TO_RAD;
+		float toPole = toSun.cycle == DaylightCycle.CUSTOM_BASIC ? BASIC_SUN_TILT : (float) getCoordinates(toSun.cycle)[0] * DEG_TO_RAD;
 		out.celestialPole = anglesToSkyDirection(mix(fromPole, toPole, t), 0);
-		float fromRotation = (fromMillis % DAY_MS) / (float) DAY_MS * TWO_PI;
-		float toRotation = (millis % DAY_MS) / (float) DAY_MS * TWO_PI;
+		float fromRotation = (fromSun.utcMillis % DAY_MS) / (float) DAY_MS * TWO_PI;
+		float toRotation = (toSun.utcMillis % DAY_MS) / (float) DAY_MS * TWO_PI;
 		out.celestialRotation = fromRotation + angleDiff(toRotation, fromRotation) * t;
 		resolveAuroraStrength(out);
 	}
@@ -436,10 +451,11 @@ public class SkyManager {
 	private ResolvedMoon resolveMoon(
 		SkyConfiguration sky,
 		float fallbackDirectionalStrength,
-		DaylightCycle cycle,
-		long millis,
-		float[] sunAngles
+		ResolvedSun sun
 	) {
+		DaylightCycle cycle = sun.cycle;
+		long millis = sun.utcMillis;
+		float[] sunAngles = sun.angles;
 		float[] angles = sky.moonAngles;
 		if (angles == null) {
 			if (configMoonBehavior.isStatic)
@@ -457,7 +473,7 @@ public class SkyManager {
 			// A mirrored moon needs an independent phase, since the sun is always opposite it.
 			orbit = (float) fract(millis / (DAY_MS * SYNTHETIC_MOON_PERIOD_DAYS));
 			illumination = .5f - .5f * cos(orbit * TWO_PI);
-		} else if (!hasFixedSunAngles(sky) || usesSyntheticLightDirection) {
+		} else if (!sun.fixed || usesSyntheticLightDirection) {
 			double[] astronomy = AstronomyUtils.getMoonIllumination(millis);
 			illumination = (float) astronomy[0];
 			orbit = (float) astronomy[1];
@@ -470,10 +486,9 @@ public class SkyManager {
 		}
 		if (phase.isLocked)
 			illumination = phase.illumination;
-		// Explicit moonlight settings can illuminate a scene even when its moon is hidden.
-		float lightIllumination = sky.hideMoon && sky.moonLightVisibility < 0 && sky.moonDirectionalStrength < 0 ? 0 : illumination;
-		lightIllumination = max(lightIllumination, sky.minMoonIllumination) *
-							(sky.moonLightVisibility < 0 ? 1 : sky.moonLightVisibility);
+		boolean naturalMoonlightEnabled = !sky.hideMoon || sky.moonLightVisibility >= 0 || sky.moonDirectionalStrength >= 0;
+		float moonLightVisibility = sky.moonLightVisibility < 0 ? 1 : sky.moonLightVisibility;
+		float lightIllumination = max(naturalMoonlightEnabled ? illumination : 0, sky.minMoonIllumination) * moonLightVisibility;
 		float visibility = isMoonHidden(sky) ? 0 : sky.moonVisibility;
 		float directionalStrength = sky.moonDirectionalStrength < 0 ? fallbackDirectionalStrength : sky.moonDirectionalStrength;
 		return new ResolvedMoon(
@@ -529,7 +544,6 @@ public class SkyManager {
 	}
 
 	private void resolveLightScheduleState() {
-		scheduleSunAltitude = state.sunAltitudeDegrees;
 		// Use the orbit's local slope, independent of config changes and environment transitions.
 		if (state.cycle == DaylightCycle.CUSTOM_BASIC) {
 			sunDescending = cos((state.utcMillis % DAY_MS) / (float) DAY_MS * TWO_PI) <= 0;
@@ -544,7 +558,7 @@ public class SkyManager {
 		long scheduleOffset = state.cycle == DaylightCycle.CUSTOM_BASIC ? DAY_MS / 4 : DAY_MS / 2;
 		scheduleNightIndex = Math.floorDiv(state.utcMillis - scheduleOffset, DAY_MS);
 		if (state.cycleActive)
-			nightFactor = smoothstep(5, -18, scheduleSunAltitude);
+			nightFactor = smoothstep(5, -18, state.sunAltitudeDegrees);
 	}
 
 	public void prepareLightSchedule(Light light) {
@@ -553,7 +567,7 @@ public class SkyManager {
 			activation = 0;
 			if (!isCycleDisabled()) {
 				float randomOffset = (getScheduleRandomOffset(light) * 2 - 1) * light.def.schedule.randomOffset;
-				activation = light.def.schedule.getActivation(scheduleSunAltitude, sunDescending, randomOffset);
+				activation = light.def.schedule.getActivation(state.sunAltitudeDegrees, sunDescending, randomOffset);
 			}
 			if (activation < .001f)
 				light.visible = false;

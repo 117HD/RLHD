@@ -4,7 +4,6 @@ import rs117.hd.config.DaylightCycle;
 
 public final class SkyState {
 	public boolean cycleActive;
-	public boolean castsShadows;
 	public DaylightCycle cycle;
 	public long utcMillis;
 	public SkyConfiguration fromConfiguration;
