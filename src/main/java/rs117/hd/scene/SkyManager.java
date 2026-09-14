@@ -31,6 +31,7 @@ import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
+import rs117.hd.utils.collections.Util;
 
 import static rs117.hd.HdPlugin.SEED;
 import static rs117.hd.utils.MathUtils.*;
@@ -623,44 +624,48 @@ public class SkyManager {
 	}
 
 	private void resolveAuroraStrength(SkyState state) {
-		double cycleTime;
-		float eventStart;
+		double elapsedDays;
 		float sunAltitude = state.sunAngles[0];
-		if (state.cycle != DaylightCycle.CUSTOM_BASIC) {
-			cycleTime = state.utcMillis / (double) DAY_MS;
-			eventStart = ASTRONOMICAL_NIGHT_START;
-			if (configCycle.skyPreset != null)
-				sunAltitude = (float) AstronomyUtils.getSunAngles(state.utcMillis, state.latLon)[0];
+		if (state.cycle == DaylightCycle.CUSTOM_BASIC) {
+			// Basic starts at sunrise; center the unwarped night on an integer day.
+			elapsedDays = customCycleElapsedDays - (1 - configNightFraction / 2);
 		} else {
-			cycleTime = customCycleElapsedDays;
-			eventStart = 1 - configNightFraction;
+			// Longitude shifts UTC to local solar time, with midnight at each integer day.
+			elapsedDays = state.utcMillis / (double) DAY_MS + state.latLon[1] / 360;
+			if (configCycle.skyPreset != null)
+				sunAltitude = AstronomyUtils.getSunAngles(state.utcMillis, state.latLon)[0];
 		}
 		// Faint auroras disappear through twilight; the event itself continues while invisible.
 		float darkness = smoothstep(-6 * DEG_TO_RAD, -18 * DEG_TO_RAD, sunAltitude);
-		state.auroraStrength = state.cycleActive ? getAuroraEventStrength(cycleTime, eventStart) * darkness : 0;
+		state.auroraStrength = state.cycleActive ? getAuroraEventStrength(elapsedDays) * darkness : 0;
 	}
 
-	private float getAuroraEventStrength(double cycleTime, float eventStart) {
-		long eventIndex = (long) Math.floor(cycleTime - eventStart);
-		random.setSeed(eventIndex);
-		if (random.nextFloat() >= AURORA_EVENT_CHANCE)
-			return 0;
+	private float getAuroraEventStrength(double elapsedDays) {
+		// One event per 24 simulated days on average. Timing is in simulated hours.
+		final float chance = 1 / 24.f;
+		final float fadeFraction = .2f;
+		long day = (long) Math.floor(elapsedDays);
+		float strength = 0;
+		// Include neighboring midnights so events can start before or continue after midnight.
+		// The onset and duration bounds ensure omitted events have already faded out.
+		for (long eventDay = day - 1; eventDay <= day + 1; eventDay++) {
+			// Hash adjacent days to avoid correlated first outputs from Random.
+			random.setSeed(Util.murmurHash3(SEED ^ eventDay));
+			if (random.nextFloat() >= chance)
+				continue;
 
-		double gaussian =
-			Math.sqrt(-2 * Math.log(Math.max(1e-6f, random.nextFloat()))) *
-			Math.cos(TWO_PI * random.nextFloat());
-		float eventDuration = clamp(
-			(AURORA_EVENT_MEAN_DURATION_SECONDS + (float) gaussian * AURORA_EVENT_DURATION_STD_DEV_SECONDS) / (HOUR_MS / 1000f),
-			(AURORA_EVENT_MEAN_DURATION_SECONDS - 2 * AURORA_EVENT_DURATION_STD_DEV_SECONDS) / (HOUR_MS / 1000f),
-			(AURORA_EVENT_MEAN_DURATION_SECONDS + 2 * AURORA_EVENT_DURATION_STD_DEV_SECONDS) / (HOUR_MS / 1000f)
-		);
-		float eventElapsed = (float) (cycleTime - eventIndex) - eventStart;
-		if (eventElapsed < 0 || eventElapsed >= eventDuration)
-			return 0;
+			float onset = clamp((float) random.nextGaussian() * 1.2f, -6, 6);
+			float duration = clamp(80 + (float) random.nextGaussian() * 40, 10, 180) / 60;
+			float elapsed = (float) ((elapsedDays - eventDay) * 24) - onset;
+			if (elapsed < 0 || elapsed >= duration)
+				continue;
 
-		float fadeDuration = eventDuration * AURORA_EVENT_FADE_FRACTION;
-		return
-			smoothstep(0, fadeDuration, eventElapsed) *
-			(1 - smoothstep(eventDuration - fadeDuration, eventDuration, eventElapsed));
+			float fade = duration * fadeFraction;
+			float eventStrength =
+				smoothstep(0, fade, elapsed) *
+				(1 - smoothstep(duration - fade, duration, elapsed));
+			strength += (1 - strength) * eventStrength;
+		}
+		return strength;
 	}
 }
