@@ -8,6 +8,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
@@ -108,6 +109,8 @@ public class SkyManager {
 
 	@Getter
 	private final SkyState state = new SkyState();
+
+	private final Random random = new Random(SEED);
 
 	@RequiredArgsConstructor
 	private static final class ResolvedMoon {
@@ -572,17 +575,13 @@ public class SkyManager {
 	}
 
 	private float getScheduleRandomOffset(Light light) {
-		int hash = Float.floatToIntBits(light.pos[0]);
-		hash ^= Float.floatToIntBits(light.pos[1]) * 374761393;
-		hash ^= Float.floatToIntBits(light.pos[2]) * 668265263;
-		hash ^= light.plane * 912271;
-		hash ^= Long.hashCode(scheduleNightIndex) * 104395301;
-		hash ^= hash >>> 16;
-		hash *= 0x85ebca6b;
-		hash ^= hash >>> 13;
-		hash *= 0xc2b2ae35;
-		hash ^= hash >>> 16;
-		return (hash & 0x7FFFFFFF) / 2147483647f;
+		int h = Float.floatToIntBits(light.pos[0]);
+		h = 31 * h + Float.floatToIntBits(light.pos[1]);
+		h = 31 * h + Float.floatToIntBits(light.pos[2]);
+		h = 31 * h + light.plane;
+		h = 31 * h + Long.hashCode(scheduleNightIndex);
+		random.setSeed(h);
+		return random.nextFloat();
 	}
 
 	private void resolveAuroraStrength(SkyState state) {
@@ -605,12 +604,13 @@ public class SkyManager {
 
 	private float getAuroraEventStrength(double cycleTime, float eventStart) {
 		long eventIndex = (long) Math.floor(cycleTime - eventStart);
-		if (getAuroraEventRoll(eventIndex, 0) >= AURORA_EVENT_CHANCE)
+		random.setSeed(eventIndex);
+		if (random.nextFloat() >= AURORA_EVENT_CHANCE)
 			return 0;
 
 		double gaussian =
-			Math.sqrt(-2 * Math.log(Math.max(1e-6f, getAuroraEventRoll(eventIndex, 2)))) *
-			Math.cos(TWO_PI * getAuroraEventRoll(eventIndex, 3));
+			Math.sqrt(-2 * Math.log(Math.max(1e-6f, random.nextFloat()))) *
+			Math.cos(TWO_PI * random.nextFloat());
 		float eventDuration = clamp(
 			(AURORA_EVENT_MEAN_DURATION_SECONDS + (float) gaussian * AURORA_EVENT_DURATION_STD_DEV_SECONDS) / (HOUR_MS / 1000f),
 			(AURORA_EVENT_MEAN_DURATION_SECONDS - 2 * AURORA_EVENT_DURATION_STD_DEV_SECONDS) / (HOUR_MS / 1000f),
@@ -624,15 +624,5 @@ public class SkyManager {
 		return
 			smoothstep(0, fadeDuration, eventElapsed) *
 			(1 - smoothstep(eventDuration - fadeDuration, eventDuration, eventElapsed));
-	}
-
-	private static float getAuroraEventRoll(long eventIndex, long salt) {
-		long h = SEED + eventIndex * 0x9E3779B97F4A7C15L + salt * 0xBF58476D1CE4E5B9L;
-		h ^= (h >>> 30);
-		h *= 0xBF58476D1CE4E5B9L;
-		h ^= (h >>> 27);
-		h *= 0x94D049BB133111EBL;
-		h ^= (h >>> 31);
-		return (h >>> 40) * (1f / (1 << 24));
 	}
 }
