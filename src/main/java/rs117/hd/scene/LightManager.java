@@ -616,17 +616,18 @@ public class LightManager {
 		}
 
 		LightingSample lighting = sampleOutdoorLighting(environment);
+		SkyState skyState = lighting.state;
 		SkyConfiguration sky = environment.getSky();
 		float[] authoredColor = light.def.color;
 		float defLuminance = linearSrgbLuminance(authoredColor);
 		float referenceLuminance = max(linearSrgbLuminance(lighting.referenceFogColorLinear), 1e-4f);
 		float[] lightColor = copy(lighting.horizonLinear);
-		float sunAltDeg = lighting.sunAltitudeDegrees;
+		float sunAltDeg = skyState.sunAltitudeDegrees;
 
 		float moonStrengthFloor = 0;
 		if (sunAltDeg < 5) {
-			float moonAltDeg = lighting.moonAltitudeDegrees;
-			float moonIllumination = lighting.moonLightIllumination;
+			float moonAltDeg = skyState.moonAltitudeDegrees;
+			float moonIllumination = skyState.moonLightIllumination;
 			if (moonAltDeg > -5 && moonIllumination > .01f) {
 				float sunFade = saturate((5 - sunAltDeg) / 10);
 				float moonElevation = smoothstep(-5, 20, moonAltDeg);

@@ -30,7 +30,6 @@ public class SkyManagerTest {
 		Instant frame = Instant.parse("2026-06-21T20:00:00Z");
 		setInjectedField(manager, "frameUtcInstant", frame);
 		setInjectedField(manager, "frameUtcMillis", frame.toEpochMilli());
-		setInjectedField(manager, "currentInstant", Instant.EPOCH);
 		setInjectedField(manager, "configCycle", DaylightCycle.CUSTOM_REALISTIC);
 		setInjectedField(manager, "customCycleElapsedDays", .75);
 		setInjectedField(manager, "customCycleStart", Instant.parse("2026-06-21T00:00:00Z"));
@@ -47,9 +46,9 @@ public class SkyManagerTest {
 		// The default test coordinates are zero. Custom's .75 day is 18:00 UTC, independent of the cave clock.
 		float expectedAltitude = (float) AstronomyUtils.getSunAngles(
 			Instant.parse("2026-06-21T18:00:00Z").toEpochMilli(), new double[2])[0] * RAD_TO_DEG;
-		assertEquals(expectedAltitude, sample.sunAltitudeDegrees, 1e-5f);
-		assertEquals(-expectedAltitude, sample.moonAltitudeDegrees, 1e-5f);
-		assertEquals(MoonPhase.FULL_MOON.illumination, sample.moonLightIllumination, 0);
+		assertEquals(expectedAltitude, sample.state.sunAltitudeDegrees, 1e-5f);
+		assertEquals(-expectedAltitude, sample.state.moonAltitudeDegrees, 1e-5f);
+		assertEquals(MoonPhase.FULL_MOON.illumination, sample.state.moonLightIllumination, 0);
 
 		sky.sunAngles = new float[] { -30 * DEG_TO_RAD, 0 };
 		sky.moonAngles = new float[] { 20 * DEG_TO_RAD, 0 };
@@ -57,15 +56,15 @@ public class SkyManagerTest {
 		sky.moonVisibility = .5f;
 		sky.moonLightVisibility = .5f;
 		manager.sampleLighting(sample, sky, new float[] { 1, 1, 1 }, .7f);
-		assertEquals(-30, sample.sunAltitudeDegrees, 1e-5f);
-		assertEquals(20, sample.moonAltitudeDegrees, 1e-5f);
-		assertEquals(.25f, sample.moonLightIllumination, 0);
+		assertEquals(-30, sample.state.sunAltitudeDegrees, 1e-5f);
+		assertEquals(20, sample.state.moonAltitudeDegrees, 1e-5f);
+		assertEquals(.25f, sample.state.moonLightIllumination, 0);
 		sky.hideMoon = true;
 		manager.sampleLighting(sample, sky, new float[] { 1, 1, 1 }, .7f);
-		assertEquals(0, sample.moonLightIllumination, 0);
+		assertEquals(0, sample.state.moonLightIllumination, 0);
 		sky.moonLightVisibility = 0;
 		manager.sampleLighting(sample, sky, new float[] { 1, 1, 1 }, .7f);
-		assertEquals(0, sample.moonLightIllumination, 0);
+		assertEquals(0, sample.state.moonLightIllumination, 0);
 	}
 
 	@Test
