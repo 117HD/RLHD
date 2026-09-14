@@ -303,35 +303,31 @@ public class SkyRenderer {
 			toFogColor,
 			transition
 		));
-		if (moonInfluence > 0) {
-			// A single directional channel carries both sources. Add their radiances before
-			// converting back to the color-and-strength representation used by the renderer.
-			float moonStrength = state.moonDirectionalStrength * moonInfluence / MAX_MOON_COLOR_INFLUENCE;
-			float combinedStrength = directionalStrength + moonStrength;
-			if (combinedStrength > 0) {
-				float[] radiance = add(
-					multiply(directionalColor, directionalStrength),
-					multiply(sky.moonLightColor, moonStrength)
-				);
-				divide(directionalColor, radiance, combinedStrength);
-				directionalStrength = combinedStrength;
-			}
-		}
-		directionalStrength *= brightnessMultiplier * sky.sunlightStrength;
 		copyTo(fogColorSrgb, linearToSrgb(skySample.horizonLinear));
 		copyTo(waterColor, skySample.horizonLinear);
 		float boostFraction = mix(1, MIN_BRIGHTNESS_BOOST_RESIDUAL, saturate(moonPresence));
 		ambientStrength = max(ambientStrength, plugin.configMinimumBrightness * (1 + sky.minBrightnessBoost * boostFraction));
 
-		applyShadowBlur(
-			sunAltDeg >= 0 ? sunAltDeg : moonAltDeg,
-			sunAltDeg >= 0 ? .533f : 2 * acos(.99945f) * RAD_TO_DEG * sky.moonSizeMult,
-			sunAltDeg >= 0 ? 1 : isMoonLighting(moonAltDeg, moonLightIllumination) ? saturate(sky.moonShadowStrength) : 0
+		float lightingScale = brightnessMultiplier * sky.sunlightStrength;
+		float sunStrength = applyShadowBlur(directionalColor, directionalStrength * lightingScale, sunAltDeg, .533f, 1);
+		// Only one source can cast shadows. Keep moonlight ambient until sunset,
+		// then introduce its directional component smoothly over the next five degrees.
+		float moonStrength = applyShadowBlur(
+			sky.moonLightColor,
+			state.moonDirectionalStrength * moonInfluence / MAX_MOON_COLOR_INFLUENCE * lightingScale,
+			moonAltDeg,
+			2 * acos(.99945f) * RAD_TO_DEG * sky.moonSizeMult,
+			saturate(sky.moonShadowStrength) * smoothstep(0, -5, sunAltDeg)
 		);
+		directionalStrength = sunStrength + moonStrength;
+		if (directionalStrength > 0) {
+			// Strength can be subnormal near the horizon; avoid overflowing its reciprocal.
+			mix(directionalColor, directionalColor, sky.moonLightColor, moonStrength / directionalStrength);
+		}
 		updateSkyUbo(sky, state, skySample);
 	}
 
-	private void applyShadowBlur(float altitudeDegrees, float diameterDegrees, float shadowStrength) {
+	private float applyShadowBlur(float[] color, float strength, float altitudeDegrees, float diameterDegrees, float shadowStrength) {
 		float visibility = 0;
 		if (altitudeDegrees > 0) {
 			// A 10 m caster projects a disk-shaped penumbra. Approximate its long-axis
@@ -340,18 +336,16 @@ public class SkyRenderer {
 			float sigma = 10 * diameterDegrees * DEG_TO_RAD / (4 * elevation * elevation);
 			visibility = exp(-2 * PI * PI * sigma * sigma) * shadowStrength;
 		}
-		float transferredStrength = directionalStrength * (1 - visibility);
+		float transferredStrength = strength * (1 - visibility);
 		// The spherical average of max(dot(normal, light), 0) is 1/4. Preserve that
 		// average irradiance, including both colors' magnitudes, when making it ambient.
 		float ambientTransfer = transferredStrength * .25f;
 		float combinedStrength = ambientStrength + ambientTransfer;
 		if (combinedStrength > 0) {
-			multiply(ambientColor, ambientColor, ambientStrength);
-			add(ambientColor, ambientColor, multiply(directionalColor, ambientTransfer));
-			divide(ambientColor, ambientColor, combinedStrength);
+			mix(ambientColor, ambientColor, color, ambientTransfer / combinedStrength);
 		}
 		ambientStrength = combinedStrength;
-		directionalStrength *= visibility;
+		return strength * visibility;
 	}
 
 	private void updateSkyUbo(SkyConfiguration configuration, SkyState state, GradientSample sky) {
