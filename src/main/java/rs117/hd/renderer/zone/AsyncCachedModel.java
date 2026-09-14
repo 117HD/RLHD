@@ -47,8 +47,6 @@ public final class AsyncCachedModel extends Job implements Model {
 		AsyncCachedModel.POOL = null;
 	}
 
-	private final Profiler profiler = Profiler.getInstance();
-
 	private int sceneId;
 	private int bufferOffset;
 	private int uvBufferOffset;
@@ -281,8 +279,9 @@ public final class AsyncCachedModel extends Job implements Model {
 	}
 
 	private boolean processCachedFields(Model model, boolean cache) {
-		final long timestamp = profiler.getTimeStamp();
-		final long memory = profiler.getUsedMemory();
+		final Profiler profiler = Profiler.getInstance();
+		final long timestamp = profiler != null ? profiler.getTimeStamp() : 0;
+		final long memory = profiler != null ? profiler.getUsedMemory() : 0;
 
 		// Caching is done in order of access
 		// Ideally this should be updated to reflect any changes
@@ -316,7 +315,8 @@ public final class AsyncCachedModel extends Job implements Model {
 		success &= texIndices2.cache(model, model.getTexIndices2(), cache);
 		success &= texIndices3.cache(model, model.getTexIndices3(), cache);
 
-		profiler.add(Timer.ASYNC_MODEL_CACHE, timestamp, memory);
+		if(profiler != null)
+			profiler.add(Timer.ASYNC_MODEL_CACHE, timestamp, memory);
 
 		return success;
 	}
