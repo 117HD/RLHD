@@ -294,9 +294,6 @@ public class EnvironmentManager {
 		if (state.target.instantTransition || newEnvironment.instantTransition)
 			skipTransition = true;
 
-		// Finish the current fade before changing its endpoints. The latest area is checked every frame.
-		if (!transitionComplete && !skipTransition)
-			return;
 		forceNextTransition = false;
 		forceNextTransitionInstant = false;
 

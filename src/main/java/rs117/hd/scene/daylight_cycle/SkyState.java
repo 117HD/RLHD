@@ -1,13 +1,12 @@
 package rs117.hd.scene.daylight_cycle;
 
-import java.time.Instant;
 import rs117.hd.config.DaylightCycle;
 
 public final class SkyState {
 	public boolean cycleActive;
 	public boolean castsShadows;
 	public DaylightCycle cycle;
-	public Instant instant;
+	public long utcMillis;
 	public SkyConfiguration fromConfiguration;
 	public SkyConfiguration toConfiguration;
 	public float configurationTransition;
@@ -38,7 +37,7 @@ public final class SkyState {
 	}
 
 	public static final class LightingSample extends GradientSample {
-		public final SkyState state = new SkyState();
+		public final SkyState sky = new SkyState();
 		public float[] referenceFogColorLinear;
 	}
 }

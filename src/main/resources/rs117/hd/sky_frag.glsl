@@ -315,9 +315,11 @@ void main() {
 
     skyColor += shootingStarColor;
 
-    // Aurora visibility is independent of stars and renders in front of the moon.
-    if (auroraVisibility > 0.001 && nightFactor > 0.001)
-        skyColor += proceduralAurora(viewDir, elapsedTime) * nightFactor * auroraVisibility;
+    // Auroras lose contrast against a bright sky much sooner than the moon.
+    float auroraContrast = 1.0 / (1.0 + linearSrgbLuminance(skyColorPreStars) * 1200.0);
+    float auroraStrength = nightFactor * auroraVisibility * auroraContrast;
+    if (auroraStrength > 0.001)
+        skyColor += proceduralAurora(viewDir, elapsedTime) * auroraStrength;
 
     skyColor = applySkyFog(skyColor, sky.upAmount);
     skyColor = applyColorAdjustments(linearToSrgb(skyColor));

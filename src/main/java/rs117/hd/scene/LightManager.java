@@ -53,6 +53,7 @@ import rs117.hd.config.DynamicLights;
 import rs117.hd.data.ObjectType;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration;
+import rs117.hd.scene.daylight_cycle.SkyState;
 import rs117.hd.scene.daylight_cycle.SkyState.LightingSample;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Alignment;
@@ -616,7 +617,7 @@ public class LightManager {
 		}
 
 		LightingSample lighting = sampleOutdoorLighting(environment);
-		SkyState skyState = lighting.state;
+		SkyState skyState = lighting.sky;
 		SkyConfiguration sky = environment.getSky();
 		float[] authoredColor = light.def.color;
 		float defLuminance = linearSrgbLuminance(authoredColor);
@@ -664,9 +665,8 @@ public class LightManager {
 			plugin.configMinimumBrightness != outdoorLightingMinBrightness ||
 			plugin.frame != outdoorLightingFrame
 		) {
-			SkyConfiguration sky = environment.getSky();
 			float[] fogColor = environmentManager.getFogColor(environment);
-			skyManager.sampleLighting(outdoorLightingSample, sky, fogColor, plugin.configMinimumBrightness);
+			skyManager.sampleLighting(outdoorLightingSample, environment, fogColor, plugin.configMinimumBrightness);
 			outdoorLightingEnvironment = environment;
 			outdoorLightingMinBrightness = plugin.configMinimumBrightness;
 			outdoorLightingFrame = plugin.frame;

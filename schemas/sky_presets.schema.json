@@ -36,7 +36,7 @@
       },
       "hideMoon": {
         "type": "boolean",
-        "description": "Hide the moon disk and halo without changing moonlight or shadows."
+        "description": "Hide the moon disk, halo and default moonlight. Explicit moonLightVisibility, moonDirectionalStrength or minMoonIllumination can retain lighting."
       },
       "profile": {
         "$ref": "environments.schema.json#/$defs/skyProfile"
@@ -76,6 +76,7 @@
       },
       "minMoonIllumination": {
         "type": "number",
+        "description": "Minimum illumination for scene lighting, including when hideMoon is true. Defaults to 0; does not affect the disk's phase.",
         "minimum": 0,
         "maximum": 1
       },
@@ -118,8 +119,8 @@
       },
       "moonLightVisibility": {
         "type": "number",
-        "description": "Moonlight visibility multiplier for scene lighting and moon shadows. Independent of moonVisibility.",
-        "minimum": 0,
+        "description": "Moonlight multiplier. -1 (default) follows hideMoon; explicit 0-1 values override it. minMoonIllumination still provides a floor before this multiplier.",
+        "minimum": -1,
         "maximum": 1
       },
       "starVisibility": {

@@ -58,8 +58,8 @@ public class SkyConfiguration {
 	public float skyFogColorMix = 1;
 	public float skyFogDensity = -1;
 	public float skyVisibility = 1;
-	/** Visibility of moonlight used for scene lighting and shadows, independent of the moon disk. */
-	public float moonLightVisibility = 1;
+	/** Negative means automatic; an explicit value can retain moonlight with hideMoon. */
+	public float moonLightVisibility = -1;
 	public float moonVisibility = 1;
 	public float starVisibility = 1;
 	public float nebulaVisibility = 1;

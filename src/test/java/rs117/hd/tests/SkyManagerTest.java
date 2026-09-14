@@ -13,6 +13,7 @@ import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.SkyManager;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration;
 import rs117.hd.scene.daylight_cycle.SkyState.LightingSample;
+import rs117.hd.scene.environments.Environment;
 import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.MoonBehavior;
 import rs117.hd.config.MoonPhase;
@@ -22,13 +23,13 @@ import static org.junit.Assert.assertEquals;
 import static rs117.hd.utils.MathUtils.*;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 public class SkyManagerTest {
 	@Test
 	public void samplingIgnoresCurrentAreaClockAndMoonOverrides() throws ReflectiveOperationException {
 		SkyManager manager = new SkyManager();
 		Instant frame = Instant.parse("2026-06-21T20:00:00Z");
-		setInjectedField(manager, "frameUtcInstant", frame);
 		setInjectedField(manager, "frameUtcMillis", frame.toEpochMilli());
 		setInjectedField(manager, "configCycle", DaylightCycle.CUSTOM_REALISTIC);
 		setInjectedField(manager, "customCycleElapsedDays", .75);
@@ -41,30 +42,38 @@ public class SkyManagerTest {
 		manager.getState().moonAltitudeDegrees = -80;
 
 		SkyConfiguration sky = loadDefaultPreset();
+		Environment environment = environmentWithSky(sky);
 		LightingSample sample = new LightingSample();
-		manager.sampleLighting(sample, sky, new float[] { 1, 1, 1 }, .7f);
+		manager.sampleLighting(sample, environment, new float[] { 1, 1, 1 }, .7f);
 		// The default test coordinates are zero. Custom's .75 day is 18:00 UTC, independent of the cave clock.
 		float expectedAltitude = (float) AstronomyUtils.getSunAngles(
 			Instant.parse("2026-06-21T18:00:00Z").toEpochMilli(), new double[2])[0] * RAD_TO_DEG;
-		assertEquals(expectedAltitude, sample.state.sunAltitudeDegrees, 1e-5f);
-		assertEquals(-expectedAltitude, sample.state.moonAltitudeDegrees, 1e-5f);
-		assertEquals(MoonPhase.FULL_MOON.illumination, sample.state.moonLightIllumination, 0);
+		assertEquals(expectedAltitude, sample.sky.sunAltitudeDegrees, 1e-5f);
+		assertEquals(-expectedAltitude, sample.sky.moonAltitudeDegrees, 1e-5f);
+		assertEquals(MoonPhase.FULL_MOON.illumination, sample.sky.moonLightIllumination, 0);
 
 		sky.sunAngles = new float[] { -30 * DEG_TO_RAD, 0 };
 		sky.moonAngles = new float[] { 20 * DEG_TO_RAD, 0 };
 		sky.forceMoonPhase = MoonPhase.FIRST_QUARTER;
 		sky.moonVisibility = .5f;
 		sky.moonLightVisibility = .5f;
-		manager.sampleLighting(sample, sky, new float[] { 1, 1, 1 }, .7f);
-		assertEquals(-30, sample.state.sunAltitudeDegrees, 1e-5f);
-		assertEquals(20, sample.state.moonAltitudeDegrees, 1e-5f);
-		assertEquals(.25f, sample.state.moonLightIllumination, 0);
+		manager.sampleLighting(sample, environment, new float[] { 1, 1, 1 }, .7f);
+		assertEquals(-30, sample.sky.sunAltitudeDegrees, 1e-5f);
+		assertEquals(20, sample.sky.moonAltitudeDegrees, 1e-5f);
+		assertEquals(.25f, sample.sky.moonLightIllumination, 0);
 		sky.hideMoon = true;
-		manager.sampleLighting(sample, sky, new float[] { 1, 1, 1 }, .7f);
-		assertEquals(0, sample.state.moonLightIllumination, 0);
+		manager.sampleLighting(sample, environment, new float[] { 1, 1, 1 }, .7f);
+		assertEquals(.25f, sample.sky.moonLightIllumination, 0);
+		assertEquals(0, sample.sky.moonVisibility, 0);
+		sky.moonLightVisibility = -1;
+		manager.sampleLighting(sample, environment, new float[] { 1, 1, 1 }, .7f);
+		assertEquals(0, sample.sky.moonLightIllumination, 0);
+		sky.minMoonIllumination = .2f;
+		manager.sampleLighting(sample, environment, new float[] { 1, 1, 1 }, .7f);
+		assertEquals(.2f, sample.sky.moonLightIllumination, 0);
 		sky.moonLightVisibility = 0;
-		manager.sampleLighting(sample, sky, new float[] { 1, 1, 1 }, .7f);
-		assertEquals(0, sample.state.moonLightIllumination, 0);
+		manager.sampleLighting(sample, environment, new float[] { 1, 1, 1 }, .7f);
+		assertEquals(0, sample.sky.moonLightIllumination, 0);
 	}
 
 	@Test
@@ -76,6 +85,11 @@ public class SkyManagerTest {
 		SkyConfiguration previousDefault = SkyConfiguration.DEFAULT_PRESET;
 		SkyConfiguration.DEFAULT_PRESET = loadDefaultPreset();
 		try {
+			Environment target = environmentWithSky(SkyConfiguration.DEFAULT_PRESET);
+			target.isOverworld = true;
+			Field environmentState = EnvironmentManager.class.getDeclaredField("state");
+			environmentState.setAccessible(true);
+			setInjectedField(environmentState.get(environmentManager), "target", target);
 			skyManager.updateConfig(new HdPluginConfig() {
 				@Override
 				public void setPluginUpdateMessage(int version) {}
@@ -87,6 +101,7 @@ public class SkyManagerTest {
 			// update() is the per-frame entry point: it pins the instant and resolves
 			// the complete celestial state before any consumer reads it.
 			skyManager.update();
+			assertTrue("cycle eligibility comes from the area definition, not the interpolation buffers", skyManager.getState().cycleActive);
 			float[] first = getSunAngles(skyManager);
 			float[] second = getSunAngles(skyManager);
 			assertSame("within one frame, consumers must share the resolved sun angles", first, second);
@@ -104,6 +119,12 @@ public class SkyManagerTest {
 		SkyConfiguration preset = new Gson().fromJson(new InputStreamReader(resource, StandardCharsets.UTF_8), SkyConfiguration[].class)[0];
 		preset.normalize();
 		return preset;
+	}
+
+	private static Environment environmentWithSky(SkyConfiguration sky) throws ReflectiveOperationException {
+		Environment environment = new Environment();
+		setInjectedField(environment, "sky", sky);
+		return environment.normalize();
 	}
 
 	private static void setInjectedField(Object target, String name, Object value) throws ReflectiveOperationException {
