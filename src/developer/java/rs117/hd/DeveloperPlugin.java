@@ -2,13 +2,11 @@ package rs117.hd;
 
 import com.google.inject.Provides;
 import java.awt.event.KeyEvent;
-import java.lang.reflect.Field;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.config.Keybind;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
@@ -47,8 +45,10 @@ public class DeveloperPlugin extends Plugin implements KeyListener {
 	@Inject
 	private DeveloperConfig config;
 
-	private Keybind configToggleFrameTimings;
 	private boolean frameTimingsOverlayEnabled;
+
+	@Inject
+	private DeveloperTools developerTools;
 
 	@Provides
 	DeveloperConfig provideConfig(ConfigManager configManager) {
@@ -68,6 +68,7 @@ public class DeveloperPlugin extends Plugin implements KeyListener {
 	private void activate() {
 		eventBus.register(this);
 		keyManager.registerKeyListener(this);
+		developerTools.setDeveloperPluginActive(true);
 
 		processConfigChanges();
 		profilerUI.load();
@@ -83,6 +84,7 @@ public class DeveloperPlugin extends Plugin implements KeyListener {
 	private void deactivate() {
 		eventBus.unregister(this);
 		keyManager.unregisterKeyListener(this);
+		developerTools.setDeveloperPluginActive(false);
 		profilerOverlay.setActive(false);
 		profilerUI.setGraphOverlayActive(false);
 	}
@@ -94,26 +96,16 @@ public class DeveloperPlugin extends Plugin implements KeyListener {
 	}
 
 	private void processConfigChanges() {
-		setDeveloperToolsKeybind("KEY_TOGGLE_TILE_INFO", config.toggleTileInfo());
-		setDeveloperToolsKeybind("KEY_RECORD_TIMINGS_SNAPSHOT", config.recordTimingsSnapshot());
-		setDeveloperToolsKeybind("KEY_TOGGLE_SHADOW_MAP_OVERLAY", config.toggleShadowMapOverlay());
-		setDeveloperToolsKeybind("KEY_TOGGLE_LIGHT_GIZMO_OVERLAY", config.toggleLightGizmoOverlay());
-		setDeveloperToolsKeybind("KEY_TOGGLE_TILED_LIGHTING_OVERLAY", config.toggleTiledLightingOverlay());
-		setDeveloperToolsKeybind("KEY_TOGGLE_FREEZE_FRAME", config.toggleFreezeFrame());
-		setDeveloperToolsKeybind("KEY_TOGGLE_ORTHOGRAPHIC", config.toggleOrthographic());
-		setDeveloperToolsKeybind("KEY_TOGGLE_HIDE_UI", config.toggleHideUi());
-		setDeveloperToolsKeybind("KEY_RELOAD_SCENE", config.reloadScene());
-		configToggleFrameTimings = config.toggleFrameTimings();
-	}
-
-	private void setDeveloperToolsKeybind(String fieldName, Keybind keybind) {
-		try {
-			Field field = DeveloperTools.class.getDeclaredField(fieldName);
-			field.setAccessible(true);
-			field.set(null, keybind);
-		} catch (ReflectiveOperationException e) {
-			throw new IllegalStateException("Unable to configure DeveloperTools keybind " + fieldName, e);
-		}
+		DeveloperTools.KEY_TOGGLE_TILE_INFO = config.toggleTileInfo();
+		DeveloperTools.KEY_TOGGLE_FRAME_TIMINGS = config.toggleFrameTimings();
+		DeveloperTools.KEY_RECORD_TIMINGS_SNAPSHOT = config.recordTimingsSnapshot();
+		DeveloperTools.KEY_TOGGLE_SHADOW_MAP_OVERLAY = config.toggleShadowMapOverlay();
+		DeveloperTools.KEY_TOGGLE_LIGHT_GIZMO_OVERLAY = config.toggleLightGizmoOverlay();
+		DeveloperTools.KEY_TOGGLE_TILED_LIGHTING_OVERLAY = config.toggleTiledLightingOverlay();
+		DeveloperTools.KEY_TOGGLE_FREEZE_FRAME = config.toggleFreezeFrame();
+		DeveloperTools.KEY_TOGGLE_ORTHOGRAPHIC = config.toggleOrthographic();
+		DeveloperTools.KEY_TOGGLE_HIDE_UI = config.toggleHideUi();
+		DeveloperTools.KEY_RELOAD_SCENE = config.reloadScene();
 	}
 
 	@Subscribe
@@ -147,7 +139,7 @@ public class DeveloperPlugin extends Plugin implements KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (configToggleFrameTimings.matches(e)) {
+		if (DeveloperTools.KEY_TOGGLE_FRAME_TIMINGS.matches(e)) {
 			profilerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
 			profilerUI.saveOverlayEnabled(frameTimingsOverlayEnabled);
 			if (!frameTimingsOverlayEnabled)
