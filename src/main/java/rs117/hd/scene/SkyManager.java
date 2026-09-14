@@ -44,23 +44,16 @@ import static rs117.hd.utils.ResourcePath.path;
 @Singleton
 public class SkyManager {
 	public static Map<String, SkyConfiguration> PRESETS = Map.of();
-	public static final double[] DEFAULT_LATLON = { 52.2347902, .1407562 }; // Jagex's offices, Cambridge
+	public static final float[] DEFAULT_LATLON = { 52.2347902f, .1407562f }; // Jagex's offices, Cambridge
 
 	private static final String DEFAULT_PRESET_NAME = "GIELINOR";
 	private static final ResourcePath SKY_PRESETS_PATH = Props
 		.getFile("rlhd.sky-presets-path", () -> path(SkyConfiguration.class, "sky_presets.json"));
 
-	private static final long DAY_MS = 24L * 60 * 60 * 1000;
-	private static final long HOUR_MS = 60L * 60 * 1000;
-
-	// 5am–7pm occupies the first 70% of the unwarped cycle.
-	private static final float ASTRONOMICAL_NIGHT_START = 19 / 24f;
-
-	// One event per 24 simulated nights on average, lasting 20 ± 10 minutes at 2σ.
-	private static final float AURORA_EVENT_CHANCE = 1f / 24;
-	private static final float AURORA_EVENT_MEAN_DURATION_SECONDS = 20 * 60;
-	private static final float AURORA_EVENT_DURATION_STD_DEV_SECONDS = 5 * 60;
-	private static final float AURORA_EVENT_FADE_FRACTION = .2f;
+	private static final long SECOND_MS = 1000;
+	private static final long MINUTE_MS = 60 * SECOND_MS;
+	private static final long HOUR_MS = 60 * MINUTE_MS;
+	private static final long DAY_MS = 24 * HOUR_MS;
 
 	private static final float BASIC_SUN_TILT = 23.5f * DEG_TO_RAD;
 
@@ -68,9 +61,9 @@ public class SkyManager {
 	private static final float[] DEFAULT_STATIC_MOON_ANGLES = HDUtils.sunAngles(15, 30);
 	private static final float[] NO_MOON_LIBRATION = { 0, 0 };
 
-	private static final double SYNTHETIC_MOON_PERIOD_DAYS = 29.53059;
-	private static final double ANOMALISTIC_MONTH_DAYS = 27.55455;
-	private static final double DRACONIC_MONTH_DAYS = 27.21222;
+	private static final float SYNTHETIC_MOON_PERIOD_DAYS = 29.53059f;
+	private static final float ANOMALISTIC_MONTH_DAYS = 27.55455f;
+	private static final float DRACONIC_MONTH_DAYS = 27.21222f;
 
 	private static final float LONGITUDE_LIBRATION_DEG = 7.9f;
 	private static final float LATITUDE_LIBRATION_DEG = 6.7f;
@@ -92,12 +85,12 @@ public class SkyManager {
 	private MoonPhase configMoonPhase;
 	private MoonBehavior configMoonBehavior;
 	private float configCycleDuration;
-	private final double[] configLatLon = new double[2];
+	private final float[] configLatLon = new float[2];
 
 	private long frameUtcMillis;
 	private long lastDirectionalCameraUpdateMillis;
 
-	private double customCycleElapsedDays = .35;
+	private double customCycleElapsedDays = .35f;
 	private long customCycleStartMillis;
 
 	private boolean isSunDescending;
@@ -212,8 +205,8 @@ public class SkyManager {
 		configLatLon[1] = degreesAndArcminutes(config.longitudeDegrees(), config.longitudeArcminutes(), 180);
 	}
 
-	private static double degreesAndArcminutes(int degrees, int arcminutes, int maxDegrees) {
-		double magnitude = min(abs(degrees), maxDegrees) + min(abs(arcminutes), 59) / 60.0;
+	private static float degreesAndArcminutes(int degrees, int arcminutes, int maxDegrees) {
+		float magnitude = min(abs(degrees), maxDegrees) + min(abs(arcminutes), 59) / 60.f;
 		boolean negative = degrees < 0 || degrees == 0 && arcminutes < 0;
 		return clamp(negative ? -magnitude : magnitude, -maxDegrees, maxDegrees);
 	}
@@ -239,7 +232,7 @@ public class SkyManager {
 		if (configCycle.usesCustomCycleTime) {
 			if (customCycleStartMillis == 0)
 				customCycleStartMillis = Instant.ofEpochMilli(frameUtcMillis).truncatedTo(ChronoUnit.DAYS).toEpochMilli();
-			customCycleElapsedDays += plugin.deltaTimeMs / (configCycleDuration * 60.0 * 1000);
+			customCycleElapsedDays += plugin.deltaTimeMs / (configCycleDuration * MINUTE_MS);
 		}
 
 		resolvePrimarySkyState();
@@ -384,7 +377,7 @@ public class SkyManager {
 		}
 	}
 
-	private ResolvedEndpoint resolveEndpoint(Environment environment, DaylightCycle cycle, long utcMillis, double[] latLon) {
+	private ResolvedEndpoint resolveEndpoint(Environment environment, DaylightCycle cycle, long utcMillis, float[] latLon) {
 		SkyConfiguration sky = environment.getSky();
 		float[] sunAngles = sky.sunAngles;
 		if (sunAngles == null && configCycle.skyPreset != null) {
@@ -427,10 +420,10 @@ public class SkyManager {
 				return frameUtcMillis;
 			case CUSTOM_REALISTIC:
 			case CUSTOM_BASIC:
-				double daytime = fract(customCycleElapsedDays);
+				float timeOfDay = (float) fract(customCycleElapsedDays);
 				if (cycle == DaylightCycle.CUSTOM_BASIC)
-					daytime = applyBasicNightDurationWarp((float) daytime);
-				return customCycleStartMillis + floor(customCycleElapsedDays) * DAY_MS + (long) (daytime * DAY_MS);
+					timeOfDay = applyBasicNightDurationWarp(timeOfDay);
+				return customCycleStartMillis + floor(customCycleElapsedDays) * DAY_MS + (long) (timeOfDay * DAY_MS);
 		}
 
 		throw new IllegalStateException("Unhandled daylight cycle mode: " + cycle);
@@ -490,16 +483,17 @@ public class SkyManager {
 		long millis,
 		float[] sunAngles,
 		boolean fixedSunAngles,
-		double[] latLon
+		float[] latLon
 	) {
 		float[] angles = sky.moonAngles;
 		if (angles == null) {
-			if (configMoonBehavior.isStatic)
+			if (configMoonBehavior.isStatic) {
 				angles = DEFAULT_STATIC_MOON_ANGLES;
-			else if (configMoonBehavior.mirrorsSun)
+			} else if (configMoonBehavior.mirrorsSun) {
 				angles = vec(-sunAngles[0], sunAngles[1] + PI);
-			else
-				angles = vec(AstronomyUtils.getMoonPosition(millis, latLon));
+			} else {
+				angles = AstronomyUtils.getMoonPosition(millis, latLon);
+			}
 		}
 		MoonPhase phase = sky.forceMoonPhase != null ? sky.forceMoonPhase : configMoonPhase;
 		float illumination;
@@ -509,9 +503,9 @@ public class SkyManager {
 			orbit = (float) fract(millis / (DAY_MS * SYNTHETIC_MOON_PERIOD_DAYS));
 			illumination = .5f - .5f * cos(orbit * TWO_PI);
 		} else if (!fixedSunAngles || configCycle == DaylightCycle.NIGHT) {
-			double[] astronomy = AstronomyUtils.getMoonIllumination(millis);
-			illumination = (float) astronomy[0];
-			orbit = (float) astronomy[1];
+			float[] astronomy = AstronomyUtils.getMoonIllumination(millis);
+			illumination = astronomy[0];
+			orbit = astronomy[1];
 		} else {
 			// Fixed visible suns determine the phase rendered beneath them.
 			float[] sunDirection = anglesToSkyDirection(sunAngles[0], sunAngles[1]);

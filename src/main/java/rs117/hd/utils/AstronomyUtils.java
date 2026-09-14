@@ -33,6 +33,7 @@ import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.tan;
+import static rs117.hd.utils.MathUtils.*;
 
 public final class AstronomyUtils {
 	private static final double
@@ -44,6 +45,10 @@ public final class AstronomyUtils {
 		J1970 = 2440588,
 		J2000 = 2451545;
 
+	public static float[] getSunAngles(long millis, float... latLong) {
+		return vec(getSunAngles(millis, (double) latLong[0], latLong[1]));
+	}
+
 	/**
 	 * Calculate angles for the sun's position in the sky at a given time and location.
 	 *
@@ -53,7 +58,7 @@ public final class AstronomyUtils {
 	 * @see <a href="https://en.wikipedia.org/wiki/Horizontal_coordinate_system">Horizontal coordinate system</a>
 	 * @see <a href="https://github.com/mourner/suncalc#sun-position">suncalc npm documentation</a>
 	 */
-	public static double[] getSunAngles(long millis, double[] latLong) {
+	public static double[] getSunAngles(long millis, double... latLong) {
 		double
 			phi = rad * latLong[0],
 			lw = rad * -latLong[1],
@@ -67,6 +72,10 @@ public final class AstronomyUtils {
 		return new double[] { altitude, azimuth + PI };
 	}
 
+	public static float[] getMoonPosition(long millis, float... latLong) {
+		return vec(getMoonPosition(millis, (double) latLong[0], latLong[1]));
+	}
+
 	/**
 	 * Calculate angles for the moon's position in the sky at a given time and location.
 	 *
@@ -77,7 +86,7 @@ public final class AstronomyUtils {
 	 * @see <a href="https://en.wikipedia.org/wiki/Horizontal_coordinate_system">Horizontal coordinate system</a>
 	 * @see <a href="https://github.com/mourner/suncalc#moon-position">suncalc npm documentation</a>
 	 */
-	public static double[] getMoonPosition(long millis, double[] latLong) {
+	public static double[] getMoonPosition(long millis, double... latLong) {
 		double
 			phi = rad * latLong[0],
 			lw = rad * -latLong[1],
@@ -103,13 +112,13 @@ public final class AstronomyUtils {
 		};
 	}
 
-	public static double[] getMoonIllumination(long millis) {
+	public static float[] getMoonIllumination(long millis) {
 		double d = toDays(millis); // Real (non-reversed) time so the phase matches the real-world moon
 		return getMoonIllumination(sunCoords(d), moonCoords(d));
 	}
 
 	// https://github.com/mourner/suncalc#moon-illumination
-	public static double[] getMoonIllumination(double[] sunCoords, double[] moonCoords) {
+	public static float[] getMoonIllumination(double[] sunCoords, double[] moonCoords) {
 		double
 			sdist = 149598000, // distance from Earth to Sun in km
 			sdec = sunCoords[0],
@@ -122,11 +131,11 @@ public final class AstronomyUtils {
 			inc = atan2(sdist * sin(phi), mdist - sdist * cos(phi)),
 			angle = atan2(cos(sdec) * sin(sra - mra), sin(sdec) * cos(mdec) - cos(sdec) * sin(mdec) * cos(sra - mra));
 
-		return new double[]{
+		return vec(
 			(1 + cos(inc)) / 2, // fraction
 			0.5 + 0.5 * inc * (angle < 0 ? -1 : 1) / Math.PI, // phase
 			angle
-		};
+		);
 	}
 
 	private static double toJulian(long millis) {
