@@ -1,13 +1,17 @@
 package rs117.hd;
 
+import com.google.inject.Provides;
 import java.awt.event.KeyEvent;
+import java.lang.reflect.Field;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.config.ConfigManager;
 import net.runelite.client.config.Keybind;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
@@ -15,8 +19,7 @@ import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
 import rs117.hd.overlays.ProfilerOverlay;
 import rs117.hd.overlays.ProfilerUI;
-
-import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
+import rs117.hd.utils.DeveloperTools;
 
 @Slf4j
 @PluginDescriptor(
@@ -26,8 +29,6 @@ import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
 )
 @PluginDependency(HdPlugin.class)
 public class DeveloperPlugin extends Plugin implements KeyListener {
-	private static final Keybind KEY_TOGGLE_FRAME_TIMINGS = new Keybind(KeyEvent.VK_F4, CTRL_DOWN_MASK);
-
 	@Inject
 	private ClientThread clientThread;
 
@@ -43,7 +44,16 @@ public class DeveloperPlugin extends Plugin implements KeyListener {
 	@Inject
 	private ProfilerUI profilerUI;
 
+	@Inject
+	private DeveloperConfig config;
+
+	private Keybind configToggleFrameTimings;
 	private boolean frameTimingsOverlayEnabled;
+
+	@Provides
+	DeveloperConfig provideConfig(ConfigManager configManager) {
+		return configManager.getConfig(DeveloperConfig.class);
+	}
 
 	@Override
 	protected void startUp() {
@@ -59,6 +69,7 @@ public class DeveloperPlugin extends Plugin implements KeyListener {
 		eventBus.register(this);
 		keyManager.registerKeyListener(this);
 
+		processConfigChanges();
 		profilerUI.load();
 		frameTimingsOverlayEnabled = profilerUI.loadOverlayEnabled();
 
@@ -74,6 +85,35 @@ public class DeveloperPlugin extends Plugin implements KeyListener {
 		keyManager.unregisterKeyListener(this);
 		profilerOverlay.setActive(false);
 		profilerUI.setGraphOverlayActive(false);
+	}
+
+	@Subscribe
+	public void onConfigChanged(ConfigChanged event) {
+		if (event.getGroup().equals(DeveloperConfig.CONFIG_GROUP))
+			processConfigChanges();
+	}
+
+	private void processConfigChanges() {
+		setDeveloperToolsKeybind("KEY_TOGGLE_TILE_INFO", config.toggleTileInfo());
+		setDeveloperToolsKeybind("KEY_RECORD_TIMINGS_SNAPSHOT", config.recordTimingsSnapshot());
+		setDeveloperToolsKeybind("KEY_TOGGLE_SHADOW_MAP_OVERLAY", config.toggleShadowMapOverlay());
+		setDeveloperToolsKeybind("KEY_TOGGLE_LIGHT_GIZMO_OVERLAY", config.toggleLightGizmoOverlay());
+		setDeveloperToolsKeybind("KEY_TOGGLE_TILED_LIGHTING_OVERLAY", config.toggleTiledLightingOverlay());
+		setDeveloperToolsKeybind("KEY_TOGGLE_FREEZE_FRAME", config.toggleFreezeFrame());
+		setDeveloperToolsKeybind("KEY_TOGGLE_ORTHOGRAPHIC", config.toggleOrthographic());
+		setDeveloperToolsKeybind("KEY_TOGGLE_HIDE_UI", config.toggleHideUi());
+		setDeveloperToolsKeybind("KEY_RELOAD_SCENE", config.reloadScene());
+		configToggleFrameTimings = config.toggleFrameTimings();
+	}
+
+	private void setDeveloperToolsKeybind(String fieldName, Keybind keybind) {
+		try {
+			Field field = DeveloperTools.class.getDeclaredField(fieldName);
+			field.setAccessible(true);
+			field.set(null, keybind);
+		} catch (ReflectiveOperationException e) {
+			throw new IllegalStateException("Unable to configure DeveloperTools keybind " + fieldName, e);
+		}
 	}
 
 	@Subscribe
@@ -107,7 +147,7 @@ public class DeveloperPlugin extends Plugin implements KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (KEY_TOGGLE_FRAME_TIMINGS.matches(e)) {
+		if (configToggleFrameTimings.matches(e)) {
 			profilerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
 			profilerUI.saveOverlayEnabled(frameTimingsOverlayEnabled);
 			if (!frameTimingsOverlayEnabled)
