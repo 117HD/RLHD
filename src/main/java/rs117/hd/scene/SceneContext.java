@@ -2,8 +2,7 @@ package rs117.hd.scene;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Objects;
-import java.util.stream.Stream;
+import java.util.List;
 import javax.annotation.Nullable;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
@@ -283,32 +282,82 @@ public class SceneContext {
 		return sceneToWorld(sceneExX - sceneOffset, sceneExY - sceneOffset, plane);
 	}
 
-	public Stream<int[]> worldToLocals(WorldPoint worldPoint) {
+	public List<int[]> worldToScene(int[] worldPoint) {
 		if (sceneBase != null)
-			return Stream.of(worldToLocal(worldPoint));
-		// If the scene is not contiguous, convert the world point to world points within the instance, then to local coords
-		return WorldPoint.toLocalInstance(scene, worldPoint)
-			.stream()
-			.filter(Objects::nonNull)
-			.map(instancePoint -> ivec(
-				(instancePoint.getX() - scene.getBaseX()) * LOCAL_TILE_SIZE,
-				(instancePoint.getY() - scene.getBaseY()) * LOCAL_TILE_SIZE,
-				instancePoint.getPlane()
+			return List.of(ivec(
+				worldPoint[0] - sceneBase[0],
+				worldPoint[1] - sceneBase[1],
+				worldPoint[2]
 			));
+
+		// If the scene is not contiguous, convert the world point to world points within the instance, then to local coords
+		var instanceTemplateChunks = scene.getInstanceTemplateChunks();
+		ArrayList<int[]> sceneCoords = new ArrayList<>();
+		for (int z = 0; z < instanceTemplateChunks.length; z++) {
+			for (int x = 0; x < instanceTemplateChunks[z].length; ++x) {
+				for (int y = 0; y < instanceTemplateChunks[z][x].length; ++y) {
+					int chunkData = instanceTemplateChunks[z][x][y];
+					int rotation = chunkData >> 1 & 0x3;
+					int templateChunkY = (chunkData >> 3 & 0x7FF) * CHUNK_SIZE;
+					int templateChunkX = (chunkData >> 14 & 0x3FF) * CHUNK_SIZE;
+					int plane = chunkData >> 24 & 0x3;
+					if (worldPoint[0] >= templateChunkX && worldPoint[0] < templateChunkX + CHUNK_SIZE &&
+						worldPoint[1] >= templateChunkY && worldPoint[1] < templateChunkY + CHUNK_SIZE &&
+						plane == worldPoint[2]
+					) {
+						var p = ivec(
+							x * CHUNK_SIZE + (worldPoint[0] & (CHUNK_SIZE - 1)),
+							y * CHUNK_SIZE + (worldPoint[1] & (CHUNK_SIZE - 1)),
+							z
+						);
+						rotate(p, p, rotation);
+						sceneCoords.add(p);
+					}
+				}
+			}
+		}
+		return sceneCoords;
+	}
+
+	public List<int[]> worldToLocal(int[] worldPoint) {
+		var points = worldToScene(worldPoint);
+		for (int i = 0; i < points.size(); i++) {
+			var p = points.get(i);
+			multiply(p, p, LOCAL_TILE_SIZE);
+		}
+		return points;
 	}
 
 	/**
-	 * Gets the local coordinate at the south-western corner of the tile, if the scene is contiguous, otherwise null
+	 * Rotate the coordinates in the chunk according to chunk rotation
+	 *
+	 * @param out      output, can be the same instance as point
+	 * @param point    point
+	 * @param rotation rotation
+	 * @return world point
 	 */
-	@Nullable
-	public int[] worldToLocal(WorldPoint worldPoint) {
-		if (sceneBase == null)
-			return null;
-		return ivec(
-			(worldPoint.getX() - sceneBase[0]) * LOCAL_TILE_SIZE,
-			(worldPoint.getY() - sceneBase[1]) * LOCAL_TILE_SIZE,
-			worldPoint.getPlane()
-		);
+	private static int[] rotate(int[] out, int[] point, int rotation) {
+		int mask = CHUNK_SIZE - 1;
+		int chunkX = point[0] & ~mask;
+		int chunkY = point[1] & ~mask;
+		int x = point[0] & mask;
+		int y = point[1] & mask;
+		switch (rotation) {
+			case 1:
+				out[0] = chunkX + y;
+				out[1] = chunkY + mask - x;
+				break;
+			case 2:
+				out[0] = chunkX + mask - x;
+				out[1] = chunkY + mask - y;
+				break;
+			case 3:
+				out[0] = chunkX + mask - y;
+				out[1] = chunkY + x;
+				break;
+		}
+		out[2] = point[2];
+		return out;
 	}
 
 	public boolean intersects(Area area) {

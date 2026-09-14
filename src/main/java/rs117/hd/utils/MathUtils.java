@@ -10,6 +10,7 @@ package rs117.hd.utils;
 
 import java.util.Arrays;
 import java.util.Random;
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 
 /**
@@ -51,6 +52,13 @@ public final class MathUtils {
 
 	public static float[] vec(float... vec) {
 		return vec;
+	}
+
+	public static float[] vec(double... vec) {
+		float[] floats = new float[vec.length];
+		for (int i = 0; i < vec.length; i++)
+			floats[i] = (float) vec[i];
+		return floats;
 	}
 
 	public static float[] vec(int... vec) {
@@ -206,6 +214,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static int[] add(int[] a, int[] b) {
 		return add(new int[max(a.length, b.length)], a, b);
 	}
@@ -216,6 +225,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] add(float[] a, float[] b) {
 		return add(new float[max(a.length, b.length)], a, b);
 	}
@@ -226,6 +236,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static int[] subtract(int[] a, int[] b) {
 		return subtract(new int[max(a.length, b.length)], a, b);
 	}
@@ -236,8 +247,20 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] subtract(float[] a, float[] b) {
 		return subtract(new float[max(a.length, b.length)], a, b);
+	}
+
+	public static int[] multiply(int[] out, int[] a, int... b) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = a[i % a.length] * b[i % b.length];
+		return out;
+	}
+
+	@CheckReturnValue
+	public static int[] multiply(int[] a, int... b) {
+		return multiply(new int[max(a.length, b.length)], a, b);
 	}
 
 	public static float[] multiply(float[] out, float[] a, float... b) {
@@ -246,6 +269,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] multiply(float[] a, float... b) {
 		return multiply(new float[max(a.length, b.length)], a, b);
 	}
@@ -262,6 +286,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] divide(float[] a, float... b) {
 		return divide(new float[max(a.length, b.length)], a, b);
 	}
@@ -297,6 +322,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] mod(float[] v, float... mod) {
 		return mod(new float[max(v.length, mod.length)], v, mod);
 	}
@@ -311,6 +337,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] pow(float[] in, float... exp) {
 		return pow(new float[max(in.length, exp.length)], in, exp);
 	}
@@ -327,6 +354,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] pow2(float... v) {
 		return pow2(new float[v.length], v);
 	}
@@ -349,6 +377,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] exp(float... v) {
 		return exp(new float[v.length], v);
 	}
@@ -363,6 +392,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] log(float... v) {
 		return log(new float[v.length], v);
 	}
@@ -377,6 +407,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] log2(float... v) {
 		return log2(new float[v.length], v);
 	}
@@ -395,6 +426,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] square(float... v) {
 		return square(new float[v.length], v);
 	}
@@ -409,6 +441,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] sqrt(float... v) {
 		return sqrt(new float[v.length], v);
 	}
@@ -475,6 +508,21 @@ public final class MathUtils {
 		return product;
 	}
 
+	public static float angleDiff(float a, float b) {
+		return mod(a - b + PI, TWO_PI) - PI;
+	}
+
+	public static float[] angleDiff(float[] out, float[] a, float[] b) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = angleDiff(a[i % a.length], b[i % b.length]);
+		return out;
+	}
+
+	@CheckReturnValue
+	public static float[] angleDiff(float[] a, float[] b) {
+		return angleDiff(new float[max(a.length, b.length)], a, b);
+	}
+
 	/**
 	 * Yields incorrect results if either of the input vectors is used as the output vector.
 	 */
@@ -485,6 +533,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static int[] cross(int[] a, int[] b) {
 		return cross(new int[3], a, b);
 	}
@@ -499,6 +548,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] cross(float[] a, float[] b) {
 		return cross(new float[3], a, b);
 	}
@@ -519,6 +569,7 @@ public final class MathUtils {
 		return divide(out, v, length(v));
 	}
 
+	@CheckReturnValue
 	public static float[] normalize(float... v) {
 		return normalize(new float[v.length], v);
 	}
@@ -527,6 +578,7 @@ public final class MathUtils {
 		return divide(out, plane, length(slice(plane, 0, 3)));
 	}
 
+	@CheckReturnValue
 	public static float[] normalizePlane(float... plane) {
 		return normalizePlane(new float[4], plane);
 	}
@@ -553,6 +605,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] abs(float[] v) {
 		return abs(new float[v.length], v);
 	}
@@ -561,12 +614,17 @@ public final class MathUtils {
 		return (int) Math.floor(v);
 	}
 
+	public static long floor(double v) {
+		return (long) Math.floor(v);
+	}
+
 	public static int[] floor(int[] out, float... v) {
 		for (int i = 0; i < out.length; i++)
 			out[i] = floor(v[i % v.length]);
 		return out;
 	}
 
+	@CheckReturnValue
 	public static int[] floor(float[] v) {
 		return floor(new int[v.length], v);
 	}
@@ -581,6 +639,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static int[] ceil(float[] v) {
 		return ceil(new int[v.length], v);
 	}
@@ -611,6 +670,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static int[] round(float[] v) {
 		return round(new int[v.length], v);
 	}
@@ -621,6 +681,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] roundf(float[] v) {
 		return roundf(new float[v.length], v);
 	}
@@ -638,6 +699,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static double[] round(int numDecimals, double... v) {
 		return round(new double[v.length], numDecimals, v);
 	}
@@ -654,6 +716,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] round(int numDecimals, float... v) {
 		return round(new float[v.length], numDecimals, v);
 	}
@@ -688,6 +751,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] min(float[] a, float... b) {
 		return min(new float[max(a.length, b.length)], a, b);
 	}
@@ -706,6 +770,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static int[] min(int[] a, int... b) {
 		return min(new int[max(a.length, b.length)], a, b);
 	}
@@ -740,6 +805,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] max(float[] a, float... b) {
 		return max(new float[max(a.length, b.length)], a, b);
 	}
@@ -758,6 +824,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static int[] max(int[] a, int... b) {
 		return max(new int[max(a.length, b.length)], a, b);
 	}
@@ -768,6 +835,10 @@ public final class MathUtils {
 
 	public static float clamp(double v, float min, float max) {
 		return clamp((float) v, min, max);
+	}
+
+	public static double clamp(double v, double min, double max) {
+		return Math.min(Math.max(v, min), max);
 	}
 
 	public static int clamp(int v, int min, int max) {
@@ -788,10 +859,12 @@ public final class MathUtils {
 		return clamp(out, v, vec(min), vec(max));
 	}
 
+	@CheckReturnValue
 	public static float[] clamp(float[] v, float[] min, float[] max) {
 		return clamp(new float[max(v.length, min.length, max.length)], v, min, max);
 	}
 
+	@CheckReturnValue
 	public static float[] clamp(float[] v, float min, float max) {
 		return clamp(new float[v.length], v, vec(min), vec(max));
 	}
@@ -810,12 +883,17 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] saturate(float... v) {
 		return saturate(new float[v.length], v);
 	}
 
 	public static float fract(float v) {
-		return mod(v, 1);
+		return v - floor(v);
+	}
+
+	public static double fract(double v) {
+		return v - floor(v);
 	}
 
 	public static float[] fract(float[] out, float... v) {
@@ -824,6 +902,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] fract(float... v) {
 		return fract(new float[v.length], v);
 	}
@@ -838,6 +917,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] sign(float... v) {
 		return sign(new float[v.length], v);
 	}
@@ -852,6 +932,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] mix(float[] v0, float[] v1, float... factor) {
 		return mix(new float[max(v0.length, v1.length, factor.length)], v0, v1, factor);
 	}
@@ -867,6 +948,7 @@ public final class MathUtils {
 		return out;
 	}
 
+	@CheckReturnValue
 	public static float[] smoothstep(float[] v0, float[] v1, float... factor) {
 		return smoothstep(new float[max(v0.length, v1.length, factor.length)], v0, v1, factor);
 	}
@@ -892,6 +974,22 @@ public final class MathUtils {
 
 	public static float tan(float rad) {
 		return (float) Math.tan(rad);
+	}
+
+	public static float acos(float cos) {
+		return (float) Math.acos(cos);
+	}
+
+	public static float asin(float sin) {
+		return (float) Math.asin(sin);
+	}
+
+	public static float atan(float yOverX) {
+		return (float) Math.atan(yOverX);
+	}
+
+	public static float atan(float y, float x) {
+		return (float) Math.atan2(y, x);
 	}
 
 	public static short normShort(float f) {

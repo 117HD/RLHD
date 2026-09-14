@@ -36,12 +36,15 @@ import rs117.hd.config.ColorBlindMode;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
 import rs117.hd.config.CpuUsageLimit;
+import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DefaultBoolean;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.GroundBlending;
 import rs117.hd.config.InfernalCape;
+import rs117.hd.config.MoonBehavior;
+import rs117.hd.config.MoonPhase;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SceneScalingMode;
 import rs117.hd.config.SeasonalHemisphere;
@@ -51,6 +54,7 @@ import rs117.hd.config.ShadowDistance;
 import rs117.hd.config.ShadowFiltering;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.ShadowResolution;
+import rs117.hd.config.StarMode;
 import rs117.hd.config.TextureResolution;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
@@ -58,6 +62,7 @@ import rs117.hd.config.VanillaShadowMode;
 import static rs117.hd.HdPlugin.MAX_DISTANCE;
 import static rs117.hd.HdPlugin.MAX_FOG_DEPTH;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.scene.SkyManager.DEFAULT_LATLON;
 import static rs117.hd.utils.MathUtils.*;
 
 @ConfigGroup(CONFIG_GROUP)
@@ -421,14 +426,16 @@ public interface HdPluginConfig extends Config
 		name = "Shadow filtering",
 		description =
 			"Filtering technique used when smoothing the edges of shadows.<br>" +
-			"'Smooth' smooths the shadow pixels evenly (PCF 3x3).<br>" +
-			"'Dithered' smooths out pixelation using dithering.<br>" +
+			"'Smooth Low' smooths the shadow pixels evenly (PCF 2x2).<br>" +
+			"'Smooth High' smooths the shadow pixels evenly (PCF 3x3).<br>" +
+			"'Dithered Low' smooths out pixelation using dithering.<br>" +
+			"'Dithered High' smooths out pixelation using dithering (PCF 2x2).<br>" +
 			"'Pixelated' retains slightly pixelated shadow edges.",
 		position = 3,
 		section = shadowSettings
 	)
 	default ShadowFiltering shadowFiltering() {
-		return ShadowFiltering.SMOOTH;
+		return ShadowFiltering.SMOOTH_HIGH;
 	}
 
 	String KEY_SHADOW_TRANSPARENCY = "enableShadowTransparency";
@@ -467,6 +474,18 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean expandShadowDraw() {
 		return false;
+	}
+
+	String KEY_TERRAIN_SHADOWS = "terrainShadows";
+	@ConfigItem(
+		keyName = KEY_TERRAIN_SHADOWS,
+		name = "Terrain Shadows",
+		description = "Allow terrain to cast shadows. May cause visual artifacts on slopes.",
+		position = 7,
+		section = shadowSettings
+	)
+	default boolean terrainShadows() {
+		return true;
 	}
 
 
@@ -584,12 +603,236 @@ public interface HdPluginConfig extends Config
 	}
 
 
+	/*====== Day & night settings ======*/
+
+	@ConfigSection(
+		name = "Day & night",
+		description = "Daylight cycle settings",
+		position = 3,
+		closedByDefault = true
+	)
+	String daylightCycleSettings = "daylightCycleSettings";
+
+	String KEY_DAYLIGHT_CYCLE = "daylightCycle";
+	@ConfigItem(
+		keyName = KEY_DAYLIGHT_CYCLE,
+		name = "Cycle mode",
+		description =
+			"Controls the day & night cycle behavior.<br>" +
+			"'Off' disables the day & night cycle entirely.<br>" +
+			"'Default' everyone sees the same sky, with a full day passing per hour.<br>" +
+			"'Real-Time' follows your local time, roughly matching the real sun in your hemisphere.<br>" +
+			"'Dawn' shows the sky just before sunrise.<br>" +
+			"'Sunrise' shows a constant sunrise.<br>" +
+			"'Day' shows constant daytime.<br>" +
+			"'Sunset' shows a constant sunset.<br>" +
+			"'Dusk' shows the sky just after sunset.<br>" +
+			"'Night' shows constant night-time.<br>" +
+			"'Custom Realistic' follows the sun and moon at the configured location, respecting the Custom duration.<br>" +
+			"'Custom Basic' moves the sun on a circular cycle, respecting the Custom duration and Basic night portion.",
+		position = 0,
+		section = daylightCycleSettings
+	)
+	default DaylightCycle daylightCycle() {
+		return DaylightCycle.DEFAULT;
+	}
+
+	String KEY_STARS = "stars";
+	@ConfigItem(
+		keyName = KEY_STARS,
+		name = "Stars",
+		description =
+			"'Off' hides stars.<br>" +
+			"'Realistic' follows the sky's celestial rotation.<br>" +
+			"'Artistic' rotates horizontally with slight parallax.<br>" +
+			"'Static' keeps the realistic star field fixed in place.",
+		position = 1,
+		section = daylightCycleSettings
+	)
+	default StarMode starMode() {
+		return StarMode.REALISTIC;
+	}
+
+	String KEY_NEBULAS = "nebulas";
+	@ConfigItem(
+		keyName = KEY_NEBULAS,
+		name = "Nebulas",
+		description = "Show nebulas in the night sky",
+		position = 2,
+		section = daylightCycleSettings
+	)
+	default boolean enableNebulas() {
+		return true;
+	}
+
+	String KEY_MOON_BEHAVIOR = "moonBehavior";
+	@ConfigItem(
+		keyName = KEY_MOON_BEHAVIOR,
+		name = "Moon behavior",
+		description =
+			"Controls how the moon moves across the sky.<br>" +
+			"'Disabled' gets rid of the moon entirely.<br>" +
+			"'Realistic' makes the moon orbit naturally, independent of the sun.<br>" +
+			"'Mirrored' keeps the moon at the opposite side of the sun.<br>" +
+			"'Static' keeps the moon at a fixed point in the sky.",
+		position = 3,
+		section = daylightCycleSettings
+	)
+	default MoonBehavior moonBehavior() {
+		return MoonBehavior.REALISTIC;
+	}
+
+	String KEY_MOON_PHASE = "moonPhase";
+	@ConfigItem(
+		keyName = KEY_MOON_PHASE,
+		name = "Moon phase",
+		description =
+			"Controls the portion of the moon which is lit by the sun.<br>" +
+			"'Realistic' lights up the moon based on its position relative to the sun.<br>" +
+			"Other options lock the moon in a particular lunar phase.",
+		position = 4,
+		section = daylightCycleSettings
+	)
+	default MoonPhase moonPhase() {
+		return MoonPhase.REALISTIC;
+	}
+
+	String KEY_NIGHT_BRIGHTNESS = "nightBrightness";
+	@Range(min = 0, max = 300)
+	@Units(Units.PERCENT)
+	@ConfigItem(
+		keyName = KEY_NIGHT_BRIGHTNESS,
+		name = "Night brightness",
+		description =
+			"Sets the minimum brightness during nighttime.<br>" +
+			"'15%' makes nights very dark.<br>" +
+			"'35%' is dark, but playable.<br>" +
+			"'50%' is dark, but comfortable.<br>" +
+			"'70%' provides balanced darkness.<br>" +
+			"'100%' is the default, with good visibility at night.<br>" +
+			"'150%' gives night-time high visibility.",
+		position = 5,
+		section = daylightCycleSettings
+	)
+	default int nightBrightness() {
+		return 100;
+	}
+
+	String KEY_REPLACE_VANILLA_SKYBOXES = "replaceVanillaSkyboxes";
+	@ConfigItem(
+		keyName = KEY_REPLACE_VANILLA_SKYBOXES,
+		name = "Replace vanilla skyboxes",
+		description = "Replace the game's built-in skybox models with 117 HD's own implementation.",
+		position = 6,
+		section = daylightCycleSettings
+	)
+	default boolean replaceVanillaSkyboxes() {
+		return true;
+	}
+
+	String KEY_CUSTOM_CYCLE_DURATION = "customCycleDurationMinutes";
+	@Range(min = 1)
+	@Units(Units.MINUTES)
+	@ConfigItem(
+		keyName = KEY_CUSTOM_CYCLE_DURATION,
+		name = "Custom cycle duration",
+		description = "Configures how long each Custom day & night cycle lasts.",
+		position = 7,
+		section = daylightCycleSettings
+	)
+	default double customCycleDurationMinutes() {
+		return 60;
+	}
+
+	String KEY_BASIC_NIGHT_PERCENTAGE = "basicNightPercentage";
+	@Range(min = 0, max = 100)
+	@Units(Units.PERCENT)
+	@ConfigItem(
+		keyName = KEY_BASIC_NIGHT_PERCENTAGE,
+		name = "Basic night portion",
+		description = "Decides how much of the Custom Basic cycle should be dedicated to night-time.",
+		position = 8,
+		section = daylightCycleSettings
+	)
+	default int basicNightPercentage() {
+		return 50;
+	}
+
+	String KEY_LATITUDE_DEGREES = "latitudeDegrees";
+	@Range(min = -90, max = 90)
+	@Units("°")
+	@ConfigItem(
+		keyName = KEY_LATITUDE_DEGREES,
+		name = "Latitude degrees",
+		description =
+			"Advanced: sets the observer latitude for realistic sun and moon movement at a location on Earth.<br>" +
+			"Positive values are north and negative values are south. Combine with Latitude arcminutes for higher accuracy.<br>" +
+			"Only applies to Real-Time and Custom Realistic. Defaults to Jagex's offices in Cambridge, England.",
+		position = 9,
+		section = daylightCycleSettings
+	)
+	default int latitudeDegrees() {
+		return (int) DEFAULT_LATLON[0];
+	}
+
+	String KEY_LATITUDE_ARCMINUTES = "latitudeArcminutes";
+	@Range(min = -59, max = 59)
+	@Units("′")
+	@ConfigItem(
+		keyName = KEY_LATITUDE_ARCMINUTES,
+		name = "Latitude arcminutes",
+		description =
+			"Advanced: adds arcminutes to Latitude degrees for realistic sun and moon movement.<br>" +
+			"The degree sign determines north or south; when degrees are zero, a negative value selects south.<br>" +
+			"Only applies to Real-Time and Custom Realistic. Defaults to Jagex's offices in Cambridge, England.",
+		position = 10,
+		section = daylightCycleSettings
+	)
+	default int latitudeArcminutes() {
+		return (int) Math.round((DEFAULT_LATLON[0] % 1) * 60);
+	}
+
+	String KEY_LONGITUDE_DEGREES = "longitudeDegrees";
+	@Range(min = -180, max = 180)
+	@Units("°")
+	@ConfigItem(
+		keyName = KEY_LONGITUDE_DEGREES,
+		name = "Longitude degrees",
+		description =
+			"Advanced: sets the observer longitude for realistic sun and moon movement at a location on Earth.<br>" +
+			"Positive values are east and negative values are west. Combine with Longitude arcminutes for higher accuracy.<br>" +
+			"Only applies to Real-Time and Custom Realistic. Defaults to Jagex's offices in Cambridge, England.",
+		position = 11,
+		section = daylightCycleSettings
+	)
+	default int longitudeDegrees() {
+		return (int) DEFAULT_LATLON[1];
+	}
+
+	String KEY_LONGITUDE_ARCMINUTES = "longitudeArcminutes";
+	@Range(min = -59, max = 59)
+	@Units("′")
+	@ConfigItem(
+		keyName = KEY_LONGITUDE_ARCMINUTES,
+		name = "Longitude arcminutes",
+		description =
+			"Advanced: adds arcminutes to Longitude degrees for realistic sun and moon movement.<br>" +
+			"The degree sign determines east or west; when degrees are zero, a negative value selects west.<br>" +
+			"Only applies to Real-Time and Custom Realistic. Defaults to Jagex's offices in Cambridge, England.",
+		position = 12,
+		section = daylightCycleSettings
+	)
+	default int longitudeArcminutes() {
+		return (int) Math.round((DEFAULT_LATLON[1] % 1) * 60);
+	}
+
+
 	/*====== Environment settings ======*/
 
 	@ConfigSection(
 		name = "Environment",
 		description = "Environment settings",
-		position = 3,
+		position = 4,
 		closedByDefault = true
 	)
 	String environmentSettings = "environmentSettings";
@@ -821,7 +1064,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Miscellaneous",
 		description = "Miscellaneous settings",
-		position = 4,
+		position = 5,
 		closedByDefault = true
 	)
 	String miscellaneousSettings = "miscellaneousSettings";
@@ -975,7 +1218,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Legacy",
 		description = "Legacy options. If you dislike a change, you might find an option to change it back here.",
-		position = 5,
+		position = 6,
 		closedByDefault = true
 	)
 	String legacySettings = "legacySettings";
@@ -1128,7 +1371,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Experimental",
 		description = "Experimental features - if you're experiencing issues you should consider disabling these.",
-		position = 6,
+		position = 7,
 		closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";

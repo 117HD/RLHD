@@ -1,0 +1,72 @@
+#pragma once
+
+struct SkyGradient {
+    vec3 sunDir;         // sun direction with the perceived-horizon offset applied
+    float upAmount;      // how much the view is looking up (-viewDir.y)
+    float sunSideBlend;  // 0 = facing away from sun, 1 = facing toward sun
+    float zenithBlend;   // 0 = horizon, 1 = zenith
+    float nightFade;     // 0 = deep night, 1 = sun at/above horizon
+    vec3 color;          // linear sRGB gradient + sun glow (before haze/stars/moon)
+};
+
+// The camera makes the perceived horizon about 5° below astronomical 0°.
+#define HORIZON_OFFSET 0.087
+
+SkyGradient computeSkyGradient(vec3 viewDir) {
+    SkyGradient g;
+
+    g.sunDir = normalize(vec3(skySunDir.x, -skySunDir.y + HORIZON_OFFSET, skySunDir.z));
+    g.upAmount = -viewDir.y;
+
+    // Fade the sun-facing bias near vertical views to avoid pinching.
+    vec2 viewHoriz = vec2(viewDir.x, viewDir.z);
+    float viewHorizLen = length(viewHoriz);
+    vec3 viewHorizontal = viewHorizLen > 1e-4 ? vec3(viewHoriz.x, 0.0, viewHoriz.y) / viewHorizLen : vec3(0.0);
+    vec3 sunHorizontal = normalize(vec3(g.sunDir.x, 0.0, g.sunDir.z));
+
+    float sunFacing = dot(viewHorizontal, sunHorizontal) * smoothstep(0.0, 0.35, viewHorizLen);
+    g.sunSideBlend = smoothstep(0.0, 1.0, (sunFacing + 1.0) * 0.5);
+
+    g.zenithBlend = smoothstep(-0.1, 0.7, g.upAmount);
+
+    float sunAltitude = clamp(skySunDir.y, 0.0, 1.0);
+    float daytimeFactor = smoothstep(0.0, 0.64, sunAltitude);
+    float dimFadeout = smoothstep(0.0, 0.34, sunAltitude);
+    float darkSideDim = mix(0.7, 1.0, dimFadeout);
+    vec3 darkSideColor = mix(skyZenithColor * darkSideDim, skyHorizonColor, daytimeFactor);
+    vec3 sunSideColor = skyHorizonColor;
+
+    g.nightFade = smoothstep(-0.26, 0.0, skySunDir.y) * (1.0 - skyCustomGradient);
+
+    vec3 horizonColor = mix(darkSideColor, sunSideColor, g.sunSideBlend);
+    horizonColor = mix(skyZenithColor, horizonColor, g.nightFade);
+
+    g.color = mix(horizonColor, skyZenithColor, g.zenithBlend);
+    // Custom skies have a symmetric horizon band independent of the sun's direction.
+    vec3 customColor = mix(skyHorizonColor, skyZenithColor,
+        smoothstep(0.0, skyHorizonWidth, abs(g.upAmount)));
+    g.color = mix(g.color, customColor, skyCustomGradient);
+
+    // Use multiply/sqrt equivalents of pow for the glow falloffs.
+    float sunDot = dot(viewDir, g.sunDir);
+    if (sunDot > 0.0) {
+        float s2 = sunDot * sunDot;
+        float s4 = s2 * s2;
+        float s8 = s4 * s4;
+        float s16 = s8 * s8;
+        float s32 = s16 * s16;
+        float s128 = s32 * s32; s128 = s128 * s128;
+        float coreGlow = s128 * 0.4;
+        float innerGlow = s32 * 0.25;
+        float midGlow = s8 * 0.15;
+        float outerGlow = s2 * sunDot * sqrt(sunDot) * 0.08;
+        g.color += skySunColor * (coreGlow + innerGlow + midGlow + outerGlow);
+    }
+
+    return g;
+}
+
+vec3 blendSkyBackground(vec3 gradient, vec3 background, float amount) {
+    // Keep an authored gradient visible behind stars and nebulas, including below the horizon.
+    return mix(gradient, background + gradient * skyCustomGradient, amount);
+}

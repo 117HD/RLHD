@@ -20,6 +20,7 @@ public class UBOMaterials extends UniformBuffer<GLBuffer> {
 		public Property flowMap = addProperty(PropertyType.Int, "flowMap");
 		public Property shadowAlphaMap = addProperty(PropertyType.Int, "shadowAlphaMap");
 		public Property flags = addProperty(PropertyType.Int, "flags");
+		public Property subsurfaceAndGlow = addProperty(PropertyType.Int, "subsurfaceAndGlow");
 		public Property brightness = addProperty(PropertyType.Float, "brightness");
 		public Property displacementScale = addProperty(PropertyType.Float, "displacementScale");
 		public Property specularStrength = addProperty(PropertyType.Float, "specularStrength");

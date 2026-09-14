@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sky_presets.schema.json",
+  "title": "Sky Presets",
+  "$defs": {
+    "color": {
+      "type": [ "string", "array" ],
+      "description": "sRGB color, specified as a hex code or an array in the range 0-255.",
+      "pattern": "^#[A-Fa-f0-9]{6}$",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "number"
+      }
+    }
+  },
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [ "name" ],
+    "additionalProperties": false,
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Unique preset name used by environments and other presets."
+      },
+      "parent": {
+        "type": "string",
+        "description": "Optional preset to inherit before applying this preset's values."
+      },
+      "sunAngles": {
+        "$ref": "environments.schema.json#/$defs/celestialAngles"
+      },
+      "moonAngles": {
+        "$ref": "environments.schema.json#/$defs/celestialAngles"
+      },
+      "hideMoon": {
+        "type": "boolean",
+        "description": "Hide the moon disk and halo without changing moonlight or shadows."
+      },
+      "profile": {
+        "$ref": "environments.schema.json#/$defs/skyProfile"
+      },
+      "customGradient": {
+        "type": "boolean",
+        "description": "Use profile colors directly, without automatic fog/night replacement or sun-facing bias. Stars remain visible at any sun altitude. Defaults to false."
+      },
+      "horizonWidth": {
+        "type": "number",
+        "minimum": 0.001,
+        "maximum": 90,
+        "description": "Degrees above and below the horizon where a custom gradient reaches its zenith color. Defaults to 15."
+      },
+      "forceMoonPhase": {
+        "type": "string",
+        "enum": [
+          "REALISTIC",
+          "NEW_MOON",
+          "WAXING_CRESCENT",
+          "FIRST_QUARTER",
+          "WAXING_GIBBOUS",
+          "FULL_MOON",
+          "WANING_GIBBOUS",
+          "LAST_QUARTER",
+          "WANING_CRESCENT"
+        ]
+      },
+      "moonDirectionalStrength": {
+        "type": "number",
+        "minimum": 0
+      },
+      "moonShadowStrength": {
+        "type": "number",
+        "description": "Moon shadow contrast multiplier, clamped to 0-1. Defaults to 1. Faded directional light becomes ambient while preserving irradiance averaged over surface orientations.",
+        "minimum": 0
+      },
+      "minMoonIllumination": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "moonDiskColor": {
+        "$ref": "#/$defs/color"
+      },
+      "moonLightColor": {
+        "$ref": "#/$defs/color"
+      },
+      "moonDiskStrength": {
+        "type": "number",
+        "minimum": 0
+      },
+      "skyFogColor": {
+        "$ref": "#/$defs/color",
+        "description": "Fog color in sRGB. Omit to follow the sky's horizon color. Blends with that color using skyFogColorMix."
+      },
+      "skyFogColorMix": {
+        "type": "number",
+        "description": "Color blend: 0 follows the horizon color; 1 uses skyFogColor. Defaults to 1. Does not change fog opacity.",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "skyFogDensity": {
+        "type": "number",
+        "description": "Additional horizon optical depth: 0 disables horizon fog; 0.69 halves transmission at the horizon. Fades upward. Defaults to environment fogDepth / 100; ground fog is independent.",
+        "minimum": 0
+      },
+      "skyVisibility": {
+        "type": "number",
+        "description": "Transmission through uniform sky haze: 1 is clear; 0.25 lets 25% of linear light through; 0 is opaque. Multiplies the transmission through horizon fog. Affects the sky and all celestial objects.",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "moonVisibility": {
+        "type": "number",
+        "description": "Moon disk and halo visibility multiplier. Does not affect moonlight or shadows.",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "moonLightVisibility": {
+        "type": "number",
+        "description": "Moonlight visibility multiplier for scene lighting and moon shadows. Independent of moonVisibility.",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "starVisibility": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "nebulaVisibility": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "auroraVisibility": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "moonSizeMult": {
+        "type": "number",
+        "minimum": 0
+      },
+      "starHorizonHeight": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 2
+      },
+      "sunStrength": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "sunriseSunsetStrength": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "skyColorTakeoverAngle": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 90
+      },
+      "sunlightStrength": {
+        "type": "number",
+        "minimum": 0
+      },
+      "minBrightnessBoost": {
+        "type": "number",
+        "minimum": 0
+      }
+    }
+  }
+}

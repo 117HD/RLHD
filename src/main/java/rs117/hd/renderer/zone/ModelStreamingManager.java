@@ -214,7 +214,7 @@ public class ModelStreamingManager {
 			boolean inArea = ctx.sceneContext.currentArea.containsPoint(
 				base[0] + ((int) objectWorldPos[0] >> Perspective.LOCAL_COORD_BITS),
 				base[1] + ((int) objectWorldPos[2] >> Perspective.LOCAL_COORD_BITS),
-				base[2] + client.getTopLevelWorldView().getPlane()
+				base[2] + tileObject.getPlane()
 			);
 			if (!inArea)
 				return;

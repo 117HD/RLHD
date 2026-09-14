@@ -78,6 +78,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.ColorFilter;
+import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.GroundBlending;
 import rs117.hd.config.SeasonalHemisphere;
@@ -92,6 +93,7 @@ import rs117.hd.opengl.shader.UIShaderProgram;
 import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.opengl.uniforms.UBOGlobal;
 import rs117.hd.opengl.uniforms.UBOLights;
+import rs117.hd.opengl.uniforms.UBOSky;
 import rs117.hd.opengl.uniforms.UBOUI;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.GammaCalibrationOverlay;
@@ -112,9 +114,11 @@ import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
+import rs117.hd.scene.SkyManager;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.WaterTypeManager;
+import rs117.hd.scene.daylight_cycle.StarField;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.DeveloperTools;
@@ -164,13 +168,17 @@ public class HdPlugin extends Plugin {
 	public static final String INTEL_DRIVER_URL = "https://www.intel.com/content/www/us/en/support/detect.html";
 	public static final String NVIDIA_DRIVER_URL = "https://www.nvidia.com/en-us/geforce/drivers/";
 
+	public static final long SEED = 0x313137204844L;
+
 	public static int MAX_TEXTURE_UNITS;
 	public static int TEXTURE_UNIT_COUNT = 0;
 	public static final int TEXTURE_UNIT_UI = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_TERRAIN_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_NEBULA = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -178,6 +186,7 @@ public class HdPlugin extends Plugin {
 
 	public static int UNIFORM_BLOCK_COUNT = 0;
 	public static final int UNIFORM_BLOCK_GLOBAL = UNIFORM_BLOCK_COUNT++;
+	public static final int UNIFORM_BLOCK_SKY = UNIFORM_BLOCK_COUNT++;
 	public static final int UNIFORM_BLOCK_MATERIALS = UNIFORM_BLOCK_COUNT++;
 	public static final int UNIFORM_BLOCK_WATER_TYPES = UNIFORM_BLOCK_COUNT++;
 	public static final int UNIFORM_BLOCK_LIGHTS = UNIFORM_BLOCK_COUNT++;
@@ -262,6 +271,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private LightManager lightManager;
+
+	@Inject
+	private SkyManager skyManager;
 
 	@Inject
 	private EnvironmentManager environmentManager;
@@ -370,6 +382,7 @@ public class HdPlugin extends Plugin {
 	@Nullable
 	public int[] sceneViewport;
 	public final float[] sceneViewportScale = { 1, 1 };
+
 	public int msaaSamples;
 
 	public int[] sceneResolution;
@@ -383,12 +396,17 @@ public class HdPlugin extends Plugin {
 	public int fboShadowMap;
 	private int texShadowMap;
 
+	public int terrainShadowMapResolution;
+	public int fboTerrainShadowMap;
+	private int texTerrainShadowMap;
+
 	public int[] tiledLightingResolution;
 	public int tiledLightingLayerCount;
 	public int fboTiledLighting;
 	public int texTiledLighting;
 
 	public UBOGlobal uboGlobal;
+	public UBOSky uboSky;
 	public UBOUI uboUI;
 	public UBOLights uboLights;
 	public UBOLights uboLightsCulling;
@@ -407,7 +425,9 @@ public class HdPlugin extends Plugin {
 	public boolean configModelBatching;
 	public boolean configModelCaching;
 	public boolean configShadowsEnabled;
+	public boolean configShadowTransparency;
 	public boolean configRoofShadows;
+	public boolean configTerrainShadows;
 	public boolean configExpandShadowDraw;
 	public boolean configUseFasterModelHashing;
 	public boolean configZoneStreaming;
@@ -420,8 +440,11 @@ public class HdPlugin extends Plugin {
 	public boolean configHideVanillaWaterEffects;
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
+	public boolean configOverrideSky;
 	public int configDetailDrawDistance;
 	public int configExpandedMapLoadingChunks;
+	public float configMinimumBrightness;
+	public DefaultSkyColor configDefaultSkyColor;
 	public DynamicLights configDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
@@ -477,6 +500,7 @@ public class HdPlugin extends Plugin {
 	public double elapsedTime;
 	public double elapsedClientTime;
 	public float deltaTime;
+	public long deltaTimeMs;
 	public float deltaClientTime;
 	private long lastFrameTimeMillis;
 	private double lastFrameClientTime;
@@ -709,7 +733,7 @@ public class HdPlugin extends Plugin {
 				checkGLErrors();
 
 				client.setDrawCallbacks(renderer);
-				client.setExpandedMapLoading(getExpandedMapLoadingChunks());
+				client.setExpandedMapLoading(configExpandedMapLoadingChunks);
 				// force rebuild of main buffer provider to enable alpha channel
 				client.resizeCanvas();
 
@@ -718,6 +742,7 @@ public class HdPlugin extends Plugin {
 				tileOverrideManager.startUp();
 				modelOverrideManager.startUp();
 				lightManager.startUp();
+				skyManager.startUp();
 				environmentManager.startUp();
 				fishingSpotReplacer.startUp();
 				gammaCalibrationOverlay.initialize();
@@ -788,6 +813,7 @@ public class HdPlugin extends Plugin {
 			modelOverrideManager.shutDown();
 			lightManager.shutDown();
 			environmentManager.shutDown();
+			skyManager.shutDown();
 			fishingSpotReplacer.shutDown();
 			areaManager.shutDown();
 			gamevalManager.shutDown();
@@ -920,8 +946,11 @@ public class HdPlugin extends Plugin {
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
 			.define("SHADOW_MODE", configShadowMode)
-			.define("SHADOW_TRANSPARENCY", config.shadowTransparency())
-			.define("SHADOW_FILTERING", config.shadowFiltering())
+			.define("TERRAIN_SHADOWS", configTerrainShadows)
+			.define("TERRAIN_ONLY_PASS", false)
+			.define("SHADOW_TRANSPARENCY", configShadowTransparency)
+			.define("SHADOW_FILTERING", config.shadowFiltering().filtering)
+			.define("SHADOW_FILTERING_KERNAL", config.shadowFiltering().kernelSize)
 			.define("SHADOW_RESOLUTION", config.shadowResolution())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
 			.define("UNDO_VANILLA_SHADING", configShadingMode.undoVanillaShading)
@@ -938,6 +967,7 @@ public class HdPlugin extends Plugin {
 			.define("ZONE_RENDERER", renderer instanceof ZoneRenderer)
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", 0)
 			.define("WORLD_VIEW_GETTER", "")
+			.define("NEBULA_CLUSTER_COUNT", StarField.CLUSTER_COUNT)
 			.addInclude(
 				"MATERIAL_CONSTANTS", () -> {
 					StringBuilder include = new StringBuilder();
@@ -955,6 +985,7 @@ public class HdPlugin extends Plugin {
 			.addInclude("MATERIAL_GETTER", () -> generateGetter("Material", MaterialManager.MATERIALS.length))
 			.addInclude("WATER_TYPE_GETTER", () -> generateGetter("WaterType", waterTypeManager.uboWaterTypes.getCount()))
 			.addUniformBuffer(uboGlobal)
+			.addUniformBuffer(uboSky)
 			.addUniformBuffer(uboLights)
 			.addUniformBuffer(uboLightsCulling)
 			.addUniformBuffer(uboUI)
@@ -1135,6 +1166,9 @@ public class HdPlugin extends Plugin {
 		uboGlobal = new UBOGlobal();
 		uboGlobal.initialize(UNIFORM_BLOCK_GLOBAL);
 
+		uboSky = new UBOSky();
+		uboSky.initialize(UNIFORM_BLOCK_SKY);
+
 		uboUI = new UBOUI();
 		uboUI.initialize(UNIFORM_BLOCK_UI);
 
@@ -1149,6 +1183,10 @@ public class HdPlugin extends Plugin {
 		if (uboGlobal != null)
 			uboGlobal.destroy();
 		uboGlobal = null;
+
+		if (uboSky != null)
+			uboSky.destroy();
+		uboSky = null;
 
 		if (uboUI != null)
 			uboUI.destroy();
@@ -1398,7 +1436,7 @@ public class HdPlugin extends Plugin {
 
 	private void initializeShadowMapFbo() {
 		if (!configShadowsEnabled) {
-			initializeDummyShadowMap();
+			initializeDummyShadowMaps();
 			return;
 		}
 
@@ -1421,7 +1459,7 @@ public class HdPlugin extends Plugin {
 		glTexImage2D(
 			GL_TEXTURE_2D,
 			0,
-			GL_DEPTH_COMPONENT24,
+			configShadowTransparency ? GL_DEPTH_COMPONENT24 : GL_DEPTH_COMPONENT16,
 			shadowMapResolution,
 			shadowMapResolution,
 			0,
@@ -1442,15 +1480,64 @@ public class HdPlugin extends Plugin {
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
 
+		// Create terrain shadow map FBO and texture
+		if (configTerrainShadows) {
+			fboTerrainShadowMap = glGenFramebuffers();
+			glBindFramebuffer(GL_FRAMEBUFFER, fboTerrainShadowMap);
+
+			texTerrainShadowMap = glGenTextures();
+			glActiveTexture(TEXTURE_UNIT_TERRAIN_SHADOW_MAP);
+			glBindTexture(GL_TEXTURE_2D, texTerrainShadowMap);
+
+			terrainShadowMapResolution = shadowMapResolution / 2;
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_DEPTH_COMPONENT16,
+				terrainShadowMapResolution,
+				terrainShadowMapResolution,
+				0,
+				GL_DEPTH_COMPONENT,
+				GL_FLOAT,
+				0
+			);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_GREATER);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+			glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
+
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texTerrainShadowMap, 0);
+			glDrawBuffer(GL_NONE);
+			glReadBuffer(GL_NONE);
+		} else {
+			initializeDummyTerrainShadowMap();
+		}
+
 		// Reset FBO
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 	}
 
-	private void initializeDummyShadowMap() {
+	private void initializeDummyShadowMaps() {
 		// Create dummy texture
 		texShadowMap = glGenTextures();
 		glActiveTexture(TEXTURE_UNIT_SHADOW_MAP);
 		glBindTexture(GL_TEXTURE_2D, texShadowMap);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1, 1, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+		initializeDummyTerrainShadowMap();
+	}
+
+	private void initializeDummyTerrainShadowMap() {
+		texTerrainShadowMap = glGenTextures();
+		glActiveTexture(TEXTURE_UNIT_TERRAIN_SHADOW_MAP);
+		glBindTexture(GL_TEXTURE_2D, texTerrainShadowMap);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1, 1, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -1466,6 +1553,14 @@ public class HdPlugin extends Plugin {
 		if (fboShadowMap != 0)
 			glDeleteFramebuffers(fboShadowMap);
 		fboShadowMap = 0;
+
+		if (texTerrainShadowMap != 0)
+			glDeleteTextures(texTerrainShadowMap);
+		texTerrainShadowMap = 0;
+
+		if (fboTerrainShadowMap != 0)
+			glDeleteFramebuffers(fboTerrainShadowMap);
+		fboTerrainShadowMap = 0;
 	}
 
 	public void initializeShaderHotswapping() {
@@ -1643,10 +1738,13 @@ public class HdPlugin extends Plugin {
 	}
 
 	private void updateCachedConfigs() {
-		configExpandedMapLoadingChunks = config.expandedMapLoadingChunks();
+		configExpandedMapLoadingChunks = useLowMemoryMode ? 0 : config.expandedMapLoadingChunks();
+		configMinimumBrightness = config.nightBrightness() / 100f * .7f;
 		configShadowMode = config.shadowMode();
 		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
+		configShadowTransparency = config.shadowTransparency();
 		configRoofShadows = config.roofShadows();
+		configTerrainShadows = config.terrainShadows() && renderer instanceof ZoneRenderer;
 		configGroundTextures = config.groundTextures();
 		var groundBlending = config.groundBlending();
 		configGroundBlending = groundBlending != GroundBlending.OFF;
@@ -1661,9 +1759,11 @@ public class HdPlugin extends Plugin {
 		configLegacyGreyColors = config.legacyGreyColors();
 		configModelBatching = config.modelBatching();
 		configModelCaching = config.modelCaching();
+		configDefaultSkyColor = config.defaultSkyColor();
 		configDynamicLights = config.dynamicLights();
 		configTiledLighting = config.tiledLighting();
 		configTiledLightingImageLoadStore = config.tiledLightingImageLoadStore();
+		configOverrideSky = config.overrideSky();
 		configDetailDrawDistance = config.detailDrawDistance();
 		configExpandShadowDraw = config.expandShadowDraw();
 		configUseFasterModelHashing = config.fasterModelHashing();
@@ -1728,6 +1828,8 @@ public class HdPlugin extends Plugin {
 				}
 			}
 		}
+
+		skyManager.updateConfig(config);
 	}
 
 	@Subscribe
@@ -1805,7 +1907,7 @@ public class HdPlugin extends Plugin {
 
 						switch (key) {
 							case KEY_EXPANDED_MAP_LOADING_CHUNKS:
-								client.setExpandedMapLoading(getExpandedMapLoadingChunks());
+								client.setExpandedMapLoading(configExpandedMapLoadingChunks);
 								// fall-through
 							case KEY_HIDE_UNRELATED_AREAS:
 								if (client.getGameState() == GameState.LOGGED_IN)
@@ -1834,6 +1936,7 @@ public class HdPlugin extends Plugin {
 							case KEY_SHADOW_MODE:
 							case KEY_SHADOW_RESOLUTION:
 							case KEY_SHADOW_TRANSPARENCY:
+							case KEY_TERRAIN_SHADOWS:
 								recompilePrograms = true;
 								recreateShadowMapFbo = true;
 								break;
@@ -1913,7 +2016,7 @@ public class HdPlugin extends Plugin {
 					}
 
 					if (reloadEnvironments)
-						environmentManager.reload();
+						environmentManager.reloadAndSmoothlyTransition();
 				}
 			} catch (Throwable ex) {
 				log.error("Error while changing settings:", ex);
@@ -1980,12 +2083,6 @@ public class HdPlugin extends Plugin {
 		return 100f / config.brightness();
 	}
 
-	public int getExpandedMapLoadingChunks() {
-		if (useLowMemoryMode)
-			return 0;
-		return config.expandedMapLoadingChunks();
-	}
-
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
 		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
@@ -2000,7 +2097,8 @@ public class HdPlugin extends Plugin {
 		}
 
 		if (lastFrameTimeMillis > 0) {
-			deltaTime = (float) ((System.currentTimeMillis() - lastFrameTimeMillis) / 1000.);
+			deltaTimeMs = System.currentTimeMillis() - lastFrameTimeMillis;
+			deltaTime = (float) (deltaTimeMs / 1000.);
 
 			// Restart the to avoid potential buffer corruption if the computer has likely resumed from suspension
 			if (deltaTime > 300) {
@@ -2015,7 +2113,7 @@ public class HdPlugin extends Plugin {
 			deltaClientTime = (float) (elapsedClientTime - lastFrameClientTime);
 
 			elapsedTime += deltaTime;
-			windOffset += deltaTime * environmentManager.currentWindSpeed;
+			windOffset += deltaTime * environmentManager.getCurrentEnvironment().windSpeed;
 		}
 		lastFrameTimeMillis = System.currentTimeMillis();
 		lastFrameClientTime = elapsedClientTime;

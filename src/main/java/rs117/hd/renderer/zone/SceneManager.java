@@ -457,7 +457,7 @@ public class SceneManager {
 				client,
 				worldView,
 				scene,
-				plugin.getExpandedMapLoadingChunks(),
+				plugin.configExpandedMapLoadingChunks,
 				root.sceneContext
 			);
 
@@ -769,7 +769,7 @@ public class SceneManager {
 			clientThread.invoke(prevCtx::free);
 		}
 
-		var sceneContext = new ZoneSceneContext(client, worldView, scene, plugin.getExpandedMapLoadingChunks(), null);
+		var sceneContext = new ZoneSceneContext(client, worldView, scene, plugin.configExpandedMapLoadingChunks, null);
 		proceduralGenerator.generateSceneData(sceneContext, null);
 
 		final WorldViewContext ctx = new WorldViewContext(worldView, sceneContext, uboWorldViews);

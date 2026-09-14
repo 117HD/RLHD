@@ -9,6 +9,7 @@
 package rs117.hd.utils;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
@@ -21,7 +22,12 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.function.BiConsumer;
 import javax.annotation.Nullable;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +53,116 @@ public class GsonUtils {
 			.registerTypeAdapterFactory(new ExcludeDefaultsFactory())
 			.registerTypeAdapter(Float.class, new RoundingAdapter(3))
 			.create();
+	}
+
+	public static void deepInheritFrom(JsonObject overrides, JsonObject base) {
+		for (var entry : base.entrySet()) {
+			JsonElement value = overrides.get(entry.getKey());
+			if (value == null) {
+				overrides.add(entry.getKey(), entry.getValue());
+			} else if (value.isJsonObject() && entry.getValue().isJsonObject()) {
+				deepInheritFrom(value.getAsJsonObject(), entry.getValue().getAsJsonObject());
+			}
+		}
+	}
+
+	public static void shallowInheritFrom(JsonObject overrides, JsonObject base) {
+		for (var entry : base.entrySet())
+			if (!overrides.has(entry.getKey()))
+				overrides.add(entry.getKey(), entry.getValue());
+	}
+
+	public static Map<String, JsonObject> resolveParentDefinitions(
+		Map<String, JsonObject> definitions,
+		String type,
+		@Nullable String rootParent,
+		BiConsumer<JsonObject, JsonObject> inherit
+	) {
+		var resolved = new HashMap<String, JsonObject>();
+		for (String name : definitions.keySet())
+			resolveParentDefinition(name, definitions, resolved, new HashSet<>(), type, rootParent, inherit);
+		return resolved;
+	}
+
+	@Nullable
+	private static JsonObject resolveParentDefinition(
+		String name,
+		Map<String, JsonObject> definitions,
+		Map<String, JsonObject> resolved,
+		Set<String> resolving,
+		String type,
+		@Nullable String rootParent,
+		BiConsumer<JsonObject, JsonObject> inherit
+	) {
+		JsonObject result = resolved.get(name);
+		if (result != null)
+			return result;
+		JsonObject definition = definitions.get(name);
+		if (definition == null)
+			return null;
+		if (!resolving.add(name)) {
+			log.error("{} '{}' contains a parent loop", type, name);
+			return null;
+		}
+
+		result = definition;
+		JsonElement parent = definition.get("parent");
+		if (parent != null) {
+			if (!parent.isJsonPrimitive() || !parent.getAsJsonPrimitive().isString()) {
+				log.error("{} '{}' has a non-string parent", type, name);
+			} else {
+				String parentName = parent.getAsString();
+				if (!parentName.equals(rootParent)) {
+					if (!definitions.containsKey(parentName)) {
+						log.error("{} '{}' has an unknown parent '{}'", type, name, parentName);
+					} else {
+						JsonObject base = resolveParentDefinition(
+							parentName, definitions, resolved, resolving, type, rootParent, inherit);
+						if (base != null)
+							inherit.accept(result, base);
+					}
+				}
+			}
+		}
+		resolving.remove(name);
+		resolved.put(name, result);
+		return result;
+	}
+
+	public static void removeNulls(JsonElement element) {
+		if (element.isJsonObject()) {
+			var iter = element.getAsJsonObject().entrySet().iterator();
+			while (iter.hasNext()) {
+				JsonElement value = iter.next().getValue();
+				if (value.isJsonNull()) {
+					iter.remove();
+				} else {
+					removeNulls(value);
+				}
+			}
+		} else if (element.isJsonArray()) {
+			var array = element.getAsJsonArray();
+			for (int i = 0; i < array.size(); i++)
+				removeNulls(array.get(i));
+		}
+	}
+
+	public static void removeMatching(JsonObject target, JsonObject base) {
+		var iter = target.entrySet().iterator();
+		while (iter.hasNext()) {
+			var entry = iter.next();
+			JsonElement baseValue = base.get(entry.getKey());
+			if (baseValue == null)
+				continue;
+			JsonElement value = entry.getValue();
+			if (value.isJsonObject() && baseValue.isJsonObject()) {
+				removeMatching(value.getAsJsonObject(), baseValue.getAsJsonObject());
+				if (value.getAsJsonObject().size() == 0)
+					iter.remove();
+			} else if (value.equals(baseValue)) {
+				iter.remove();
+			}
+		}
 	}
 
 	public static class RoundingAdapter extends TypeAdapter<Float> {

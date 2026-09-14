@@ -151,6 +151,62 @@
         "type": "boolean",
         "description": "Whether the light should spawn only when an animation starts playing. Only works for `GraphicsObject`s and `Projectile`s. Defaults to false."
       },
+      "nightMultiplier": {
+        "type": "number",
+        "minimum": 0,
+        "description": "Overworld night brightness multiplier while the daylight cycle is active. Defaults to 1; 0 disables the light and values above 1 brighten it."
+      },
+      "schedule": {
+        "description": "When the light turns on or off based on the sun's altitude. Scheduled lights are disabled when the daylight cycle is disabled.",
+        "oneOf": [
+          { "$ref": "#/$defs/lightScheduleRange" },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [ "during" ],
+            "properties": {
+              "turn": {
+                "type": "string",
+                "enum": [ "ON", "OFF" ],
+                "default": "ON",
+                "description": "Whether the listed ranges enable or disable the light."
+              },
+              "during": {
+                "oneOf": [
+                  { "$ref": "#/$defs/lightScheduleRange" },
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": { "$ref": "#/$defs/lightScheduleRange" }
+                  }
+                ]
+              },
+              "randomOffset": {
+                "type": "number",
+                "minimum": 0,
+                "default": 2.7,
+                "description": "Stable per-instance altitude offset in degrees, applied in either direction. Defaults to 2.7."
+              }
+            }
+          }
+        ]
+      },
+      "outdoorLighting": {
+        "oneOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "items": {
+              "type": "integer"
+            }
+          }
+        ],
+        "description": "Sample the default overworld lighting if true, or specify a world position to sample. Defaults to false."
+      },
       "areas": {
         "type": "array",
         "description": "An array of bounding boxes and/or area enums specifying which areas the light should be limited to.",
@@ -200,6 +256,39 @@
           "type": [ "string", "number" ]
         }
       }
+    }
+  },
+  "$defs": {
+    "lightSchedulePhase": {
+      "type": "string",
+      "enum": [ "DAWN", "SUNRISE", "DAY", "SUNSET", "DUSK", "NIGHT", "DEEP_NIGHT" ]
+    },
+    "lightScheduleEndpoint": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [ "DAWN", "SUNRISE", "DAY", "SUNSET", "DUSK", "NIGHT", "DEEP_NIGHT" ]
+        },
+        {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        }
+      ]
+    },
+    "lightScheduleRange": {
+      "oneOf": [
+        { "$ref": "#/$defs/lightSchedulePhase" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "from", "through" ],
+          "properties": {
+            "from": { "$ref": "#/$defs/lightScheduleEndpoint" },
+            "through": { "$ref": "#/$defs/lightScheduleEndpoint" }
+          }
+        }
+      ]
     }
   }
 }

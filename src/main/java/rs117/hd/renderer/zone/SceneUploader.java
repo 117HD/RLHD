@@ -238,13 +238,13 @@ public class SceneUploader implements AutoCloseable {
 			this.level = z;
 
 			if (z == 0) {
-				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 2, true, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 3, true, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, false, true, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, false, true, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, false, true, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 2, true, false, true, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 3, true, false, true, vb, ab, fb);
 			} else {
-				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, false, false, vb, ab, fb);
 			}
 
 			if (vb != null)
@@ -252,6 +252,13 @@ public class SceneUploader implements AutoCloseable {
 		}
 
 		if (vb != null) {
+			uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, true, false, vb, ab, fb);
+			uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, true, false, vb, ab, fb);
+			uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, true, false, vb, ab, fb);
+			uploadZoneLevel(ctx, zone, mzx, mzz, 2, true, true, false, vb, ab, fb);
+			uploadZoneLevel(ctx, zone, mzx, mzz, 3, true, true, false, vb, ab, fb);
+			zone.levelOffsets[Zone.LEVEL_TERRAIN] = vb.position();
+
 			// Upload water surface tiles to be drawn after everything else
 			if (zone.hasWater)
 				uploadZoneWater(ctx, zone, mzx, mzz, vb, fb);
@@ -270,6 +277,8 @@ public class SceneUploader implements AutoCloseable {
 		int mzz,
 		int level,
 		boolean visbelow,
+		boolean onlyTiles,
+		boolean onlyRenderables,
 		GpuIntBuffer vb,
 		GpuIntBuffer ab,
 		GpuIntBuffer fb
@@ -281,7 +290,7 @@ public class SceneUploader implements AutoCloseable {
 			final int id = roofIds.array[i];
 			int pos = vb != null ? vb.position() : 0;
 
-			uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, id, visbelow, vb, ab, fb);
+			uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, id, visbelow, onlyTiles, onlyRenderables, vb, ab, fb);
 
 			int endpos = vb != null ? vb.position() : 0;
 
@@ -294,7 +303,7 @@ public class SceneUploader implements AutoCloseable {
 		}
 
 		// upload everything else
-		uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, 0, visbelow, vb, ab, fb);
+		uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, 0, visbelow, onlyTiles, onlyRenderables, vb, ab, fb);
 	}
 
 	private void uploadZoneLevelRoof(
@@ -305,6 +314,8 @@ public class SceneUploader implements AutoCloseable {
 		int level,
 		int roofId,
 		boolean visbelow,
+		boolean onlyTiles,
+		boolean onlyRenderables,
 		GpuIntBuffer vb,
 		GpuIntBuffer ab,
 		GpuIntBuffer fb
@@ -341,7 +352,7 @@ public class SceneUploader implements AutoCloseable {
 						this.rid = rid;
 						if (onBeforeProcessTile != null)
 							onBeforeProcessTile.invoke(t, false);
-						uploadZoneTile(ctx, zone, t, false, false, vb, ab, fb);
+						uploadZoneTile(ctx, zone, t, false, onlyTiles, false, onlyRenderables, vb, ab, fb);
 					}
 				}
 			}
@@ -371,7 +382,7 @@ public class SceneUploader implements AutoCloseable {
 					if (onBeforeProcessTile != null)
 						onBeforeProcessTile.invoke(t, false);
 
-					uploadZoneTile(ctx, zone, t, false, true, vb, null, fb);
+					uploadZoneTile(ctx, zone, t, false, true, true, false, vb, null, fb);
 				}
 			}
 		}
@@ -384,6 +395,8 @@ public class SceneUploader implements AutoCloseable {
 		int tileExX = tilePoint.getX() + ctx.sceneOffset;
 		int tileExY = tilePoint.getY() + ctx.sceneOffset;
 		int tileZ = t.getRenderLevel();
+
+		final boolean isTileVisBelow = (settings[tileZ][tileExX][tileExY] & TILE_FLAG_VIS_BELOW) != 0;
 
 		SceneTilePaint paint = t.getSceneTilePaint();
 		if (paint != null && paint.getNeColor() != HIDDEN_HSL) {
@@ -403,7 +416,8 @@ public class SceneUploader implements AutoCloseable {
 				z.onlyWater = false;
 			}
 
-			if (tileZ != 0 || override.doubleSidedFaces)
+			boolean isDoubleSided = !isTileVisBelow && tileZ != 0 || override.doubleSidedFaces;
+			if (isDoubleSided)
 				z.sizeO += 2;
 		}
 
@@ -438,7 +452,8 @@ public class SceneUploader implements AutoCloseable {
 				z.onlyWater = false;
 			}
 
-			if (tileZ != 0 || overlayOverride.doubleSidedFaces || underlayOverride.doubleSidedFaces)
+			boolean isDoubleSided = !isTileVisBelow && tileZ != 0 || overlayOverride.doubleSidedFaces || underlayOverride.doubleSidedFaces;
+			if (isDoubleSided)
 				z.sizeO += len;
 		}
 
@@ -493,7 +508,9 @@ public class SceneUploader implements AutoCloseable {
 		Zone zone,
 		Tile t,
 		boolean isBridge,
+		boolean onlyTiles,
 		boolean onlyWaterSurface,
+		boolean onlyRenderables,
 		GpuIntBuffer vertexBuffer,
 		GpuIntBuffer alphaBuffer,
 		GpuIntBuffer textureBuffer
@@ -510,7 +527,7 @@ public class SceneUploader implements AutoCloseable {
 		boolean drawTile = renderCallbackManager.drawTile(ctx.scene, t);
 
 		SceneTilePaint paint = t.getSceneTilePaint();
-		if (paint != null && drawTile) {
+		if (paint != null && drawTile && !onlyRenderables) {
 			uploadTilePaint(
 				ctx,
 				t,
@@ -524,15 +541,15 @@ public class SceneUploader implements AutoCloseable {
 		}
 
 		SceneTileModel model = t.getSceneTileModel();
-		if (model != null && drawTile)
+		if (model != null && drawTile && !onlyRenderables)
 			uploadTileModel(ctx, t, model, onlyWaterSurface, tileExX, tileExY, tileZ, basex, basez, vertexBuffer, textureBuffer);
 
-		if (!onlyWaterSurface)
+		if (!onlyWaterSurface && !onlyTiles)
 			uploadZoneTileRenderables(ctx, zone, t, tileExX, tileExY, tileZ, vertexBuffer, alphaBuffer, textureBuffer);
 
 		Tile bridge = t.getBridge();
 		if (bridge != null)
-			uploadZoneTile(ctx, zone, bridge, true, onlyWaterSurface, vertexBuffer, alphaBuffer, textureBuffer);
+			uploadZoneTile(ctx, zone, bridge, true, onlyTiles, onlyWaterSurface, onlyRenderables, vertexBuffer, alphaBuffer, textureBuffer);
 	}
 
 	private void uploadZoneTileRenderables(
@@ -737,6 +754,8 @@ public class SceneUploader implements AutoCloseable {
 		mightHaveTransparency |= transparencies != null || isVanillaTextured || modelTransparency != 0;
 		if (mightHaveTransparency)
 			z.sizeA += faceCount;
+
+		z.modelCount++;
 	}
 
 	private void uploadZoneRenderable(
@@ -885,6 +904,7 @@ public class SceneUploader implements AutoCloseable {
 
 		ctx.filledTiles[tileExX][tileExY] |= (byte) (1 << tileZ);
 
+		final boolean isTileVisBelow = (settings[tileZ][tileExX][tileExY] & TILE_FLAG_VIS_BELOW) != 0;
 		int swHeight = tileHeights[tileZ][tileExX][tileExY];
 		int seHeight = tileHeights[tileZ][tileExX + 1][tileExY];
 		int neHeight = tileHeights[tileZ][tileExX + 1][tileExY + 1];
@@ -1095,7 +1115,7 @@ public class SceneUploader implements AutoCloseable {
 			texturedFaceIdx, false
 		);
 
-		boolean isDoubleSided = !onlyWaterSurface && (tileZ != 0 || override.doubleSidedFaces);
+		boolean isDoubleSided = !onlyWaterSurface && (!isTileVisBelow && tileZ != 0 || override.doubleSidedFaces);
 		if (isDoubleSided) {
 			vb.putStaticVertex(
 				lx1, seHeight, lz1,
@@ -1207,6 +1227,7 @@ public class SceneUploader implements AutoCloseable {
 
 		ctx.filledTiles[tileExX][tileExY] |= (byte) (1 << tileZ);
 
+		final boolean isTileVisBelow = (settings[tileZ][tileExX][tileExY] & TILE_FLAG_VIS_BELOW) != 0;
 		final int[] faceX = model.getFaceX();
 		final int[] faceY = model.getFaceY();
 		final int[] faceZ = model.getFaceZ();
@@ -1464,7 +1485,7 @@ public class SceneUploader implements AutoCloseable {
 				texturedFaceIdx, false
 			);
 
-			boolean isDoubleSided = !onlyWaterSurface && (tileZ != 0 || override.doubleSidedFaces);
+			boolean isDoubleSided = !onlyWaterSurface && (!isTileVisBelow && tileZ != 0 || override.doubleSidedFaces);
 			if (isDoubleSided) {
 				vb.putStaticVertex(
 					lx2, ly2, lz2,
