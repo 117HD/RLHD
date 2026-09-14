@@ -1,14 +1,16 @@
 package rs117.hd.scene.daylight_cycle;
 
 import rs117.hd.config.DaylightCycle;
+import rs117.hd.scene.environments.Environment;
 
 public final class SkyState {
 	public boolean cycleActive;
 	public DaylightCycle cycle;
 	public long utcMillis;
-	public SkyConfiguration fromConfiguration;
-	public SkyConfiguration toConfiguration;
-	public float configurationTransition;
+	public long transitionId;
+	public Environment fromEnvironment;
+	public Environment toEnvironment;
+	public float transitionProgress;
 	public float moonDirectionalStrength;
 	public float[] sunAngles;
 	public float[] moonAngles;
@@ -17,7 +19,7 @@ public final class SkyState {
 	public float[] moonDirection;
 	public float[] moonPhaseLightDirection;
 	public boolean moonPhaseReversed;
-	public float[] moonLibration;
+	public final float[] moonLibration = new float[2];
 	public float[] celestialPole;
 	public float celestialRotation;
 	public float moonIllumination;

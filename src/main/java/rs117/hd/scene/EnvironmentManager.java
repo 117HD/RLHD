@@ -92,6 +92,7 @@ public class EnvironmentManager {
 	@Getter
 	private float transitionProgress = 1;
 	private double transitionStartTime = 0;
+	private long transitionId;
 	private int[] previousPosition = new int[3];
 
 	private static final class State {
@@ -299,6 +300,7 @@ public class EnvironmentManager {
 
 		log.debug("changing environment from {} to {} (instant: {})", state.target, newEnvironment, skipTransition);
 		state.target = newEnvironment;
+		transitionId++;
 		transitionComplete = false;
 		transitionProgress = 0;
 		transitionStartTime = plugin.elapsedTime - (skipTransition ? TRANSITION_DURATION : 0);
@@ -405,12 +407,16 @@ public class EnvironmentManager {
 		}
 
 		if (lightningEnabled && config.flashingEffects()) {
-			float t = clamp(lightningBrightness, 0, 1);
-			mix(state.current.getFogColor(), state.current.getFogColor(), LIGHTNING_COLOR, t);
-			mix(state.current.getWaterColor(), state.current.getWaterColor(), LIGHTNING_COLOR, t);
+			applyLightning(state.current.getFogColor());
+			applyLightning(state.current.getWaterColor());
 		} else {
 			lightningBrightness = 0f;
 		}
+	}
+
+	public void applyLightning(float[] color) {
+		if (lightningEnabled && config.flashingEffects())
+			mix(color, color, LIGHTNING_COLOR, clamp(lightningBrightness, 0, 1));
 	}
 
 	/**
@@ -453,6 +459,10 @@ public class EnvironmentManager {
 	/** Area-selected environment definition, before atmospheric-lighting fallbacks. */
 	public Environment getTargetEnvironment() {
 		return state.target;
+	}
+
+	long getTransitionId() {
+		return transitionId;
 	}
 
 	public Environment getOverworldEnvironment() {

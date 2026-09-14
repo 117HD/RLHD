@@ -166,9 +166,10 @@ public class SkyRendererTest {
 			setLightingField(renderer, "ambientStrength", .7f);
 			setLightingField(renderer, "directionalStrength", 4f);
 			float[] before = averageIrradiance(renderer);
-			var blur = SkyRenderer.class.getDeclaredMethod("applyShadowBlur", float.class, float.class, float.class);
+			var blur = SkyRenderer.class.getDeclaredMethod("applyShadowBlur", float[].class, float.class, float.class, float.class, float.class);
 			blur.setAccessible(true);
-			blur.invoke(renderer, altitudes[i], .533f, 1f);
+			setLightingField(renderer, "directionalStrength", blur.invoke(renderer,
+				getLightingField(renderer, "directionalColor"), 4f, altitudes[i], .533f, 1f));
 			assertArrayEquals(before, averageIrradiance(renderer), 1e-6f);
 		}
 	}
@@ -178,9 +179,10 @@ public class SkyRendererTest {
 		SkyRenderer renderer = new SkyRenderer();
 		setLightingField(renderer, "directionalColor", new float[] { 2, 1, .5f });
 		setLightingField(renderer, "directionalStrength", 4f);
-		var blur = SkyRenderer.class.getDeclaredMethod("applyShadowBlur", float.class, float.class, float.class);
+		var blur = SkyRenderer.class.getDeclaredMethod("applyShadowBlur", float[].class, float.class, float.class, float.class, float.class);
 		blur.setAccessible(true);
-		blur.invoke(renderer, 0f, .533f, 1f);
+		setLightingField(renderer, "directionalStrength", blur.invoke(renderer,
+			getLightingField(renderer, "directionalColor"), 4f, 0f, .533f, 1f));
 		assertEquals(0, (float) getLightingField(renderer, "directionalStrength"), 0);
 		assertArrayEquals(new float[] { 2, 1, .5f }, averageIrradiance(renderer), 1e-6f);
 	}

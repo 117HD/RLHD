@@ -77,16 +77,59 @@ public class SkyRenderer {
 	private final float[] directionalColor = new float[3];
 	private final float[] ambientColor = new float[3];
 	private final float[] waterColor = new float[3];
-	private final SkyConfiguration currentSky = new SkyConfiguration();
-	private final GradientSample skySample = new GradientSample();
-	private final GradientSample transitionSkySample = new GradientSample();
+	private final float[] endpointFogColor = new float[3];
+	private final SkyState.LightingSample endpointSample = new SkyState.LightingSample();
+	private final LightingFrame fromFrame = new LightingFrame();
+	private final LightingFrame toFrame = new LightingFrame();
+	private final LightingFrame currentFrame = new LightingFrame();
+	private long transitionId;
+	private float previousTransition = 1;
+	private boolean interruptedTransition;
 	private final float[] fogColorSrgb = new float[3];
 	private float directionalStrength;
 	private float ambientStrength;
 	private boolean skyEnabled;
 	public boolean castsShadows;
 
+	private static final class LightingFrame extends GradientSample {
+		private final float[] ambient = new float[3];
+		private final float[] directional = new float[3];
+		private final float[] fog = new float[3];
+		private final float[] moonDisk = new float[3];
+		private final SkyConfiguration configuration = new SkyConfiguration();
+		private float fogDensity;
+		private float visibility;
+		private float customGradient;
+		private float ambientStrength;
+		private float directionalStrength;
+
+		private LightingFrame() {
+			zenithLinear = new float[3];
+			horizonLinear = new float[3];
+			sunGlowLinear = new float[3];
+		}
+
+		private void interpolate(LightingFrame from, LightingFrame to, float t) {
+			ambientStrength = mix(from.ambientStrength, to.ambientStrength, t);
+			directionalStrength = mix(from.directionalStrength, to.directionalStrength, t);
+			// Weight colors by their contributions without taking a potentially overflowing reciprocal.
+			mix(ambient, from.ambient, to.ambient, ambientStrength > 0 ? to.ambientStrength * t / ambientStrength : t);
+			mix(directional, from.directional, to.directional, directionalStrength > 0 ? to.directionalStrength * t / directionalStrength : t);
+			mix(fog, from.fog, to.fog, t);
+			mix(moonDisk, from.moonDisk, to.moonDisk, t);
+			mix(zenithLinear, from.zenithLinear, to.zenithLinear, t);
+			mix(horizonLinear, from.horizonLinear, to.horizonLinear, t);
+			mix(sunGlowLinear, from.sunGlowLinear, to.sunGlowLinear, t);
+			fogDensity = mix(from.fogDensity, to.fogDensity, t);
+			visibility = mix(from.visibility, to.visibility, t);
+			customGradient = mix(from.customGradient, to.customGradient, t);
+			configuration.interpolateLightingParameters(from.configuration, to.configuration, t);
+		}
+	}
+
 	public void initialize() {
+		previousTransition = 1;
+		interruptedTransition = false;
 		commandBuffer.setFrameTimer(frameTimer);
 		commandBuffer.reset();
 		starField.initialize();
@@ -136,6 +179,8 @@ public class SkyRenderer {
 		if (skyEnabled)
 			updateSky(skyManager.getState());
 		else {
+			previousTransition = 1;
+			interruptedTransition = false;
 			plugin.uboSky.skyGradientEnabled.set(0);
 			plugin.uboSky.upload();
 		}
@@ -242,35 +287,54 @@ public class SkyRenderer {
 	}
 
 	private void updateSky(SkyState state) {
-		Environment env = environmentManager.getCurrentEnvironment();
-		SkyConfiguration fromSky = state.fromConfiguration;
-		SkyConfiguration toSky = state.toConfiguration;
-		float transition = state.configurationTransition;
-		SkyConfiguration sky = transition < 1 ? currentSky.interpolateLightingParameters(fromSky, toSky, transition) : toSky;
-		SkyProfile fromProfile = fromSky.profile;
-		SkyProfile toProfile = toSky.profile;
-		float sunAltDeg = state.sunAltitudeDegrees;
-		float regionalBlend = mix(fromProfile.getRegionalBlend(sunAltDeg), toProfile.getRegionalBlend(sunAltDeg), transition);
-		float[] directionalLight = mix(
-			fromProfile.getDirectionalLight(state.sunAngles[0]),
-			toProfile.getDirectionalLight(state.sunAngles[0]),
-			transition
-		);
-		float[] ambientLight = mix(fromProfile.getAmbientLight(sunAltDeg), toProfile.getAmbientLight(sunAltDeg), transition);
-		mix(directionalColor, directionalLight, directionalColor, regionalBlend);
-		mix(ambientColor, ambientLight, ambientColor, regionalBlend);
-
-		float moonAltDeg = state.moonAltitudeDegrees;
-		toSky.evaluateGradient(skySample, sunAltDeg, env.getFogColor(), plugin.configMinimumBrightness);
-		if (transition < 1) {
-			fromSky.evaluateGradient(transitionSkySample, sunAltDeg, env.getFogColor(), plugin.configMinimumBrightness);
-			mix(skySample.zenithLinear, transitionSkySample.zenithLinear, skySample.zenithLinear, transition);
-			mix(skySample.horizonLinear, transitionSkySample.horizonLinear, skySample.horizonLinear, transition);
-			mix(skySample.sunGlowLinear, transitionSkySample.sunGlowLinear, skySample.sunGlowLinear, transition);
-			skySample.brightnessMultiplier = mix(transitionSkySample.brightnessMultiplier, skySample.brightnessMultiplier, transition);
+		float transition = state.transitionProgress;
+		if (transitionId != state.transitionId) {
+			transitionId = state.transitionId;
+			interruptedTransition = previousTransition < 1 && transition < 1;
+			if (interruptedTransition)
+				fromFrame.interpolate(currentFrame, currentFrame, 1);
 		}
-		float brightnessMultiplier = skySample.brightnessMultiplier;
+		evaluateLighting(toFrame, state.toEnvironment);
+		if (transition < 1) {
+			if (!interruptedTransition)
+				evaluateLighting(fromFrame, state.fromEnvironment);
+			currentFrame.interpolate(fromFrame, toFrame, transition);
+		} else {
+			currentFrame.interpolate(toFrame, toFrame, 1);
+		}
+		previousTransition = transition;
+		// Blend linear-light contributions, including strength, before encoding the global UBO.
+		copyTo(directionalColor, currentFrame.directional);
+		copyTo(ambientColor, currentFrame.ambient);
+		directionalStrength = currentFrame.directionalStrength;
+		ambientStrength = currentFrame.ambientStrength;
+		copyTo(fogColorSrgb, linearToSrgb(currentFrame.horizonLinear));
+		copyTo(waterColor, currentFrame.horizonLinear);
+		plugin.uboSky.skyFogDensity.set(currentFrame.fogDensity);
+		plugin.uboSky.skyVisibility.set(currentFrame.visibility);
+		plugin.uboSky.skyFogColor.set(currentFrame.fog);
+		plugin.uboSky.skyCustomGradient.set(currentFrame.customGradient);
+		plugin.uboSky.skyMoonDiskColor.set(currentFrame.moonDisk);
+		updateSkyUbo(currentFrame.configuration, state, currentFrame);
+	}
+
+	private void evaluateLighting(LightingFrame out, Environment env) {
+		SkyConfiguration sky = env.getSky();
+		copyTo(endpointFogColor, env.getFogColor());
+		environmentManager.applyLightning(endpointFogColor);
+		skyManager.sampleLighting(endpointSample, env, endpointFogColor, plugin.configMinimumBrightness);
+		SkyState state = endpointSample.sky;
+		float sunAltDeg = state.sunAltitudeDegrees;
+		{
+			SkyProfile profile = sky.profile;
+			float regionalBlend = profile.getRegionalBlend(sunAltDeg);
+			mix(directionalColor, profile.getDirectionalLight(state.sunAngles[0]), env.getDirectionalColor(), regionalBlend);
+			mix(ambientColor, profile.getAmbientLight(sunAltDeg), env.getAmbientColor(), regionalBlend);
+		}
+		float moonAltDeg = state.moonAltitudeDegrees;
+		float brightnessMultiplier = endpointSample.brightnessMultiplier;
 		ambientStrength = brightnessMultiplier;
+		directionalStrength = env.directionalStrength;
 
 		float moonLightIllumination = state.moonLightIllumination;
 		float moonPresence = isMoonLighting(moonAltDeg, moonLightIllumination) ?
@@ -281,31 +345,11 @@ public class SkyRenderer {
 		moonInfluence *= moonPresence;
 		// fogDepth is an artistic density control, not a physical extinction coefficient.
 		float defaultDensity = max(0, env.fogDepth) / 100;
-		float fogDensity = mix(
-			fromSky.skyFogDensity < 0 ? defaultDensity : fromSky.skyFogDensity,
-			toSky.skyFogDensity < 0 ? defaultDensity : toSky.skyFogDensity,
-			transition
-		);
-		plugin.uboSky.skyFogDensity.set(max(0, fogDensity));
-		plugin.uboSky.skyVisibility.set(mix(saturate(fromSky.skyVisibility), saturate(toSky.skyVisibility), transition));
-		float[] lightingFogColor = skySample.horizonLinear;
-		float[] fromFogColor = fromSky.skyFogColor == null ? lightingFogColor : mix(
-			lightingFogColor,
-			fromSky.skyFogColor,
-			saturate(fromSky.skyFogColorMix)
-		);
-		float[] toFogColor = toSky.skyFogColor == null ? lightingFogColor : mix(
-			lightingFogColor,
-			toSky.skyFogColor,
-			saturate(toSky.skyFogColorMix)
-		);
-		plugin.uboSky.skyFogColor.set(mix(
-			fromFogColor,
-			toFogColor,
-			transition
-		));
-		copyTo(fogColorSrgb, linearToSrgb(skySample.horizonLinear));
-		copyTo(waterColor, skySample.horizonLinear);
+		out.fogDensity = max(0, sky.skyFogDensity < 0 ? defaultDensity : sky.skyFogDensity);
+		out.visibility = saturate(sky.skyVisibility);
+		copyTo(out.fog, endpointSample.horizonLinear);
+		if (sky.skyFogColor != null)
+			mix(out.fog, out.fog, sky.skyFogColor, saturate(sky.skyFogColorMix));
 		float boostFraction = mix(1, MIN_BRIGHTNESS_BOOST_RESIDUAL, saturate(moonPresence));
 		ambientStrength = max(ambientStrength, plugin.configMinimumBrightness * (1 + sky.minBrightnessBoost * boostFraction));
 
@@ -325,7 +369,16 @@ public class SkyRenderer {
 			// Strength can be subnormal near the horizon; avoid overflowing its reciprocal.
 			mix(directionalColor, directionalColor, sky.moonLightColor, moonStrength / directionalStrength);
 		}
-		updateSkyUbo(sky, state, skySample);
+		copyTo(out.ambient, ambientColor);
+		copyTo(out.directional, directionalColor);
+		out.ambientStrength = ambientStrength;
+		out.directionalStrength = directionalStrength;
+		copyTo(out.zenithLinear, endpointSample.zenithLinear);
+		copyTo(out.horizonLinear, endpointSample.horizonLinear);
+		copyTo(out.sunGlowLinear, endpointSample.sunGlowLinear);
+		multiply(out.moonDisk, sky.moonDiskColor, sky.moonDiskStrength);
+		out.customGradient = sky.customGradient ? 1 : 0;
+		out.configuration.interpolateLightingParameters(sky, sky, 1);
 	}
 
 	private float applyShadowBlur(float[] color, float strength, float altitudeDegrees, float diameterDegrees, float shadowStrength) {
@@ -355,22 +408,12 @@ public class SkyRenderer {
 		ubo.skyZenithColor.set(sky.zenithLinear);
 		ubo.skyHorizonColor.set(sky.horizonLinear);
 		ubo.skySunColor.set(sky.sunGlowLinear);
-		ubo.skyCustomGradient.set(mix(
-			state.fromConfiguration.customGradient ? 1f : 0,
-			state.toConfiguration.customGradient ? 1f : 0,
-			state.configurationTransition
-		));
 		ubo.skyHorizonWidth.set(sin(clamp(configuration.horizonWidth, .001f, 90) * DEG_TO_RAD));
 		ubo.skySunDir.set(state.sunDirection);
 		ubo.skyCelestialPole.set(state.celestialPole[0], -state.celestialPole[1], state.celestialPole[2]);
 		ubo.skyCelestialRotation.set(state.celestialRotation);
 		ubo.skyStarRotationMode.set(config.starMode().ordinal());
 		ubo.skyMoonDir.set(state.moonDirection);
-		ubo.skyMoonDiskColor.set(
-			configuration.moonDiskColor[0] * configuration.moonDiskStrength,
-			configuration.moonDiskColor[1] * configuration.moonDiskStrength,
-			configuration.moonDiskColor[2] * configuration.moonDiskStrength
-		);
 		ubo.skyMoonIllumination.set(state.moonIllumination);
 		ubo.skyMoonPhaseLightDirection.set(state.moonPhaseLightDirection);
 		ubo.skyMoonLibration.set(state.moonLibration);
