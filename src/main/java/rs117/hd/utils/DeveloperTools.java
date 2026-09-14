@@ -2,6 +2,7 @@ package rs117.hd.utils;
 
 import java.awt.event.KeyEvent;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.events.*;
@@ -12,6 +13,7 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import rs117.hd.HdPlugin;
+import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TileInfoOverlay;
@@ -22,16 +24,18 @@ import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
 import static java.awt.event.InputEvent.SHIFT_DOWN_MASK;
 
 @Slf4j
+@Singleton
 public class DeveloperTools implements KeyListener {
-	private static Keybind KEY_TOGGLE_TILE_INFO = new Keybind(KeyEvent.VK_F3, CTRL_DOWN_MASK);
-	private static Keybind KEY_RECORD_TIMINGS_SNAPSHOT = new Keybind(KeyEvent.VK_F4, CTRL_DOWN_MASK | SHIFT_DOWN_MASK);
-	private static Keybind KEY_TOGGLE_SHADOW_MAP_OVERLAY = new Keybind(KeyEvent.VK_F5, CTRL_DOWN_MASK);
-	private static Keybind KEY_TOGGLE_LIGHT_GIZMO_OVERLAY = new Keybind(KeyEvent.VK_F6, CTRL_DOWN_MASK);
-	private static Keybind KEY_TOGGLE_TILED_LIGHTING_OVERLAY = new Keybind(KeyEvent.VK_F7, CTRL_DOWN_MASK);
-	private static Keybind KEY_TOGGLE_FREEZE_FRAME = new Keybind(KeyEvent.VK_ESCAPE, SHIFT_DOWN_MASK);
-	private static Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, SHIFT_DOWN_MASK);
-	private static Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, CTRL_DOWN_MASK);
-	private static Keybind KEY_RELOAD_SCENE = new Keybind(KeyEvent.VK_R, CTRL_DOWN_MASK);
+	public static Keybind KEY_TOGGLE_TILE_INFO = new Keybind(KeyEvent.VK_F3, CTRL_DOWN_MASK);
+	public static Keybind KEY_TOGGLE_FRAME_TIMINGS = new Keybind(KeyEvent.VK_F4, CTRL_DOWN_MASK);
+	public static Keybind KEY_RECORD_TIMINGS_SNAPSHOT = new Keybind(KeyEvent.VK_F4, CTRL_DOWN_MASK | SHIFT_DOWN_MASK);
+	public static Keybind KEY_TOGGLE_SHADOW_MAP_OVERLAY = new Keybind(KeyEvent.VK_F5, CTRL_DOWN_MASK);
+	public static Keybind KEY_TOGGLE_LIGHT_GIZMO_OVERLAY = new Keybind(KeyEvent.VK_F6, CTRL_DOWN_MASK);
+	public static Keybind KEY_TOGGLE_TILED_LIGHTING_OVERLAY = new Keybind(KeyEvent.VK_F7, CTRL_DOWN_MASK);
+	public static Keybind KEY_TOGGLE_FREEZE_FRAME = new Keybind(KeyEvent.VK_ESCAPE, SHIFT_DOWN_MASK);
+	public static Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, SHIFT_DOWN_MASK);
+	public static Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, CTRL_DOWN_MASK);
+	public static Keybind KEY_RELOAD_SCENE = new Keybind(KeyEvent.VK_R, CTRL_DOWN_MASK);
 
 	@Inject
 	private ClientThread clientThread;
@@ -49,6 +53,9 @@ public class DeveloperTools implements KeyListener {
 	private TileInfoOverlay tileInfoOverlay;
 
 	@Inject
+	private FrameTimerOverlay frameTimerOverlay;
+
+	@Inject
 	private ShadowMapOverlay shadowMapOverlay;
 
 	@Inject
@@ -62,11 +69,22 @@ public class DeveloperTools implements KeyListener {
 
 	private boolean keyBindingsEnabled;
 	private boolean tileInfoOverlayEnabled;
+	private boolean frameTimingsOverlayEnabled;
 	private boolean shadowMapOverlayEnabled;
 	private boolean lightGizmoOverlayEnabled;
 	@Getter
 	private boolean hideUiEnabled;
 	private boolean tiledLightingOverlayEnabled;
+	private boolean developerPluginActive;
+
+	public void setDeveloperPluginActive(boolean active)
+	{
+		developerPluginActive = active;
+		if (active)
+			frameTimerOverlay.setActive(false);
+		else
+			frameTimerOverlay.setActive(frameTimingsOverlayEnabled);
+	}
 
 	public void activate() {
 		// Listen for commands
@@ -81,6 +99,7 @@ public class DeveloperTools implements KeyListener {
 		keyManager.registerKeyListener(this);
 		clientThread.invokeLater(() -> {
 			tileInfoOverlay.setActive(tileInfoOverlayEnabled);
+			frameTimerOverlay.setActive(frameTimingsOverlayEnabled);
 			shadowMapOverlay.setActive(shadowMapOverlayEnabled);
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
 			tiledLightingOverlay.setActive(tiledLightingOverlayEnabled);
@@ -91,6 +110,7 @@ public class DeveloperTools implements KeyListener {
 		eventBus.unregister(this);
 		keyManager.unregisterKeyListener(this);
 		tileInfoOverlay.setActive(false);
+		frameTimerOverlay.setActive(false);
 		shadowMapOverlay.setActive(false);
 		lightGizmoOverlay.setActive(false);
 		tiledLightingOverlay.setActive(false);
@@ -109,6 +129,12 @@ public class DeveloperTools implements KeyListener {
 			return;
 
 		switch (args[0].toLowerCase()) {
+			case "timers":
+			case "timings":
+				if (developerPluginActive)
+					break;
+				frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
+				break;
 			case "snapshot":
 				frameTimingsRecorder.recordSnapshot();
 				break;
@@ -145,7 +171,9 @@ public class DeveloperTools implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
-		if (KEY_RECORD_TIMINGS_SNAPSHOT.matches(e)) {
+		if (!developerPluginActive && KEY_TOGGLE_FRAME_TIMINGS.matches(e)) {
+			frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
+		} else if (KEY_RECORD_TIMINGS_SNAPSHOT.matches(e)) {
 			frameTimingsRecorder.recordSnapshot();
 		} else if (KEY_TOGGLE_TILE_INFO.matches(e)) {
 			tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
