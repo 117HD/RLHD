@@ -105,7 +105,7 @@ void main() {
     if (moonVisibility > 0.001) {
         // Apply the sun's perceived-horizon offset.
         vec3 moonDir = normalize(vec3(skyMoonDir.x, -skyMoonDir.y + HORIZON_OFFSET, skyMoonDir.z));
-        vec3 moonSunDir = normalize(vec3(skyMoonPhaseLightDirection.x, -skyMoonPhaseLightDirection.y + HORIZON_OFFSET, skyMoonPhaseLightDirection.z));
+        vec3 moonIlluminationDir = normalize(vec3(skyMoonIlluminationDirection.x, -skyMoonIlluminationDirection.y + HORIZON_OFFSET, skyMoonIlluminationDirection.z));
 
         float moonDot = dot(viewDir, moonDir);
 
@@ -141,20 +141,19 @@ void main() {
                 float localX = dot(toView, moonRight) * angDist / moonRadius;
                 float localY = dot(toView, moonUp) * angDist / moonRadius;
 
-                // Orient the terminator toward the sun; the mirrored moon can still use its own phase.
-                vec2 moonToSun = vec2(dot(moonSunDir, moonRight), dot(moonSunDir, moonUp));
-                float moonToSunLength = length(moonToSun);
-                moonToSun = moonToSunLength > 1e-4 ? moonToSun / moonToSunLength : vec2(1.0, 0.0);
-                moonToSun *= skyMoonPhaseReversed > 0.5 ? -1.0 : 1.0;
+                // Orient the terminator toward the resolved illuminant.
+                vec2 moonToLight = vec2(dot(moonIlluminationDir, moonRight), dot(moonIlluminationDir, moonUp));
+                float moonToLightLength = length(moonToLight);
+                moonToLight = moonToLightLength > 1e-4 ? moonToLight / moonToLightLength : vec2(1.0, 0.0);
 
                 vec2 moonLocal = vec2(localX, localY);
                 float moonLocalZ = sqrt(max(0.0, 1.0 - dot(moonLocal, moonLocal)));
                 vec3 moonSurfaceNormal = vec3(moonLocal, moonLocalZ);
                 float phaseCos = 2.0 * skyMoonIllumination - 1.0;
                 float phaseSin = sqrt(max(0.0, 1.0 - phaseCos * phaseCos));
-                vec3 moonLightDir = vec3(moonToSun * phaseSin, phaseCos);
+                vec3 moonLightDir = vec3(moonToLight * phaseSin, phaseCos);
 
-                // Libration moves surface detail without rotating the sun-facing terminator.
+                // Libration moves surface detail without rotating the terminator.
                 vec2 moonSurface = moonLocal + skyMoonLibration * (2.0 / PI);
                 float librationRoll = (skyMoonLibration.x + skyMoonLibration.y) * 0.25;
                 float librationRollCos = cos(librationRoll);
@@ -302,9 +301,8 @@ void main() {
             float rimDistance = max(0.0, acos(clamp(moonDot, 0.0, 1.0)) /
                 max(moonBaseRadius * moonSizeMult, 0.001) - 1.0);
             vec3 toRim = viewDir - moonDir * moonDot;
-            vec3 toLight = moonSunDir - moonDir * dot(moonSunDir, moonDir);
+            vec3 toLight = moonIlluminationDir - moonDir * dot(moonIlluminationDir, moonDir);
             float litSide = dot(toRim, toLight) / max(length(toRim) * length(toLight), 1e-5);
-            litSide *= skyMoonPhaseReversed > 0.5 ? -1.0 : 1.0;
             float phaseCos = 2.0 * skyMoonIllumination - 1.0;
             float phaseWeight = mix(1.0, smoothstep(-0.2, 0.5, litSide), sqrt(max(0.0, 1.0 - phaseCos * phaseCos)));
             float halo = 0.0015 * exp(-8.0 * rimDistance * rimDistance) + 0.00015 * exp(-2.0 * rimDistance);

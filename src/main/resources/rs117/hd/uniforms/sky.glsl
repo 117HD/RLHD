@@ -23,9 +23,8 @@ layout(std140) uniform UBOSky {
     vec3 skyMoonDir;
     vec3 skyMoonDiskColor;
     float skyMoonIllumination;
-    vec3 skyMoonPhaseLightDirection;
+    vec3 skyMoonIlluminationDirection;
     vec2 skyMoonLibration;
-    float skyMoonPhaseReversed;
 
     vec3 skyFogColor;
     float skyFogDensity;

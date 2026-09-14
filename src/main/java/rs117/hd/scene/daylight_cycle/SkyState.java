@@ -18,8 +18,8 @@ public final class SkyState {
 	public float[] shadowAngles;
 	public float[] sunDirection;
 	public float[] moonDirection;
-	public float[] moonPhaseLightDirection;
-	public boolean moonPhaseReversed;
+	/** Direction from the moon toward its illuminant. */
+	public float[] moonIlluminationDirection;
 	public final float[] moonLibration = new float[2];
 	public float[] celestialPole;
 	public float celestialRotation;

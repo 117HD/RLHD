@@ -102,7 +102,6 @@ public class SkyManager {
 	private final SkyState state = new SkyState();
 	private long transitionId;
 	private ResolvedEndpoint interruptedFrom;
-	private float[] interruptedPhaseDirection;
 	private float[] interruptedPole;
 	private float interruptedRotation;
 	private float interruptedAurora;
@@ -112,12 +111,11 @@ public class SkyManager {
 	@RequiredArgsConstructor
 	private static final class ResolvedMoon {
 		private final float[] angles;
+		private final float[] illuminationDirection;
 		private final float illumination;
 		private final float lightIllumination;
 		private final float visibility;
 		private final float directionalStrength;
-		private final MoonPhase phase;
-		private final float orbit;
 	}
 
 	@RequiredArgsConstructor
@@ -252,16 +250,14 @@ public class SkyManager {
 					copy(state.sunAngles),
 					new ResolvedMoon(
 						copy(state.moonAngles),
+						copy(state.moonIlluminationDirection),
 						state.moonIllumination,
 						state.moonLightIllumination,
 						state.moonVisibility,
-						state.moonDirectionalStrength,
-						configMoonPhase,
-						0
+						state.moonDirectionalStrength
 					),
 					copy(state.moonLibration)
 				);
-				interruptedPhaseDirection = multiply(state.moonPhaseLightDirection, state.moonPhaseReversed ? -1 : 1);
 				interruptedPole = copy(state.celestialPole);
 				interruptedRotation = state.celestialRotation;
 				interruptedAurora = state.auroraStrength;
@@ -326,35 +322,12 @@ public class SkyManager {
 			out.moonDirectionalStrength = mix(fromMoon.directionalStrength, toMoon.directionalStrength, t);
 			out.moonIllumination = mix(fromMoon.illumination, toMoon.illumination, t);
 			out.moonLightIllumination = mix(fromMoon.lightIllumination, toMoon.lightIllumination, t);
+			out.moonIlluminationDirection = interpolateDirection(fromMoon.illuminationDirection, toMoon.illuminationDirection, t);
 			out.shadowAngles = fallbackShadowAngles;
 			if (out.cycleActive) {
 				out.shadowAngles = out.sunAngles;
 				if (out.sunAngles[0] < 0 && out.moonAngles[0] > 0 && out.moonLightIllumination > 0)
 					out.shadowAngles = out.moonAngles;
-			}
-
-			float phaseOrbit = fromMoon.orbit + angleDiff(toMoon.orbit * TWO_PI, fromMoon.orbit * TWO_PI) / TWO_PI * t;
-			out.moonPhaseLightDirection = configCycle == DaylightCycle.NIGHT || configMoonBehavior.mirrorsSun ?
-				getSyntheticMoonPhaseLightDirection(out, phaseOrbit) : out.sunDirection;
-			out.moonPhaseReversed = t == 0 && fromMoon.phase.reversesTerminator || t == 1 && toMoon.phase.reversesTerminator;
-			if (t > 0 && t < 1) {
-				float fromSign = fromMoon.phase.reversesTerminator ? -1 : 1;
-				float[] moonPhaseLightDirection = out.moonPhaseLightDirection;
-				out.moonPhaseLightDirection = multiply(moonPhaseLightDirection, fromSign);
-				if (fromMoon.phase.reversesTerminator != toMoon.phase.reversesTerminator) {
-					// Rotate between waxing and waning; a linear blend would pass through a zero direction.
-					float[] phaseTangent = cross(out.moonDirection, moonPhaseLightDirection);
-					if (dot(phaseTangent, phaseTangent) < 1e-6f) {
-						phaseTangent = cross(
-							out.moonDirection,
-							abs(out.moonDirection[1]) < .999f ? vec(0, 1, 0) : vec(0, 0, 1)
-						);
-					}
-					out.moonPhaseLightDirection = normalize(add(
-						multiply(out.moonPhaseLightDirection, cos(PI * t)),
-						multiply(normalize(phaseTangent), sin(PI * t))
-					));
-				}
 			}
 		}
 
@@ -366,12 +339,8 @@ public class SkyManager {
 		out.celestialRotation = (utcMillis % DAY_MS) / (float) DAY_MS * TWO_PI;
 		resolveAuroraStrength(out);
 		if (interrupted) {
-			// The captured phase direction already includes the waxing/waning reversal.
 			SkyState target = new SkyState();
 			resolveSkyState(target, to, to, 1, allowsCycle, fallbackShadowAngles);
-			float[] direction = multiply(target.moonPhaseLightDirection, target.moonPhaseReversed ? -1 : 1);
-			out.moonPhaseLightDirection = interpolateDirection(interruptedPhaseDirection, direction, t);
-			out.moonPhaseReversed = false;
 			out.celestialPole = interpolateDirection(interruptedPole, target.celestialPole, t);
 			out.celestialRotation = interruptedRotation + angleDiff(target.celestialRotation, interruptedRotation) * t;
 			out.auroraStrength = mix(interruptedAurora, target.auroraStrength, t);
@@ -496,6 +465,8 @@ public class SkyManager {
 				angles = AstronomyUtils.getMoonPosition(millis, latLon);
 			}
 		}
+		float[] moonDirection = anglesToSkyDirection(angles[0], angles[1]);
+		float[] sunDirection = anglesToSkyDirection(sunAngles[0], sunAngles[1]);
 		MoonPhase phase = sky.forceMoonPhase != null ? sky.forceMoonPhase : configMoonPhase;
 		float illumination;
 		float orbit;
@@ -509,13 +480,20 @@ public class SkyManager {
 			orbit = astronomy[1];
 		} else {
 			// Fixed visible suns determine the phase rendered beneath them.
-			float[] sunDirection = anglesToSkyDirection(sunAngles[0], sunAngles[1]);
-			float[] moonDirection = anglesToSkyDirection(angles[0], angles[1]);
 			illumination = saturate((1 - dot(sunDirection, moonDirection)) * .5f);
 			orbit = 0;
 		}
 		if (phase.isLocked)
 			illumination = phase.illumination;
+
+		float[] illuminationDirection = configCycle == DaylightCycle.NIGHT || configMoonBehavior.mirrorsSun ?
+			resolveSyntheticMoonIlluminationDirection(moonDirection, illumination, orbit) : sunDirection;
+		if (phase.reversesTerminator) {
+			// Preserve the radial component while moving the illuminated side across the disk.
+			float radial = dot(illuminationDirection, moonDirection);
+			illuminationDirection = subtract(multiply(moonDirection, 2 * radial), illuminationDirection);
+		}
+
 		boolean naturalMoonlightEnabled = !sky.hideMoon || sky.moonLightVisibility >= 0 || sky.moonDirectionalStrength >= 0;
 		float moonLightVisibility = sky.moonLightVisibility < 0 ? 1 : sky.moonLightVisibility;
 		float lightIllumination = max(naturalMoonlightEnabled ? illumination : 0, sky.minMoonIllumination) * moonLightVisibility;
@@ -523,28 +501,27 @@ public class SkyManager {
 		float directionalStrength = sky.moonDirectionalStrength < 0 ? fallbackDirectionalStrength : sky.moonDirectionalStrength;
 		return new ResolvedMoon(
 			angles,
+			illuminationDirection,
 			illumination,
 			lightIllumination,
 			visibility,
-			directionalStrength,
-			phase,
-			orbit
+			directionalStrength
 		);
 	}
 
 	/**
 	 * Keep Night and mirrored moons on a fixed diagonal phase orbit around the moon.
 	 */
-	private float[] getSyntheticMoonPhaseLightDirection(SkyState state, float phase) {
-		float[] moonUp = abs(state.moonDirection[1]) < .999f ? vec(0, 1, 0) : vec(0, 0, 1);
-		float[] moonRight = normalize(cross(moonUp, state.moonDirection));
-		moonUp = normalize(cross(state.moonDirection, moonRight));
+	private static float[] resolveSyntheticMoonIlluminationDirection(float[] moonDirection, float illumination, float orbit) {
+		float[] moonUp = abs(moonDirection[1]) < .999f ? vec(0, 1, 0) : vec(0, 0, 1);
+		float[] moonRight = normalize(cross(moonUp, moonDirection));
+		moonUp = normalize(cross(moonDirection, moonRight));
 		float[] orbitTangent = normalize(add(moonRight, multiply(moonUp, NIGHT_MOON_PHASE_TILT)));
-		float phaseCos = state.moonIllumination * 2 - 1;
+		float phaseCos = illumination * 2 - 1;
 		float phaseSin = sqrt(max(0, 1 - phaseCos * phaseCos));
-		if (sin(phase * TWO_PI) < 0)
+		if (sin(orbit * TWO_PI) < 0)
 			phaseSin = -phaseSin;
-		return normalize(add(multiply(state.moonDirection, phaseCos), multiply(orbitTangent, phaseSin)));
+		return normalize(add(multiply(moonDirection, phaseCos), multiply(orbitTangent, phaseSin)));
 	}
 
 	/**
