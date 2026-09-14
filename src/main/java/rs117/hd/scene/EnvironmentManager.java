@@ -38,6 +38,7 @@ import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.utils.ExpressionParser;
@@ -295,6 +296,12 @@ public class EnvironmentManager {
 		if (state.target.instantTransition || newEnvironment.instantTransition)
 			skipTransition = true;
 
+		// A fixed sky uses Default's clock rather than the configured cycle, so blending
+		// between fixed and moving skies would also blend unrelated celestial motion.
+		if (config.daylightCycle() != DaylightCycle.OFF && state.target != Environment.NONE &&
+			(state.target.getSky().sunAngles != null) != (newEnvironment.getSky().sunAngles != null))
+			skipTransition = true;
+
 		forceNextTransition = false;
 		forceNextTransitionInstant = false;
 
@@ -446,17 +453,23 @@ public class EnvironmentManager {
 		return state.current;
 	}
 
-	/** Environment at the beginning of the current transition. */
+	/**
+	 * Environment at the beginning of the current transition.
+	 */
 	Environment getFromEnvironment() {
 		return state.from;
 	}
 
-	/** Resolved environment at the end of the current transition. */
+	/**
+	 * Resolved environment at the end of the current transition.
+	 */
 	Environment getToEnvironment() {
 		return state.to;
 	}
 
-	/** Area-selected environment definition, before atmospheric-lighting fallbacks. */
+	/**
+	 * Area-selected environment definition, before atmospheric-lighting fallbacks.
+	 */
 	public Environment getTargetEnvironment() {
 		return state.target;
 	}

@@ -7,6 +7,7 @@ public final class SkyState {
 	public boolean cycleActive;
 	public DaylightCycle cycle;
 	public long utcMillis;
+	public final double[] latLon = new double[2];
 	public long transitionId;
 	public Environment fromEnvironment;
 	public Environment toEnvironment;
