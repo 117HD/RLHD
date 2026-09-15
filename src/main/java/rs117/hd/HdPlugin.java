@@ -80,6 +80,7 @@ import org.lwjgl.system.Configuration;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.GroundBlending;
+import rs117.hd.config.SceneShaderDebugMode;
 import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
@@ -431,6 +432,7 @@ public class HdPlugin extends Plugin {
 	public ShadingMode configShadingMode;
 	public ColorFilter configColorFilter = ColorFilter.NONE;
 	public ColorFilter configColorFilterPrevious;
+	public SceneShaderDebugMode configSceneShaderDebugMode = SceneShaderDebugMode.NONE;
 
 	public boolean useLowMemoryMode;
 	public boolean enableDetailedTimers;
@@ -910,6 +912,7 @@ public class HdPlugin extends Plugin {
 		var includes = new ShaderIncludes()
 			.addIncludePath(SHADER_PATH)
 			.addInclude("VERSION_HEADER", OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER)
+			.define("SCENE_SHADER_DEBUG_MODE", configSceneShaderDebugMode)
 			.define("UI_SCALING_MODE", config.uiScalingMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
