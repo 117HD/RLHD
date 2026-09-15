@@ -40,6 +40,9 @@ public class DeveloperPlugin extends Plugin implements KeyListener {
 	private ProfilerOverlay profilerOverlay;
 
 	@Inject
+	private HdPlugin plugin;
+
+	@Inject
 	private ProfilerUI profilerUI;
 
 	@Inject
@@ -106,6 +109,11 @@ public class DeveloperPlugin extends Plugin implements KeyListener {
 		DeveloperTools.KEY_TOGGLE_ORTHOGRAPHIC = config.toggleOrthographic();
 		DeveloperTools.KEY_TOGGLE_HIDE_UI = config.toggleHideUi();
 		DeveloperTools.KEY_RELOAD_SCENE = config.reloadScene();
+
+		if(plugin.configSceneShaderDebugMode != config.sceneShaderDebugMode()) {
+			plugin.configSceneShaderDebugMode = config.sceneShaderDebugMode();
+			plugin.recompilePrograms();
+		}
 	}
 
 	@Subscribe
