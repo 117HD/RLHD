@@ -24,6 +24,8 @@
  */
 package rs117.hd.scene;
 
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -38,9 +40,15 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.eventbus.Subscribe;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
+import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.resourcepacks.PackEventType;
+import rs117.hd.resourcepacks.ResourcePackManager;
+import rs117.hd.resourcepacks.ResourcePackUpdate;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
@@ -53,7 +61,7 @@ import static rs117.hd.utils.ResourcePath.path;
 public class TextureManager {
 	private static final String[] SUPPORTED_IMAGE_EXTENSIONS = { "png", "jpg" };
 	private static final ResourcePath TEXTURE_PATH = Props
-		.getFolder("rlhd.texture-path", () -> path(TextureManager.class, "textures"));
+		.getFolder("rlhd.texture-path", () -> path(HdPlugin.class, "resource-pack", "materials"));
 
 	@Inject
 	private Client client;
@@ -62,10 +70,16 @@ public class TextureManager {
 	private ClientThread clientThread;
 
 	@Inject
+	private ResourcePackManager resourcePackManager;
+
+	@Inject
 	private ScheduledExecutorService executor;
 
 	@Inject
 	private HdPluginConfig config;
+
+	@Inject
+	private EventBus eventBus;
 
 	@Inject
 	private MaterialManager materialManager;
@@ -73,14 +87,19 @@ public class TextureManager {
 	// Temporary variables for texture loading and generating material uniforms
 	private IntBuffer pixelBuffer;
 	private BufferedImage scaledImage;
+	private BufferedImage uploadImage;
 	private BufferedImage vanillaImage;
+	private int uploadTexture;
+	private int uploadReadFramebuffer;
+	private int uploadDrawFramebuffer;
+	private int[] uploadResolution;
 
 	private ScheduledFuture<?> debounce;
 
 	public void startUp() {
 		assert vanillaTexturesAvailable();
 		vanillaImage = new BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB);
-
+		eventBus.register(this);
 		TEXTURE_PATH.watch((path, first) -> {
 			if (first) return;
 
@@ -102,10 +121,23 @@ public class TextureManager {
 		});
 	}
 
+
 	public void shutDown() {
 		pixelBuffer = null;
 		scaledImage = null;
+		uploadImage = null;
 		vanillaImage = null;
+		uploadResolution = null;
+		if (uploadTexture != 0)
+			glDeleteTextures(uploadTexture);
+		uploadTexture = 0;
+		if (uploadReadFramebuffer != 0)
+			glDeleteFramebuffers(uploadReadFramebuffer);
+		uploadReadFramebuffer = 0;
+		if (uploadDrawFramebuffer != 0)
+			glDeleteFramebuffers(uploadDrawFramebuffer);
+		uploadDrawFramebuffer = 0;
+		eventBus.unregister(this);
 	}
 
 	public boolean vanillaTexturesAvailable() {
@@ -176,12 +208,17 @@ public class TextureManager {
 
 	@Nullable
 	public BufferedImage loadTexture(String filename) {
-		for (String ext : SUPPORTED_IMAGE_EXTENSIONS) {
-			ResourcePath path = TEXTURE_PATH.resolve(filename + "." + ext);
-			try {
-				return path.loadImage();
-			} catch (Exception ex) {
-				log.trace("Unable to load texture: {}", path, ex);
+		for (var pack : resourcePackManager.getEnabledPacks()) {
+			for (String ext : SUPPORTED_IMAGE_EXTENSIONS) {
+				ResourcePath path = pack.getResource("materials", filename + "." + ext);
+				if (!path.exists())
+					continue;
+
+				try {
+					return path.loadImage();
+				} catch (Exception ex) {
+					log.trace("Unable to load texture: {}", path, ex);
+				}
 			}
 		}
 
@@ -190,34 +227,106 @@ public class TextureManager {
 
 	public void uploadTexture(int target, int textureLayer, int[] textureSize, BufferedImage image) {
 		assert client.isClientThread() : "Not thread safe";
+		assert target == GL_TEXTURE_2D_ARRAY : "Material textures must use a texture array";
+		if (config.gpuTextureResizing())
+			uploadTextureGpu(target, textureLayer, textureSize, image);
+		else
+			uploadTextureCpu(target, textureLayer, textureSize, image);
+	}
 
-		// Allocate resources for storing temporary image data
+	private void uploadTextureCpu(int target, int textureLayer, int[] textureSize, BufferedImage image) {
 		int numPixels = product(textureSize);
 		if (pixelBuffer == null || pixelBuffer.capacity() < numPixels)
 			pixelBuffer = BufferUtils.createIntBuffer(numPixels);
 		if (scaledImage == null || scaledImage.getWidth() != textureSize[0] || scaledImage.getHeight() != textureSize[1])
 			scaledImage = new BufferedImage(textureSize[0], textureSize[1], BufferedImage.TYPE_INT_ARGB);
 
-		// TODO: scale and transform on the GPU for better performance (would save 400+ ms)
-		AffineTransform t = new AffineTransform();
+		AffineTransform transform = new AffineTransform();
 		if (image != vanillaImage) {
 			// Flip non-vanilla textures horizontally to match vanilla UV orientation
-			t.translate(textureSize[1], 0);
-			t.scale(-1, 1);
+			transform.translate(textureSize[1], 0);
+			transform.scale(-1, 1);
 		}
-		t.scale((double) textureSize[0] / image.getWidth(), (double) textureSize[1] / image.getHeight());
-		AffineTransformOp scaleOp = new AffineTransformOp(t, AffineTransformOp.TYPE_BICUBIC);
-		scaleOp.filter(image, scaledImage);
+		transform.scale((double) textureSize[0] / image.getWidth(), (double) textureSize[1] / image.getHeight());
+		new AffineTransformOp(transform, AffineTransformOp.TYPE_BICUBIC).filter(image, scaledImage);
 
 		int[] pixels = ((DataBufferInt) scaledImage.getRaster().getDataBuffer()).getData();
 		pixelBuffer.clear().put(pixels).flip();
+		glTexSubImage3D(target, 0, 0, 0, textureLayer, textureSize[0], textureSize[1], 1,
+			GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, pixelBuffer);
+	}
 
-		// Go from TYPE_4BYTE_ABGR in the BufferedImage to RGBA
-		glTexSubImage3D(
-			target, 0, 0, 0,
-			textureLayer, textureSize[0], textureSize[1], 1,
-			GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, pixelBuffer
-		);
+	private void uploadTextureGpu(int target, int textureLayer, int[] textureSize, BufferedImage image) {
+		int sourceWidth = image.getWidth();
+		int sourceHeight = image.getHeight();
+		int numPixels = sourceWidth * sourceHeight;
+		if (pixelBuffer == null || pixelBuffer.capacity() < numPixels)
+			pixelBuffer = BufferUtils.createIntBuffer(numPixels);
+		if (uploadImage == null || uploadImage.getWidth() != sourceWidth || uploadImage.getHeight() != sourceHeight)
+			uploadImage = new BufferedImage(sourceWidth, sourceHeight, BufferedImage.TYPE_INT_ARGB);
+
+		Graphics2D graphics = uploadImage.createGraphics();
+		graphics.setComposite(AlphaComposite.Src);
+		graphics.drawImage(image, 0, 0, null);
+		graphics.dispose();
+
+		int[] pixels = ((DataBufferInt) uploadImage.getRaster().getDataBuffer()).getData();
+		pixelBuffer.clear().put(pixels).flip();
+
+		int destinationTexture = glGetInteger(GL_TEXTURE_BINDING_2D_ARRAY);
+		if (destinationTexture == 0)
+			throw new IllegalStateException("No material texture array is bound");
+
+		int previousTexture = glGetInteger(GL_TEXTURE_BINDING_2D);
+		int previousReadFramebuffer = glGetInteger(GL_READ_FRAMEBUFFER_BINDING);
+		int previousDrawFramebuffer = glGetInteger(GL_DRAW_FRAMEBUFFER_BINDING);
+		int previousReadBuffer = glGetInteger(GL_READ_BUFFER);
+		int previousDrawBuffer = glGetInteger(GL_DRAW_BUFFER);
+		boolean framebufferSrgb = glIsEnabled(GL_FRAMEBUFFER_SRGB);
+		try {
+			ensureUploadResources(sourceWidth, sourceHeight);
+			glBindTexture(GL_TEXTURE_2D, uploadTexture);
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, sourceWidth, sourceHeight,
+				GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, pixelBuffer);
+
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, uploadReadFramebuffer);
+			glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, uploadTexture, 0);
+			glReadBuffer(GL_COLOR_ATTACHMENT0);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, uploadDrawFramebuffer);
+			glFramebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, destinationTexture, 0, textureLayer);
+			glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+			if (framebufferSrgb)
+				glDisable(GL_FRAMEBUFFER_SRGB);
+			int sourceLeft = image == vanillaImage ? 0 : sourceWidth;
+			int sourceRight = image == vanillaImage ? sourceWidth : 0;
+			glBlitFramebuffer(sourceLeft, 0, sourceRight, sourceHeight,
+				0, 0, textureSize[0], textureSize[1], GL_COLOR_BUFFER_BIT, GL_LINEAR);
+		} finally {
+			if (framebufferSrgb)
+				glEnable(GL_FRAMEBUFFER_SRGB);
+			glBindTexture(GL_TEXTURE_2D, previousTexture);
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, previousReadFramebuffer);
+			glReadBuffer(previousReadBuffer);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, previousDrawFramebuffer);
+			glDrawBuffer(previousDrawBuffer);
+		}
+	}
+
+	private void ensureUploadResources(int width, int height) {
+		if (uploadTexture == 0) {
+			uploadTexture = glGenTextures();
+			uploadReadFramebuffer = glGenFramebuffers();
+			uploadDrawFramebuffer = glGenFramebuffers();
+		}
+		if (uploadResolution != null && uploadResolution[0] == width && uploadResolution[1] == height)
+			return;
+
+		uploadResolution = ivec(width, height);
+		glBindTexture(GL_TEXTURE_2D, uploadTexture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	}
 
 	public void setAnisotropicFilteringLevel() {
@@ -241,4 +350,18 @@ public class TextureManager {
 			glTexParameterf(GL_TEXTURE_2D_ARRAY, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, clamp(level, 1, maxSamples));
 		}
 	}
+
+	@Subscribe
+	public void onResourcePackUpdate(ResourcePackUpdate event) {
+		if (event.stateIs(PackEventType.UI_CHANGED))
+			return;
+
+		for (var layer : materialManager.textureLayers) {
+			layer.needsUpload = true;
+		}
+
+		if (debounce == null || debounce.cancel(false) || debounce.isDone())
+			debounce = executor.schedule(() -> clientThread.invoke(materialManager::uploadTextures), 100, TimeUnit.MILLISECONDS);
+	}
+
 }

@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -113,6 +114,7 @@ public class MaterialManager {
 	private int texMaterialTextureArray;
 	private int[] textureResolution;
 	public final List<TextureLayer> textureLayers = new ArrayList<>();
+	private Map<String, String> resolvedMaterialNames = Collections.emptyMap();
 
 	private FileWatcher.UnregisterCallback fileWatcher;
 
@@ -135,6 +137,7 @@ public class MaterialManager {
 		uboMaterials = null;
 
 		MATERIAL_MAP.clear();
+		resolvedMaterialNames = Collections.emptyMap();
 		invalidateMaterials(MATERIALS);
 		MATERIALS = VANILLA_TEXTURE_MAPPING = null;
 	}
@@ -423,27 +426,15 @@ public class MaterialManager {
 
 		uploadTextures();
 
-		boolean materialOrderChanged = true;
-		// TODO: Fix material loading issues with profile switching
-//		if (uboMaterials != null && uboMaterials.materials.length == MATERIALS.length) {
-//			materialOrderChanged = false;
-//			for (int i = 0; i < MATERIALS.length; i++) {
-//				var a = MATERIALS[i];
-//				var b = uboMaterials.materials[i];
-//				if (a.vanillaTextureIndex != b.vanillaTextureIndex ||
-//					a.modifiesVanillaTexture != b.modifiesVanillaTexture ||
-//					!a.name.equals(b.name)
-//				) {
-//					materialOrderChanged = true;
-//					break;
-//				}
-//			}
-//		} else {
+		boolean materialLayoutChanged = hasMaterialLayoutChanged();
+		boolean materialBindingsChanged = hasMaterialBindingsChanged();
+		if (materialLayoutChanged) {
 			if (uboMaterials != null)
 				uboMaterials.destroy();
 			uboMaterials = new UBOMaterials(MATERIALS.length);
-//		}
+		}
 		uboMaterials.update(MATERIALS, vanillaTextures);
+		resolvedMaterialNames = getResolvedMaterialNames();
 
 		if (isFirstLoad)
 			return;
@@ -454,11 +445,42 @@ public class MaterialManager {
 		tileOverrideManager.reload(true);
 		modelOverrideManager.reload();
 
-		if (materialOrderChanged && !skipSceneReload) {
+		if ((materialLayoutChanged || materialBindingsChanged) && !skipSceneReload) {
 			plugin.renderer.clearCaches();
 			plugin.renderer.reloadScene();
 			plugin.recompilePrograms();
 		}
+	}
+
+	private boolean hasMaterialLayoutChanged() {
+		if (uboMaterials == null || uboMaterials.materials.length != MATERIALS.length)
+			return true;
+
+		for (int i = 0; i < MATERIALS.length; i++) {
+			Material current = MATERIALS[i];
+			Material previous = uboMaterials.materials[i];
+			if (current.vanillaTextureIndex != previous.vanillaTextureIndex ||
+				current.modifiesVanillaTexture != previous.modifiesVanillaTexture ||
+				!current.name.equals(previous.name))
+				return true;
+		}
+		return false;
+	}
+
+	private boolean hasMaterialBindingsChanged() {
+		if (resolvedMaterialNames.size() != MATERIAL_MAP.size())
+			return true;
+		for (Map.Entry<String, Material> entry : MATERIAL_MAP.entrySet())
+			if (!Objects.equals(resolvedMaterialNames.get(entry.getKey()), entry.getValue().name))
+				return true;
+		return false;
+	}
+
+	private Map<String, String> getResolvedMaterialNames() {
+		Map<String, String> names = new HashMap<>(MATERIAL_MAP.size());
+		for (Map.Entry<String, Material> entry : MATERIAL_MAP.entrySet())
+			names.put(entry.getKey(), entry.getValue().name);
+		return names;
 	}
 
 	private void invalidateMaterials(Material[] materials) {
