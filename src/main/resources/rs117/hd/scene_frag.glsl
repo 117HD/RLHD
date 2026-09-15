@@ -39,6 +39,7 @@
 #include <uniforms/water_types.glsl>
 
 #include <utils/sky_fog.glsl>
+#include <utils/hash.glsl>
 
 #include GAP_FILLER
 #include MATERIAL_CONSTANTS
@@ -578,16 +579,15 @@ void main() {
             }
 
             outputColor.rgb = mix(outputColor.rgb, skyColorAtFragment, combinedFog);
-
-            // This is the scene's only anti-banding noise, so run it outside the fog gate.
-            float dither = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453123) - 0.5;
-            outputColor.rgb += dither / 255.0;
         } else {
             outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
         }
     }
 
     outputColor.rgb = applyOutputCorrection(outputColor.rgb);
+
+    // Reduce color banding
+    outputColor.rgb += (hash12(gl_FragCoord.xy + elapsedTime) - 0.5) / 255.0;
 
     FragColor = outputColor;
 }

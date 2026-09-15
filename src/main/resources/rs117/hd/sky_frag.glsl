@@ -9,6 +9,7 @@
 #include <utils/aurora.glsl>
 #include <utils/sky.glsl>
 #include <utils/sky_fog.glsl>
+#include <utils/hash.glsl>
 
 in vec2 fScreenPos;
 
@@ -322,6 +323,9 @@ void main() {
     skyColor = applySkyFog(skyColor, sky.upAmount);
     skyColor = applyColorAdjustments(linearToSrgb(skyColor));
     skyColor = applyOutputCorrection(skyColor);
-    float dither = moonHash(gl_FragCoord.xy) - 0.5;
-    FragColor = vec4(skyColor + dither / 255.0, 1.0);
+
+    // Reduce color banding
+    skyColor.rgb += (hash12(gl_FragCoord.xy + elapsedTime) - 0.5) / 255.0;
+
+    FragColor = vec4(skyColor, 1.0);
 }
