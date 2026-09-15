@@ -25,12 +25,14 @@
  */
 #version 330
 
-#define DISPLAY_BASE_COLOR 0
-#define DISPLAY_UV 0
-#define DISPLAY_NORMAL 0
-#define DISPLAY_TANGENT 0
-#define DISPLAY_SHADOWS 0
-#define DISPLAY_LIGHTING 0
+#include SCENE_SHADER_DEBUG_MODE
+
+#define DISPLAY_BASE_COLOR SCENE_SHADER_DEBUG_MODE == 1
+#define DISPLAY_UV SCENE_SHADER_DEBUG_MODE == 2
+#define DISPLAY_NORMAL SCENE_SHADER_DEBUG_MODE == 3
+#define DISPLAY_TANGENT SCENE_SHADER_DEBUG_MODE == 4
+#define DISPLAY_SHADOWS SCENE_SHADER_DEBUG_MODE == 5
+#define DISPLAY_LIGHTING SCENE_SHADER_DEBUG_MODE == 6
 
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
@@ -169,17 +171,17 @@ void main() {
 
         #if DISPLAY_UV
             FragColor = vec4(fract(uv1 * IN.texBlend.x + uv2 * IN.texBlend.y + uv3 * IN.texBlend.z), 0.0, 1.0);
-            if (DISPLAY_UV == 1) return; // Redundant, for syntax highlighting in IntelliJ
+            if (DISPLAY_UV ) return; // Redundant, for syntax highlighting in IntelliJ
         #endif
 
         #if DISPLAY_NORMAL
             FragColor = vec4(N * 0.5 + 0.5, 1.0);
-            if (DISPLAY_NORMAL == 1) return; // Redundant, for syntax highlighting in IntelliJ
+            if (DISPLAY_NORMAL) return; // Redundant, for syntax highlighting in IntelliJ
         #endif
 
         #if DISPLAY_TANGENT
             FragColor = vec4(TBN[0] * 0.5 + 0.5, 1.0);
-            if (DISPLAY_TANGENT == 1) return; // Redundant, for syntax highlighting in IntelliJ
+            if (DISPLAY_TANGENT) return; // Redundant, for syntax highlighting in IntelliJ
         #endif
 
         float selfShadowing = 0;
@@ -228,7 +230,7 @@ void main() {
         baseColor3.rgb = srgbToLinear(hslToSrgb(baseColor3.xyz));
 
         #if DISPLAY_BASE_COLOR
-        if (DISPLAY_BASE_COLOR == 1) { // Redundant, used for syntax highlighting in IntelliJ
+        if (DISPLAY_BASE_COLOR) { // Redundant, used for syntax highlighting in IntelliJ
             outputColor = baseColor1 * IN.texBlend.x + baseColor2 * IN.texBlend.y + baseColor3 * IN.texBlend.z;
             outputColor.rgb = linearToSrgb(outputColor.rgb);
             FragColor = outputColor;
@@ -340,7 +342,7 @@ void main() {
 
         #if DISPLAY_SHADOWS
             FragColor = vec4(inverseShadow, inverseShadow, inverseShadow, 1.0);
-            if (DISPLAY_SHADOWS == 1) return; // Redundant, for syntax highlighting in IntelliJ
+            if (DISPLAY_SHADOWS) return; // Redundant, for syntax highlighting in IntelliJ
         #endif
 
         // specular
@@ -444,7 +446,7 @@ void main() {
 
         #if DISPLAY_LIGHTING
             FragColor = vec4(compositeLight, 1.0);
-            if (DISPLAY_LIGHTING == 1) return; // Redundant, for syntax highlighting in IntelliJ
+            if (DISPLAY_LIGHTING) return; // Redundant, for syntax highlighting in IntelliJ
         #endif
 
         float unlit = dot(IN.texBlend, vec3(
