@@ -16,6 +16,7 @@ import net.runelite.client.callback.ClientThread;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.collections.PrimitiveIntArray;
 
 import static org.lwjgl.opengl.GL11.glGetInteger;
 import static org.lwjgl.opengl.GL33C.*;
@@ -51,6 +52,7 @@ public class Profiler {
 	private static final int NUM_GPU_DEBUG_GROUPS = (int) Arrays.stream(Timer.TIMERS).filter(Timer::hasGpuDebugGroup).count();
 
 	private static final boolean TRACK_SYSTEM_MEMORY = HDUtils.getFreeSystemMemory() != Long.MAX_VALUE;
+	private static final int GPU_QUERY_GROWTH = Math.max(NUM_GPU_TIMERS * 2, 32);
 
 	private final AutoTimer[] autoTimers = new AutoTimer[NUM_TIMERS];
 	private final boolean[] activeTimers = new boolean[NUM_TIMERS];
@@ -58,10 +60,22 @@ public class Profiler {
 	private final long[] timings = new long[NUM_TIMERS];
 	private final long[] heap = new long[NUM_TIMERS];
 	private final long[] allocations = new long[NUM_TIMERS];
-	private final int[] gpuQueries = new int[NUM_TIMERS * 2];
+	private final int[] openGpuDepth = new int[NUM_TIMERS];
+
+	private final PrimitiveIntArray pendingElapsedResults = new PrimitiveIntArray();
+	private final PrimitiveIntArray[] openTimestampSpans = new PrimitiveIntArray[NUM_TIMERS];
+	private final PrimitiveIntArray[] pendingTimestampSpans = new PrimitiveIntArray[NUM_TIMERS];
+
+	private final PrimitiveIntArray freeGpuQueries = new PrimitiveIntArray();
+	private final PrimitiveIntArray allocatedGpuQueries = new PrimitiveIntArray();
+	private final PrimitiveIntArray elapsedStack = new PrimitiveIntArray();
+
 	private final ArrayDeque<Timer> glDebugGroupStack = new ArrayDeque<>(NUM_GPU_DEBUG_GROUPS);
 	private final ArrayDeque<Listener> listeners = new ArrayDeque<>();
 	private long[] lastGCTimes;
+
+	private boolean useElapsedGpuQueries;
+	private int activeElapsedQuery = -1;
 	private int nextEventIndex = 0;
 
 	@RequiredArgsConstructor
@@ -78,6 +92,13 @@ public class Profiler {
 	public Profiler() {
 		for (int i = 0; i < NUM_TIMERS; i++)
 			autoTimers[i] = new AutoTimer(Timer.TIMERS[i]);
+		for (var timer : Timer.TIMERS) {
+			if (!timer.isGpuTimer())
+				continue;
+			int i = timer.ordinal();
+			openTimestampSpans[i] = new PrimitiveIntArray();
+			pendingTimestampSpans[i] = new PrimitiveIntArray();
+		}
 	}
 
 
@@ -86,13 +107,7 @@ public class Profiler {
 
 	private void initialize() {
 		clientThread.invoke(() -> {
-			int[] queryNames = new int[NUM_GPU_TIMERS * 2];
-			glGenQueries(queryNames);
-			int queryIndex = 0;
-			for (var timer : Timer.TIMERS)
-				if (timer.isGpuTimer())
-					for (int j = 0; j < 2; ++j)
-						gpuQueries[timer.ordinal() * 2 + j] = queryNames[queryIndex++];
+			useElapsedGpuQueries = HdPlugin.APPLE || !HdPlugin.GL_CAPS.OpenGL33;
 
 			instance = this;
 			isActive = true;
@@ -126,9 +141,11 @@ public class Profiler {
 			plugin.setupSyncMode();
 			plugin.enableDetailedTimers = false;
 
-			glDeleteQueries(gpuQueries);
-			Arrays.fill(gpuQueries, 0);
 			reset();
+			if (allocatedGpuQueries.length > 0)
+				glDeleteQueries(Arrays.copyOf(allocatedGpuQueries.array, allocatedGpuQueries.length));
+			allocatedGpuQueries.reset();
+			freeGpuQueries.reset();
 		});
 	}
 
@@ -158,8 +175,64 @@ public class Profiler {
 		Arrays.fill(timings, 0);
 		Arrays.fill(allocations, 0);
 		Arrays.fill(activeTimers, false);
+		Arrays.fill(openGpuDepth, 0);
+		if (activeElapsedQuery != -1) {
+			glEndQuery(GL_TIME_ELAPSED);
+			releaseGpuQuery(activeElapsedQuery);
+			activeElapsedQuery = -1;
+		}
+		elapsedStack.reset();
+		releaseElapsedResults();
+		for (var timer : Timer.TIMERS) {
+			if (!timer.isGpuTimer())
+				continue;
+			int i = timer.ordinal();
+			releaseTimestampSpans(openTimestampSpans[i]);
+			releaseTimestampSpans(pendingTimestampSpans[i]);
+		}
 		cumulativeError = 0;
 		nextEventIndex = 0;
+	}
+
+	private int acquireGpuQuery() {
+		if (freeGpuQueries.length == 0) {
+			int[] names = new int[GPU_QUERY_GROWTH];
+			glGenQueries(names);
+			freeGpuQueries.put(names, 0, GPU_QUERY_GROWTH);
+			allocatedGpuQueries.put(names, 0, GPU_QUERY_GROWTH);
+		}
+		return freeGpuQueries.array[--freeGpuQueries.length];
+	}
+
+	private void releaseGpuQuery(int id) {
+		freeGpuQueries.ensureCapacity(1);
+		freeGpuQueries.put(id);
+	}
+
+	private void finalizeActiveElapsedQuery() {
+		glEndQuery(GL_TIME_ELAPSED);
+		int id = activeElapsedQuery;
+		activeElapsedQuery = -1;
+		int depth = elapsedStack.length;
+		pendingElapsedResults.ensureCapacity(depth + 2);
+		pendingElapsedResults.put(id);
+		pendingElapsedResults.put(depth);
+		pendingElapsedResults.put(elapsedStack.array, 0, depth);
+	}
+
+	private void releaseElapsedResults() {
+		int idx = 0;
+		while (idx < pendingElapsedResults.length) {
+			releaseGpuQuery(pendingElapsedResults.array[idx]);
+			idx += 2 + pendingElapsedResults.array[idx + 1];
+		}
+		pendingElapsedResults.reset();
+	}
+
+	private void releaseTimestampSpans(PrimitiveIntArray spans) {
+		for (int i = 0; i < spans.length; i++)
+			releaseGpuQuery(spans.array[i]);
+		spans.reset();
 	}
 
 	public long getTimeStamp() { return isActive ? System.nanoTime() : 0; }
@@ -181,9 +254,22 @@ public class Profiler {
 			return null;
 
 		if (timer.isGpuTimer()) {
-			if (activeTimers[index])
-				throw new UnsupportedOperationException("Cumulative GPU timing isn't supported");
-			glQueryCounter(gpuQueries[index * 2], GL_TIMESTAMP);
+			if (useElapsedGpuQueries) {
+				if (elapsedStack.length > 0)
+					finalizeActiveElapsedQuery(); // pause the parent so this nested query can use the hardware's single elapsed-query slot
+				activeElapsedQuery = acquireGpuQuery();
+				glBeginQuery(GL_TIME_ELAPSED, activeElapsedQuery);
+				elapsedStack.ensureCapacity(1);
+				elapsedStack.put(index);
+			} else {
+				var spans = openTimestampSpans[index];
+				spans.ensureCapacity(2);
+				int startId = acquireGpuQuery();
+				spans.put(startId);
+				spans.put(acquireGpuQuery());
+				glQueryCounter(startId, GL_TIMESTAMP);
+			}
+			openGpuDepth[index]++;
 		} else if (!activeTimers[index]) {
 			cumulativeError += errorCompensation + 1 >> 1;
 			subtractDuration(index, System.nanoTime() - cumulativeError);
@@ -210,8 +296,38 @@ public class Profiler {
 			return false;
 
 		if (timer.isGpuTimer()) {
-			glQueryCounter(gpuQueries[index * 2 + 1], GL_TIMESTAMP);
-			// leave the GPU timer active, since it needs to be gathered at a later point
+			if (useElapsedGpuQueries) {
+				if (elapsedStack.length > 0 && elapsedStack.array[elapsedStack.length - 1] == index) {
+					finalizeActiveElapsedQuery();
+					elapsedStack.length--;
+					if (elapsedStack.length > 0) {
+						// Resume the parent timer's query now that this one has finished
+						activeElapsedQuery = acquireGpuQuery();
+						glBeginQuery(GL_TIME_ELAPSED, activeElapsedQuery);
+					}
+				} else {
+					log.warn("GPU timer {} was ended out of order", timer.name());
+					for (int i = elapsedStack.length - 1; i >= 0; i--) {
+						if (elapsedStack.array[i] == index) {
+							elapsedStack.removeAt(i);
+							break;
+						}
+					}
+				}
+			} else {
+				var spans = openTimestampSpans[index];
+				int endId = spans.array[--spans.length];
+				int startId = spans.array[--spans.length];
+				glQueryCounter(endId, GL_TIMESTAMP);
+
+				var pending = pendingTimestampSpans[index];
+				pending.ensureCapacity(2);
+				pending.put(startId);
+				pending.put(endId);
+			}
+			openGpuDepth[index]--;
+			activeTimers[index] = openGpuDepth[index] > 0;
+			// leave the GPU timer's result to be gathered at a later point
 		} else {
 			final long originalHeap = heap[index];
 			final long newHeap = HDUtils.getUsedMemory(true);
@@ -289,13 +405,26 @@ public class Profiler {
 		for (var timer : Timer.TIMERS) {
 			int i = timer.ordinal();
 			if (timer.isGpuTimer()) {
-				if (!activeTimers[i])
-					continue;
+				if (openGpuDepth[i] > 0) {
+					// End any dangling GPU timer spans automatically, but warn about it
+					log.warn("Timer {} was never ended", timer);
+					while (openGpuDepth[i] > 0)
+						end(timer);
+				}
 
-				for (int j = 0; j < 2; j++) {
-					while (available[0] == 0)
-						glGetQueryObjectiv(gpuQueries[i * 2 + j], GL_QUERY_RESULT_AVAILABLE, available);
-					timings[i] += (j * 2L - 1) * glGetQueryObjectui64(gpuQueries[i * 2 + j], GL_QUERY_RESULT);
+				if (!useElapsedGpuQueries) {
+					var spans = pendingTimestampSpans[i];
+					for (int j = 0; j < spans.length; j += 2) {
+						int startId = spans.array[j];
+						int endId = spans.array[j + 1];
+						available[0] = 0;
+						while (available[0] == 0)
+							glGetQueryObjectiv(endId, GL_QUERY_RESULT_AVAILABLE, available);
+						timings[i] += glGetQueryObjectui64(endId, GL_QUERY_RESULT) - glGetQueryObjectui64(startId, GL_QUERY_RESULT);
+						releaseGpuQuery(startId);
+						releaseGpuQuery(endId);
+					}
+					spans.reset();
 				}
 			} else {
 				if (activeTimers[i]) {
@@ -304,6 +433,26 @@ public class Profiler {
 					timings[i] += frameEndNanos;
 				}
 			}
+		}
+
+		if (useElapsedGpuQueries) {
+			int idx = 0;
+			while (idx < pendingElapsedResults.length) {
+				int id = pendingElapsedResults.array[idx++];
+				int depth = pendingElapsedResults.array[idx++];
+
+				available[0] = 0;
+				while (available[0] == 0)
+					glGetQueryObjectiv(id, GL_QUERY_RESULT_AVAILABLE, available);
+				long duration = glGetQueryObjectui64(id, GL_QUERY_RESULT);
+
+				for (int k = 0; k < depth; k++)
+					timings[pendingElapsedResults.array[idx + k]] += duration;
+				idx += depth;
+
+				releaseGpuQuery(id);
+			}
+			pendingElapsedResults.reset();
 		}
 
 		final float cpuLoad = (float) osBean.getSystemLoadAverage() / osBean.getAvailableProcessors();
