@@ -67,8 +67,6 @@ public class FrameTimingsRecorder implements Profiler.Listener {
 
 		public static class Frame {
 			public long timestamp;
-			public long drawnTiles;
-			public long drawnStatic;
 			public long drawnDynamic;
 			public long npcDisplacementCacheSize;
 			public long memoryUsed;
@@ -174,8 +172,6 @@ public class FrameTimingsRecorder implements Profiler.Listener {
 		}
 
 		var frame = new Snapshot.Frame(timings);
-		frame.drawnTiles = plugin.getDrawnTileCount();
-		frame.drawnStatic = plugin.getDrawnStaticRenderableCount();
 		frame.npcDisplacementCacheSize = npcDisplacementCache.size();
 		snapshot.frames.add(frame);
 	}
