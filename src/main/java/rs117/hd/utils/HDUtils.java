@@ -647,4 +647,9 @@ public final class HDUtils {
 		}
 		return null;
 	}
+
+	public static String enumToName(String name) {
+		name = name.replace('_', ' ');
+		return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+	}
 }

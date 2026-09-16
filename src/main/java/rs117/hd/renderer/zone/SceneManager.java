@@ -444,7 +444,6 @@ public class SceneManager {
 			profiler.pushEvent(Event.ROOT_MAP_LOAD);
 
 			Stopwatch sw = Stopwatch.createStarted();
-			root.loadTime = root.uploadTime = root.sceneSwapTime = 0;
 			root.isLoading = true;
 
 			root.sceneLoadGroup.complete();

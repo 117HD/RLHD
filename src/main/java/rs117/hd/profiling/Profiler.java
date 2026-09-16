@@ -48,6 +48,7 @@ public class Profiler {
 
 	private static final int NUM_EVENTS = Event.EVENTS.length;
 	private static final int NUM_TIMERS = Timer.TIMERS.length;
+	private static final int NUM_STATS = Stat.STATS.length;
 	private static final int NUM_GPU_TIMERS = (int) Arrays.stream(Timer.TIMERS).filter(Timer::isGpuTimer).count();
 	private static final int NUM_GPU_DEBUG_GROUPS = (int) Arrays.stream(Timer.TIMERS).filter(Timer::hasGpuDebugGroup).count();
 
@@ -56,6 +57,7 @@ public class Profiler {
 
 	private final TimerState[] timerStates = new TimerState[NUM_TIMERS];
 	private final Event[] events = new Event[NUM_EVENTS];
+	private final long[] stats = new long[NUM_STATS];
 
 	private final int[] queryResult = { 0 };
 
@@ -205,6 +207,7 @@ public class Profiler {
 			releaseTimestampSpans(state.openTimestampSpans);
 			releaseTimestampSpans(state.pendingTimestampSpans);
 		}
+		Arrays.fill(stats, 0);
 		cumulativeError = 0;
 		nextEventIndex = 0;
 	}
@@ -404,6 +407,22 @@ public class Profiler {
 			events[nextEventIndex++] = event;
 	}
 
+	public synchronized void setStat(Stat stat, long value) {
+		stats[stat.ordinal()] = value;
+	}
+
+	public synchronized void setStat(Stat stat, int x, int y) {
+		stats[stat.ordinal()] = (long)x | ((long)y << 32L);
+	}
+
+	public synchronized void addStat(Stat stat, long value) {
+		stats[stat.ordinal()] += value;
+	}
+
+	public synchronized void incrementStat(Stat stat) {
+		stats[stat.ordinal()]++;
+	}
+
 	public void endFrameAndReset() {
 		if (HdPlugin.GL_CAPS.OpenGL43) {
 			while (!glDebugGroupStack.isEmpty()) {
@@ -489,7 +508,7 @@ public class Profiler {
 			gpuUsageKB = -1;
 		}
 
-		var frameTimings = new ProfileSample(frameEndTimestamp, totalAsyncTime, events, nextEventIndex, cpuLoad, heapUsageKB, freeSystemMemory, gpuUsageKB);
+		var frameTimings = new ProfileSample(frameEndTimestamp, totalAsyncTime, stats, events, nextEventIndex, cpuLoad, heapUsageKB, freeSystemMemory, gpuUsageKB);
 
 		for (int i = 0; i < NUM_TIMERS; i++) {
 			final TimerState state = timerStates[i];
@@ -503,13 +522,14 @@ public class Profiler {
 		reset();
 	}
 
+	private long lastGarbageCollectionCount;
+
 	private void trackGarbageCollection() {
 		List<GarbageCollectorMXBean> garbageCollectors = ManagementFactory.getGarbageCollectorMXBeans();
 		if (lastGCTimes == null || lastGCTimes.length != garbageCollectors.size())
 			lastGCTimes = new long[garbageCollectors.size()];
 
-		long lastGcCount = plugin.garbageCollectionCount;
-		plugin.garbageCollectionCount = 0;
+		long garbageCollectionCount = 0;
 		long elapsedDuration = 0;
 		for (int i = 0; i < garbageCollectors.size(); i++) {
 			var gc = garbageCollectors.get(i);
@@ -519,12 +539,15 @@ public class Profiler {
 				lastGCTimes[i] = time;
 				elapsedDuration += duration;
 			}
-			plugin.garbageCollectionCount += gc.getCollectionCount();
+			garbageCollectionCount += gc.getCollectionCount();
 		}
 
-		if(lastGcCount != plugin.garbageCollectionCount)
+		if(garbageCollectionCount != lastGarbageCollectionCount) {
+			lastGarbageCollectionCount = garbageCollectionCount;
 			pushEvent(Event.GC);
+		}
 
+		setStat(Stat.GARBAGE_COLLECTION_COUNT, garbageCollectionCount);
 		addDuration(Timer.GARBAGE_COLLECTION, elapsedDuration * 1_000_000L);
 	}
 }
