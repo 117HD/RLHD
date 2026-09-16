@@ -8,6 +8,7 @@ import static rs117.hd.profiling.Profiler.ASYNC_CPU_TIMER;
 import static rs117.hd.profiling.Profiler.ASYNC_GPU_TIMER;
 import static rs117.hd.profiling.Profiler.CPU_TIMER;
 import static rs117.hd.profiling.Profiler.GPU_TIMER;
+import static rs117.hd.utils.HDUtils.enumToName;
 
 @RequiredArgsConstructor
 public enum Timer {
@@ -100,11 +101,6 @@ public enum Timer {
 	Timer(int type, @Nonnull String name) {
 		this.name = name;
 		this.type = type;
-	}
-
-	private static String enumToName(String name) {
-		name = name.replace('_', ' ');
-		return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
 	}
 
 	public boolean isCpuTimer() {

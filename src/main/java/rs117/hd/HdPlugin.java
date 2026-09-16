@@ -469,10 +469,6 @@ public class HdPlugin extends Plugin {
 	public int drawnStaticRenderableCount;
 	@Getter
 	public int drawnTempRenderableCount;
-	@Getter
-	public int drawnDynamicRenderableCount;
-	@Getter
-	public long garbageCollectionCount;
 
 	private int startupCount;
 	public int frame;

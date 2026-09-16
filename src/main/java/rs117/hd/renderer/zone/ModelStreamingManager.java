@@ -17,6 +17,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Stat;
 import rs117.hd.profiling.Timer;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.materials.Material;
@@ -79,7 +80,6 @@ public class ModelStreamingManager {
 	static final class StreamingContext {
 		final int[] worldPos = new int[3];
 		final float[] objectWorldPos = new float[4];
-		int renderableCount;
 	}
 
 	public void initialize() {
@@ -132,17 +132,7 @@ public class ModelStreamingManager {
 
 	@Subscribe
 	public void onBeforeRender(BeforeRender event) {
-		for (int i = 0; i < streamingContexts.length; i++)
-			streamingContexts[i].renderableCount = 0;
-
 		updateRenderThreads();
-	}
-
-	public int getDrawnDynamicRenderableCount() {
-		int count = 0;
-		for (int i = 0; i < streamingContexts.length; i++)
-			count += streamingContexts[i].renderableCount;
-		return count;
 	}
 
 	private boolean isAlphaModel(Model m) {
@@ -241,7 +231,7 @@ public class ModelStreamingManager {
 		)) {
 			return;
 		}
-		streamingContext.renderableCount++;
+		profiler.incrementStat(Stat.VISIBLE_DYNAMIC_RENDERABLES);
 
 		final boolean hasAlpha =
 			(modelOverride.mightHaveTransparency || isAlphaModel(m)) &&

@@ -39,6 +39,7 @@ import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Stat;
 import rs117.hd.profiling.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.scene.AreaManager;
@@ -589,7 +590,6 @@ public class LegacyRenderer implements Renderer {
 
 				plugin.drawnTileCount = 0;
 				plugin.drawnStaticRenderableCount = 0;
-				plugin.drawnDynamicRenderableCount = 0;
 
 				// TODO: this could be done only once during scene swap, but is a bit of a pain to do
 				// Push unordered models that should always be drawn at the start of each frame.
@@ -1742,7 +1742,7 @@ public class LegacyRenderer implements Renderer {
 			}
 
 			if (eightIntWrite[0] != -1)
-				plugin.drawnDynamicRenderableCount = plugin.drawnDynamicRenderableCount + 1;
+				profiler.incrementStat(Stat.VISIBLE_DYNAMIC_RENDERABLES);
 
 			if (plugin.configCharacterDisplacement && renderable instanceof Actor) {
 				if (plugin.enableDetailedTimers)

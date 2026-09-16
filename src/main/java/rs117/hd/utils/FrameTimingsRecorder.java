@@ -20,6 +20,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.profiling.ProfileSample;
 import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Stat;
 import rs117.hd.profiling.Timer;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -82,6 +83,7 @@ public class FrameTimingsRecorder implements Profiler.Listener {
 			public Frame(ProfileSample profileSample) {
 				timestamp = profileSample.frameTimestamp;
 				rawTimings = profileSample.timers;
+				drawnDynamic = profileSample.stats[Stat.VISIBLE_DYNAMIC_RENDERABLES.ordinal()];
 				Runtime rt = Runtime.getRuntime();
 				memoryTotal = rt.totalMemory() / MiB;
 				memoryFree = rt.freeMemory() / MiB;
@@ -174,7 +176,6 @@ public class FrameTimingsRecorder implements Profiler.Listener {
 		var frame = new Snapshot.Frame(timings);
 		frame.drawnTiles = plugin.getDrawnTileCount();
 		frame.drawnStatic = plugin.getDrawnStaticRenderableCount();
-		frame.drawnDynamic = plugin.getDrawnDynamicRenderableCount();
 		frame.npcDisplacementCacheSize = npcDisplacementCache.size();
 		snapshot.frames.add(frame);
 	}
