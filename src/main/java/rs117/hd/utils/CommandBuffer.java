@@ -10,6 +10,7 @@ import org.lwjgl.system.MemoryStack;
 import rs117.hd.opengl.GLFence;
 import rs117.hd.opengl.shader.ShaderProgram;
 import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Stat;
 import rs117.hd.profiling.Timer;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
@@ -46,6 +47,9 @@ public class CommandBuffer {
 	private static final int DRAW_MODE_MASK = 0xF;
 
 	private static final ThreadLocal<ArrayDeque<CommandBuffer>> CALL_STACK = ThreadLocal.withInitial(ArrayDeque::new);
+
+	private static int DRAW_CALL_COUNT = 0;
+	private static int RENDER_STATE_CHANGE_COUNT = 0;
 
 	private Object[] objects = new Object[8];
 	private int objectCount = 0;
@@ -286,8 +290,13 @@ public class CommandBuffer {
 				// Casting from long to int keeps the lower 32 bits
 				long data = cmd[readHead++];
 				int type = (int) data & 0xFF;
-				if (type < GL_DRAW_CALL_TYPE_COUNT)
-					renderState.apply();
+				if (type < GL_DRAW_CALL_TYPE_COUNT) {
+					DRAW_CALL_COUNT++;
+					if (renderState.isDirty()) {
+						RENDER_STATE_CHANGE_COUNT++;
+						renderState.apply();
+					}
+				}
 
 				switch (type) {
 					case GL_DEPTH_MASK_TYPE: {
@@ -453,5 +462,13 @@ public class CommandBuffer {
 
 		writeHead = 0;
 		objectCount = 0;
+	}
+
+	public static void recordStats(Profiler profiler) {
+		if(profiler == null)
+			return;
+		profiler.setStat(Stat.DRAW_CALL_COUNT, DRAW_CALL_COUNT);
+		profiler.setStat(Stat.RENDER_STATE_CHANGES, RENDER_STATE_CHANGE_COUNT);
+		DRAW_CALL_COUNT = RENDER_STATE_CHANGE_COUNT = 0;
 	}
 }

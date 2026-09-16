@@ -13,6 +13,10 @@ public abstract class GLState {
 		hasValue = hasApplied = false;
 	}
 
+	public boolean isDirty() {
+		return hasValue;
+	}
+
 	public void invalidate() {
 		hasValue = true;
 		hasApplied = false;

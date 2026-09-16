@@ -1224,6 +1224,8 @@ public class ZoneRenderer implements Renderer {
 			profiler.end(Timer.DRAW_FRAME);
 			profiler.end(Timer.RENDER_FRAME);
 
+			CommandBuffer.recordStats(profiler);
+
 			try {
 				profiler.begin(Timer.SWAP_BUFFERS);
 				plugin.awtContext.swapBuffers();
