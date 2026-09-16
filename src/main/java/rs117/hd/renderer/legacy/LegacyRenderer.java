@@ -605,9 +605,6 @@ public class LegacyRenderer implements Renderer {
 				// viewport buffer.
 				renderBufferOffset = sceneContext.staticVertexCount;
 
-				plugin.drawnTileCount = 0;
-				plugin.drawnStaticRenderableCount = 0;
-
 				// TODO: this could be done only once during scene swap, but is a bit of a pain to do
 				// Push unordered models that should always be drawn at the start of each frame.
 				// Used to fix issues like the right-click menu causing underwater tiles to disappear.
@@ -924,7 +921,6 @@ public class LegacyRenderer implements Renderer {
 			.put(tileY * Perspective.LOCAL_TILE_SIZE);
 
 		renderBufferOffset += vertexCount;
-		plugin.drawnTileCount++;
 	}
 
 	@Override
@@ -965,7 +961,6 @@ public class LegacyRenderer implements Renderer {
 			buffer.put(localX).put(localY).put(localZ);
 
 			renderBufferOffset += bufferLength;
-			plugin.drawnTileCount++;
 		}
 
 		++numPassthroughModels;
@@ -978,7 +973,6 @@ public class LegacyRenderer implements Renderer {
 		buffer.put(localX).put(localY).put(localZ);
 
 		renderBufferOffset += bufferLength;
-		plugin.drawnTileCount++;
 	}
 
 	@Override
@@ -1638,8 +1632,6 @@ public class LegacyRenderer implements Renderer {
 			eightIntWrite[1] = uvOffset;
 			eightIntWrite[2] = faceCount;
 			eightIntWrite[4] |= (hillskew ? 1 : 0) << 26 | plane << 24;
-
-			plugin.drawnStaticRenderableCount = plugin.drawnStaticRenderableCount + 1;
 		} else {
 			int uuid = ModelHash.generateUuid(client, hash, renderable);
 			if (renderable instanceof DynamicObject) {
