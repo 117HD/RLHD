@@ -371,6 +371,7 @@ public class ProfilerOverlay extends HDOverlayPanel implements Profiler.Listener
 
 	private void buildSummary(PanelComponent panel, int lineWidth, long[] timings, float cpuLoad) {
 		var boldFont = FontManager.getRunescapeBoldFont();
+		long clientTime = timings[Timer.CLIENT.ordinal()];
 		long cpuTime = timings[Timer.DRAW_FRAME.ordinal()];
 		long gpuTime = timings[Timer.RENDER_FRAME.ordinal()];
 
@@ -378,7 +379,7 @@ public class ProfilerOverlay extends HDOverlayPanel implements Profiler.Listener
 			.leftFont(boldFont)
 			.left("Estimated bottleneck:")
 			.rightFont(boldFont)
-			.right(cpuTime > gpuTime ? "CPU" : "GPU"));
+			.right(clientTime > cpuTime + gpuTime ? "CLIENT" : cpuTime > gpuTime ? "CPU" : "GPU"));
 
 		addLine(panel, lineWidth, LineComponent.builder()
 			.leftFont(boldFont)
