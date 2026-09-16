@@ -1,9 +1,9 @@
 package rs117.hd.renderer.zone;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Timer;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLTextureBuffer;
@@ -28,6 +28,7 @@ public final class ZoneUploadJob extends Job {
 
 	@Override
 	protected void onRun() throws InterruptedException {
+		final long start = System.nanoTime();
 		try (SceneUploader sceneUploader = SceneUploader.POOL.acquire()) {
 			workerHandleCancel();
 
@@ -48,6 +49,9 @@ public final class ZoneUploadJob extends Job {
 					invokeClientCallback(zoneBeingUploaded::unmap);
 			}
 			zoneBeingUploaded.initialized = true;
+		} finally {
+			if(Profiler.getInstance() != null)
+				Profiler.getInstance().add(Timer.ZONE_UPLOAD, start);
 		}
 	}
 

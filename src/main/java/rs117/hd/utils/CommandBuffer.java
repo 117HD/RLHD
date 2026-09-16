@@ -9,8 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.opengl.GLFence;
 import rs117.hd.opengl.shader.ShaderProgram;
-import rs117.hd.overlays.FrameTimer;
-import rs117.hd.overlays.Timer;
+import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Stat;
+import rs117.hd.profiling.Timer;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
@@ -47,13 +48,16 @@ public class CommandBuffer {
 
 	private static final ThreadLocal<ArrayDeque<CommandBuffer>> CALL_STACK = ThreadLocal.withInitial(ArrayDeque::new);
 
+	private static int DRAW_CALL_COUNT = 0;
+	private static int RENDER_STATE_CHANGE_COUNT = 0;
+
 	private Object[] objects = new Object[8];
 	private int objectCount = 0;
 
 	public final String name;
 
 	@Setter
-	private FrameTimer frameTimer;
+	private Profiler profiler;
 
 	private long[] cmd = new long[(int) KiB];
 	private int writeHead = 0;
@@ -277,8 +281,8 @@ public class CommandBuffer {
 		// Force VAO state to reapply to ensure it is in sync with the render state
 		renderState.vao.invalidate();
 
-		if (frameTimer != null)
-			frameTimer.begin(Timer.EXECUTE_COMMAND_BUFFER);
+		if (profiler != null)
+			profiler.begin(Timer.EXECUTE_COMMAND_BUFFER);
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			IntBuffer offsets = null, counts = null;
 			int readHead = 0;
@@ -286,8 +290,13 @@ public class CommandBuffer {
 				// Casting from long to int keeps the lower 32 bits
 				long data = cmd[readHead++];
 				int type = (int) data & 0xFF;
-				if (type < GL_DRAW_CALL_TYPE_COUNT)
-					renderState.apply();
+				if (type < GL_DRAW_CALL_TYPE_COUNT) {
+					DRAW_CALL_COUNT++;
+					if (renderState.isDirty()) {
+						RENDER_STATE_CHANGE_COUNT++;
+						renderState.apply();
+					}
+				}
 
 				switch (type) {
 					case GL_DEPTH_MASK_TYPE: {
@@ -430,8 +439,8 @@ public class CommandBuffer {
 			}
 			renderState.apply();
 		}
-		if (frameTimer != null)
-			frameTimer.end(Timer.EXECUTE_COMMAND_BUFFER);
+		if (profiler != null)
+			profiler.end(Timer.EXECUTE_COMMAND_BUFFER);
 	}
 
 	private int writeObject(Object obj) {
@@ -453,5 +462,13 @@ public class CommandBuffer {
 
 		writeHead = 0;
 		objectCount = 0;
+	}
+
+	public static void recordStats(Profiler profiler) {
+		if(profiler == null)
+			return;
+		profiler.setStat(Stat.DRAW_CALL_COUNT, DRAW_CALL_COUNT);
+		profiler.setStat(Stat.RENDER_STATE_CHANGES, RENDER_STATE_CHANGE_COUNT);
+		DRAW_CALL_COUNT = RENDER_STATE_CHANGE_COUNT = 0;
 	}
 }
