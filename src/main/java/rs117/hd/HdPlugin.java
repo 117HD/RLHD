@@ -435,7 +435,6 @@ public class HdPlugin extends Plugin {
 	public SceneShaderDebugMode configSceneShaderDebugMode = SceneShaderDebugMode.NONE;
 
 	public boolean useLowMemoryMode;
-	public boolean enableDetailedTimers;
 	public boolean enableFreezeFrame;
 	public boolean orthographicProjection;
 	public boolean freezeCulling;

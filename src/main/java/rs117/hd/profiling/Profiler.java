@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.callback.ClientThread;
 import org.lwjgl.opengl.*;
@@ -70,9 +71,13 @@ public class Profiler {
 	private final ArrayDeque<Listener> listeners = new ArrayDeque<>();
 	private long[] lastGCTimes;
 
+	@Setter
+	private boolean enableDetailedTimers = false;
+
 	private boolean useElapsedGpuQueries;
 	private int activeElapsedQuery = -1;
 	private int nextEventIndex = 0;
+
 
 	@RequiredArgsConstructor
 	public class AutoTimer implements AutoCloseable {
@@ -132,7 +137,6 @@ public class Profiler {
 			instance = this;
 			isActive = true;
 			plugin.setupSyncMode();
-			plugin.enableDetailedTimers = true;
 
 			// Estimate the timer's own runtime, with a warm-up run first
 			final int iterations = 100000;
@@ -159,7 +163,6 @@ public class Profiler {
 			instance = null;
 
 			plugin.setupSyncMode();
-			plugin.enableDetailedTimers = false;
 
 			reset();
 			if (allocatedGpuQueries.length > 0)
@@ -271,6 +274,9 @@ public class Profiler {
 		}
 
 		if (!isActive)
+			return null;
+
+		if(timer.isDetailedTimer() && !enableDetailedTimers)
 			return null;
 
 		if (timer.isGpuTimer()) {

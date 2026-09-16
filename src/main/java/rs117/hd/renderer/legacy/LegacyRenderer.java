@@ -1564,11 +1564,8 @@ public class LegacyRenderer implements Renderer {
 				return;
 		}
 
-		if (plugin.enableDetailedTimers)
-			profiler.begin(Timer.GET_MODEL);
-
 		Model model, offsetModel;
-		try {
+		try (var ignored = profiler.begin(Timer.GET_MODEL)) {
 			// getModel may throw an exception from vanilla client code
 			if (renderable instanceof Model) {
 				model = (Model) renderable;
@@ -1587,9 +1584,6 @@ public class LegacyRenderer implements Renderer {
 		} catch (Exception ex) {
 			// Vanilla happens to handle exceptions thrown here gracefully, but we handle them explicitly anyway
 			return;
-		} finally {
-			if (plugin.enableDetailedTimers)
-				profiler.end(Timer.GET_MODEL);
 		}
 
 		// Apply height to renderable from the model
@@ -1622,8 +1616,7 @@ public class LegacyRenderer implements Renderer {
 		if (plugin.redrawPreviousFrame)
 			return;
 
-		if (plugin.enableDetailedTimers)
-			profiler.begin(Timer.DRAW_RENDERABLE);
+		profiler.begin(Timer.DRAW_RENDERABLE);
 
 		eightIntWrite[3] = renderBufferOffset;
 		eightIntWrite[4] = orientation;
@@ -1687,8 +1680,7 @@ public class LegacyRenderer implements Renderer {
 			}
 
 			// Temporary model (animated or otherwise not a static Model already in the scene buffer)
-			if (plugin.enableDetailedTimers)
-				profiler.begin(Timer.MODEL_BATCHING);
+			profiler.begin(Timer.MODEL_BATCHING);
 			ModelOffsets modelOffsets = null;
 			if (plugin.configModelBatching || plugin.configModelCaching) {
 				modelHasher.setModel(model, modelOverride, preOrientation);
@@ -1700,8 +1692,7 @@ public class LegacyRenderer implements Renderer {
 						modelOffsets = null; // Assume there's been a hash collision
 				}
 			}
-			if (plugin.enableDetailedTimers)
-				profiler.end(Timer.MODEL_BATCHING);
+			profiler.end(Timer.MODEL_BATCHING);
 
 			if (modelOffsets != null && modelOffsets.faceCount == model.getFaceCount()) {
 				faceCount = modelOffsets.faceCount;
@@ -1709,8 +1700,7 @@ public class LegacyRenderer implements Renderer {
 				eightIntWrite[1] = modelOffsets.uvOffset;
 				eightIntWrite[2] = modelOffsets.faceCount;
 			} else {
-				if (plugin.enableDetailedTimers)
-					profiler.begin(Timer.MODEL_PUSHING);
+				profiler.begin(Timer.MODEL_PUSHING);
 
 				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
 				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
@@ -1721,8 +1711,7 @@ public class LegacyRenderer implements Renderer {
 				if (sceneContext.modelPusherResults[1] == 0)
 					uvOffset = -1;
 
-				if (plugin.enableDetailedTimers)
-					profiler.end(Timer.MODEL_PUSHING);
+				profiler.end(Timer.MODEL_PUSHING);
 
 				eightIntWrite[0] = vertexOffset;
 				eightIntWrite[1] = uvOffset;
@@ -1737,8 +1726,7 @@ public class LegacyRenderer implements Renderer {
 				profiler.incrementStat(Stat.VISIBLE_DYNAMIC_RENDERABLES);
 
 			if (plugin.configCharacterDisplacement && renderable instanceof Actor) {
-				if (plugin.enableDetailedTimers)
-					profiler.begin(Timer.CHARACTER_DISPLACEMENT);
+				profiler.begin(Timer.CHARACTER_DISPLACEMENT);
 				if (renderable instanceof NPC) {
 					var npc = (NPC) renderable;
 					var entry = npcDisplacementCache.get(npc);
@@ -1756,13 +1744,11 @@ public class LegacyRenderer implements Renderer {
 				} else if (renderable instanceof Player && renderable != client.getLocalPlayer()) {
 					uboCompute.addCharacterPosition(x, z, (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
 				}
-				if (plugin.enableDetailedTimers)
-					profiler.end(Timer.CHARACTER_DISPLACEMENT);
+				profiler.end(Timer.CHARACTER_DISPLACEMENT);
 			}
 		}
 
-		if (plugin.enableDetailedTimers)
-			profiler.end(Timer.DRAW_RENDERABLE);
+		profiler.end(Timer.DRAW_RENDERABLE);
 
 		if (eightIntWrite[0] == -1)
 			return; // Hidden model

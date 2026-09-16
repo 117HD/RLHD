@@ -51,6 +51,9 @@ public class FrameTimingsRecorder implements Profiler.Listener {
 	private Profiler profiler;
 
 	@Inject
+	private DeveloperTools developerTools;
+
+	@Inject
 	private NpcDisplacementCache npcDisplacementCache;
 
 	private static class Snapshot {
@@ -124,6 +127,7 @@ public class FrameTimingsRecorder implements Profiler.Listener {
 				snapshot.settings.put(key, configManager.getConfiguration("hd", key));
 			}
 
+			profiler.setEnableDetailedTimers(true);
 			profiler.addTimingsListener(this);
 			sendGameMessage(String.format("Capturing frame timings for %.0f seconds...", SNAPSHOT_DURATION_MS / 1e3f));
 		});
@@ -178,6 +182,8 @@ public class FrameTimingsRecorder implements Profiler.Listener {
 
 	private void saveSnapshot() {
 		profiler.removeTimingsListener(this);
+		if(!developerTools.isDeveloperPluginActive())
+			profiler.setEnableDetailedTimers(false);
 
 		for (var frame : snapshot.frames) {
 			frame.cpu = new LinkedHashMap<>();

@@ -843,12 +843,12 @@ public class ZoneRenderer implements Renderer {
 
 		profiler.end(Timer.CLIENT);
 
-		try {
+		try (var ignored = profiler.begin(Timer.VISIBILITY_CHECK)) {
 			if (!sceneManager.isTopLevelValid())
 				return false;
 
 			WorldViewContext ctx = sceneManager.getRoot();
-			if (plugin.enableDetailedTimers) profiler.begin(Timer.VISIBILITY_CHECK);
+			;
 			int minX = zx * CHUNK_SIZE - ctx.sceneContext.sceneOffset;
 			int minZ = zz * CHUNK_SIZE - ctx.sceneContext.sceneOffset;
 			if (ctx.sceneContext.currentArea != null) {
@@ -856,10 +856,8 @@ public class ZoneRenderer implements Renderer {
 				assert base != null;
 				boolean inArea = ctx.sceneContext.currentArea.intersects(
 					true, base[0] + minX, base[1] + minZ, base[0] + minX + 7, base[1] + minZ + 7);
-				if (!inArea) {
-					if (plugin.enableDetailedTimers) profiler.end(Timer.VISIBILITY_CHECK);
+				if (!inArea)
 					return false;
-				}
 			}
 
 			Zone zone = ctx.zones[zx][zz];
@@ -879,11 +877,8 @@ public class ZoneRenderer implements Renderer {
 			zone.inSceneFrustum = sceneCamera.intersectsAABB(
 				minX - PADDING, minY, minZ - PADDING, maxX + PADDING, maxY, maxZ + PADDING);
 
-			if (zone.inSceneFrustum) {
-				if (plugin.enableDetailedTimers)
-					profiler.end(Timer.VISIBILITY_CHECK);
+			if (zone.inSceneFrustum)
 				return zone.inShadowFrustum = true;
-			}
 
 			if (plugin.configShadowsEnabled && plugin.configExpandShadowDraw) {
 				zone.inShadowFrustum = directionalCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
@@ -893,13 +888,8 @@ public class ZoneRenderer implements Renderer {
 					int centerZ = minZ + (maxZ - minZ) / 2;
 					zone.inShadowFrustum = directionalShadowCasterVolume.intersectsPoint(centerX, centerY, centerZ);
 				}
-				if (plugin.enableDetailedTimers)
-					profiler.end(Timer.VISIBILITY_CHECK);
 				return zone.inShadowFrustum;
 			}
-
-			if (plugin.enableDetailedTimers)
-				profiler.end(Timer.VISIBILITY_CHECK);
 			if (plugin.orthographicProjection)
 				return zone.inSceneFrustum = true;
 		} catch (Throwable ex) {
