@@ -1984,7 +1984,7 @@ public class HdPlugin extends Plugin {
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
-		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
+		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || profiler.isActive();
 
 		frame = (frame + 1) & Integer.MAX_VALUE;
 

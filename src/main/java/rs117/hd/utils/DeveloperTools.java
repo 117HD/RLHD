@@ -118,8 +118,6 @@ public class DeveloperTools implements KeyListener {
 		hideUiEnabled = false;
 	}
 
-	public boolean isFrameTimingsOverlayEnabled() { return Profiler.isActive(); }
-
 	@Subscribe
 	public void onCommandExecuted(CommandExecuted commandExecuted) {
 		if (!commandExecuted.getCommand().equalsIgnoreCase("117hd"))

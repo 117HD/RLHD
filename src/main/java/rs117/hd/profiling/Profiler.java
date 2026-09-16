@@ -38,9 +38,6 @@ public class Profiler {
 	@Getter
 	private static Profiler instance;
 
-	@Getter
-	private static boolean isActive = false;
-
 	@Inject
 	private ClientThread clientThread;
 
@@ -77,7 +74,6 @@ public class Profiler {
 	private boolean useElapsedGpuQueries;
 	private int activeElapsedQuery = -1;
 	private int nextEventIndex = 0;
-
 
 	@RequiredArgsConstructor
 	public class AutoTimer implements AutoCloseable {
@@ -135,7 +131,6 @@ public class Profiler {
 			useElapsedGpuQueries = HdPlugin.APPLE || !HdPlugin.GL_CAPS.OpenGL33;
 
 			instance = this;
-			isActive = true;
 			plugin.setupSyncMode();
 
 			// Estimate the timer's own runtime, with a warm-up run first
@@ -156,10 +151,8 @@ public class Profiler {
 
 	private void destroy() {
 		clientThread.invoke(() -> {
-			if (!isActive)
+			if (instance == null)
 				return;
-
-			isActive = false;
 			instance = null;
 
 			plugin.setupSyncMode();
@@ -192,6 +185,10 @@ public class Profiler {
 	public void removeAllListeners() {
 		listeners.clear();
 		destroy();
+	}
+
+	public boolean isActive() {
+		return instance != null && !listeners.isEmpty();
 	}
 
 	public void reset() {
@@ -256,9 +253,9 @@ public class Profiler {
 		spans.reset();
 	}
 
-	public long getTimeStamp() { return isActive ? System.nanoTime() : 0; }
+	public long getTimeStamp() { return isActive() ? System.nanoTime() : 0; }
 
-	public long getUsedMemory() { return isActive ? HDUtils.getUsedMemory(true) : 0; }
+	public long getUsedMemory() { return isActive() ? HDUtils.getUsedMemory(true) : 0; }
 
 	public AutoTimer begin(Timer timer) {
 		final int index = timer.ordinal();
@@ -273,7 +270,7 @@ public class Profiler {
 			}
 		}
 
-		if (!isActive)
+		if (!isActive())
 			return null;
 
 		if(timer.isDetailedTimer() && !enableDetailedTimers)
@@ -320,7 +317,7 @@ public class Profiler {
 		final int index = timer.ordinal();
 		final TimerState state = timerStates[index];
 
-		if (!isActive || !state.active)
+		if (!isActive() || !state.active)
 			return false;
 
 		if (timer.isGpuTimer()) {
@@ -385,17 +382,17 @@ public class Profiler {
 	}
 
 	public void addDuration(Timer timer, long nanos) {
-		if (isActive)
+		if (isActive())
 			addDuration(timer.ordinal(), nanos);
 	}
 
 	public void add(Timer timer, long startNanos) {
-		if (isActive)
+		if (isActive())
 			addDuration(timer.ordinal(), System.nanoTime() - startNanos);
 	}
 
 	public void add(Timer timer, long startNanos, long startMemory) {
-		if (isActive) {
+		if (isActive()) {
 			long allocated = HDUtils.getUsedMemory(true) - startMemory;
 			addDuration(timer.ordinal(), System.nanoTime() - startNanos);
 			if(allocated > 0)
@@ -404,29 +401,33 @@ public class Profiler {
 	}
 
 	public void add(Timer timer, long duration, TimeUnit unit) {
-		if (isActive)
+		if (isActive())
 			addDuration(timer.ordinal(), TimeUnit.NANOSECONDS.convert(duration, unit));
 	}
 
 	public synchronized void pushEvent(Event event) {
-		if(nextEventIndex < NUM_EVENTS)
+		if(isActive() && nextEventIndex < NUM_EVENTS)
 			events[nextEventIndex++] = event;
 	}
 
 	public synchronized void setStat(Stat stat, long value) {
-		stats[stat.ordinal()] = value;
+		if (isActive())
+			stats[stat.ordinal()] = value;
 	}
 
 	public synchronized void setStat(Stat stat, int x, int y) {
-		stats[stat.ordinal()] = (long)x | ((long)y << 32L);
+		if (isActive())
+			stats[stat.ordinal()] = (long)x | ((long)y << 32L);
 	}
 
 	public synchronized void addStat(Stat stat, long value) {
-		stats[stat.ordinal()] += value;
+		if (isActive())
+			stats[stat.ordinal()] += value;
 	}
 
 	public synchronized void incrementStat(Stat stat) {
-		stats[stat.ordinal()]++;
+		if (isActive())
+			stats[stat.ordinal()]++;
 	}
 
 	public void endFrameAndReset() {
@@ -437,7 +438,7 @@ public class Profiler {
 			}
 		}
 
-		if (!isActive)
+		if (!isActive())
 			return;
 
 		final long frameEndNanos = System.nanoTime();
