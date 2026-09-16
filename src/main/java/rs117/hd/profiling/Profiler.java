@@ -54,17 +54,10 @@ public class Profiler {
 	private static final boolean TRACK_SYSTEM_MEMORY = HDUtils.getFreeSystemMemory() != Long.MAX_VALUE;
 	private static final int GPU_QUERY_GROWTH = Math.max(NUM_GPU_TIMERS * 2, 32);
 
-	private final AutoTimer[] autoTimers = new AutoTimer[NUM_TIMERS];
-	private final boolean[] activeTimers = new boolean[NUM_TIMERS];
+	private final TimerState[] timerStates = new TimerState[NUM_TIMERS];
 	private final Event[] events = new Event[NUM_EVENTS];
-	private final long[] timings = new long[NUM_TIMERS];
-	private final long[] heap = new long[NUM_TIMERS];
-	private final long[] allocations = new long[NUM_TIMERS];
-	private final int[] openGpuDepth = new int[NUM_TIMERS];
 
 	private final PrimitiveIntArray pendingElapsedResults = new PrimitiveIntArray();
-	private final PrimitiveIntArray[] openTimestampSpans = new PrimitiveIntArray[NUM_TIMERS];
-	private final PrimitiveIntArray[] pendingTimestampSpans = new PrimitiveIntArray[NUM_TIMERS];
 
 	private final PrimitiveIntArray freeGpuQueries = new PrimitiveIntArray();
 	private final PrimitiveIntArray allocatedGpuQueries = new PrimitiveIntArray();
@@ -88,17 +81,42 @@ public class Profiler {
 		}
 	}
 
+	public class TimerState {
+		private final Timer timer;
+		private final AutoTimer autoTimer;
+
+		private boolean active;
+		private long timing;
+		private long heap;
+		private long allocations;
+		private int gpuDepth;
+
+		private PrimitiveIntArray openTimestampSpans;
+		private PrimitiveIntArray pendingTimestampSpans;
+
+		private TimerState(Timer timer) {
+			this.timer = timer;
+			this.autoTimer = new AutoTimer(timer);
+
+			if (timer.isGpuTimer()) {
+				openTimestampSpans = new PrimitiveIntArray();
+				pendingTimestampSpans = new PrimitiveIntArray();
+			}
+		}
+
+		private void reset() {
+			active = false;
+			timing = 0;
+			heap = 0;
+			allocations = 0;
+			gpuDepth = 0;
+		}
+	}
+
 	@SuppressWarnings("resource")
 	public Profiler() {
 		for (int i = 0; i < NUM_TIMERS; i++)
-			autoTimers[i] = new AutoTimer(Timer.TIMERS[i]);
-		for (var timer : Timer.TIMERS) {
-			if (!timer.isGpuTimer())
-				continue;
-			int i = timer.ordinal();
-			openTimestampSpans[i] = new PrimitiveIntArray();
-			pendingTimestampSpans[i] = new PrimitiveIntArray();
-		}
+			timerStates[i] = new TimerState(Timer.TIMERS[i]);
 	}
 
 
@@ -123,8 +141,8 @@ public class Profiler {
 					begin(Timer.DRAW_FRAME);
 					end(Timer.DRAW_FRAME);
 				}
-				errorCompensation = (timings[Timer.DRAW_FRAME.ordinal()] + compensation) / iterations;
-				timings[Timer.DRAW_FRAME.ordinal()] = 0;
+				errorCompensation = (timerStates[Timer.DRAW_FRAME.ordinal()].timing + compensation) / iterations;
+				timerStates[Timer.DRAW_FRAME.ordinal()].timing = 0;
 			}
 			log.debug("Estimated the overhead of timers to be around {} ns", errorCompensation);
 		});
@@ -172,10 +190,6 @@ public class Profiler {
 	}
 
 	public void reset() {
-		Arrays.fill(timings, 0);
-		Arrays.fill(allocations, 0);
-		Arrays.fill(activeTimers, false);
-		Arrays.fill(openGpuDepth, 0);
 		if (activeElapsedQuery != -1) {
 			glEndQuery(GL_TIME_ELAPSED);
 			releaseGpuQuery(activeElapsedQuery);
@@ -183,12 +197,12 @@ public class Profiler {
 		}
 		elapsedStack.reset();
 		releaseElapsedResults();
-		for (var timer : Timer.TIMERS) {
-			if (!timer.isGpuTimer())
+		for (var state : timerStates) {
+			state.reset();
+			if (!state.timer.isGpuTimer())
 				continue;
-			int i = timer.ordinal();
-			releaseTimestampSpans(openTimestampSpans[i]);
-			releaseTimestampSpans(pendingTimestampSpans[i]);
+			releaseTimestampSpans(state.openTimestampSpans);
+			releaseTimestampSpans(state.pendingTimestampSpans);
 		}
 		cumulativeError = 0;
 		nextEventIndex = 0;
@@ -240,7 +254,9 @@ public class Profiler {
 	public long getUsedMemory() { return isActive ? HDUtils.getUsedMemory(true) : 0; }
 
 	public AutoTimer begin(Timer timer) {
-		int index = timer.ordinal();
+		final int index = timer.ordinal();
+		final TimerState state = timerStates[index];
+
 		if (log.isDebugEnabled() && timer.hasGpuDebugGroup() && HdPlugin.GL_CAPS.OpenGL43) {
 			if (glDebugGroupStack.contains(timer)) {
 				log.warn("The debug group {} is already on the stack", timer.name());
@@ -262,22 +278,22 @@ public class Profiler {
 				elapsedStack.ensureCapacity(1);
 				elapsedStack.put(index);
 			} else {
-				var spans = openTimestampSpans[index];
+				var spans = state.openTimestampSpans;
 				spans.ensureCapacity(2);
 				int startId = acquireGpuQuery();
 				spans.put(startId);
 				spans.put(acquireGpuQuery());
 				glQueryCounter(startId, GL_TIMESTAMP);
 			}
-			openGpuDepth[index]++;
-		} else if (!activeTimers[index]) {
+			state.gpuDepth++;
+		} else if (!state.active) {
 			cumulativeError += errorCompensation + 1 >> 1;
 			subtractDuration(index, System.nanoTime() - cumulativeError);
-			heap[index] = HDUtils.getUsedMemory(true);
+			state.heap = HDUtils.getUsedMemory(true);
 		}
-		activeTimers[index] = true;
+		state.active = true;
 
-		return autoTimers[index];
+		return state.autoTimer;
 	}
 
 	public boolean end(Timer timer) {
@@ -291,8 +307,10 @@ public class Profiler {
 			}
 		}
 
-		int index = timer.ordinal();
-		if (!isActive || !activeTimers[index])
+		final int index = timer.ordinal();
+		final TimerState state = timerStates[index];
+
+		if (!isActive || !state.active)
 			return false;
 
 		if (timer.isGpuTimer()) {
@@ -315,45 +333,45 @@ public class Profiler {
 					}
 				}
 			} else {
-				var spans = openTimestampSpans[index];
+				var spans = state.openTimestampSpans;
 				int endId = spans.array[--spans.length];
 				int startId = spans.array[--spans.length];
 				glQueryCounter(endId, GL_TIMESTAMP);
 
-				var pending = pendingTimestampSpans[index];
+				var pending = state.pendingTimestampSpans;
 				pending.ensureCapacity(2);
 				pending.put(startId);
 				pending.put(endId);
 			}
-			openGpuDepth[index]--;
-			activeTimers[index] = openGpuDepth[index] > 0;
+			state.gpuDepth--;
+			state.active = state.gpuDepth > 0;
 			// leave the GPU timer's result to be gathered at a later point
 		} else {
-			final long originalHeap = heap[index];
+			final long originalHeap = state.heap;
 			final long newHeap = HDUtils.getUsedMemory(true);
 			final long allocated = newHeap - originalHeap;
 
 			cumulativeError += errorCompensation >> 1;
 			addDuration(index, System.nanoTime() - cumulativeError);
-			if(allocated > 0)
+			if (allocated > 0)
 				addAllocation(timer.ordinal(), allocated);
-			activeTimers[index] = false;
-			heap[index] = 0;
+			state.active = false;
+			state.heap = 0;
 		}
 
 		return true;
 	}
 
 	private synchronized void subtractDuration(int ordinal, long nanos) {
-		timings[ordinal] -= nanos;
+		timerStates[ordinal].timing -= nanos;
 	}
 
 	private synchronized void addDuration(int ordinal, long nanos) {
-		timings[ordinal] += nanos;
+		timerStates[ordinal].timing += nanos;
 	}
 
 	private synchronized void addAllocation(int ordinal, long allocated) {
-		allocations[ordinal] += allocated;
+		timerStates[ordinal].allocations += allocated;
 	}
 
 	public void addDuration(Timer timer, long nanos) {
@@ -402,35 +420,35 @@ public class Profiler {
 		trackGarbageCollection();
 
 		int[] available = { 0 };
-		for (var timer : Timer.TIMERS) {
-			int i = timer.ordinal();
-			if (timer.isGpuTimer()) {
-				if (openGpuDepth[i] > 0) {
+		for (var state : timerStates) {
+			int i = state.timer.ordinal();
+			if (state.timer.isGpuTimer()) {
+				if (state.gpuDepth > 0) {
 					// End any dangling GPU timer spans automatically, but warn about it
-					log.warn("Timer {} was never ended", timer);
-					while (openGpuDepth[i] > 0)
-						end(timer);
+					log.warn("Timer {} was never ended", state.timer);
+					while (state.gpuDepth > 0)
+						end(state.timer);
 				}
 
 				if (!useElapsedGpuQueries) {
-					var spans = pendingTimestampSpans[i];
+					var spans = state.pendingTimestampSpans;
 					for (int j = 0; j < spans.length; j += 2) {
 						int startId = spans.array[j];
 						int endId = spans.array[j + 1];
 						available[0] = 0;
 						while (available[0] == 0)
 							glGetQueryObjectiv(endId, GL_QUERY_RESULT_AVAILABLE, available);
-						timings[i] += glGetQueryObjectui64(endId, GL_QUERY_RESULT) - glGetQueryObjectui64(startId, GL_QUERY_RESULT);
+						state.timing += glGetQueryObjectui64(endId, GL_QUERY_RESULT) - glGetQueryObjectui64(startId, GL_QUERY_RESULT);
 						releaseGpuQuery(startId);
 						releaseGpuQuery(endId);
 					}
 					spans.reset();
 				}
 			} else {
-				if (activeTimers[i]) {
+				if (state.active) {
 					// End the CPU timer automatically, but warn about it
-					log.warn("Timer {} was never ended", timer);
-					timings[i] += frameEndNanos;
+					log.warn("Timer {} was never ended", state.timer);
+					state.timing += frameEndNanos;
 				}
 			}
 		}
@@ -447,7 +465,7 @@ public class Profiler {
 				long duration = glGetQueryObjectui64(id, GL_QUERY_RESULT);
 
 				for (int k = 0; k < depth; k++)
-					timings[pendingElapsedResults.array[idx + k]] += duration;
+					timerStates[pendingElapsedResults.array[idx + k]].timing += duration;
 				idx += depth;
 
 				releaseGpuQuery(id);
@@ -466,6 +484,14 @@ public class Profiler {
 			gpuUsageKB = totalKB - availableKB;
 		} else {
 			gpuUsageKB = -1;
+		}
+
+		long[] timings = new long[NUM_TIMERS];
+		long[] allocations = new long[NUM_TIMERS];
+		for (var state : timerStates) {
+			int i = state.timer.ordinal();
+			timings[i] = state.timing;
+			allocations[i] = state.allocations;
 		}
 
 		var frameTimings = new ProfileSample(frameEndTimestamp, timings, allocations, events, nextEventIndex, cpuLoad, heapUsageKB, freeSystemMemory, gpuUsageKB);
