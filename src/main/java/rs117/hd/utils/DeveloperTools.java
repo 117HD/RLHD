@@ -77,13 +77,9 @@ public class DeveloperTools implements KeyListener {
 	private boolean tiledLightingOverlayEnabled;
 	private boolean developerPluginActive;
 
-	public void setDeveloperPluginActive(boolean active)
-	{
+	public void setDeveloperPluginActive(boolean active) {
 		developerPluginActive = active;
-		if (active)
-			frameTimerOverlay.setActive(false);
-		else
-			frameTimerOverlay.setActive(frameTimingsOverlayEnabled);
+		frameTimerOverlay.setActive(!active && frameTimingsOverlayEnabled);
 	}
 
 	public void activate() {
