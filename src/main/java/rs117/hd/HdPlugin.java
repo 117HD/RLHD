@@ -461,13 +461,6 @@ public class HdPlugin extends Plugin {
 	public float[] viewProjMatrix = Mat4.zero();
 	public float[] invViewProjMatrix = Mat4.zero();
 
-	@Getter
-	public int drawnTileCount;
-	@Getter
-	public int drawnStaticRenderableCount;
-	@Getter
-	public int drawnTempRenderableCount;
-
 	private int startupCount;
 	public int frame;
 	public double elapsedTime;

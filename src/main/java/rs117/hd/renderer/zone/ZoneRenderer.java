@@ -387,8 +387,6 @@ public class ZoneRenderer implements Renderer {
 		profiler.begin(Timer.DRAW_SCENE);
 
 		if (!plugin.enableFreezeFrame && !plugin.redrawPreviousFrame) {
-			plugin.drawnTempRenderableCount = 0;
-
 			copyTo(plugin.cameraPosition, vec(cameraX, cameraY, cameraZ));
 			copyTo(plugin.cameraOrientation, vec(cameraYaw, cameraPitch));
 
