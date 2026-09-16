@@ -277,8 +277,7 @@ public class LegacyModelPusher {
 		}
 
 		if (!foundCachedVertexData) {
-			if (plugin.enableDetailedTimers)
-				profiler.begin(Timer.MODEL_PUSHING_VERTEX);
+			profiler.begin(Timer.MODEL_PUSHING_VERTEX);
 
 			modelOverride.applyRotation(model);
 			for (int face = 0; face < faceCount; face++) {
@@ -289,13 +288,11 @@ public class LegacyModelPusher {
 			}
 			modelOverride.revertRotation(model);
 
-			if (plugin.enableDetailedTimers)
-				profiler.end(Timer.MODEL_PUSHING_VERTEX);
+			profiler.end(Timer.MODEL_PUSHING_VERTEX);
 		}
 
 		if (!foundCachedNormalData) {
-			if (plugin.enableDetailedTimers)
-				profiler.begin(Timer.MODEL_PUSHING_NORMAL);
+			profiler.begin(Timer.MODEL_PUSHING_NORMAL);
 
 			for (int face = 0; face < faceCount; face++) {
 				getNormalDataForFace(sceneContext, model, modelOverride, face);
@@ -304,13 +301,11 @@ public class LegacyModelPusher {
 					fullNormalData.put(sceneContext.modelFaceNormals);
 			}
 
-			if (plugin.enableDetailedTimers)
-				profiler.end(Timer.MODEL_PUSHING_NORMAL);
+			profiler.end(Timer.MODEL_PUSHING_NORMAL);
 		}
 
 		if (!foundCachedUvData) {
-			if (plugin.enableDetailedTimers)
-				profiler.begin(Timer.MODEL_PUSHING_UV);
+			profiler.begin(Timer.MODEL_PUSHING_UV);
 
 			int[] faceColors = model.getFaceColors1();
 			byte[] faceTransparencies = model.getFaceTransparencies();
@@ -372,8 +367,7 @@ public class LegacyModelPusher {
 				++texturedFaceCount;
 			}
 
-			if (plugin.enableDetailedTimers)
-				profiler.end(Timer.MODEL_PUSHING_UV);
+			profiler.end(Timer.MODEL_PUSHING_UV);
 		}
 
 		if (cacheVertexData)

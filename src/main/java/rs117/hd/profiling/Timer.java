@@ -103,6 +103,8 @@ public enum Timer {
 		this.type = type;
 	}
 
+	public boolean isDetailedTimer() { return this != CLIENT && this != DRAW_FRAME && this != RENDER_FRAME; }
+
 	public boolean isCpuTimer() {
 		return type == CPU_TIMER;
 	}
