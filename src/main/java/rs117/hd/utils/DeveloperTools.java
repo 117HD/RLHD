@@ -89,6 +89,9 @@ public class DeveloperTools implements KeyListener {
 	@Inject
 	private FrameTimingsRecorder frameTimingsRecorder;
 
+	@Inject
+	private Profiler profiler;
+
 	private boolean keyBindingsEnabled;
 	private boolean tileInfoOverlayEnabled;
 	private boolean frameTimingsOverlayEnabled;
@@ -97,12 +100,14 @@ public class DeveloperTools implements KeyListener {
 	@Getter
 	private boolean hideUiEnabled;
 	private boolean tiledLightingOverlayEnabled;
+	@Getter
 	private boolean developerPluginActive;
 
 	private RuneliteColorPicker colorPicker;
 
 	public void setDeveloperPluginActive(boolean active) {
 		developerPluginActive = active;
+		profiler.setEnableDetailedTimers(active);
 		frameTimerOverlay.setActive(!active && frameTimingsOverlayEnabled);
 	}
 

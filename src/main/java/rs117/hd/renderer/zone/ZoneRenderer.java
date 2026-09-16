@@ -898,12 +898,12 @@ public class ZoneRenderer implements Renderer {
 
 		profiler.end(Timer.CLIENT);
 
-		try {
+		try (var ignored = profiler.begin(Timer.VISIBILITY_CHECK)) {
 			if (!sceneManager.isTopLevelValid())
 				return false;
 
 			WorldViewContext ctx = sceneManager.getRoot();
-			if (plugin.enableDetailedTimers) profiler.begin(Timer.VISIBILITY_CHECK);
+			;
 			int minX = zx * CHUNK_SIZE - ctx.sceneContext.sceneOffset;
 			int minZ = zz * CHUNK_SIZE - ctx.sceneContext.sceneOffset;
 			if (ctx.sceneContext.currentArea != null) {
@@ -911,10 +911,8 @@ public class ZoneRenderer implements Renderer {
 				assert base != null;
 				boolean inArea = ctx.sceneContext.currentArea.intersects(
 					true, base[0] + minX, base[1] + minZ, base[0] + minX + 7, base[1] + minZ + 7);
-				if (!inArea) {
-					if (plugin.enableDetailedTimers) profiler.end(Timer.VISIBILITY_CHECK);
+				if (!inArea)
 					return false;
-				}
 			}
 
 			Zone zone = ctx.zones[zx][zz];
@@ -944,12 +942,10 @@ public class ZoneRenderer implements Renderer {
 					minX - PADDING, minY - PADDING, minZ - PADDING,
 					maxX + PADDING, maxY + PADDING, maxZ + PADDING
 				) &&
-					profiler.end(Timer.VISIBILITY_CHECK);
 				directionalShadowCasterVolume.intersectsAABB(
 					minX - PADDING, minY - PADDING, minZ - PADDING,
 					maxX + PADDING, maxY + PADDING, maxZ + PADDING
 				);
-
 			if (plugin.orthographicProjection)
 				return zone.inSceneFrustum = true;
 			return zone.inShadowFrustum;
