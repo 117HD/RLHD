@@ -3,6 +3,7 @@ package rs117.hd;
 import com.google.inject.Provides;
 import java.awt.event.KeyEvent;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
@@ -20,6 +21,7 @@ import rs117.hd.overlays.ProfilerUI;
 import rs117.hd.utils.DeveloperTools;
 
 @Slf4j
+@Singleton
 @PluginDescriptor(
 	name = "117 HD Developer",
 	description = "Development and profiling tools for 117 HD",
@@ -48,10 +50,10 @@ public class DeveloperPlugin extends Plugin implements KeyListener {
 	@Inject
 	private DeveloperConfig config;
 
-	private boolean frameTimingsOverlayEnabled;
-
 	@Inject
 	private DeveloperTools developerTools;
+
+	private boolean frameTimingsOverlayEnabled;
 
 	@Provides
 	DeveloperConfig provideConfig(ConfigManager configManager) {
@@ -60,15 +62,6 @@ public class DeveloperPlugin extends Plugin implements KeyListener {
 
 	@Override
 	protected void startUp() {
-		activate();
-	}
-
-	@Override
-	protected void shutDown() {
-		deactivate();
-	}
-
-	private void activate() {
 		eventBus.register(this);
 		keyManager.registerKeyListener(this);
 		developerTools.setDeveloperPluginActive(true);
@@ -84,7 +77,8 @@ public class DeveloperPlugin extends Plugin implements KeyListener {
 		});
 	}
 
-	private void deactivate() {
+	@Override
+	protected void shutDown() {
 		eventBus.unregister(this);
 		keyManager.unregisterKeyListener(this);
 		developerTools.setDeveloperPluginActive(false);
