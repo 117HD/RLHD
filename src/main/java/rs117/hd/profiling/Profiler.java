@@ -57,8 +57,9 @@ public class Profiler {
 	private final TimerState[] timerStates = new TimerState[NUM_TIMERS];
 	private final Event[] events = new Event[NUM_EVENTS];
 
-	private final PrimitiveIntArray pendingElapsedResults = new PrimitiveIntArray();
+	private final int[] queryResult = { 0 };
 
+	private final PrimitiveIntArray pendingElapsedResults = new PrimitiveIntArray();
 	private final PrimitiveIntArray freeGpuQueries = new PrimitiveIntArray();
 	private final PrimitiveIntArray allocatedGpuQueries = new PrimitiveIntArray();
 	private final PrimitiveIntArray elapsedStack = new PrimitiveIntArray();
@@ -81,7 +82,7 @@ public class Profiler {
 		}
 	}
 
-	public class TimerState {
+	private final class TimerState {
 		private final Timer timer;
 		private final AutoTimer autoTimer;
 
@@ -118,7 +119,6 @@ public class Profiler {
 		for (int i = 0; i < NUM_TIMERS; i++)
 			timerStates[i] = new TimerState(Timer.TIMERS[i]);
 	}
-
 
 	public long cumulativeError;
 	public long errorCompensation;
@@ -197,7 +197,8 @@ public class Profiler {
 		}
 		elapsedStack.reset();
 		releaseElapsedResults();
-		for (var state : timerStates) {
+		for (int i = 0; i < NUM_TIMERS; i++) {
+			final TimerState state = timerStates[i];
 			state.reset();
 			if (!state.timer.isGpuTimer())
 				continue;
@@ -414,14 +415,14 @@ public class Profiler {
 		if (!isActive)
 			return;
 
-		long frameEndNanos = System.nanoTime();
-		long frameEndTimestamp = System.currentTimeMillis();
+		final long frameEndNanos = System.nanoTime();
+		final long frameEndTimestamp = System.currentTimeMillis();
 
 		trackGarbageCollection();
 
-		int[] available = { 0 };
-		for (var state : timerStates) {
-			int i = state.timer.ordinal();
+		long totalAsyncTime = 0;
+		for (int i = 0; i < NUM_TIMERS; i++) {
+			final TimerState state = timerStates[i];
 			if (state.timer.isGpuTimer()) {
 				if (state.gpuDepth > 0) {
 					// End any dangling GPU timer spans automatically, but warn about it
@@ -435,9 +436,9 @@ public class Profiler {
 					for (int j = 0; j < spans.length; j += 2) {
 						int startId = spans.array[j];
 						int endId = spans.array[j + 1];
-						available[0] = 0;
-						while (available[0] == 0)
-							glGetQueryObjectiv(endId, GL_QUERY_RESULT_AVAILABLE, available);
+						queryResult[0] = 0;
+						while (queryResult[0] == 0)
+							glGetQueryObjectiv(endId, GL_QUERY_RESULT_AVAILABLE, queryResult);
 						state.timing += glGetQueryObjectui64(endId, GL_QUERY_RESULT) - glGetQueryObjectui64(startId, GL_QUERY_RESULT);
 						releaseGpuQuery(startId);
 						releaseGpuQuery(endId);
@@ -449,6 +450,8 @@ public class Profiler {
 					// End the CPU timer automatically, but warn about it
 					log.warn("Timer {} was never ended", state.timer);
 					state.timing += frameEndNanos;
+				} else if(state.timer.isAsyncCpuTimer()) {
+					totalAsyncTime += state.timing;
 				}
 			}
 		}
@@ -459,9 +462,9 @@ public class Profiler {
 				int id = pendingElapsedResults.array[idx++];
 				int depth = pendingElapsedResults.array[idx++];
 
-				available[0] = 0;
-				while (available[0] == 0)
-					glGetQueryObjectiv(id, GL_QUERY_RESULT_AVAILABLE, available);
+				queryResult[0] = 0;
+				while (queryResult[0] == 0)
+					glGetQueryObjectiv(id, GL_QUERY_RESULT_AVAILABLE, queryResult);
 				long duration = glGetQueryObjectui64(id, GL_QUERY_RESULT);
 
 				for (int k = 0; k < depth; k++)
@@ -486,15 +489,14 @@ public class Profiler {
 			gpuUsageKB = -1;
 		}
 
-		long[] timings = new long[NUM_TIMERS];
-		long[] allocations = new long[NUM_TIMERS];
-		for (var state : timerStates) {
-			int i = state.timer.ordinal();
-			timings[i] = state.timing;
-			allocations[i] = state.allocations;
+		var frameTimings = new ProfileSample(frameEndTimestamp, totalAsyncTime, events, nextEventIndex, cpuLoad, heapUsageKB, freeSystemMemory, gpuUsageKB);
+
+		for (int i = 0; i < NUM_TIMERS; i++) {
+			final TimerState state = timerStates[i];
+			frameTimings.timers[i] = state.timing;
+			frameTimings.allocations[i] = state.allocations;
 		}
 
-		var frameTimings = new ProfileSample(frameEndTimestamp, timings, allocations, events, nextEventIndex, cpuLoad, heapUsageKB, freeSystemMemory, gpuUsageKB);
 		for (var listener : listeners)
 			listener.onFrameCompletion(frameTimings);
 
