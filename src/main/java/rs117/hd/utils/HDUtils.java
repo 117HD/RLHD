@@ -615,4 +615,9 @@ public final class HDUtils {
 		var b = g.getClipBounds();
 		drawStringCentered(g, s, b.width / 2.f, b.height / 2.f);
 	}
+
+	public static String enumToName(String name) {
+		name = name.replace('_', ' ');
+		return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+	}
 }

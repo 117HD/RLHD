@@ -41,10 +41,10 @@ import rs117.hd.overlays.components.SwatchComponent;
 import rs117.hd.profiling.ProfileSample;
 import rs117.hd.profiling.ProfileSampleStore;
 import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Stat;
 import rs117.hd.profiling.Timer;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.WorldViewContext;
-import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.utils.FrameTimingsRecorder;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.collections.PooledArrayType;
@@ -347,7 +347,21 @@ public class ProfilerOverlay extends HDOverlayPanel implements Profiler.Listener
 			.leftFont(boldFont)
 			.left("Stats:"));
 
-		buildSceneContent(panel, lineWidth);
+		var frames = profileSampleStore.getFrames();
+		if (frames.isEmpty())
+			return;
+
+		var sample = frames.peekLast();
+		for(int i = 0; i < Stat.STATS.length; i++) {
+			if(sample.stats[i] == 0)
+				continue;
+
+			var stat = Stat.STATS[i];
+			addLine(panel, lineWidth, LineComponent.builder()
+				.left(stat.name)
+				.right(stat.formatter.format(sample.stats[i])));
+		}
+
 		buildStreamingContent(panel, cache, lineWidth);
 	}
 
@@ -385,10 +399,6 @@ public class ProfilerOverlay extends HDOverlayPanel implements Profiler.Listener
 		addLine(panel, lineWidth, LineComponent.builder()
 			.left("Pooled array size:")
 			.right(formatBytes(PooledArrayType.getCurrentTotalCacheSize())));
-
-		addLine(panel, lineWidth, LineComponent.builder()
-			.left("Garbage collection count:")
-			.right(String.valueOf(plugin.getGarbageCollectionCount())));
 
 		addLine(panel, lineWidth, LineComponent.builder()
 			.left("Power saving mode:")
@@ -431,41 +441,6 @@ public class ProfilerOverlay extends HDOverlayPanel implements Profiler.Listener
 		for (var t : Timer.TIMERS)
 			if (t.isGpuTimer() && t != Timer.RENDER_FRAME)
 				addTiming(panel, cache, lineWidth, t, timings);
-	}
-
-	private void buildSceneContent(PanelComponent panel, int lineWidth) {
-		if (plugin.getSceneContext() != null) {
-			var sceneContext = plugin.getSceneContext();
-			addLine(panel, lineWidth, LineComponent.builder()
-				.left("Lights:")
-				.right(format("%d/%d", sceneContext.numVisibleLights, sceneContext.lights.size())));
-		}
-
-		if (plugin.renderer instanceof ZoneRenderer) {
-			addLine(panel, lineWidth, LineComponent.builder()
-				.left("Dynamic renderables:")
-				.right(String.valueOf(plugin.getDrawnDynamicRenderableCount())));
-
-			addLine(panel, lineWidth, LineComponent.builder()
-				.left("Temp renderables:")
-				.right(String.valueOf(plugin.getDrawnTempRenderableCount())));
-		} else {
-			addLine(panel, lineWidth, LineComponent.builder()
-				.left("Tiles:")
-				.right(String.valueOf(plugin.getDrawnTileCount())));
-
-			addLine(panel, lineWidth, LineComponent.builder()
-				.left("Static renderables:")
-				.right(String.valueOf(plugin.getDrawnStaticRenderableCount())));
-
-			addLine(panel, lineWidth, LineComponent.builder()
-				.left("Dynamic renderables:")
-				.right(String.valueOf(plugin.getDrawnDynamicRenderableCount())));
-
-			addLine(panel, lineWidth, LineComponent.builder()
-				.left("NPC displacement cache size:")
-				.right(String.valueOf(npcDisplacementCache.size())));
-		}
 	}
 
 	private void buildStreamingContent(PanelComponent panel, LineCache cache, int lineWidth) {

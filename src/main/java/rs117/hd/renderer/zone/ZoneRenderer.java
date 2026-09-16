@@ -50,6 +50,7 @@ import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Stat;
 import rs117.hd.profiling.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.scene.EnvironmentManager;
@@ -387,7 +388,6 @@ public class ZoneRenderer implements Renderer {
 
 		if (!plugin.enableFreezeFrame && !plugin.redrawPreviousFrame) {
 			plugin.drawnTempRenderableCount = 0;
-			plugin.drawnDynamicRenderableCount = 0;
 
 			copyTo(plugin.cameraPosition, vec(cameraX, cameraY, cameraZ));
 			copyTo(plugin.cameraOrientation, vec(cameraYaw, cameraPitch));
@@ -556,6 +556,8 @@ public class ZoneRenderer implements Renderer {
 				plugin.uboLights.upload();
 				plugin.uboLightsCulling.upload();
 				plugin.uboGlobal.pointLightsCount.set(ctx.sceneContext.numVisibleLights);
+
+				profiler.setStat(Stat.VISIBLE_LIGHTS, ctx.sceneContext.numVisibleLights, ctx.sceneContext.lights.size());
 				profiler.end(Timer.UPDATE_LIGHTS);
 			}
 		}
@@ -709,9 +711,6 @@ public class ZoneRenderer implements Renderer {
 		profiler.end(Timer.DRAW_SCENE);
 		profiler.begin(Timer.RENDER_FRAME);
 		shouldRenderScene = true;
-
-		// TODO: Add proper support for stat tracking to the FrameTimer or elsewhere
-		plugin.drawnDynamicRenderableCount += modelStreamingManager.getDrawnDynamicRenderableCount();
 
 		checkGLErrors();
 	}
