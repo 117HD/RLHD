@@ -7,7 +7,9 @@ import static rs117.hd.utils.HDUtils.enumToName;
 public enum Stat {
 	GARBAGE_COLLECTION_COUNT,
 	VISIBLE_LIGHTS((value) -> String.format("%d/%d", value & 0xFFFF_FFFFL, value >>> 32)),
-	VISIBLE_DYNAMIC_RENDERABLES;
+	VISIBLE_DYNAMIC_RENDERABLES,
+	RENDER_STATE_CHANGES,
+	DRAW_CALL_COUNT;
 
 	public static final Stat[] STATS = values();
 
