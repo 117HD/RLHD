@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.input.KeyListener;
@@ -29,11 +28,9 @@ import rs117.hd.utils.DeveloperTools;
 )
 @PluginDependency(HdPlugin.class)
 public class DeveloperPlugin extends Plugin implements KeyListener {
-	@Inject
-	private ClientThread clientThread;
 
 	@Inject
-	private EventBus eventBus;
+	private ClientThread clientThread;
 
 	@Inject
 	private KeyManager keyManager;
@@ -62,15 +59,14 @@ public class DeveloperPlugin extends Plugin implements KeyListener {
 
 	@Override
 	protected void startUp() {
-		eventBus.register(this);
-		keyManager.registerKeyListener(this);
-		developerTools.setDeveloperPluginActive(true);
+		clientThread.invoke(() -> {
+			keyManager.registerKeyListener(this);
+			developerTools.setDeveloperPluginActive(true);
 
-		processConfigChanges();
-		profilerUI.load();
-		frameTimingsOverlayEnabled = profilerUI.loadOverlayEnabled();
+			processConfigChanges();
+			profilerUI.load();
+			frameTimingsOverlayEnabled = profilerUI.loadOverlayEnabled();
 
-		clientThread.invokeLater(() -> {
 			profilerOverlay.setActive(frameTimingsOverlayEnabled);
 			if (frameTimingsOverlayEnabled)
 				profilerUI.applyGraphOverlayState();
@@ -79,11 +75,12 @@ public class DeveloperPlugin extends Plugin implements KeyListener {
 
 	@Override
 	protected void shutDown() {
-		eventBus.unregister(this);
-		keyManager.unregisterKeyListener(this);
-		developerTools.setDeveloperPluginActive(false);
-		profilerOverlay.setActive(false);
-		profilerUI.setGraphOverlayActive(false);
+		clientThread.invoke(() -> {
+			keyManager.unregisterKeyListener(this);
+			developerTools.setDeveloperPluginActive(false);
+			profilerOverlay.setActive(false);
+			profilerUI.setGraphOverlayActive(false);
+		});
 	}
 
 	@Subscribe
