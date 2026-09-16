@@ -209,9 +209,9 @@ public class ZoneRenderer implements Renderer {
 			FacePrioritySorter.POOL = new ConcurrentPool<>(() -> injector.getInstance(FacePrioritySorter.class));
 
 		sceneCmd.setProfiler(profiler);
-		gapFillerCmd.setProfiler(frameTimer);
+		gapFillerCmd.setProfiler(profiler);
 		directionalCmd.setProfiler(profiler);
-		gapFillerCmd.setProfiler(frameTimer);
+		gapFillerCmd.setProfiler(profiler);
 
 		jobSystem.startUp(config.cpuUsageLimit());
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
@@ -463,9 +463,9 @@ public class ZoneRenderer implements Renderer {
 				environmentManager.update(ctx.sceneContext);
 				profiler.end(Timer.UPDATE_ENVIRONMENT);
 
-				setProfiler.begin(Timer.UPDATE_SKY);
+				profiler.begin(Timer.UPDATE_SKY);
 				skyManager.update();
-				setProfiler.end(Timer.UPDATE_SKY);
+				profiler.end(Timer.UPDATE_SKY);
 
 				profiler.begin(Timer.UPDATE_LIGHTS);
 				lightManager.update(ctx.sceneContext, plugin.cameraShift, plugin.cameraFrustum);
@@ -816,11 +816,11 @@ public class ZoneRenderer implements Renderer {
 
 		directionalCmd.execute(renderState);
 
-		frameTimer.end(Timer.RENDER_SHADOWS);
+		profiler.end(Timer.RENDER_SHADOWS);
 
 		// Render terrain-only shadow map
 		if (plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0) {
-			frameTimer.begin(Timer.RENDER_TERRAIN_SHADOWS);
+			profiler.begin(Timer.RENDER_TERRAIN_SHADOWS);
 
 			renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTerrainShadowMap);
 			renderState.viewport.set(0, 0, plugin.terrainShadowMapResolution, plugin.terrainShadowMapResolution);
@@ -832,7 +832,7 @@ public class ZoneRenderer implements Renderer {
 			terrainShadowProgram.use();
 			terrainShadowCmd.execute(renderState);
 
-			frameTimer.end(Timer.RENDER_TERRAIN_SHADOWS);
+			profiler.end(Timer.RENDER_TERRAIN_SHADOWS);
 		}
 
 		glBindVertexArray(0);
@@ -843,11 +843,10 @@ public class ZoneRenderer implements Renderer {
 		renderState.disable.set(GL_POLYGON_OFFSET_FILL);
 
 		shouldClearShadowFbo = true;
-		frameTimer.end(Timer.RENDER_SHADOWS);
+		profiler.end(Timer.RENDER_SHADOWS);
 	}
 
 	private void scenePass() {
-		profiler.begin(Timer.DRAW_SCENE);
 		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
 		if (plugin.msaaSamples > 1) {
 			renderState.enable.set(GL_MULTISAMPLE);
@@ -859,11 +858,9 @@ public class ZoneRenderer implements Renderer {
 			renderState.ido.set(indirectDrawCmds.id);
 		renderState.apply();
 
-		profiler.begin(Timer.CLEAR_SCENE);
 		skyRenderer.clear(shouldRenderVanillaSkybox);
-		profiler.end(Timer.CLEAR_SCENE);
 
-		profiler.begin(Timer.RENDER_SCENE);
+		profiler.begin(Timer.RENDER_SCENE_AND_SKY);
 
 		renderState.enable.set(GL_CULL_FACE);
 		renderState.enable.set(GL_DEPTH_TEST);
@@ -878,7 +875,7 @@ public class ZoneRenderer implements Renderer {
 		sceneProgram.use();
 		sceneCmd.execute(renderState);
 
-		profiler.end(Timer.RENDER_SCENE);
+		profiler.end(Timer.RENDER_SCENE_AND_SKY);
 
 		glBindVertexArray(0);
 

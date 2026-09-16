@@ -1,7 +1,5 @@
 package rs117.hd.renderer.zone;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.profiling.Profiler;
@@ -52,7 +50,7 @@ public final class ZoneUploadJob extends Job {
 			}
 			zoneBeingUploaded.initialized = true;
 		} finally {
-			if(Profiler.isActive())
+			if(Profiler.getInstance() != null)
 				Profiler.getInstance().add(Timer.ZONE_UPLOAD, start);
 		}
 	}

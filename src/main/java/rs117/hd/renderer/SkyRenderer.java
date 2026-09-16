@@ -14,8 +14,8 @@ import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.SkyShaderProgram;
 import rs117.hd.opengl.shader.StarShaderProgram;
 import rs117.hd.opengl.uniforms.UBOGlobal;
-import rs117.hd.overlays.FrameTimer;
-import rs117.hd.overlays.Timer;
+import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Timer;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.SkyManager;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration;
@@ -47,7 +47,7 @@ public class SkyRenderer {
 	private HdPluginConfig config;
 
 	@Inject
-	private FrameTimer frameTimer;
+	private Profiler profiler;
 
 	@Inject
 	private SkyManager skyManager;
@@ -126,7 +126,7 @@ public class SkyRenderer {
 	public void initialize() {
 		previousTransition = 1;
 		interruptedTransition = false;
-		commandBuffer.setFrameTimer(frameTimer);
+		commandBuffer.setProfiler(profiler);
 		commandBuffer.reset();
 		starField.initialize();
 	}
@@ -194,7 +194,7 @@ public class SkyRenderer {
 	}
 
 	public void clear(boolean hasVanillaSkybox) {
-		frameTimer.begin(Timer.CLEAR_SCENE);
+		profiler.begin(Timer.CLEAR_SCENE);
 
 		glClearDepth(0);
 
@@ -212,7 +212,7 @@ public class SkyRenderer {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 
-		frameTimer.end(Timer.CLEAR_SCENE);
+		profiler.end(Timer.CLEAR_SCENE);
 	}
 
 	public void appendTo(CommandBuffer target) {

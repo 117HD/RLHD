@@ -3,6 +3,8 @@ package rs117.hd.utils;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -16,10 +18,14 @@ import net.runelite.client.input.KeyManager;
 import net.runelite.client.ui.components.colorpicker.ColorPickerManager;
 import net.runelite.client.ui.components.colorpicker.RuneliteColorPicker;
 import rs117.hd.HdPlugin;
+import rs117.hd.HdPluginConfig;
+import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TileInfoOverlay;
 import rs117.hd.overlays.TiledLightingOverlay;
+import rs117.hd.profiling.Profiler;
+import rs117.hd.scene.GamevalManager;
 
 import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
 import static java.awt.event.InputEvent.SHIFT_DOWN_MASK;
@@ -142,8 +148,6 @@ public class DeveloperTools implements KeyListener {
 		hideUiEnabled = false;
 	}
 
-	public boolean isFrameTimingsOverlayEnabled() { return Profiler.isActive(); }
-
 	@Subscribe
 	public void onCommandExecuted(CommandExecuted commandExecuted) {
 		if (!commandExecuted.getCommand().equalsIgnoreCase("117hd"))
@@ -153,7 +157,8 @@ public class DeveloperTools implements KeyListener {
 		if (args.length < 1)
 			return;
 
-		switch (args[0].toLowerCase()) {
+		String action = args[0].toLowerCase();
+		switch (action) {
 			case "timers":
 			case "timings":
 				if (developerPluginActive)

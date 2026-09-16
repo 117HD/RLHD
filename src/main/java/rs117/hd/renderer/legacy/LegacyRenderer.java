@@ -1139,7 +1139,7 @@ public class LegacyRenderer implements Renderer {
 			skyRenderer.renderImmediately();
 			profiler.end(Timer.CLEAR_SCENE);
 
-			profiler.begin(Timer.RENDER_SCENE);
+			profiler.begin(Timer.RENDER_SCENE_AND_SKY);
 
 			// We just allow the GL to do face culling. Note this requires the priority renderer
 			// to have logic to disregard culled faces in the priority depth testing.
@@ -1190,7 +1190,7 @@ public class LegacyRenderer implements Renderer {
 				glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
 			}
 
-			profiler.end(Timer.RENDER_SCENE);
+			profiler.end(Timer.RENDER_SCENE_AND_SKY);
 
 			glDisable(GL_BLEND);
 			glDisable(GL_CULL_FACE);

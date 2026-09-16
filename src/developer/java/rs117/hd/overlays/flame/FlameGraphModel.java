@@ -48,7 +48,7 @@ public class FlameGraphModel {
 		});
 		CHILDREN.put(Timer.RENDER_FRAME, new Timer[] {
 			Timer.CLEAR_SCENE,
-			Timer.RENDER_SCENE,
+			Timer.RENDER_SCENE_AND_SKY,
 			Timer.RENDER_SHADOWS,
 			Timer.RENDER_TILED_LIGHTING,
 			Timer.UPLOAD_GEOMETRY,

@@ -379,14 +379,14 @@ public class CommandBuffer {
 						break;
 					}
 					case GL_TIMER: {
-						if (frameTimer != null) {
+						if (profiler != null) {
 							int timerOrdinal = (int) (data >> 9);
 							assert timerOrdinal >= 0 && timerOrdinal < Timer.TIMERS.length;
 							var timer = Timer.TIMERS[timerOrdinal];
 							if (((data >> 8) & 1) == 1) {
-								frameTimer.begin(timer);
+								profiler.begin(timer);
 							} else {
-								frameTimer.end(timer);
+								profiler.end(timer);
 							}
 						}
 						break;
