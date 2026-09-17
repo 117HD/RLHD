@@ -19,14 +19,12 @@ void main() {
         discard;
 
     // A soft profile avoids sub-pixel brightness flicker.
-    float falloff = exp(-d * d * 2.0); // smooth bell, ~0 by the sprite edge (wider = softer)
-    falloff *= 1.0 - smoothstep(0.8, 1.0, d);
+    float falloff = exp(-d * d * 4.4); // smooth bell, ~0 by the sprite edge (wider = softer)
 
     // Vertex colors are authored in sRGB; brightness and falloff scale linear light.
     vec3 starColor = srgbToLinear(vColor) * vBrightness * falloff * 4.0;
     starColor = linearToSrgb(starColor);
     starColor = applyColorAdjustments(starColor);
     starColor = applyOutputCorrection(starColor);
-    // Additive sprites preserve the background alpha.
     FragColor = vec4(starColor, 0.0);
 }
