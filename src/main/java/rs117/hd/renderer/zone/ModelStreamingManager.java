@@ -364,7 +364,8 @@ public class ModelStreamingManager {
 		try (
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
 			FacePrioritySorter facePrioritySorter = shouldSort ? FacePrioritySorter.POOL.acquire() : null;
-			PooledArray<int[]> faceDistances = shouldSort ? PooledArrayType.INT.borrow("ModelStreamingManager::uploadTempModel", m.getFaceCount()) : null
+			PooledArray<int[]> faceDistances = shouldSort ?
+				PooledArrayType.INT.borrow("ModelStreamingManager::uploadTempModel", m.getFaceCount()) : null
 		) {
 			shouldSort &= sceneUploader.preprocessTempModel(
 				projection,

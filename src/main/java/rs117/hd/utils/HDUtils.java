@@ -488,10 +488,9 @@ public final class HDUtils {
 		StringBuilder sb = threadLocalStringBuilder.get();
 
 		int rangeEnd = 0;
-		for (int i = 2; i < stackTrace.length; i++) {
-			if(stackTrace[i].getClassName().startsWith("rs117.hd"))
+		for (int i = 2; i < stackTrace.length; i++)
+			if (stackTrace[i].getClassName().startsWith("rs117.hd"))
 				rangeEnd = i;
-		}
 		rangeEnd = Math.min(rangeEnd + 2, stackTrace.length);
 
 		for (int i = 2; i < rangeEnd; i++)
@@ -507,10 +506,9 @@ public final class HDUtils {
 	}
 
 	public static Thread getThreadById(long id) {
-		for (Thread t : Thread.getAllStackTraces().keySet()) {
+		for (Thread t : Thread.getAllStackTraces().keySet())
 			if (t.getId() == id)
 				return t;
-		}
 		return null;
 	}
 

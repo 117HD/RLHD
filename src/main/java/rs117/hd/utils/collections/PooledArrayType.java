@@ -27,6 +27,7 @@ public enum PooledArrayType {
 	OBJECT(Object[]::new, 4);
 
 	private static final boolean VERBOSE = false;
+
 	public enum BorrowFlag { NONE, CREATE_IF_NOT_FULL, ALWAYS_CREATE }
 
 	public static final PooledArrayType[] VALUES = values();
@@ -75,7 +76,7 @@ public enum PooledArrayType {
 	private static boolean tryReservePoolBytes(long bytes) {
 		long current = CURRENT_POOL_BYTES.get();
 
-		for (;;) {
+		for (; ; ) {
 			if (current > MAX_POOL_BYTES - bytes)
 				return false;
 
@@ -90,7 +91,7 @@ public enum PooledArrayType {
 	}
 
 	public static void incrementalCleanup(int frame) {
-		int ArrayTypeTarget = floor(frame / (float)MAX_BUCKET) % VALUES.length;
+		int ArrayTypeTarget = floor(frame / (float) MAX_BUCKET) % VALUES.length;
 		int BucketTarget = frame % MAX_BUCKET;
 
 		VALUES[ArrayTypeTarget].cleanup(BucketTarget);
@@ -161,7 +162,7 @@ public enum PooledArrayType {
 
 			final int targetTotal = max((int) (group.avgDemand * 0.5f), 1);
 			final int excessTotal = (int) (totalSize - targetTotal);
-			if(excessTotal <= 0)
+			if (excessTotal <= 0)
 				return false;
 
 			final int perStripeShare = max(targetTotal / STRIPES, 1);
@@ -174,7 +175,7 @@ public enum PooledArrayType {
 
 			int dropped = 0;
 			int spilled = 0;
-			for(int i = 0; i < excessTotal; i++){
+			for (int i = 0; i < excessTotal; i++) {
 				int maxIdx = -1;
 				int maxSize = 0;
 
@@ -253,7 +254,7 @@ public enum PooledArrayType {
 		final long bytes = bytesFor(cap);
 		final Object array = supplier.get(cap);
 
-		if(VERBOSE)
+		if (VERBOSE)
 			log.debug("Created new PooledArray::{} of size {} ({} bytes)", this, cap, bytes);
 
 		final PooledArray<Object> wrapper = new PooledArray<>(this, array, bytes);
@@ -342,7 +343,11 @@ public enum PooledArrayType {
 			log.warn(
 				"Attempted to release a PooledArray that's already back in the pool: {} " +
 				"(borrowed by {}, previously released by {}, this release attempted by {})\n{}",
-				wrapper, formatThreadString(wrapper.metadata.borrowedByThreadId), formatThreadString(wrapper.metadata.releasedByThreadId), formatThreadString(currentThread), getThreadStackTrace(currentThread)
+				wrapper,
+				formatThreadString(wrapper.metadata.borrowedByThreadId),
+				formatThreadString(wrapper.metadata.releasedByThreadId),
+				formatThreadString(currentThread),
+				getThreadStackTrace(currentThread)
 			);
 			return;
 		}
@@ -451,12 +456,12 @@ public enum PooledArrayType {
 		public <E> E get(int idx) { return pooledArray != null ? pooledArray.get(idx) : null; }
 
 		public <E> void set(int idx, E value) {
-			if(pooledArray != null)
+			if (pooledArray != null)
 				pooledArray.set(idx, value);
 		}
 
 		public T ensureCapacity(int requestedSize) {
-			if(pooledArray == null) {
+			if (pooledArray == null) {
 				pooledArray = arrayType.borrow(context, requestedSize);
 				return pooledArray.getArray();
 			}
@@ -466,7 +471,7 @@ public enum PooledArrayType {
 		}
 
 		public T ensureCapacity(int requestedSize, int offset, int count) {
-			if(pooledArray == null) {
+			if (pooledArray == null) {
 				pooledArray = arrayType.borrow(context, requestedSize);
 				return pooledArray.getArray();
 			}
@@ -477,7 +482,7 @@ public enum PooledArrayType {
 
 		@Override
 		public void close() {
-			if(pooledArray != null)
+			if (pooledArray != null)
 				pooledArray.close();
 			pooledArray = null;
 		}
@@ -501,19 +506,25 @@ public enum PooledArrayType {
 			this.length = Array.getLength(array);
 
 			final Metadata metadata = this.metadata = new Metadata(arrayType);
-			this.cleanable = CLEANER.register(this, () -> {
-				TOTAL_POOL_BYTES.addAndGet(-bytes);
+			this.cleanable = CLEANER.register(
+				this, () -> {
+					TOTAL_POOL_BYTES.addAndGet(-bytes);
 
-				final String context = metadata.context;
-				if (!metadata.isInPool() && context != null) {
-					log.warn(
-						"A {} PooledArray ({} bytes) was garbage collected while still borrowed by {}. " +
-						"Borrowed on {}, last accessed on {}. " +
-						"This usually means close()/release() was never called - check for a leak.",
-						metadata.type, bytes, context, formatThreadString(metadata.borrowedByThreadId), formatThreadString(metadata.lastAccessThreadId)
-					);
+					final String context = metadata.context;
+					if (!metadata.isInPool() && context != null) {
+						log.warn(
+							"A {} PooledArray ({} bytes) was garbage collected while still borrowed by {}. " +
+							"Borrowed on {}, last accessed on {}. " +
+							"This usually means close()/release() was never called - check for a leak.",
+							metadata.type,
+							bytes,
+							context,
+							formatThreadString(metadata.borrowedByThreadId),
+							formatThreadString(metadata.lastAccessThreadId)
+						);
+					}
 				}
-			});
+			);
 		}
 
 		public T getArray() {
@@ -522,7 +533,10 @@ public enum PooledArrayType {
 				log.warn(
 					"Attempted to use a PooledArray after it was released back to the pool " +
 					"(borrowed by {}, released by {}, attempted access by {})\n{}",
-					formatThreadString(metadata.borrowedByThreadId), formatThreadString(metadata.releasedByThreadId), formatThreadString(currentThread), getThreadStackTrace(currentThread)
+					formatThreadString(metadata.borrowedByThreadId),
+					formatThreadString(metadata.releasedByThreadId),
+					formatThreadString(currentThread),
+					getThreadStackTrace(currentThread)
 				);
 				return null;
 			}
@@ -539,7 +553,14 @@ public enum PooledArrayType {
 			return metadata.type.ensureCapacity(this, requestedSize);
 		}
 
-		public PooledArray<T> ensureCapacity(int requestedSize, int offset, int count) { return metadata.type.ensureCapacity(this, requestedSize, offset, count); }
+		public PooledArray<T> ensureCapacity(int requestedSize, int offset, int count) {
+			return metadata.type.ensureCapacity(
+				this,
+				requestedSize,
+				offset,
+				count
+			);
+		}
 
 		@Override
 		public String toString() {

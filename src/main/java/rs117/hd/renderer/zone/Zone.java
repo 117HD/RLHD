@@ -575,8 +575,11 @@ public class Zone implements Destructible {
 		final int writtenAlphaFaceCount = (endpos - startpos) / (3 * intsPerVertex);
 		final int bucketCapacity = ceil(writtenAlphaFaceCount / 32.0f);
 
-		try (PooledArray<int[]> packedFacesArray = PooledArrayType.INT.borrow("Zone::AddAlphaModel::packedFacesArray", writtenAlphaFaceCount);
-			PooledArray<int[]> doubleSidedBitSetArray = PooledArrayType.INT.borrow("Zone::AddAlphaModel::doubleSidedBitSetArray",bucketCapacity)
+		try (
+			PooledArray<int[]> packedFacesArray =
+				PooledArrayType.INT.borrow("Zone::AddAlphaModel::packedFacesArray", writtenAlphaFaceCount);
+			PooledArray<int[]> doubleSidedBitSetArray =
+				PooledArrayType.INT.borrow("Zone::AddAlphaModel::doubleSidedBitSetArray",bucketCapacity)
 		) {
 			final int[] packedFaces = packedFacesArray.getArray();
 			final int[] doubleSidedBitSet = doubleSidedBitSetArray.getArray();

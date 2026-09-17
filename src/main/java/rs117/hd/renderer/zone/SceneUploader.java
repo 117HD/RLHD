@@ -1898,7 +1898,7 @@ public class SceneUploader implements AutoCloseable {
 	) {
 		final int vertexCount = model.getVerticesCount();
 
-		if(isModelPartiallyVisible)
+		if (isModelPartiallyVisible)
 			visibility.ensureCapacity(vertexCount);
 		modelProjected.ensureCapacity(vertexCount * 3);
 

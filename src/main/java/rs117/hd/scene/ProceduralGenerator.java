@@ -186,7 +186,8 @@ public class ProceduralGenerator {
 				prevSceneContext != null && prevSceneContext.vertexTerrainNormalIndices != null ?
 					prevSceneContext.vertexTerrainNormalIndices.capacity() : 0);
 
-			vertexNormals.ensureCapacity(prevSceneContext != null && prevSceneContext.vertexTerrainNormals != null ? prevSceneContext.vertexTerrainNormals.length : 3000);
+			vertexNormals.ensureCapacity(prevSceneContext != null && prevSceneContext.vertexTerrainNormals != null ?
+				prevSceneContext.vertexTerrainNormals.length : 3000);
 			vertexNormalsPos = 0;
 
 			for (int z = 0; z < MAX_Z; z++) {
