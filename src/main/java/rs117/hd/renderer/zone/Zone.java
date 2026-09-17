@@ -33,8 +33,8 @@ import rs117.hd.utils.collections.PooledArrayType.PooledArrayRef;
 
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
+import static rs117.hd.HdPlugin.SUPPORTS_MULTI_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.renderer.zone.ZoneRenderer.eboAlpha;
@@ -440,10 +440,9 @@ public class Zone implements Destructible {
 		int[] doubleSidedBitSet;
 		char doubleSidedCount;
 
-		int dist;
-		int asyncSortIdx = -1;
 		int sortedFacesLen;
 		PooledArrayRef<int[]> sortedFaces;
+		volatile int sortingState;
 
 		static final int SKIP = 1; // temporary model is in a closer zone
 		static final int TEMP = 2; // temporary model added to a closer zone
@@ -691,7 +690,6 @@ public class Zone implements Destructible {
 
 		for (int i = alphaModels.size() - 1; i >= 0; --i) {
 			AlphaModel m = alphaModels.get(i);
-			m.asyncSortIdx = -1;
 			m.flags &= ~(AlphaModel.SKIP | AlphaModel.SORT_COMPLETED);
 
 			if (m.isTemp() || (m.flags & AlphaModel.TEMP) != 0) {
@@ -754,11 +752,14 @@ public class Zone implements Destructible {
 			if ((m.flags & AlphaModel.SKIP) != 0 || m.isTemp())
 				continue;
 
-			m.dist = dist;
 			m.sortedFaces.ensureCapacity((m.packedFaces.length + m.doubleSidedCount) * 3);
 			alphaSortingJob.addAlphaModel(m);
 		}
 		alphaSortingJob.queue(camera);
+	}
+
+	void queueLateAlphaModels(Camera camera) {
+		alphaSortingJob.queueAdditionalModels(alphaModels, camera);
 	}
 
 	void renderAlpha(
@@ -801,7 +802,7 @@ public class Zone implements Destructible {
 			if (m.isTemp()) {
 				// these are already sorted and so just requires a glMultiDrawArrays() from the active vao
 				drawMode = TEMP;
-			} else if (depthOnly || m.asyncSortIdx < 0) {
+			} else if (depthOnly) {
 				drawMode = STATIC_UNSORTED;
 			}
 
@@ -857,7 +858,7 @@ public class Zone implements Destructible {
 				cmd.BindVertexArray(lastVao, eboAlpha);
 				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 				// The EBO & IDO is bound by in ZoneRenderer
-				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
+				if (SUPPORTS_INDIRECT_DRAW) {
 					cmd.DrawElementsIndirect(GL_TRIANGLES, vertexCount, (int) (byteOffset / 4L), ZoneRenderer.indirectDrawCmdsStaging);
 				} else {
 					cmd.DrawElements(GL_TRIANGLES, vertexCount, byteOffset);
@@ -869,13 +870,13 @@ public class Zone implements Destructible {
 			cmd.BindVertexArray(lastVao);
 			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 			if (drawIdx == 1) {
-				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
+				if (SUPPORTS_INDIRECT_DRAW) {
 					cmd.DrawArraysIndirect(GL_TRIANGLES, drawOff[0], drawEnd[0], ZoneRenderer.indirectDrawCmdsStaging);
 				} else {
 					cmd.DrawArrays(GL_TRIANGLES, drawOff[0], drawEnd[0]);
 				}
 			} else {
-				if (GL_CAPS.OpenGL43 && SUPPORTS_INDIRECT_DRAW) {
+				if (SUPPORTS_MULTI_INDIRECT_DRAW) {
 					cmd.MultiDrawArraysIndirect(GL_TRIANGLES, glDrawOffset, glDrawLength, drawIdx, ZoneRenderer.indirectDrawCmdsStaging);
 				} else {
 					cmd.MultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength, drawIdx);
@@ -950,7 +951,6 @@ public class Zone implements Destructible {
 				m2.doubleSidedBitSet = m.doubleSidedBitSet;
 				m2.radius = m.radius;
 				m2.doubleSidedCount = m.doubleSidedCount;
-				m2.asyncSortIdx = m.asyncSortIdx;
 				m2.sortedFaces = m.sortedFaces;
 				m2.sortedFacesLen = m.sortedFacesLen;
 
