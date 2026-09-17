@@ -6935,13 +6935,22 @@
     "hideOtherAreas": true
   },
   {
+    "name": "KARUULM_SLAYER_DUNGEON_PLANE_0_BRIGHTNESS_FIXES",
+    "aabbs": [
+      [ 1322, 10205, 1324, 10206, 0 ],
+      [ 1293, 10205, 1300, 10206, 0 ],
+      [ 1311, 10215, 1312, 10228, 0 ],
+      [ 1311, 10192, 1312, 10194, 0 ]
+    ]
+  },
+  {
     "name": "KARUULM_SLAYER_DUNGEON_PLANE_1",
     "regionBoxes": [
       [ 5022, 5535, 1 ],
       [ 5280, 5536, 1 ]
     ],
     "unhideAreas": [
-      [ 1280, 10176, 1343, 10239 ]
+      [ 1280, 10176, 1343, 10239, 0 ]
     ],
     "hideOtherAreas": true
   },
