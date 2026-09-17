@@ -59,7 +59,7 @@ public class SkyManager {
 	private static final float BASIC_SUN_TILT = 23.5f * DEG_TO_RAD;
 
 	// Used by the Static moon behavior when an environment provides no moon position.
-	private static final float[] DEFAULT_STATIC_MOON_ANGLES = HDUtils.sunAngles(15, 30);
+	private static final float[] DEFAULT_STATIC_MOON_ANGLES = HDUtils.sunAngles(25, 73);
 	private static final float[] NO_MOON_LIBRATION = { 0, 0 };
 
 	private static final float SYNTHETIC_MOON_PERIOD_DAYS = 29.53059f;

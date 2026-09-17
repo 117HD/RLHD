@@ -354,14 +354,20 @@ public class SkyRenderer {
 		ambientStrength = max(ambientStrength, plugin.configMinimumBrightness * (1 + sky.minBrightnessBoost * boostFraction));
 
 		float lightingScale = brightnessMultiplier * sky.sunlightStrength;
-		float sunStrength = applyShadowBlur(directionalColor, directionalStrength * lightingScale, sunAltDeg, .533f, 1);
+		float sunStrength = applyShadowBlur(
+			directionalColor,
+			directionalStrength * lightingScale,
+			sunAltDeg,
+			.533f,
+			1
+		);
 		// Only one source can cast shadows. Keep moonlight ambient until sunset,
 		// then introduce its directional component smoothly over the next five degrees.
 		float moonStrength = applyShadowBlur(
 			sky.moonLightColor,
 			state.moonDirectionalStrength * moonInfluence / MAX_MOON_COLOR_INFLUENCE * lightingScale,
 			moonAltDeg,
-			2 * acos(.99945f) * RAD_TO_DEG * sky.moonSizeMult,
+			.517f,
 			saturate(sky.moonShadowStrength) * smoothstep(0, -5, sunAltDeg)
 		);
 		directionalStrength = sunStrength + moonStrength;
