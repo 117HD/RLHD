@@ -74,11 +74,11 @@ import rs117.hd.utils.jobs.JobSystem;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
-import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 import static rs117.hd.HdPlugin.APPLE;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
+import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
@@ -253,8 +253,10 @@ public class ZoneRenderer implements Renderer {
 		eboAlpha.initialize(MiB);
 		eboAlphaWriter = new GLMappedBufferIntWriter(eboAlpha);
 
-		indirectDrawCmds = new GLBuffer("indirectDrawCmds", GL_DRAW_INDIRECT_BUFFER, GL_STREAM_DRAW).initialize(MiB);
-		indirectDrawCmdsStaging = new GpuIntBuffer();
+		if (SUPPORTS_INDIRECT_DRAW) {
+			indirectDrawCmds = new GLBuffer("indirectDrawCmds", GL40.GL_DRAW_INDIRECT_BUFFER, GL_STREAM_DRAW).initialize(MiB);
+			indirectDrawCmdsStaging = new GpuIntBuffer();
+		}
 	}
 
 	private void destroyBuffers() {
@@ -647,7 +649,8 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboGlobal.upload();
 
 		// Reset buffers for the next frame
-		indirectDrawCmdsStaging.clear();
+		if (SUPPORTS_INDIRECT_DRAW)
+			indirectDrawCmdsStaging.clear();
 		sceneCmd.reset();
 		directionalCmd.reset();
 		gapFillerCmd.reset();
@@ -694,7 +697,7 @@ public class ZoneRenderer implements Renderer {
 			eboAlphaWriter.flush();
 
 		// Scene draw state to apply before all recorded commands
-		if (indirectDrawCmdsStaging.position() > 0) {
+		if (SUPPORTS_INDIRECT_DRAW && indirectDrawCmdsStaging.position() > 0) {
 			indirectDrawCmdsStaging.flip();
 			indirectDrawCmds.orphan();
 			indirectDrawCmds.upload(indirectDrawCmdsStaging);
@@ -769,7 +772,8 @@ public class ZoneRenderer implements Renderer {
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.depthFunc.set(GL_LEQUAL);
-		renderState.ido.set(indirectDrawCmds.id);
+		if (SUPPORTS_INDIRECT_DRAW)
+			renderState.ido.set(indirectDrawCmds.id);
 		directionalCmd.execute(renderState);
 
 		glBindVertexArray(0);
@@ -791,7 +795,8 @@ public class ZoneRenderer implements Renderer {
 			renderState.disable.set(GL_MULTISAMPLE);
 		}
 		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
-		renderState.ido.set(indirectDrawCmds.id);
+		if (SUPPORTS_INDIRECT_DRAW)
+			renderState.ido.set(indirectDrawCmds.id);
 		renderState.apply();
 
 		// Clear scene
