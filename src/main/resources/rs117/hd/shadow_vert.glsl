@@ -160,17 +160,8 @@ layout (location = 0) in vec3 vPosition;
 
         #if TERRAIN_ONLY_PASS
             // Terrain-only pass: only ground plane tiles cast shadows
-            bool isShadowDisabled =
-                !isGroundPlaneTile ||
-                isWaterSurfaceOrUnderwaterTile;
-        #elif TERRAIN_SHADOWS
-            // Main pass with terrain shadows: terrain goes to its own map
-            bool isShadowDisabled =
-                isGroundPlaneTile ||
-                isWaterSurfaceOrUnderwaterTile ||
-                isTransparent;
+            bool isShadowDisabled = !isGroundPlaneTile || isWaterSurfaceOrUnderwaterTile;
         #else
-            // Exclude ground plane tiles from casting shadows (original behavior)
             bool isShadowDisabled =
                 isGroundPlaneTile ||
                 isWaterSurfaceOrUnderwaterTile ||

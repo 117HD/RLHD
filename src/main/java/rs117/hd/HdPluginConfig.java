@@ -789,7 +789,7 @@ public interface HdPluginConfig extends Config
 		section = daylightCycleSettings
 	)
 	default int latitudeArcminutes() {
-		return (int) Math.round((DEFAULT_LATLON[0] % 1) * 60);
+		return round((DEFAULT_LATLON[0] % 1) * 60);
 	}
 
 	String KEY_LONGITUDE_DEGREES = "longitudeDegrees";
@@ -823,7 +823,7 @@ public interface HdPluginConfig extends Config
 		section = daylightCycleSettings
 	)
 	default int longitudeArcminutes() {
-		return (int) Math.round((DEFAULT_LATLON[1] % 1) * 60);
+		return round((DEFAULT_LATLON[1] % 1) * 60);
 	}
 
 

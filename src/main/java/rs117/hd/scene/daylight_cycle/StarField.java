@@ -65,11 +65,11 @@ public final class StarField {
 	private final Random random = new Random(SEED);
 	private final RenderState nebulaBakeRenderState = new RenderState();
 
-	private int texNebulaCubemap = 0;
-	private int fboNebulaBake = 0;
+	private int texNebulaCubemap;
+	private int fboNebulaBake;
 
 	@Getter
-	private int vaoStars = 0;
+	private int vaoStars;
 
 	public int starCount;
 

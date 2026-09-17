@@ -11,12 +11,8 @@ public enum ShadowFiltering {
 	DITHERED_HIGH(Mode.DITHER, 2),
 	PIXELATED(Mode.AVERAGE, 2);
 
+	public enum Mode { PCF, DITHER, AVERAGE }
+
 	public final Mode filtering;
 	public final int kernelSize;
-
-	public enum Mode {
-		PCF,
-		DITHER,
-		AVERAGE,
-	}
 }

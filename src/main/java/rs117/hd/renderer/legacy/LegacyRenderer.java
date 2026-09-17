@@ -1037,9 +1037,7 @@ public class LegacyRenderer implements Renderer {
 
 			plugin.uboGlobal.groundFogStart.set(env.groundFogStart);
 			plugin.uboGlobal.groundFogEnd.set(env.groundFogEnd);
-			plugin.uboGlobal.groundFogOpacity.set(config.groundFog() ?
-				env.groundFogOpacity :
-				0);
+			plugin.uboGlobal.groundFogOpacity.set(config.groundFog() ? env.groundFogOpacity : 0);
 
 			// Lights & lightning
 			plugin.uboGlobal.pointLightsCount.set(sceneContext.numVisibleLights);
@@ -1304,12 +1302,7 @@ public class LegacyRenderer implements Renderer {
 		nextSceneContext = null;
 
 		try {
-			nextSceneContext = new LegacySceneContext(
-				client,
-				scene,
-				plugin.configExpandedMapLoadingChunks,
-				sceneContext
-			);
+			nextSceneContext = new LegacySceneContext(client, scene, plugin.configExpandedMapLoadingChunks, sceneContext);
 			// If area hiding was determined to be incorrect previously, keep it disabled
 			nextSceneContext.forceDisableAreaHiding = sceneContext != null && sceneContext.forceDisableAreaHiding;
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <uniforms/global.glsl>
+
 #include <utils/color_utils.glsl>
 #include <utils/color_blindness.glsl>
 #include <utils/color_filters.glsl>

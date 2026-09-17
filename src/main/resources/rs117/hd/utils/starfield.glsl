@@ -263,14 +263,15 @@ vec3 proceduralNebula(vec3 dir) {
 // shaders sample the prebaked cubemap; only the bake shader itself defines
 // NEBULA_BAKE to evaluate the nebula procedurally (to fill the cubemap).
 #ifdef NEBULA_BAKE
-vec3 sampleNebula(vec3 dir) {
-    return proceduralNebula(dir);
-}
+    vec3 sampleNebula(vec3 dir) {
+        return proceduralNebula(dir);
+    }
 #else
-uniform samplerCube nebulaMap;
-vec3 sampleNebula(vec3 dir) {
-    return texture(nebulaMap, dir).rgb;
-}
+    uniform samplerCube nebulaMap;
+
+    vec3 sampleNebula(vec3 dir) {
+        return texture(nebulaMap, dir).rgb;
+    }
 #endif
 
 // Returns only the background sky color + nebula (no individual stars).

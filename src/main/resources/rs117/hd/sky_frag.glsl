@@ -2,8 +2,8 @@
 
 #include <uniforms/global.glsl>
 #include <uniforms/sky.glsl>
-#include <utils/output_transform.glsl>
 
+#include <utils/output_transform.glsl>
 #include <utils/misc.glsl>
 #include <utils/starfield.glsl>
 #include <utils/aurora.glsl>

@@ -196,7 +196,7 @@ public class SkyManager {
 	public void updateConfig(HdPluginConfig config) {
 		configCycle = config.daylightCycle();
 		configMoonBehavior = config.moonBehavior();
-		configMoonPhase = configMoonBehavior.isDisabled ? MoonPhase.FIRST_QUARTER : config.moonPhase();
+		configMoonPhase = configMoonBehavior == MoonBehavior.DISABLED ? MoonPhase.FIRST_QUARTER : config.moonPhase();
 		configCycleDuration = max(1e-6f, (float) config.customCycleDurationMinutes());
 		configNightFraction = clamp(config.basicNightPercentage(), 0, 100) / 100f;
 
@@ -370,7 +370,10 @@ public class SkyManager {
 
 		ResolvedMoon moon = resolveMoon(sky, environment.directionalStrength, utcMillis, sunAngles, fixedSunAngles, latLon);
 		float[] moonLibration = NO_MOON_LIBRATION;
-		if (sky.moonAngles == null && !configMoonBehavior.isStatic && !configMoonBehavior.mirrorsSun) {
+		if (sky.moonAngles == null &&
+			configMoonBehavior != MoonBehavior.STATIC &&
+			configMoonBehavior != MoonBehavior.MIRRORED
+		) {
 			double days = utcMillis / (double) DAY_MS;
 			moonLibration = vec(
 				sin((float) (days / ANOMALISTIC_MONTH_DAYS) * TWO_PI) * LONGITUDE_LIBRATION_DEG * DEG_TO_RAD,
@@ -457,9 +460,9 @@ public class SkyManager {
 	) {
 		float[] angles = sky.moonAngles;
 		if (angles == null) {
-			if (configMoonBehavior.isStatic) {
+			if (configMoonBehavior == MoonBehavior.STATIC) {
 				angles = DEFAULT_STATIC_MOON_ANGLES;
-			} else if (configMoonBehavior.mirrorsSun) {
+			} else if (configMoonBehavior == MoonBehavior.MIRRORED) {
 				angles = vec(-sunAngles[0], sunAngles[1] + PI);
 			} else {
 				angles = AstronomyUtils.getMoonPosition(millis, latLon);
@@ -470,7 +473,7 @@ public class SkyManager {
 		MoonPhase phase = sky.forceMoonPhase != null ? sky.forceMoonPhase : configMoonPhase;
 		float illumination;
 		float orbit;
-		if (configMoonBehavior.mirrorsSun) {
+		if (configMoonBehavior == MoonBehavior.MIRRORED) {
 			// A mirrored moon needs an independent phase, since the sun is always opposite it.
 			orbit = (float) fract(millis / (DAY_MS * SYNTHETIC_MOON_PERIOD_DAYS));
 			illumination = .5f - .5f * cos(orbit * TWO_PI);
@@ -486,7 +489,7 @@ public class SkyManager {
 		if (phase.isLocked)
 			illumination = phase.illumination;
 
-		float[] illuminationDirection = configCycle == DaylightCycle.NIGHT || configMoonBehavior.mirrorsSun ?
+		float[] illuminationDirection = configCycle == DaylightCycle.NIGHT || configMoonBehavior == MoonBehavior.MIRRORED ?
 			resolveSyntheticMoonIlluminationDirection(moonDirection, illumination, orbit) : sunDirection;
 		if (phase.reversesTerminator) {
 			// Preserve the radial component while moving the illuminated side across the disk.
@@ -497,7 +500,9 @@ public class SkyManager {
 		boolean naturalMoonlightEnabled = !sky.hideMoon || sky.moonLightVisibility >= 0 || sky.moonDirectionalStrength >= 0;
 		float moonLightVisibility = sky.moonLightVisibility < 0 ? 1 : sky.moonLightVisibility;
 		float lightIllumination = max(naturalMoonlightEnabled ? illumination : 0, sky.minMoonIllumination) * moonLightVisibility;
-		float visibility = sky.hideMoon || configMoonBehavior.isDisabled && sky.forceMoonPhase == null ? 0 : sky.moonVisibility;
+		float visibility = sky.moonVisibility;
+		if (sky.hideMoon || configMoonBehavior == MoonBehavior.DISABLED && sky.forceMoonPhase == null)
+			visibility = 0;
 		float directionalStrength = sky.moonDirectionalStrength < 0 ? fallbackDirectionalStrength : sky.moonDirectionalStrength;
 		return new ResolvedMoon(
 			angles,

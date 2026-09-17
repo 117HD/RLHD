@@ -116,7 +116,7 @@ public class SceneUploader implements AutoCloseable {
 
 	public OnBeforeProcessTileFunc onBeforeProcessTile;
 
-	private int basex, basez, rid, level;
+	private int basex, basez, rid, renderablePlane;
 
 	private final PrimitiveIntArray roofIds = new PrimitiveIntArray();
 	private Scene currentScene;
@@ -235,7 +235,7 @@ public class SceneUploader implements AutoCloseable {
 		zone.roofEnd = new int[4][roofIds.length];
 
 		for (int z = 0; z <= 3; ++z) {
-			this.level = z;
+			renderablePlane = z;
 
 			if (z == 0) {
 				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, false, true, vb, ab, fb);
@@ -852,7 +852,7 @@ public class SceneUploader implements AutoCloseable {
 					model, modelOverride, alphaStart, alphaEnd,
 					x - basex, y + modelOverride.heightOffset, z - basez,
 					lx, lz, ux, uz,
-					rid, level, id
+					rid, renderablePlane, id
 				);
 			} catch (Throwable ex) {
 				try (var gamevals = gamevalManager.obtainHandle()) {

@@ -29,7 +29,6 @@ public class LightSchedule {
 		SUNSET(5, -2, Range.Mode.DESCENDING),
 		DUSK(-2, -8.8f, Range.Mode.DESCENDING),
 		NIGHT(5, -2, Range.Mode.BOTH),
-		// Preserve the old deep-night altitude boundaries.
 		DEEP_NIGHT(-8.8f, -18, Range.Mode.BOTH);
 
 		private static final Phase[] VALUES = values();
