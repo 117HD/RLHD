@@ -4,26 +4,26 @@ import com.google.gson.Gson;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 import java.time.Instant;
+import java.util.Objects;
 import org.junit.Test;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.config.DaylightCycle;
+import rs117.hd.config.MoonBehavior;
+import rs117.hd.config.MoonPhase;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.SkyManager;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration;
 import rs117.hd.scene.daylight_cycle.SkyState.LightingSample;
 import rs117.hd.scene.environments.Environment;
-import rs117.hd.config.DaylightCycle;
-import rs117.hd.config.MoonBehavior;
-import rs117.hd.config.MoonPhase;
 import rs117.hd.utils.AstronomyUtils;
 
 import static org.junit.Assert.assertEquals;
-import static rs117.hd.utils.MathUtils.*;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static rs117.hd.utils.MathUtils.*;
 
 public class SkyManagerTest {
 	@Test
@@ -44,7 +44,7 @@ public class SkyManagerTest {
 		SkyConfiguration sky = loadDefaultPreset();
 		Environment environment = environmentWithSky(sky);
 		LightingSample sample = new LightingSample();
-		manager.sampleLighting(sample, environment, new float[] { 1, 1, 1 }, .7f);
+		manager.sampleLighting(sample, environment, new float[] { 1, 1, 1 });
 		// The default test coordinates are zero. Custom's .75 day is 18:00 UTC, independent of the cave clock.
 		float expectedAltitude = (float) AstronomyUtils.getSunAngles(
 			Instant.parse("2026-06-21T18:00:00Z").toEpochMilli(), new double[2])[0] * RAD_TO_DEG;
@@ -57,22 +57,22 @@ public class SkyManagerTest {
 		sky.forceMoonPhase = MoonPhase.FIRST_QUARTER;
 		sky.moonVisibility = .5f;
 		sky.moonLightVisibility = .5f;
-		manager.sampleLighting(sample, environment, new float[] { 1, 1, 1 }, .7f);
+		manager.sampleLighting(sample, environment, new float[] { 1, 1, 1 });
 		assertEquals(-30, sample.sky.sunAltitudeDegrees, 1e-5f);
 		assertEquals(20, sample.sky.moonAltitudeDegrees, 1e-5f);
 		assertEquals(.25f, sample.sky.moonLightIllumination, 0);
 		sky.hideMoon = true;
-		manager.sampleLighting(sample, environment, new float[] { 1, 1, 1 }, .7f);
+		manager.sampleLighting(sample, environment, new float[] { 1, 1, 1 });
 		assertEquals(.25f, sample.sky.moonLightIllumination, 0);
 		assertEquals(0, sample.sky.moonVisibility, 0);
 		sky.moonLightVisibility = -1;
-		manager.sampleLighting(sample, environment, new float[] { 1, 1, 1 }, .7f);
+		manager.sampleLighting(sample, environment, new float[] { 1, 1, 1 });
 		assertEquals(0, sample.sky.moonLightIllumination, 0);
 		sky.minMoonIllumination = .2f;
-		manager.sampleLighting(sample, environment, new float[] { 1, 1, 1 }, .7f);
+		manager.sampleLighting(sample, environment, new float[] { 1, 1, 1 });
 		assertEquals(.2f, sample.sky.moonLightIllumination, 0);
 		sky.moonLightVisibility = 0;
-		manager.sampleLighting(sample, environment, new float[] { 1, 1, 1 }, .7f);
+		manager.sampleLighting(sample, environment, new float[] { 1, 1, 1 });
 		assertEquals(0, sample.sky.moonLightIllumination, 0);
 	}
 

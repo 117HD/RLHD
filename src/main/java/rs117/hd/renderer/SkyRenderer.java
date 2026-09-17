@@ -322,7 +322,7 @@ public class SkyRenderer {
 		SkyConfiguration sky = env.getSky();
 		copyTo(endpointFogColor, env.getFogColor());
 		environmentManager.applyLightning(endpointFogColor);
-		skyManager.sampleLighting(endpointSample, env, endpointFogColor, plugin.configMinimumBrightness);
+		skyManager.sampleLighting(endpointSample, env, endpointFogColor);
 		SkyState state = endpointSample.sky;
 		float sunAltDeg = state.sunAltitudeDegrees;
 		{

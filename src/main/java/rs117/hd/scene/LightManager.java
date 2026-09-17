@@ -666,7 +666,7 @@ public class LightManager {
 			plugin.frame != outdoorLightingFrame
 		) {
 			float[] fogColor = environmentManager.getFogColor(environment);
-			skyManager.sampleLighting(outdoorLightingSample, environment, fogColor, plugin.configMinimumBrightness);
+			skyManager.sampleLighting(outdoorLightingSample, environment, fogColor);
 			outdoorLightingEnvironment = environment;
 			outdoorLightingMinBrightness = plugin.configMinimumBrightness;
 			outdoorLightingFrame = plugin.frame;

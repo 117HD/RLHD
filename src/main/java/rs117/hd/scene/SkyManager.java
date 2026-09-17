@@ -530,9 +530,9 @@ public class SkyManager {
 	 * Resolve an authored sky independently of the current area's overrides and transition.
 	 * The reusable sample contains both its complete celestial state and evaluated gradient.
 	 */
-	public void sampleLighting(SkyState.LightingSample out, Environment environment, float[] fogColor, float minBrightness) {
+	public void sampleLighting(SkyState.LightingSample out, Environment environment, float[] fogColor) {
 		resolveSkyState(out.sky, environment, environment, 1, true, environment.getShadowAngles());
-		environment.getSky().evaluateGradient(out, out.sky.sunAltitudeDegrees, fogColor, minBrightness);
+		environment.getSky().evaluateGradient(out, out.sky.sunAltitudeDegrees, fogColor, plugin.configMinimumBrightness);
 		out.referenceFogColorLinear = fogColor;
 	}
 

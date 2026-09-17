@@ -1744,7 +1744,7 @@ public class HdPlugin extends Plugin {
 
 	private void updateCachedConfigs() {
 		configExpandedMapLoadingChunks = useLowMemoryMode ? 0 : config.expandedMapLoadingChunks();
-		configMinimumBrightness = config.nightBrightness() / 100f * .7f;
+		configMinimumBrightness = config.nightBrightness() / 100f;
 		configShadowMode = config.shadowMode();
 		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
 		configShadowTransparency = config.shadowTransparency();
