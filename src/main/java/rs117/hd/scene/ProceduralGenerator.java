@@ -40,6 +40,7 @@ import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.Int2IntHashMap;
 import rs117.hd.utils.collections.Int2ObjectHashMap;
 import rs117.hd.utils.collections.PooledArrayType;
+import rs117.hd.utils.collections.PooledArrayType.PooledArrayRef;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
@@ -171,7 +172,7 @@ public class ProceduralGenerator {
 
 		private int[][][] faceVertices = new int[2][VERTICES_PER_FACE][3];
 		private int[][] faceVertexKeys = new int[VERTICES_PER_FACE][3];
-		private int[] vertexNormals;
+		private final PooledArrayRef<int[]> vertexNormals = PooledArrayType.INT.ref("TerrainNormalGenerator::vertexNormalsArray");
 		private int vertexNormalsPos = 0;
 
 		/**
@@ -185,9 +186,8 @@ public class ProceduralGenerator {
 				prevSceneContext != null && prevSceneContext.vertexTerrainNormalIndices != null ?
 					prevSceneContext.vertexTerrainNormalIndices.capacity() : 0);
 
-			vertexNormals = PooledArrayType.INT.borrow(
-				prevSceneContext != null && prevSceneContext.vertexTerrainNormals != null ?
-					prevSceneContext.vertexTerrainNormals.length : 3000);
+			vertexNormals.ensureCapacity(prevSceneContext != null && prevSceneContext.vertexTerrainNormals != null ?
+				prevSceneContext.vertexTerrainNormals.length : 3000);
 			vertexNormalsPos = 0;
 
 			for (int z = 0; z < MAX_Z; z++) {
@@ -208,6 +208,7 @@ public class ProceduralGenerator {
 			}
 
 			sceneContext.vertexTerrainNormals = new short[vertexNormalsPos];
+			final int[] vertexNormals = this.vertexNormals.getArray();
 			for (int offset = 0; offset < vertexNormalsPos; offset += 3) {
 				final float x = vertexNormals[offset];
 				final float y = vertexNormals[offset + 1];
@@ -223,8 +224,7 @@ public class ProceduralGenerator {
 				sceneContext.vertexTerrainNormals[offset + 2] = normShort(z * invLen);
 			}
 
-			PooledArrayType.INT.release(vertexNormals);
-			vertexNormals = null;
+			this.vertexNormals.close();
 		}
 
 		/**
@@ -274,6 +274,7 @@ public class ProceduralGenerator {
 			}
 
 			// Loop through tris to calculate and accumulate normals
+			int[] vertexNormals = this.vertexNormals.getArray();
 			for (int face = 0; face < faceCount; face++) {
 				// XYZ
 				if (!isBridge) {
@@ -290,13 +291,8 @@ public class ProceduralGenerator {
 					if (terrainNormalIdx == -1) {
 						sceneContext.vertexTerrainNormalIndices.put(vertexKey, vertexNormalsPos / 3);
 
-						if (vertexNormalsPos + 3 >= vertexNormals.length) {
-							int[] newVertexNormals = PooledArrayType.INT.borrow(vertexNormalsPos * 2);
-							System.arraycopy(vertexNormals, 0, newVertexNormals, 0, vertexNormalsPos);
-
-							PooledArrayType.INT.release(vertexNormals);
-							vertexNormals = newVertexNormals;
-						}
+						if (vertexNormalsPos + 3 >= vertexNormals.length)
+							vertexNormals = this.vertexNormals.ensureCapacity(vertexNormalsPos * 2, 0, vertexNormalsPos);
 
 						vertexNormals[vertexNormalsPos++] = surfaceNormal[0];
 						vertexNormals[vertexNormalsPos++] = surfaceNormal[1];

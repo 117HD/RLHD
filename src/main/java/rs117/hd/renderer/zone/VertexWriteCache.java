@@ -4,6 +4,7 @@ import java.nio.IntBuffer;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.collections.PooledArrayType;
+import rs117.hd.utils.collections.PooledArrayType.PooledArrayRef;
 
 import static rs117.hd.utils.MathUtils.*;
 
@@ -14,7 +15,7 @@ public final class VertexWriteCache {
 	private final String name;
 	private final int initialCapacity;
 	private final int maxCapacity;
-	private int[] stagingBuffer;
+	private final PooledArrayRef<int[]> stagingBuffer;
 	private int stagingPosition;
 
 	public VertexWriteCache(String name, int initialCapacity) {
@@ -25,28 +26,26 @@ public final class VertexWriteCache {
 		this.name = name;
 		this.initialCapacity = initialCapacity;
 		this.maxCapacity = maxCapacity;
+		this.stagingBuffer = PooledArrayType.INT.ref("VertexWriteCache::" + name);
 	}
 
 	public void setOutputBuffer(IntBuffer outputBuffer) {
 		this.outputBuffer = outputBuffer;
 		stagingPosition = 0;
-		stagingBuffer = PooledArrayType.INT.ensureCapacity(stagingBuffer, initialCapacity);
+		stagingBuffer.ensureCapacity(initialCapacity);
 	}
 
 	private void release(){
 		flush();
-
-		if (stagingBuffer != null)
-			PooledArrayType.INT.release(stagingBuffer);
-		stagingBuffer = null;
+		stagingBuffer.close();
 	}
 
 	private void flushAndGrow() {
 		// Flush buffer and then resize to avoid flushing mid put
 		flush();
 
-		if (stagingBuffer.length < maxCapacity)
-			stagingBuffer = PooledArrayType.INT.ensureCapacity(stagingBuffer, min(stagingBuffer.length * 2, maxCapacity));
+		if (stagingBuffer.length() < maxCapacity)
+			stagingBuffer.ensureCapacity(min(stagingBuffer.length() * 2, maxCapacity));
 	}
 
 	public int putFace(
@@ -54,11 +53,11 @@ public final class VertexWriteCache {
 		int materialDataA, int materialDataB, int materialDataC,
 		int terrainDataA, int terrainDataB, int terrainDataC
 	) {
-		if (stagingPosition + 9 > stagingBuffer.length)
+		if (stagingPosition + 9 > stagingBuffer.length())
 			flushAndGrow();
 
 		final int textureFaceIdx = (outputBuffer.position() + stagingPosition) / 3;
-		final int[] stagingBuffer = this.stagingBuffer;
+		final int[] stagingBuffer = this.stagingBuffer.getArray();
 		final int stagingPosition = this.stagingPosition;
 
 		stagingBuffer[stagingPosition] = alphaBiasHslA;
@@ -84,10 +83,10 @@ public final class VertexWriteCache {
 		int nx, int ny, int nz,
 		int textureFaceIdx
 	) {
-		if (stagingPosition + 8 > stagingBuffer.length)
+		if (stagingPosition + 8 > stagingBuffer.length())
 			flushAndGrow();
 
-		final int[] stagingBuffer = this.stagingBuffer;
+		final int[] stagingBuffer = this.stagingBuffer.getArray();
 		final int stagingPosition = this.stagingPosition;
 
 		stagingBuffer[stagingPosition] = x;
@@ -108,10 +107,10 @@ public final class VertexWriteCache {
 		int nx, int ny, int nz,
 		int textureFaceIdx, boolean windingReversed
 	) {
-		if (stagingPosition + 7 > stagingBuffer.length)
+		if (stagingPosition + 7 > stagingBuffer.length())
 			flushAndGrow();
 
-		final int[] stagingBuffer = this.stagingBuffer;
+		final int[] stagingBuffer = this.stagingBuffer.getArray();
 		final int stagingPosition = this.stagingPosition;
 
 		stagingBuffer[stagingPosition] = (y & 0xFFFF) << 16 | x & 0xFFFF;
@@ -131,7 +130,7 @@ public final class VertexWriteCache {
 			return;
 
 		try {
-			outputBuffer.put(stagingBuffer, 0, stagingPosition);
+			outputBuffer.put(stagingBuffer.getArray(), 0, stagingPosition);
 		} catch (Exception e) {
 			log.error("Failed to flush vertex write cache {} written: {} remaining: {}", name, stagingPosition, outputBuffer.remaining(), e);
 		} finally {

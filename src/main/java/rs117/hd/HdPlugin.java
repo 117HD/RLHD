@@ -2040,6 +2040,9 @@ public class HdPlugin extends Plugin {
 
 		gamevalManager.update();
 		DestructibleHandler.flushPendingDestruction();
+		try (var ignored = frameTimer.begin(Timer.POOL_CLEANUP)) {
+			PooledArrayType.incrementalCleanup(frame);
+		}
 	}
 
 	@Subscribe

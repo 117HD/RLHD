@@ -32,6 +32,7 @@ public enum Timer {
 	MAP_UI_BUFFER("Map UI Buffer"),
 	COPY_UI("Copy UI"),
 	MODEL_UPLOAD_COMPLETE,
+	POOL_CLEANUP,
 
 	// Logic
 	VISIBILITY_CHECK,

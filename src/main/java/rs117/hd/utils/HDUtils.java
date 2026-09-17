@@ -486,12 +486,39 @@ public final class HDUtils {
 			return "<STACK TRACE UNAVAILABLE>";
 
 		StringBuilder sb = threadLocalStringBuilder.get();
-		for (int i = 1; i < stackTrace.length; i++)
+
+		int rangeEnd = 0;
+		for (int i = 2; i < stackTrace.length; i++)
+			if (stackTrace[i].getClassName().startsWith("rs117.hd"))
+				rangeEnd = i;
+		rangeEnd = Math.min(rangeEnd + 2, stackTrace.length);
+
+		for (int i = 2; i < rangeEnd; i++)
 			sb.append('\t').append(stackTrace[i]).append('\n');
 
 		String s = sb.toString();
 		sb.setLength(0);
 		return s;
+	}
+
+	public static long getThreadId() {
+		return Thread.currentThread().getId();
+	}
+
+	public static Thread getThreadById(long id) {
+		for (Thread t : Thread.getAllStackTraces().keySet())
+			if (t.getId() == id)
+				return t;
+		return null;
+	}
+
+	public static String formatThreadString(Thread thread) {
+		return "Thread-" + thread.getId() + "-" + thread.getName();
+	}
+
+	public static String formatThreadString(long id) {
+		final Thread thread = getThreadById(id);
+		return "Thread-" + id + "-" + (thread != null ? thread.getName() : "Unknown");
 	}
 
 	public static boolean isBakedGroundShading(Model model, int face) {

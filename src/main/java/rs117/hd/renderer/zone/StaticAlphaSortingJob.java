@@ -8,7 +8,6 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.zone.Zone.AlphaModel;
 import rs117.hd.utils.Camera;
-import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.Job;
 
 import static net.runelite.api.Perspective.*;
@@ -63,10 +62,10 @@ final class StaticAlphaSortingJob extends Job {
 			boolean added = false;
 			for (int i = 0; i < candidates.size(); i++) {
 				AlphaModel m = candidates.get(i);
-				if ((m.flags & AlphaModel.SKIP) != 0 || m.isTemp() || m.tempSortedFaces != null)
+				if ((m.flags & AlphaModel.SKIP) != 0 || m.isTemp() || m.sortedFaces.isAllocated())
 					continue;
 
-				m.tempSortedFaces = PooledArrayType.INT.borrow((m.packedFaces.length + m.doubleSidedCount) * 3);
+				m.sortedFaces.ensureCapacity((m.packedFaces.length + m.doubleSidedCount) * 3);
 				m.sortingState = UNSORTED;
 				models.add(m);
 				added = true;

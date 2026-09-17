@@ -29,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PooledArrayType;
+import rs117.hd.utils.collections.PooledArrayType.PooledArrayRef;
 import rs117.hd.utils.collections.PrimitiveCharArray;
 
 import static rs117.hd.renderer.zone.Zone.VERT_SIZE;
@@ -48,15 +49,15 @@ public final class FacePrioritySorter implements AutoCloseable {
 	private final int[] eq11 = new int[MAX_FACES_PER_PRIORITY];
 	private final int[] lt10 = new int[PRIORITY_COUNT];
 
-	private char[] orderedFaces;
-	private int[] zsortHead;
-	private int[] zsortTail;
-	private int[] zsortNext;
+	private final PooledArrayRef<char[]> orderedFaces = PooledArrayType.CHAR.ref("FacePrioritySorter::orderedFaces");
+	private final PooledArrayRef<int[]> zsortHead = PooledArrayType.INT.ref("FacePrioritySorter::zsortHead");
+	private final PooledArrayRef<int[]> zsortTail = PooledArrayType.INT.ref("FacePrioritySorter::zsortTail");
+	private final PooledArrayRef<int[]> zsortNext = PooledArrayType.INT.ref("FacePrioritySorter::zsortNext");
 
 	private void ensureCapacity(int diameter, int faceCount) {
-		zsortHead = PooledArrayType.INT.ensureCapacity(zsortHead, min(MAX_DIAMETER, diameter + 1));
-		zsortTail = PooledArrayType.INT.ensureCapacity(zsortTail, min(MAX_DIAMETER, diameter + 1));
-		zsortNext = PooledArrayType.INT.ensureCapacity(zsortNext, min(MAX_FACE_COUNT, faceCount));
+		zsortHead.ensureCapacity(diameter + 1);
+		zsortTail.ensureCapacity(diameter + 1);
+		zsortNext.ensureCapacity(faceCount);
 	}
 
 	void sortModelFaces(PrimitiveCharArray visibleFaces, Model model, int[] faceDistances, boolean depthOnly) {
@@ -66,13 +67,18 @@ public final class FacePrioritySorter implements AutoCloseable {
 
 		final int visibleFaceCount = visibleFaces.length;
 		final int facesPerPriority = min(visibleFaceCount, MAX_FACES_PER_PRIORITY);
-		orderedFaces = PooledArrayType.CHAR.ensureCapacity(orderedFaces, PRIORITY_COUNT * facesPerPriority);
+		orderedFaces.ensureCapacity(PRIORITY_COUNT * facesPerPriority);
 
 		int unsortedCount = 0;
 		int minFz = diameter, maxFz = 0;
 		boolean needsClear = true;
 
 		ensureCapacity(diameter, model.getFaceCount());
+
+		final char[] orderedFaces = this.orderedFaces.getArray();
+		final int[] zsortHead = this.zsortHead.getArray();
+		final int[] zsortTail = this.zsortTail.getArray();
+		final int[] zsortNext = this.zsortNext.getArray();
 
 		// Build the z-sorted linked list of faces
 		for (int i = 0; i < visibleFaceCount; ++i) {
@@ -216,10 +222,10 @@ public final class FacePrioritySorter implements AutoCloseable {
 
 		final int[] packedFaces = m.packedFaces;
 		final int[] doubleSidedBitSet = m.doubleSidedBitSet;
-		final int[] sortedFaces = m.tempSortedFaces;
-		final int[] zsortHead = this.zsortHead;
-		final int[] zsortTail = this.zsortTail;
-		final int[] zsortNext = this.zsortNext;
+		final int[] sortedFaces = m.sortedFaces.getArray();
+		final int[] zsortHead = this.zsortHead.getArray();
+		final int[] zsortTail = this.zsortTail.getArray();
+		final int[] zsortNext = this.zsortNext.getArray();
 
 		Arrays.fill(zsortHead, 0, diameter, -1);
 		Arrays.fill(zsortTail, 0, diameter, -1);
@@ -282,15 +288,10 @@ public final class FacePrioritySorter implements AutoCloseable {
 
 	@Override
 	public void close() {
-		PooledArrayType.CHAR.release(orderedFaces);
-		PooledArrayType.INT.release(zsortHead);
-		PooledArrayType.INT.release(zsortTail);
-		PooledArrayType.INT.release(zsortNext);
-
-		orderedFaces = null;
-		zsortHead = null;
-		zsortTail = null;
-		zsortNext = null;
+		orderedFaces.close();
+		zsortHead.close();
+		zsortTail.close();
+		zsortNext.close();
 
 		POOL.recycle(this);
 	}

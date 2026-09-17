@@ -17,6 +17,8 @@ import rs117.hd.renderer.zone.Zone.AlphaModel;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PooledArrayType;
+import rs117.hd.utils.collections.PooledArrayType.BorrowFlag;
+import rs117.hd.utils.collections.PooledArrayType.PooledArray;
 import rs117.hd.utils.jobs.Job;
 
 import static rs117.hd.utils.collections.PooledArrayType.BYTE;
@@ -119,7 +121,6 @@ public final class AsyncCachedModel extends Job implements Model {
 	private int y;
 	private int z;
 	private UploadModelFunc uploadFunc;
-	private long availableMemory;
 
 	@SuppressWarnings("unchecked")
 	private <T> CachedArrayField<T> addField(PooledArrayType arrayType, int fieldType) {
@@ -196,7 +197,6 @@ public final class AsyncCachedModel extends Job implements Model {
 		// Wait for completion so that the job has cleared the job system before clearing the isProcessing flag
 		waitForCompletion(true);
 
-		availableMemory = RUNTIME.freeMemory();
 		if (processCachedFields(model, false))
 			return true;
 
@@ -472,7 +472,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		private final PooledArrayType arrayType;
 		private final int fieldType;
 
-		private T value;
+		private PooledArray<T> pooledArray;
 		private final AtomicBoolean cached = new AtomicBoolean(false);
 
 		public boolean isCached() {
@@ -486,13 +486,13 @@ public final class AsyncCachedModel extends Job implements Model {
 
 		public T getValue() {
 			ensureCached();
-			return value;
+			return pooledArray != null ? pooledArray.getArray() : null;
 		}
 
 		public void reset() {
-			if (value != null)
-				arrayType.release(value);
-			value = null;
+			if (pooledArray != null)
+				pooledArray.close();
+			pooledArray = null;
 			cached.set(false);
 		}
 
@@ -518,20 +518,12 @@ public final class AsyncCachedModel extends Job implements Model {
 			}
 
 			if (!cache) {
-				// Attempt to get an array from the pool, if we fail check if enough memory is available before creating
-				final long requested = (long) arraySize * arrayType.stride;
-				value = arrayType.borrow(arraySize, false);
-
-				if (value == null && requested < availableMemory) {
-					availableMemory -= requested;
-					value = arrayType.create(arraySize);
-				}
-
-				return value != null;
+				pooledArray = arrayType.borrow("AsyncCachedModel", arraySize, BorrowFlag.CREATE_IF_NOT_FULL);
+				return pooledArray != null;
 			}
 
 			if (!model.isCompleted.get())
-				System.arraycopy(src, 0, value, 0, arraySize);
+				System.arraycopy(src, 0, pooledArray.getArray(), 0, arraySize);
 
 			cached.set(true);
 			return true;
