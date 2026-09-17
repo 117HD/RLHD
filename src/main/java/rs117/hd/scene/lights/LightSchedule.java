@@ -1,12 +1,13 @@
 package rs117.hd.scene.lights;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.utils.GsonUtils;
 
@@ -22,39 +23,42 @@ public class LightSchedule {
 
 	private enum Turn { ON, OFF }
 
-	private enum Phase {
-		DAWN(-2, -8.8f, Range.Mode.ASCENDING),
-		SUNRISE(5, -2, Range.Mode.ASCENDING),
-		DAY(-2, 5, Range.Mode.BOTH),
-		SUNSET(5, -2, Range.Mode.DESCENDING),
-		DUSK(-2, -8.8f, Range.Mode.DESCENDING),
-		NIGHT(5, -2, Range.Mode.BOTH),
-		DEEP_NIGHT(-8.8f, -18, Range.Mode.BOTH);
-
-		private static final Phase[] VALUES = values();
-
-		private final Range[] ranges;
-
-		Phase(float from, float through, Range.Mode mode) {
-			ranges = new Range[] { new Range(from, through, mode) };
-		}
-	}
-
+	@RequiredArgsConstructor
 	private static class Range {
-		private enum Mode {
-			BOTH,
-			ASCENDING,
-			DESCENDING
-		}
-
 		private final float from;
 		private final float through;
 		private final Mode mode;
 
-		private Range(float from, float through, Mode mode) {
-			this.from = from;
-			this.through = through;
-			this.mode = mode;
+		private enum Mode { ASCENDING, DESCENDING, BOTH }
+
+		private enum Named {
+			DAWN(-2, -8.8f, Mode.ASCENDING),
+			SUNRISE(5, -2, Mode.ASCENDING),
+			DAY(-2, 5, Mode.BOTH),
+			SUNSET(5, -2, Mode.DESCENDING),
+			DUSK(-2, -8.8f, Mode.DESCENDING),
+			NIGHT(5, -2, Mode.BOTH),
+			DEEP_NIGHT(-8.8f, -18, Mode.BOTH),
+			;
+
+			private static final Named[] VALUES = values();
+
+			private final Range range;
+
+			Named(float from, float through, Mode mode) {
+				range = new Range(from, through, mode);
+			}
+		}
+
+		private static Named resolvedNamedRange(Range range) {
+			for (int i = 0; i < Named.VALUES.length; i++) {
+				Named named = Named.VALUES[i];
+				if (range.from == named.range.from &&
+					range.through == named.range.through &&
+					range.mode == named.range.mode)
+					return named;
+			}
+			return null;
 		}
 	}
 
@@ -73,237 +77,148 @@ public class LightSchedule {
 		float transition = 1 - smoothstep(range.through, range.from, sunAltitude);
 		// Directional phases are a smooth pulse between their two altitude boundaries.
 		switch (range.mode) {
-			case BOTH:
-				return transition;
 			case ASCENDING:
 				return sunDescending ? 0 : 4 * transition * (1 - transition);
 			case DESCENDING:
 				return sunDescending ? 4 * transition * (1 - transition) : 0;
+			case BOTH:
+				return transition;
 		}
 		throw new IllegalStateException("Unhandled light schedule range mode: " + range.mode);
 	}
 
 	public static class Adapter extends TypeAdapter<LightSchedule> {
+		private final JsonParser JSON_ELEMENT_PARSER = new JsonParser();
+
 		@Override
-		public LightSchedule read(JsonReader in) throws IOException {
-			String scheduleLocation = GsonUtils.location(in);
-			if (in.peek() == JsonToken.NULL) {
-				in.nextNull();
-				return null;
-			}
-			if (in.peek() != JsonToken.STRING && in.peek() != JsonToken.BEGIN_OBJECT) {
-				log.error("Expected a light schedule at {}; ignoring value", scheduleLocation);
-				in.skipValue();
-				return null;
-			}
+		public LightSchedule read(JsonReader in) {
+			String location = GsonUtils.location(in);
+			try {
+				JsonElement json = JSON_ELEMENT_PARSER.parse(in);
+				if (json.isJsonNull())
+					return null;
 
-			var schedule = new LightSchedule();
-			if (in.peek() == JsonToken.STRING) {
-				schedule.during = readRange(in);
-				return schedule.during == null ? null : schedule;
-			}
-
-			boolean valid = true;
-			in.beginObject();
-			while (in.hasNext()) {
-				String name = in.nextName();
-				String location = GsonUtils.location(in);
-				switch (name) {
-					case "turn":
-						if (in.peek() != JsonToken.STRING) {
-							log.error("Light schedule turn must be ON or OFF at {}; ignoring schedule", location);
-							in.skipValue();
-							valid = false;
-							break;
-						}
-						try {
-							schedule.turn = Turn.valueOf(in.nextString());
-						} catch (IllegalArgumentException ex) {
-							log.error("Unknown light schedule turn at {}; ignoring schedule", location);
-							valid = false;
-						}
-						break;
-					case "during":
-						if (in.peek() != JsonToken.BEGIN_ARRAY) {
-							schedule.during = readRange(in);
-							break;
-						}
-						var ranges = new ArrayList<Range>();
-						in.beginArray();
-						while (in.hasNext()) {
-							Range[] range = readRange(in);
-							if (range != null)
-								Collections.addAll(ranges, range);
-						}
-						in.endArray();
-						schedule.during = ranges.toArray(Range[]::new);
-						break;
-					case "randomOffset":
-						if (in.peek() != JsonToken.NUMBER) {
-							log.error("Light schedule randomOffset must be a number at {}; ignoring schedule", location);
-							in.skipValue();
-							valid = false;
-							break;
-						}
-						schedule.randomOffset = (float) in.nextDouble();
-						if (!Float.isFinite(schedule.randomOffset) || schedule.randomOffset < 0) {
-							log.error("Light schedule randomOffset must be finite and non-negative at {}; ignoring schedule", location);
-							valid = false;
-						}
-						break;
-					default:
-						log.error("Unknown light schedule property at {}; ignoring schedule", location);
-						in.skipValue();
-						valid = false;
+				var schedule = new LightSchedule();
+				if (json.isJsonPrimitive()) {
+					schedule.during = new Range[] { parseRange(json) };
+				} else {
+					var object = json.getAsJsonObject();
+					if (object.has("turn"))
+						schedule.turn = Turn.valueOf(object.get("turn").getAsString());
+					if (!object.has("during"))
+						throw new IllegalArgumentException("missing 'during'");
+					schedule.during = parseRanges(object.get("during"), location);
+					if (object.has("randomOffset"))
+						schedule.randomOffset = object.get("randomOffset").getAsFloat();
 				}
-			}
-			in.endObject();
 
-			return valid && schedule.during != null && schedule.during.length > 0 ? schedule : null;
+				if (!Float.isFinite(schedule.randomOffset) || schedule.randomOffset < 0)
+					throw new IllegalArgumentException("'randomOffset' must be finite and non-negative");
+				if (schedule.during.length == 0)
+					throw new IllegalArgumentException("'during' contains no valid ranges");
+				return schedule;
+			} catch (RuntimeException ex) {
+				log.error("Invalid light schedule at {}; ignoring schedule: {}", location, ex.getMessage());
+				return null;
+			}
 		}
 
-		private static Range[] readRange(JsonReader in) throws IOException {
-			String location = GsonUtils.location(in);
-			if (in.peek() == JsonToken.STRING) {
-				String name = in.nextString();
+		private static Range[] parseRanges(JsonElement json, String location) {
+			if (!json.isJsonArray())
+				return new Range[] { parseRange(json) };
+
+			var ranges = new ArrayList<Range>();
+			var array = json.getAsJsonArray();
+			for (int i = 0; i < array.size(); i++) {
 				try {
-					return Phase.valueOf(name).ranges;
-				} catch (IllegalArgumentException ex) {
-					log.error("Unknown light schedule phase '{}' at {}; ignoring range", name, location);
-					return null;
+					ranges.add(parseRange(array.get(i)));
+				} catch (RuntimeException ex) {
+					log.error("Invalid light schedule range at {}; ignoring range: {}", location, ex.getMessage());
 				}
 			}
+			return ranges.toArray(Range[]::new);
+		}
 
-			if (in.peek() != JsonToken.BEGIN_OBJECT) {
-				log.error("Expected a named phase or { from, through } range at {}; ignoring range", location);
-				in.skipValue();
-				return null;
-			}
+		private static Range parseRange(JsonElement json) {
+			if (json.isJsonPrimitive() && json.getAsJsonPrimitive().isString())
+				return Range.Named.valueOf(json.getAsString()).range;
 
-			Float from = null;
-			Float through = null;
-			boolean valid = true;
-			in.beginObject();
-			while (in.hasNext()) {
-				String property = in.nextName();
-				if (!property.equals("from") && !property.equals("through")) {
-					log.error("Unknown light schedule range property at {}; ignoring range", GsonUtils.location(in));
-					in.skipValue();
-					valid = false;
-					continue;
+			var object = json.getAsJsonObject();
+			boolean hasMode = object.has("mode");
+			if (!object.has("from") || !object.has("through") || object.size() != (hasMode ? 3 : 2))
+				throw new IllegalArgumentException("range must contain 'from', 'through', and optionally 'mode'");
+
+			float from = parseAltitude(object.get("from"), true);
+			float through = parseAltitude(object.get("through"), false);
+			if (from == through)
+				throw new IllegalArgumentException("equal 'from' and 'through' altitudes cover the full cycle");
+			return new Range(
+				from, through,
+				hasMode ? Range.Mode.valueOf(object.get("mode").getAsString()) : Range.Mode.BOTH
+			);
+		}
+
+		private static float parseAltitude(JsonElement json, boolean from) {
+			if (json.isJsonPrimitive()) {
+				var value = json.getAsJsonPrimitive();
+				if (value.isString()) {
+					Range range = Range.Named.valueOf(value.getAsString()).range;
+					return from ? range.from : range.through;
 				}
-
-				Float time = null;
-				String timeLocation = GsonUtils.location(in);
-				if (in.peek() == JsonToken.STRING) {
-					String name = in.nextString();
-					try {
-						Phase phase = Phase.valueOf(name);
-						time = property.equals("from") ? phase.ranges[0].from : phase.ranges[0].through;
-					} catch (IllegalArgumentException ex) {
-						log.error("Unknown light schedule phase '{}' at {}; ignoring range", name, timeLocation);
-					}
-				} else if (in.peek() == JsonToken.NUMBER) {
-					time = (float) in.nextDouble();
-					if (!Float.isFinite(time) || time < -90 || time > 90) {
-						log.error(
-							"Light schedule altitudes must be finite and between -90 and 90 degrees at {}; ignoring range",
-							timeLocation
-						);
-						time = null;
-					}
-				} else {
-					log.error("Light schedule time must be a named phase or altitude at {}; ignoring range", timeLocation);
-					in.skipValue();
-				}
-				valid &= time != null;
-
-				if (property.equals("from")) {
-					from = time;
-				} else {
-					through = time;
+				if (value.isNumber()) {
+					float altitude = value.getAsFloat();
+					if (Float.isFinite(altitude) && altitude >= -90 && altitude <= 90)
+						return altitude;
 				}
 			}
-			in.endObject();
-
-			if (!valid)
-				return null;
-			if (from == null || through == null) {
-				log.error("Light schedule range needs valid from and through values at {}; ignoring range", location);
-				return null;
-			}
-			if ((float) from == through) {
-				log.error(
-					"Light schedule range from {} through {} covers all solar altitudes at {}; ignoring range",
-					from,
-					through,
-					location
-				);
-				return null;
-			}
-			return new Range[] { new Range(from, through, Range.Mode.BOTH) };
+			throw new IllegalArgumentException("altitudes must be either predefined names or numbers between -90 and 90");
 		}
 
 		@Override
 		public void write(JsonWriter out, LightSchedule schedule) throws IOException {
-			Phase phase = getPhase(schedule.during);
-			if (phase != null && schedule.turn == Turn.ON && schedule.randomOffset == DEFAULT_RANDOM_OFFSET) {
-				out.value(phase.name());
+			if (schedule == null) {
+				out.nullValue();
+				return;
+			}
+
+			if (schedule.during.length == 1 &&
+				Range.resolvedNamedRange(schedule.during[0]) != null &&
+				schedule.turn == Turn.ON &&
+				schedule.randomOffset == DEFAULT_RANDOM_OFFSET
+			) {
+				writeRange(out, schedule.during[0]);
 				return;
 			}
 
 			out.beginObject();
-			if (schedule.turn != Turn.ON) {
+			if (schedule.turn != Turn.ON)
 				out.name("turn").value(schedule.turn.name());
-			}
 			out.name("during");
-			writeRanges(out, schedule.during, phase);
+			boolean array = schedule.during.length > 1;
+			if (array)
+				out.beginArray();
+			for (int i = 0; i < schedule.during.length; i++)
+				writeRange(out, schedule.during[i]);
+			if (array)
+				out.endArray();
 			if (schedule.randomOffset != DEFAULT_RANDOM_OFFSET)
 				out.name("randomOffset").value(schedule.randomOffset);
 			out.endObject();
 		}
 
-		private static void writeRanges(JsonWriter out, Range[] ranges, Phase phase) throws IOException {
-			if (phase != null) {
-				out.value(phase.name());
-			} else if (ranges.length == 1) {
-				writeRange(out, ranges[0]);
-			} else {
-				out.beginArray();
-				for (int i = 0; i < ranges.length; i++)
-					writeRange(out, ranges[i]);
-				out.endArray();
-			}
-		}
-
 		private static void writeRange(JsonWriter out, Range range) throws IOException {
-			Phase phase = getPhase(range);
-			if (phase != null) {
-				out.value(phase.name());
+			Range.Named named = Range.resolvedNamedRange(range);
+			if (named != null) {
+				out.value(named.name());
 				return;
 			}
 
 			out.beginObject();
 			out.name("from").value(range.from);
 			out.name("through").value(range.through);
+			if (range.mode != Range.Mode.BOTH)
+				out.name("mode").value(range.mode.name());
 			out.endObject();
-		}
-
-		private static Phase getPhase(Range[] ranges) {
-			if (ranges.length == 1)
-				return getPhase(ranges[0]);
-			return null;
-		}
-
-		private static Phase getPhase(Range range) {
-			for (int i = 0; i < Phase.VALUES.length; i++) {
-				Phase phase = Phase.VALUES[i];
-				if (range.from == phase.ranges[0].from &&
-					range.through == phase.ranges[0].through &&
-					range.mode == phase.ranges[0].mode)
-					return phase;
-			}
-			return null;
 		}
 	}
 }

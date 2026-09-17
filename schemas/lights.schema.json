@@ -285,7 +285,13 @@
           "required": [ "from", "through" ],
           "properties": {
             "from": { "$ref": "#/$defs/lightScheduleEndpoint" },
-            "through": { "$ref": "#/$defs/lightScheduleEndpoint" }
+            "through": { "$ref": "#/$defs/lightScheduleEndpoint" },
+            "mode": {
+              "type": "string",
+              "enum": [ "ASCENDING", "DESCENDING", "BOTH" ],
+              "default": "BOTH",
+              "description": "Restrict the range to the sun rising or setting. BOTH applies regardless of direction."
+            }
           }
         }
       ]

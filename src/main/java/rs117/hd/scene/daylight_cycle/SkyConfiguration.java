@@ -283,6 +283,8 @@ public class SkyConfiguration {
 
 	@Slf4j
 	public static class Adapter implements TypeAdapterFactory {
+		private final JsonParser JSON_ELEMENT_PARSER = new JsonParser();
+
 		@Override
 		@SuppressWarnings("unchecked")
 		public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
@@ -318,7 +320,7 @@ public class SkyConfiguration {
 						return null;
 					}
 
-					JsonObject override = new JsonParser().parse(in).getAsJsonObject();
+					JsonObject override = JSON_ELEMENT_PARSER.parse(in).getAsJsonObject();
 
 					JsonElement parentElement = override.get("parent");
 					SkyConfiguration parent = DEFAULT_PRESET;
