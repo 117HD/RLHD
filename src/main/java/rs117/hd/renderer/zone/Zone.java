@@ -98,6 +98,12 @@ public class Zone implements Destructible {
 	final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob();
 	ZoneUploadJob uploadJob;
 
+	void setUploadJob(ZoneUploadJob uploadJob) {
+		this.uploadJob = uploadJob;
+		if (uploadJob != null)
+			uploadJob.zoneToBeReplaced = this;
+	}
+
 	int[] levelOffsets = new int[LEVEL_COUNT]; // buffer pos in ints for the end of the level
 
 	int[][] rids;
@@ -182,7 +188,7 @@ public class Zone implements Destructible {
 
 		if (uploadJob != null) {
 			uploadJob.cancel();
-			DestructibleHandler.destroy(uploadJob.zone);
+			DestructibleHandler.destroy(uploadJob.zoneBeingUploaded);
 			uploadJob = null;
 		}
 
@@ -401,6 +407,8 @@ public class Zone implements Destructible {
 
 	private static void pushRange(int start, int end) {
 		assert end >= start;
+		if (end <= start)
+			return;
 
 		if (drawIdx > 0 && drawEnd[drawIdx - 1] == start) {
 			drawEnd[drawIdx - 1] = end;

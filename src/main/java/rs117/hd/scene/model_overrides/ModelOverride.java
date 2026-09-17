@@ -87,6 +87,7 @@ public class ModelOverride
 	public boolean invertDisplacementStrength = false;
 	public int depthBias = -1;
 	public boolean disablePrioritySorting = false;
+	public int heightOffset = 0;
 
 	private int setHue = -1;
 	private int shiftHue;
@@ -321,6 +322,7 @@ public class ModelOverride
 			invertDisplacementStrength,
 			depthBias,
 			disablePrioritySorting,
+			heightOffset,
 			setHue,
 			shiftHue,
 			minHue,

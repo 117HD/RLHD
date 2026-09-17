@@ -829,7 +829,7 @@ public class SceneUploader implements AutoCloseable {
 					zone.glVaoA,
 					zone.tboF.getTexId(),
 					model, modelOverride, alphaStart, alphaEnd,
-					x - basex, y, z - basez,
+					x - basex, y + modelOverride.heightOffset, z - basez,
 					lx, lz, ux, uz,
 					rid, level, id
 				);
@@ -1536,6 +1536,9 @@ public class SceneUploader implements AutoCloseable {
 		final float modelHeight = model.getModelHeight();
 		final byte modelTransparency = model.getTransparency();
 
+		if (modelOverride.rotate != 0)
+			orientation = (int) (modelOverride.rotate * DEG_TO_JAU);
+
 		int orientSin = 0;
 		int orientCos = 0;
 		if (orientation != 0) {
@@ -1543,6 +1546,8 @@ public class SceneUploader implements AutoCloseable {
 			orientSin = SINE[orientation];
 			orientCos = COSINE[orientation];
 		}
+
+		y += modelOverride.heightOffset;
 
 		final int[] modelVertices = this.modelVertices.ensureCapacity(vertexCount * 3);
 		for (int v = 0, vertexOffset = 0; v < vertexCount; ++v) {
@@ -1905,6 +1910,9 @@ public class SceneUploader implements AutoCloseable {
 		final float[] verticesY = model.getVerticesY();
 		final float[] verticesZ = model.getVerticesZ();
 
+		if (modelOverride.rotate != 0)
+			orientation = (int) (modelOverride.rotate * DEG_TO_JAU);
+
 		// Identity orient, will result in no rotation
 		float orientSinf = 0;
 		float orientCosf = 1;
@@ -1914,6 +1922,8 @@ public class SceneUploader implements AutoCloseable {
 			orientSinf = SINE[orientation] / 65536f;
 			orientCosf = COSINE[orientation] / 65536f;
 		}
+
+		y += modelOverride.heightOffset;
 
 		boolean shouldSort = true;
 		boolean allVertsVisible = true;

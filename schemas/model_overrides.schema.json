@@ -286,6 +286,10 @@
         "type": "integer",
         "description": "Vertex colors with a higher alpha value value will be clamped to the specified max alpha value. Defaults to 255, where 0 is fully transparent, 255 is fully opaque."
       },
+      "heightOffset": {
+        "type": "integer",
+        "description": "Height offset to apply to the model, where negative values move the model upward."
+      },
       "materialOverrides": {
         "type": "object",
         "description": "A subset of options can be tweaked separately for specific materials of the model.",
