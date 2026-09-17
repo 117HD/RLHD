@@ -1903,7 +1903,7 @@ public class SceneUploader implements AutoCloseable {
 		modelProjected.ensureCapacity(vertexCount * 3);
 
 		final int[] modelVertices = this.modelVertices.ensureCapacity(vertexCount * 3);
-		final boolean[] visibility = this.visibility.getArray();
+		final boolean[] visibility = this.visibility.getArrayUnsafe();
 		final float[] modelProjected = this.modelProjected.getArray();
 
 		final float[] verticesX = model.getVerticesX();

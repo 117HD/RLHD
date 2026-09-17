@@ -6,7 +6,9 @@ import java.lang.reflect.Array;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import javax.annotation.Nullable;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -444,6 +446,8 @@ public enum PooledArrayType {
 		@Getter
 		private PooledArray<T> pooledArray;
 
+		public boolean isAllocated() { return pooledArray != null; }
+
 		private PooledArrayRef(PooledArrayType arrayType, String context) {
 			this.arrayType = arrayType;
 			this.context = context;
@@ -451,7 +455,15 @@ public enum PooledArrayType {
 
 		public int length() { return pooledArray != null ? pooledArray.length : 0; }
 
-		public T getArray() { return pooledArray != null ? pooledArray.getArray() : null; }
+		@NonNull
+		public T getArray() {
+			if(pooledArray == null)
+				throw new IllegalStateException("ensureCapacity must be called before accessing array");
+			return pooledArray.getArray();
+		}
+
+		@Nullable
+		public T getArrayUnsafe() { return pooledArray != null ? pooledArray.getArrayUnsafe() : null; }
 
 		public <E> E get(int idx) { return pooledArray != null ? pooledArray.get(idx) : null; }
 
@@ -527,7 +539,16 @@ public enum PooledArrayType {
 			);
 		}
 
+		@NonNull
 		public T getArray() {
+			final T a = getArrayUnsafe();
+			if (a == null)
+				throw new IllegalStateException("Illegal Attempt to access array whilst it was released back to the pool");
+			return a;
+		}
+
+		@Nullable
+		public T getArrayUnsafe() {
 			if (metadata.isInPool()) {
 				final Thread currentThread = Thread.currentThread();
 				log.warn(

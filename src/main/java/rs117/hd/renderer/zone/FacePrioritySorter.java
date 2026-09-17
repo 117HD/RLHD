@@ -227,11 +227,6 @@ public final class FacePrioritySorter implements AutoCloseable {
 		final int[] zsortTail = this.zsortTail.getArray();
 		final int[] zsortNext = this.zsortNext.getArray();
 
-		if (zsortHead == null || zsortTail == null || zsortNext == null) {
-			close();
-			return;
-		}
-
 		Arrays.fill(zsortHead, 0, diameter, -1);
 		Arrays.fill(zsortTail, 0, diameter, -1);
 
