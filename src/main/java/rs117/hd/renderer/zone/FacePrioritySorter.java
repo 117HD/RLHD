@@ -201,6 +201,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 	}
 
 	void sortStaticModelFacesByDistance(
+		int[] sortedAlphaIndicies,
 		Zone.AlphaModel m,
 		int yawCos, int yawSin,
 		int pitchCos, int pitchSin
@@ -216,7 +217,6 @@ public final class FacePrioritySorter implements AutoCloseable {
 
 		final int[] packedFaces = m.packedFaces;
 		final int[] doubleSidedBitSet = m.doubleSidedBitSet;
-		final int[] sortedFaces = m.tempSortedFaces;
 		final int[] zsortHead = this.zsortHead;
 		final int[] zsortTail = this.zsortTail;
 		final int[] zsortNext = this.zsortNext;
@@ -224,7 +224,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 		Arrays.fill(zsortHead, 0, diameter, -1);
 		Arrays.fill(zsortTail, 0, diameter, -1);
 
-		int sortedOffset = 0;
+		int sortedOffset = m.sortedIndiciesOffset;
 		int backfaceWord = 0;
 		int minFz = diameter, maxFz = 0;
 
@@ -258,9 +258,9 @@ public final class FacePrioritySorter implements AutoCloseable {
 
 				if ((backfaceWord & 1) != 0) {
 					final int faceStart = ++f * 3 + start;
-					sortedFaces[sortedOffset++] = faceStart;
-					sortedFaces[sortedOffset++] = faceStart + 1;
-					sortedFaces[sortedOffset++] = faceStart + 2;
+					sortedAlphaIndicies[sortedOffset++] = faceStart;
+					sortedAlphaIndicies[sortedOffset++] = faceStart + 1;
+					sortedAlphaIndicies[sortedOffset++] = faceStart + 2;
 				}
 				backfaceWord >>>= 1;
 			}
@@ -272,12 +272,12 @@ public final class FacePrioritySorter implements AutoCloseable {
 					continue;
 
 				final int faceStart = f * 3 + start;
-				sortedFaces[sortedOffset++] = faceStart;
-				sortedFaces[sortedOffset++] = faceStart + 1;
-				sortedFaces[sortedOffset++] = faceStart + 2;
+				sortedAlphaIndicies[sortedOffset++] = faceStart;
+				sortedAlphaIndicies[sortedOffset++] = faceStart + 1;
+				sortedAlphaIndicies[sortedOffset++] = faceStart + 2;
 			}
 		}
-		m.sortedFacesLen = sortedOffset;
+		m.sortedIndiciesCount = sortedOffset - m.sortedIndiciesOffset;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package rs117.hd.utils.collections;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -54,45 +55,17 @@ public final class Util {
 	 * Algorithm based on the JDK 8 Dual-Pivot Quicksort by Yaroslavskiy, Bentley,
 	 *   https://github.com/openjdk/jdk/blob/master/src/java.base/share/classes/java/util/DualPivotQuicksort.java
 	 */
-
 	private static final int INSERTION_SORT_THRESHOLD = 47;
+	private static final ThreadLocal<SortAccessor> LOCAL_ACCESSOR = ThreadLocal.withInitial(SortAccessor::new);
 
-	@SuppressWarnings("unchecked")
-	public static <T> void quickSort(List<T> list, Comparator<T> comparator) {
-		final int size = list.size();
-		if (size <= 1) return;
-
-		final Object[] buf = PooledArrayType.OBJECT.borrow(size);
-		try {
-			list.toArray(buf);
-			quickSortInternal(buf, 0, size - 1, comparator);
-			for (int i = 0; i < size; i++)
-				list.set(i, (T) buf[i]);
-		} finally {
-			PooledArrayType.OBJECT.release(buf);
-		}
-	}
-
-	public static <T> void quickSort(T[] a, Comparator<T> comparator) {
-		if (a.length > 1)
-			quickSortInternal(a, 0, a.length - 1, comparator);
-	}
-
-	public static <T> void quickSort(T[] a, int left, int right, Comparator<T> comparator) {
-		if (a.length > 1)
-			quickSortInternal(a, left, right, comparator);
-	}
-
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	private static void quickSortInternal(Object[] a, int left, int right, Comparator comparator) {
+	private static void quickSortInternal(SortAccessor accessor, int left, int right) {
 		if (right <= left) return;
 
-		/*
-		 * Stack layout: pairs of (lo, hi) indices.
-		 * Worst-case depth with "always push larger, tail-loop smaller" is
-		 * ceil(log2(n)), so 64 int slots (= 32 pairs) covers 2^32 elements.
-		 * We borrow from the pool to keep the entire call heap-allocation-free.
-		 */
+		if (right - left + 1 <= INSERTION_SORT_THRESHOLD) {
+			insertionSort(accessor, left, right);
+			return;
+		}
+
 		final int[] stack = PooledArrayType.INT.borrow(64);
 		try {
 			int top = 0;
@@ -107,72 +80,66 @@ public final class Util {
 				while (left < right) {
 					int length = right - left + 1;
 
-					// insertion sort for tiny ranges (JDK 8)
+					// insertion sort for tiny ranges
 					if (length <= INSERTION_SORT_THRESHOLD) {
-						insertionSort(a, left, right, comparator);
+						insertionSort(accessor, left, right);
 						break;
 					}
 
-					// 5-sample pivot selection (mirrors JDK 8 sort)
-					//
-					// Divide the range into 6 equal-ish segments, take the
-					// element at each interior boundary, sort those 5 candidates
-					// in-place, then use the middle one (e3) as the pivot.
-					// This keeps the pivot selection cost at O(1) while giving a
-					// much better median estimate than median-of-three alone.
+					// 5-sample pivot selection
 					int sixth = length / 6;
-					int e1 = left  + sixth;
+					int e1 = left + sixth;
 					int e5 = right - sixth;
-					int e3 = left  + (length >>> 1); // midpoint
-					int e2 = e3   - sixth;
-					int e4 = e3   + sixth;
+					int e3 = left + (length >>> 1);
+					int e2 = e3 - sixth;
+					int e4 = e3 + sixth;
 
-					// sort the 5 samples with a 5-element sort network (7 comparisons)
-					if (comparator.compare(a[e1], a[e2]) > 0) swap(a, e1, e2);
-					if (comparator.compare(a[e4], a[e5]) > 0) swap(a, e4, e5);
-					if (comparator.compare(a[e1], a[e3]) > 0) swap(a, e1, e3);
-					if (comparator.compare(a[e2], a[e3]) > 0) swap(a, e2, e3);
-					if (comparator.compare(a[e1], a[e4]) > 0) swap(a, e1, e4);
-					if (comparator.compare(a[e3], a[e4]) > 0) swap(a, e3, e4);
-					if (comparator.compare(a[e2], a[e5]) > 0) swap(a, e2, e5);
-					if (comparator.compare(a[e2], a[e3]) > 0) swap(a, e2, e3);
-					if (comparator.compare(a[e4], a[e5]) > 0) swap(a, e4, e5);
-					// invariant: a[e1] <= a[e2] <= a[e3] <= a[e4] <= a[e5]
+					// sort the 5 samples
+					if (accessor.compare(e1, e2) > 0) accessor.swap(e1, e2);
+					if (accessor.compare(e4, e5) > 0) accessor.swap(e4, e5);
+					if (accessor.compare(e1, e3) > 0) accessor.swap(e1, e3);
+					if (accessor.compare(e2, e3) > 0) accessor.swap(e2, e3);
+					if (accessor.compare(e1, e4) > 0) accessor.swap(e1, e4);
+					if (accessor.compare(e3, e4) > 0) accessor.swap(e3, e4);
+					if (accessor.compare(e2, e5) > 0) accessor.swap(e2, e5);
+					if (accessor.compare(e2, e3) > 0) accessor.swap(e2, e3);
+					if (accessor.compare(e4, e5) > 0) accessor.swap(e4, e5);
 
-					Object pivot = a[e3]; // true median of 5 samples
+					accessor.savePivot(e3);
 
-					// 3-way partition (Dutch-flag / Bentley-McIlroy)
+					// 3-way partition
 					int lt = left;
 					int gt = right;
-					int i  = left;
+					int i = left;
 
 					while (i <= gt) {
-						int cmp = comparator.compare(a[i], pivot);
-						if      (cmp < 0) swap(a, lt++, i++);
-						else if (cmp > 0) swap(a, i, gt--);
-						else              i++;
+						int cmp = accessor.compareToPivot(i);
+
+						if (cmp < 0) {
+							accessor.swap(lt++, i++);
+						} else if (cmp > 0) {
+							accessor.swap(i, gt--);
+						} else {
+							i++;
+						}
 					}
 
-					// push larger partition; tail-loop smaller
-					//
-					// This is the key invariant that keeps the pooled stack at
-					int leftLen  = lt - 1 - left;
+					// push larger partition; continue with smaller
+					int leftLen = lt - 1 - left;
 					int rightLen = right - (gt + 1);
 
 					if (leftLen >= rightLen) {
-						// left side larger -> push it, tail-recurse right
 						if (left < lt - 1) {
 							stack[top++] = left;
 							stack[top++] = lt - 1;
 						}
-						left = gt + 1; // continue with right partition
+						left = gt + 1;
 					} else {
-						// right side larger -> push it, tail-recurse left
 						if (gt + 1 < right) {
 							stack[top++] = gt + 1;
 							stack[top++] = right;
 						}
-						right = lt - 1; // continue with left partition
+						right = lt - 1;
 					}
 				}
 			}
@@ -181,26 +148,210 @@ public final class Util {
 		}
 	}
 
-	/**
-	 * Straight insertion sort for small ranges.
-	 * JDK 8 uses the same algorithm for ranges below its INSERTION_SORT_THRESHOLD.
-	 */
-	@SuppressWarnings({"rawtypes", "unchecked"})
-	private static void insertionSort(Object[] a, int left, int right, Comparator c) {
+	private static void insertionSort(SortAccessor accessor, int left, int right) {
 		for (int i = left + 1; i <= right; i++) {
-			final Object key = a[i];
-			int j = i - 1;
-			while (j >= left && c.compare(a[j], key) > 0) {
-				a[j + 1] = a[j];
+			int j = i;
+			while (j > left && accessor.compare(j - 1, j) > 0) {
+				accessor.swap(j - 1, j);
 				j--;
 			}
-			a[j + 1] = key;
 		}
 	}
 
-	private static void swap(Object[] a, int i, int j) {
-		final Object tmp = a[i];
-		a[i] = a[j];
-		a[j] = tmp;
+	public static void quickSort(float[] a) {
+		if (a.length > 1)
+			quickSort(a, 0, a.length - 1);
+	}
+
+	public static void quickSort(float[] a, int left, int right) {
+		if (right > left)
+			quickSort(a, left, right, null);
+	}
+
+	public static void quickSort(float[] a, int left, int right, Comparator<Float> comparator) {
+		if (right > left)
+			quickSortInternal(LOCAL_ACCESSOR.get().setupFloat(a, comparator), left, right);
+	}
+
+	public static void quickSort(int[] a) {
+		if (a.length > 1)
+			quickSort(a, 0, a.length - 1);
+	}
+
+	public static void quickSort(int[] a, int left, int right) {
+		if (right > left)
+			quickSort(a, left, right, null);
+	}
+
+	public static void quickSort(int[] a, int left, int right, Comparator<Integer> comparator) {
+		if (right > left)
+			quickSortInternal(LOCAL_ACCESSOR.get().setupInt(a, comparator), left, right);
+	}
+
+	public static <T> void quickSort(T[] a, Comparator<? super T> comparator) {
+		if (a.length > 1)
+			quickSort(a, 0, a.length - 1, comparator);
+	}
+
+	public static <T> void quickSort(T[] a, int left, int right, Comparator<? super T> comparator) {
+		if (right > left)
+			quickSortInternal(LOCAL_ACCESSOR.get().setupObject(a, comparator), left, right);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> void quickSort(List<T> list, Comparator<? super T> comparator) {
+		final int size = list.size();
+		if (size <= 1) return;
+
+		quickSortInternal(LOCAL_ACCESSOR.get().setupList((List<Object>) list, comparator), 0, size - 1);
+	}
+
+	public static <T> void quickSortByKey(int[] keys, List<T> payload) {
+		if (keys.length > 1)
+			quickSortByKey(keys, payload, 0, keys.length - 1);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> void quickSortByKey(int[] keys, List<T> payload, int left, int right) {
+		if (right > left)
+			quickSortInternal(LOCAL_ACCESSOR.get().setupKeyedList(keys, (List<Object>) payload), left, right);
+	}
+
+	@SuppressWarnings("rawtypes")
+	private static final class SortAccessor {
+		private enum Kind { INT, FLOAT, OBJECT, LIST, KEYED_LIST }
+		private Kind kind;
+
+		private int[] intArray;
+		private float[] floatArray;
+		private Object[] objArray;
+		private List<Object> list;
+		private int[] keys;
+
+		private Comparator comparator;
+
+		private int intPivot;
+		private float floatPivot;
+		private Object objPivot;
+
+		SortAccessor setupInt(int[] array, Comparator<Integer> comparator) {
+			this.kind = Kind.INT;
+			this.intArray = array;
+			this.comparator = comparator;
+			this.intPivot = 0;
+			return this;
+		}
+
+		SortAccessor setupFloat(float[] array, Comparator<Float> comparator) {
+			this.kind = Kind.FLOAT;
+			this.floatArray = array;
+			this.comparator = comparator;
+			this.floatPivot = 0;
+			return this;
+		}
+
+		SortAccessor setupObject(Object[] array, Comparator comparator) {
+			this.kind = Kind.OBJECT;
+			this.objArray = array;
+			this.comparator = comparator;
+			this.objPivot = null;
+			return this;
+		}
+
+		SortAccessor setupList(List<Object> list, Comparator comparator) {
+			this.kind = Kind.LIST;
+			this.list = list;
+			this.comparator = comparator;
+			this.objPivot = null;
+			return this;
+		}
+
+		SortAccessor setupKeyedList(int[] keys, List<Object> list) {
+			this.kind = Kind.KEYED_LIST;
+			this.keys = keys;
+			this.list = list;
+			this.comparator = null;
+			this.intPivot = 0;
+			return this;
+		}
+
+		int compare(int i, int j) {
+			switch (kind) {
+				case INT:
+					return comparator != null ? comparator.compare(intArray[i], intArray[j]) : Integer.compare(intArray[i], intArray[j]);
+				case FLOAT:
+					return comparator != null ? comparator.compare(floatArray[i], floatArray[j]) : Float.compare(floatArray[i], floatArray[j]);
+				case OBJECT:
+					return comparator.compare(objArray[i], objArray[j]);
+				case LIST:
+					return comparator.compare(list.get(i), list.get(j));
+				case KEYED_LIST:
+					return Integer.compare(keys[i], keys[j]);
+				default:
+					throw new IllegalStateException("Unknown kind: " + kind);
+			}
+		}
+
+		int compareToPivot(int i) {
+			switch (kind) {
+				case INT:
+					return comparator != null ? comparator.compare(intArray[i], intPivot) : Integer.compare(intArray[i], intPivot);
+				case FLOAT:
+					return comparator != null ? comparator.compare(floatArray[i], floatPivot) : Float.compare(floatArray[i], floatPivot);
+				case OBJECT:
+					return comparator.compare(objArray[i], objPivot);
+				case LIST:
+					return comparator.compare(list.get(i), objPivot);
+				case KEYED_LIST:
+					return Integer.compare(keys[i], intPivot);
+				default:
+					throw new IllegalStateException("Unknown kind: " + kind);
+			}
+		}
+
+		void savePivot(int index) {
+			switch (kind) {
+				case INT:        intPivot = intArray[index]; break;
+				case FLOAT:      floatPivot = floatArray[index]; break;
+				case OBJECT:     objPivot = objArray[index]; break;
+				case LIST:       objPivot = list.get(index); break;
+				case KEYED_LIST: intPivot = keys[index]; break;
+				default: throw new IllegalStateException("Unknown kind: " + kind);
+			}
+		}
+
+		void swap(int i, int j) {
+			switch (kind) {
+				case INT: {
+					final int t = intArray[i];
+					intArray[i] = intArray[j];
+					intArray[j] = t;
+					break;
+				}
+				case FLOAT: {
+					final float t = floatArray[i];
+					floatArray[i] = floatArray[j];
+					floatArray[j] = t;
+					break;
+				}
+				case OBJECT: {
+					final Object t = objArray[i];
+					objArray[i] = objArray[j];
+					objArray[j] = t;
+					break;
+				}
+				case KEYED_LIST: {
+					final int tk = keys[i];
+					keys[i] = keys[j];
+					keys[j] = tk;
+				}
+				case LIST: {
+					Collections.swap(list, i, j);
+					break;
+				}
+				default:
+					throw new IllegalStateException("Unknown kind: " + kind);
+			}
+		}
 	}
 }

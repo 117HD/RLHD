@@ -46,6 +46,7 @@ public class CommandBuffer {
 	private static final int DRAW_MODE_MASK = 0xF;
 
 	private static final ThreadLocal<ArrayDeque<CommandBuffer>> CALL_STACK = ThreadLocal.withInitial(ArrayDeque::new);
+	private static final ThreadLocal<int[]> INDIRECT_STAGING = ThreadLocal.withInitial(() -> new int[8]);
 
 	private Object[] objects = new Object[8];
 	private int objectCount = 0;
@@ -175,11 +176,12 @@ public class CommandBuffer {
 		// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDrawArraysIndirect.xhtml
 		int indirectOffset = indirectBuffer.position();
 		try {
-			indirectBuffer.ensureCapacity(4).getBuffer()
-				.put(vertexCount)  // count
-				.put(1)         // primCount
-				.put(vertexOffset) // first
-				.put(0);        // baseInstance (reserved 4.1 prior)
+			final int[] drawArgs = INDIRECT_STAGING.get();
+			drawArgs[0] = vertexCount;  // count
+			drawArgs[1] = 1;            // primCount
+			drawArgs[2] = vertexOffset; // first
+			drawArgs[3] = 0;            // baseInstance (reserved 4.1 prior)
+			indirectBuffer.ensureCapacity(4).getBuffer().put(drawArgs, 0, 4);
 		} catch (Exception e) {
 			log.debug(
 				"Failed to write DrawArraysIndirect buffer position={} remaining={} capacity={}",
@@ -200,12 +202,13 @@ public class CommandBuffer {
 		// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDrawElementsIndirect.xhtml
 		int indirectOffset = indirectBuffer.position();
 		try {
-			indirectBuffer.ensureCapacity(5).getBuffer()
-				.put(indexCount)    // count
-				.put(1)          // instanceCount
-				.put(indexOffset)   // firstIndex
-				.put(0)          // baseVertex
-				.put(0);         // baseInstance
+			final int[] drawArgs = INDIRECT_STAGING.get();
+			drawArgs[0] = indexCount;   // count
+			drawArgs[1] = 1; 			// instanceCount
+			drawArgs[2] = indexOffset;  // firstIndex
+			drawArgs[3] = 0;            // baseVertex
+			drawArgs[4] = 0;            // baseInstance
+			indirectBuffer.ensureCapacity(5).getBuffer().put(drawArgs, 0, 5);
 		} catch (Exception e) {
 			log.debug(
 				"Failed to write DrawArraysIndirect buffer position={} remaining={} capacity={}",
@@ -237,13 +240,18 @@ public class CommandBuffer {
 		// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glMultiDrawArraysIndirect.xhtml
 		indirectBuffer.ensureCapacity(drawCount * 4);
 		try {
-			IntBuffer buf = indirectBuffer.getBuffer();
+			int[] drawArgs = INDIRECT_STAGING.get();
+			if(drawArgs.length < drawCount * 4)
+				INDIRECT_STAGING.set((drawArgs = new int[drawCount * 4]));
+
 			for (int i = 0; i < drawCount; i++) {
-				buf.put(vertexCounts[i]);  // count
-				buf.put(1);              // instanceCount
-				buf.put(vertexOffsets[i]); // first
-				buf.put(0);             // baseInstance
+				final int base = i * 4;
+				drawArgs[base]     = vertexCounts[i];  // count
+				drawArgs[base + 1] = 1;                // instanceCount
+				drawArgs[base + 2] = vertexOffsets[i]; // first
+				drawArgs[base + 3] = 0;                // baseInstance
 			}
+			indirectBuffer.getBuffer().put(drawArgs, 0, drawCount * 4);
 		} catch (Exception e) {
 			log.debug(
 				"Failed to write DrawArraysIndirect buffer drawCount={} position={} remaining={} capacity={}",
