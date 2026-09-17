@@ -188,7 +188,8 @@ public class WorldViewContext {
 		}
 	}
 
-	void handleZoneSwap(int zx, int zz, boolean queue) {
+	// Synchronize creation of delayed upload jobs with zone swaps and invalidation
+	synchronized void handleZoneSwap(int zx, int zz, boolean queue) {
 		Zone curZone = zones[zx][zz];
 		ZoneUploadJob uploadTask = curZone.uploadJob;
 		if (uploadTask == null)
@@ -196,7 +197,7 @@ public class WorldViewContext {
 
 		if (!uploadTask.isQueued()) {
 			if (queue && uploadTask.revealAfterTimestampMs < System.currentTimeMillis()) {
-				log.trace("queueing zone({}): [{}-{},{}]", uploadTask.zone.hashCode(), worldViewId, zx, zz);
+				log.trace("queueing zone({}): [{}-{},{}]", uploadTask.zoneBeingUploaded.hashCode(), worldViewId, zx, zz);
 				uploadTask.revealAfterTimestampMs = 0;
 				uploadTask.queue(streamingGroup, sceneManager.getGenerateSceneDataTask());
 			}
@@ -206,11 +207,23 @@ public class WorldViewContext {
 		if (uploadTask.isDone()) {
 			curZone.uploadJob = null;
 			if (uploadTask.ranToCompletion() && !uploadTask.wasCancelled()) {
-				log.trace("swapping zone({}): [{}-{},{}]", uploadTask.zone.hashCode(), worldViewId, zx, zz);
+				Zone uploadedZone = uploadTask.zoneBeingUploaded;
+				if (uploadedZone == null) {
+					log.error(
+						"Completed zone upload job [{}] has already been released: [{}-{},{}]",
+						uploadTask.hashCode(),
+						worldViewId,
+						zx,
+						zz
+					);
+					curZone.rebuild = true;
+					return;
+				}
+				log.trace("swapping zone({}): [{}-{},{}]", uploadedZone.hashCode(), worldViewId, zx, zz);
 
 				Zone prevZone = curZone;
 				// Swap the zone out with the one we just uploaded
-				zones[zx][zz] = curZone = uploadTask.zone;
+				zones[zx][zz] = curZone = uploadedZone;
 				clientThread.invoke(curZone::unmap);
 
 				if (prevZone != curZone) {
@@ -310,11 +323,14 @@ public class WorldViewContext {
 				invalidateZone(x, z);
 	}
 
-	void invalidateZone(int zx, int zz) {
+	// Synchronize creation of delayed upload jobs with zone swaps and invalidation
+	synchronized void invalidateZone(int zx, int zz) {
 		Zone curZone = zones[zx][zz];
 		long revealAfterTimestampMs = 0;
-		if (curZone.uploadJob != null) {
-			Zone pendingZone = curZone.uploadJob.zone;
+		ZoneUploadJob previousUpload = curZone.uploadJob;
+		if (previousUpload != null) {
+			curZone.uploadJob = null;
+			Zone pendingZone = previousUpload.zoneBeingUploaded;
 			log.trace(
 				"Invalidate Zone({}) - Cancelled upload task: [{}-{},{}] task zone({})",
 				curZone.hashCode(),
@@ -323,9 +339,9 @@ public class WorldViewContext {
 				zz,
 				pendingZone.hashCode()
 			);
-			revealAfterTimestampMs = curZone.uploadJob.revealAfterTimestampMs;
-			curZone.uploadJob.cancel();
-			curZone.uploadJob.release();
+			revealAfterTimestampMs = previousUpload.revealAfterTimestampMs;
+			previousUpload.cancel();
+			previousUpload.release();
 
 			if (pendingZone != curZone)
 				DestructibleHandler.destroy(pendingZone);
@@ -334,7 +350,7 @@ public class WorldViewContext {
 		Zone newZone = injector.getInstance(Zone.class);
 		newZone.dirty = zones[zx][zz].dirty;
 
-		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz);
+		curZone.setUploadJob(ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz));
 		curZone.uploadJob.revealAfterTimestampMs = revealAfterTimestampMs;
 
 		// Queue right away, so we can wait for it while in the POH in order to hide building mode placeholders
