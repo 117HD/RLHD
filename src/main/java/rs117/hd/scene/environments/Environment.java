@@ -114,12 +114,10 @@ public class Environment {
 			hasFogColorOverride = fogColor != null;
 			hasWaterColorOverride = waterColor != null;
 		}
-		if (fogColor == null) {
+		if (fogColor == null)
 			fogColor = DEFAULT_FOG_COLOR;
-		}
-		if (waterColor == null) {
+		if (waterColor == null)
 			waterColor = DEFAULT_WATER_COLOR;
-		}
 
 		if (area != Area.ALL && area != Area.NONE) {
 			isOverworld = Area.OVERWORLD.intersects(area);

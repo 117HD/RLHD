@@ -121,10 +121,11 @@ public class GsonUtils {
 					} else {
 						JsonObject base = resolveParentDefinition(
 							parentName, definitions, resolved, resolving, type, rootParent, inherit);
-						if (base != null)
+						if (base != null) {
 							inherit.accept(result, base);
-						else
+						} else {
 							result = null;
+						}
 					}
 				}
 			}

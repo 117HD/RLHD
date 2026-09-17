@@ -93,6 +93,7 @@ public class EnvironmentManager {
 	@Getter
 	private float transitionProgress = 1;
 	private double transitionStartTime = 0;
+	@Getter
 	private long transitionId;
 	private int[] previousPosition = new int[3];
 
@@ -298,8 +299,10 @@ public class EnvironmentManager {
 
 		// A fixed sky uses Default's clock rather than the configured cycle, so blending
 		// between fixed and moving skies would also blend unrelated celestial motion.
+		boolean oldHasFixedSun = state.target.getSky().sunAngles != null;
+		boolean newHasFixedSun = newEnvironment.getSky().sunAngles != null;
 		if (config.daylightCycle() != DaylightCycle.OFF && state.target != Environment.NONE &&
-			(state.target.getSky().sunAngles != null) != (newEnvironment.getSky().sunAngles != null))
+			oldHasFixedSun != newHasFixedSun)
 			skipTransition = true;
 
 		forceNextTransition = false;
@@ -472,10 +475,6 @@ public class EnvironmentManager {
 	 */
 	public Environment getTargetEnvironment() {
 		return state.target;
-	}
-
-	long getTransitionId() {
-		return transitionId;
 	}
 
 	public Environment getOverworldEnvironment() {

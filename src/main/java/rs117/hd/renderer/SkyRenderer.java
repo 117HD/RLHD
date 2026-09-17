@@ -401,9 +401,8 @@ public class SkyRenderer {
 		// average irradiance, including both colors' magnitudes, when making it ambient.
 		float ambientTransfer = transferredStrength * .25f;
 		float combinedStrength = ambientStrength + ambientTransfer;
-		if (combinedStrength > 0) {
+		if (combinedStrength > 0)
 			mix(ambientColor, ambientColor, color, ambientTransfer / combinedStrength);
-		}
 		ambientStrength = combinedStrength;
 		return strength * visibility;
 	}
