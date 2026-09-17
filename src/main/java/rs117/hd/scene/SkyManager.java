@@ -307,28 +307,26 @@ public class SkyManager {
 		out.utcMillis = utcMillis;
 
 		// Resolve and blend celestial positions, moon lighting, and shadow direction.
-		{
-			out.sunAngles = interpolateAngles(fromEndpoint.sunAngles, toEndpoint.sunAngles, t);
-			out.sunAltitudeDegrees = out.sunAngles[0] * RAD_TO_DEG;
-			out.sunDirection = anglesToSkyDirection(out.sunAngles[0], out.sunAngles[1]);
+		out.sunAngles = interpolateAngles(fromEndpoint.sunAngles, toEndpoint.sunAngles, t);
+		out.sunAltitudeDegrees = out.sunAngles[0] * RAD_TO_DEG;
+		out.sunDirection = anglesToSkyDirection(out.sunAngles[0], out.sunAngles[1]);
 
-			ResolvedMoon fromMoon = fromEndpoint.moon;
-			ResolvedMoon toMoon = toEndpoint.moon;
-			out.moonAngles = interpolateAngles(fromMoon.angles, toMoon.angles, t);
-			out.moonAltitudeDegrees = out.moonAngles[0] * RAD_TO_DEG;
-			out.moonDirection = anglesToSkyDirection(out.moonAngles[0], out.moonAngles[1]);
+		ResolvedMoon fromMoon = fromEndpoint.moon;
+		ResolvedMoon toMoon = toEndpoint.moon;
+		out.moonAngles = interpolateAngles(fromMoon.angles, toMoon.angles, t);
+		out.moonAltitudeDegrees = out.moonAngles[0] * RAD_TO_DEG;
+		out.moonDirection = anglesToSkyDirection(out.moonAngles[0], out.moonAngles[1]);
 
-			out.moonVisibility = mix(fromMoon.visibility, toMoon.visibility, t);
-			out.moonDirectionalStrength = mix(fromMoon.directionalStrength, toMoon.directionalStrength, t);
-			out.moonIllumination = mix(fromMoon.illumination, toMoon.illumination, t);
-			out.moonLightIllumination = mix(fromMoon.lightIllumination, toMoon.lightIllumination, t);
-			out.moonIlluminationDirection = interpolateDirection(fromMoon.illuminationDirection, toMoon.illuminationDirection, t);
-			out.shadowAngles = fallbackShadowAngles;
-			if (out.cycleActive) {
-				out.shadowAngles = out.sunAngles;
-				if (out.sunAngles[0] < 0 && out.moonAngles[0] > 0 && out.moonLightIllumination > 0)
-					out.shadowAngles = out.moonAngles;
-			}
+		out.moonVisibility = mix(fromMoon.visibility, toMoon.visibility, t);
+		out.moonDirectionalStrength = mix(fromMoon.directionalStrength, toMoon.directionalStrength, t);
+		out.moonIllumination = mix(fromMoon.illumination, toMoon.illumination, t);
+		out.moonLightIllumination = mix(fromMoon.lightIllumination, toMoon.lightIllumination, t);
+		out.moonIlluminationDirection = interpolateDirection(fromMoon.illuminationDirection, toMoon.illuminationDirection, t);
+		out.shadowAngles = fallbackShadowAngles;
+		if (out.cycleActive) {
+			out.shadowAngles = out.sunAngles;
+			if (out.sunAngles[0] < 0 && out.moonAngles[0] > 0 && out.moonLightIllumination > 0)
+				out.shadowAngles = out.moonAngles;
 		}
 
 		// Resolve the remaining shared celestial state consumed by the sky shaders.
@@ -458,24 +456,23 @@ public class SkyManager {
 		boolean fixedSunAngles,
 		float[] latLon
 	) {
-		float[] angles = sky.moonAngles;
-		if (angles == null) {
-			if (configMoonBehavior == MoonBehavior.STATIC) {
-				angles = DEFAULT_STATIC_MOON_ANGLES;
-			} else if (configMoonBehavior == MoonBehavior.MIRRORED) {
-				angles = vec(-sunAngles[0], sunAngles[1] + PI);
-			} else {
-				angles = AstronomyUtils.getMoonPosition(millis, latLon);
-			}
+		float[] angles;
+		if (sky.moonAngles != null) {
+			angles = sky.moonAngles;
+		} else if (configMoonBehavior == MoonBehavior.STATIC) {
+			angles = DEFAULT_STATIC_MOON_ANGLES;
+		} else if (configMoonBehavior == MoonBehavior.MIRRORED) {
+			angles = vec(-sunAngles[0], sunAngles[1] + PI);
+		} else {
+			angles = AstronomyUtils.getMoonPosition(millis, latLon);
 		}
 		float[] moonDirection = anglesToSkyDirection(angles[0], angles[1]);
 		float[] sunDirection = anglesToSkyDirection(sunAngles[0], sunAngles[1]);
 		MoonPhase phase = sky.forceMoonPhase != null ? sky.forceMoonPhase : configMoonPhase;
-		float illumination;
-		float orbit;
+		float illumination, orbit;
 		if (configMoonBehavior == MoonBehavior.MIRRORED) {
 			// A mirrored moon needs an independent phase, since the sun is always opposite it.
-			orbit = (float) fract(millis / (DAY_MS * SYNTHETIC_MOON_PERIOD_DAYS));
+			orbit = fract(millis / (DAY_MS * SYNTHETIC_MOON_PERIOD_DAYS));
 			illumination = .5f - .5f * cos(orbit * TWO_PI);
 		} else if (!fixedSunAngles || configCycle == DaylightCycle.NIGHT) {
 			float[] astronomy = AstronomyUtils.getMoonIllumination(millis);
