@@ -26,9 +26,12 @@ import rs117.hd.scene.GamevalManager;
 
 import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
 import static java.awt.event.InputEvent.SHIFT_DOWN_MASK;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class DeveloperTools implements KeyListener {
+	public static final float[] COLOR_PICKER = new float[4];
+
 	// This could be part of the config if we had developer mode config sections
 	private static final Keybind KEY_TOGGLE_TILE_INFO = new Keybind(KeyEvent.VK_F3, CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_FRAME_TIMINGS = new Keybind(KeyEvent.VK_F4, CTRL_DOWN_MASK);
@@ -278,8 +281,9 @@ public class DeveloperTools implements KeyListener {
 			);
 			colorPicker.setLocationRelativeTo(client.getCanvas());
 			colorPicker.setOnColorChange(c -> clientThread.invoke(() -> {
-				var rgb = ColorUtils.rgb(c); // linear
-				plugin.uboGlobal.colorPicker.set(rgb[0], rgb[1], rgb[2], c.getAlpha() / 255.f);
+				copyTo(COLOR_PICKER, ColorUtils.rgb(c)); // linear
+				COLOR_PICKER[3] = c.getAlpha() / 255.f;
+				plugin.uboGlobal.colorPicker.set(COLOR_PICKER);
 			}));
 			colorPicker.setOnClose(e -> colorPicker = null);
 			colorPicker.setVisible(true);
