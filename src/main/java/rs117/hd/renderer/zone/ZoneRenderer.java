@@ -25,7 +25,6 @@
 package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
 import javax.inject.Inject;
@@ -42,29 +41,23 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
-import rs117.hd.config.ShadowMode;
-import rs117.hd.opengl.shader.SceneShaderProgram;
-import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
-import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
+import rs117.hd.renderer.zone.passes.RenderPipeline;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.lights.Light;
-import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.ColorUtils;
-import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.RenderState;
-import rs117.hd.utils.ShadowCasterVolume;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLMappedBufferIntWriter;
 import rs117.hd.utils.buffer.GpuIntBuffer;
@@ -74,7 +67,6 @@ import rs117.hd.utils.jobs.JobSystem;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.HdPlugin.APPLE;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
@@ -83,7 +75,6 @@ import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
-import static rs117.hd.renderer.zone.WorldViewContext.VAO_PRESCENE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -91,6 +82,9 @@ import static rs117.hd.utils.MathUtils.*;
 @Singleton
 public class ZoneRenderer implements Renderer {
 	public static final int FRAMES_IN_FLIGHT = 3;
+
+	public static int CAMERA_COUNT;
+	public static final int SCENE_CAMERA_ID = CAMERA_COUNT++;
 
 	private static int TEXTURE_UNIT_COUNT = HdPlugin.TEXTURE_UNIT_COUNT;
 	public static final int TEXTURE_UNIT_TEXTURED_FACES = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
@@ -132,40 +126,25 @@ public class ZoneRenderer implements Renderer {
 	private FrameTimer frameTimer;
 
 	@Inject
-	private SceneShaderProgram sceneProgram;
-
-	@Inject
-	private ShadowShaderProgram.Fast fastShadowProgram;
-
-	@Inject
-	private ShadowShaderProgram.Detailed detailedShadowProgram;
-
-	@Inject
 	private JobSystem jobSystem;
 
 	@Inject
 	private UBOWorldViews uboWorldViews;
 
-	public final Camera sceneCamera = new Camera().setReverseZ(true);
-	public final Camera directionalCamera = new Camera().setOrthographic(true);
-	public final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
+	@Inject
+	private RenderPipeline renderPipeline;
+
+	public final Camera sceneCamera = new Camera().setReverseZ(true).setCullingId(SCENE_CAMERA_ID);
 
 	public final RenderState renderState = new RenderState();
-	public final CommandBuffer sceneCmd = new CommandBuffer("Scene");
-	public final CommandBuffer directionalCmd = new CommandBuffer("Directional");
-	public final CommandBuffer gapFillerCmd = new CommandBuffer("GapFiller");
 
-	private GLBuffer indirectDrawCmds;
+	public GLBuffer indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
 
 	public static GLBuffer.EBO eboAlpha;
 	public static GLMappedBufferIntWriter eboAlphaWriter;
 
-	private boolean sceneFboValid;
-	private boolean shouldRenderSkybox;
-	private boolean shouldRenderScene;
-	private boolean shouldClearShadowFbo;
-	private boolean shouldDrawRoofShadows;
+	private boolean shouldExecuteRenderPipeline;
 
 	@Override
 	public boolean supportsGpu(GLCapabilities glCaps) {
@@ -190,18 +169,14 @@ public class ZoneRenderer implements Renderer {
 		if (FacePrioritySorter.POOL == null)
 			FacePrioritySorter.POOL = new ConcurrentPool<>(() -> injector.getInstance(FacePrioritySorter.class));
 
-		sceneCmd.setFrameTimer(frameTimer);
-		directionalCmd.setFrameTimer(frameTimer);
-		gapFillerCmd.setFrameTimer(frameTimer);
-
 		jobSystem.startUp(config.cpuUsageLimit());
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
 		sceneManager.initialize(uboWorldViews);
 		modelStreamingManager.initialize();
+		renderPipeline.initialize();
 
 		// Force updates that only run when the cameras change
 		sceneCamera.setDirty();
-		directionalCamera.setDirty();
 	}
 
 	@Override
@@ -212,6 +187,7 @@ public class ZoneRenderer implements Renderer {
 		modelStreamingManager.destroy();
 		sceneManager.destroy();
 		uboWorldViews.destroy();
+		renderPipeline.destroy();
 
 		if (SceneUploader.POOL != null)
 			SceneUploader.POOL.destroy();
@@ -232,20 +208,18 @@ public class ZoneRenderer implements Renderer {
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS)
 			.addInclude("WORLD_VIEW_GETTER", () -> plugin.generateGetter("WorldView", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS))
 			.addUniformBuffer(uboWorldViews);
+
+		renderPipeline.addShaderIncludes.execute(includes);
 	}
 
 	@Override
-	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
-		sceneProgram.compile(includes);
-		fastShadowProgram.compile(includes);
-		detailedShadowProgram.compile(includes);
+	public void initializeShaders(ShaderIncludes includes) {
+		renderPipeline.initializeShaders.execute(includes);
 	}
 
 	@Override
 	public void destroyShaders() {
-		sceneProgram.destroy();
-		fastShadowProgram.destroy();
-		detailedShadowProgram.destroy();
+		renderPipeline.destroyShaders.execute();
 	}
 
 	private void initializeBuffers() {
@@ -281,6 +255,8 @@ public class ZoneRenderer implements Renderer {
 	public void processConfigChanges(Set<String> keys) {
 		if (keys.contains(KEY_ASYNC_MODEL_PROCESSING))
 			modelStreamingManager.reinitialize();
+
+		renderPipeline.processConfigChanges.execute(keys);
 	}
 
 	@Override
@@ -312,45 +288,16 @@ public class ZoneRenderer implements Renderer {
 			if (ctx.uboWorldViewStruct != null)
 				ctx.uboWorldViewStruct.update();
 
-			if (scene.getWorldViewId() == WorldView.TOPLEVEL)
+			final boolean isTopLevel = scene.getWorldViewId() == WorldView.TOPLEVEL;
+			if (isTopLevel)
 				preSceneDrawTopLevel(scene, cameraX, cameraY, cameraZ, cameraPitch, cameraYaw);
 
-			ctx.completeInvalidation();
+			renderPipeline.preSceneDraw.execute(ctx, isTopLevel);
 
-			int offset = ctx.sceneContext.sceneOffset >> 3;
-			for (int zx = 0; zx < ctx.sizeX; ++zx)
-				for (int zz = 0; zz < ctx.sizeZ; ++zz)
-					ctx.zones[zx][zz].multizoneLocs(ctx.sceneContext, zx - offset, zz - offset, sceneCamera, ctx.zones);
+			ctx.preSceneDraw(sceneCamera);
 
-			ctx.sortStaticAlphaModels(sceneCamera);
-
-			ctx.map();
-
-			if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
-				Model skybox = scene.getSkybox();
-				if (skybox != null) {
-					skybox.calculateBoundsCylinder();
-					modelStreamingManager.uploadTempModel(
-						ctx,
-						sceneCamera,
-						null,
-						skybox,
-						ModelOverride.UNLIT,
-						skybox,
-						null,
-						null,
-						true,
-						VAO_PRESCENE,
-						-1,
-						0,
-						cameraX, cameraY, cameraZ
-					);
-				}
-
-				sceneCmd.DepthMask(false);
-				ctx.drawAll(VAO_PRESCENE, sceneCmd);
-				sceneCmd.DepthMask(true);
-			}
+			if(plugin.showCulling)
+				ctx.debugDraw(sceneCamera);
 
 			frameTimer.end(Timer.DRAW_PRESCENE);
 		} catch (Throwable ex) {
@@ -393,7 +340,6 @@ public class ZoneRenderer implements Renderer {
 			Arrays.fill(plugin.cameraShift, 0);
 
 			float zoom = client.get3dZoom();
-			float drawDistance = (float) plugin.getDrawDistance();
 
 			if (plugin.orthographicProjection)
 				zoom *= ORTHOGRAPHIC_ZOOM;
@@ -434,86 +380,6 @@ public class ZoneRenderer implements Renderer {
 				return;
 			}
 
-			directionalCamera.setPitch(environmentManager.currentSunAngles[0]);
-			directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
-			boolean hasDirectionalCameraChanged = directionalCamera.isViewDirty() || directionalCamera.isProjDirty();
-
-			if (plugin.configShadowsEnabled &&
-				(hasSceneCameraChanged || hasDirectionalCameraChanged) &&
-				!sceneCamera.isOrthographic()
-			) {
-				int shadowDrawDistance = 90 * LOCAL_TILE_SIZE;
-
-				final float[][] volumeCorners = directionalShadowCasterVolume
-					.build(sceneCamera, drawDistance * LOCAL_TILE_SIZE, shadowDrawDistance);
-
-				final float[] sceneCenter = new float[3];
-				for (float[] corner : volumeCorners)
-					add(sceneCenter, sceneCenter, corner);
-				divide(sceneCenter, sceneCenter, (float) volumeCorners.length);
-
-				// Reset position before transforming points
-				directionalCamera.setPosition(0, 0, 0);
-
-				float minX = Float.POSITIVE_INFINITY, maxX = Float.NEGATIVE_INFINITY;
-				float minY = Float.POSITIVE_INFINITY, maxY = Float.NEGATIVE_INFINITY;
-				float minZ = Float.POSITIVE_INFINITY, maxZ = Float.NEGATIVE_INFINITY;
-				float radius = 0f;
-				for (float[] corner : volumeCorners) {
-					radius = max(radius, distance(sceneCenter, corner));
-
-					directionalCamera.transformPoint(corner, corner);
-
-					minX = min(minX, corner[0]);
-					maxX = max(maxX, corner[0]);
-
-					minY = min(minY, corner[1]);
-					maxY = max(maxY, corner[1]);
-
-					minZ = min(minZ, corner[2]);
-					maxZ = max(maxZ, corner[2]);
-				}
-
-				// Offset the Directional Camera by the radius of the scene
-				float[] directionalFwd = directionalCamera.getForwardDirection();
-				multiply(directionalFwd, directionalFwd, radius);
-				add(sceneCenter, sceneCenter, directionalFwd);
-
-				// Calculate directional size from the AABB of the scene frustum corners
-				// Then snap to the nearest multiple of `LOCAL_HALF_TILE_SIZE` to prevent shimmering
-				int directionalSize = (int) max(abs(maxY - minY), abs(maxX - minX), abs(maxZ - minZ));
-				directionalSize = Math.round(directionalSize / (float) LOCAL_HALF_TILE_SIZE) * LOCAL_HALF_TILE_SIZE;
-				directionalSize = max(8000, directionalSize); // Clamp the size to prevent going too small at reduced draw distances
-
-				// Ignore directional size changes below the change threshold to avoid inducing shimmering
-				int previousDirectionalSize = directionalCamera.getViewportWidth();
-				float changeThreshold = previousDirectionalSize * 0.05f; // 10% of the previous directional size
-				if (abs(directionalSize - previousDirectionalSize) < changeThreshold)
-					directionalSize = previousDirectionalSize;
-
-				// Snap Position to Shadow Texel Grid to prevent shimmering
-				directionalCamera.transformPoint(sceneCenter, sceneCenter);
-
-				float texelSize = (float) directionalSize / plugin.shadowMapResolution;
-				sceneCenter[0] = (float) floor(sceneCenter[0] / texelSize + 0.5f) * texelSize;
-				sceneCenter[1] = (float) floor(sceneCenter[1] / texelSize + 0.5f) * texelSize;
-
-				directionalCamera.setPosition(directionalCamera.inverseTransformPoint(sceneCenter, sceneCenter));
-				directionalCamera.setNearPlane(Math.max(0.1f, radius * 0.05f));
-				directionalCamera.setFarPlane(radius * 2.0f);
-				directionalCamera.setZoom(1.0f);
-				directionalCamera.setViewportWidth(directionalSize);
-				directionalCamera.setViewportHeight(directionalSize);
-
-				plugin.uboGlobal.lightProjectionMatrix.set(directionalCamera.getViewProjMatrix());
-			}
-
-			shouldDrawRoofShadows =
-				plugin.configShadowsEnabled &&
-				plugin.configRoofShadows &&
-				environmentManager.allowRoofShadows();
-
-			plugin.uboGlobal.lightDir.set(directionalCamera.getForwardDirection());
 			plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
 			plugin.uboGlobal.viewMatrix.set(plugin.viewMatrix);
 			plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);
@@ -561,10 +427,8 @@ public class ZoneRenderer implements Renderer {
 		if (client.getGameState().getState() >= GameState.LOGGED_IN.getState())
 			plugin.hasLoggedIn = true;
 
-		shouldRenderSkybox = scene.getSkybox() != null;
-
 		float fogDepth = 0;
-		if (!shouldRenderSkybox) {
+		if (scene.getSkybox() == null) {
 			switch (config.fogDepthMode()) {
 				case USER_DEFINED:
 					fogDepth = config.fogDepth();
@@ -651,9 +515,6 @@ public class ZoneRenderer implements Renderer {
 		// Reset buffers for the next frame
 		if (SUPPORTS_INDIRECT_DRAW)
 			indirectDrawCmdsStaging.clear();
-		sceneCmd.reset();
-		directionalCmd.reset();
-		gapFillerCmd.reset();
 		renderState.reset();
 
 		eboAlpha.orphan();
@@ -677,6 +538,9 @@ public class ZoneRenderer implements Renderer {
 			frameTimer.begin(Timer.DRAW_POSTSCENE);
 			if (scene.getWorldViewId() == WorldView.TOPLEVEL)
 				postDrawTopLevel();
+
+			renderPipeline.postSceneDraw.execute(ctx);
+
 			frameTimer.end(Timer.DRAW_POSTSCENE);
 		} catch (Throwable ex) {
 			log.error("Error in postSceneDraw({}):", scene != null ? scene.getWorldViewId() : null, ex);
@@ -687,8 +551,6 @@ public class ZoneRenderer implements Renderer {
 	private void postDrawTopLevel() {
 		if (!sceneManager.isTopLevelValid() || plugin.sceneViewport == null)
 			return;
-
-		sceneFboValid = true;
 
 		// Upload world views before rendering
 		uboWorldViews.upload();
@@ -705,140 +567,12 @@ public class ZoneRenderer implements Renderer {
 
 		frameTimer.end(Timer.DRAW_SCENE);
 		frameTimer.begin(Timer.RENDER_FRAME);
-		shouldRenderScene = true;
+		shouldExecuteRenderPipeline = true;
 
 		// TODO: Add proper support for stat tracking to the FrameTimer or elsewhere
 		plugin.drawnDynamicRenderableCount += modelStreamingManager.getDrawnDynamicRenderableCount();
 
 		checkGLErrors();
-	}
-
-	private void tiledLightingPass() {
-		if (!plugin.configTiledLighting || plugin.configDynamicLights == DynamicLights.NONE)
-			return;
-
-		plugin.updateTiledLightingFbo();
-		assert plugin.fboTiledLighting != 0;
-
-		frameTimer.begin(Timer.DRAW_TILED_LIGHTING);
-		frameTimer.begin(Timer.RENDER_TILED_LIGHTING);
-
-		renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTiledLighting);
-		renderState.viewport.set(0, 0, plugin.tiledLightingResolution[0], plugin.tiledLightingResolution[1]);
-		renderState.vao.setVao(plugin.vaoTri);
-
-		if (plugin.tiledLightingImageStoreProgram.isValid()) {
-			renderState.program.set(plugin.tiledLightingImageStoreProgram);
-			renderState.drawBuffer.set(GL_NONE);
-			renderState.apply();
-			glDrawArrays(GL_TRIANGLES, 0, 3);
-		} else {
-			renderState.drawBuffer.set(GL_COLOR_ATTACHMENT0);
-			int layerCount = plugin.configDynamicLights.getTiledLightingLayers();
-			for (int layer = 0; layer < layerCount; layer++) {
-				renderState.program.set(plugin.tiledLightingShaderPrograms.get(layer));
-				renderState.framebufferTextureLayer.set(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, plugin.texTiledLighting, 0, layer);
-				renderState.apply();
-				glDrawArrays(GL_TRIANGLES, 0, 3);
-			}
-		}
-
-		frameTimer.end(Timer.RENDER_TILED_LIGHTING);
-		frameTimer.end(Timer.DRAW_TILED_LIGHTING);
-	}
-
-	private void directionalShadowPass() {
-		final boolean shouldRenderShadows =
-			plugin.configShadowsEnabled &&
-			plugin.fboShadowMap != 0 &&
-			environmentManager.currentDirectionalStrength > 0;
-
-		if (shouldRenderShadows || shouldClearShadowFbo) {
-			// Render to the shadow depth map
-			renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboShadowMap);
-			renderState.viewport.set(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
-			renderState.apply();
-
-			glClearDepth(1);
-			glClear(GL_DEPTH_BUFFER_BIT);
-			shouldClearShadowFbo = false;
-		}
-
-		if (!shouldRenderShadows)
-			return;
-
-		frameTimer.begin(Timer.RENDER_SHADOWS);
-
-		renderState.enable.set(GL_DEPTH_TEST);
-		renderState.disable.set(GL_CULL_FACE);
-		renderState.depthFunc.set(GL_LEQUAL);
-		if (SUPPORTS_INDIRECT_DRAW)
-			renderState.ido.set(indirectDrawCmds.id);
-		directionalCmd.execute(renderState);
-
-		glBindVertexArray(0);
-
-		renderState.disable.set(GL_DEPTH_TEST);
-
-		shouldClearShadowFbo = true;
-		frameTimer.end(Timer.RENDER_SHADOWS);
-	}
-
-	private void scenePass() {
-		sceneProgram.use();
-
-		frameTimer.begin(Timer.DRAW_SCENE);
-		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
-		if (plugin.msaaSamples > 1) {
-			renderState.enable.set(GL_MULTISAMPLE);
-		} else {
-			renderState.disable.set(GL_MULTISAMPLE);
-		}
-		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
-		if (SUPPORTS_INDIRECT_DRAW)
-			renderState.ido.set(indirectDrawCmds.id);
-		renderState.apply();
-
-		// Clear scene
-		frameTimer.begin(Timer.CLEAR_SCENE);
-
-		float[] clearColor = { 0, 0, 0 };
-		if (!shouldRenderSkybox) {
-			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
-			pow(clearColor, fogColor, plugin.getGammaCorrection());
-		}
-		glClearColor(clearColor[0], clearColor[1], clearColor[2], 1f);
-		glClearDepth(0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		frameTimer.end(Timer.CLEAR_SCENE);
-
-		frameTimer.begin(Timer.RENDER_SCENE);
-
-		renderState.enable.set(GL_BLEND);
-		renderState.enable.set(GL_CULL_FACE);
-		renderState.enable.set(GL_DEPTH_TEST);
-		renderState.depthFunc.set(GL_GEQUAL);
-		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
-
-		if (!gapFillerCmd.isEmpty()) {
-			renderState.depthMask.set(false);
-			gapFillerCmd.execute(renderState);
-			renderState.depthMask.set(true);
-		}
-
-		sceneCmd.execute(renderState);
-
-		frameTimer.end(Timer.RENDER_SCENE);
-
-		glBindVertexArray(0);
-
-		// Done rendering the scene
-		renderState.disable.set(GL_BLEND);
-		renderState.disable.set(GL_CULL_FACE);
-		renderState.disable.set(GL_DEPTH_TEST);
-		renderState.apply();
-
-		frameTimer.end(Timer.DRAW_SCENE);
 	}
 
 	@Override
@@ -850,64 +584,30 @@ public class ZoneRenderer implements Renderer {
 			if (!sceneManager.isTopLevelValid())
 				return false;
 
-			WorldViewContext ctx = sceneManager.getRoot();
-			if (plugin.enableDetailedTimers) frameTimer.begin(Timer.VISIBILITY_CHECK);
-			int minX = zx * CHUNK_SIZE - ctx.sceneContext.sceneOffset;
-			int minZ = zz * CHUNK_SIZE - ctx.sceneContext.sceneOffset;
-			if (ctx.sceneContext.currentArea != null) {
-				var base = ctx.sceneContext.sceneBase;
-				assert base != null;
-				boolean inArea = ctx.sceneContext.currentArea.intersects(
-					true, base[0] + minX, base[1] + minZ, base[0] + minX + 7, base[1] + minZ + 7);
-				if (!inArea) {
-					if (plugin.enableDetailedTimers) frameTimer.end(Timer.VISIBILITY_CHECK);
-					return false;
-				}
-			}
-
-			Zone zone = ctx.zones[zx][zz];
-			if (plugin.freezeCulling)
-				return zone.inSceneFrustum || zone.inShadowFrustum;
-
-			minX *= LOCAL_TILE_SIZE;
-			minZ *= LOCAL_TILE_SIZE;
-			int maxX = minX + CHUNK_SIZE * LOCAL_TILE_SIZE;
-			int maxZ = minZ + CHUNK_SIZE * LOCAL_TILE_SIZE;
-			if (zone.hasWater) {
-				maxY += ProceduralGenerator.MAX_DEPTH;
-				minY -= ProceduralGenerator.MAX_DEPTH;
-			}
-
-			final int PADDING = 4 * LOCAL_TILE_SIZE;
-			zone.inSceneFrustum = sceneCamera.intersectsAABB(
-				minX - PADDING, minY, minZ - PADDING, maxX + PADDING, maxY, maxZ + PADDING);
-
-			if (zone.inSceneFrustum) {
-				if (plugin.enableDetailedTimers)
-					frameTimer.end(Timer.VISIBILITY_CHECK);
-				return zone.inShadowFrustum = true;
-			}
-
-			if (plugin.configShadowsEnabled && plugin.configExpandShadowDraw) {
-				zone.inShadowFrustum = directionalCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
-				if (zone.inShadowFrustum) {
-					int centerX = minX + (maxX - minX) / 2;
-					int centerY = minY + (maxY - minY) / 2;
-					int centerZ = minZ + (maxZ - minZ) / 2;
-					zone.inShadowFrustum = directionalShadowCasterVolume.intersectsPoint(centerX, centerY, centerZ);
-				}
-				if (plugin.enableDetailedTimers)
-					frameTimer.end(Timer.VISIBILITY_CHECK);
-				return zone.inShadowFrustum;
-			}
-
 			if (plugin.enableDetailedTimers)
-				frameTimer.end(Timer.VISIBILITY_CHECK);
-			if (plugin.orthographicProjection)
-				return zone.inSceneFrustum = true;
+				frameTimer.begin(Timer.VISIBILITY_CHECK);
+
+			final WorldViewContext ctx = sceneManager.getRoot();
+			final Zone zone = ctx.zones[zx][zz];
+			if (plugin.freezeCulling)
+				return zone.visibilityFlags != 0;
+
+			final int zMinX = (zx * CHUNK_SIZE - ctx.sceneContext.sceneOffset) * LOCAL_TILE_SIZE;
+			final int zMinZ = (zz * CHUNK_SIZE - ctx.sceneContext.sceneOffset) * LOCAL_TILE_SIZE;
+			final int zMaxX = zMinX + CHUNK_SIZE * LOCAL_TILE_SIZE;
+			final int zMaxZ = zMinZ + CHUNK_SIZE * LOCAL_TILE_SIZE;
+			final int zMinY = minY - (zone.hasWater ? ProceduralGenerator.MAX_DEPTH : 0);
+			final int zMaxY = maxY + (zone.hasWater ? ProceduralGenerator.MAX_DEPTH : 0);
+
+			renderPipeline.zoneInFrustum.execute(zone, zx, zz, zMinX, zMinY, zMinZ, zMaxX, zMaxY, zMaxZ);
+
+			return zone.visibilityFlags != 0;
 		} catch (Throwable ex) {
 			log.error("Error in zoneInFrustum({}, {}, {}, {}):", zx, zz, maxY, minY, ex);
 			plugin.requestPluginStop();
+		} finally {
+			if (plugin.enableDetailedTimers)
+				frameTimer.end(Timer.VISIBILITY_CHECK);
 		}
 		return false;
 	}
@@ -927,18 +627,7 @@ public class ZoneRenderer implements Renderer {
 				return;
 
 			frameTimer.begin(Timer.DRAW_ZONE_OPAQUE);
-			if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
-				z.renderOpaque(sceneCmd, ctx, false);
-
-				if (z.hasGapFiller)
-					z.renderOpaqueLevel(gapFillerCmd, Zone.LEVEL_GAP_FILLER);
-			}
-
-			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
-			if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
-				directionalCmd.SetShader(fastShadowProgram);
-				z.renderOpaque(directionalCmd, ctx, shouldDrawRoofShadows);
-			}
+			renderPipeline.drawZoneOpaque.execute(ctx, z, zx, zz);
 			frameTimer.end(Timer.DRAW_ZONE_OPAQUE);
 
 			checkGLErrors();
@@ -963,53 +652,15 @@ public class ZoneRenderer implements Renderer {
 				return;
 
 			frameTimer.begin(Timer.DRAW_ZONE_ALPHA);
-			final boolean renderWater = z.inSceneFrustum && level == 0 && z.hasWater;
-			if (renderWater)
-				z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
-
 			modelStreamingManager.ensureAsyncUploadsComplete(z);
 			z.queueLateAlphaModels(sceneCamera);
 
-			final boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
-			if (hasAlpha) {
-				final int offset = ctx.sceneContext.sceneOffset >> 3;
-				// Only sort if the alpha will be directly visible, since shadows don't require sorting
-				if (level == 0 && (!sceneManager.isRoot(ctx) || z.inSceneFrustum))
-					z.alphaSort(zx - offset, zz - offset, sceneCamera);
+			final int offset = ctx.sceneContext.sceneOffset >> 3;
+			if (level == 0)
+				z.alphaSort(zx - offset, zz - offset, sceneCamera);
 
-				final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
-				if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
-					directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
-					z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, shouldDrawRoofShadows);
-				}
+			renderPipeline.drawZoneAlpha.execute(ctx, z, level, zx, zz);
 
-				if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
-					if (renderWater) {
-						// Water is currently drawn with depth writes & depth testing enabled, and as such, alpha models and the water plane
-						// can Z-fight depending on draw order. To avoid alpha models above water causing the water surface to fail its
-						// depth test, we disable depth writes for alpha models and rely on correct back to front ordering of the zones
-						sceneCmd.DepthMask(false);
-						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
-						sceneCmd.DepthMask(true);
-					} else {
-						// Draw alpha models in two passes, first blending colors correctly, then writing depth for subsequent opaque models
-						// to test against. This is necessary because opaque models on higher planes can be drawn later
-
-						// Write color without depth writes
-						sceneCmd.DepthMask(false);
-						sceneCmd.ColorMask(true, true, true, true);
-						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
-
-						// Write depth without color
-						sceneCmd.DepthMask(true);
-						sceneCmd.ColorMask(false, false, false, false);
-						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, true, false);
-
-						// Restore color writes
-						sceneCmd.ColorMask(true, true, true, true);
-					}
-				}
-			}
 			frameTimer.end(Timer.DRAW_ZONE_ALPHA);
 
 			checkGLErrors();
@@ -1031,48 +682,41 @@ public class ZoneRenderer implements Renderer {
 
 			frameTimer.begin(Timer.DRAW_PASS);
 
-			switch (pass) {
-				case DrawCallbacks.PASS_OPAQUE:
-					directionalCmd.SetShader(fastShadowProgram);
-					directionalCmd.ExecuteSubCommandBuffer(ctx.vaoDirectionalCmd);
+			renderPipeline.drawPass.execute(ctx, pass);
 
-					sceneCmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
-					break;
-				case DrawCallbacks.PASS_ALPHA:
-					modelStreamingManager.ensureAsyncUploadsComplete(null);
+			if (pass == DrawCallbacks.PASS_ALPHA) {
+				modelStreamingManager.ensureAsyncUploadsComplete(null);
 
-					if (sceneManager.isRoot(ctx))
-						frameTimer.begin(Timer.UNMAP_ROOT_CTX);
+				if (sceneManager.isRoot(ctx))
+					frameTimer.begin(Timer.UNMAP_ROOT_CTX);
 
-					ctx.unmap();
+				ctx.unmap();
 
-					if (sceneManager.isRoot(ctx))
-						frameTimer.end(Timer.UNMAP_ROOT_CTX);
+				if (sceneManager.isRoot(ctx))
+					frameTimer.end(Timer.UNMAP_ROOT_CTX);
 
-					// Draw opaque
-					ctx.drawAll(VAO_OPAQUE, ctx.vaoSceneCmd);
-					ctx.drawAll(VAO_OPAQUE, ctx.vaoDirectionalCmd);
-					ctx.drawAll(VAO_PLAYER, ctx.vaoDirectionalCmd);
+				// Draw opaque
+				ctx.drawAll(VAO_OPAQUE, ctx.vaoSceneCmd);
+				ctx.drawAll(VAO_OPAQUE, ctx.vaoDirectionalCmd);
+				ctx.drawAll(VAO_PLAYER, ctx.vaoDirectionalCmd);
 
-					// Draw shadow-only models
-					ctx.drawAll(VAO_SHADOW, ctx.vaoDirectionalCmd);
+				// Draw shadow-only models
+				ctx.drawAll(VAO_SHADOW, ctx.vaoDirectionalCmd);
 
-					// Draw players with sorted alpha, without writing depth
-					ctx.vaoSceneCmd.DepthMask(false);
-					ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
-					ctx.vaoSceneCmd.DepthMask(true);
+				// Draw players with sorted alpha, without writing depth
+				ctx.vaoSceneCmd.DepthMask(false);
+				ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
+				ctx.vaoSceneCmd.DepthMask(true);
 
-					// Redraw players, this time only writing depth, for correct ordering with the background
-					ctx.vaoSceneCmd.ColorMask(false, false, false, false);
-					ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
-					ctx.vaoSceneCmd.ColorMask(true, true, true, true);
+				// Redraw players, this time only writing depth, for correct ordering with the background
+				ctx.vaoSceneCmd.ColorMask(false, false, false, false);
+				ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
+				ctx.vaoSceneCmd.ColorMask(true, true, true, true);
 
-					for (int zx = 0; zx < ctx.sizeX; ++zx)
-						for (int zz = 0; zz < ctx.sizeZ; ++zz)
-							ctx.zones[zx][zz].postAlphaPass();
-					break;
+				for (int zx = 0; zx < ctx.sizeX; ++zx)
+					for (int zz = 0; zz < ctx.sizeZ; ++zz)
+						ctx.zones[zx][zz].postAlphaPass();
 			}
-
 			frameTimer.end(Timer.DRAW_PASS);
 			checkGLErrors();
 		} catch (Throwable ex) {
@@ -1145,48 +789,8 @@ public class ZoneRenderer implements Renderer {
 			}
 
 			frameTimer.begin(Timer.DRAW_SUBMIT);
-			if (shouldRenderScene) {
-				tiledLightingPass();
-				directionalShadowPass();
-				scenePass();
-			}
-
-			if (sceneFboValid && plugin.sceneResolution != null && plugin.sceneViewport != null) {
-				glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboScene);
-				if (plugin.fboSceneResolve != 0) {
-					// Blit from the scene FBO to the multisample resolve FBO
-					glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboSceneResolve);
-					glBlitFramebuffer(
-						0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
-						0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
-						GL_COLOR_BUFFER_BIT, GL_NEAREST
-					);
-					glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboSceneResolve);
-				}
-
-				// Blit from the resolved FBO to the default FBO
-				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
-
-				if (APPLE && !client.isResized()) {
-					// On macOS, we need to ensure that the alpha channel is opaque to prevent whatever
-					// is beneath from leaking through. In fixed mode, the MSAA resolve alone is not
-					// sufficient, since the viewport only covers part of the screen.
-					glClearColor(0, 0, 0, 1);
-					glClear(GL_COLOR_BUFFER_BIT);
-				}
-
-				glBlitFramebuffer(
-					0,
-					0,
-					plugin.sceneResolution[0],
-					plugin.sceneResolution[1],
-					plugin.sceneViewport[0],
-					plugin.sceneViewport[1],
-					plugin.sceneViewport[0] + plugin.sceneViewport[2],
-					plugin.sceneViewport[1] + plugin.sceneViewport[3],
-					GL_COLOR_BUFFER_BIT,
-					config.sceneScalingMode().glFilter
-				);
+			if (shouldExecuteRenderPipeline) {
+				renderPipeline.draw.execute(renderState);
 			} else {
 				glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
 				glClearColor(0, 0, 0, 1);
@@ -1216,12 +820,15 @@ public class ZoneRenderer implements Renderer {
 				log.error("Unable to swap buffers:", ex);
 			}
 
+			if(shouldExecuteRenderPipeline)
+				renderPipeline.postDraw.execute(renderState);
+
 			glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
 
 			frameTimer.endFrameAndReset();
 			checkGLErrors();
 
-			shouldRenderScene = false;
+			shouldExecuteRenderPipeline = false;
 		} catch (Throwable ex) {
 			log.error("Error in draw({}):", overlayColor, ex);
 			plugin.requestPluginStop();
@@ -1234,7 +841,7 @@ public class ZoneRenderer implements Renderer {
 		if (state.getState() < GameState.LOADING.getState()) {
 			// this is to avoid scene fbo blit when going from <loading to >=loading,
 			// but keep it when doing >loading to loading
-			sceneFboValid = false;
+			shouldExecuteRenderPipeline = false;
 		}
 	}
 
