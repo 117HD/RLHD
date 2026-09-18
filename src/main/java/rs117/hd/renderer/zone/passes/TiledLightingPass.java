@@ -5,8 +5,6 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.HdPlugin;
 import rs117.hd.config.DynamicLights;
-import rs117.hd.overlays.FrameTimer;
-import rs117.hd.overlays.Timer;
 import rs117.hd.utils.RenderState;
 
 import static org.lwjgl.opengl.GL11C.GL_NONE;
@@ -22,9 +20,6 @@ public class TiledLightingPass implements RenderPass {
 	@Inject
 	private HdPlugin plugin;
 
-	@Inject
-	private FrameTimer frameTimer;
-
 	@Override
 	public void draw(RenderState renderState) {
 		if (!plugin.configTiledLighting || plugin.configDynamicLights == DynamicLights.NONE)
@@ -32,8 +27,6 @@ public class TiledLightingPass implements RenderPass {
 
 		plugin.updateTiledLightingFbo();
 		assert plugin.fboTiledLighting != 0;
-
-		frameTimer.begin(Timer.RENDER_TILED_LIGHTING);
 
 		renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTiledLighting);
 		renderState.viewport.set(0, 0, plugin.tiledLightingResolution[0], plugin.tiledLightingResolution[1]);
@@ -54,8 +47,6 @@ public class TiledLightingPass implements RenderPass {
 				glDrawArrays(GL_TRIANGLES, 0, 3);
 			}
 		}
-
-		frameTimer.end(Timer.RENDER_TILED_LIGHTING);
 	}
 
 	@Override

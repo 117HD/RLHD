@@ -372,6 +372,7 @@ public class HdPlugin extends Plugin {
 
 	public int[] sceneResolution;
 	public int fboScene;
+	public int fboSceneDepth;
 	private int rboSceneColor;
 	private int rboSceneDepth;
 	public int fboSceneResolve;
@@ -537,6 +538,7 @@ public class HdPlugin extends Plugin {
 				startupCount++;
 
 				fboScene = 0;
+				fboSceneDepth = 0;
 				rboSceneColor = 0;
 				rboSceneDepth = 0;
 				fboSceneResolve = 0;
@@ -1370,6 +1372,12 @@ public class HdPlugin extends Plugin {
 			checkGLErrors();
 		}
 
+		fboSceneDepth = glGenFramebuffers();
+		glBindFramebuffer(GL_FRAMEBUFFER, fboSceneDepth);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboSceneDepth);
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
+
 		// Reset
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
@@ -1381,6 +1389,10 @@ public class HdPlugin extends Plugin {
 		if (fboScene != 0)
 			glDeleteFramebuffers(fboScene);
 		fboScene = 0;
+
+		if(fboSceneDepth != 0)
+			glDeleteFramebuffers(fboSceneDepth);
+		fboSceneDepth = 0;
 
 		if (rboSceneColor != 0)
 			glDeleteRenderbuffers(rboSceneColor);

@@ -12,6 +12,7 @@ import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.overlays.FrameTimer;
+import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.zone.WorldViewContext;
 import rs117.hd.renderer.zone.Zone;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -340,7 +341,15 @@ public final class RenderPipeline {
 			super("draw", true, false);
 
 			consumer = (renderPass) -> {
-				renderPass.draw(renderState);
+				final Timer gpuTimer = renderPass.getType().gpuTimer;
+				if(gpuTimer != null)
+					frameTimer.begin(gpuTimer);
+				try {
+					renderPass.draw(renderState);
+				} finally {
+					if(gpuTimer != null)
+						frameTimer.end(gpuTimer);
+				}
 				return true;
 			};
 		}

@@ -73,9 +73,6 @@ import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
-import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
-import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
-import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -680,9 +677,6 @@ public class ZoneRenderer implements Renderer {
 				return;
 
 			frameTimer.begin(Timer.DRAW_PASS);
-
-			renderPipeline.drawPass.execute(ctx, pass);
-
 			if (pass == DrawCallbacks.PASS_ALPHA) {
 				modelStreamingManager.ensureAsyncUploadsComplete(null);
 
@@ -693,25 +687,11 @@ public class ZoneRenderer implements Renderer {
 
 				if (sceneManager.isRoot(ctx))
 					frameTimer.end(Timer.UNMAP_ROOT_CTX);
+			}
 
-				// Draw opaque
-				ctx.drawAll(VAO_OPAQUE, ctx.vaoSceneCmd);
-				ctx.drawAll(VAO_OPAQUE, ctx.vaoDirectionalCmd);
-				ctx.drawAll(VAO_PLAYER, ctx.vaoDirectionalCmd);
+			renderPipeline.drawPass.execute(ctx, pass);
 
-				// Draw shadow-only models
-				ctx.drawAll(VAO_SHADOW, ctx.vaoDirectionalCmd);
-
-				// Draw players with sorted alpha, without writing depth
-				ctx.vaoSceneCmd.DepthMask(false);
-				ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
-				ctx.vaoSceneCmd.DepthMask(true);
-
-				// Redraw players, this time only writing depth, for correct ordering with the background
-				ctx.vaoSceneCmd.ColorMask(false, false, false, false);
-				ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
-				ctx.vaoSceneCmd.ColorMask(true, true, true, true);
-
+			if (pass == DrawCallbacks.PASS_ALPHA) {
 				for (int zx = 0; zx < ctx.sizeX; ++zx)
 					for (int zz = 0; zz < ctx.sizeZ; ++zz)
 						ctx.zones[zx][zz].postAlphaPass();
