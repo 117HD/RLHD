@@ -52,7 +52,6 @@ import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
-import rs117.hd.scene.SceneCullingManager;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.ColorUtils;
@@ -68,7 +67,6 @@ import rs117.hd.utils.jobs.JobSystem;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.HdPlugin.APPLE;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
@@ -125,9 +123,6 @@ public class ZoneRenderer implements Renderer {
 	private ModelStreamingManager modelStreamingManager;
 
 	@Inject
-	private SceneCullingManager sceneCullingManager;
-
-	@Inject
 	private FrameTimer frameTimer;
 
 	@Inject
@@ -151,7 +146,7 @@ public class ZoneRenderer implements Renderer {
 
 	private boolean sceneFboValid;
 	private boolean shouldRenderSkybox;
-	private boolean shouldRenderScene;
+	private boolean shouldExecuteRenderPipeline;
 
 	@Override
 	public boolean supportsGpu(GLCapabilities glCaps) {
@@ -561,8 +556,6 @@ public class ZoneRenderer implements Renderer {
 		if (!sceneManager.isTopLevelValid() || plugin.sceneViewport == null)
 			return;
 
-		sceneFboValid = true;
-
 		// Upload world views before rendering
 		uboWorldViews.upload();
 
@@ -578,7 +571,7 @@ public class ZoneRenderer implements Renderer {
 
 		frameTimer.end(Timer.DRAW_SCENE);
 		frameTimer.begin(Timer.RENDER_FRAME);
-		shouldRenderScene = true;
+		shouldExecuteRenderPipeline = true;
 
 		// TODO: Add proper support for stat tracking to the FrameTimer or elsewhere
 		plugin.drawnDynamicRenderableCount += modelStreamingManager.getDrawnDynamicRenderableCount();
@@ -812,45 +805,8 @@ public class ZoneRenderer implements Renderer {
 			}
 
 			frameTimer.begin(Timer.DRAW_SUBMIT);
-			if (shouldRenderScene)
+			if (shouldExecuteRenderPipeline) {
 				renderPipeline.draw.execute(renderState);
-
-			if (sceneFboValid && plugin.sceneResolution != null && plugin.sceneViewport != null) {
-				glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboScene);
-				if (plugin.fboSceneResolve != 0) {
-					// Blit from the scene FBO to the multisample resolve FBO
-					glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboSceneResolve);
-					glBlitFramebuffer(
-						0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
-						0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
-						GL_COLOR_BUFFER_BIT, GL_NEAREST
-					);
-					glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboSceneResolve);
-				}
-
-				// Blit from the resolved FBO to the default FBO
-				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
-
-				if (APPLE && !client.isResized()) {
-					// On macOS, we need to ensure that the alpha channel is opaque to prevent whatever
-					// is beneath from leaking through. In fixed mode, the MSAA resolve alone is not
-					// sufficient, since the viewport only covers part of the screen.
-					glClearColor(0, 0, 0, 1);
-					glClear(GL_COLOR_BUFFER_BIT);
-				}
-
-				glBlitFramebuffer(
-					0,
-					0,
-					plugin.sceneResolution[0],
-					plugin.sceneResolution[1],
-					plugin.sceneViewport[0],
-					plugin.sceneViewport[1],
-					plugin.sceneViewport[0] + plugin.sceneViewport[2],
-					plugin.sceneViewport[1] + plugin.sceneViewport[3],
-					GL_COLOR_BUFFER_BIT,
-					config.sceneScalingMode().glFilter
-				);
 			} else {
 				glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
 				glClearColor(0, 0, 0, 1);
@@ -880,7 +836,7 @@ public class ZoneRenderer implements Renderer {
 				log.error("Unable to swap buffers:", ex);
 			}
 
-			if(shouldRenderScene)
+			if(shouldExecuteRenderPipeline)
 				renderPipeline.postDraw.execute(renderState);
 
 			glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
@@ -888,7 +844,7 @@ public class ZoneRenderer implements Renderer {
 			frameTimer.endFrameAndReset();
 			checkGLErrors();
 
-			shouldRenderScene = false;
+			shouldExecuteRenderPipeline = false;
 		} catch (Throwable ex) {
 			log.error("Error in draw({}):", overlayColor, ex);
 			plugin.requestPluginStop();
@@ -901,7 +857,7 @@ public class ZoneRenderer implements Renderer {
 		if (state.getState() < GameState.LOADING.getState()) {
 			// this is to avoid scene fbo blit when going from <loading to >=loading,
 			// but keep it when doing >loading to loading
-			sceneFboValid = false;
+			shouldExecuteRenderPipeline = false;
 		}
 	}
 
