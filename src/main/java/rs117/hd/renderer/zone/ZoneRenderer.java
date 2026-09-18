@@ -144,8 +144,6 @@ public class ZoneRenderer implements Renderer {
 	public static GLBuffer.EBO eboAlpha;
 	public static GLMappedBufferIntWriter eboAlphaWriter;
 
-	private boolean sceneFboValid;
-	private boolean shouldRenderSkybox;
 	private boolean shouldExecuteRenderPipeline;
 
 	@Override
@@ -429,10 +427,8 @@ public class ZoneRenderer implements Renderer {
 		if (client.getGameState().getState() >= GameState.LOGGED_IN.getState())
 			plugin.hasLoggedIn = true;
 
-		shouldRenderSkybox = scene.getSkybox() != null;
-
 		float fogDepth = 0;
-		if (!shouldRenderSkybox) {
+		if (scene.getSkybox() == null) {
 			switch (config.fogDepthMode()) {
 				case USER_DEFINED:
 					fogDepth = config.fogDepth();
