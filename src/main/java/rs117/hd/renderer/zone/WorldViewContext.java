@@ -275,6 +275,7 @@ public class WorldViewContext {
 			for (int zx = 0; zx < sizeX; ++zx)
 				for (int zz = 0; zz < sizeZ; ++zz)
 					zones[zx][zz].queueVisibility(this, zx, zz);
+
 			sceneCullingManager.flush();
 		}
 

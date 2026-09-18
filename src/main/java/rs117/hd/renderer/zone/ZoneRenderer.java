@@ -591,25 +591,13 @@ public class ZoneRenderer implements Renderer {
 			if (plugin.enableDetailedTimers)
 				frameTimer.begin(Timer.VISIBILITY_CHECK);
 
-			WorldViewContext ctx = sceneManager.getRoot();
-			int x = zx * CHUNK_SIZE - ctx.sceneContext.sceneOffset;
-			int z = zz * CHUNK_SIZE - ctx.sceneContext.sceneOffset;
-			if (ctx.sceneContext.currentArea != null) {
-				var base = ctx.sceneContext.sceneBase;
-				assert base != null;
-				boolean inArea = ctx.sceneContext.currentArea.intersects(
-					true, base[0] + x, base[1] + z, base[0] + x + 7, base[1] + z + 7);
-				if (!inArea) {
-					return false;
-				}
-			}
-
-			Zone zone = ctx.zones[zx][zz];
+			final WorldViewContext ctx = sceneManager.getRoot();
+			final Zone zone = ctx.zones[zx][zz];
 			if (plugin.freezeCulling)
 				return zone.visibilityFlags != 0;
 
-			final int zMinX = x * LOCAL_TILE_SIZE;
-			final int zMinZ = z * LOCAL_TILE_SIZE;
+			final int zMinX = (zx * CHUNK_SIZE - ctx.sceneContext.sceneOffset) * LOCAL_TILE_SIZE;
+			final int zMinZ = (zz * CHUNK_SIZE - ctx.sceneContext.sceneOffset) * LOCAL_TILE_SIZE;
 			final int zMaxX = zMinX + CHUNK_SIZE * LOCAL_TILE_SIZE;
 			final int zMaxZ = zMinZ + CHUNK_SIZE * LOCAL_TILE_SIZE;
 			final int zMinY = minY - (zone.hasWater ? ProceduralGenerator.MAX_DEPTH : 0);
