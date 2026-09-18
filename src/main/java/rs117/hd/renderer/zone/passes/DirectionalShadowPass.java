@@ -13,7 +13,6 @@ import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.uniforms.UBOGlobal;
 import rs117.hd.overlays.FrameTimer;
-import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.WorldViewContext;
 import rs117.hd.renderer.zone.Zone;
@@ -35,6 +34,9 @@ import static org.lwjgl.opengl.GL11C.glClear;
 import static org.lwjgl.opengl.GL11C.glClearDepth;
 import static org.lwjgl.opengl.GL30C.GL_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
+import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
+import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
+import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -263,6 +265,10 @@ public class DirectionalShadowPass implements RenderPass {
 		if(pass == DrawCallbacks.PASS_OPAQUE) {
 			directionalCmd.SetShader(fastShadowProgram);
 			directionalCmd.ExecuteSubCommandBuffer(ctx.vaoDirectionalCmd);
+		} else if(pass == DrawCallbacks.PASS_ALPHA) {
+			ctx.drawAll(VAO_OPAQUE, ctx.vaoDirectionalCmd);
+			ctx.drawAll(VAO_PLAYER, ctx.vaoDirectionalCmd);
+			ctx.drawAll(VAO_SHADOW, ctx.vaoDirectionalCmd);
 		}
 	}
 
@@ -288,8 +294,6 @@ public class DirectionalShadowPass implements RenderPass {
 		if (!shouldRenderShadows)
 			return;
 
-		frameTimer.begin(Timer.RENDER_SHADOWS);
-
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.depthFunc.set(GL_LEQUAL);
@@ -303,7 +307,6 @@ public class DirectionalShadowPass implements RenderPass {
 		renderState.disable.set(GL_DEPTH_TEST);
 
 		shouldClearShadowFbo = true;
-		frameTimer.end(Timer.RENDER_SHADOWS);
 	}
 
 	@Override

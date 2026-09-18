@@ -51,7 +51,6 @@ import static org.lwjgl.opengl.GL30.glVertexAttribIPointer;
 import static org.lwjgl.opengl.GL30C.GL_DRAW_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL31.glDrawElementsInstanced;
 import static org.lwjgl.opengl.GL33.glVertexAttribDivisor;
-import static rs117.hd.overlays.Timer.RENDER_DEBUG_DRAW;
 
 @Slf4j
 @Singleton
@@ -280,8 +279,6 @@ public class DebugDrawPass implements RenderPass {
 		if (lineQueue.isEmpty() && aabbQueue.isEmpty() && sphereQueue.isEmpty() && textQueue.isEmpty())
 			return;
 
-		frameTimer.begin(RENDER_DEBUG_DRAW);
-
 		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
 		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
 		renderState.enable.set(GL_DEPTH_TEST);
@@ -340,8 +337,6 @@ public class DebugDrawPass implements RenderPass {
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.depthMask.set(true);
 		renderState.apply();
-
-		frameTimer.end(RENDER_DEBUG_DRAW);
 
 		expireQueue(lineQueue);
 		expireQueue(aabbQueue);

@@ -11,38 +11,31 @@ import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.overlays.FrameTimer;
-import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.zone.ModelStreamingManager;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.WorldViewContext;
 import rs117.hd.renderer.zone.Zone;
 import rs117.hd.renderer.zone.ZoneRenderer;
-import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.SceneCullingManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
-import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.RenderState;
 
+import static org.lwjgl.opengl.GL11.GL_GEQUAL;
 import static org.lwjgl.opengl.GL11C.GL_BLEND;
-import static org.lwjgl.opengl.GL11C.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11C.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11C.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11C.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11C.GL_GEQUAL;
 import static org.lwjgl.opengl.GL11C.GL_ONE;
 import static org.lwjgl.opengl.GL11C.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11C.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11C.GL_ZERO;
-import static org.lwjgl.opengl.GL11C.glClear;
-import static org.lwjgl.opengl.GL11C.glClearColor;
-import static org.lwjgl.opengl.GL11C.glClearDepth;
 import static org.lwjgl.opengl.GL13C.GL_MULTISAMPLE;
 import static org.lwjgl.opengl.GL30C.GL_DRAW_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
+import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
+import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PRESCENE;
-import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
@@ -59,9 +52,6 @@ public class ScenePass implements RenderPass {
 
 	@Inject
 	private FrameTimer frameTimer;
-
-	@Inject
-	private EnvironmentManager environmentManager;
 
 	@Inject
 	private SceneCullingManager sceneCullingManager;
@@ -188,15 +178,28 @@ public class ScenePass implements RenderPass {
 
 	@Override
 	public void drawPass(WorldViewContext ctx, int pass) {
-		if(pass == DrawCallbacks.PASS_OPAQUE)
+		if (pass == DrawCallbacks.PASS_OPAQUE) {
 			sceneCmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
+		} else if (pass == DrawCallbacks.PASS_ALPHA) {
+			// Draw opaque
+			ctx.drawAll(VAO_OPAQUE, ctx.vaoSceneCmd);
+
+			// Draw players with sorted alpha, without writing depth
+			ctx.vaoSceneCmd.DepthMask(false);
+			ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
+			ctx.vaoSceneCmd.DepthMask(true);
+
+			// Redraw players, this time only writing depth, for correct ordering with the background
+			ctx.vaoSceneCmd.ColorMask(false, false, false, false);
+			ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
+			ctx.vaoSceneCmd.ColorMask(true, true, true, true);
+		}
 	}
 
 	@Override
 	public void draw(RenderState renderState) {
 		sceneProgram.use();
 
-		frameTimer.begin(Timer.DRAW_SCENE);
 		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
 		if (plugin.msaaSamples > 1) {
 			renderState.enable.set(GL_MULTISAMPLE);
@@ -206,24 +209,6 @@ public class ScenePass implements RenderPass {
 		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
 		if(renderer.indirectDrawCmds != null)
 			renderState.ido.set(renderer.indirectDrawCmds.id);
-		renderState.apply();
-
-		// Clear scene
-		frameTimer.begin(Timer.CLEAR_SCENE);
-
-		float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
-		float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
-		glClearColor(
-			gammaCorrectedFogColor[0],
-			gammaCorrectedFogColor[1],
-			gammaCorrectedFogColor[2],
-			1f
-		);
-		glClearDepth(0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		frameTimer.end(Timer.CLEAR_SCENE);
-
-		frameTimer.begin(Timer.RENDER_SCENE);
 
 		renderState.enable.set(GL_BLEND);
 		renderState.enable.set(GL_CULL_FACE);
@@ -239,8 +224,6 @@ public class ScenePass implements RenderPass {
 
 		sceneCmd.execute(renderState);
 
-		frameTimer.end(Timer.RENDER_SCENE);
-
 		glBindVertexArray(0);
 
 		// Done rendering the scene
@@ -248,8 +231,6 @@ public class ScenePass implements RenderPass {
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.disable.set(GL_DEPTH_TEST);
 		renderState.apply();
-
-		frameTimer.end(Timer.DRAW_SCENE);
 	}
 
 	@Override
