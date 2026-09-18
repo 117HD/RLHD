@@ -125,9 +125,10 @@ void main() {
             // Deliberately enlarged ~1.9° moon radius, scaled per environment.
             float moonBaseRadius = acos(0.99945);
             float moonAngularRadius = cos(moonBaseRadius * moonSizeMult);
-            float edgeWidth = moonDot > 0.01 ? fwidth(moonDot) * 1.5 : 0;
+            float edgeWidth = moonDot > 0.01 ? max(fwidth(moonDot) * 1.5, 1e-7) : 0;
 
-            float moonDisk = smoothstep(moonAngularRadius - edgeWidth, moonAngularRadius, moonDot);
+            // Keep the antialiased edge within the sphere used for surface shading.
+            float moonDisk = smoothstep(moonAngularRadius, moonAngularRadius + edgeWidth, moonDot);
             if (moonDisk > 0.0) {
                 // Moon-local coordinates for the phase shape.
                 float angDist = acos(clamp(moonDot, 0.0, 1.0));
