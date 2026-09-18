@@ -505,6 +505,27 @@ public class Zone implements Destructible {
 	}
 
 	void queueVisibility(WorldViewContext ctx, int zx, int zz) {
+		// Area Hiding, check if Zone is hidden and if so, then clear the Culling Results to hide the Zone
+		if (ctx.sceneContext.sceneBase != null && ctx.sceneContext.currentArea != null) {
+			final int x = zx * CHUNK_SIZE - ctx.sceneContext.sceneOffset;
+			final int z = zz * CHUNK_SIZE - ctx.sceneContext.sceneOffset;
+			final var base = ctx.sceneContext.sceneBase;
+			final boolean inArea = ctx.sceneContext.currentArea.intersects(
+				true,
+				base[0] + x,
+				base[1] + zx,
+				base[0] + x + 7,
+				base[1] + z + 7);
+			if(!inArea) {
+				for (int i = 0; i < LEVEL_COUNT; i++) {
+					final CullingResult result = levelCullingResults[i];
+					if (result != null)
+						result.reset();
+				}
+				return;
+			}
+		}
+
 		final Projection projection = ctx.uboWorldViewStruct != null ? ctx.uboWorldViewStruct.worldView.getMainWorldProjection() : null;
 		final int baseX = (zx - (ctx.sceneContext.sceneOffset >> 3)) << 10;
 		final int baseZ = (zz - (ctx.sceneContext.sceneOffset >> 3)) << 10;

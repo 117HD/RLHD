@@ -322,6 +322,10 @@ public class SceneCullingManager {
 				flush();
 		}
 
+		public void reset() {
+			visibilityFlags = 0;
+		}
+
 		public void release() {
 			x = y = z = offsetX = offsetY = offsetZ = 0;
 			visibilityFlags = 0;
