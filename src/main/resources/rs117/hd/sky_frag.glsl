@@ -154,8 +154,15 @@ void main() {
                 float phaseSin = sqrt(max(0.0, 1.0 - phaseCos * phaseCos));
                 vec3 moonLightDir = vec3(moonToLight * phaseSin, phaseCos);
 
+                // Sample detail by angular distance across the hemisphere so it
+                // becomes progressively foreshortened toward the moon's limb.
+                float moonSurfaceRadius = length(moonLocal);
+                vec2 moonSurface = moonLocal;
+                if (moonSurfaceRadius > 1e-4)
+                    moonSurface *= asin(min(moonSurfaceRadius, 1.0)) / moonSurfaceRadius;
+
                 // Libration moves surface detail without rotating the terminator.
-                vec2 moonSurface = moonLocal + skyMoonLibration * (2.0 / PI);
+                moonSurface += skyMoonLibration * (2.0 / PI);
                 float librationRoll = (skyMoonLibration.x + skyMoonLibration.y) * 0.25;
                 float librationRollCos = cos(librationRoll);
                 float librationRollSin = sin(librationRoll);
