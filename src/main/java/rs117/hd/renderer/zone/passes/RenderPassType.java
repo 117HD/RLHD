@@ -6,7 +6,8 @@ public enum RenderPassType {
 	TILED_LIGHTING(TiledLightingPass.class, Timer.TILED_LIGHTING_PASS),
 	DIRECTIONAL(DirectionalShadowPass.class, Timer.DIRECTIONAL_PASS),
 	SCENE(ScenePass.class, Timer.SCENE_PASS),
-	DEBUG_DRAW(DebugDrawPass.class, Timer.DEBUG_DRAW_PASS);
+	DEBUG_DRAW(DebugDrawPass.class, Timer.DEBUG_DRAW_PASS),
+	BLIT_SCENE(BlitScenePass.class, Timer.BLIT_SCENE_PASS);
 
 	public final Class<? extends RenderPass> clazz;
 	public final String name;
