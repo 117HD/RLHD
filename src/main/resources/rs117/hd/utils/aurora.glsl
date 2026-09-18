@@ -1,7 +1,5 @@
 #pragma once
 
-#include <utils/color_utils.glsl>
-
 // Raymarched aurora curtains through thin elevated layers.
 
 float au_hash21(vec2 p) {
@@ -58,12 +56,12 @@ vec3 auroraLayer(vec3 ro, vec3 rd, float planeY, float time, float layerSeed) {
 
     // Slowly vary the emissive green base between teal and yellow-green.
     float hueNoise = au_noise(vec2(curtainX * 1.3 + layerSeed * 4.0, time * 0.04 + layerSeed));
-    vec3 tealGreen = srgbToLinear(vec3(0.0, 1.5, 0.9));   // cool cyan-green
-    vec3 warmGreen = srgbToLinear(vec3(0.35, 1.7, 0.25)); // warm yellow-green
+    vec3 tealGreen = vec3(0.0, 2.53716, 0.787412); // cool cyan-green
+    vec3 warmGreen = vec3(0.100482, 3.39203, 0.0508761); // warm yellow-green
     vec3 green = mix(tealGreen, warmGreen, smoothstep(0.25, 0.75, hueNoise));
 
     float heightBlend = (planeY - 600.0) / 600.0; // 0 at bottom, 1 at top of aurora range
-    vec3 purple = srgbToLinear(vec3(0.9, 0.2, 1.2));
+    vec3 purple = vec3(0.787412, 0.0331048, 1.51684);
     vec3 col = mix(green, purple, smoothstep(0.0, 1.0, heightBlend));
 
     return col * intensity;

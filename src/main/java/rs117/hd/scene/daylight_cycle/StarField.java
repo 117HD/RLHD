@@ -1,6 +1,5 @@
 package rs117.hd.scene.daylight_cycle;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.Random;
@@ -21,6 +20,7 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.SEED;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_NEBULA;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_UI;
+import static rs117.hd.utils.ColorUtils.rgb;
 import static rs117.hd.utils.HDUtils.randomPointOnSphere;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -30,13 +30,13 @@ public final class StarField {
 	private static final float[] UP_VECTOR = { 0, 1, 0 };
 	private static final float[] LEFT_VECTOR = { 1, 0, 0 };
 
-	private static final Color[] STAR_COLORS = {
-		new Color(1.0f, 0.7f, 0.45f),  // warm orange
-		new Color(1.0f, 0.9f, 0.65f),  // golden yellow
-		new Color(1.0f, 0.95f, 0.85f), // pale warm white
-		new Color(1.0f, 1.0f, 1.0f),   // neutral white
-		new Color(0.85f, 0.92f, 1.0f), // pale blue-white
-		new Color(0.70f, 0.80f, 1.0f)  // cool blue
+	private static final float[][] STAR_COLORS = {
+		rgb(255, 179, 115), // warm orange
+		rgb(255, 230, 166), // golden yellow
+		rgb(255, 242, 217), // pale warm white
+		rgb(255, 255, 255), // neutral white
+		rgb(217, 235, 255), // pale blue-white
+		rgb(179, 204, 255), // cool blue
 	};
 
 	// VBO layout: direction.xyz, size, brightness, color.rgb, artistic rotation speed.
@@ -294,7 +294,7 @@ public final class StarField {
 		float size = (0.4f + sizeSeed * sizeSeed * 0.6f) * sizeScale;
 
 		// Stellar color tint by population fraction (same bands as the shader).
-		final Color starColor = STAR_COLORS[random.nextInt(STAR_COLORS.length)];
+		final float[] starColor = STAR_COLORS[random.nextInt(STAR_COLORS.length)];
 
 		vertexBuffer
 			.put(dx)
@@ -302,9 +302,7 @@ public final class StarField {
 			.put(dz)
 			.put(size)
 			.put(brightness)
-			.put(starColor.getRed() / 255.0f)
-			.put(starColor.getGreen() / 255.0f)
-			.put(starColor.getBlue() / 255.0f)
+			.put(starColor)
 			.put(artisticRotationSpeed);
 	}
 }

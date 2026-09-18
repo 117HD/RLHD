@@ -3,9 +3,8 @@
 #include <uniforms/sky.glsl>
 
 #include <utils/constants.glsl>
-#include <utils/color_utils.glsl>
 
-#define STARFIELD_BACKGROUND_COLOR srgbToLinear(vec3(0.00304, 0.00304, 0.00521))
+#define STARFIELD_BACKGROUND_COLOR vec3(0.000235294, 0.000235294, 0.000403251)
 
 // Artistic rotation uses elapsed seconds, independently of the daylight-cycle clock.
 vec3 rotateStarfield(vec3 direction, float elapsedSeconds, float artisticRotationSpeed) {
@@ -202,7 +201,7 @@ vec3 shootingStars(vec3 viewDir, float time) {
         float brightness = (core + trail) * streak * alpha * maxBright;
 
         // Warm white color
-        color += srgbToLinear(vec3(1.0, 0.95, 0.8)) * brightness;
+        color += vec3(1.0, 0.890005, 0.603827) * brightness;
     }
 
     return color;
@@ -250,9 +249,9 @@ vec3 proceduralNebula(vec3 dir) {
     nebulaIntensity *= (1.0 + clusterBias * 1.2);
 
     // Two-tone nebula color: teal dominant with subtle purple variation
-    vec3 tealColor = srgbToLinear(vec3(0.008, 0.025, 0.035));
+    vec3 tealColor = vec3(0.000619195, 0.00193498, 0.00270898);
     float colorVariation = sf_fbm(wdir * 4.0 + vec3(77.0), 2);
-    vec3 purpleColor = srgbToLinear(vec3(0.02, 0.01, 0.035));
+    vec3 purpleColor = vec3(0.00154799, 0.000773994, 0.00270898);
     vec3 nebulaColor = mix(tealColor, purpleColor, colorVariation * 0.5);
 
     return nebulaColor * nebulaIntensity;
