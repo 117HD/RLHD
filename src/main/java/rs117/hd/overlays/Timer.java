@@ -31,6 +31,7 @@ public enum Timer {
 	DIRECTIONAL_PASS,
 	SCENE_PASS,
 	DEBUG_DRAW_PASS,
+	BLIT_SCENE_PASS,
 
 	// Miscellaneous
 	SWAP_BUFFERS,

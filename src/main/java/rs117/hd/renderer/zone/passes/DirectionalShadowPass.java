@@ -293,7 +293,8 @@ public class DirectionalShadowPass implements RenderPass {
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.depthFunc.set(GL_LEQUAL);
-		renderState.ido.set(renderer.indirectDrawCmds.id);
+		if(renderer.indirectDrawCmds != null)
+			renderState.ido.set(renderer.indirectDrawCmds.id);
 
 		directionalCmd.execute(renderState);
 

@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.hooks.*;
 import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
@@ -32,7 +31,6 @@ import static org.lwjgl.opengl.GL11C.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11C.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11C.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11C.GL_GEQUAL;
-import static org.lwjgl.opengl.GL11C.GL_NEAREST;
 import static org.lwjgl.opengl.GL11C.GL_ONE;
 import static org.lwjgl.opengl.GL11C.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11C.GL_SRC_ALPHA;
@@ -42,11 +40,7 @@ import static org.lwjgl.opengl.GL11C.glClearColor;
 import static org.lwjgl.opengl.GL11C.glClearDepth;
 import static org.lwjgl.opengl.GL13C.GL_MULTISAMPLE;
 import static org.lwjgl.opengl.GL30C.GL_DRAW_FRAMEBUFFER;
-import static org.lwjgl.opengl.GL30C.GL_READ_FRAMEBUFFER;
-import static org.lwjgl.opengl.GL30C.glBindFramebuffer;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
-import static org.lwjgl.opengl.GL30C.glBlitFramebuffer;
-import static rs117.hd.HdPlugin.APPLE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PRESCENE;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -55,13 +49,7 @@ import static rs117.hd.utils.MathUtils.*;
 public class ScenePass implements RenderPass {
 
 	@Inject
-	private Client client;
-
-	@Inject
 	private HdPlugin plugin;
-
-	@Inject
-	private HdPluginConfig config;
 
 	@Inject
 	private ZoneRenderer renderer;
@@ -216,7 +204,8 @@ public class ScenePass implements RenderPass {
 			renderState.disable.set(GL_MULTISAMPLE);
 		}
 		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
-		renderState.ido.set(renderer.indirectDrawCmds.id);
+		if(renderer.indirectDrawCmds != null)
+			renderState.ido.set(renderer.indirectDrawCmds.id);
 		renderState.apply();
 
 		// Clear scene
@@ -259,44 +248,6 @@ public class ScenePass implements RenderPass {
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.disable.set(GL_DEPTH_TEST);
 		renderState.apply();
-
-		if (plugin.sceneResolution != null && plugin.sceneViewport != null) {
-			glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboScene);
-			if (plugin.fboSceneResolve != 0) {
-				// Blit from the scene FBO to the multisample resolve FBO
-				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboSceneResolve);
-				glBlitFramebuffer(
-					0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
-					0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
-					GL_COLOR_BUFFER_BIT, GL_NEAREST
-				);
-				glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboSceneResolve);
-			}
-
-			// Blit from the resolved FBO to the default FBO
-			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
-
-			if (APPLE && !client.isResized()) {
-				// On macOS, we need to ensure that the alpha channel is opaque to prevent whatever
-				// is beneath from leaking through. In fixed mode, the MSAA resolve alone is not
-				// sufficient, since the viewport only covers part of the screen.
-				glClearColor(0, 0, 0, 1);
-				glClear(GL_COLOR_BUFFER_BIT);
-			}
-
-			glBlitFramebuffer(
-				0,
-				0,
-				plugin.sceneResolution[0],
-				plugin.sceneResolution[1],
-				plugin.sceneViewport[0],
-				plugin.sceneViewport[1],
-				plugin.sceneViewport[0] + plugin.sceneViewport[2],
-				plugin.sceneViewport[1] + plugin.sceneViewport[3],
-				GL_COLOR_BUFFER_BIT,
-				config.sceneScalingMode().glFilter
-			);
-		}
 
 		frameTimer.end(Timer.DRAW_SCENE);
 	}
