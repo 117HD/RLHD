@@ -85,7 +85,7 @@ public class SkyRenderer {
 	private long transitionId;
 	private float previousTransition = 1;
 	private boolean interruptedTransition;
-	private final float[] fogColorSrgb = new float[3];
+	private final float[] fogColor = new float[3];
 	private float directionalStrength;
 	private float ambientStrength;
 	private boolean skyEnabled;
@@ -172,7 +172,7 @@ public class SkyRenderer {
 		copyTo(directionalColor, env.getDirectionalColor());
 		copyTo(ambientColor, env.getAmbientColor());
 		copyTo(waterColor, env.getWaterColor());
-		copyTo(fogColorSrgb, ColorUtils.linearToSrgb(env.getFogColor()));
+		copyTo(fogColor, env.getFogColor());
 		directionalStrength = env.directionalStrength;
 		ambientStrength = env.ambientStrength;
 
@@ -206,8 +206,8 @@ public class SkyRenderer {
 		if (shouldRenderSky(hasVanillaSkybox)) {
 			glClear(GL_DEPTH_BUFFER_BIT);
 		} else {
-			float[] fogColor = hasVanillaSkybox ? BLACK : fogColorSrgb;
-			float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
+			float[] fogColorSrgb = hasVanillaSkybox ? BLACK : linearToSrgb(fogColor);
+			float[] gammaCorrectedFogColor = pow(fogColorSrgb, plugin.getGammaCorrection());
 			glClearColor(
 				gammaCorrectedFogColor[0],
 				gammaCorrectedFogColor[1],
@@ -266,7 +266,7 @@ public class SkyRenderer {
 	}
 
 	private void updateGlobalUbo(UBOGlobal ubo) {
-		ubo.fogColor.set(fogColorSrgb);
+		ubo.fogColor.set(fogColor);
 		float[] waterColorHsv = ColorUtils.srgbToHsv(waterColor);
 		ubo.waterColorLight.set(linearToSrgb(ColorUtils.hsvToSrgb(waterColorHsv[0], waterColorHsv[1], waterColorHsv[2] * .8f)));
 		ubo.waterColorMid.set(linearToSrgb(ColorUtils.hsvToSrgb(waterColorHsv[0], waterColorHsv[1], waterColorHsv[2] * .45f)));
@@ -308,7 +308,7 @@ public class SkyRenderer {
 		copyTo(ambientColor, currentFrame.ambient);
 		directionalStrength = currentFrame.directionalStrength;
 		ambientStrength = currentFrame.ambientStrength;
-		copyTo(fogColorSrgb, linearToSrgb(currentFrame.horizonLinear));
+		copyTo(fogColor, currentFrame.horizonLinear);
 		copyTo(waterColor, currentFrame.horizonLinear);
 		plugin.uboSky.skyFogDensity.set(currentFrame.fogDensity);
 		plugin.uboSky.skyVisibility.set(currentFrame.visibility);

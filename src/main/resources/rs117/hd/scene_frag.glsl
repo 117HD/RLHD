@@ -429,7 +429,7 @@ void main() {
         calculateLighting(IN.position, normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength, pointLightsOut, pointLightsSpecularOut);
 
         // sky light
-        vec3 skyLightColor = srgbToLinear(fogColor);
+        vec3 skyLightColor = fogColor;
         float skyLightStrength = 0.5;
         float skyDotNormals = downDotNormals;
         vec3 skyLightOut = max(skyDotNormals, 0.0) * skyLightColor * skyLightStrength;
@@ -580,7 +580,7 @@ void main() {
 
             outputColor.rgb = mix(outputColor.rgb, skyColorAtFragment, combinedFog);
         } else {
-            outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
+            outputColor.rgb = mix(outputColor.rgb, linearToSrgb(fogColor), combinedFog);
         }
     }
 

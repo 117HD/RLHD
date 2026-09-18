@@ -90,7 +90,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     calculateLighting(IN.position, normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength, pointLightsOut, pointLightsSpecularOut);
 
     // sky light
-    vec3 skyLightColor = fogColor.rgb;
+    vec3 skyLightColor = fogColor;
     float skyLightStrength = 0.5;
     float skyDotNormals = downDotNormals;
     vec3 skyLightOut = max(skyDotNormals, 0.0) * skyLightColor * skyLightStrength;
