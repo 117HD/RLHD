@@ -10,23 +10,22 @@
 
 #include <utils/constants.glsl>
 
+const vec3 LINEAR_SRGB_LUMINANCE_COEFFICIENTS = vec3(.2126f, .7152f, .0722f);
+
 /**
- * Row-major transformation matrices for conversion between RGB and XYZ color spaces.
- *
- * Fairman, H. S., Brill, M. H., & Hemmendinger, H. (1997).
- * How the CIE 1931 color-matching functions were derived from Wright-Guild data.
- * Color Research & Application, 22(1), 11–23.
- * doi:10.1002/(sici)1520-6378(199702)22:1<11::aid-col4>3.0.co;2-7
+ * Transforms between CIE XYZ (D65) and linear sRGB.
+ * Coefficients are the sRGB matrices from CSS Color Module Level 4:
+ * https://www.w3.org/TR/css-color-4/#color-conversion-code
  */
 const mat3 RGB_TO_XYZ_MATRIX = mat3(
-    .49, .1769, .0,
-    .31, .8124, .0099,
-    .2,  .0107, .9901
+    .4123908, .212639,  .01933082,
+    .35758434, .7151687, .11919478,
+    .1804808, .07219232, .95053215
 );
 const mat3 XYZ_TO_RGB_MATRIX = mat3(
-    2.36449,  -.514935,  0.00514883,
-    -.896553, 1.42633,   -.0142619,
-    -.467937,  .0886025, 1.00911
+    3.24097,   -.96924365, .05563008,
+    -1.5373832, 1.8759675,  -.20397696,
+    -.49861076, .041555058, 1.0569715
 );
 
 /**
@@ -108,6 +107,11 @@ float linearToSrgb(float rgb) {
     rgb * 12.92,
     1.055 * pow(rgb, 1 / 2.4) - 0.055,
     step(0.0031308, rgb));
+}
+
+// Calculate linear perceptual luminance from a linear sRGB color
+float linearSrgbLuminance(vec3 linearSrgb) {
+    return dot(linearSrgb, LINEAR_SRGB_LUMINANCE_COEFFICIENTS);
 }
 
 // https://web.archive.org/web/20230619214343/https://en.wikipedia.org/wiki/HSL_and_HSV#Color_conversion_formulae

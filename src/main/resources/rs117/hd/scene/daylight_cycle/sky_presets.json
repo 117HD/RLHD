@@ -1,0 +1,318 @@
+[
+  {
+    "name": "GIELINOR",
+    "moonDiskColor": "#E1E5FF",
+    "moonDiskStrength": 5,
+    "moonLightColor": [ 228.46, 259.86, 287.43 ],
+    "profile": {
+      "zenith": [
+        {
+          "altitude": -30,
+          "color": "#010104"
+        },
+        {
+          "altitude": -15,
+          "color": "#03040A"
+        },
+        {
+          "altitude": -8,
+          "color": "#2D2346"
+        },
+        {
+          "altitude": -3,
+          "color": "#503C64"
+        },
+        {
+          "altitude": 0,
+          "color": "#645078"
+        },
+        {
+          "altitude": 5,
+          "color": "#788CB4"
+        },
+        {
+          "altitude": 15,
+          "color": "#6496C8"
+        },
+        {
+          "altitude": 30,
+          "color": "#5A91C8"
+        },
+        {
+          "altitude": 50,
+          "color": "#558CC3"
+        },
+        {
+          "altitude": 90,
+          "color": "#5087BE"
+        }
+      ],
+      "horizon": [
+        {
+          "altitude": -30,
+          "color": "#010205"
+        },
+        {
+          "altitude": -15,
+          "color": "#04050C"
+        },
+        {
+          "altitude": -8,
+          "color": "#3C2D41"
+        },
+        {
+          "altitude": -3,
+          "color": "#8C5046"
+        },
+        {
+          "altitude": 0,
+          "color": "#DC8250"
+        },
+        {
+          "altitude": 5,
+          "color": "#E6AA78"
+        },
+        {
+          "altitude": 10,
+          "color": "#C8B4A0"
+        },
+        {
+          "altitude": 20,
+          "color": "#AAAFB9"
+        },
+        {
+          "altitude": 30,
+          "color": "#96A5BE"
+        },
+        {
+          "altitude": 50,
+          "color": "#8CA0BE"
+        },
+        {
+          "altitude": 90,
+          "color": "#879BB9"
+        }
+      ],
+      "sunGlow": [
+        {
+          "altitude": -30,
+          "color": "#000000"
+        },
+        {
+          "altitude": -10,
+          "color": "#140A1E"
+        },
+        {
+          "altitude": -5,
+          "color": "#50283C"
+        },
+        {
+          "altitude": -2,
+          "color": "#B45032"
+        },
+        {
+          "altitude": 0,
+          "color": "#FF9650"
+        },
+        {
+          "altitude": 5,
+          "color": "#FFC882"
+        },
+        {
+          "altitude": 15,
+          "color": "#FFE6B4"
+        },
+        {
+          "altitude": 30,
+          "color": "#FFFADC"
+        },
+        {
+          "altitude": 50,
+          "color": "#FFFFF0"
+        },
+        {
+          "altitude": 90,
+          "color": "#FFFFFA"
+        }
+      ],
+      "ambientColor": [
+        {
+          "altitude": -5,
+          "color": "#718CB4"
+        },
+        {
+          "altitude": 25,
+          "color": "#C0B9FF"
+        },
+        {
+          "altitude": 40,
+          "color": "#B9D6FF"
+        }
+      ],
+      "directionalTemperature": [
+        {
+          "altitude": 3,
+          "value": 2500
+        },
+        {
+          "altitude": 5,
+          "value": 2600
+        },
+        {
+          "altitude": 10,
+          "value": 3000
+        },
+        {
+          "altitude": 15,
+          "value": 3300
+        },
+        {
+          "altitude": 20,
+          "value": 3600
+        },
+        {
+          "altitude": 30,
+          "value": 4000
+        },
+        {
+          "altitude": 40,
+          "value": 4300
+        },
+        {
+          "altitude": 50,
+          "value": 4750
+        },
+        {
+          "altitude": 60,
+          "value": 5250
+        },
+        {
+          "altitude": 70,
+          "value": 5500
+        },
+        {
+          "altitude": 80,
+          "value": 5750
+        },
+        {
+          "altitude": 90,
+          "value": 6000
+        }
+      ],
+      "regionalBlend": [
+        {
+          "altitude": -10,
+          "value": 0
+        },
+        {
+          "altitude": 0,
+          "value": 0.3
+        },
+        {
+          "altitude": 5,
+          "value": 0.5
+        },
+        {
+          "altitude": 15,
+          "value": 0.75
+        },
+        {
+          "altitude": 30,
+          "value": 1
+        }
+      ],
+      "nightSkyColor": "#05070F",
+      "directionalBaseTemperature": 4100,
+      "directionalBaseStrength": 0.1,
+      "brightness": {
+        "nightAltitude": -18,
+        "lowSunAltitude": -5,
+        "horizonAltitude": 5,
+        "lowSunBoost": 0.07,
+        "horizonBoost": 0.1,
+        "earlyDayBoost": 0.05,
+        "daytimeStrength": 1.2
+      }
+    }
+  },
+  {
+    "name": "DAWN",
+    "parent": "GIELINOR",
+    "sunAngles": [ -2.5, 90 ]
+  },
+  {
+    "name": "SUNRISE",
+    "parent": "GIELINOR",
+    "sunAngles": [ 7.8, 90.2 ]
+  },
+  {
+    "name": "DAY",
+    "parent": "GIELINOR",
+    "sunAngles": [ 52, 235 ]
+  },
+  {
+    "name": "SUNSET",
+    "parent": "GIELINOR",
+    "sunAngles": [ 0, 272 ]
+  },
+  {
+    "name": "DUSK",
+    "parent": "GIELINOR",
+    "sunAngles": [ -2.5, 270 ]
+  },
+  {
+    "name": "NIGHT",
+    "parent": "GIELINOR",
+    "sunAngles": [ -90, 0 ]
+  },
+  {
+    "name": "VOID",
+    "parent": "NIGHT",
+    "customGradient": true,
+    "hideMoon": true,
+    "skyVisibility": 1,
+    "skyFogDensity": 0,
+    "starHorizonHeight": 0,
+    "auroraVisibility": 0,
+    "profile": {
+      "zenith": [
+        {
+          "altitude": 0,
+          "color": "#000000"
+        }
+      ],
+      "horizon": [
+        {
+          "altitude": 0,
+          "color": "#000000"
+        }
+      ],
+      "sunGlow": [
+        {
+          "altitude": 0,
+          "color": "#000000"
+        }
+      ]
+    }
+  },
+  {
+    "name": "BLOOD_MOON",
+    "parent": "NIGHT",
+    "moonAngles": [
+      22.6,
+      89.75
+    ],
+    "forceMoonPhase": "FULL_MOON",
+    "moonDiskColor": "#E82B20",
+    "moonDiskStrength": 1.5,
+    "moonLightColor": "#ED8B8B",
+    "skyFogDensity": 0.1,
+    "skyVisibility": 0.85,
+    "starVisibility": 0.71,
+    "auroraVisibility": 0,
+    "moonSizeMult": 3.05,
+    "profile": {
+      "nightSkyColor": "#1E060E"
+    }
+  }
+]

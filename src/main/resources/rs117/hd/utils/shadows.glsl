@@ -27,41 +27,21 @@
 
 #include <utils/constants.glsl>
 #include <utils/misc.glsl>
+#include <utils/shadow_filtering.glsl>
 
-#if SHADOW_RESOLUTION == 0
-    #define MIN_SHADOW_BIAS -0.00125f
-#elif SHADOW_RESOLUTION == 1
-    #define MIN_SHADOW_BIAS -0.0007f
-#elif SHADOW_RESOLUTION == 2
-    #define MIN_SHADOW_BIAS -0.00035
-#elif SHADOW_RESOLUTION == 3
-    #define MIN_SHADOW_BIAS -0.0003
-#elif SHADOW_RESOLUTION >= 4
-    #define MIN_SHADOW_BIAS -0.00025
-#endif
-
-#ifndef TILE_SIZE
-    #define TILE_SIZE 128
+#if SHADOW_FILTERING_KERNAL == 3
+    #define sampleShadow sampleShadowPCF3x3
+    #define sampleHardwareShadow sampleHardwareShadow3x3
+#elif SHADOW_FILTERING_KERNAL == 2
+    #define sampleShadow sampleShadowPCF2x2
+    #define sampleHardwareShadow sampleHardwareShadow2x2
+#else
+    #define sampleShadow sampleShadowPCF1x1
+    #define sampleHardwareShadow sampleHardwareShadow1x1
 #endif
 
 #if SHADOW_MODE != SHADOW_MODE_OFF
-float fetchShadowTexel(ivec2 pixelCoord, float fragDepth, vec3 fragPos, int i) {
-    #if SHADOW_FILTERING == SHADOW_FILTERING_DITHER
-        int index = int(hash(vec4(floor(fragPos.xyz), i)) * POISSON_DISK_LENGTH) % POISSON_DISK_LENGTH;
-        pixelCoord += ivec2(getPoissonDisk(index) * 1.25);
-    #endif
-
-    #if SHADOW_TRANSPARENCY
-        int alphaDepth = int(texelFetch(shadowMap, pixelCoord, 0).r * SHADOW_COMBINED_MAX);
-        float depth = float(alphaDepth & SHADOW_DEPTH_MAX) / SHADOW_DEPTH_MAX;
-        float alpha = 1 - float(alphaDepth >> SHADOW_DEPTH_BITS) / SHADOW_ALPHA_MAX;
-        return depth < fragDepth ? alpha : 0.f;
-    #else
-        return texelFetch(shadowMap, pixelCoord, 0).r < fragDepth ? 1.f : 0.f;
-    #endif
-}
-
-float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
+float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal) {
     if (lightStrength <= 0)
         return 0.f;
 
@@ -81,71 +61,56 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
         return 0.f;
 
     // NDC to texture space
-    ivec2 shadowRes = textureSize(shadowMap, 0);
     shadowPos.xyz += 1;
     shadowPos.xyz /= 2;
     shadowPos.xy += distortion;
     shadowPos.xy = clamp(shadowPos.xy, 0, 1);
-    shadowPos.xy *= shadowRes;
-    shadowPos.xy += .5; // Shift to texel center
+    vec2 shadowMapSize = vec2(textureSize(shadowMap, 0));
+    float bias = 0.0;
+    float depthPrecisionBias = 0.0;
+    vec2 receiverDepthPerTexel = vec2(0.0);
+    if (dot(surfaceNormal, surfaceNormal) > 0) {
+        vec3 receiverNormal = surfaceNormal * mat3(invLightProjectionMatrix);
+        float normalZ = max(abs(receiverNormal.z), length(receiverNormal) * 1e-4);
+        receiverDepthPerTexel = -receiverNormal.xy / (receiverNormal.z < 0 ? -normalZ : normalZ) / shadowMapSize;
+        // Bound extrapolation when the receiver is nearly edge-on to the light
+        float gradientLimit = shadowBiasScale * 16.0;
+        receiverDepthPerTexel *= min(1.0, gradientLimit / max(length(receiverDepthPerTexel), 1e-8));
 
-    float shadowBias = MIN_SHADOW_BIAS * max(1, 1.0 - lightDotNormals);
-    float fragDepth = shadowPos.z + shadowBias;
-
-    const int kernelSize = 3;
-    ivec2 kernelOffset = ivec2(shadowPos.xy - kernelSize / 2);
-    #if SHADOW_FILTERING == SHADOW_FILTERING_AVERAGE
-        const float kernelAreaReciprocal = 1. / (kernelSize * kernelSize);
-    #else
-        const float kernelAreaReciprocal = .25; // This is effectively a 2x2 kernel
-        vec2 lerp = fract(shadowPos.xy);
-        vec3 lerpX = vec3(1 - lerp.x, 1, lerp.x);
-        vec3 lerpY = vec3(1 - lerp.y, 1, lerp.y);
-    #endif
-
-    // Sample 4 corners first
-    float c00 = fetchShadowTexel(kernelOffset + ivec2(0, 0), fragDepth, fragPos, 0);
-    float c02 = fetchShadowTexel(kernelOffset + ivec2(0, kernelSize - 1), fragDepth, fragPos, 1);
-    float c20 = fetchShadowTexel(kernelOffset + ivec2(kernelSize - 1, 0), fragDepth, fragPos, 2);
-    float c22 = fetchShadowTexel(kernelOffset + ivec2(kernelSize - 1, kernelSize - 1), fragDepth, fragPos, 3);
-
-    // Early exit if all corners are the same (fully shadowed or fully lit)
-    bool allShadowed = (c00 == 0.0 && c02 == 0.0 && c20 == 0.0 && c22 == 0.0);
-    bool allLit      = (c00 == 1.0 && c02 == 1.0 && c20 == 1.0 && c22 == 1.0);
-
-    float shadow = 0.0;
-    if (allShadowed || allLit) {
-        shadow = (c00 + c02 + c20 + c22) * 0.25;
-    } else {
-        // Finish sampling the reset of the kernal
-        float s01 = fetchShadowTexel(kernelOffset + ivec2(0, 1), fragDepth, fragPos, 4);
-        float s10 = fetchShadowTexel(kernelOffset + ivec2(1, 0), fragDepth, fragPos, 5);
-        float s11 = fetchShadowTexel(kernelOffset + ivec2(1, 1), fragDepth, fragPos, 6);
-        float s12 = fetchShadowTexel(kernelOffset + ivec2(1, 2), fragDepth, fragPos, 7);
-        float s21 = fetchShadowTexel(kernelOffset + ivec2(2, 1), fragDepth, fragPos, 8);
-
-        #if SHADOW_FILTERING == SHADOW_FILTERING_AVERAGE
-            shadow =
-                c00 + s01 + c02 +
-                s10 + s11 + s12 +
-                c20 + s21 + c22;
-        #else
-            shadow =
-                c00 * lerpX[0] * lerpY[0] +
-                s01 * lerpX[0] * lerpY[1] +
-                c02 * lerpX[0] * lerpY[2] +
-                s10 * lerpX[1] * lerpY[0] +
-                s11 * lerpX[1] * lerpY[1] +
-                s12 * lerpX[1] * lerpY[2] +
-                c20 * lerpX[2] * lerpY[0] +
-                s21 * lerpX[2] * lerpY[1] +
-                c22 * lerpX[2] * lerpY[2];
-        #endif
-        shadow *= kernelAreaReciprocal;
+        // Retain the texel-sized safety margin; the gradient already includes projection and resolution scaling
+        bias = max(shadowBiasScale, length(receiverDepthPerTexel));
+        // Both the depth texture and packed transparent shadows retain 16 depth bits
+        // Cover one truncated depth step plus a step of rounding margin, independently of resolution
+        depthPrecisionBias = 2.0 / float(SHADOW_DEPTH_MAX);
     }
+    vec4 receiverPlane = vec4(shadowPos.xy * shadowMapSize, receiverDepthPerTexel);
+
+    float shadow = sampleShadow(
+        shadowMap,
+        SHADOW_TRANSPARENCY == 1,
+        shadowPos.z - max(depthPrecisionBias, bias * (1 + colorPicker.a * 5)),
+        shadowPos,
+        receiverPlane
+    );
+
+    #if TERRAIN_SHADOWS
+        if (shadow < 1.0) {
+            float terrainBias = bias * 3.15;
+            // Hardware PCF shares one reference depth across its bilinear footprint.
+            vec2 terrainMapSize = vec2(textureSize(terrainShadowMap, 0));
+            vec4 terrainReceiverPlane = vec4(
+                shadowPos.xy * terrainMapSize,
+                receiverDepthPerTexel * shadowMapSize / terrainMapSize
+            );
+            terrainBias -= dot(abs(terrainReceiverPlane.zw), vec2(1.0));
+            float terrainShadow = sampleHardwareShadow(
+                terrainShadowMap, shadowPos.z + terrainBias, shadowPos, terrainReceiverPlane);
+            shadow = max(shadow, terrainShadow);
+        }
+    #endif
 
     return shadow * (1 - fadeOut);
 }
 #else
-#define sampleShadowMap(fragPos, distortion, lightDotNormals) 0
+#define sampleShadowMap(fragPos, distortion, surfaceNormal) 0
 #endif

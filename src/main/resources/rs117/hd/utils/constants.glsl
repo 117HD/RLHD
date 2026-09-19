@@ -7,6 +7,8 @@
 
 #define SHORT_MAX 32767 // 2^15 - 1
 
+#define TILE_SIZE 128
+
 #include SHADER_TYPE
 #include LEGACY_RENDERER
 #include ZONE_RENDERER
@@ -41,7 +43,9 @@
 #define SHADOW_ALPHA_MAX ((1 << SHADOW_ALPHA_BITS) - 1)
 #define SHADOW_COMBINED_MAX ((1 << SHADOW_COMBINED_BITS) - 1)
 
-#include SHADOW_RESOLUTION
+#include SHADOW_FILTERING_KERNAL
+#include TERRAIN_SHADOWS
+#include TERRAIN_ONLY_PASS
 
 #include SHADOW_FILTERING
 #define SHADOW_FILTERING_PCF 0
@@ -54,6 +58,14 @@
 #else
     #define SHADOW_DEFAULT_OPACITY_THRESHOLD 0.71 // Lowest while keeping Prifddinas glass walkways transparent
 #endif
+
+#include STAR_MODE
+#define STAR_MODE_OFF 0
+#define STAR_MODE_REALISTIC 1
+#define STAR_MODE_ARTISTIC 2
+#define STAR_MODE_STATIC 3
+
+#include NEBULAS
 
 #include VANILLA_COLOR_BANDING
 #include UNDO_VANILLA_SHADING
