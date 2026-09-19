@@ -306,15 +306,20 @@ void main() {
                 skyColor = mix(skyColor, moonColor, moonAlpha);
             }
 
-            // Cheap bloom-like halo, biased toward the illuminated side of a crescent.
-            float rimDistance = max(0.0, acos(clamp(moonDot, 0.0, 1.0)) /
-                max(moonBaseRadius * moonSizeMult, 0.001) - 1.0);
+            // Place a real-sized moon's glare outside the artistic disk without scaling its width or intensity.
+            float rimDistanceDegrees = degrees(max(0.0,
+                acos(clamp(moonDot, 0.0, 1.0)) - moonBaseRadius * moonSizeMult));
+            float glareAngleDegrees = rimDistanceDegrees + 0.25;
             vec3 toRim = viewDir - moonDir * moonDot;
             vec3 toLight = moonIlluminationDir - moonDir * dot(moonIlluminationDir, moonDir);
             float litSide = dot(toRim, toLight) / max(length(toRim) * length(toLight), 1e-5);
             float phaseCos = 2.0 * skyMoonIllumination - 1.0;
             float phaseWeight = mix(1.0, smoothstep(-0.2, 0.5, litSide), sqrt(max(0.0, 1.0 - phaseCos * phaseCos)));
-            float halo = 0.0015 * exp(-8.0 * rimDistance * rimDistance) + 0.00015 * exp(-2.0 * rimDistance);
+            // Stiles-Holladay: Lveil / Lmoon = 10 * solidAngle / angleDegrees^2.
+            // A 0.5° disk gives 0.0006; 0.3 approximates mean surface reflectance above.
+            // The model is invalid near the limb: soften its core over 0.75° rather than extrapolating a bright rim.
+            // https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=917534
+            float halo = 0.3 * 0.0006 / (glareAngleDegrees * glareAngleDegrees + 0.75 * 0.75);
             halo *= (1.0 - moonDisk) * skyMoonIllumination * phaseWeight * moonDayVisibility * moonVisibility;
             skyColor += skyMoonDiskColor * halo * nightSkyHorizonFade(sky.upAmount, horizonShift);
         }
