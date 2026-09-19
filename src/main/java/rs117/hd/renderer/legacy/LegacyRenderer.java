@@ -1090,7 +1090,7 @@ public class LegacyRenderer implements Renderer {
 				final int south = max(camY - drawDistanceSceneUnits, 0);
 				final int width = east - west;
 				final int height = north - south;
-				final int depthScale = 10000;
+				final int depthRange = 10000;
 
 				final int maxDrawDistance = 90;
 				final float maxScale = 0.7f;
@@ -1099,11 +1099,14 @@ public class LegacyRenderer implements Renderer {
 				float scale = mix(maxScale, minScale, scaleMultiplier);
 				float[] lightProjectionMatrix = Mat4.identity();
 				Mat4.mul(lightProjectionMatrix, Mat4.scale(scale, scale, scale));
-				Mat4.mul(lightProjectionMatrix, Mat4.orthographic(width, height, depthScale));
+				Mat4.mul(lightProjectionMatrix, Mat4.orthographic(width, height, depthRange));
 				Mat4.mul(lightProjectionMatrix, lightViewMatrix);
 				Mat4.mul(lightProjectionMatrix, Mat4.translate(-(width / 2f + west), 0, -(height / 2f + south)));
 
 				plugin.uboGlobal.lightProjectionMatrix.set(lightProjectionMatrix);
+				plugin.uboGlobal.invLightProjectionMatrix.set(Mat4.inverse(lightProjectionMatrix));
+				float texelSize = (float) max(width, height) / plugin.shadowMapResolution;
+				plugin.uboGlobal.shadowBiasScale.set(texelSize / depthRange);
 				plugin.uboGlobal.upload();
 
 				glEnable(GL_CULL_FACE);

@@ -956,7 +956,6 @@ public class HdPlugin extends Plugin {
 			.define("SHADOW_TRANSPARENCY", configShadowTransparency)
 			.define("SHADOW_FILTERING", config.shadowFiltering().filtering)
 			.define("SHADOW_FILTERING_KERNAL", config.shadowFiltering().kernelSize)
-			.define("SHADOW_RESOLUTION", config.shadowResolution())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
 			.define("UNDO_VANILLA_SHADING", configShadingMode.undoVanillaShading)
 			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)

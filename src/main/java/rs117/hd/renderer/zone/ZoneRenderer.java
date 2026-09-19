@@ -308,6 +308,9 @@ public class ZoneRenderer implements Renderer {
 		if (keys.contains(KEY_ASYNC_MODEL_PROCESSING))
 			modelStreamingManager.reinitialize();
 
+		if (keys.contains(KEY_SHADOW_RESOLUTION) || keys.contains(KEY_SHADOW_MODE))
+			directionalCamera.setDirty();
+
 		skyRenderer.processConfigChanges(keys);
 	}
 
@@ -541,6 +544,9 @@ public class ZoneRenderer implements Renderer {
 				directionalCamera.setViewportHeight(directionalSize);
 
 				plugin.uboGlobal.lightProjectionMatrix.set(directionalCamera.getViewProjMatrix());
+				plugin.uboGlobal.invLightProjectionMatrix.set(directionalCamera.getInvViewProjMatrix());
+				float depthRange = 2 * (directionalCamera.getFarPlane() - directionalCamera.getNearPlane());
+				plugin.uboGlobal.shadowBiasScale.set(texelSize / depthRange);
 			}
 
 			shouldDrawRoofShadows =

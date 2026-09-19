@@ -102,6 +102,7 @@ void main() {
     vec3 downDir = vec3(0, -1, 0);
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(cameraPos - IN.position);
+    vec3 flatNormal = normalize(cross(dFdx(IN.position), dFdy(IN.position)));
 
     Material material1 = getMaterial(fMaterialData[0] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
     Material material2 = getMaterial(fMaterialData[1] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
@@ -350,7 +351,7 @@ void main() {
 
         float shadow = 0;
         if ((fMaterialData[0] >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0)
-            shadow = sampleShadowMap(fragPos, vec2(0), lightDotNormals);
+            shadow = sampleShadowMap(fragPos, vec2(0), flatNormal);
         shadow = max(shadow, selfShadowing);
         float inverseShadow = 1 - shadow;
 

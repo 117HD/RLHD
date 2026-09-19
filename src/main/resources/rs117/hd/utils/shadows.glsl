@@ -41,7 +41,7 @@
 #endif
 
 #if SHADOW_MODE != SHADOW_MODE_OFF
-float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
+float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal) {
     if (lightStrength <= 0)
         return 0.f;
 
@@ -65,21 +65,47 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
     shadowPos.xyz /= 2;
     shadowPos.xy += distortion;
     shadowPos.xy = clamp(shadowPos.xy, 0, 1);
+    vec2 shadowMapSize = vec2(textureSize(shadowMap, 0));
+    float bias = 0.0;
+    vec2 receiverDepthPerTexel = vec2(0.0);
+    if (dot(surfaceNormal, surfaceNormal) > 0) {
+        vec3 receiverNormal = surfaceNormal * mat3(invLightProjectionMatrix);
+        if (abs(receiverNormal.z) > length(receiverNormal) * 1e-4)
+            receiverDepthPerTexel = -receiverNormal.xy / receiverNormal.z;
 
-    // Scale bias with surface angle to light - steeper angles need more bias.
-    // tan(acos(x)) == sqrt(1 - x*x) / x (algebraic identity), avoiding two SFU ops.
-    // Lower-clamp x by 1e-3 to avoid divide-by-zero; that region already saturates to 16.
-    float c = clamp(lightDotNormals, 1e-3, 1.0);
-    float slopeBias = clamp(sqrt(1.0 - c * c) / c, 1.0, 16.0);
-    float shadowBias = MIN_SHADOW_BIAS * slopeBias;
+        receiverDepthPerTexel /= shadowMapSize;
+        // Bound extrapolation when the receiver is nearly edge-on to the light.
+        float gradientLimit = shadowBiasScale * 16.0;
+        receiverDepthPerTexel *= min(1.0, gradientLimit / max(length(receiverDepthPerTexel), 1e-8));
 
-    float shadow = sampleShadow(shadowMap, SHADOW_TRANSPARENCY == 1, shadowPos.z + shadowBias, shadowPos, fragPos);
+        // tan(theta) estimates depth variation across a texel. Limit grazing-angle detachment.
+        float c = clamp(abs(dot(surfaceNormal, lightDir)), 1e-3, 1.0);
+        float slope = clamp(sqrt(1.0 - c * c) / c, 1.0, 16.0);
+        bias = shadowBiasScale * slope;
+    }
+    vec4 receiverPlane = vec4(shadowPos.xy * shadowMapSize, receiverDepthPerTexel);
+
+    float shadow = sampleShadow(
+        shadowMap,
+        SHADOW_TRANSPARENCY == 1,
+        shadowPos.z - bias * (1 + colorPicker.a * 5),
+        shadowPos,
+        receiverPlane,
+        fragPos
+    );
 
     #if TERRAIN_SHADOWS
         if (shadow < 1.0) {
-            // Sample terrain shadow map and combine
-            float terrainBias = 0.00002 * slopeBias;
-            float terrainShadow = sampleHardwareShadow(terrainShadowMap, shadowPos.z + terrainBias, shadowPos, fragPos);
+            float terrainBias = bias * 3.15;
+            // Hardware PCF shares one reference depth across its bilinear footprint.
+            vec2 terrainMapSize = vec2(textureSize(terrainShadowMap, 0));
+            vec4 terrainReceiverPlane = vec4(
+                shadowPos.xy * terrainMapSize,
+                receiverDepthPerTexel * shadowMapSize / terrainMapSize
+            );
+            terrainBias -= dot(abs(terrainReceiverPlane.zw), vec2(1.0));
+            float terrainShadow = sampleHardwareShadow(
+                terrainShadowMap, shadowPos.z + terrainBias, shadowPos, terrainReceiverPlane, fragPos);
             shadow = max(shadow, terrainShadow);
         }
     #endif
@@ -87,5 +113,5 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
     return shadow * (1 - fadeOut);
 }
 #else
-#define sampleShadowMap(fragPos, distortion, lightDotNormals) 0
+#define sampleShadowMap(fragPos, distortion, surfaceNormal) 0
 #endif
