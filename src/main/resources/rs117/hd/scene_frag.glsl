@@ -58,10 +58,6 @@ flat in ivec3 fAlphaBiasHsl;
 flat in ivec3 fMaterialData;
 flat in ivec3 fTerrainData;
 
-#if FLAT_SHADING && ZONE_RENDERER
-    flat in vec3 fFlatNormal;
-#endif
-
 in FragmentData {
     vec3 position;
     vec2 uv;
@@ -177,8 +173,8 @@ void main() {
         // Set up tangent-space transformation matrix
 
         vec3 N;
-        #if FLAT_SHADING && ZONE_RENDERER
-            N = normalize(fFlatNormal);
+        #if FLAT_SHADING
+            N = flatNormal;
         #else
             N = normalize(IN.normal);
         #endif
