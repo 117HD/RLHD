@@ -1,10 +1,11 @@
 #pragma once
 
+#include <utils/hash.glsl>
 #include <utils/misc.glsl>
 
 vec2 getShadowDitherOffset(vec3 fragPos, int i) {
 #if SHADOW_FILTERING == SHADOW_FILTERING_DITHER
-    int index = int(hash(vec4(floor(fragPos.xyz), i)) * POISSON_DISK_LENGTH) % POISSON_DISK_LENGTH;
+    int index = int(hash14(vec4(floor(fragPos.xyz), i)) * POISSON_DISK_LENGTH) % POISSON_DISK_LENGTH;
     return getPoissonDisk(index) * 1.25;
 #else
     return vec2(0.0);

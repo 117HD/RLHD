@@ -5,6 +5,7 @@
 #include <uniforms/global.glsl>
 #include <uniforms/sky.glsl>
 
+#include <utils/hash.glsl>
 #include <utils/starfield.glsl>
 #include <utils/sky_fog.glsl>
 
@@ -70,11 +71,10 @@ void main() {
     vColor = aStarColor;
 
     // Stable per-star hashes give each deliberate twinkle its own phase, rate, and depth.
-    float starHash = fract(sin(dot(aStarDir, vec3(12.9898, 78.233, 37.719))) * 43758.5453);
-    float starHash2 = fract(sin(dot(aStarDir, vec3(93.989, 41.123, 19.37))) * 24634.6345);
-    float twinklePhase = starHash * TAU;
-    float twinkleRate = mix(4.0, 13.2, starHash2);
-    float twinkleAmt = mix(0.35, 0.5, starHash);
+    vec2 starHash = hash23(aStarDir);
+    float twinklePhase = starHash.x * TAU;
+    float twinkleRate = mix(4.0, 13.2, starHash.y);
+    float twinkleAmt = mix(0.35, 0.5, starHash.x);
     // Two incommensurate oscillators keep the shimmer from visibly repeating.
     float s1 = sin(elapsedTime * twinkleRate + twinklePhase);
     float s2 = sin(elapsedTime * twinkleRate * 0.37 + twinklePhase * 2.13);

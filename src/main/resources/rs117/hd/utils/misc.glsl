@@ -24,6 +24,8 @@
  */
 #pragma once
 
+#include <utils/hash.glsl>
+
 #include <uniforms/global.glsl>
 
 #include <utils/constants.glsl>
@@ -112,21 +114,6 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
     }
 #endif
 
-// 2D Random
-float hash(in vec2 st) {
-    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
-}
-
-// 3D Random
-float hash(in vec3 st) {
-	return fract(sin(dot(st, vec3(12.9898, 78.233, 45.164))) * 43758.5453123);
-}
-
-// 4D Random
-float hash(in vec4 st) {
-	return fract(sin(dot(st, vec4(12.9898, 78.233, 45.164, 94.673))) * 43758.5453123);
-}
-
 // 2D Noise based on Morgan McGuire @morgan3d, under the BSD license
 // https://www.shadertoy.com/view/4dS3Wd
 float noise(in vec2 st) {
@@ -134,10 +121,10 @@ float noise(in vec2 st) {
     vec2 f = fract(st);
 
     // Four corners in 2D of a tile
-    float a = hash(i);
-    float b = hash(i + vec2(1.0, 0.0));
-    float c = hash(i + vec2(0.0, 1.0));
-    float d = hash(i + vec2(1.0, 1.0));
+    float a = hash12(i);
+    float b = hash12(i + vec2(1.0, 0.0));
+    float c = hash12(i + vec2(0.0, 1.0));
+    float d = hash12(i + vec2(1.0, 1.0));
 
     // Smooth interpolation
     vec2 u = smoothstep(0., 1., f);

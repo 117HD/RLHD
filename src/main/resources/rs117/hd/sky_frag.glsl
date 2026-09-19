@@ -3,6 +3,7 @@
 #include <uniforms/global.glsl>
 #include <uniforms/sky.glsl>
 
+#include <utils/constants.glsl>
 #include <utils/output_transform.glsl>
 #include <utils/misc.glsl>
 #include <utils/starfield.glsl>
@@ -15,29 +16,11 @@ in vec2 fScreenPos;
 
 out vec4 FragColor;
 
-// Moon surface noise functions
-float moonHash(in vec2 st) {
-    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
-}
-
-float moonNoise(in vec2 st) {
-    vec2 i = floor(st);
-    vec2 f = fract(st);
-    float a = moonHash(i);
-    float b = moonHash(i + vec2(1.0, 0.0));
-    float c = moonHash(i + vec2(0.0, 1.0));
-    float d = moonHash(i + vec2(1.0, 1.0));
-    vec2 u = f * f * (3.0 - 2.0 * f);
-    return mix(a, b, u.x) +
-        (c - a) * u.y * (1.0 - u.x) +
-        (d - b) * u.x * u.y;
-}
-
 float moonFbm(in vec2 st) {
     float value = 0.0;
     float amplitude = 0.5;
     for (int i = 0; i < 6; i++) {
-        value += amplitude * moonNoise(st);
+        value += amplitude * noise(st);
         st *= 2;
         amplitude *= 0.5;
     }
@@ -188,8 +171,10 @@ void main() {
                 surfaceNoise = mix(0.6, 1, surfaceNoise);
 
                 // Dark maria (seas) - a few subtle darker patches
-                float seaNoise = moonFbm(moonUV * 0.8 + vec2(30.0, 70.0));
-                float seaMask = smoothstep(0.50, 0.40, seaNoise);
+                float seaNoise = moonFbm(moonUV * 0.8);
+                const float seaSpan = 0.13;
+                float seaStart = colorPicker.a;
+                float seaMask = smoothstep(seaStart + seaSpan, seaStart, seaNoise);
                 surfaceNoise *= mix(1.0, 0.88, seaMask);
 
                 vec2 impactPositions[3] = vec2[3](
@@ -233,10 +218,10 @@ void main() {
                     impactEast = impactEastLength > 1e-4 ? impactEast / impactEastLength : vec3(1.0, 0.0, 0.0);
                     vec3 impactNorth = normalize(cross(impactNormal, impactEast));
                     for (int ray = 0; ray < 14; ray++) {
-                        float rayAngle = moonHash(vec2(
+                        float rayAngle = TAU * hash12(vec2(
                             float(impact) * 7.0 + float(ray) * 13.0,
                             float(ray) * 3.0 + float(impact) * 11.0
-                        )) * 6.2832;
+                        ));
                         vec3 rayDirection = impactEast * cos(rayAngle) + impactNorth * sin(rayAngle);
                         float alongRay = atan(
                             dot(moonSurfaceNormal, rayDirection),
@@ -245,17 +230,14 @@ void main() {
                         if (alongRay <= 0.0)
                             continue;
 
-                        float wobble = (moonNoise(vec2(
-                            alongRay * 3.0 + float(impact) * 20.0,
-                            float(ray) * 5.0
-                        )) - 0.5) * 0.06;
+                        float wobble = noise(vec2(alongRay * 3.0 + float(impact) * 20.0, float(ray) * 5.0)) - 0.5;
                         vec3 rayPlaneNormal = cross(impactNormal, rayDirection);
                         float perpendicularDistance = abs(
-                            asin(clamp(dot(moonSurfaceNormal, rayPlaneNormal), -1.0, 1.0)) * 4.0 + wobble
+                            asin(clamp(dot(moonSurfaceNormal, rayPlaneNormal), -1.0, 1.0)) * 4.0 + wobble * 0.06
                         );
-                        float rayWidth = 0.025 + moonNoise(vec2(float(ray) * 9.0, float(impact) * 4.0)) * 0.015;
+                        float rayWidth = 0.025 + noise(vec2(float(ray) * 9.0, float(impact) * 4.0)) * 0.015;
                         float rayLine = smoothstep(rayWidth, rayWidth * 0.2, perpendicularDistance);
-                        float rayIntensity = 0.5 + moonHash(vec2(float(ray) * 11.0, float(impact) * 6.0)) * 0.5;
+                        float rayIntensity = 0.5 + hash12(vec2(float(ray) * 11.0, float(impact) * 6.0)) * 0.5;
                         impactRays = max(impactRays, rayLine * rayIntensity);
                     }
                     impactHighlight = max(impactHighlight, saturate(

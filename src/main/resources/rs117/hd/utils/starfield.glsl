@@ -4,6 +4,7 @@
 #include <uniforms/sky.glsl>
 
 #include <utils/constants.glsl>
+#include <utils/hash.glsl>
 
 #define STARFIELD_BACKGROUND_COLOR vec3(0.000235294, 0.000235294, 0.000403251)
 
@@ -75,18 +76,6 @@ float nebulaClusterInfluence(vec3 dir) {
     return influence;
 }
 
-// Noise hash; prefixed to avoid collisions with other shader helpers.
-float sf_hash(vec3 p) {
-    uvec3 q = floatBitsToUint(p);
-    uint h = q.x * 1664525u + q.y * 1013904223u + q.z * 1u;
-    h ^= h >> 16u;
-    h *= 0x7feb352du;
-    h ^= h >> 15u;
-    h *= 0x846ca68bu;
-    h ^= h >> 16u;
-    return float(h) * (1.0 / 4294967296.0); // / 2^32
-}
-
 float sf_noise(vec3 p) {
     vec3 i = floor(p);
     vec3 f = fract(p);
@@ -97,13 +86,13 @@ float sf_noise(vec3 p) {
 
     return mix(
         mix(
-            mix(sf_hash(i + vec3(0,0,0)), sf_hash(i + vec3(1,0,0)), f.x),
-            mix(sf_hash(i + vec3(0,1,0)), sf_hash(i + vec3(1,1,0)), f.x),
+            mix(hash13(i + vec3(0,0,0)), hash13(i + vec3(1,0,0)), f.x),
+            mix(hash13(i + vec3(0,1,0)), hash13(i + vec3(1,1,0)), f.x),
             f.y
         ),
         mix(
-            mix(sf_hash(i + vec3(0,0,1)), sf_hash(i + vec3(1,0,1)), f.x),
-            mix(sf_hash(i + vec3(0,1,1)), sf_hash(i + vec3(1,1,1)), f.x),
+            mix(hash13(i + vec3(0,0,1)), hash13(i + vec3(1,0,1)), f.x),
+            mix(hash13(i + vec3(0,1,1)), hash13(i + vec3(1,1,1)), f.x),
             f.y
         ),
         f.z
@@ -142,26 +131,26 @@ vec3 shootingStars(vec3 viewDir, float time) {
         vec3 seed = vec3(slot, float(channel) * 137.0 + 42.0, 7.0);
 
         // ~12% spawn chance per slot -> ~1 meteor per 42s average
-        if (sf_hash(seed) > 0.12) continue;
+        if (hash13(seed) > 0.12) continue;
 
         // Start position on upper sky sphere
-        float theta = sf_hash(seed + vec3(1.0, 0.0, 0.0)) * TAU;
-        float cosElev = 1.0 - sf_hash(seed + vec3(2.0, 0.0, 0.0)) * 0.65;
+        float theta = hash13(seed + vec3(1.0, 0.0, 0.0)) * TAU;
+        float cosElev = 1.0 - hash13(seed + vec3(2.0, 0.0, 0.0)) * 0.65;
         float sinElev = sqrt(1.0 - cosElev * cosElev);
         vec3 startPos = normalize(vec3(sinElev * cos(theta), -cosElev, sinElev * sin(theta)));
 
         // Travel direction (generally downward with randomization)
-        float tTheta = sf_hash(seed + vec3(3.0, 0.0, 0.0)) * TAU;
-        float tPhi = 0.3 + sf_hash(seed + vec3(4.0, 0.0, 0.0)) * 0.5;
+        float tTheta = hash13(seed + vec3(3.0, 0.0, 0.0)) * TAU;
+        float tPhi = 0.3 + hash13(seed + vec3(4.0, 0.0, 0.0)) * 0.5;
         vec3 travelDir = normalize(vec3(
             sin(tPhi) * cos(tTheta),
             cos(tPhi),
             sin(tPhi) * sin(tTheta)
         ));
 
-        float speed = 0.08 + sf_hash(seed + vec3(5.0, 0.0, 0.0)) * 0.06;
-        float lifetime = 0.8 + sf_hash(seed + vec3(6.0, 0.0, 0.0)) * 0.7;
-        float maxBright = 0.6 + sf_hash(seed + vec3(7.0, 0.0, 0.0)) * 0.6;
+        float speed = 0.08 + hash13(seed + vec3(5.0, 0.0, 0.0)) * 0.06;
+        float lifetime = 0.8 + hash13(seed + vec3(6.0, 0.0, 0.0)) * 0.7;
+        float maxBright = 0.6 + hash13(seed + vec3(7.0, 0.0, 0.0)) * 0.6;
 
         // Timing within the slot
         float startDelay = 0.1 * SLOT_DURATION;
