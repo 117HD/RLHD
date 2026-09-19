@@ -90,8 +90,7 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal) {
         SHADOW_TRANSPARENCY == 1,
         shadowPos.z - bias * (1 + colorPicker.a * 5),
         shadowPos,
-        receiverPlane,
-        fragPos
+        receiverPlane
     );
 
     #if TERRAIN_SHADOWS
@@ -105,7 +104,7 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal) {
             );
             terrainBias -= dot(abs(terrainReceiverPlane.zw), vec2(1.0));
             float terrainShadow = sampleHardwareShadow(
-                terrainShadowMap, shadowPos.z + terrainBias, shadowPos, terrainReceiverPlane, fragPos);
+                terrainShadowMap, shadowPos.z + terrainBias, shadowPos, terrainReceiverPlane);
             shadow = max(shadow, terrainShadow);
         }
     #endif
