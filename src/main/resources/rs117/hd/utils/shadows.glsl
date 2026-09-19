@@ -67,28 +67,28 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal) {
     shadowPos.xy = clamp(shadowPos.xy, 0, 1);
     vec2 shadowMapSize = vec2(textureSize(shadowMap, 0));
     float bias = 0.0;
+    float depthPrecisionBias = 0.0;
     vec2 receiverDepthPerTexel = vec2(0.0);
     if (dot(surfaceNormal, surfaceNormal) > 0) {
         vec3 receiverNormal = surfaceNormal * mat3(invLightProjectionMatrix);
-        if (abs(receiverNormal.z) > length(receiverNormal) * 1e-4)
-            receiverDepthPerTexel = -receiverNormal.xy / receiverNormal.z;
-
-        receiverDepthPerTexel /= shadowMapSize;
-        // Bound extrapolation when the receiver is nearly edge-on to the light.
+        float normalZ = max(abs(receiverNormal.z), length(receiverNormal) * 1e-4);
+        receiverDepthPerTexel = -receiverNormal.xy / (receiverNormal.z < 0 ? -normalZ : normalZ) / shadowMapSize;
+        // Bound extrapolation when the receiver is nearly edge-on to the light
         float gradientLimit = shadowBiasScale * 16.0;
         receiverDepthPerTexel *= min(1.0, gradientLimit / max(length(receiverDepthPerTexel), 1e-8));
 
-        // tan(theta) estimates depth variation across a texel. Limit grazing-angle detachment.
-        float c = clamp(abs(dot(surfaceNormal, lightDir)), 1e-3, 1.0);
-        float slope = clamp(sqrt(1.0 - c * c) / c, 1.0, 16.0);
-        bias = shadowBiasScale * slope;
+        // Retain the texel-sized safety margin; the gradient already includes projection and resolution scaling
+        bias = max(shadowBiasScale, length(receiverDepthPerTexel));
+        // Both the depth texture and packed transparent shadows retain 16 depth bits
+        // Cover one truncated depth step plus a step of rounding margin, independently of resolution
+        depthPrecisionBias = 2.0 / float(SHADOW_DEPTH_MAX);
     }
     vec4 receiverPlane = vec4(shadowPos.xy * shadowMapSize, receiverDepthPerTexel);
 
     float shadow = sampleShadow(
         shadowMap,
         SHADOW_TRANSPARENCY == 1,
-        shadowPos.z - bias * (1 + colorPicker.a * 5),
+        shadowPos.z - max(depthPrecisionBias, bias * (1 + colorPicker.a * 5)),
         shadowPos,
         receiverPlane
     );
