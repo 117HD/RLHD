@@ -24,12 +24,12 @@ void main() {
 
     // Softly occlude additively blended stars behind the opaque moon disk.
     float moonOcclusion = 1.0;
-    if (moonVisibility > 0.0) {
-        vec3 moonDir = normalize(vec3(skyMoonDir.x, -skyMoonDir.y + SKY_HORIZON_OFFSET, skyMoonDir.z));
+    if (uboSky.moonVisibility > 0.0) {
+        vec3 moonDir = normalize(vec3(uboSky.moonDir.x, -uboSky.moonDir.y + SKY_HORIZON_OFFSET, uboSky.moonDir.z));
         float moonDot = dot(dir, moonDir);
         // Match the moon disk's per-environment angular scale.
-        float innerAngle = acos(0.99951) * moonSizeMult;
-        float outerAngle = acos(0.9991) * moonSizeMult;
+        float innerAngle = acos(0.99951) * uboSky.moonSizeMult;
+        float outerAngle = acos(0.9991) * uboSky.moonSizeMult;
         moonOcclusion = smoothstep(cos(innerAngle), cos(outerAngle), moonDot);
     }
 
@@ -46,7 +46,7 @@ void main() {
     // Match sky_frag's night-sky visibility.
     float upAmount = -dir.y;
 
-    vec3 sunDir = normalize(vec3(skySunDir.x, -skySunDir.y + SKY_HORIZON_OFFSET, skySunDir.z));
+    vec3 sunDir = normalize(vec3(uboSky.sunDir.x, -uboSky.sunDir.y + SKY_HORIZON_OFFSET, uboSky.sunDir.z));
     vec2 viewHoriz = vec2(dir.x, dir.z);
     float viewHorizLen = length(viewHoriz);
     vec3 viewHorizontal = viewHorizLen > 1e-4 ? vec3(viewHoriz.x, 0.0, viewHoriz.y) / viewHorizLen : vec3(0.0);
@@ -55,14 +55,14 @@ void main() {
     float sunSideBlend = smoothstep(0.0, 1.0, (sunFacing + 1.0) * 0.5);
 
     float zenithBlend = smoothstep(-0.1, 0.7, upAmount);
-    float nightFade = smoothstep(-0.26, 0.0, skySunDir.y) * (1.0 - skyCustomGradient);
+    float nightFade = smoothstep(-0.26, 0.0, uboSky.sunDir.y) * (1.0 - uboSky.customGradient);
 
     float baseProgress = 1.0 - nightFade;
     float sunProximity = sunSideBlend * (1.0 - zenithBlend);
-    float nightSkyBlend = pow(baseProgress, mix(0.4, 0.9, sunProximity)) * starVisibility;
+    float nightSkyBlend = pow(baseProgress, mix(0.4, 0.9, sunProximity)) * uboSky.starVisibility;
 
     // Fade stars just above the nebula horizon band.
-    float horizonShift = nightHorizonOffset(starHorizonHeight);
+    float horizonShift = nightHorizonOffset(uboSky.starHorizonHeight);
     float horizonStarFade = smoothstep(horizonShift, 0.12 + horizonShift, upAmount);
 
     float visibility = nightSkyBlend * horizonStarFade * moonOcclusion;

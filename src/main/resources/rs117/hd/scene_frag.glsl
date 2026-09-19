@@ -548,7 +548,7 @@ void main() {
             outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
         }
 
-        if (skyGradientEnabled) {
+        if (uboSky.gradientEnabled) {
             // Reconstruct the sky only where fog blends geometry toward it.
             vec3 skyColorAtFragment = outputColor.rgb;
 
@@ -561,7 +561,7 @@ void main() {
                 float sunProximity = sky.sunSideBlend * (1.0 - sky.zenithBlend);
                 float nightSkyBlend = pow(baseProgress, mix(0.4, 0.9, sunProximity));
                 if (nightSkyBlend > 0.001) {
-                    float horizonShift = nightHorizonOffset(starHorizonHeight);
+                    float horizonShift = nightHorizonOffset(uboSky.starHorizonHeight);
                     float horizonFade = smoothstep(-0.1 + horizonShift, 0.07 + horizonShift, sky.upAmount);
                     skyColorAtFragment = blendSkyBackground(
                         skyColorAtFragment,

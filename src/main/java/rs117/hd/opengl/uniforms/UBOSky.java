@@ -11,27 +11,27 @@ public class UBOSky extends UniformBuffer<GLBuffer> {
 	}
 
 	// Sky gradient and celestial state
-	public Property skyGradientEnabled = addProperty(PropertyType.Int, "skyGradientEnabled");
-	public Property skyZenithColor = addProperty(PropertyType.FVec3, "skyZenithColor");
-	public Property skyHorizonColor = addProperty(PropertyType.FVec3, "skyHorizonColor");
-	public Property skySunColor = addProperty(PropertyType.FVec3, "skySunColor");
-	public Property skyCustomGradient = addProperty(PropertyType.Float, "skyCustomGradient");
-	public Property skyHorizonWidth = addProperty(PropertyType.Float, "skyHorizonWidth");
-	public Property skySunDir = addProperty(PropertyType.FVec3, "skySunDir");
-	public Property skyCelestialPole = addProperty(PropertyType.FVec3, "skyCelestialPole");
-	public Property skyCelestialRotation = addProperty(PropertyType.Float, "skyCelestialRotation");
-	public Property skyStarRotationMode = addProperty(PropertyType.Int, "skyStarRotationMode");
+	public Property gradientEnabled = addProperty(PropertyType.Int, "gradientEnabled");
+	public Property zenithColor = addProperty(PropertyType.FVec3, "zenithColor");
+	public Property horizonColor = addProperty(PropertyType.FVec3, "horizonColor");
+	public Property sunColor = addProperty(PropertyType.FVec3, "sunColor");
+	public Property customGradient = addProperty(PropertyType.Float, "customGradient");
+	public Property horizonWidth = addProperty(PropertyType.Float, "horizonWidth");
+	public Property sunDir = addProperty(PropertyType.FVec3, "sunDir");
+	public Property celestialPole = addProperty(PropertyType.FVec3, "celestialPole");
+	public Property celestialRotation = addProperty(PropertyType.Float, "celestialRotation");
+	public Property starRotationMode = addProperty(PropertyType.Int, "starRotationMode");
 
-	public Property skyMoonDir = addProperty(PropertyType.FVec3, "skyMoonDir");
-	public Property skyMoonDiskColor = addProperty(PropertyType.FVec3, "skyMoonDiskColor");
-	public Property skyMoonIllumination = addProperty(PropertyType.Float, "skyMoonIllumination");
-	public Property skyMoonIlluminationDirection = addProperty(PropertyType.FVec3, "skyMoonIlluminationDirection");
-	public Property skyMoonLibration = addProperty(PropertyType.FVec2, "skyMoonLibration");
+	public Property moonDir = addProperty(PropertyType.FVec3, "moonDir");
+	public Property moonDiskColor = addProperty(PropertyType.FVec3, "moonDiskColor");
+	public Property moonIllumination = addProperty(PropertyType.Float, "moonIllumination");
+	public Property moonIlluminationDirection = addProperty(PropertyType.FVec3, "moonIlluminationDirection");
+	public Property moonLibration = addProperty(PropertyType.FVec2, "moonLibration");
 
 	// Environment visibility controls
-	public Property skyFogColor = addProperty(PropertyType.FVec3, "skyFogColor");
-	public Property skyFogDensity = addProperty(PropertyType.Float, "skyFogDensity");
-	public Property skyVisibility = addProperty(PropertyType.Float, "skyVisibility");
+	public Property fogColor = addProperty(PropertyType.FVec3, "fogColor");
+	public Property fogDensity = addProperty(PropertyType.Float, "fogDensity");
+	public Property visibility = addProperty(PropertyType.Float, "visibility");
 	public Property moonVisibility = addProperty(PropertyType.Float, "moonVisibility");
 	public Property starVisibility = addProperty(PropertyType.Float, "starVisibility");
 	public Property nebulaVisibility = addProperty(PropertyType.Float, "nebulaVisibility");

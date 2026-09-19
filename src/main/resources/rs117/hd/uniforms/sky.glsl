@@ -9,26 +9,26 @@
 
 layout(std140) uniform UBOSky {
     // All color fields are linear sRGB.
-    bool skyGradientEnabled;
-    vec3 skyZenithColor;
-    vec3 skyHorizonColor;
-    vec3 skySunColor;
-    float skyCustomGradient;
-    float skyHorizonWidth;
-    vec3 skySunDir;
-    vec3 skyCelestialPole;
-    float skyCelestialRotation;
-    int skyStarRotationMode;
+    bool gradientEnabled;
+    vec3 zenithColor;
+    vec3 horizonColor;
+    vec3 sunColor;
+    float customGradient;
+    float horizonWidth;
+    vec3 sunDir;
+    vec3 celestialPole;
+    float celestialRotation;
+    int starRotationMode;
 
-    vec3 skyMoonDir;
-    vec3 skyMoonDiskColor;
-    float skyMoonIllumination;
-    vec3 skyMoonIlluminationDirection;
-    vec2 skyMoonLibration;
+    vec3 moonDir;
+    vec3 moonDiskColor;
+    float moonIllumination;
+    vec3 moonIlluminationDirection;
+    vec2 moonLibration;
 
-    vec3 skyFogColor;
-    float skyFogDensity;
-    float skyVisibility;
+    vec3 fogColor;
+    float fogDensity;
+    float visibility;
     float moonVisibility;
     float starVisibility;
     float nebulaVisibility;
@@ -39,4 +39,4 @@ layout(std140) uniform UBOSky {
     float starHorizonHeight;
 
     vec4 nebulaClusters[NEBULA_CLUSTER_COUNT];
-};
+} uboSky;

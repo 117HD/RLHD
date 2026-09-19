@@ -1,5 +1,6 @@
 #pragma once
 
+#include <uniforms/global.glsl>
 #include <uniforms/sky.glsl>
 
 #include <utils/constants.glsl>
@@ -8,7 +9,7 @@
 
 // Artistic rotation uses elapsed seconds, independently of the daylight-cycle clock.
 vec3 rotateStarfield(vec3 direction, float elapsedSeconds, float artisticRotationSpeed) {
-    if (skyStarRotationMode == STAR_MODE_ARTISTIC) {
+    if (uboSky.starRotationMode == STAR_MODE_ARTISTIC) {
         float rotY = elapsedSeconds * (TAU / 3600.0) * artisticRotationSpeed;
         float rotX = elapsedSeconds * (TAU / 10800.0) * artisticRotationSpeed;
         float cosY = cos(rotY);
@@ -19,20 +20,20 @@ vec3 rotateStarfield(vec3 direction, float elapsedSeconds, float artisticRotatio
         return vec3(direction.x, cosX * direction.y - sinX * direction.z, sinX * direction.y + cosX * direction.z);
     }
 
-    if (skyStarRotationMode == STAR_MODE_REALISTIC) {
-        float cosRotation = cos(skyCelestialRotation);
-        float sinRotation = sin(skyCelestialRotation);
+    if (uboSky.starRotationMode == STAR_MODE_REALISTIC) {
+        float cosRotation = cos(uboSky.celestialRotation);
+        float sinRotation = sin(uboSky.celestialRotation);
         return
             direction * cosRotation +
-            cross(skyCelestialPole, direction) * sinRotation +
-            skyCelestialPole * dot(skyCelestialPole, direction) * (1.0 - cosRotation);
+            cross(uboSky.celestialPole, direction) * sinRotation +
+            uboSky.celestialPole * dot(uboSky.celestialPole, direction) * (1.0 - cosRotation);
     }
 
     return direction;
 }
 
 vec3 inverseRotateStarfield(vec3 direction, float elapsedSeconds, float artisticRotationSpeed) {
-    if (skyStarRotationMode == STAR_MODE_ARTISTIC) {
+    if (uboSky.starRotationMode == STAR_MODE_ARTISTIC) {
         float rotY = -elapsedSeconds * (TAU / 3600.0) * artisticRotationSpeed;
         float rotX = -elapsedSeconds * (TAU / 10800.0) * artisticRotationSpeed;
         float cosY = cos(rotY);
@@ -43,13 +44,13 @@ vec3 inverseRotateStarfield(vec3 direction, float elapsedSeconds, float artistic
         return vec3(cosY * direction.x + sinY * direction.z, direction.y, -sinY * direction.x + cosY * direction.z);
     }
 
-    if (skyStarRotationMode == STAR_MODE_REALISTIC) {
-        float cosRotation = cos(skyCelestialRotation);
-        float sinRotation = -sin(skyCelestialRotation);
+    if (uboSky.starRotationMode == STAR_MODE_REALISTIC) {
+        float cosRotation = cos(uboSky.celestialRotation);
+        float sinRotation = -sin(uboSky.celestialRotation);
         return
             direction * cosRotation +
-            cross(skyCelestialPole, direction) * sinRotation +
-            skyCelestialPole * dot(skyCelestialPole, direction) * (1.0 - cosRotation);
+            cross(uboSky.celestialPole, direction) * sinRotation +
+            uboSky.celestialPole * dot(uboSky.celestialPole, direction) * (1.0 - cosRotation);
     }
 
     return direction;
@@ -66,8 +67,8 @@ float nightHorizonOffset(float height) {
 float nebulaClusterInfluence(vec3 dir) {
     float influence = 0.0;
     for (int i = 0; i < NEBULA_CLUSTER_COUNT; i++) {
-        vec3 c = nebulaClusters[i].xyz;
-        float sigma = nebulaClusters[i].w * 6.0;
+        vec3 c = uboSky.nebulaClusters[i].xyz;
+        float sigma = uboSky.nebulaClusters[i].w * 6.0;
         float angleSq = max(0.0, (1.0 - dot(dir, c)) * 2.0);
         influence = max(influence, exp(-angleSq / (2.0 * sigma * sigma)));
     }
@@ -278,14 +279,14 @@ vec3 proceduralNebula(vec3 dir) {
 // showing star points through terrain.
 vec3 proceduralStarfieldBackground(vec3 dir) {
     vec3 color = STARFIELD_BACKGROUND_COLOR;
-    if (nebulaVisibility > 0.0)
-        color += sampleNebula(dir) * nebulaVisibility;
+    if (uboSky.nebulaVisibility > 0.0)
+        color += sampleNebula(dir) * uboSky.nebulaVisibility;
     return color;
 }
 
 // The static background needs neither a celestial rotation nor a nebula lookup.
 vec3 nightSkyBackground(vec3 viewDir, float elapsedSeconds) {
-    return nebulaVisibility == 0.0 ?
+    return uboSky.nebulaVisibility == 0.0 ?
         STARFIELD_BACKGROUND_COLOR :
         proceduralStarfieldBackground(rotateStarfield(viewDir, elapsedSeconds, 1.0));
 }

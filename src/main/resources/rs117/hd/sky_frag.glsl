@@ -68,7 +68,7 @@ void main() {
     vec3 skyColorPreStars = skyColor;
 
     // Shift the shared night-sky horizon line.
-    float horizonShift = nightHorizonOffset(starHorizonHeight);
+    float horizonShift = nightHorizonOffset(uboSky.starHorizonHeight);
 
     // Stars appear first opposite the sun, then spread across the low-sun sky.
     float baseProgress = 1.0 - sky.nightFade;
@@ -76,7 +76,7 @@ void main() {
     // Aurora visibility is independent of the night-sky background.
     float nightFactor = pow(baseProgress, mix(0.4, 0.9, sunProximity));
     float skyBlend = nightFactor;
-    float starBlend = nightFactor * starVisibility;
+    float starBlend = nightFactor * uboSky.starVisibility;
     vec3 shootingStarColor = vec3(0.0);
     if (skyBlend > 0.001) {
         // Individual stars are drawn separately as point sprites.
@@ -100,13 +100,13 @@ void main() {
     float sunHorizon = smoothstep(-0.002, 0.002, -viewDir.y + HORIZON_OFFSET);
     float sunMu = sqrt(clamp((sunDot - sunEdge) / (1.0 - sunEdge), 0.0, 1.0));
     // Mild limb darkening; the moon is composited afterward and can cover the sun.
-    skyColor += skySunColor * sunDisk * sunHorizon * mix(0.6, 1.0, sunMu);
+    skyColor += uboSky.sunColor * sunDisk * sunHorizon * mix(0.6, 1.0, sunMu);
 
     // Render the moon disk
-    if (moonVisibility > 0.001) {
+    if (uboSky.moonVisibility > 0.001) {
         // Apply the sun's perceived-horizon offset.
-        vec3 moonDir = normalize(vec3(skyMoonDir.x, -skyMoonDir.y + HORIZON_OFFSET, skyMoonDir.z));
-        vec3 moonIlluminationDir = normalize(vec3(skyMoonIlluminationDirection.x, -skyMoonIlluminationDirection.y + HORIZON_OFFSET, skyMoonIlluminationDirection.z));
+        vec3 moonDir = normalize(vec3(uboSky.moonDir.x, -uboSky.moonDir.y + HORIZON_OFFSET, uboSky.moonDir.z));
+        vec3 moonIlluminationDir = normalize(vec3(uboSky.moonIlluminationDirection.x, -uboSky.moonIlluminationDirection.y + HORIZON_OFFSET, uboSky.moonIlluminationDirection.z));
 
         float moonDot = dot(viewDir, moonDir);
 
@@ -124,7 +124,7 @@ void main() {
         if (moonDot > 0.0 && moonDayVisibility > 0.001) {
             // Deliberately enlarged ~1.9° moon radius, scaled per environment.
             float moonBaseRadius = acos(0.99945);
-            float moonAngularRadius = cos(moonBaseRadius * moonSizeMult);
+            float moonAngularRadius = cos(moonBaseRadius * uboSky.moonSizeMult);
             float edgeWidth = moonDot > 0.01 ? max(fwidth(moonDot) * 1.5, 1e-7) : 0;
 
             // Keep the antialiased edge within the sphere used for surface shading.
@@ -151,7 +151,7 @@ void main() {
                 vec2 moonLocal = vec2(localX, localY);
                 float moonLocalZ = sqrt(max(0.0, 1.0 - dot(moonLocal, moonLocal)));
                 vec3 moonSurfaceNormal = vec3(moonLocal, moonLocalZ);
-                float phaseCos = 2.0 * skyMoonIllumination - 1.0;
+                float phaseCos = 2.0 * uboSky.moonIllumination - 1.0;
                 float phaseSin = sqrt(max(0.0, 1.0 - phaseCos * phaseCos));
                 vec3 moonLightDir = vec3(moonToLight * phaseSin, phaseCos);
 
@@ -163,8 +163,8 @@ void main() {
                     moonSurface *= asin(min(moonSurfaceRadius, 1.0)) / moonSurfaceRadius;
 
                 // Libration moves surface detail without rotating the terminator.
-                moonSurface += skyMoonLibration * (2.0 / PI);
-                float librationRoll = (skyMoonLibration.x + skyMoonLibration.y) * 0.25;
+                moonSurface += uboSky.moonLibration * (2.0 / PI);
+                float librationRoll = (uboSky.moonLibration.x + uboSky.moonLibration.y) * 0.25;
                 float librationRollCos = cos(librationRoll);
                 float librationRollSin = sin(librationRoll);
                 mat2 librationRotation = mat2(
@@ -202,7 +202,7 @@ void main() {
                 float impactHighlight = 0.0;
                 for (int impact = 0; impact < 3; impact++) {
                     vec2 impactDetail = impactPositions[impact];
-                    vec2 impactLocal = transpose(librationRotation) * impactDetail - skyMoonLibration * 2.0 / PI;
+                    vec2 impactLocal = transpose(librationRotation) * impactDetail - uboSky.moonLibration * 2.0 / PI;
                     float impactLocalZ = sqrt(max(0.0, 1.0 - dot(impactLocal, impactLocal)));
                     vec3 impactNormal = vec3(impactLocal, impactLocalZ);
                     float distanceFromImpact = acos(clamp(dot(moonSurfaceNormal, impactNormal), -1.0, 1.0)) * 4.0;
@@ -277,7 +277,7 @@ void main() {
                 float lunarLambertWeight = mix(0.6, 0.15, max(phaseCos, 0.0));
                 float lunarDiffuse = mix(lommelSeeliger, lightCos, lunarLambertWeight);
                 float terminatorFade = smoothstep(-0.14, 0.08, roughLambert);
-                float isLit = skyMoonIllumination < 0.001 ? 0.0 : clamp(lunarDiffuse, 0.0, 1.0) * terminatorFade;
+                float isLit = uboSky.moonIllumination < 0.001 ? 0.0 : clamp(lunarDiffuse, 0.0, 1.0) * terminatorFade;
                 float terminatorProximity = 1.0 - smoothstep(0.02, 0.2, abs(roughLambert));
                 float crescentEdgeFade = smoothstep(0.0, 0.25, moonLocalZ);
                 isLit *= mix(1.0, crescentEdgeFade, terminatorProximity);
@@ -287,7 +287,7 @@ void main() {
                 float surfaceContrast = smoothstep(0.65, 0.95, surfaceNoise);
                 float surfaceDetail = mix(0.12, 0.48, surfaceContrast);
                 surfaceDetail = mix(surfaceDetail, 0.48, impactHighlight * 0.8);
-                vec3 moonBrightSide = skyMoonDiskColor * surfaceDetail;
+                vec3 moonBrightSide = uboSky.moonDiskColor * surfaceDetail;
 
                 // The opaque disk occludes stars and nebulas while its dark side matches the night sky.
                 vec3 moonDarkSide = skyColorPreStars;
@@ -301,27 +301,27 @@ void main() {
 
                 // Fade moon near the horizon to match the star/nebula horizon fade
                 float moonHorizonFade = nightSkyHorizonFade(sky.upAmount, horizonShift);
-                float moonAlpha = moonDisk * moonVisibility * moonHorizonFade;
+                float moonAlpha = moonDisk * uboSky.moonVisibility * moonHorizonFade;
 
                 skyColor = mix(skyColor, moonColor, moonAlpha);
             }
 
             // Place a real-sized moon's glare outside the artistic disk without scaling its width or intensity.
             float rimDistanceDegrees = degrees(max(0.0,
-                acos(clamp(moonDot, 0.0, 1.0)) - moonBaseRadius * moonSizeMult));
+                acos(clamp(moonDot, 0.0, 1.0)) - moonBaseRadius * uboSky.moonSizeMult));
             float glareAngleDegrees = rimDistanceDegrees + 0.25;
             vec3 toRim = viewDir - moonDir * moonDot;
             vec3 toLight = moonIlluminationDir - moonDir * dot(moonIlluminationDir, moonDir);
             float litSide = dot(toRim, toLight) / max(length(toRim) * length(toLight), 1e-5);
-            float phaseCos = 2.0 * skyMoonIllumination - 1.0;
+            float phaseCos = 2.0 * uboSky.moonIllumination - 1.0;
             float phaseWeight = mix(1.0, smoothstep(-0.2, 0.5, litSide), sqrt(max(0.0, 1.0 - phaseCos * phaseCos)));
             // Stiles-Holladay: Lveil / Lmoon = 10 * solidAngle / angleDegrees^2.
             // A 0.5° disk gives 0.0006; 0.3 approximates mean surface reflectance above.
             // The model is invalid near the limb: soften its core over 0.75° rather than extrapolating a bright rim.
             // https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=917534
             float halo = 0.3 * 0.0006 / (glareAngleDegrees * glareAngleDegrees + 0.75 * 0.75);
-            halo *= (1.0 - moonDisk) * skyMoonIllumination * phaseWeight * moonDayVisibility * moonVisibility;
-            skyColor += skyMoonDiskColor * halo * nightSkyHorizonFade(sky.upAmount, horizonShift);
+            halo *= (1.0 - moonDisk) * uboSky.moonIllumination * phaseWeight * moonDayVisibility * uboSky.moonVisibility;
+            skyColor += uboSky.moonDiskColor * halo * nightSkyHorizonFade(sky.upAmount, horizonShift);
         }
     }
 
@@ -329,7 +329,7 @@ void main() {
 
     // Auroras lose contrast against a bright sky much sooner than the moon.
     float auroraContrast = 1.0 / (1.0 + linearSrgbLuminance(skyColorPreStars) * 1200.0);
-    float auroraStrength = nightFactor * auroraVisibility * auroraContrast;
+    float auroraStrength = nightFactor * uboSky.auroraVisibility * auroraContrast;
     if (auroraStrength > 0.001)
         skyColor += proceduralAurora(viewDir, elapsedTime) * auroraStrength;
 

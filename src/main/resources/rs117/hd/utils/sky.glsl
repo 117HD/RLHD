@@ -15,7 +15,7 @@ struct SkyGradient {
 SkyGradient computeSkyGradient(vec3 viewDir) {
     SkyGradient g;
 
-    g.sunDir = normalize(vec3(skySunDir.x, -skySunDir.y + HORIZON_OFFSET, skySunDir.z));
+    g.sunDir = normalize(vec3(uboSky.sunDir.x, -uboSky.sunDir.y + HORIZON_OFFSET, uboSky.sunDir.z));
     g.upAmount = -viewDir.y;
 
     // Fade the sun-facing bias near vertical views to avoid pinching.
@@ -29,23 +29,23 @@ SkyGradient computeSkyGradient(vec3 viewDir) {
 
     g.zenithBlend = smoothstep(-0.1, 0.7, g.upAmount);
 
-    float sunAltitude = clamp(skySunDir.y, 0.0, 1.0);
+    float sunAltitude = clamp(uboSky.sunDir.y, 0.0, 1.0);
     float daytimeFactor = smoothstep(0.0, 0.64, sunAltitude);
     float dimFadeout = smoothstep(0.0, 0.34, sunAltitude);
     float darkSideDim = mix(0.7, 1.0, dimFadeout);
-    vec3 darkSideColor = mix(skyZenithColor * darkSideDim, skyHorizonColor, daytimeFactor);
-    vec3 sunSideColor = skyHorizonColor;
+    vec3 darkSideColor = mix(uboSky.zenithColor * darkSideDim, uboSky.horizonColor, daytimeFactor);
+    vec3 sunSideColor = uboSky.horizonColor;
 
-    g.nightFade = smoothstep(-0.26, 0.0, skySunDir.y) * (1.0 - skyCustomGradient);
+    g.nightFade = smoothstep(-0.26, 0.0, uboSky.sunDir.y) * (1.0 - uboSky.customGradient);
 
     vec3 horizonColor = mix(darkSideColor, sunSideColor, g.sunSideBlend);
-    horizonColor = mix(skyZenithColor, horizonColor, g.nightFade);
+    horizonColor = mix(uboSky.zenithColor, horizonColor, g.nightFade);
 
-    g.color = mix(horizonColor, skyZenithColor, g.zenithBlend);
+    g.color = mix(horizonColor, uboSky.zenithColor, g.zenithBlend);
     // Custom skies have a symmetric horizon band independent of the sun's direction.
-    vec3 customColor = mix(skyHorizonColor, skyZenithColor,
-        smoothstep(0.0, skyHorizonWidth, abs(g.upAmount)));
-    g.color = mix(g.color, customColor, skyCustomGradient);
+    vec3 customColor = mix(uboSky.horizonColor, uboSky.zenithColor,
+        smoothstep(0.0, uboSky.horizonWidth, abs(g.upAmount)));
+    g.color = mix(g.color, customColor, uboSky.customGradient);
 
     // Use multiply/sqrt equivalents of pow for the glow falloffs.
     float sunDot = dot(viewDir, g.sunDir);
@@ -60,7 +60,7 @@ SkyGradient computeSkyGradient(vec3 viewDir) {
         float innerGlow = s32 * 0.25;
         float midGlow = s8 * 0.15;
         float outerGlow = s2 * sunDot * sqrt(sunDot) * 0.08;
-        g.color += skySunColor * (coreGlow + innerGlow + midGlow + outerGlow);
+        g.color += uboSky.sunColor * (coreGlow + innerGlow + midGlow + outerGlow);
     }
 
     return g;
@@ -68,5 +68,5 @@ SkyGradient computeSkyGradient(vec3 viewDir) {
 
 vec3 blendSkyBackground(vec3 gradient, vec3 background, float amount) {
     // Keep an authored gradient visible behind stars and nebulas, including below the horizon.
-    return mix(gradient, background + gradient * skyCustomGradient, amount);
+    return mix(gradient, background + gradient * uboSky.customGradient, amount);
 }

@@ -181,7 +181,7 @@ public class SkyRenderer {
 		else {
 			previousTransition = 1;
 			interruptedTransition = false;
-			plugin.uboSky.skyGradientEnabled.set(0);
+			plugin.uboSky.gradientEnabled.set(0);
 			plugin.uboSky.upload();
 		}
 		updateGlobalUbo(uboGlobal);
@@ -310,11 +310,11 @@ public class SkyRenderer {
 		ambientStrength = currentFrame.ambientStrength;
 		copyTo(fogColor, currentFrame.horizonLinear);
 		copyTo(waterColor, currentFrame.horizonLinear);
-		plugin.uboSky.skyFogDensity.set(currentFrame.fogDensity);
-		plugin.uboSky.skyVisibility.set(currentFrame.visibility);
-		plugin.uboSky.skyFogColor.set(currentFrame.fog);
-		plugin.uboSky.skyCustomGradient.set(currentFrame.customGradient);
-		plugin.uboSky.skyMoonDiskColor.set(currentFrame.moonDisk);
+		plugin.uboSky.fogDensity.set(currentFrame.fogDensity);
+		plugin.uboSky.visibility.set(currentFrame.visibility);
+		plugin.uboSky.fogColor.set(currentFrame.fog);
+		plugin.uboSky.customGradient.set(currentFrame.customGradient);
+		plugin.uboSky.moonDiskColor.set(currentFrame.moonDisk);
 		updateSkyUbo(currentFrame.configuration, state, currentFrame);
 	}
 
@@ -409,19 +409,19 @@ public class SkyRenderer {
 
 	private void updateSkyUbo(SkyConfiguration configuration, SkyState state, GradientSample sky) {
 		var ubo = plugin.uboSky;
-		ubo.skyGradientEnabled.set(1);
-		ubo.skyZenithColor.set(sky.zenithLinear);
-		ubo.skyHorizonColor.set(sky.horizonLinear);
-		ubo.skySunColor.set(sky.sunGlowLinear);
-		ubo.skyHorizonWidth.set(sin(clamp(configuration.horizonWidth, .001f, 90) * DEG_TO_RAD));
-		ubo.skySunDir.set(state.sunDirection);
-		ubo.skyCelestialPole.set(state.celestialPole[0], -state.celestialPole[1], state.celestialPole[2]);
-		ubo.skyCelestialRotation.set(state.celestialRotation);
-		ubo.skyStarRotationMode.set(config.starMode().ordinal());
-		ubo.skyMoonDir.set(state.moonDirection);
-		ubo.skyMoonIllumination.set(state.moonIllumination);
-		ubo.skyMoonIlluminationDirection.set(state.moonIlluminationDirection);
-		ubo.skyMoonLibration.set(state.moonLibration);
+		ubo.gradientEnabled.set(1);
+		ubo.zenithColor.set(sky.zenithLinear);
+		ubo.horizonColor.set(sky.horizonLinear);
+		ubo.sunColor.set(sky.sunGlowLinear);
+		ubo.horizonWidth.set(sin(clamp(configuration.horizonWidth, .001f, 90) * DEG_TO_RAD));
+		ubo.sunDir.set(state.sunDirection);
+		ubo.celestialPole.set(state.celestialPole[0], -state.celestialPole[1], state.celestialPole[2]);
+		ubo.celestialRotation.set(state.celestialRotation);
+		ubo.starRotationMode.set(config.starMode().ordinal());
+		ubo.moonDir.set(state.moonDirection);
+		ubo.moonIllumination.set(state.moonIllumination);
+		ubo.moonIlluminationDirection.set(state.moonIlluminationDirection);
+		ubo.moonLibration.set(state.moonLibration);
 		ubo.moonVisibility.set(state.moonVisibility);
 		ubo.moonSizeMult.set(configuration.moonSizeMult);
 		ubo.starHorizonHeight.set(configuration.starHorizonHeight);
