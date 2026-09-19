@@ -59,7 +59,9 @@ void main() {
     // Aurora visibility is independent of the night-sky background.
     float nightFactor = pow(baseProgress, mix(0.4, 0.9, sunProximity));
     float skyBlend = nightFactor;
-    float starBlend = nightFactor * uboSky.starVisibility;
+    #if STAR_MODE != STAR_MODE_OFF
+        float starBlend = nightFactor * uboSky.starVisibility;
+    #endif
     vec3 shootingStarColor = vec3(0.0);
     if (skyBlend > 0.001) {
         // Individual stars are drawn separately as point sprites.
@@ -70,8 +72,10 @@ void main() {
         skyColor = blendSkyBackground(skyColor, nightSkyColor, skyBlend * horizonStarFade);
     }
     // Shooting stars are atmospheric and render in front of the moon.
-    if (starBlend > 0.001 && -viewDir.y > 0.05 + horizonShift)
-        shootingStarColor = shootingStars(viewDir, elapsedTime) * starBlend;
+    #if STAR_MODE != STAR_MODE_OFF
+        if (starBlend > 0.001 && -viewDir.y > 0.05 + horizonShift)
+            shootingStarColor = shootingStars(viewDir, elapsedTime) * starBlend;
+    #endif
 
     // Match the moon's default apparent size. Reuse the authored sun-glow color
     // so environmental suppression and sunset colors still apply.

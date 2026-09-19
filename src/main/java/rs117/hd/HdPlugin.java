@@ -956,6 +956,8 @@ public class HdPlugin extends Plugin {
 			.define("SHADOW_TRANSPARENCY", configShadowTransparency)
 			.define("SHADOW_FILTERING", config.shadowFiltering().filtering)
 			.define("SHADOW_FILTERING_KERNAL", config.shadowFiltering().kernelSize)
+			.define("STAR_MODE", config.starMode())
+			.define("NEBULAS", config.enableNebulas())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
 			.define("UNDO_VANILLA_SHADING", configShadingMode.undoVanillaShading)
 			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)
@@ -1931,6 +1933,8 @@ public class HdPlugin extends Plugin {
 							case KEY_WIREFRAME:
 							case KEY_SHADOW_FILTERING:
 							case KEY_WINDOWS_HDR_CORRECTION:
+							case KEY_STARS:
+							case KEY_NEBULAS:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:

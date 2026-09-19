@@ -10,7 +10,14 @@
 
 // Artistic rotation uses elapsed seconds, independently of the daylight-cycle clock.
 vec3 rotateStarfield(vec3 direction, float elapsedSeconds, float artisticRotationSpeed) {
-    if (uboSky.starRotationMode == STAR_MODE_ARTISTIC) {
+    #if STAR_MODE == STAR_MODE_REALISTIC
+        float cosRotation = cos(uboSky.celestialRotation);
+        float sinRotation = sin(uboSky.celestialRotation);
+        return
+            direction * cosRotation +
+            cross(uboSky.celestialPole, direction) * sinRotation +
+            uboSky.celestialPole * dot(uboSky.celestialPole, direction) * (1.0 - cosRotation);
+    #elif STAR_MODE == STAR_MODE_ARTISTIC
         float rotY = elapsedSeconds * (TAU / 3600.0) * artisticRotationSpeed;
         float rotX = elapsedSeconds * (TAU / 10800.0) * artisticRotationSpeed;
         float cosY = cos(rotY);
@@ -19,22 +26,20 @@ vec3 rotateStarfield(vec3 direction, float elapsedSeconds, float artisticRotatio
         float sinX = sin(rotX);
         direction = vec3(cosY * direction.x + sinY * direction.z, direction.y, -sinY * direction.x + cosY * direction.z);
         return vec3(direction.x, cosX * direction.y - sinX * direction.z, sinX * direction.y + cosX * direction.z);
-    }
+    #else
+        return direction;
+    #endif
+}
 
-    if (uboSky.starRotationMode == STAR_MODE_REALISTIC) {
+vec3 inverseRotateStarfield(vec3 direction, float elapsedSeconds, float artisticRotationSpeed) {
+    #if STAR_MODE == STAR_MODE_REALISTIC
         float cosRotation = cos(uboSky.celestialRotation);
-        float sinRotation = sin(uboSky.celestialRotation);
+        float sinRotation = -sin(uboSky.celestialRotation);
         return
             direction * cosRotation +
             cross(uboSky.celestialPole, direction) * sinRotation +
             uboSky.celestialPole * dot(uboSky.celestialPole, direction) * (1.0 - cosRotation);
-    }
-
-    return direction;
-}
-
-vec3 inverseRotateStarfield(vec3 direction, float elapsedSeconds, float artisticRotationSpeed) {
-    if (uboSky.starRotationMode == STAR_MODE_ARTISTIC) {
+    #elif STAR_MODE == STAR_MODE_ARTISTIC
         float rotY = -elapsedSeconds * (TAU / 3600.0) * artisticRotationSpeed;
         float rotX = -elapsedSeconds * (TAU / 10800.0) * artisticRotationSpeed;
         float cosY = cos(rotY);
@@ -43,18 +48,9 @@ vec3 inverseRotateStarfield(vec3 direction, float elapsedSeconds, float artistic
         float sinX = sin(rotX);
         direction = vec3(direction.x, cosX * direction.y - sinX * direction.z, sinX * direction.y + cosX * direction.z);
         return vec3(cosY * direction.x + sinY * direction.z, direction.y, -sinY * direction.x + cosY * direction.z);
-    }
-
-    if (uboSky.starRotationMode == STAR_MODE_REALISTIC) {
-        float cosRotation = cos(uboSky.celestialRotation);
-        float sinRotation = -sin(uboSky.celestialRotation);
-        return
-            direction * cosRotation +
-            cross(uboSky.celestialPole, direction) * sinRotation +
-            uboSky.celestialPole * dot(uboSky.celestialPole, direction) * (1.0 - cosRotation);
-    }
-
-    return direction;
+    #else
+        return direction;
+    #endif
 }
 
 // Vertical shift applied to every night-sky horizon fade band (stars, nebula, moon,
@@ -255,7 +251,7 @@ vec3 proceduralNebula(vec3 dir) {
     vec3 sampleNebula(vec3 dir) {
         return proceduralNebula(dir);
     }
-#else
+#elif NEBULAS
     uniform samplerCube nebulaMap;
 
     vec3 sampleNebula(vec3 dir) {
@@ -263,19 +259,25 @@ vec3 proceduralNebula(vec3 dir) {
     }
 #endif
 
-// Returns only the background sky color + nebula (no individual stars).
-// Used for fog blending so the fog matches the sky darkness without
-// showing star points through terrain.
-vec3 proceduralStarfieldBackground(vec3 dir) {
-    vec3 color = STARFIELD_BACKGROUND_COLOR;
-    if (uboSky.nebulaVisibility > 0.0)
-        color += sampleNebula(dir) * uboSky.nebulaVisibility;
-    return color;
-}
+#if NEBULAS
+    // Returns only the background sky color + nebula (no individual stars).
+    // Used for fog blending so the fog matches the sky darkness without
+    // showing star points through terrain.
+    vec3 proceduralStarfieldBackground(vec3 dir) {
+        vec3 color = STARFIELD_BACKGROUND_COLOR;
+        if (uboSky.nebulaVisibility > 0.0)
+            color += sampleNebula(dir) * uboSky.nebulaVisibility;
+        return color;
+    }
 
-// The static background needs neither a celestial rotation nor a nebula lookup.
-vec3 nightSkyBackground(vec3 viewDir, float elapsedSeconds) {
-    return uboSky.nebulaVisibility == 0.0 ?
-        STARFIELD_BACKGROUND_COLOR :
-        proceduralStarfieldBackground(rotateStarfield(viewDir, elapsedSeconds, 1.0));
-}
+    // The static background needs neither a celestial rotation nor a nebula lookup.
+    vec3 nightSkyBackground(vec3 viewDir, float elapsedSeconds) {
+        return uboSky.nebulaVisibility == 0.0 ?
+            STARFIELD_BACKGROUND_COLOR :
+            proceduralStarfieldBackground(rotateStarfield(viewDir, elapsedSeconds, 1.0));
+    }
+#else
+    vec3 nightSkyBackground(vec3 viewDir, float elapsedSeconds) {
+        return STARFIELD_BACKGROUND_COLOR;
+    }
+#endif

@@ -2,11 +2,6 @@
 
 #include NEBULA_CLUSTER_COUNT
 
-#define STAR_MODE_OFF 0
-#define STAR_MODE_REALISTIC 1
-#define STAR_MODE_ARTISTIC 2
-#define STAR_MODE_STATIC 3
-
 layout(std140) uniform UBOSky {
     // All color fields are linear sRGB.
     bool gradientEnabled;
@@ -18,7 +13,6 @@ layout(std140) uniform UBOSky {
     vec3 sunDir;
     vec3 celestialPole;
     float celestialRotation;
-    int starRotationMode;
 
     vec3 moonDir;
     vec3 moonDiskColor;

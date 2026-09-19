@@ -10,6 +10,7 @@ public class SkyShaderProgram extends ShaderProgram {
 		super(t -> t
 			.add(GL_VERTEX_SHADER, "sky_vert.glsl")
 			.add(GL_FRAGMENT_SHADER, "sky_frag.glsl"));
+		uniNebulaMap.ignoreMissing = true;
 	}
 
 	@Override

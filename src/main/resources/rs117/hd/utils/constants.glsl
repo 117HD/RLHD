@@ -59,6 +59,14 @@
     #define SHADOW_DEFAULT_OPACITY_THRESHOLD 0.71 // Lowest while keeping Prifddinas glass walkways transparent
 #endif
 
+#include STAR_MODE
+#define STAR_MODE_OFF 0
+#define STAR_MODE_REALISTIC 1
+#define STAR_MODE_ARTISTIC 2
+#define STAR_MODE_STATIC 3
+
+#include NEBULAS
+
 #include VANILLA_COLOR_BANDING
 #include UNDO_VANILLA_SHADING
 #include LEGACY_GREY_COLORS

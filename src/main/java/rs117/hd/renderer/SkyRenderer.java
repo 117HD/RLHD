@@ -417,7 +417,6 @@ public class SkyRenderer {
 		ubo.sunDir.set(state.sunDirection);
 		ubo.celestialPole.set(state.celestialPole[0], -state.celestialPole[1], state.celestialPole[2]);
 		ubo.celestialRotation.set(state.celestialRotation);
-		ubo.starRotationMode.set(config.starMode().ordinal());
 		ubo.moonDir.set(state.moonDirection);
 		ubo.moonIllumination.set(state.moonIllumination);
 		ubo.moonIlluminationDirection.set(state.moonIlluminationDirection);
@@ -425,8 +424,8 @@ public class SkyRenderer {
 		ubo.moonVisibility.set(state.moonVisibility);
 		ubo.moonSizeMult.set(configuration.moonSizeMult);
 		ubo.starHorizonHeight.set(configuration.starHorizonHeight);
-		ubo.starVisibility.set(config.starMode() == StarMode.OFF ? 0 : configuration.starVisibility);
-		ubo.nebulaVisibility.set(config.enableNebulas() ? configuration.nebulaVisibility : 0);
+		ubo.starVisibility.set(configuration.starVisibility);
+		ubo.nebulaVisibility.set(configuration.nebulaVisibility);
 		ubo.auroraVisibility.set(state.auroraStrength * configuration.auroraVisibility);
 		ubo.upload();
 	}

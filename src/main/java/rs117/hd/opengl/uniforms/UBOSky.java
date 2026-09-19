@@ -20,7 +20,6 @@ public class UBOSky extends UniformBuffer<GLBuffer> {
 	public Property sunDir = addProperty(PropertyType.FVec3, "sunDir");
 	public Property celestialPole = addProperty(PropertyType.FVec3, "celestialPole");
 	public Property celestialRotation = addProperty(PropertyType.Float, "celestialRotation");
-	public Property starRotationMode = addProperty(PropertyType.Int, "starRotationMode");
 
 	public Property moonDir = addProperty(PropertyType.FVec3, "moonDir");
 	public Property moonDiskColor = addProperty(PropertyType.FVec3, "moonDiskColor");
