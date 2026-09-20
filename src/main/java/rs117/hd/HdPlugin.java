@@ -2023,8 +2023,13 @@ public class HdPlugin extends Plugin {
 						initializeShadowMapFbo();
 					}
 
-					if (reloadEnvironments)
-						environmentManager.reloadAndSmoothlyTransition();
+					if (reloadEnvironments) {
+						if (pendingConfigChanges.contains(KEY_ATMOSPHERIC_LIGHTING)) {
+							environmentManager.reload();
+						} else {
+							environmentManager.reloadAndSmoothlyTransition();
+						}
+					}
 				}
 			} catch (Throwable ex) {
 				log.error("Error while changing settings:", ex);
