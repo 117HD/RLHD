@@ -47986,6 +47986,25 @@
     ]
   },
   {
+    "description": "Zulrah - Venom Cloud",
+    "offset": [ 0, 120, 0 ],
+    "radius": 350,
+    "strength": 4.5,
+    "color": [
+      18,
+      110,
+      102
+    ],
+    "type": "PULSE",
+    "duration": 4000,
+    "range": 15,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 600,
+    "objectIds": [
+      "SNAKEBOSS_POISONCLOUD"
+    ]
+  },
+  {
     "description": "Magic Tree Top",
     "offset": [ 10, 600, -10 ],
     "radius": 300,
