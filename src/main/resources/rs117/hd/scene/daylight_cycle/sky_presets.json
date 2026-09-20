@@ -1,8 +1,8 @@
 [
   {
     "name": "GIELINOR",
-    "moonDiskColor": "#E1E5FF",
-    "moonDiskStrength": 5,
+    "moonDiskColor": "#C4CCFF",
+    "moonDiskStrength": 3.8,
     "moonLightColor": [ 228.46, 259.86, 287.43 ],
     "profile": {
       "zenith": [
@@ -304,7 +304,7 @@
     ],
     "forceMoonPhase": "FULL_MOON",
     "moonDiskColor": "#E82B20",
-    "moonDiskStrength": 1.5,
+    "moonDiskStrength": 0.9,
     "moonLightColor": "#ED8B8B",
     "skyFogDensity": 0.1,
     "skyVisibility": 0.85,

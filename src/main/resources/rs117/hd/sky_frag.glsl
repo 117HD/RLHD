@@ -101,7 +101,7 @@ void main() {
         // Scale against the local sky brightness so the moon remains subtly visible
         // in daytime, but naturally becomes prominent as the sky darkens.
         float skyLuminance = linearSrgbLuminance(skyColorPreStars);
-        float moonDayVisibility = 1.0 / (1.0 + skyLuminance * 12.0);
+        float moonDayVisibility = 1.0 / (1.0 + skyLuminance * 10.0);
 
         // Fade the moon near the sun.
         float sunMoonDot = dot(moonDir, sky.sunDir);
@@ -162,31 +162,34 @@ void main() {
                 vec2 moonUV = moonDetail * 4.0 + vec2(50.0, 50.0);
 
                 // Large-scale terrain - broad tonal variation
-                float largeTerrain = moonFbm(moonUV * 0.4);
+                float largeTerrain = moonFbm(moonUV * 0.5);
 
                 // Medium-scale detail
                 float medTerrain = moonFbm(moonUV * 1.5);
 
                 // Fine surface texture
-                float fineTerrain = moonFbm(moonUV * 5.0);
+                float fineTerrain = moonFbm(moonUV * 3);
+
+                float noiseTerrain = moonFbm(moonUV * 51);
 
                 // Base brightness from blended terrain layers
-                float surfaceNoise = largeTerrain * 0.4 + medTerrain * 0.4 + fineTerrain * 0.2;
+                vec4 portion = vec4(0.48, 0.27, 0.17, 0.07);
+                float surfaceNoise = dot(vec4(largeTerrain, medTerrain, fineTerrain, noiseTerrain), portion);
                 surfaceNoise = mix(0.6, 1, surfaceNoise);
 
                 // Dark maria (seas) - a few subtle darker patches
-                float seaNoise = moonFbm(moonUV * 0.8);
-                const float seaSpan = 0.13;
-                float seaStart = 0.4;
+                float seaNoise = moonFbm(moonUV * 0.45 + vec2(9.8, 5.6));
+                float seaSpan = 0.1;
+                float seaStart = 0.377;
                 float seaMask = smoothstep(seaStart + seaSpan, seaStart, seaNoise);
                 surfaceNoise *= mix(1.0, 0.88, seaMask);
 
                 vec2 impactPositions[3] = vec2[3](
-                    vec2(0.6, -0.25),
-                    vec2(-0.25, -0.1),
-                    vec2(0.55, 0.55)
+                    vec2(0.537, 0.651),
+                    vec2(-0.208, -0.286),
+                    vec2(-0.263, 0.576)
                 );
-                float impactMaxDistance[3] = float[3](1.8, 2.0, 2.8);
+                float impactMaxDistance[3] = float[3](1.5, 1.8, 3.5);
                 float impactRadius[3] = float[3](0.10, 0.1, 0.11);
                 float impactHighlight = 0.0;
                 for (int impact = 0; impact < 3; impact++) {
@@ -245,12 +248,20 @@ void main() {
                         impactRays = max(impactRays, rayLine * rayIntensity);
                     }
                     impactHighlight = max(impactHighlight, saturate(
-                        (impactRays * distanceFade * 0.07 + halo + webbing) * ejectaStartFade * ejectaFade * 8.0
+                        (impactRays * distanceFade * 0.07 + halo + webbing) * ejectaStartFade * ejectaFade * 6
                     ));
+                }
+                surfaceNoise = mix(surfaceNoise, 1, impactHighlight * 0.52);
+
+                // The opaque disk occludes stars and nebulas while its dark side matches the night sky.
+                vec3 moonDarkSide = skyColorPreStars;
+                if (skyBlend > 0.001) {
+                    float horizonStarFade = nightSkyHorizonFade(sky.upAmount, horizonShift);
+                    moonDarkSide = blendSkyBackground(moonDarkSide, STARFIELD_BACKGROUND_COLOR, skyBlend * horizonStarFade);
                 }
 
                 float lambert = dot(moonSurfaceNormal, moonLightDir);
-                float terminatorJitter = (surfaceNoise - 0.85) * 0.01 + (fineTerrain - 0.5) * 0.03;
+                float terminatorJitter = (noiseTerrain - .5) * 0.041;
                 // Surface relief only perturbs incidence near the terminator.
                 float terminatorRoughness =
                     (1.0 - smoothstep(0.05, 0.35, abs(lambert))) *
@@ -270,17 +281,9 @@ void main() {
 
                 // Keep surface contrast below the output's clipping threshold.
                 // Ejecta raise reflectance toward the same peak.
-                float surfaceContrast = smoothstep(0.65, 0.95, surfaceNoise);
-                float surfaceDetail = mix(0.12, 0.48, surfaceContrast);
-                surfaceDetail = mix(surfaceDetail, 0.48, impactHighlight * 0.8);
-                vec3 moonBrightSide = uboSky.moonDiskColor * surfaceDetail;
-
-                // The opaque disk occludes stars and nebulas while its dark side matches the night sky.
-                vec3 moonDarkSide = skyColorPreStars;
-                if (skyBlend > 0.001) {
-                    float horizonStarFade = nightSkyHorizonFade(sky.upAmount, horizonShift);
-                    moonDarkSide = blendSkyBackground(moonDarkSide, STARFIELD_BACKGROUND_COLOR, skyBlend * horizonStarFade);
-                }
+                float surfaceContrast = smoothstep(0.65, 1.0, surfaceNoise);
+                float surfaceDetail = mix(0.14, 1.0, surfaceContrast);
+                vec3 moonBrightSide = moonDarkSide + uboSky.moonDiskColor * surfaceDetail;
 
                 // Keep the disk opaque so stars and the sky gradient cannot show through crescents.
                 vec3 moonColor = mix(moonDarkSide, moonBrightSide, isLit * moonDayVisibility);
