@@ -88,7 +88,7 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal) {
     float shadow = sampleShadow(
         shadowMap,
         SHADOW_TRANSPARENCY == 1,
-        shadowPos.z - max(depthPrecisionBias, bias * (1 + colorPicker.a * 5)),
+        shadowPos.z - max(depthPrecisionBias, bias),
         shadowPos,
         receiverPlane
     );

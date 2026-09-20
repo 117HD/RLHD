@@ -177,7 +177,7 @@ void main() {
                 // Dark maria (seas) - a few subtle darker patches
                 float seaNoise = moonFbm(moonUV * 0.8);
                 const float seaSpan = 0.13;
-                float seaStart = colorPicker.a;
+                float seaStart = 0.4;
                 float seaMask = smoothstep(seaStart + seaSpan, seaStart, seaNoise);
                 surfaceNoise *= mix(1.0, 0.88, seaMask);
 
