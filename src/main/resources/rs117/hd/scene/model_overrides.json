@@ -82873,6 +82873,32 @@
     ]
   },
   {
+    "description": "Sailing - Facility - Fathom - Shaol Finders",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "objectIds": [
+      "SAILING_FATHOM_STONE",
+      "SAILING_FATHOM_PEARL"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "WOOD_GRAIN",
+        "uvType": "BOX",
+        "uvScale": 0.15,
+        "colors": "h == 4"
+      },
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.05,
+        "colors": "h == 0 || h > 5"
+      }
+    ]
+  },
+  {
     "description": "Sailing - Facility - Cargo Hold & Cannon - Bronze",
     "baseMaterial": "WOOD_GRAIN_3_SEMILIGHT",
     "uvType": "BOX",
