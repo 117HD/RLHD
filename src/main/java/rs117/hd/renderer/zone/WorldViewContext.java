@@ -15,6 +15,8 @@ import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
+import rs117.hd.overlays.FrameTimer;
+import rs117.hd.overlays.Timer;
 import rs117.hd.scene.SceneCullingManager;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
@@ -55,6 +57,9 @@ public class WorldViewContext {
 
 	@Inject
 	private SceneManager sceneManager;
+
+	@Inject
+	private FrameTimer frameTimer;
 
 	@Inject
 	private SceneCullingManager sceneCullingManager;
@@ -279,16 +284,18 @@ public class WorldViewContext {
 			sceneCullingManager.flush();
 		}
 
+		frameTimer.begin(Timer.VISIBILITY_CHECK);
 		int offset = sceneContext.sceneOffset >> 3;
 		for (int zx = 0; zx < sizeX; ++zx) {
 			for (int zz = 0; zz < sizeZ; ++zz) {
 				final Zone z = zones[zx][zz];
 				z.resolveVisibility();
 
-				if(z.isVisible(camera))
+				if(!z.isVisible(camera))
 					z.multizoneLocs(sceneContext, zx - offset, zz - offset, camera, zones);
 			}
 		}
+		frameTimer.end(Timer.VISIBILITY_CHECK);
 
 		sortStaticAlphaModels(camera);
 

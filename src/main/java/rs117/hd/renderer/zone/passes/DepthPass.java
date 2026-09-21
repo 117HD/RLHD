@@ -46,14 +46,14 @@ public class DepthPass implements RenderPass {
 	@Inject
 	private SceneDepthShaderProgram sceneDepthProgram;
 
-	public final CommandBuffer depthCmd = new CommandBuffer("DepthPass");
+	public final CommandBuffer opaqueDepthCmd = new CommandBuffer("DepthPass");
 
 	private Camera sceneCamera;
 
 	@Override
 	public void initialize() {
 		sceneCamera = renderer.sceneCamera;
-		depthCmd.setFrameTimer(frameTimer);
+		opaqueDepthCmd.setFrameTimer(frameTimer);
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class DepthPass implements RenderPass {
 
 	@Override
 	public void preSceneDraw(WorldViewContext ctx, boolean isTopLevel) {
-		depthCmd.reset();
+		opaqueDepthCmd.reset();
 	}
 
 	@Override
@@ -76,13 +76,13 @@ public class DepthPass implements RenderPass {
 		if (sceneManager.isRoot(ctx) && !z.isVisible(sceneCamera))
 			return;
 
-		z.renderOpaque(depthCmd, ctx, sceneCamera, false);
+		z.renderOpaque(opaqueDepthCmd, ctx, sceneCamera, false);
 	}
 
 	@Override
 	public void drawPass(WorldViewContext ctx, int pass) {
 		if (pass == DrawCallbacks.PASS_ALPHA)
-			ctx.drawAll(VAO_OPAQUE, depthCmd);
+			ctx.drawAll(VAO_OPAQUE, opaqueDepthCmd);
 	}
 
 	@Override
@@ -109,7 +109,7 @@ public class DepthPass implements RenderPass {
 		renderState.colorMask.set(false, false, false, false);
 		renderState.apply();
 
-		depthCmd.execute(renderState);
+		opaqueDepthCmd.execute(renderState);
 
 		glBindVertexArray(0);
 

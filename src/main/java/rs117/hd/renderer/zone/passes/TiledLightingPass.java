@@ -25,7 +25,7 @@ public class TiledLightingPass implements RenderPass {
 		if (!plugin.configTiledLighting || plugin.configDynamicLights == DynamicLights.NONE)
 			return;
 
-		plugin.updateTiledLightingFbo();
+		plugin.updateTiledLightingFbo(); // TODO: Once Legacy is deprecated, move this into here
 		assert plugin.fboTiledLighting != 0;
 
 		renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTiledLighting);

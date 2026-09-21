@@ -17,7 +17,6 @@ import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneCullingManager;
 import rs117.hd.scene.SceneCullingManager.CullingResult;
-import rs117.hd.scene.SceneCullingManager.CullingSphere;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
@@ -453,7 +452,6 @@ public class Zone implements Destructible {
 	public static final class AlphaModel {
 		int id;
 		ModelOverride modelOverride;
-		CullingSphere cullingSphere;
 		int startpos, endpos;
 		short x, y, z; // local position
 		short rid;
@@ -531,16 +529,6 @@ public class Zone implements Destructible {
 		final int baseX = (zx - (ctx.sceneContext.sceneOffset >> 3)) << 10;
 		final int baseZ = (zz - (ctx.sceneContext.sceneOffset >> 3)) << 10;
 
-		for(int i = 0; i < staticAlphaModels.size(); i++) {
-			final AlphaModel m = staticAlphaModels.get(i);
-			if(m.cullingSphere != null) {
-				m.cullingSphere.offsetX = baseX;
-				m.cullingSphere.offsetZ = baseZ;
-				m.cullingSphere.projection = projection;
-				m.cullingSphere.queue();
-			}
-		}
-
 		for(int i = 0; i < LEVEL_COUNT; i++) {
 			final CullingResult result = levelCullingResults[i];
 			if(result != null) {
@@ -554,9 +542,6 @@ public class Zone implements Destructible {
 
 	void debugDrawVisibility(SceneCullingManager sceneCullingManager) {
 		sceneCullingManager.debugDraw(levelCullingResults);
-
-		for(int i = 0; i < visibleAlphaModels.size(); i++)
-			sceneCullingManager.debugDraw(visibleAlphaModels.get(i).cullingSphere);
 	}
 
 	void resolveVisibility() {
@@ -568,7 +553,7 @@ public class Zone implements Destructible {
 
 		for(int i = 0; i < staticAlphaModels.size(); i++) {
 			final AlphaModel m = staticAlphaModels.get(i);
-			if(m.cullingSphere != null && m.cullingSphere.isVisible())
+			if(levelCullingResults[m.level] == null || levelCullingResults[m.level].isVisible())
 				visibleAlphaModels.add(m);
 		}
 	}
@@ -757,7 +742,6 @@ public class Zone implements Destructible {
 		m.packedFaces = Arrays.copyOf(packedFaces, bufferIdx);
 		m.doubleSidedBitSet = doubleSidedCount > 0 ? Arrays.copyOf(doubleSidedBitSet, ceil(bufferIdx / 32.0f)) : null;
 		m.doubleSidedCount = doubleSidedCount;
-		m.cullingSphere = sceneCullingManager.obtainSphere(x + cx, y + cy, z + cz, m.radius * 2);
 
 		staticAlphaModels.add(m);
 
@@ -790,7 +774,6 @@ public class Zone implements Destructible {
 			m.flags &= ~(AlphaModel.SKIP | AlphaModel.SORT_COMPLETED);
 
 			if (m.isTemp() || (m.flags & AlphaModel.TEMP) != 0) {
-				m.cullingSphere = null;
 				m.packedFaces = null;
 				m.doubleSidedBitSet = null;
 				ALPHA_MODEL_POOL.recycle(m);
@@ -895,15 +878,8 @@ public class Zone implements Destructible {
 				level > currentLevel && !hiddenRoofIds.isEmpty() && hiddenRoofIds.contains((int) m.rid))
 				continue;
 
-			if(camera != null) {
-				if(m.cullingSphere != null) {
-					if(!m.cullingSphere.isVisible(camera))
-						continue;
-				} else {
-					if((levelCullingResults[m.level] != null && !levelCullingResults[m.level].isVisible(camera)))
-						continue;
-				}
-			}
+			if(camera != null && (levelCullingResults[m.level] != null && !levelCullingResults[m.level].isVisible(camera)))
+				continue;
 
 			int drawMode = STATIC;
 			if (m.isTemp()) {
@@ -1002,9 +978,6 @@ public class Zone implements Destructible {
 			if (m.lx == -1)
 				continue;
 
-			if(m.cullingSphere != null && !m.cullingSphere.isVisible(camera))
-				continue;
-
 			// calculate which zone this model should be drawn from
 			// TODO fix for boats
 			int max = Integer.MAX_VALUE;
@@ -1041,7 +1014,6 @@ public class Zone implements Destructible {
 				AlphaModel m2 = ALPHA_MODEL_POOL.acquire();
 				m2.id = m.id;
 				m2.modelOverride = m.modelOverride;
-				m2.cullingSphere = m.cullingSphere;
 				m2.startpos = m.startpos;
 				m2.endpos = m.endpos;
 				m2.x = m.x;
