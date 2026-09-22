@@ -70,6 +70,10 @@ public class SkyManager {
 	private static final float LATITUDE_LIBRATION_DEG = 6.7f;
 	private static final float NIGHT_MOON_PHASE_TILT = -.35f;
 
+	// Fraction of an environment's directional strength that an unauthored moon inherits.
+	// Matching sunlight outright makes a full moon read as bright as midday.
+	private static final float DEFAULT_MOONLIGHT_FRACTION = .7f;
+
 	@Inject
 	private ClientThread clientThread;
 
@@ -500,7 +504,8 @@ public class SkyManager {
 		float visibility = sky.moonVisibility;
 		if (sky.hideMoon || configMoonBehavior == MoonBehavior.DISABLED && sky.forceMoonPhase == null)
 			visibility = 0;
-		float directionalStrength = sky.moonDirectionalStrength < 0 ? fallbackDirectionalStrength : sky.moonDirectionalStrength;
+		float directionalStrength = sky.moonDirectionalStrength < 0 ?
+			fallbackDirectionalStrength * DEFAULT_MOONLIGHT_FRACTION : sky.moonDirectionalStrength;
 		return new ResolvedMoon(
 			angles,
 			illuminationDirection,

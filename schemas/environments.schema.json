@@ -115,7 +115,7 @@
       },
       "directionalStrength": {
         "type": "number",
-        "description": "Directional light strength multiplier. Defaults to 0.25. While the daylight cycle is active, also controls moonlight unless `moonDirectionalStrength` is set."
+        "description": "Directional light strength multiplier. Defaults to 0.25. While the daylight cycle is active, also controls moonlight at 70% of this value, unless `moonDirectionalStrength` is set."
       },
       "waterColor": {
         "type": [
@@ -302,7 +302,7 @@
               },
               "moonDirectionalStrength": {
                 "type": "number",
-                "description": "Moonlight directional strength multiplier. Fades in around sunset. Defaults to `directionalStrength`. Only applies while the daylight cycle is active.",
+                "description": "Moonlight directional strength multiplier. Fades in around sunset. Defaults to 70% of `directionalStrength`. Only applies while the daylight cycle is active.",
                 "minimum": 0
               },
               "moonShadowStrength": {
