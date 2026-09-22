@@ -19198,11 +19198,11 @@
     ]
   },
   {
-    "description": "PYREFIEND",
-    "height": 60,
+    "description": "PYREFIEND_WIDE",
+    "height": 40,
     "alignment": "CENTER",
-    "radius": 280,
-    "strength": 7.5,
+    "radius": 300,
+    "strength": 15,
     "color": [
       252,
       122,
@@ -19217,6 +19217,51 @@
       "SLAYER_PYREFIEND_3",
       "GODWARS_PYREFIEND_1",
       "SLAYER_PYREFIEND_4"
+    ]
+  },
+  {
+    "description": "PYREFIEND_NARROW",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 120,
+    "strength": 15,
+    "color": [
+      252,
+      122,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [
+      "SLAYER_PYREFIEND_1",
+      "SLAYER_PYREFIEND_2",
+      "SLAYER_PYREFIEND_3",
+      "GODWARS_PYREFIEND_1",
+      "SLAYER_PYREFIEND_4",
+      "SLAYER_PYREBEAST_1",
+      "SLAYER_PYREBEAST_2",
+      "SUPERIOR_PYREFIEND"
+    ]
+  },
+  {
+    "description": "PYREFLORD",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 50,
+    "color": [
+      252,
+      122,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [
+      "SLAYER_PYREBEAST_1",
+      "SLAYER_PYREBEAST_2",
+      "SUPERIOR_PYREFIEND"
     ]
   },
   {
@@ -34378,9 +34423,9 @@
   },
   {
     "description": "Wyrm Slithering Light",
-    "offset": [ 0, 0, 0 ],
-    "radius": 170,
-    "strength": 25,
+    "offset": [ 0, 25, 0 ],
+    "radius": 270,
+    "strength": 7.5,
     "color": [
       0,
       200,
@@ -34391,13 +34436,13 @@
     "range": 70,
     "npcIds": [ "WYRM_DARK" ],
     "fadeInDuration": 100,
-    "fadeOutDuration": 100
+    "fadeOutDuration": 500
   },
   {
     "description": "Shadow Wyrm Slithering Light",
-    "offset": [ 0, 0, 0 ],
+    "offset": [ 0, 30, 0 ],
     "radius": 270,
-    "strength": 35,
+    "strength": 25,
     "color": [
       0,
       50,
@@ -34410,11 +34455,10 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 100
   },
-
   {
-    "description": "Wyrm Magic Attack",
+    "description": "Wyrm Magic Attack - Projectile",
     "offset": [ 0, 0, 0 ],
-    "radius": 250,
+    "radius": 200,
     "strength": 20,
     "color": [
       0,
@@ -34425,6 +34469,26 @@
     "duration": 1,
     "range": 60,
     "projectileIds": [ "WYRM_RANGE_PROJ" ],
+    "fadeInDuration": 300,
+    "fadeOutDuration": 300
+  },
+  {
+    "description": "Wyrm Magic Attack - Impact",
+    "offset": [ 0, 50, 0 ],
+    "radius": 150,
+    "strength": 20,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 1,
+    "range": 60,
+    "waitForAnimation": true,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "graphicsObjectIds": [ "WYRM_RANGE_IMPACT" ],
     "fadeInDuration": 300,
     "fadeOutDuration": 300
   },
@@ -48638,6 +48702,53 @@
     "range": 20,
     "objectIds": [
       "GRIMSTONE_FURNACE"
+    ]
+  },
+  {
+    "description": "YNYSDAIL_CAVE_EXIT",
+    "offset": [ -120, 85, -10 ],
+    "radius": 450,
+    "strength": 20,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "YNYSDAIL_CAVE_EXIT"
+    ]
+  },
+  {
+    "description": "AQUANITE_LURE_HIGH",
+    "offset": [ 0, 175, 130 ],
+    "radius": 300,
+    "strength": 3,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "npcIds": [
+      "SLAYER_AQUANITE"
+    ]
+  },
+  {
+    "description": "AQUANITE_LURE_LOW",
+    "offset": [ 0, 80, 130 ],
+    "radius": 300,
+    "strength": 3,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "range": 10,
+    "duration": 1000,
+    "npcIds": [
+      "SLAYER_AQUANITE"
     ]
   },
   {

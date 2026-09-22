@@ -1,7 +1,7 @@
 package rs117.hd.scene;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Objects;
 import java.util.Set;
 import javax.annotation.Nonnull;
@@ -205,7 +205,7 @@ public class ModelOverrideManager {
 			if (current.areaOverrides == null) {
 				// We need to replace the override with a copy that has a separate list of area overrides to avoid conflicts
 				current = current.copy();
-				current.areaOverrides = new HashMap<>();
+				current.areaOverrides = new LinkedHashMap<>();
 				modelOverrides.put(uuid, current);
 			}
 

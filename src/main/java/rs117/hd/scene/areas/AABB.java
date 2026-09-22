@@ -222,6 +222,17 @@ public class AABB {
 	}
 
 	@Override
+	public int hashCode() {
+		int h = minX;
+		h = h * 31 + maxX;
+		h = h * 31 + minY;
+		h = h * 31 + maxY;
+		h = h * 31 + minZ;
+		h = h * 31 + maxZ;
+		return h;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof AABB))
 			return false;
