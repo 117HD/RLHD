@@ -589,4 +589,28 @@ public final class HDUtils {
 		var b = g.getClipBounds();
 		drawStringCentered(g, s, b.width / 2.f, b.height / 2.f);
 	}
+
+	@Nullable
+	public static float[] parseLatLon(String coordinates) {
+		if (coordinates == null || coordinates.isEmpty())
+			return null;
+
+		String[] values = coordinates.split(",", 3);
+		if (values.length != 2)
+			return null;
+
+		try {
+			float latitude = Float.parseFloat(values[0]);
+			float longitude = Float.parseFloat(values[1]);
+			if (Float.isFinite(latitude) &&
+				Float.isFinite(longitude) &&
+				Math.abs(latitude) <= 90 &&
+				Math.abs(longitude) <= 180
+			) {
+				return vec(latitude, longitude);
+			}
+		} catch (NumberFormatException ignored) {
+		}
+		return null;
+	}
 }

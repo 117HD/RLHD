@@ -200,8 +200,14 @@ public class SkyManager {
 		configCycleDuration = max(1e-6f, (float) config.customCycleDurationMinutes());
 		configNightFraction = clamp(config.basicNightPercentage(), 0, 100) / 100f;
 
-		configLatLon[0] = degreesAndArcminutes(config.latitudeDegrees(), config.latitudeArcminutes(), 90);
-		configLatLon[1] = degreesAndArcminutes(config.longitudeDegrees(), config.longitudeArcminutes(), 180);
+		String latLonString = config.preciseLatLon();
+		float[] latLon = HDUtils.parseLatLon(latLonString);
+		if (latLon == null) {
+			if (!latLonString.isEmpty())
+				log.warn("Ignoring invalid latitude & longitude coordinates: {}", latLon);
+			latLon = vec(config.latitudeDegrees(), config.longitudeDegrees());
+		}
+		copyTo(configLatLon, latLon);
 	}
 
 	private static float degreesAndArcminutes(int degrees, int arcminutes, int maxDegrees) {
