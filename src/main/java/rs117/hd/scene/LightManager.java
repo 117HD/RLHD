@@ -47,7 +47,6 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.entityhider.EntityHiderConfig;
-import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import rs117.hd.HdPlugin;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.data.ObjectType;
@@ -109,8 +108,8 @@ public class LightManager {
 	@Inject
 	private EnvironmentManager environmentManager;
 
-	@Inject
-	private EntityHiderPlugin entityHiderPlugin;
+//	@Inject
+//	private EntityHiderPlugin entityHiderPlugin;
 
 	private final ArrayList<Light> WORLD_LIGHTS = new ArrayList<>();
 	private final ListMultimap<Integer, LightDefinition> NPC_LIGHTS = ArrayListMultimap.create();
@@ -680,7 +679,7 @@ public class LightManager {
 			return false;
 		}
 
-		boolean entityHiderEnabled = pluginManager.isPluginEnabled(entityHiderPlugin);
+		boolean entityHiderEnabled = false;//pluginManager.isPluginEnabled(entityHiderPlugin);
 
 		if (actor instanceof NPC) {
 			if (!plugin.configNpcLights)
@@ -728,7 +727,7 @@ public class LightManager {
 	}
 
 	private boolean shouldShowProjectileLights() {
-		return plugin.configProjectileLights && !(pluginManager.isPluginEnabled(entityHiderPlugin) && entityHiderConfig.hideProjectiles());
+		return plugin.configProjectileLights;// && !(pluginManager.isPluginEnabled(entityHiderPlugin) && entityHiderConfig.hideProjectiles());
 	}
 
 	public void loadSceneLights(SceneContext sceneContext) {
