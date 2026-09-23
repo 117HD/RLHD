@@ -444,7 +444,7 @@ public class HdPlugin extends Plugin {
 	public boolean configOverrideSky;
 	public int configDetailDrawDistance;
 	public int configExpandedMapLoadingChunks;
-	public float configMinimumBrightness;
+	public float configNightBrightness;
 	public DefaultSkyColor configDefaultSkyColor;
 	public DynamicLights configDynamicLights;
 	public ShadowMode configShadowMode;
@@ -1745,7 +1745,7 @@ public class HdPlugin extends Plugin {
 
 	private void updateCachedConfigs() {
 		configExpandedMapLoadingChunks = useLowMemoryMode ? 0 : config.expandedMapLoadingChunks();
-		configMinimumBrightness = config.nightBrightness() / 100f;
+		configNightBrightness = config.nightBrightness() / 100f;
 		configShadowMode = config.shadowMode();
 		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
 		configShadowTransparency = config.shadowTransparency();

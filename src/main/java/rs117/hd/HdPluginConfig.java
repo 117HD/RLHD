@@ -704,17 +704,26 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_NIGHT_BRIGHTNESS,
 		name = "Night brightness",
 		description =
-			"Sets the minimum brightness during nighttime.<br>" +
-			"'15%' makes nights very dark.<br>" +
-			"'35%' is dark, but playable.<br>" +
-			"'50%' is dark, but comfortable.<br>" +
-			"'70%' provides balanced darkness.<br>" +
-			"'100%' is the default, with good visibility at night.<br>" +
-			"'150%' gives night-time high visibility.",
+			"Simulates your eyes adapting to darkness by brightening night-time lighting.<br>" +
+			"'0%' disables adaptation.<br>" +
+			"'100%' yields good visibility.<br>" +
+			"Values above '100%' amplify the adjustment further, if needed.",
 		position = 5,
 		section = daylightCycleSettings
 	)
 	default int nightBrightness() {
+		return 100;
+	}
+
+	@Units(Units.PERCENT)
+	@ConfigItem(
+		keyName = "experimentalMoonDirectionalStrength",
+		name = "Moonlight intensity",
+		description = "0% corresponds to A, 100% to E",
+		position = 6,
+		section = daylightCycleSettings
+	)
+	default int experimentalMoonDirectionalStrength() {
 		return 100;
 	}
 

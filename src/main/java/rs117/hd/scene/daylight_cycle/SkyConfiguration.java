@@ -45,12 +45,15 @@ public class SkyConfiguration {
 	@Nullable
 	public MoonPhase forceMoonPhase;
 	public float moonDirectionalStrength = -1;
+	public float moonAmbientStrength = -1;
 	public float moonShadowStrength = 1;
 	public float minMoonIllumination;
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] moonDiskColor;
 	@JsonAdapter(SrgbToLinearAdapter.class)
-	public float[] moonLightColor;
+	public float[] moonDirectionalColor;
+	@JsonAdapter(SrgbToLinearAdapter.class)
+	public float[] moonAmbientColor;
 	public float moonDiskStrength = 1;
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	@Nullable
@@ -75,15 +78,42 @@ public class SkyConfiguration {
 	public void normalize() {
 		if (moonDiskColor == null)
 			moonDiskColor = ColorUtils.colorTemperatureToLinearRgb(8000);
-		if (moonLightColor == null)
-			moonLightColor = moonDiskColor;
+		moonDiskColor = HDUtils.ensureArrayLength(moonDiskColor, 3);
+
+		boolean deriveDirectional = moonDirectionalColor == null;
+		if (deriveDirectional) {
+			moonDirectionalColor = copy(moonDiskColor);
+		} else {
+			moonDirectionalColor = HDUtils.ensureArrayLength(moonDirectionalColor, 3);
+		}
+		if (moonDirectionalStrength < 0)
+			moonDirectionalStrength = moonDiskStrength;
+
+		boolean deriveAmbient = moonAmbientColor == null;
+		if (deriveAmbient) {
+			moonAmbientColor = copy(moonDirectionalColor);
+			if (!deriveDirectional) {
+				// We assume that authored directional colors already include the mesopic shift.
+				// Undo this before deriving ambient lighting from it
+				ColorUtils.invertMesopicShift(moonAmbientColor);
+			}
+			ColorUtils.deriveAmbientLight(moonAmbientColor, moonAmbientColor);
+		} else {
+			moonAmbientColor = HDUtils.ensureArrayLength(moonAmbientColor, 3);
+		}
+		if (moonAmbientStrength < 0)
+			moonAmbientStrength = moonDirectionalStrength;
+
+		// Apply mesopic shifts to derived night colors, since our renderer does not account for this in later stages
+		if (deriveDirectional)
+			ColorUtils.applyMesopicShift(moonDirectionalColor);
+		if (deriveAmbient)
+			ColorUtils.applyMesopicShift(moonAmbientColor);
 
 		if (sunAngles != null)
 			sunAngles = HDUtils.ensureArrayLength(sunAngles, 2);
 		if (moonAngles != null)
 			moonAngles = HDUtils.ensureArrayLength(moonAngles, 2);
-		moonDiskColor = HDUtils.ensureArrayLength(moonDiskColor, 3);
-		moonLightColor = HDUtils.ensureArrayLength(moonLightColor, 3);
 		if (skyFogColor != null)
 			skyFogColor = HDUtils.ensureArrayLength(skyFogColor, 3);
 		if (profile == null)
@@ -191,7 +221,9 @@ public class SkyConfiguration {
 			return mix(from.values(), to.values(), saturate((altitude - from.altitude) / (to.altitude - from.altitude)));
 		}
 
-		private float getBrightnessMultiplier(float sunAltitude, float minBrightness) {
+		private float getBrightnessMultiplier(float sunAltitude) {
+			// Scene exposure is applied after lighting is composed; this curve describes the sources.
+			float minBrightness = 1;
 			if (sunAltitude <= brightness.nightAltitude)
 				return minBrightness;
 			float lowSunBrightness = minBrightness + brightness.lowSunBoost;
@@ -219,10 +251,15 @@ public class SkyConfiguration {
 		if (moonDiskColor == null)
 			moonDiskColor = new float[3];
 		mix(moonDiskColor, from.moonDiskColor, to.moonDiskColor, t);
-		if (moonLightColor == null)
-			moonLightColor = new float[3];
-		mix(moonLightColor, from.moonLightColor, to.moonLightColor, t);
+		if (moonDirectionalColor == null)
+			moonDirectionalColor = new float[3];
+		mix(moonDirectionalColor, from.moonDirectionalColor, to.moonDirectionalColor, t);
+		if (moonAmbientColor == null)
+			moonAmbientColor = new float[3];
+		mix(moonAmbientColor, from.moonAmbientColor, to.moonAmbientColor, t);
 		moonDiskStrength = mix(from.moonDiskStrength, to.moonDiskStrength, t);
+		moonDirectionalStrength = mix(from.moonDirectionalStrength, to.moonDirectionalStrength, t);
+		moonAmbientStrength = mix(from.moonAmbientStrength, to.moonAmbientStrength, t);
 		horizonWidth = mix(from.horizonWidth, to.horizonWidth, t);
 		// Sky fog defaults are resolved against the environment before interpolation by the renderer.
 		starVisibility = mix(from.starVisibility, to.starVisibility, t);
@@ -235,7 +272,7 @@ public class SkyConfiguration {
 		return this;
 	}
 
-	public void evaluateGradient(GradientSample out, float sunAltitudeDegrees, float[] fogColor, float minBrightness) {
+	public void evaluateGradient(GradientSample out, float sunAltitudeDegrees, float[] fogColor) {
 		float takeover = max(0, skyColorTakeoverAngle);
 		float[] zenith = SkyProfile.interpolate(sunAltitudeDegrees, profile.zenith);
 		float[] horizon = SkyProfile.interpolate(sunAltitudeDegrees, profile.horizon);
@@ -243,7 +280,7 @@ public class SkyConfiguration {
 		out.zenithLinear = zenith;
 		out.horizonLinear = horizon;
 		out.sunGlowLinear = sunGlow;
-		out.brightnessMultiplier = profile.getBrightnessMultiplier(sunAltitudeDegrees, minBrightness);
+		out.brightnessMultiplier = profile.getBrightnessMultiplier(sunAltitudeDegrees);
 		// Authored gradients bypass the automatic fog takeover and night-color replacement.
 		if (customGradient)
 			return;

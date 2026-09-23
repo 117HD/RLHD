@@ -372,7 +372,7 @@ public class SkyManager {
 			}
 		}
 
-		ResolvedMoon moon = resolveMoon(sky, environment.directionalStrength, utcMillis, sunAngles, fixedSunAngles, latLon);
+		ResolvedMoon moon = resolveMoon(sky, utcMillis, sunAngles, fixedSunAngles, latLon);
 		float[] moonLibration = NO_MOON_LIBRATION;
 		if (sky.moonAngles == null &&
 			configMoonBehavior != MoonBehavior.STATIC &&
@@ -456,7 +456,6 @@ public class SkyManager {
 
 	private ResolvedMoon resolveMoon(
 		SkyConfiguration sky,
-		float fallbackDirectionalStrength,
 		long millis,
 		float[] sunAngles,
 		boolean fixedSunAngles,
@@ -500,20 +499,23 @@ public class SkyManager {
 			illuminationDirection = subtract(multiply(moonDirection, 2 * radial), illuminationDirection);
 		}
 
-		boolean naturalMoonlightEnabled = !sky.hideMoon || sky.moonLightVisibility >= 0 || sky.moonDirectionalStrength >= 0;
+		boolean naturalMoonlightEnabled =
+			!sky.hideMoon ||
+			sky.moonLightVisibility >= 0 ||
+			sky.moonDirectionalStrength >= 0 ||
+			sky.moonAmbientStrength >= 0;
 		float moonLightVisibility = sky.moonLightVisibility < 0 ? 1 : sky.moonLightVisibility;
-		float lightIllumination = max(naturalMoonlightEnabled ? illumination : 0, sky.minMoonIllumination) * moonLightVisibility;
+		float lightIllumination = moonLightVisibility * max(sky.minMoonIllumination, naturalMoonlightEnabled ? illumination : 0);
 		float visibility = sky.moonVisibility;
 		if (sky.hideMoon || configMoonBehavior == MoonBehavior.DISABLED && sky.forceMoonPhase == null)
 			visibility = 0;
-		float directionalStrength = sky.moonDirectionalStrength < 0 ? fallbackDirectionalStrength : sky.moonDirectionalStrength;
 		return new ResolvedMoon(
 			angles,
 			illuminationDirection,
 			illumination,
 			lightIllumination,
 			visibility,
-			directionalStrength
+			sky.moonDirectionalStrength
 		);
 	}
 
@@ -538,7 +540,7 @@ public class SkyManager {
 	 */
 	public void sampleLighting(SkyState.LightingSample out, Environment environment, float[] fogColor) {
 		resolveSkyState(out.sky, environment, environment, 1, true, environment.getShadowAngles());
-		environment.getSky().evaluateGradient(out, out.sky.sunAltitudeDegrees, fogColor, plugin.configMinimumBrightness);
+		environment.getSky().evaluateGradient(out, out.sky.sunAltitudeDegrees, fogColor);
 		out.referenceFogColorLinear = fogColor;
 	}
 

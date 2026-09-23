@@ -121,7 +121,6 @@ public class LightManager {
 	private final Renderable[] imposterRenderables = new Renderable[2];
 	private final LightingSample outdoorLightingSample = new LightingSample();
 	private Environment outdoorLightingEnvironment;
-	private float outdoorLightingMinBrightness;
 	private int outdoorLightingFrame;
 	private boolean reloadLights;
 	private EntityHiderConfig entityHiderConfig;
@@ -633,7 +632,7 @@ public class LightManager {
 				float sunFade = saturate((5 - sunAltDeg) / 10);
 				float moonElevation = smoothstep(-5, 20, moonAltDeg);
 				float moonBlend = moonIllumination * .25f * moonElevation * sunFade;
-				mix(lightColor, lightColor, sky.moonLightColor, moonBlend);
+				mix(lightColor, lightColor, sky.moonAmbientColor, moonBlend);
 				moonStrengthFloor = moonIllumination * .12f * moonElevation;
 			}
 		}
@@ -661,14 +660,10 @@ public class LightManager {
 	}
 
 	private LightingSample sampleOutdoorLighting(Environment environment) {
-		if (environment != outdoorLightingEnvironment ||
-			plugin.configMinimumBrightness != outdoorLightingMinBrightness ||
-			plugin.frame != outdoorLightingFrame
-		) {
+		if (environment != outdoorLightingEnvironment || plugin.frame != outdoorLightingFrame) {
 			float[] fogColor = environmentManager.getFogColor(environment);
 			skyManager.sampleLighting(outdoorLightingSample, environment, fogColor);
 			outdoorLightingEnvironment = environment;
-			outdoorLightingMinBrightness = plugin.configMinimumBrightness;
 			outdoorLightingFrame = plugin.frame;
 		}
 

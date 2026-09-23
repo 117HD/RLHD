@@ -393,6 +393,8 @@
     "area": "VER_SINHAZA_TRANSITION",
     "instantTransition": true,
     "varbitCondition": "MYQ6 >=128 && MYQ6 < 178",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "fogDepth": 20,
     "windAngle": 40,
     "directionalStrength": 2,
@@ -421,7 +423,7 @@
     "windStrength": 26,
     "sky": {
       "moonDiskColor": "#FF0000",
-      "moonLightColor": "#FF6D6D",
+      "moonDirectionalColor": "#FF6D6D",
       "skyVisibility": 0.32,
       "sunStrength": 0.02,
       "sunlightStrength": 0.4,
@@ -439,6 +441,8 @@
     "area": "VER_SINHAZA",
     "instantTransition": true,
     "varbitCondition": "MYQ6 >=128 && MYQ6 < 178",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "fogDepth": 20,
     "windAngle": 40,
     "directionalStrength": 2,
@@ -466,7 +470,7 @@
     "windStrength": 26,
     "sky": {
       "moonDiskColor": "#FF0000",
-      "moonLightColor": "#FF6D6D",
+      "moonDirectionalColor": "#FF6D6D",
       "skyVisibility": 0.32,
       "sunStrength": 0.02,
       "sunlightStrength": 0.4,
@@ -592,6 +596,8 @@
     "area": "BARROWS",
     "instantTransition": true,
     "varbitCondition": "MYQ6 >=128 && MYQ6 < 178",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "fogDepth": 20,
     "windAngle": 40,
     "directionalStrength": 2,
@@ -637,6 +643,8 @@
     "area": "DARKMEYER",
     "instantTransition": true,
     "varbitCondition": "MYQ6 >=128 && MYQ6 < 178",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "fogDepth": 20,
     "windAngle": 40,
     "directionalStrength": 2,
@@ -651,6 +659,7 @@
   {
     "area": "DARKMEYER",
     "ambientColor": "#8aabd5",
+    "ambientStrength": 1,
     "directionalColor": "#62a3ff",
     "directionalStrength": 4,
     "fogColor": "#1e314b",
@@ -732,6 +741,8 @@
     "instantTransition": true,
     "varbitCondition": "CUTSCENE_STATUS && MYQ6 !=0 && MYQ6 < 178",
     "hideVanillaSkyboxes": true,
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "fogDepth": 7,
     "windAngle": 40,
     "windSpeed": 15,
@@ -758,6 +769,7 @@
     "instantTransition": true,
     "varbitCondition": "CUTSCENE_STATUS && MYQ6 !=0 && MYQ6 < 178 || MYQ6 == 178",
     "hideVanillaSkyboxes": true,
+    "ambientColor": "#FFFFFF",
     "fogDepth": 30,
     "windAngle": 40,
     "windSpeed": 15,
@@ -789,6 +801,7 @@
     "instantTransition": true,
     "varbitCondition": "MYQ6 == 178",
     "hideVanillaSkyboxes": true,
+    "ambientColor": "#FFFFFF",
     "fogDepth": 30,
     "windAngle": 40,
     "windSpeed": 15,
@@ -819,6 +832,8 @@
     "area": "MORYTANIA",
     "instantTransition": true,
     "varbitCondition": "MYQ6 >=128 && MYQ6 < 178",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "fogDepth": 20,
     "windAngle": 40,
     "directionalStrength": 2,
@@ -997,6 +1012,7 @@
   {
     "area": "SOUL_WARS_RED_BASE",
     "ambientColor": "#97baff",
+    "ambientStrength": 1,
     "directionalStrength": 4,
     "fogColor": "#1c150d",
     "fogDepth": 6.5
@@ -1289,6 +1305,7 @@
   {
     "area": "FREMENNIK_ISLES_MIDDLE",
     "ambientColor": "#97baff",
+    "ambientStrength": 1,
     "directionalStrength": 4,
     "shadowAngles": [
       52,
@@ -1303,6 +1320,7 @@
   {
     "area": "NEITIZNOT",
     "ambientColor": "#97baff",
+    "ambientStrength": 1,
     "directionalStrength": 4,
     "shadowAngles": [
       52,
@@ -1516,6 +1534,7 @@
     "area": "SOTE_LLETYA_MOSTLY_DONE_BURNING",
     "allowSkyOverride": false,
     "ambientColor": "#97baff",
+    "ambientStrength": 1,
     "directionalStrength": 0,
     "fogColor": "#5b8b78",
     "fogDepth": 30
@@ -1532,6 +1551,7 @@
   {
     "area": "BACKWATER_AND_BREAKBONE_STRAIT",
     "ambientColor": "#c0dbad",
+    "ambientStrength": 1,
     "directionalColor": "#adb08b",
     "fogColor": "#BDD8E8",
     "directionalStrength": 4,
@@ -1540,6 +1560,7 @@
   {
     "area": "POISON_WASTE",
     "ambientColor": "#c0dbad",
+    "ambientStrength": 1,
     "directionalColor": "#adb08b",
     "directionalStrength": 2,
     "fogColor": "#32372f",
@@ -1564,6 +1585,7 @@
   {
     "area": "TIRANNWN_MAINLAND",
     "ambientColor": "#97baff",
+    "ambientStrength": 1,
     "directionalStrength": 4,
     "fogColor": "#99d8c8",
     "fogDepth": 15,
@@ -1574,6 +1596,7 @@
   {
     "area": "PRIFDDINAS",
     "ambientColor": "#97baff",
+    "ambientStrength": 1,
     "directionalStrength": 4,
     "waterColor": "#99d8c8",
     "fogColor": "#99d8c8",
@@ -1608,6 +1631,7 @@
     "area": "SOTE_FRAGMENT_OF_SEREN_ARENA",
     "allowSkyOverride": false,
     "ambientColor": "#97baff",
+    "ambientStrength": 1,
     "fogColor": "#000000",
     "directionalStrength": 4,
     "sky": {
@@ -1721,6 +1745,7 @@
   {
     "area": "BLOOD_ALTAR",
     "ambientColor": "#be48ae",
+    "ambientStrength": 1,
     "directionalColor": "#4eeeff",
     "directionalStrength": 2.5,
     "fogColor": "#4f1325",
@@ -1787,6 +1812,7 @@
   {
     "area": "ARCEUUS",
     "ambientColor": "#6369ff",
+    "ambientStrength": 1,
     "directionalColor": "#4eeeff",
     "directionalStrength": 3.5,
     "fogColor": "#13184f",
@@ -1805,6 +1831,7 @@
   {
     "area": "LOVAKENGJ",
     "ambientColor": "#ffd785",
+    "ambientStrength": 1,
     "directionalColor": "#7d8db3",
     "directionalStrength": 4,
     "fogColor": "#150a05",
@@ -1826,6 +1853,8 @@
   },
   {
     "area": "BATTLEFRONT_LIZARDMAN_CANYON_SHAMANS",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "fogColor": "#121216",
     "fogDepth": 16.5,
     "windAngle": 40,
@@ -2708,6 +2737,7 @@
   },
   {
     "area": "ENCHANTED_VALLEY",
+    "ambientColor": "#FFFFFF",
     "fogColor": "#b9d6ff",
     "fogDepth": 16.5,
     "directionalStrength": 3.5,
@@ -2744,6 +2774,7 @@
   },
   {
     "area": "FISHING_TRAWLER_SUNK",
+    "ambientColor": "#FFFFFF",
     "fogColor": "#b9d6ff",
     "fogDepth": 30,
     "directionalStrength": 3.5,
@@ -2753,6 +2784,7 @@
   },
   {
     "area": "FISHING_TRAWLER",
+    "ambientColor": "#FFFFFF",
     "fogColor": "#b9d6ff",
     "fogDepth": 6.5,
     "directionalStrength": 3.5,
@@ -2885,6 +2917,8 @@
     "description": "Environment for the final battle during The Blood Moon Rises",
     "area": "VAMPYRIUM_CASTLE_DRAKAN_ROOF",
     "hideVanillaSkyboxes": true,
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "fogDepth": 10,
     "windAngle": 40,
     "windSpeed": 15,
@@ -2913,6 +2947,8 @@
     "area": "VAMPYRIUM",
     "description": "Environment for Vampyrium during the quest, set to fixed twilight to simulate being on the cusp of the blood moon rising",
     "varbitCondition": "MYQ6 >= 80 && MYQ6 != 178",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "sky": {
       "parent": "DUSK",
       "skyVisibility": 1,
@@ -2937,6 +2973,8 @@
   {
     "description": "Environment for Vampyrium post quest, normal cycle since the events of the quest are now past",
     "area": "VAMPYRIUM",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "fogDepth": 17.5,
     "windAngle": 40,
     "windSpeed": 15,
@@ -2959,6 +2997,8 @@
   },
   {
     "area": "VAMPYRIUM_FOREST_INSTANCE",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "sky": {
       "parent": "DUSK",
       "skyVisibility": 1,
@@ -2982,6 +3022,8 @@
   },
   {
     "area": "MAGGOT_KING_ARENA",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "fogDepth": 50,
     "windAngle": 40,
     "windSpeed": 15,
@@ -3171,6 +3213,7 @@
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",
+    "ambientStrength": 1,
     "directionalStrength": 4,
     "shadowAngles": [
       52,

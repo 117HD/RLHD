@@ -31,6 +31,7 @@ import rs117.hd.utils.RenderState;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.utils.ColorUtils.linearSrgbLuminance;
 import static rs117.hd.utils.ColorUtils.linearToSrgb;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -308,6 +309,31 @@ public class SkyRenderer {
 		copyTo(ambientColor, currentFrame.ambient);
 		directionalStrength = currentFrame.directionalStrength;
 		ambientStrength = currentFrame.ambientStrength;
+		{
+//			float NIGHT_ADAPTATION_TARGET = ColorUtils.linearToSrgb(COLOR_PICKER[0]);
+//			float NIGHT_ADAPTATION_SOFT_FLOOR = .05f * COLOR_PICKER[3];
+			float NIGHT_ADAPTATION_SOFT_FLOOR = 0.016f;
+			float NIGHT_ADAPTATION_TARGET = 1;
+
+			// Estimate illumination over surface orientations using the same 1/4 directional
+			// weight as shadow blur. Adapt after blending so transitions share one exposure.
+			float luminance =
+				linearSrgbLuminance(ambientColor) * ambientStrength +
+				linearSrgbLuminance(directionalColor) * directionalStrength * .25f;
+			// The soft floor bounds amplification near black without introducing a hard threshold.
+			float adaptedExposure = max(
+				1,
+				(NIGHT_ADAPTATION_TARGET + NIGHT_ADAPTATION_SOFT_FLOOR) /
+				(max(0, luminance) + NIGHT_ADAPTATION_SOFT_FLOOR)
+			);
+			// Above 100%, amplify the result even when the scene already exceeds the adaptation target.
+			float adaptation = plugin.configNightBrightness * smoothstep(0, -18, state.sunAltitudeDegrees);
+//			float adaptation = plugin.configNightBrightness * ColorUtils.linearToSrgb(COLOR_PICKER[1]);
+			float exposure = mix(1, adaptedExposure * max(plugin.configNightBrightness, 1), adaptation);
+			log.debug("adaptedExposure: {}, adaptation: {}, exposure: {}", adaptedExposure, adaptation, exposure);
+			ambientStrength *= exposure;
+			directionalStrength *= exposure;
+		}
 		copyTo(fogColor, currentFrame.horizonLinear);
 		copyTo(waterColor, currentFrame.horizonLinear);
 		plugin.uboSky.fogDensity.set(currentFrame.fogDensity);
@@ -328,13 +354,13 @@ public class SkyRenderer {
 		{
 			SkyProfile profile = sky.profile;
 			float regionalBlend = profile.getRegionalBlend(sunAltDeg);
-			mix(directionalColor, profile.getDirectionalLight(state.sunAngles[0]), env.getDirectionalColor(), regionalBlend);
-			mix(ambientColor, profile.getAmbientLight(sunAltDeg), env.getAmbientColor(), regionalBlend);
+			mix(out.directional, profile.getDirectionalLight(state.sunAngles[0]), env.getDirectionalColor(), regionalBlend);
+			mix(out.ambient, profile.getAmbientLight(sunAltDeg), env.getAmbientColor(), regionalBlend);
 		}
 		float moonAltDeg = state.moonAltitudeDegrees;
 		float brightnessMultiplier = endpointSample.brightnessMultiplier;
-		ambientStrength = brightnessMultiplier;
-		directionalStrength = env.directionalStrength;
+		out.ambientStrength = brightnessMultiplier;
+		out.directionalStrength = env.directionalStrength;
 
 		float moonLightIllumination = state.moonLightIllumination;
 		float moonPresence = isMoonLighting(moonAltDeg, moonLightIllumination) ?
@@ -351,34 +377,53 @@ public class SkyRenderer {
 		if (sky.skyFogColor != null)
 			mix(out.fog, out.fog, sky.skyFogColor, saturate(sky.skyFogColorMix));
 		float boostFraction = mix(1, MIN_BRIGHTNESS_BOOST_RESIDUAL, saturate(moonPresence));
-		ambientStrength = max(ambientStrength, plugin.configMinimumBrightness * (1 + sky.minBrightnessBoost * boostFraction));
+		out.ambientStrength = max(out.ambientStrength, 1 + sky.minBrightnessBoost * boostFraction);
 
 		float lightingScale = brightnessMultiplier * sky.sunlightStrength;
-		float sunStrength = applyShadowBlur(
-			directionalColor,
-			directionalStrength * lightingScale,
+		// Fade residual sunlight through twilight before transferring blurred shadows into ambient.
+		// At -18 degrees and below, the ambient profile alone defines the moonless lighting.
+		float sunlightStrength = out.directionalStrength * lightingScale * smoothstep(-18, 0, sunAltDeg);
+
+		out.directionalStrength = 0;
+
+		distributeDirectionalAndAmbientLight(
+			out,
+			out.directional,
+			sunlightStrength,
+			out.directional,
+			0,
 			sunAltDeg,
 			.533f,
 			1
 		);
+
+//		sky.moonDirectionalStrength = sky.moonAmbientStrength = .01f * COLOR_PICKER[3];
+		sky.moonDirectionalStrength = sky.moonAmbientStrength =
+			.01f / 255 * mix(41, 255, config.experimentalMoonDirectionalStrength() / 100.f);
+
+//		sky.moonDirectionalColor = COLOR_PICKER;
+//		sky.moonAmbientColor = COLOR_PICKER;
+		log.debug(
+			"derived ambient moon: {}", ColorUtils.linearToSrgb(multiply(
+				sky.moonAmbientColor,
+				ColorUtils.linearSrgbLuminance(ColorUtils.rgb("#101010"))
+				/ ColorUtils.linearSrgbLuminance(sky.moonAmbientColor)
+			))
+		);
+//		log.debug("derived ambient moon: {}", sky.moonAmbientColor);
+
 		// Only one source can cast shadows. Keep moonlight ambient until sunset,
 		// then introduce its directional component smoothly over the next five degrees.
-		float moonStrength = applyShadowBlur(
-			sky.moonLightColor,
+		distributeDirectionalAndAmbientLight(
+			out,
+			sky.moonDirectionalColor,
 			state.moonDirectionalStrength * moonInfluence / MAX_MOON_COLOR_INFLUENCE * lightingScale,
+			sky.moonAmbientColor,
+			sky.moonAmbientStrength * moonInfluence / MAX_MOON_COLOR_INFLUENCE * lightingScale,
 			moonAltDeg,
 			.517f,
 			saturate(sky.moonShadowStrength) * smoothstep(0, -5, sunAltDeg)
 		);
-		directionalStrength = sunStrength + moonStrength;
-		if (directionalStrength > 0) {
-			// Strength can be subnormal near the horizon; avoid overflowing its reciprocal.
-			mix(directionalColor, directionalColor, sky.moonLightColor, moonStrength / directionalStrength);
-		}
-		copyTo(out.ambient, ambientColor);
-		copyTo(out.directional, directionalColor);
-		out.ambientStrength = ambientStrength;
-		out.directionalStrength = directionalStrength;
 		copyTo(out.zenithLinear, endpointSample.zenithLinear);
 		copyTo(out.horizonLinear, endpointSample.horizonLinear);
 		copyTo(out.sunGlowLinear, endpointSample.sunGlowLinear);
@@ -387,7 +432,19 @@ public class SkyRenderer {
 		out.configuration.interpolateLightingParameters(sky, sky, 1);
 	}
 
-	private float applyShadowBlur(float[] color, float strength, float altitudeDegrees, float diameterDegrees, float shadowStrength) {
+	/**
+	 * Apply a celestial light's atmospheric ambient contribution and softened directional shadows.
+	 */
+	private static void distributeDirectionalAndAmbientLight(
+		LightingFrame out,
+		float[] directionalColor,
+		float directionalStrength,
+		float[] ambientColor,
+		float ambientStrength,
+		float altitudeDegrees,
+		float diameterDegrees,
+		float shadowStrength
+	) {
 		float visibility = 0;
 		if (altitudeDegrees > 0) {
 			// A 10 m caster projects a disk-shaped penumbra. Approximate its long-axis
@@ -396,15 +453,25 @@ public class SkyRenderer {
 			float sigma = 10 * diameterDegrees * DEG_TO_RAD / (4 * elevation * elevation);
 			visibility = exp(-2 * PI * PI * sigma * sigma) * shadowStrength;
 		}
-		float transferredStrength = strength * (1 - visibility);
-		// The spherical average of max(dot(normal, light), 0) is 1/4. Preserve that
-		// average irradiance, including both colors' magnitudes, when making it ambient.
-		float ambientTransfer = transferredStrength * .25f;
-		float combinedStrength = ambientStrength + ambientTransfer;
+		float ambientTransfer = ambientStrength;
+		float combinedStrength = out.ambientStrength + ambientTransfer;
 		if (combinedStrength > 0)
-			mix(ambientColor, ambientColor, color, ambientTransfer / combinedStrength);
-		ambientStrength = combinedStrength;
-		return strength * visibility;
+			mix(out.ambient, out.ambient, ambientColor, ambientTransfer / combinedStrength);
+		out.ambientStrength = combinedStrength;
+
+		// The spherical average of max(dot(normal, light), 0) is 1/4. Transfer the
+		// non-shadow-casting part without changing its average incident energy.
+		ambientTransfer = directionalStrength * (1 - visibility) * .25f;
+		combinedStrength = out.ambientStrength + ambientTransfer;
+		if (combinedStrength > 0)
+			mix(out.ambient, out.ambient, directionalColor, ambientTransfer / combinedStrength);
+		out.ambientStrength = combinedStrength;
+
+		float directionalTransfer = directionalStrength * visibility;
+		combinedStrength = out.directionalStrength + directionalTransfer;
+		if (combinedStrength > 0)
+			mix(out.directional, out.directional, directionalColor, directionalTransfer / combinedStrength);
+		out.directionalStrength = combinedStrength;
 	}
 
 	private void updateSkyUbo(SkyConfiguration configuration, SkyState state, GradientSample sky) {

@@ -88,7 +88,7 @@
           "string",
           "array"
         ],
-        "description": "Ambient light color in sRGB, specified as a hex color code or an array in the range 0-255. Accepts decimals.",
+        "description": "Ambient light color in sRGB. In overworld environments, defaults to an approximate clear-atmosphere scattering of directionalColor; otherwise defaults to white.",
         "pattern": "^#[A-Fa-f0-9]{6}$",
         "minItems": 3,
         "maxItems": 3,
@@ -98,7 +98,8 @@
       },
       "ambientStrength": {
         "type": "number",
-        "description": "Ambient light strength multiplier. Defaults to 1."
+        "description": "Ambient light strength multiplier. In overworld environments, defaults to directionalStrength; otherwise defaults to 1.",
+        "minimum": 0
       },
       "directionalColor": {
         "type": [
@@ -115,7 +116,7 @@
       },
       "directionalStrength": {
         "type": "number",
-        "description": "Directional light strength multiplier. Defaults to 0.25. While the daylight cycle is active, also controls moonlight unless `moonDirectionalStrength` is set."
+        "description": "Directional light strength multiplier. Defaults to 0.25."
       },
       "waterColor": {
         "type": [
@@ -270,7 +271,7 @@
               },
               "hideMoon": {
                 "type": "boolean",
-                "description": "Hide the moon disk, halo and default moonlight. Explicit moonLightVisibility, moonDirectionalStrength or minMoonIllumination can retain lighting."
+                "description": "Hide the moon disk, halo and default moonlight. Explicit moonlight visibility, strength or minimum illumination can retain lighting."
               },
               "profile": {
                 "$ref": "#/$defs/skyProfile"
@@ -302,12 +303,17 @@
               },
               "moonDirectionalStrength": {
                 "type": "number",
-                "description": "Moonlight directional strength multiplier. Fades in around sunset. Defaults to `directionalStrength`. Only applies while the daylight cycle is active.",
+                "description": "Directional moonlight strength. Defaults to `moonDiskStrength`. Only applies while the daylight cycle is active.",
+                "minimum": 0
+              },
+              "moonAmbientStrength": {
+                "type": "number",
+                "description": "Atmospheric ambient moonlight strength. Defaults to `moonDirectionalStrength`. Only applies while the daylight cycle is active.",
                 "minimum": 0
               },
               "moonShadowStrength": {
                 "type": "number",
-                "description": "Moon shadow contrast multiplier, clamped to 0-1. Defaults to 1. Faded directional light becomes ambient while preserving irradiance averaged over surface orientations. Does not affect sunlight.",
+                "description": "Moon shadow contrast multiplier, clamped to 0-1. Defaults to 1. Blurred directional light is transferred into ambient independently of the atmospheric ambient contribution. Does not affect sunlight.",
                 "minimum": 0
               },
               "minMoonIllumination": {
@@ -329,12 +335,25 @@
                   "type": "number"
                 }
               },
-              "moonLightColor": {
+              "moonDirectionalColor": {
                 "type": [
                   "string",
                   "array"
                 ],
-                "description": "Moonlight color in sRGB, specified as a hex color code or an array in the range 0-255. Defaults to `moonDiskColor`.",
+                "description": "Final directional moonlight color in sRGB. Defaults to moonDiskColor with a luminance-preserving cool tint approximating mesopic vision.",
+                "pattern": "^#[A-Fa-f0-9]{6}$",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "number"
+                }
+              },
+              "moonAmbientColor": {
+                "type": [
+                  "string",
+                  "array"
+                ],
+                "description": "Final ambient moonlight color in sRGB. Defaults to clear-atmosphere scattering of directional moonlight, undoing its mesopic tint before scattering and reapplying it afterward.",
                 "pattern": "^#[A-Fa-f0-9]{6}$",
                 "minItems": 3,
                 "maxItems": 3,
