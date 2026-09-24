@@ -103,6 +103,7 @@ public class SkyRenderer {
 		private float ambientStrength;
 		private float directionalStrength;
 		private float moonShadowFade;
+		private float adaptationLuminance;
 
 		private LightingFrame() {
 			zenithLinear = new float[3];
@@ -114,6 +115,7 @@ public class SkyRenderer {
 			ambientStrength = mix(from.ambientStrength, to.ambientStrength, t);
 			directionalStrength = mix(from.directionalStrength, to.directionalStrength, t);
 			moonShadowFade = mix(from.moonShadowFade, to.moonShadowFade, t);
+			adaptationLuminance = mix(from.adaptationLuminance, to.adaptationLuminance, t);
 			// Weight colors by their contributions without taking a potentially overflowing reciprocal.
 			mix(ambient, from.ambient, to.ambient, ambientStrength > 0 ? to.ambientStrength * t / ambientStrength : t);
 			mix(directional, from.directional, to.directional, directionalStrength > 0 ? to.directionalStrength * t / directionalStrength : t);
@@ -311,10 +313,7 @@ public class SkyRenderer {
 		copyTo(ambientColor, currentFrame.ambient);
 		directionalStrength = currentFrame.directionalStrength;
 		ambientStrength = currentFrame.ambientStrength;
-		float exposure = getNightExposure(
-			linearSrgbLuminance(ambientColor) * ambientStrength + linearSrgbLuminance(directionalColor) * directionalStrength * .25f,
-			state.sunAltitudeDegrees
-		);
+		float exposure = getNightExposure(currentFrame.adaptationLuminance, state.sunAltitudeDegrees);
 		ambientStrength *= exposure;
 		directionalStrength *= exposure;
 		usesMoonShadows = currentFrame.moonShadowFade > 0;
@@ -379,8 +378,9 @@ public class SkyRenderer {
 			linearSrgbLuminance(sky.moonAmbientColor) * moonAmbientStrength;
 		float sunLuminance = linearSrgbLuminance(out.directional) * sunlightStrength;
 		float moonLuminance = linearSrgbLuminance(sky.moonDirectionalColor) * moonDirectionalStrength;
-		float averageLuminance = ambientLuminance + (sunLuminance + moonLuminance) * .25f;
-		float exposure = getNightExposure(averageLuminance, sunAltDeg);
+		// Meter the established lighting so adaptation does not compensate for the handoff.
+		out.adaptationLuminance = ambientLuminance + (sunLuminance + moonLuminance) * .25f;
+		float exposure = getNightExposure(out.adaptationLuminance, sunAltDeg);
 		float litLuminance = (ambientLuminance + sunLuminance + moonLuminance) * exposure;
 		float shadowedLuminance = max(
 			0,
@@ -402,6 +402,7 @@ public class SkyRenderer {
 			0,
 			sunAltDeg,
 			.533f,
+			1,
 			out.moonShadowFade > 0 ? 0 : 1
 		);
 //		sky.moonDirectionalColor = COLOR_PICKER;
@@ -423,7 +424,8 @@ public class SkyRenderer {
 			moonAmbientStrength,
 			moonAltDeg,
 			.517f,
-			saturate(sky.moonShadowStrength) * out.moonShadowFade
+			saturate(sky.moonShadowStrength),
+			out.moonShadowFade
 		);
 		copyTo(out.zenithLinear, endpointSample.zenithLinear);
 		copyTo(out.horizonLinear, endpointSample.horizonLinear);
@@ -444,7 +446,8 @@ public class SkyRenderer {
 		float ambientStrength,
 		float altitudeDegrees,
 		float diameterDegrees,
-		float shadowStrength
+		float shadowStrength,
+		float directionalFade
 	) {
 		float visibility = getShadowVisibility(altitudeDegrees, diameterDegrees) * shadowStrength;
 		float ambientTransfer = ambientStrength;
@@ -461,7 +464,8 @@ public class SkyRenderer {
 			mix(out.ambient, out.ambient, directionalColor, ambientTransfer / combinedStrength);
 		out.ambientStrength = combinedStrength;
 
-		float directionalTransfer = directionalStrength * visibility;
+		// Handoff suppression is temporary: unlike physical softening, it adds no ambient light.
+		float directionalTransfer = directionalStrength * visibility * directionalFade;
 		combinedStrength = out.directionalStrength + directionalTransfer;
 		if (combinedStrength > 0)
 			mix(out.directional, out.directional, directionalColor, directionalTransfer / combinedStrength);
@@ -481,13 +485,13 @@ public class SkyRenderer {
 	private float getNightExposure(float luminance, float sunAltitudeDegrees) {
 //		float target = ColorUtils.linearToSrgb(COLOR_PICKER[2]);
 //		float softFloor = .05f * COLOR_PICKER[3];
-		float softFloor = 0.016f;
 		float target = 1;
+		float softFloor = 0.006f;
 		// .05f * 30/255: good for Auburnvale
 		float adaptedExposure = max(1, (target + softFloor) / (max(0, luminance) + softFloor));
-		// Bring adaptation in during early twilight, before darkness makes its absence noticeable.
-		// The cycle's overworld gate excludes interiors; keep daylight exposure unchanged here.
-		float adaptation = plugin.configNightBrightness * smoothstep(0, -3, sunAltitudeDegrees);
+		// Establish adaptation during sunset, before direct sunlight disappears at the horizon.
+		// The cycle's overworld gate excludes interiors; daytime above 10 degrees is unchanged.
+		float adaptation = plugin.configNightBrightness * smoothstep(10, 0, sunAltitudeDegrees);
 //		float adaptation = plugin.configNightBrightness * ColorUtils.linearToSrgb(COLOR_PICKER[1]);
 		return mix(1, adaptedExposure * max(plugin.configNightBrightness, 1), adaptation);
 	}
