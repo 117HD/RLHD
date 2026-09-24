@@ -1,6 +1,7 @@
 package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
+import java.awt.Color;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -17,6 +18,7 @@ import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
+import rs117.hd.utils.Debug;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
@@ -224,6 +226,7 @@ public class WorldViewContext {
 				Zone prevZone = curZone;
 				// Swap the zone out with the one we just uploaded
 				zones[zx][zz] = curZone = uploadedZone;
+				Debug.Print(3.0f, Color.GREEN, "Swapped zone: {} -> {} at [{}-{},{}]", prevZone.hashCode(), curZone.hashCode(), worldViewId, zx, zz);
 				clientThread.invoke(curZone::unmap);
 
 				if (prevZone != curZone) {
