@@ -155,7 +155,6 @@ import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
 	tags = { "hd", "high", "detail", "graphics", "shaders", "textures", "gpu", "shadows", "lights" },
 	conflicts = "GPU"
 )
-//@PluginDependency(EntityHiderPlugin.class)
 public class HdPlugin extends Plugin {
 	public static final ResourcePath PLUGIN_DIR = Props
 		.getFolder("rlhd.plugin-dir", () -> path(RuneLite.RUNELITE_DIR, "117hd"));
