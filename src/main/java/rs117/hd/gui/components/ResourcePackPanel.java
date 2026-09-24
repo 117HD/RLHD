@@ -348,8 +348,11 @@ public class ResourcePackPanel extends JPanel {
 				return false;
 			JPanel component = wrapPackCard(createInstalledPackComponent(pack, index));
 			list.add(component, index);
-			draggablePacks.put(component, pack);
-			attachDragEventForwarder(component);
+			// The default pack is pinned to the bottom and must not be draggable.
+			if (!(pack instanceof DefaultResourcePack)) {
+				draggablePacks.put(component, pack);
+				attachDragEventForwarder(component);
+			}
 		} else {
 			Component component = draggablePacks.entrySet().stream()
 				.filter(entry -> entry.getValue() == event.getPack())
@@ -387,8 +390,11 @@ public class ResourcePackPanel extends JPanel {
 						JPanel card = createInstalledPackComponent(pack, i);
 						JPanel component = wrapPackCard(card);
 						list.add(component);
-						draggablePacks.put(component, pack);
-						attachDragEventForwarder(component);
+						// The default pack is pinned to the bottom and must not be draggable.
+						if (!(pack instanceof DefaultResourcePack)) {
+							draggablePacks.put(component, pack);
+							attachDragEventForwarder(component);
+						}
 					}
 
 					break;
@@ -519,6 +525,7 @@ public class ResourcePackPanel extends JPanel {
 	}
 
 	private void updateMoveButtons() {
+		// The default pack is excluded from draggablePacks, so this only covers movable packs.
 		ArrayList<Component> cards = new ArrayList<>(draggablePacks.keySet());
 		cards.sort(Comparator.comparingInt(Component::getY));
 		for (int index = 0; index < cards.size(); index++) {
@@ -579,7 +586,11 @@ public class ResourcePackPanel extends JPanel {
 
 		boolean isDefaultPack = pack instanceof DefaultResourcePack;
 		boolean isTop = index == 0;
-		int lastIndex = resourcePackManager.getInstalledPacks().size() - 1;
+		var allInstalledPacks = resourcePackManager.getInstalledPacks();
+		int lastIndex = allInstalledPacks.size() - 1;
+		int lastMovableIndex = !allInstalledPacks.isEmpty() && allInstalledPacks.get(lastIndex) instanceof DefaultResourcePack
+			? lastIndex - 1
+			: lastIndex;
 
 		panel.setBackground(packEnabled ? ColorScheme.DARKER_GRAY_COLOR : DISABLED_PACK_COLOR);
 		panel.setOpaque(true);
@@ -596,7 +607,7 @@ public class ResourcePackPanel extends JPanel {
 		moveDown.setBounds(165, 5, 22, 22);
 		moveDown.setToolTipText("Deprioritize this pack, or drag and drop to reorder");
 		panel.add(moveDown);
-		moveDown.setEnabled(index < lastIndex);
+		moveDown.setEnabled(!isDefaultPack && index < lastMovableIndex);
 		moveDown.addActionListener(ev -> movePack(
 			resourcePackManager.getInstalledPacks().indexOf(pack),
 			resourcePackManager.getInstalledPacks().indexOf(pack) + 1
@@ -609,7 +620,7 @@ public class ResourcePackPanel extends JPanel {
 		moveUp.setToolTipText("Prioritize this pack, or drag and drop to reorder");
 		panel.add(moveUp);
 		moveUp.setBounds(140, 5, 22, 22);
-		moveUp.setEnabled(!isTop);
+		moveUp.setEnabled(!isDefaultPack && !isTop);
 		moveUp.addActionListener(ev -> movePack(
 			resourcePackManager.getInstalledPacks().indexOf(pack),
 			resourcePackManager.getInstalledPacks().indexOf(pack) - 1
