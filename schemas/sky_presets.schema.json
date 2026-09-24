@@ -67,7 +67,6 @@
       },
       "moonDirectionalStrength": {
         "type": "number",
-        "description": "Moonlight directional strength multiplier. Fades in around sunset. Defaults to 70% of the environment's `directionalStrength`. Only applies while the daylight cycle is active.",
         "minimum": 0
       },
       "moonShadowStrength": {
