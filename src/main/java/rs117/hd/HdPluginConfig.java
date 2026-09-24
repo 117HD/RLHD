@@ -715,18 +715,6 @@ public interface HdPluginConfig extends Config
 		return 100;
 	}
 
-	@Units(Units.PERCENT)
-	@ConfigItem(
-		keyName = "experimentalMoonDirectionalStrength",
-		name = "Moonlight intensity",
-		description = "0% corresponds to A, 100% to E",
-		position = 6,
-		section = daylightCycleSettings
-	)
-	default int experimentalMoonDirectionalStrength() {
-		return 100;
-	}
-
 	String KEY_REPLACE_VANILLA_SKYBOXES = "replaceVanillaSkyboxes";
 	@ConfigItem(
 		keyName = KEY_REPLACE_VANILLA_SKYBOXES,
@@ -836,6 +824,18 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean useSunlightStrength() {
 		return false;
+	}
+
+	@Units(Units.PERCENT)
+	@ConfigItem(
+		keyName = "experimentalMoonDirectionalStrength",
+		name = "dev: moonlight intensity",
+		description = "0% corresponds to A, 100% to E",
+		position = 100,
+		section = daylightCycleSettings
+	)
+	default int experimentalMoonDirectionalStrength() {
+		return 100;
 	}
 
 

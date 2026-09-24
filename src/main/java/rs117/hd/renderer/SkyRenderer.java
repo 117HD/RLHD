@@ -44,10 +44,8 @@ public class SkyRenderer {
 	private static final float MOON_ELEVATION_FADE_START_DEG = -10;
 	private static final float MOON_ELEVATION_FADE_END_DEG = 20;
 	private static final float MIN_BRIGHTNESS_BOOST_RESIDUAL = .2f;
-	private static final float MAX_MOON_COLOR_INFLUENCE = .8f;
-	private static final float MOON_INFLUENCE_AT_HORIZON = .05f;
-	private static final float MOON_TINT_SUN_START_DEG = 5;
-	private static final float MOON_TINT_SUN_END_DEG = -15;
+	private static final float SHADOW_HANDOFF_MIN_CONTRAST = 1 / 255.f;
+	private static final float SHADOW_HANDOFF_MAX_CONTRAST = 3 / 255.f;
 
 	@Inject
 	private HdPlugin plugin;
@@ -91,6 +89,7 @@ public class SkyRenderer {
 	private float ambientStrength;
 	private boolean skyEnabled;
 	public boolean castsShadows;
+	public boolean usesMoonShadows;
 
 	private static final class LightingFrame extends GradientSample {
 		private final float[] ambient = new float[3];
@@ -103,6 +102,7 @@ public class SkyRenderer {
 		private float customGradient;
 		private float ambientStrength;
 		private float directionalStrength;
+		private float moonShadowFade;
 
 		private LightingFrame() {
 			zenithLinear = new float[3];
@@ -113,6 +113,7 @@ public class SkyRenderer {
 		private void interpolate(LightingFrame from, LightingFrame to, float t) {
 			ambientStrength = mix(from.ambientStrength, to.ambientStrength, t);
 			directionalStrength = mix(from.directionalStrength, to.directionalStrength, t);
+			moonShadowFade = mix(from.moonShadowFade, to.moonShadowFade, t);
 			// Weight colors by their contributions without taking a potentially overflowing reciprocal.
 			mix(ambient, from.ambient, to.ambient, ambientStrength > 0 ? to.ambientStrength * t / ambientStrength : t);
 			mix(directional, from.directional, to.directional, directionalStrength > 0 ? to.directionalStrength * t / directionalStrength : t);
@@ -180,6 +181,7 @@ public class SkyRenderer {
 		if (skyEnabled)
 			updateSky(skyManager.getState());
 		else {
+			usesMoonShadows = false;
 			previousTransition = 1;
 			interruptedTransition = false;
 			plugin.uboSky.gradientEnabled.set(0);
@@ -309,31 +311,13 @@ public class SkyRenderer {
 		copyTo(ambientColor, currentFrame.ambient);
 		directionalStrength = currentFrame.directionalStrength;
 		ambientStrength = currentFrame.ambientStrength;
-		{
-//			float NIGHT_ADAPTATION_TARGET = ColorUtils.linearToSrgb(COLOR_PICKER[0]);
-//			float NIGHT_ADAPTATION_SOFT_FLOOR = .05f * COLOR_PICKER[3];
-			float NIGHT_ADAPTATION_SOFT_FLOOR = 0.016f;
-			float NIGHT_ADAPTATION_TARGET = 1;
-
-			// Estimate illumination over surface orientations using the same 1/4 directional
-			// weight as shadow blur. Adapt after blending so transitions share one exposure.
-			float luminance =
-				linearSrgbLuminance(ambientColor) * ambientStrength +
-				linearSrgbLuminance(directionalColor) * directionalStrength * .25f;
-			// The soft floor bounds amplification near black without introducing a hard threshold.
-			float adaptedExposure = max(
-				1,
-				(NIGHT_ADAPTATION_TARGET + NIGHT_ADAPTATION_SOFT_FLOOR) /
-				(max(0, luminance) + NIGHT_ADAPTATION_SOFT_FLOOR)
-			);
-			// Above 100%, amplify the result even when the scene already exceeds the adaptation target.
-			float adaptation = plugin.configNightBrightness * smoothstep(0, -18, state.sunAltitudeDegrees);
-//			float adaptation = plugin.configNightBrightness * ColorUtils.linearToSrgb(COLOR_PICKER[1]);
-			float exposure = mix(1, adaptedExposure * max(plugin.configNightBrightness, 1), adaptation);
-//			log.debug("adaptedExposure: {}, adaptation: {}, exposure: {}", adaptedExposure, adaptation, exposure);
-			ambientStrength *= exposure;
-			directionalStrength *= exposure;
-		}
+		float exposure = getNightExposure(
+			linearSrgbLuminance(ambientColor) * ambientStrength + linearSrgbLuminance(directionalColor) * directionalStrength * .25f,
+			state.sunAltitudeDegrees
+		);
+		ambientStrength *= exposure;
+		directionalStrength *= exposure;
+		usesMoonShadows = currentFrame.moonShadowFade > 0;
 		copyTo(fogColor, currentFrame.horizonLinear);
 		copyTo(waterColor, currentFrame.horizonLinear);
 		plugin.uboSky.fogDensity.set(currentFrame.fogDensity);
@@ -365,10 +349,9 @@ public class SkyRenderer {
 		float moonLightIllumination = state.moonLightIllumination;
 		float moonPresence = isMoonLighting(moonAltDeg, moonLightIllumination) ?
 			moonLightIllumination * smoothstep(MOON_ELEVATION_FADE_START_DEG, MOON_ELEVATION_FADE_END_DEG, moonAltDeg) : 0;
-		float moonInfluence = sunAltDeg >= 0 ?
-			smoothstep(MOON_TINT_SUN_START_DEG, 0, sunAltDeg) * MOON_INFLUENCE_AT_HORIZON :
-			mix(MOON_INFLUENCE_AT_HORIZON, MAX_MOON_COLOR_INFLUENCE, smoothstep(0, MOON_TINT_SUN_END_DEG, sunAltDeg));
-		moonInfluence *= moonPresence;
+		// Moonlight is already negligible beside daylight. Bring it to its natural strength
+		// before the shadow camera changes source, then vary only its shadow contrast.
+		float moonLighting = moonPresence * smoothstep(5, 0, sunAltDeg);
 		// fogDepth is an artistic density control, not a physical extinction coefficient.
 		float defaultDensity = max(0, env.fogDepth) / 100;
 		out.fogDensity = max(0, sky.skyFogDensity < 0 ? defaultDensity : sky.skyFogDensity);
@@ -382,9 +365,32 @@ public class SkyRenderer {
 		}
 
 		float lightingScale = brightnessMultiplier * (config.useSunlightStrength() ? sky.sunlightStrength : 1);
-		// Fade residual sunlight through twilight before transferring blurred shadows into ambient.
-		// At -18 degrees and below, the ambient profile alone defines the moonless lighting.
-		float sunlightStrength = out.directionalStrength * lightingScale * smoothstep(-18, 0, sunAltDeg);
+		// Fade direct sunlight near the horizon; the ambient profile supplies twilight below it.
+		// Carrying the warm directional baseline into twilight produces a red cast under exposure.
+		float sunlightStrength = out.directionalStrength * lightingScale * smoothstep(0, 5, sunAltDeg);
+
+		sky.moonDirectionalStrength = sky.moonAmbientStrength =
+			.01f / 255 * mix(41, 255, config.experimentalMoonDirectionalStrength() / 100.f);
+
+		float moonDirectionalStrength = state.moonDirectionalStrength * moonLighting * lightingScale;
+		float moonAmbientStrength = sky.moonAmbientStrength * moonLighting * lightingScale;
+		float ambientLuminance =
+			linearSrgbLuminance(out.ambient) * out.ambientStrength +
+			linearSrgbLuminance(sky.moonAmbientColor) * moonAmbientStrength;
+		float sunLuminance = linearSrgbLuminance(out.directional) * sunlightStrength;
+		float moonLuminance = linearSrgbLuminance(sky.moonDirectionalColor) * moonDirectionalStrength;
+		float averageLuminance = ambientLuminance + (sunLuminance + moonLuminance) * .25f;
+		float exposure = getNightExposure(averageLuminance, sunAltDeg);
+		float litLuminance = (ambientLuminance + sunLuminance + moonLuminance) * exposure;
+		float shadowedLuminance = max(
+			0,
+			litLuminance - sunLuminance * getShadowVisibility(sunAltDeg, .533f) * exposure
+		);
+		// Switch sources while the disappearing sun shadow spans only a few display values.
+		// Applying exposure first keeps eye adaptation from hiding an otherwise visible shadow.
+		float sunShadowContrast = linearToSrgb(litLuminance) - linearToSrgb(shadowedLuminance);
+		out.moonShadowFade = moonAltDeg > 0 && moonLightIllumination > 0 ?
+			1 - smoothstep(SHADOW_HANDOFF_MIN_CONTRAST, SHADOW_HANDOFF_MAX_CONTRAST, sunShadowContrast) : 0;
 
 		out.directionalStrength = 0;
 
@@ -396,13 +402,8 @@ public class SkyRenderer {
 			0,
 			sunAltDeg,
 			.533f,
-			1
+			out.moonShadowFade > 0 ? 0 : 1
 		);
-
-//		sky.moonDirectionalStrength = sky.moonAmbientStrength = .01f * COLOR_PICKER[3];
-		sky.moonDirectionalStrength = sky.moonAmbientStrength =
-			.01f / 255 * mix(41, 255, config.experimentalMoonDirectionalStrength() / 100.f);
-
 //		sky.moonDirectionalColor = COLOR_PICKER;
 //		sky.moonAmbientColor = COLOR_PICKER;
 //		log.debug(
@@ -414,17 +415,15 @@ public class SkyRenderer {
 //		);
 //		log.debug("derived ambient moon: {}", sky.moonAmbientColor);
 
-		// Only one source can cast shadows. Keep moonlight ambient until sunset,
-		// then introduce its directional component smoothly over the next five degrees.
 		distributeDirectionalAndAmbientLight(
 			out,
 			sky.moonDirectionalColor,
-			state.moonDirectionalStrength * moonInfluence / MAX_MOON_COLOR_INFLUENCE * lightingScale,
+			moonDirectionalStrength,
 			sky.moonAmbientColor,
-			sky.moonAmbientStrength * moonInfluence / MAX_MOON_COLOR_INFLUENCE * lightingScale,
+			moonAmbientStrength,
 			moonAltDeg,
 			.517f,
-			saturate(sky.moonShadowStrength) * smoothstep(0, -5, sunAltDeg)
+			saturate(sky.moonShadowStrength) * out.moonShadowFade
 		);
 		copyTo(out.zenithLinear, endpointSample.zenithLinear);
 		copyTo(out.horizonLinear, endpointSample.horizonLinear);
@@ -447,14 +446,7 @@ public class SkyRenderer {
 		float diameterDegrees,
 		float shadowStrength
 	) {
-		float visibility = 0;
-		if (altitudeDegrees > 0) {
-			// A 10 m caster projects a disk-shaped penumbra. Approximate its long-axis
-			// variance with a Gaussian and retain its contrast at a 1 m feature wavelength.
-			float elevation = sin(altitudeDegrees * DEG_TO_RAD);
-			float sigma = 10 * diameterDegrees * DEG_TO_RAD / (4 * elevation * elevation);
-			visibility = exp(-2 * PI * PI * sigma * sigma) * shadowStrength;
-		}
+		float visibility = getShadowVisibility(altitudeDegrees, diameterDegrees) * shadowStrength;
 		float ambientTransfer = ambientStrength;
 		float combinedStrength = out.ambientStrength + ambientTransfer;
 		if (combinedStrength > 0)
@@ -474,6 +466,30 @@ public class SkyRenderer {
 		if (combinedStrength > 0)
 			mix(out.directional, out.directional, directionalColor, directionalTransfer / combinedStrength);
 		out.directionalStrength = combinedStrength;
+	}
+
+	private static float getShadowVisibility(float altitudeDegrees, float diameterDegrees) {
+		if (altitudeDegrees <= 0)
+			return 0;
+		// A 10 m caster projects a disk-shaped penumbra. Approximate its long-axis
+		// variance with a Gaussian and retain its contrast at a 1 m feature wavelength.
+		float elevation = sin(altitudeDegrees * DEG_TO_RAD);
+		float sigma = 10 * diameterDegrees * DEG_TO_RAD / (4 * elevation * elevation);
+		return exp(-2 * PI * PI * sigma * sigma);
+	}
+
+	private float getNightExposure(float luminance, float sunAltitudeDegrees) {
+//		float target = ColorUtils.linearToSrgb(COLOR_PICKER[2]);
+//		float softFloor = .05f * COLOR_PICKER[3];
+		float softFloor = 0.016f;
+		float target = 1;
+		// .05f * 30/255: good for Auburnvale
+		float adaptedExposure = max(1, (target + softFloor) / (max(0, luminance) + softFloor));
+		// Bring adaptation in during early twilight, before darkness makes its absence noticeable.
+		// The cycle's overworld gate excludes interiors; keep daylight exposure unchanged here.
+		float adaptation = plugin.configNightBrightness * smoothstep(0, -3, sunAltitudeDegrees);
+//		float adaptation = plugin.configNightBrightness * ColorUtils.linearToSrgb(COLOR_PICKER[1]);
+		return mix(1, adaptedExposure * max(plugin.configNightBrightness, 1), adaptation);
 	}
 
 	private void updateSkyUbo(SkyConfiguration configuration, SkyState state, GradientSample sky) {

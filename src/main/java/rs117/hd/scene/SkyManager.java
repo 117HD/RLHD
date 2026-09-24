@@ -331,12 +331,7 @@ public class SkyManager {
 		out.moonIllumination = mix(fromMoon.illumination, toMoon.illumination, t);
 		out.moonLightIllumination = mix(fromMoon.lightIllumination, toMoon.lightIllumination, t);
 		out.moonIlluminationDirection = interpolateDirection(fromMoon.illuminationDirection, toMoon.illuminationDirection, t);
-		out.shadowAngles = fallbackShadowAngles;
-		if (out.cycleActive) {
-			out.shadowAngles = out.sunAngles;
-			if (out.sunAngles[0] < 0 && out.moonAngles[0] > 0 && out.moonLightIllumination > 0)
-				out.shadowAngles = out.moonAngles;
-		}
+		out.shadowAngles = out.cycleActive ? out.sunAngles : fallbackShadowAngles;
 
 		// Resolve the remaining shared celestial state consumed by the sky shaders.
 		// Approximate the Moon's visible east/west and north/south rocking over a month.
@@ -549,8 +544,8 @@ public class SkyManager {
 			out.brightnessMultiplier = 1;
 	}
 
-	public void updateDirectionalCamera(Camera directionalCamera) {
-		float[] angles = state.shadowAngles;
+	public void updateDirectionalCamera(Camera directionalCamera, boolean useMoon) {
+		float[] angles = useMoon ? state.moonAngles : state.shadowAngles;
 		float[] orientation = { PI - angles[1], angles[0] };
 		if (state.cycleActive) {
 			final float angleThreshold = 0.0005f;
