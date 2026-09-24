@@ -77,6 +77,9 @@ public class SkyManager {
 	private HdPlugin plugin;
 
 	@Inject
+	private HdPluginConfig config;
+
+	@Inject
 	private EnvironmentManager environmentManager;
 
 	private FileWatcher.UnregisterCallback fileWatcher;
@@ -542,6 +545,8 @@ public class SkyManager {
 		resolveSkyState(out.sky, environment, environment, 1, true, environment.getShadowAngles());
 		environment.getSky().evaluateGradient(out, out.sky.sunAltitudeDegrees, fogColor);
 		out.referenceFogColorLinear = fogColor;
+		if (!config.useCycleBrightnessMultiplier())
+			out.brightnessMultiplier = 1;
 	}
 
 	public void updateDirectionalCamera(Camera directionalCamera) {

@@ -805,6 +805,17 @@ public interface HdPluginConfig extends Config
 		return (int) DEFAULT_LATLON[1];
 	}
 
+	@ConfigItem(
+		keyName = "experimentalUseCycleBrightnessMultiplier",
+		name = "dev: cycle brightness multiplier",
+		description = "Imo this should be removed, since it only has a small impact, and is fairly convoluted.",
+		position = 100,
+		section = daylightCycleSettings
+	)
+	default boolean useCycleBrightnessMultiplier() {
+		return false;
+	}
+
 
 	/*====== Environment settings ======*/
 
