@@ -64,10 +64,8 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
-import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginManager;
-import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.OSType;
@@ -153,7 +151,6 @@ import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
 	tags = { "hd", "high", "detail", "graphics", "shaders", "textures", "gpu", "shadows", "lights" },
 	conflicts = "GPU"
 )
-@PluginDependency(EntityHiderPlugin.class)
 public class HdPlugin extends Plugin {
 	public static final ResourcePath PLUGIN_DIR = Props
 		.getFolder("rlhd.plugin-dir", () -> path(RuneLite.RUNELITE_DIR, "117hd"));
