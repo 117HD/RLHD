@@ -5631,7 +5631,8 @@
     "name": "PRIFDDINAS_REGION",
     "regionBoxes": [
       [ 12637, 13408 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "PRIFDDINAS",
