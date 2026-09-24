@@ -387,7 +387,7 @@
               },
               "skyFogDensity": {
                 "type": "number",
-                "description": "Additional horizon optical depth: 0 disables horizon fog; 0.69 halves transmission at the horizon. Fades upward. Defaults to environment fogDepth / 100; ground fog is independent.",
+                "description": "Horizon optical depth: 0 disables horizon fog; 0.69 halves transmission at the horizon. Fades upward. Defaults to 0.16 + environment fogDepth / 100; ground fog is independent.",
                 "minimum": 0
               },
               "skyVisibility": {
@@ -454,16 +454,6 @@
                 "description": "Sun altitude in degrees where `fogColor` fully replaces the procedural sky gradient. Lower values shorten the low-sun gradient; 0 replaces it at the horizon. Defaults to 40.",
                 "minimum": 0,
                 "maximum": 90
-              },
-              "sunlightStrength": {
-                "type": "number",
-                "description": "Multiplier for the daylight cycle's directional sun/moon light, after its time-of-day curve. 1 (default) is unchanged. Only applies while the cycle is active.",
-                "minimum": 0
-              },
-              "minBrightnessBoost": {
-                "type": "number",
-                "description": "Night-time ambient-floor boost, as a fraction of the player's minimum brightness. Scales with missing moonlight: strongest for a new or set moon, weakest for a full overhead moon. 0 (default) disables it.",
-                "minimum": 0
               }
             }
           }
@@ -618,33 +608,6 @@
         "directionalBaseStrength": {
           "type": "number",
           "minimum": 0
-        },
-        "brightness": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "nightAltitude": {
-              "type": "number"
-            },
-            "lowSunAltitude": {
-              "type": "number"
-            },
-            "horizonAltitude": {
-              "type": "number"
-            },
-            "lowSunBoost": {
-              "type": "number"
-            },
-            "horizonBoost": {
-              "type": "number"
-            },
-            "earlyDayBoost": {
-              "type": "number"
-            },
-            "daytimeStrength": {
-              "type": "number"
-            }
-          }
         }
       }
     }

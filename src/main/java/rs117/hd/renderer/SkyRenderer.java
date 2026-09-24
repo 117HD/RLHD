@@ -341,8 +341,7 @@ public class SkyRenderer {
 			mix(out.ambient, profile.getAmbientLight(sunAltDeg), env.getAmbientColor(), regionalBlend);
 		}
 		float moonAltDeg = state.moonAltitudeDegrees;
-		float brightnessMultiplier = endpointSample.brightnessMultiplier;
-		out.ambientStrength = config.useCycleBrightnessMultiplier() ? brightnessMultiplier : env.ambientStrength;
+		out.ambientStrength = env.ambientStrength;
 		out.directionalStrength = env.directionalStrength;
 
 		float moonLightIllumination = state.moonLightIllumination;
@@ -358,21 +357,13 @@ public class SkyRenderer {
 		copyTo(out.fog, endpointSample.horizonLinear);
 		if (sky.skyFogColor != null)
 			mix(out.fog, out.fog, sky.skyFogColor, saturate(sky.skyFogColorMix));
-		if (config.useMinBrightnessBoost()) {
-			float boostFraction = mix(1, MIN_BRIGHTNESS_BOOST_RESIDUAL, saturate(moonPresence));
-			out.ambientStrength = max(out.ambientStrength, 1 + sky.minBrightnessBoost * boostFraction);
-		}
 
-		float lightingScale = brightnessMultiplier * (config.useSunlightStrength() ? sky.sunlightStrength : 1);
 		// Fade direct sunlight near the horizon; the ambient profile supplies twilight below it.
 		// Carrying the warm directional baseline into twilight produces a red cast under exposure.
-		float sunlightStrength = out.directionalStrength * lightingScale * smoothstep(0, 5, sunAltDeg);
+		float sunlightStrength = out.directionalStrength * smoothstep(0, 5, sunAltDeg);
 
-		sky.moonDirectionalStrength = sky.moonAmbientStrength =
-			.01f / 255 * mix(41, 255, config.experimentalMoonDirectionalStrength() / 100.f);
-
-		float moonDirectionalStrength = state.moonDirectionalStrength * moonLighting * lightingScale;
-		float moonAmbientStrength = sky.moonAmbientStrength * moonLighting * lightingScale;
+		float moonDirectionalStrength = state.moonDirectionalStrength * moonLighting;
+		float moonAmbientStrength = sky.moonAmbientStrength * moonLighting;
 		float ambientLuminance =
 			linearSrgbLuminance(out.ambient) * out.ambientStrength +
 			linearSrgbLuminance(sky.moonAmbientColor) * moonAmbientStrength;

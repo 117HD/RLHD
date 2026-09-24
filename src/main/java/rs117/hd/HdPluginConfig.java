@@ -793,51 +793,6 @@ public interface HdPluginConfig extends Config
 		return (int) DEFAULT_LATLON[1];
 	}
 
-	@ConfigItem(
-		keyName = "experimentalUseCycleBrightnessMultiplier",
-		name = "dev: cycle brightness multiplier",
-		description = "Imo this should be removed, since it only has a small impact, and is fairly convoluted.",
-		position = 100,
-		section = daylightCycleSettings
-	)
-	default boolean useCycleBrightnessMultiplier() {
-		return false;
-	}
-
-	@ConfigItem(
-		keyName = "experimentalUseMinBrightnessBoost",
-		name = "dev: minBrightnessBoost",
-		description = "This doesn't play nicely with eye adaptation, so maybe we'll remove it.",
-		position = 100,
-		section = daylightCycleSettings
-	)
-	default boolean useMinBrightnessBoost() {
-		return false;
-	}
-
-	@ConfigItem(
-		keyName = "experimentalUseSunlightStrength",
-		name = "dev: sunlightStrength",
-		description = "This doesn't play nicely with eye adaptation, so maybe we'll remove it.",
-		position = 100,
-		section = daylightCycleSettings
-	)
-	default boolean useSunlightStrength() {
-		return false;
-	}
-
-	@Units(Units.PERCENT)
-	@ConfigItem(
-		keyName = "experimentalMoonDirectionalStrength",
-		name = "dev: moonlight intensity",
-		description = "0% corresponds to A, 100% to E",
-		position = 100,
-		section = daylightCycleSettings
-	)
-	default int experimentalMoonDirectionalStrength() {
-		return 100;
-	}
-
 
 	/*====== Environment settings ======*/
 

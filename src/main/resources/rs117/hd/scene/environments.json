@@ -88,8 +88,6 @@
       "skyVisibility": 0.04,
       "moonVisibility": 0.1,
       "sunStrength": 0.05,
-      "sunlightStrength": 0.5,
-      "minBrightnessBoost": 0.8,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#060810"
@@ -113,8 +111,6 @@
       "skyVisibility": 0.34,
       "moonVisibility": 0.3,
       "sunStrength": 0.1,
-      "sunlightStrength": 0.7,
-      "minBrightnessBoost": 0.8,
       "skyFogDensity": 0.02,
       "profile": {
         "nightSkyColor": "#070912"
@@ -141,8 +137,6 @@
       "skyVisibility": 0.23,
       "moonVisibility": 0.2,
       "sunStrength": 0.05,
-      "sunlightStrength": 0.5,
-      "minBrightnessBoost": 0.8,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#060911"
@@ -426,8 +420,6 @@
       "moonDirectionalColor": "#FF6D6D",
       "skyVisibility": 0.32,
       "sunStrength": 0.02,
-      "sunlightStrength": 0.4,
-      "minBrightnessBoost": 3,
       "skyFogDensity": 0.02,
       "profile": {
         "nightSkyColor": "#0F070E"
@@ -473,8 +465,6 @@
       "moonDirectionalColor": "#FF6D6D",
       "skyVisibility": 0.32,
       "sunStrength": 0.02,
-      "sunlightStrength": 0.4,
-      "minBrightnessBoost": 3,
       "skyFogDensity": 0.02,
       "profile": {
         "nightSkyColor": "#0F070E"
@@ -631,8 +621,6 @@
       "skyFogDensity": 0,
       "moonVisibility": 0.35,
       "sunStrength": 0.025,
-      "sunlightStrength": 0.15,
-      "minBrightnessBoost": 0.75,
       "profile": {
         "nightSkyColor": "#080A12"
       }
@@ -675,8 +663,6 @@
       "auroraVisibility": 0,
       "sunStrength": 0.02,
       "sunriseSunsetStrength": 0.2,
-      "sunlightStrength": 0.4,
-      "minBrightnessBoost": 1.2,
       "skyFogDensity": 0.02,
       "profile": {
         "nightSkyColor": "#0F070E"
@@ -701,8 +687,6 @@
       "skyVisibility": 0.08,
       "moonVisibility": 0.4,
       "sunStrength": 0.04,
-      "sunlightStrength": 0.15,
-      "minBrightnessBoost": 0.85,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#080A13"
@@ -754,7 +738,6 @@
     "sky": {
       "parent": "BLOOD_MOON",
       "skyVisibility": 0.94,
-      "minBrightnessBoost": 1.25,
       "skyFogDensity": 0.06,
       "profile": {
         "nightSkyColor": "#32060C"
@@ -864,8 +847,6 @@
       "skyVisibility": 0.28,
       "moonVisibility": 0.35,
       "sunStrength": 0.01,
-      "sunlightStrength": 0.25,
-      "minBrightnessBoost": 0.75,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#080A12"
@@ -922,8 +903,6 @@
     "fogDepth": 45,
     "sky": {
       "sunStrength": 0.02,
-      "sunlightStrength": 0.1,
-      "minBrightnessBoost": 0.9,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.15,
       "profile": {
@@ -942,8 +921,6 @@
     "fogDepth": 20,
     "sky": {
       "sunStrength": 0.02,
-      "sunlightStrength": 0.1,
-      "minBrightnessBoost": 0.9,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.13,
       "profile": {
@@ -976,7 +953,6 @@
     "sky": {
       "parent": "NIGHT",
       "moonDirectionalStrength": 2,
-      "minBrightnessBoost": 0.35,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.16,
       "profile": {
@@ -1167,7 +1143,6 @@
       "skyVisibility": 0.44,
       "moonVisibility": 0.4,
       "sunStrength": 0.6,
-      "sunlightStrength": 0.7,
       "skyFogDensity": 0.07,
       "profile": {
         "nightSkyColor": "#080A13"
@@ -1188,7 +1163,6 @@
       "skyVisibility": 0.44,
       "moonVisibility": 0.4,
       "sunStrength": 0.6,
-      "sunlightStrength": 0.7,
       "skyFogDensity": 0.07,
       "profile": {
         "nightSkyColor": "#080A13"
@@ -1233,8 +1207,6 @@
       "skyVisibility": 0.54,
       "moonVisibility": 0.5,
       "sunStrength": 0.6,
-      "sunlightStrength": 0.4,
-      "minBrightnessBoost": 0.3,
       "skyFogDensity": 0.1,
       "profile": {
         "nightSkyColor": "#090B14"
@@ -1257,8 +1229,6 @@
       "skyVisibility": 0.54,
       "moonVisibility": 0.5,
       "sunStrength": 0.6,
-      "sunlightStrength": 0.4,
-      "minBrightnessBoost": 0.3,
       "skyFogDensity": 0.1,
       "profile": {
         "nightSkyColor": "#090B14"
@@ -1283,8 +1253,6 @@
       "skyVisibility": 0.54,
       "moonVisibility": 0.5,
       "sunStrength": 0.6,
-      "sunlightStrength": 0.4,
-      "minBrightnessBoost": 0.3,
       "skyFogDensity": 0.1,
       "profile": {
         "nightSkyColor": "#090B14"
@@ -1350,7 +1318,6 @@
       "skyVisibility": 0.82,
       "moonVisibility": 0.8,
       "sunStrength": 0.8,
-      "sunlightStrength": 0.9,
       "skyFogDensity": 0.12,
       "profile": {
         "nightSkyColor": "#0B0D17"
@@ -1416,7 +1383,6 @@
       "skyVisibility": 0.23,
       "moonVisibility": 0.1,
       "sunStrength": 0.02,
-      "sunlightStrength": 0.8,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#060810"
@@ -1441,7 +1407,6 @@
       "skyVisibility": 0.23,
       "moonVisibility": 0.1,
       "sunStrength": 0.02,
-      "sunlightStrength": 0.6,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#060810"
@@ -1499,7 +1464,6 @@
       "skyVisibility": 0.23,
       "moonVisibility": 0.1,
       "sunStrength": 0.02,
-      "sunlightStrength": 0.6,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#060810"
@@ -1572,8 +1536,6 @@
       "skyVisibility": 0.34,
       "moonVisibility": 0.3,
       "sunStrength": 0.1,
-      "sunlightStrength": 0.7,
-      "minBrightnessBoost": 0.4,
       "skyFogDensity": 0.02,
       "profile": {
         "nightSkyColor": "#070912"
@@ -1729,7 +1691,6 @@
     "windSpeed": 10,
     "sky": {
       "sunStrength": 0.1,
-      "sunlightStrength": 0.5,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.13,
       "profile": {
@@ -1752,7 +1713,6 @@
     "fogDepth": 30,
     "sky": {
       "sunStrength": 0.02,
-      "sunlightStrength": 0.8,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.13,
       "profile": {
@@ -1772,7 +1732,6 @@
       "skyVisibility": 0.34,
       "moonVisibility": 0.3,
       "sunStrength": 0.1,
-      "sunlightStrength": 0.8,
       "skyFogDensity": 0.02,
       "profile": {
         "nightSkyColor": "#070912"
@@ -1800,7 +1759,6 @@
     "sky": {
       "skyVisibility": 0.36,
       "sunStrength": 0.1,
-      "sunlightStrength": 0.8,
       "skyFogDensity": 0.03,
       "profile": {
         "nightSkyColor": "#0C0F19"
@@ -1820,7 +1778,6 @@
     "waterCausticsStrength": 0.8,
     "sky": {
       "sunStrength": 0.1,
-      "minBrightnessBoost": 0.3,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.13,
       "profile": {
@@ -1842,7 +1799,6 @@
       "sunStrength": 0.1,
       "sunriseSunsetStrength": 0.2,
       "skyColorTakeoverAngle": 10,
-      "sunlightStrength": 0.01,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#05070F"
@@ -1862,7 +1818,6 @@
     "windStrength": 50,
     "sky": {
       "moonDirectionalStrength": 2,
-      "minBrightnessBoost": 1.5,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.13,
       "profile": {
@@ -1881,7 +1836,6 @@
     "sky": {
       "skyVisibility": 0.36,
       "sunStrength": 0.8,
-      "sunlightStrength": 0.8,
       "skyFogDensity": 0.03,
       "profile": {
         "nightSkyColor": "#0C0F19"
@@ -2026,7 +1980,6 @@
       "skyVisibility": 0.23,
       "moonVisibility": 0.1,
       "sunStrength": 0.02,
-      "sunlightStrength": 0.8,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#060810"
@@ -2046,7 +1999,6 @@
       "skyVisibility": 0.23,
       "moonVisibility": 0.1,
       "sunStrength": 0.02,
-      "sunlightStrength": 0.8,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#060810"
@@ -2073,7 +2025,6 @@
       "skyVisibility": 0.23,
       "moonVisibility": 0.1,
       "sunStrength": 0.02,
-      "sunlightStrength": 0.8,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#060810"
@@ -2672,8 +2623,6 @@
       "skyVisibility": 0.54,
       "moonVisibility": 0.5,
       "sunStrength": 0.6,
-      "sunlightStrength": 0.4,
-      "minBrightnessBoost": 0.3,
       "skyFogDensity": 0.1,
       "profile": {
         "nightSkyColor": "#090B14"
@@ -2694,8 +2643,6 @@
       "skyVisibility": 0.54,
       "moonVisibility": 0.5,
       "sunStrength": 0.6,
-      "sunlightStrength": 0.4,
-      "minBrightnessBoost": 0.3,
       "skyFogDensity": 0.1,
       "profile": {
         "nightSkyColor": "#090B14"
@@ -2716,8 +2663,6 @@
       "skyVisibility": 0.54,
       "moonVisibility": 0.5,
       "sunStrength": 0.6,
-      "sunlightStrength": 0.4,
-      "minBrightnessBoost": 0.3,
       "skyFogDensity": 0.1,
       "profile": {
         "nightSkyColor": "#090B14"
@@ -2769,7 +2714,6 @@
     "fogDepth": 6.5,
     "windStrength": 50,
     "sky": {
-      "minBrightnessBoost": 0.4
     }
   },
   {
@@ -2932,8 +2876,6 @@
       ],
       "moonSizeMult": 2.8,
       "sunStrength": 0.2,
-      "sunlightStrength": 2,
-      "minBrightnessBoost": 0.5,
       "skyVisibility": 0.94,
       "skyFogDensity": 0.05,
       "profile": {
@@ -2955,8 +2897,6 @@
       "auroraVisibility": 0,
       "sunStrength": 0.075,
       "sunriseSunsetStrength": 0.2,
-      "sunlightStrength": 2,
-      "minBrightnessBoost": 0.5,
       "skyFogDensity": 0,
       "moonVisibility": 0,
       "profile": {
@@ -2986,8 +2926,6 @@
       "auroraVisibility": 0,
       "sunStrength": 0.075,
       "sunriseSunsetStrength": 0.2,
-      "sunlightStrength": 2,
-      "minBrightnessBoost": 1.75,
       "skyFogDensity": 0.16,
       "profile": {
         "nightSkyColor": "#0F070E"
@@ -3005,8 +2943,6 @@
       "auroraVisibility": 0,
       "sunStrength": 0.075,
       "sunriseSunsetStrength": 0.2,
-      "sunlightStrength": 2,
-      "minBrightnessBoost": 0.5,
       "skyFogDensity": 0,
       "moonVisibility": 0,
       "profile": {
@@ -3034,8 +2970,6 @@
       "auroraVisibility": 0,
       "sunStrength": 0.01,
       "sunriseSunsetStrength": 0.2,
-      "sunlightStrength": 2,
-      "minBrightnessBoost": 1.15,
       "skyFogDensity": 0.16,
       "profile": {
         "nightSkyColor": "#0F070E"
@@ -3063,7 +2997,6 @@
       "skyVisibility": 0.6,
       "moonVisibility": 0.7,
       "sunStrength": 0.05,
-      "sunlightStrength": 0.8,
       "skyFogDensity": 0.11,
       "profile": {
         "nightSkyColor": "#0A0C16"
@@ -3089,8 +3022,6 @@
       "skyVisibility": 0.54,
       "moonVisibility": 0.5,
       "sunStrength": 0.6,
-      "sunlightStrength": 0.4,
-      "minBrightnessBoost": 0.3,
       "skyFogDensity": 0.1,
       "profile": {
         "nightSkyColor": "#090B14"
@@ -3118,8 +3049,6 @@
       "skyVisibility": 0.28,
       "moonVisibility": 0.35,
       "sunStrength": 0.025,
-      "sunlightStrength": 0.15,
-      "minBrightnessBoost": 0.75,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#080A12"
@@ -3161,7 +3090,6 @@
       "skyVisibility": 0.44,
       "moonVisibility": 0.4,
       "sunStrength": 0.6,
-      "sunlightStrength": 0.7,
       "skyFogDensity": 0.07,
       "profile": {
         "nightSkyColor": "#080A13"
@@ -3186,8 +3114,6 @@
       "skyVisibility": 0.57,
       "moonVisibility": 1,
       "sunStrength": 0.5,
-      "sunlightStrength": 0.55,
-      "minBrightnessBoost": 0.75,
       "skyFogDensity": 0.1,
       "profile": {
         "nightSkyColor": "#0C0F19"

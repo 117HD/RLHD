@@ -3,7 +3,7 @@
     "name": "GIELINOR",
     "moonDiskColor": "#C4CCFF",
     "moonDiskStrength": 3.8,
-    "moonDirectionalStrength": 0.024,
+    "moonDirectionalStrength": 0.01,
     "profile": {
       "zenith": [
         {
@@ -255,16 +255,7 @@
       ],
       "nightSkyColor": "#05070F",
       "directionalBaseTemperature": 4100,
-      "directionalBaseStrength": 0.1,
-      "brightness": {
-        "nightAltitude": -18,
-        "lowSunAltitude": -5,
-        "horizonAltitude": 5,
-        "lowSunBoost": 0.07,
-        "horizonBoost": 0.1,
-        "earlyDayBoost": 0.05,
-        "daytimeStrength": 1.2
-      }
+      "directionalBaseStrength": 0.1
     }
   },
   {

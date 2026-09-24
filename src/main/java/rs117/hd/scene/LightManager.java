@@ -639,7 +639,7 @@ public class LightManager {
 
 		copyTo(light.color, lightColor);
 		float peakScale = defLuminance / referenceLuminance;
-		float timeScale = max(min(horizonLuminance / referenceLuminance, 1) * lighting.brightnessMultiplier, moonStrengthFloor);
+		float timeScale = max(min(horizonLuminance / referenceLuminance, 1), moonStrengthFloor);
 		float outdoorLightScale = peakScale * timeScale;
 		if (outdoorLightScale > 1) {
 			float scaleRange = 3;

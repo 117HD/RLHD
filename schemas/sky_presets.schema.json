@@ -113,7 +113,7 @@
       },
       "skyFogDensity": {
         "type": "number",
-        "description": "Additional horizon optical depth: 0 disables horizon fog; 0.69 halves transmission at the horizon. Fades upward. Defaults to environment fogDepth / 100; ground fog is independent.",
+        "description": "Horizon optical depth: 0 disables horizon fog; 0.69 halves transmission at the horizon. Fades upward. Defaults to 0.16 + environment fogDepth / 100; ground fog is independent.",
         "minimum": 0
       },
       "skyVisibility": {
@@ -172,14 +172,6 @@
         "type": "number",
         "minimum": 0,
         "maximum": 90
-      },
-      "sunlightStrength": {
-        "type": "number",
-        "minimum": 0
-      },
-      "minBrightnessBoost": {
-        "type": "number",
-        "minimum": 0
       }
     }
   }

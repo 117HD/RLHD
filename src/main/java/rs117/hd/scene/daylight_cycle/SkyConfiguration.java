@@ -72,8 +72,6 @@ public class SkyConfiguration {
 	private float sunStrength = 1;
 	private float sunriseSunsetStrength = 1;
 	private float skyColorTakeoverAngle = 40;
-	public float sunlightStrength = 1;
-	public float minBrightnessBoost;
 
 	public void normalize() {
 		if (moonDiskColor == null)
@@ -87,7 +85,7 @@ public class SkyConfiguration {
 			moonDirectionalColor = HDUtils.ensureArrayLength(moonDirectionalColor, 3);
 		}
 		if (moonDirectionalStrength < 0)
-			moonDirectionalStrength = moonDiskStrength;
+			moonDirectionalStrength = 0.0026f * moonDiskStrength;
 
 		boolean deriveAmbient = moonAmbientColor == null;
 		if (deriveAmbient) {
@@ -132,7 +130,6 @@ public class SkyConfiguration {
 		private float[] nightSkyColor;
 		private float directionalBaseTemperature;
 		private float directionalBaseStrength;
-		private BrightnessCurve brightness;
 
 		private static class Keyframe {
 			private float altitude;
@@ -145,21 +142,8 @@ public class SkyConfiguration {
 			}
 		}
 
-		private static class BrightnessCurve {
-			private float nightAltitude;
-			private float lowSunAltitude;
-			private float horizonAltitude;
-			private float lowSunBoost;
-			private float horizonBoost;
-			private float earlyDayBoost;
-			private float daytimeStrength;
-		}
-
 		public void normalize() {
-			if (nightSkyColor == null ||
-				brightness == null ||
-				brightness.nightAltitude >= brightness.lowSunAltitude ||
-				brightness.lowSunAltitude >= brightness.horizonAltitude)
+			if (nightSkyColor == null)
 				throw new IllegalStateException("Invalid sky profile");
 			nightSkyColor = HDUtils.ensureArrayLength(nightSkyColor, 3);
 			normalizeKeyframes(zenith, true);
@@ -220,26 +204,6 @@ public class SkyConfiguration {
 			Keyframe to = keyframes[i + 1];
 			return mix(from.values(), to.values(), saturate((altitude - from.altitude) / (to.altitude - from.altitude)));
 		}
-
-		private float getBrightnessMultiplier(float sunAltitude) {
-			// Scene exposure is applied after lighting is composed; this curve describes the sources.
-			float minBrightness = 1;
-			if (sunAltitude <= brightness.nightAltitude)
-				return minBrightness;
-			float lowSunBrightness = minBrightness + brightness.lowSunBoost;
-			if (sunAltitude <= brightness.lowSunAltitude)
-				return mix(minBrightness, lowSunBrightness, smoothstep(brightness.nightAltitude, brightness.lowSunAltitude, sunAltitude));
-			float earlyDayBrightness = minBrightness + brightness.horizonBoost + brightness.earlyDayBoost;
-			if (sunAltitude <= brightness.horizonAltitude)
-				return mix(
-					lowSunBrightness,
-					earlyDayBrightness,
-					smoothstep(brightness.lowSunAltitude, brightness.horizonAltitude, sunAltitude)
-				);
-			float sineAtHorizon = sin(brightness.horizonAltitude * DEG_TO_RAD);
-			float normalizedSine = max(0, (sin(sunAltitude * DEG_TO_RAD) - sineAtHorizon) / (1 - sineAtHorizon));
-			return mix(earlyDayBrightness, brightness.daytimeStrength, normalizedSine);
-		}
 	}
 
 	/**
@@ -267,8 +231,6 @@ public class SkyConfiguration {
 		auroraVisibility = mix(from.auroraVisibility, to.auroraVisibility, t);
 		moonSizeMult = mix(from.moonSizeMult, to.moonSizeMult, t);
 		starHorizonHeight = mix(from.starHorizonHeight, to.starHorizonHeight, t);
-		sunlightStrength = mix(from.sunlightStrength, to.sunlightStrength, t);
-		minBrightnessBoost = mix(from.minBrightnessBoost, to.minBrightnessBoost, t);
 		return this;
 	}
 
@@ -280,7 +242,6 @@ public class SkyConfiguration {
 		out.zenithLinear = zenith;
 		out.horizonLinear = horizon;
 		out.sunGlowLinear = sunGlow;
-		out.brightnessMultiplier = profile.getBrightnessMultiplier(sunAltitudeDegrees);
 		// Authored gradients bypass the automatic fog takeover and night-color replacement.
 		if (customGradient)
 			return;
