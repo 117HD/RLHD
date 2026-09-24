@@ -381,7 +381,7 @@ public class SkyRenderer {
 			out.ambientStrength = max(out.ambientStrength, 1 + sky.minBrightnessBoost * boostFraction);
 		}
 
-		float lightingScale = brightnessMultiplier * sky.sunlightStrength;
+		float lightingScale = brightnessMultiplier * (config.useSunlightStrength() ? sky.sunlightStrength : 1);
 		// Fade residual sunlight through twilight before transferring blurred shadows into ambient.
 		// At -18 degrees and below, the ambient profile alone defines the moonless lighting.
 		float sunlightStrength = out.directionalStrength * lightingScale * smoothstep(-18, 0, sunAltDeg);

@@ -827,6 +827,17 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	@ConfigItem(
+		keyName = "experimentalUseSunlightStrength",
+		name = "dev: sunlightStrength",
+		description = "This doesn't play nicely with eye adaptation, so maybe we'll remove it.",
+		position = 100,
+		section = daylightCycleSettings
+	)
+	default boolean useSunlightStrength() {
+		return false;
+	}
+
 
 	/*====== Environment settings ======*/
 
