@@ -15,6 +15,7 @@ import rs117.hd.utils.GsonUtils.DegreesToRadians;
 import rs117.hd.utils.HDUtils;
 
 import static rs117.hd.utils.ColorUtils.SrgbToLinearAdapter;
+import static rs117.hd.utils.ColorUtils.deriveAmbientLight;
 import static rs117.hd.utils.ColorUtils.rgb;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -27,6 +28,8 @@ public class Environment {
 	public static final Environment DEFAULT = new Environment()
 		.setKey("DEFAULT")
 		.setArea(Area.ALL)
+		.setAmbientColor(rgb("#ffffff"))
+		.setAmbientStrength(1)
 		.setFogColor(DEFAULT_FOG_COLOR)
 		.setWaterColor(DEFAULT_WATER_COLOR)
 		.setShadowAngles(DEFAULT_SHADOW_ANGLES)
@@ -55,8 +58,8 @@ public class Environment {
 	public ExpressionPredicate varpCondition = ExpressionPredicate.TRUE;
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	@Getter
-	private float[] ambientColor = rgb("#ffffff");
-	public float ambientStrength = 1;
+	private float[] ambientColor;
+	public float ambientStrength = -1;
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	@Getter
 	private float[] directionalColor = rgb("#ffffff");
@@ -103,10 +106,9 @@ public class Environment {
 			varbitCondition = ExpressionPredicate.TRUE;
 		if (varpCondition == null)
 			varpCondition = ExpressionPredicate.TRUE;
-		if (ambientColor == null)
-			ambientColor = rgb("#ffffff");
 		if (directionalColor == null)
 			directionalColor = rgb("#ffffff");
+		directionalColor = HDUtils.ensureArrayLength(directionalColor, 3);
 		if (underglowColor == null)
 			underglowColor = rgb("#000000");
 
@@ -132,6 +134,18 @@ public class Environment {
 				}
 			}
 		}
+
+		if (ambientColor == null) {
+			if (isOverworld) {
+				ambientColor = new float[3];
+				deriveAmbientLight(ambientColor, directionalColor);
+			} else {
+				ambientColor = DEFAULT.ambientColor;
+			}
+		}
+		ambientColor = HDUtils.ensureArrayLength(ambientColor, 3);
+		if (ambientStrength < 0)
+			ambientStrength = isOverworld ? directionalStrength : DEFAULT.ambientStrength;
 
 		if (shadowAngles == null) {
 			shadowAngles = DEFAULT_SHADOW_ANGLES;

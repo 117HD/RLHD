@@ -471,7 +471,8 @@ public class ZoneRenderer implements Renderer {
 				return;
 			}
 
-			skyManager.updateDirectionalCamera(directionalCamera);
+			skyRenderer.prepareFrame(plugin.uboGlobal);
+			skyManager.updateDirectionalCamera(directionalCamera, skyRenderer.usesMoonShadows);
 
 			boolean hasDirectionalCameraChanged = directionalCamera.isViewDirty() || directionalCamera.isProjDirty();
 
@@ -604,7 +605,8 @@ public class ZoneRenderer implements Renderer {
 		if (client.getGameState().getState() >= GameState.LOGGED_IN.getState())
 			plugin.hasLoggedIn = true;
 
-		skyRenderer.prepareFrame(plugin.uboGlobal);
+		if (plugin.enableFreezeFrame || plugin.redrawPreviousFrame)
+			skyRenderer.prepareFrame(plugin.uboGlobal);
 
 		boolean replaceVanillaSkybox =
 			skyRenderer.shouldRenderSky(false) &&
@@ -1011,7 +1013,6 @@ public class ZoneRenderer implements Renderer {
 				z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
 
 			modelStreamingManager.ensureAsyncUploadsComplete(z);
-			z.queueLateAlphaModels(sceneCamera);
 
 			final boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
 			if (hasAlpha) {

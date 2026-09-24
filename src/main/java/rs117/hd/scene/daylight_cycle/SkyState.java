@@ -35,7 +35,6 @@ public final class SkyState {
 		public float[] zenithLinear;
 		public float[] horizonLinear;
 		public float[] sunGlowLinear;
-		public float brightnessMultiplier;
 	}
 
 	public static final class LightingSample extends GradientSample {

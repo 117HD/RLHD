@@ -3,7 +3,7 @@
     "name": "GIELINOR",
     "moonDiskColor": "#C4CCFF",
     "moonDiskStrength": 3.8,
-    "moonLightColor": [ 228.46, 259.86, 287.43 ],
+    "moonDirectionalStrength": 0.01,
     "profile": {
       "zenith": [
         {
@@ -12,15 +12,19 @@
         },
         {
           "altitude": -15,
-          "color": "#03040A"
+          "color": "#060D20"
+        },
+        {
+          "altitude": -12,
+          "color": "#10264D"
         },
         {
           "altitude": -8,
-          "color": "#2D2346"
+          "color": "#284878"
         },
         {
           "altitude": -3,
-          "color": "#503C64"
+          "color": "#465E8C"
         },
         {
           "altitude": 0,
@@ -54,11 +58,15 @@
         },
         {
           "altitude": -15,
-          "color": "#04050C"
+          "color": "#20100E"
+        },
+        {
+          "altitude": -12,
+          "color": "#482B30"
         },
         {
           "altitude": -8,
-          "color": "#3C2D41"
+          "color": "#785450"
         },
         {
           "altitude": -3,
@@ -99,12 +107,24 @@
           "color": "#000000"
         },
         {
-          "altitude": -10,
-          "color": "#140A1E"
+          "altitude": -18,
+          "color": "#000000"
+        },
+        {
+          "altitude": -15,
+          "color": "#140704"
+        },
+        {
+          "altitude": -12,
+          "color": "#32120C"
+        },
+        {
+          "altitude": -8,
+          "color": "#59271B"
         },
         {
           "altitude": -5,
-          "color": "#50283C"
+          "color": "#783629"
         },
         {
           "altitude": -2,
@@ -137,7 +157,19 @@
       ],
       "ambientColor": [
         {
-          "altitude": -5,
+          "altitude": -18,
+          "color": "#030713"
+        },
+        {
+          "altitude": -12,
+          "color": "#0D1933"
+        },
+        {
+          "altitude": -6,
+          "color": "#334F78"
+        },
+        {
+          "altitude": 0,
           "color": "#718CB4"
         },
         {
@@ -223,16 +255,7 @@
       ],
       "nightSkyColor": "#05070F",
       "directionalBaseTemperature": 4100,
-      "directionalBaseStrength": 0.1,
-      "brightness": {
-        "nightAltitude": -18,
-        "lowSunAltitude": -5,
-        "horizonAltitude": 5,
-        "lowSunBoost": 0.07,
-        "horizonBoost": 0.1,
-        "earlyDayBoost": 0.05,
-        "daytimeStrength": 1.2
-      }
+      "directionalBaseStrength": 0.1
     }
   },
   {
@@ -305,7 +328,7 @@
     "forceMoonPhase": "FULL_MOON",
     "moonDiskColor": "#E82B20",
     "moonDiskStrength": 0.9,
-    "moonLightColor": "#ED8B8B",
+    "moonDirectionalColor": "#ED8B8B",
     "skyFogDensity": 0.1,
     "skyVisibility": 0.85,
     "starVisibility": 0.71,

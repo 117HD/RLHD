@@ -77,6 +77,9 @@ public class SkyManager {
 	private HdPlugin plugin;
 
 	@Inject
+	private HdPluginConfig config;
+
+	@Inject
 	private EnvironmentManager environmentManager;
 
 	private FileWatcher.UnregisterCallback fileWatcher;
@@ -200,8 +203,14 @@ public class SkyManager {
 		configCycleDuration = max(1e-6f, (float) config.customCycleDurationMinutes());
 		configNightFraction = clamp(config.basicNightPercentage(), 0, 100) / 100f;
 
-		configLatLon[0] = degreesAndArcminutes(config.latitudeDegrees(), config.latitudeArcminutes(), 90);
-		configLatLon[1] = degreesAndArcminutes(config.longitudeDegrees(), config.longitudeArcminutes(), 180);
+		String latLonString = config.preciseLatLon();
+		float[] latLon = HDUtils.parseLatLon(latLonString);
+		if (latLon == null) {
+			if (!latLonString.isEmpty())
+				log.warn("Ignoring invalid latitude & longitude coordinates: {}", latLon);
+			latLon = vec(config.latitudeDegrees(), config.longitudeDegrees());
+		}
+		copyTo(configLatLon, latLon);
 	}
 
 	private static float degreesAndArcminutes(int degrees, int arcminutes, int maxDegrees) {
@@ -322,12 +331,7 @@ public class SkyManager {
 		out.moonIllumination = mix(fromMoon.illumination, toMoon.illumination, t);
 		out.moonLightIllumination = mix(fromMoon.lightIllumination, toMoon.lightIllumination, t);
 		out.moonIlluminationDirection = interpolateDirection(fromMoon.illuminationDirection, toMoon.illuminationDirection, t);
-		out.shadowAngles = fallbackShadowAngles;
-		if (out.cycleActive) {
-			out.shadowAngles = out.sunAngles;
-			if (out.sunAngles[0] < 0 && out.moonAngles[0] > 0 && out.moonLightIllumination > 0)
-				out.shadowAngles = out.moonAngles;
-		}
+		out.shadowAngles = out.cycleActive ? out.sunAngles : fallbackShadowAngles;
 
 		// Resolve the remaining shared celestial state consumed by the sky shaders.
 		// Approximate the Moon's visible east/west and north/south rocking over a month.
@@ -366,7 +370,7 @@ public class SkyManager {
 			}
 		}
 
-		ResolvedMoon moon = resolveMoon(sky, environment.directionalStrength, utcMillis, sunAngles, fixedSunAngles, latLon);
+		ResolvedMoon moon = resolveMoon(sky, utcMillis, sunAngles, fixedSunAngles, latLon);
 		float[] moonLibration = NO_MOON_LIBRATION;
 		if (sky.moonAngles == null &&
 			configMoonBehavior != MoonBehavior.STATIC &&
@@ -450,7 +454,6 @@ public class SkyManager {
 
 	private ResolvedMoon resolveMoon(
 		SkyConfiguration sky,
-		float fallbackDirectionalStrength,
 		long millis,
 		float[] sunAngles,
 		boolean fixedSunAngles,
@@ -494,20 +497,23 @@ public class SkyManager {
 			illuminationDirection = subtract(multiply(moonDirection, 2 * radial), illuminationDirection);
 		}
 
-		boolean naturalMoonlightEnabled = !sky.hideMoon || sky.moonLightVisibility >= 0 || sky.moonDirectionalStrength >= 0;
+		boolean naturalMoonlightEnabled =
+			!sky.hideMoon ||
+			sky.moonLightVisibility >= 0 ||
+			sky.moonDirectionalStrength >= 0 ||
+			sky.moonAmbientStrength >= 0;
 		float moonLightVisibility = sky.moonLightVisibility < 0 ? 1 : sky.moonLightVisibility;
-		float lightIllumination = max(naturalMoonlightEnabled ? illumination : 0, sky.minMoonIllumination) * moonLightVisibility;
+		float lightIllumination = moonLightVisibility * max(sky.minMoonIllumination, naturalMoonlightEnabled ? illumination : 0);
 		float visibility = sky.moonVisibility;
 		if (sky.hideMoon || configMoonBehavior == MoonBehavior.DISABLED && sky.forceMoonPhase == null)
 			visibility = 0;
-		float directionalStrength = sky.moonDirectionalStrength < 0 ? fallbackDirectionalStrength : sky.moonDirectionalStrength;
 		return new ResolvedMoon(
 			angles,
 			illuminationDirection,
 			illumination,
 			lightIllumination,
 			visibility,
-			directionalStrength
+			sky.moonDirectionalStrength
 		);
 	}
 
@@ -532,12 +538,12 @@ public class SkyManager {
 	 */
 	public void sampleLighting(SkyState.LightingSample out, Environment environment, float[] fogColor) {
 		resolveSkyState(out.sky, environment, environment, 1, true, environment.getShadowAngles());
-		environment.getSky().evaluateGradient(out, out.sky.sunAltitudeDegrees, fogColor, plugin.configMinimumBrightness);
+		environment.getSky().evaluateGradient(out, out.sky.sunAltitudeDegrees, fogColor);
 		out.referenceFogColorLinear = fogColor;
 	}
 
-	public void updateDirectionalCamera(Camera directionalCamera) {
-		float[] angles = state.shadowAngles;
+	public void updateDirectionalCamera(Camera directionalCamera, boolean useMoon) {
+		float[] angles = useMoon ? state.moonAngles : state.shadowAngles;
 		float[] orientation = { PI - angles[1], angles[0] };
 		if (state.cycleActive) {
 			final float angleThreshold = 0.0005f;

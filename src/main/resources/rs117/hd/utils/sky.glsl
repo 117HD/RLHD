@@ -36,19 +36,24 @@ SkyGradient computeSkyGradient(vec3 viewDir) {
     vec3 darkSideColor = mix(uboSky.zenithColor * darkSideDim, uboSky.horizonColor, daytimeFactor);
     vec3 sunSideColor = uboSky.horizonColor;
 
-    g.nightFade = smoothstep(-0.26, 0.0, uboSky.sunDir.y) * (1.0 - uboSky.customGradient);
+    // Retain residual twilight until the sun reaches astronomical night at -18 degrees.
+    g.nightFade = smoothstep(sin(radians(-18.0)), 0.0, uboSky.sunDir.y) * (1.0 - uboSky.customGradient);
 
     vec3 horizonColor = mix(darkSideColor, sunSideColor, g.sunSideBlend);
     horizonColor = mix(uboSky.zenithColor, horizonColor, g.nightFade);
 
     g.color = mix(horizonColor, uboSky.zenithColor, g.zenithBlend);
+
     // Custom skies have a symmetric horizon band independent of the sun's direction.
     vec3 customColor = mix(uboSky.horizonColor, uboSky.zenithColor,
         smoothstep(0.0, uboSky.horizonWidth, abs(g.upAmount)));
     g.color = mix(g.color, customColor, uboSky.customGradient);
 
     // Use multiply/sqrt equivalents of pow for the glow falloffs.
-    float sunDot = dot(viewDir, g.sunDir);
+    // Below sunset, keep scattered sunlight at the perceived horizon. Its color and
+    // disappearance are authored in sunGlow, independently of the sun disk's position.
+    vec3 glowDir = normalize(vec3(uboSky.sunDir.x, -max(0.0, uboSky.sunDir.y) + HORIZON_OFFSET, uboSky.sunDir.z));
+    float sunDot = dot(viewDir, glowDir);
     if (sunDot > 0.0) {
         float s2 = sunDot * sunDot;
         float s4 = s2 * s2;

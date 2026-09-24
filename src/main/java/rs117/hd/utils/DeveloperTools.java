@@ -17,6 +17,7 @@ import net.runelite.client.input.KeyManager;
 import net.runelite.client.ui.components.colorpicker.ColorPickerManager;
 import net.runelite.client.ui.components.colorpicker.RuneliteColorPicker;
 import rs117.hd.HdPlugin;
+import rs117.hd.HdPluginConfig;
 import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
@@ -66,6 +67,9 @@ public class DeveloperTools implements KeyListener {
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private HdPluginConfig config;
 
 	@Inject
 	private GamevalManager gamevalManager;
@@ -181,8 +185,12 @@ public class DeveloperTools implements KeyListener {
 			case "colorpicker":
 				toggleColorPicker();
 				break;
+			case "latlon":
+				handleLatLonCommand(args);
+				break;
 		}
 
+		// Other commands are gated behind RuneLite's --developer-mode
 		if (!developerMode)
 			return;
 
@@ -191,6 +199,33 @@ public class DeveloperTools implements KeyListener {
 			case "varp":
 				handleVarCommand(action, args);
 				break;
+		}
+	}
+
+	private void handleLatLonCommand(String[] args) {
+		if (args.length == 1) {
+			String current = config.preciseLatLon();
+			if (current.isEmpty())
+				current = config.latitudeDegrees() + "," + config.longitudeDegrees() + " (from config panel)";
+			postMessage("Current latitude & longitude: " + current);
+		} else if (
+			args.length == 2 &&
+			(args[1].equalsIgnoreCase("reset") || args[1].equalsIgnoreCase("clear"))
+		) {
+			config.setPreciseLatLon("");
+			postMessage("Reset latitude & longitude coordinates");
+		} else if (args.length == 3) {
+			float[] latLon = HDUtils.parseLatLon(args[1] + "," + args[2]);
+			if (latLon == null) {
+				postMessage("Latitude & longitude must be decimal numbers, within ±90 and ±180 degrees respectively");
+				return;
+			}
+
+			config.setPreciseLatLon(latLon[0] + "," + latLon[1]);
+			postMessage(
+				"Changed latitude & longitude to: " + latLon[0] + "," + latLon[1] + ". Note, this will not show up in the config panel.");
+		} else {
+			postMessage("Usage: ::117hd latlon <lt>latitude<gt> <lt>longitude<gt> / reset");
 		}
 	}
 

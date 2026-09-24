@@ -88,8 +88,6 @@
       "skyVisibility": 0.04,
       "moonVisibility": 0.1,
       "sunStrength": 0.05,
-      "sunlightStrength": 0.5,
-      "minBrightnessBoost": 0.8,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#060810"
@@ -113,8 +111,6 @@
       "skyVisibility": 0.34,
       "moonVisibility": 0.3,
       "sunStrength": 0.1,
-      "sunlightStrength": 0.7,
-      "minBrightnessBoost": 0.8,
       "skyFogDensity": 0.02,
       "profile": {
         "nightSkyColor": "#070912"
@@ -141,8 +137,6 @@
       "skyVisibility": 0.23,
       "moonVisibility": 0.2,
       "sunStrength": 0.05,
-      "sunlightStrength": 0.5,
-      "minBrightnessBoost": 0.8,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#060911"
@@ -393,6 +387,8 @@
     "area": "VER_SINHAZA_TRANSITION",
     "instantTransition": true,
     "varbitCondition": "MYQ6 >=128 && MYQ6 < 178",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "fogDepth": 20,
     "windAngle": 40,
     "directionalStrength": 2,
@@ -421,11 +417,9 @@
     "windStrength": 26,
     "sky": {
       "moonDiskColor": "#FF0000",
-      "moonLightColor": "#FF6D6D",
+      "moonDirectionalColor": "#FF6D6D",
       "skyVisibility": 0.32,
       "sunStrength": 0.02,
-      "sunlightStrength": 0.4,
-      "minBrightnessBoost": 3,
       "skyFogDensity": 0.02,
       "profile": {
         "nightSkyColor": "#0F070E"
@@ -439,6 +433,8 @@
     "area": "VER_SINHAZA",
     "instantTransition": true,
     "varbitCondition": "MYQ6 >=128 && MYQ6 < 178",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "fogDepth": 20,
     "windAngle": 40,
     "directionalStrength": 2,
@@ -466,11 +462,9 @@
     "windStrength": 26,
     "sky": {
       "moonDiskColor": "#FF0000",
-      "moonLightColor": "#FF6D6D",
+      "moonDirectionalColor": "#FF6D6D",
       "skyVisibility": 0.32,
       "sunStrength": 0.02,
-      "sunlightStrength": 0.4,
-      "minBrightnessBoost": 3,
       "skyFogDensity": 0.02,
       "profile": {
         "nightSkyColor": "#0F070E"
@@ -592,6 +586,8 @@
     "area": "BARROWS",
     "instantTransition": true,
     "varbitCondition": "MYQ6 >=128 && MYQ6 < 178",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "fogDepth": 20,
     "windAngle": 40,
     "directionalStrength": 2,
@@ -625,8 +621,6 @@
       "skyFogDensity": 0,
       "moonVisibility": 0.35,
       "sunStrength": 0.025,
-      "sunlightStrength": 0.15,
-      "minBrightnessBoost": 0.75,
       "profile": {
         "nightSkyColor": "#080A12"
       }
@@ -637,6 +631,8 @@
     "area": "DARKMEYER",
     "instantTransition": true,
     "varbitCondition": "MYQ6 >=128 && MYQ6 < 178",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "fogDepth": 20,
     "windAngle": 40,
     "directionalStrength": 2,
@@ -651,6 +647,7 @@
   {
     "area": "DARKMEYER",
     "ambientColor": "#8aabd5",
+    "ambientStrength": 1,
     "directionalColor": "#62a3ff",
     "directionalStrength": 4,
     "fogColor": "#1e314b",
@@ -666,8 +663,6 @@
       "auroraVisibility": 0,
       "sunStrength": 0.02,
       "sunriseSunsetStrength": 0.2,
-      "sunlightStrength": 0.4,
-      "minBrightnessBoost": 1.2,
       "skyFogDensity": 0.02,
       "profile": {
         "nightSkyColor": "#0F070E"
@@ -692,8 +687,6 @@
       "skyVisibility": 0.08,
       "moonVisibility": 0.4,
       "sunStrength": 0.04,
-      "sunlightStrength": 0.15,
-      "minBrightnessBoost": 0.85,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#080A13"
@@ -732,6 +725,8 @@
     "instantTransition": true,
     "varbitCondition": "CUTSCENE_STATUS && MYQ6 !=0 && MYQ6 < 178",
     "hideVanillaSkyboxes": true,
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "fogDepth": 7,
     "windAngle": 40,
     "windSpeed": 15,
@@ -743,7 +738,6 @@
     "sky": {
       "parent": "BLOOD_MOON",
       "skyVisibility": 0.94,
-      "minBrightnessBoost": 1.25,
       "skyFogDensity": 0.06,
       "profile": {
         "nightSkyColor": "#32060C"
@@ -758,6 +752,7 @@
     "instantTransition": true,
     "varbitCondition": "CUTSCENE_STATUS && MYQ6 !=0 && MYQ6 < 178 || MYQ6 == 178",
     "hideVanillaSkyboxes": true,
+    "ambientColor": "#FFFFFF",
     "fogDepth": 30,
     "windAngle": 40,
     "windSpeed": 15,
@@ -789,6 +784,7 @@
     "instantTransition": true,
     "varbitCondition": "MYQ6 == 178",
     "hideVanillaSkyboxes": true,
+    "ambientColor": "#FFFFFF",
     "fogDepth": 30,
     "windAngle": 40,
     "windSpeed": 15,
@@ -819,6 +815,8 @@
     "area": "MORYTANIA",
     "instantTransition": true,
     "varbitCondition": "MYQ6 >=128 && MYQ6 < 178",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "fogDepth": 20,
     "windAngle": 40,
     "directionalStrength": 2,
@@ -849,8 +847,6 @@
       "skyVisibility": 0.28,
       "moonVisibility": 0.35,
       "sunStrength": 0.01,
-      "sunlightStrength": 0.25,
-      "minBrightnessBoost": 0.75,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#080A12"
@@ -907,8 +903,6 @@
     "fogDepth": 45,
     "sky": {
       "sunStrength": 0.02,
-      "sunlightStrength": 0.1,
-      "minBrightnessBoost": 0.9,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.15,
       "profile": {
@@ -927,8 +921,6 @@
     "fogDepth": 20,
     "sky": {
       "sunStrength": 0.02,
-      "sunlightStrength": 0.1,
-      "minBrightnessBoost": 0.9,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.13,
       "profile": {
@@ -961,7 +953,6 @@
     "sky": {
       "parent": "NIGHT",
       "moonDirectionalStrength": 2,
-      "minBrightnessBoost": 0.35,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.16,
       "profile": {
@@ -997,6 +988,7 @@
   {
     "area": "SOUL_WARS_RED_BASE",
     "ambientColor": "#97baff",
+    "ambientStrength": 1,
     "directionalStrength": 4,
     "fogColor": "#1c150d",
     "fogDepth": 6.5
@@ -1151,7 +1143,6 @@
       "skyVisibility": 0.44,
       "moonVisibility": 0.4,
       "sunStrength": 0.6,
-      "sunlightStrength": 0.7,
       "skyFogDensity": 0.07,
       "profile": {
         "nightSkyColor": "#080A13"
@@ -1172,7 +1163,6 @@
       "skyVisibility": 0.44,
       "moonVisibility": 0.4,
       "sunStrength": 0.6,
-      "sunlightStrength": 0.7,
       "skyFogDensity": 0.07,
       "profile": {
         "nightSkyColor": "#080A13"
@@ -1217,8 +1207,6 @@
       "skyVisibility": 0.54,
       "moonVisibility": 0.5,
       "sunStrength": 0.6,
-      "sunlightStrength": 0.4,
-      "minBrightnessBoost": 0.3,
       "skyFogDensity": 0.1,
       "profile": {
         "nightSkyColor": "#090B14"
@@ -1241,8 +1229,6 @@
       "skyVisibility": 0.54,
       "moonVisibility": 0.5,
       "sunStrength": 0.6,
-      "sunlightStrength": 0.4,
-      "minBrightnessBoost": 0.3,
       "skyFogDensity": 0.1,
       "profile": {
         "nightSkyColor": "#090B14"
@@ -1267,8 +1253,6 @@
       "skyVisibility": 0.54,
       "moonVisibility": 0.5,
       "sunStrength": 0.6,
-      "sunlightStrength": 0.4,
-      "minBrightnessBoost": 0.3,
       "skyFogDensity": 0.1,
       "profile": {
         "nightSkyColor": "#090B14"
@@ -1289,6 +1273,7 @@
   {
     "area": "FREMENNIK_ISLES_MIDDLE",
     "ambientColor": "#97baff",
+    "ambientStrength": 1,
     "directionalStrength": 4,
     "shadowAngles": [
       52,
@@ -1303,6 +1288,7 @@
   {
     "area": "NEITIZNOT",
     "ambientColor": "#97baff",
+    "ambientStrength": 1,
     "directionalStrength": 4,
     "shadowAngles": [
       52,
@@ -1332,7 +1318,6 @@
       "skyVisibility": 0.82,
       "moonVisibility": 0.8,
       "sunStrength": 0.8,
-      "sunlightStrength": 0.9,
       "skyFogDensity": 0.12,
       "profile": {
         "nightSkyColor": "#0B0D17"
@@ -1398,7 +1383,6 @@
       "skyVisibility": 0.23,
       "moonVisibility": 0.1,
       "sunStrength": 0.02,
-      "sunlightStrength": 0.8,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#060810"
@@ -1423,7 +1407,6 @@
       "skyVisibility": 0.23,
       "moonVisibility": 0.1,
       "sunStrength": 0.02,
-      "sunlightStrength": 0.6,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#060810"
@@ -1481,7 +1464,6 @@
       "skyVisibility": 0.23,
       "moonVisibility": 0.1,
       "sunStrength": 0.02,
-      "sunlightStrength": 0.6,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#060810"
@@ -1516,6 +1498,7 @@
     "area": "SOTE_LLETYA_MOSTLY_DONE_BURNING",
     "allowSkyOverride": false,
     "ambientColor": "#97baff",
+    "ambientStrength": 1,
     "directionalStrength": 0,
     "fogColor": "#5b8b78",
     "fogDepth": 30
@@ -1532,6 +1515,7 @@
   {
     "area": "BACKWATER_AND_BREAKBONE_STRAIT",
     "ambientColor": "#c0dbad",
+    "ambientStrength": 1,
     "directionalColor": "#adb08b",
     "fogColor": "#BDD8E8",
     "directionalStrength": 4,
@@ -1540,6 +1524,7 @@
   {
     "area": "POISON_WASTE",
     "ambientColor": "#c0dbad",
+    "ambientStrength": 1,
     "directionalColor": "#adb08b",
     "directionalStrength": 2,
     "fogColor": "#32372f",
@@ -1551,8 +1536,6 @@
       "skyVisibility": 0.34,
       "moonVisibility": 0.3,
       "sunStrength": 0.1,
-      "sunlightStrength": 0.7,
-      "minBrightnessBoost": 0.4,
       "skyFogDensity": 0.02,
       "profile": {
         "nightSkyColor": "#070912"
@@ -1564,6 +1547,7 @@
   {
     "area": "TIRANNWN_MAINLAND",
     "ambientColor": "#97baff",
+    "ambientStrength": 1,
     "directionalStrength": 4,
     "fogColor": "#99d8c8",
     "fogDepth": 15,
@@ -1574,6 +1558,7 @@
   {
     "area": "PRIFDDINAS",
     "ambientColor": "#97baff",
+    "ambientStrength": 1,
     "directionalStrength": 4,
     "waterColor": "#99d8c8",
     "fogColor": "#99d8c8",
@@ -1608,6 +1593,7 @@
     "area": "SOTE_FRAGMENT_OF_SEREN_ARENA",
     "allowSkyOverride": false,
     "ambientColor": "#97baff",
+    "ambientStrength": 1,
     "fogColor": "#000000",
     "directionalStrength": 4,
     "sky": {
@@ -1705,7 +1691,6 @@
     "windSpeed": 10,
     "sky": {
       "sunStrength": 0.1,
-      "sunlightStrength": 0.5,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.13,
       "profile": {
@@ -1721,13 +1706,13 @@
   {
     "area": "BLOOD_ALTAR",
     "ambientColor": "#be48ae",
+    "ambientStrength": 1,
     "directionalColor": "#4eeeff",
     "directionalStrength": 2.5,
     "fogColor": "#4f1325",
     "fogDepth": 30,
     "sky": {
       "sunStrength": 0.02,
-      "sunlightStrength": 0.8,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.13,
       "profile": {
@@ -1747,7 +1732,6 @@
       "skyVisibility": 0.34,
       "moonVisibility": 0.3,
       "sunStrength": 0.1,
-      "sunlightStrength": 0.8,
       "skyFogDensity": 0.02,
       "profile": {
         "nightSkyColor": "#070912"
@@ -1775,7 +1759,6 @@
     "sky": {
       "skyVisibility": 0.36,
       "sunStrength": 0.1,
-      "sunlightStrength": 0.8,
       "skyFogDensity": 0.03,
       "profile": {
         "nightSkyColor": "#0C0F19"
@@ -1787,6 +1770,7 @@
   {
     "area": "ARCEUUS",
     "ambientColor": "#6369ff",
+    "ambientStrength": 1,
     "directionalColor": "#4eeeff",
     "directionalStrength": 3.5,
     "fogColor": "#13184f",
@@ -1794,7 +1778,6 @@
     "waterCausticsStrength": 0.8,
     "sky": {
       "sunStrength": 0.1,
-      "minBrightnessBoost": 0.3,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.13,
       "profile": {
@@ -1805,6 +1788,7 @@
   {
     "area": "LOVAKENGJ",
     "ambientColor": "#ffd785",
+    "ambientStrength": 1,
     "directionalColor": "#7d8db3",
     "directionalStrength": 4,
     "fogColor": "#150a05",
@@ -1815,7 +1799,6 @@
       "sunStrength": 0.1,
       "sunriseSunsetStrength": 0.2,
       "skyColorTakeoverAngle": 10,
-      "sunlightStrength": 0.01,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#05070F"
@@ -1826,6 +1809,8 @@
   },
   {
     "area": "BATTLEFRONT_LIZARDMAN_CANYON_SHAMANS",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "fogColor": "#121216",
     "fogDepth": 16.5,
     "windAngle": 40,
@@ -1833,7 +1818,6 @@
     "windStrength": 50,
     "sky": {
       "moonDirectionalStrength": 2,
-      "minBrightnessBoost": 1.5,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.13,
       "profile": {
@@ -1852,7 +1836,6 @@
     "sky": {
       "skyVisibility": 0.36,
       "sunStrength": 0.8,
-      "sunlightStrength": 0.8,
       "skyFogDensity": 0.03,
       "profile": {
         "nightSkyColor": "#0C0F19"
@@ -1997,7 +1980,6 @@
       "skyVisibility": 0.23,
       "moonVisibility": 0.1,
       "sunStrength": 0.02,
-      "sunlightStrength": 0.8,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#060810"
@@ -2017,7 +1999,6 @@
       "skyVisibility": 0.23,
       "moonVisibility": 0.1,
       "sunStrength": 0.02,
-      "sunlightStrength": 0.8,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#060810"
@@ -2044,7 +2025,6 @@
       "skyVisibility": 0.23,
       "moonVisibility": 0.1,
       "sunStrength": 0.02,
-      "sunlightStrength": 0.8,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#060810"
@@ -2643,8 +2623,6 @@
       "skyVisibility": 0.54,
       "moonVisibility": 0.5,
       "sunStrength": 0.6,
-      "sunlightStrength": 0.4,
-      "minBrightnessBoost": 0.3,
       "skyFogDensity": 0.1,
       "profile": {
         "nightSkyColor": "#090B14"
@@ -2665,8 +2643,6 @@
       "skyVisibility": 0.54,
       "moonVisibility": 0.5,
       "sunStrength": 0.6,
-      "sunlightStrength": 0.4,
-      "minBrightnessBoost": 0.3,
       "skyFogDensity": 0.1,
       "profile": {
         "nightSkyColor": "#090B14"
@@ -2687,8 +2663,6 @@
       "skyVisibility": 0.54,
       "moonVisibility": 0.5,
       "sunStrength": 0.6,
-      "sunlightStrength": 0.4,
-      "minBrightnessBoost": 0.3,
       "skyFogDensity": 0.1,
       "profile": {
         "nightSkyColor": "#090B14"
@@ -2708,6 +2682,7 @@
   },
   {
     "area": "ENCHANTED_VALLEY",
+    "ambientColor": "#FFFFFF",
     "fogColor": "#b9d6ff",
     "fogDepth": 16.5,
     "directionalStrength": 3.5,
@@ -2739,11 +2714,11 @@
     "fogDepth": 6.5,
     "windStrength": 50,
     "sky": {
-      "minBrightnessBoost": 0.4
     }
   },
   {
     "area": "FISHING_TRAWLER_SUNK",
+    "ambientColor": "#FFFFFF",
     "fogColor": "#b9d6ff",
     "fogDepth": 30,
     "directionalStrength": 3.5,
@@ -2753,6 +2728,7 @@
   },
   {
     "area": "FISHING_TRAWLER",
+    "ambientColor": "#FFFFFF",
     "fogColor": "#b9d6ff",
     "fogDepth": 6.5,
     "directionalStrength": 3.5,
@@ -2885,6 +2861,8 @@
     "description": "Environment for the final battle during The Blood Moon Rises",
     "area": "VAMPYRIUM_CASTLE_DRAKAN_ROOF",
     "hideVanillaSkyboxes": true,
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "fogDepth": 10,
     "windAngle": 40,
     "windSpeed": 15,
@@ -2898,8 +2876,6 @@
       ],
       "moonSizeMult": 2.8,
       "sunStrength": 0.2,
-      "sunlightStrength": 2,
-      "minBrightnessBoost": 0.5,
       "skyVisibility": 0.94,
       "skyFogDensity": 0.05,
       "profile": {
@@ -2913,14 +2889,14 @@
     "area": "VAMPYRIUM",
     "description": "Environment for Vampyrium during the quest, set to fixed twilight to simulate being on the cusp of the blood moon rising",
     "varbitCondition": "MYQ6 >= 80 && MYQ6 != 178",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "sky": {
       "parent": "DUSK",
       "skyVisibility": 1,
       "auroraVisibility": 0,
       "sunStrength": 0.075,
       "sunriseSunsetStrength": 0.2,
-      "sunlightStrength": 2,
-      "minBrightnessBoost": 0.5,
       "skyFogDensity": 0,
       "moonVisibility": 0,
       "profile": {
@@ -2937,6 +2913,8 @@
   {
     "description": "Environment for Vampyrium post quest, normal cycle since the events of the quest are now past",
     "area": "VAMPYRIUM",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "fogDepth": 17.5,
     "windAngle": 40,
     "windSpeed": 15,
@@ -2948,8 +2926,6 @@
       "auroraVisibility": 0,
       "sunStrength": 0.075,
       "sunriseSunsetStrength": 0.2,
-      "sunlightStrength": 2,
-      "minBrightnessBoost": 1.75,
       "skyFogDensity": 0.16,
       "profile": {
         "nightSkyColor": "#0F070E"
@@ -2959,14 +2935,14 @@
   },
   {
     "area": "VAMPYRIUM_FOREST_INSTANCE",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "sky": {
       "parent": "DUSK",
       "skyVisibility": 1,
       "auroraVisibility": 0,
       "sunStrength": 0.075,
       "sunriseSunsetStrength": 0.2,
-      "sunlightStrength": 2,
-      "minBrightnessBoost": 0.5,
       "skyFogDensity": 0,
       "moonVisibility": 0,
       "profile": {
@@ -2982,6 +2958,8 @@
   },
   {
     "area": "MAGGOT_KING_ARENA",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
     "fogDepth": 50,
     "windAngle": 40,
     "windSpeed": 15,
@@ -2992,8 +2970,6 @@
       "auroraVisibility": 0,
       "sunStrength": 0.01,
       "sunriseSunsetStrength": 0.2,
-      "sunlightStrength": 2,
-      "minBrightnessBoost": 1.15,
       "skyFogDensity": 0.16,
       "profile": {
         "nightSkyColor": "#0F070E"
@@ -3021,7 +2997,6 @@
       "skyVisibility": 0.6,
       "moonVisibility": 0.7,
       "sunStrength": 0.05,
-      "sunlightStrength": 0.8,
       "skyFogDensity": 0.11,
       "profile": {
         "nightSkyColor": "#0A0C16"
@@ -3047,8 +3022,6 @@
       "skyVisibility": 0.54,
       "moonVisibility": 0.5,
       "sunStrength": 0.6,
-      "sunlightStrength": 0.4,
-      "minBrightnessBoost": 0.3,
       "skyFogDensity": 0.1,
       "profile": {
         "nightSkyColor": "#090B14"
@@ -3076,8 +3049,6 @@
       "skyVisibility": 0.28,
       "moonVisibility": 0.35,
       "sunStrength": 0.025,
-      "sunlightStrength": 0.15,
-      "minBrightnessBoost": 0.75,
       "skyFogDensity": 0,
       "profile": {
         "nightSkyColor": "#080A12"
@@ -3119,7 +3090,6 @@
       "skyVisibility": 0.44,
       "moonVisibility": 0.4,
       "sunStrength": 0.6,
-      "sunlightStrength": 0.7,
       "skyFogDensity": 0.07,
       "profile": {
         "nightSkyColor": "#080A13"
@@ -3144,8 +3114,6 @@
       "skyVisibility": 0.57,
       "moonVisibility": 1,
       "sunStrength": 0.5,
-      "sunlightStrength": 0.55,
-      "minBrightnessBoost": 0.75,
       "skyFogDensity": 0.1,
       "profile": {
         "nightSkyColor": "#0C0F19"
@@ -3171,6 +3139,7 @@
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",
+    "ambientStrength": 1,
     "directionalStrength": 4,
     "shadowAngles": [
       52,

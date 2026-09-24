@@ -24,6 +24,11 @@ public class ColorUtils {
 
 	private static final float[] LINEAR_SRGB_LUMINANCE_COEFFICIENTS = { .2126f, .7152f, .0722f };
 
+	// Approximate the downward half of single Rayleigh scattering relative to already-attenuated red, green and blue directional light.
+	private static final float[] AMBIENT_SCATTERING = { .026f, .053f, .136f };
+	// Approximate mesopic vision
+	private static final float[] MESOPIC_TINT = { .85f, .95f, 1.15f };
+
 	/**
 	 * Row-major transforms between CIE XYZ (D65) and linear sRGB.
 	 * Coefficients are the sRGB matrices from
@@ -134,6 +139,37 @@ public class ColorUtils {
 	 */
 	public static float linearSrgbLuminance(float[] linearSrgb) {
 		return dot(linearSrgb, LINEAR_SRGB_LUMINANCE_COEFFICIENTS, 3);
+	}
+
+	/**
+	 * Approximate clear-atmosphere ambient light from linear directional light.
+	 */
+	public static void deriveAmbientLight(float[] out, float[] directionalColor) {
+		multiply(out, directionalColor, AMBIENT_SCATTERING);
+	}
+
+	/**
+	 * Apply an approximate color shift due to mesopic vision, in linear sRGB, preserving luminance.
+	 */
+	public static void applyMesopicShift(float[] out) {
+		float luminance = linearSrgbLuminance(out);
+		for (int i = 0; i < 3; i++)
+			out[i] = out[i] * MESOPIC_TINT[i];
+		float shiftedLuminance = linearSrgbLuminance(out);
+		if (shiftedLuminance > 0)
+			multiply(out, out, luminance / shiftedLuminance);
+	}
+
+	/**
+	 * Approximately invert the color shift due to mesopic vision, in linear sRGB, preserving luminance.
+	 */
+	public static void invertMesopicShift(float[] out) {
+		float luminance = linearSrgbLuminance(out);
+		for (int i = 0; i < 3; i++)
+			out[i] = out[i] / MESOPIC_TINT[i];
+		float shiftedLuminance = linearSrgbLuminance(out);
+		if (shiftedLuminance > 0)
+			multiply(out, out, luminance / shiftedLuminance);
 	}
 
 	/**

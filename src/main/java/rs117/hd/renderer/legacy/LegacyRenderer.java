@@ -50,6 +50,7 @@ import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SkyManager;
 import rs117.hd.scene.areas.Area;
+import rs117.hd.scene.daylight_cycle.SkyState;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -1051,7 +1052,8 @@ public class LegacyRenderer implements Renderer {
 			plugin.uboGlobal.underwaterCausticsStrength.set(env.waterCausticsStrength);
 			plugin.uboGlobal.elapsedTime.set((float) (plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
 
-			float[] shadowAngles = skyManager.getState().shadowAngles;
+			SkyState sky = skyManager.getState();
+			float[] shadowAngles = skyRenderer.usesMoonShadows ? sky.moonAngles : sky.shadowAngles;
 			float[] lightViewMatrix = Mat4.rotateX(shadowAngles[0]);
 			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - shadowAngles[1]));
 			// Extract the 3rd column from the light view matrix (the float array is column-major).
