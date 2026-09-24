@@ -359,7 +359,7 @@ public class SkyRenderer {
 		}
 		float moonAltDeg = state.moonAltitudeDegrees;
 		float brightnessMultiplier = endpointSample.brightnessMultiplier;
-		out.ambientStrength = brightnessMultiplier;
+		out.ambientStrength = config.useCycleBrightnessMultiplier() ? brightnessMultiplier : env.ambientStrength;
 		out.directionalStrength = env.directionalStrength;
 
 		float moonLightIllumination = state.moonLightIllumination;
