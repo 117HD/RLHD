@@ -89,7 +89,7 @@ public class Zone implements Destructible {
 	public boolean hasWater; // whether the zone has any water tiles
 	public boolean onlyWater; // whether the zone only contains water tiles
 	public boolean hasGapFiller; // whether the zone has any gap filler geometry
-	public boolean inSceneFrustum; // whether the zone is visible to the scene camera
+	public boolean inSceneFrustum = true; // whether the zone is visible to the scene camera
 	public boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
 	public boolean isFirstLoadingAttempt = true;
 
@@ -440,9 +440,10 @@ public class Zone implements Destructible {
 		int[] doubleSidedBitSet;
 		char doubleSidedCount;
 
+		int dist;
+		int asyncSortIdx = -1;
 		int sortedFacesLen;
 		int[] tempSortedFaces;
-		volatile int sortingState;
 
 		static final int SKIP = 1; // temporary model is in a closer zone
 		static final int TEMP = 2; // temporary model added to a closer zone
@@ -685,6 +686,7 @@ public class Zone implements Destructible {
 
 		for (int i = alphaModels.size() - 1; i >= 0; --i) {
 			AlphaModel m = alphaModels.get(i);
+			m.asyncSortIdx = -1;
 			m.flags &= ~(AlphaModel.SKIP | AlphaModel.SORT_COMPLETED);
 
 			if (m.isTemp() || (m.flags & AlphaModel.TEMP) != 0) {
@@ -747,14 +749,11 @@ public class Zone implements Destructible {
 			if ((m.flags & AlphaModel.SKIP) != 0 || m.isTemp())
 				continue;
 
+			m.dist = dist;
 			m.tempSortedFaces = PooledArrayType.INT.borrow((m.packedFaces.length + m.doubleSidedCount) * 3);
 			alphaSortingJob.addAlphaModel(m);
 		}
 		alphaSortingJob.queue(camera);
-	}
-
-	void queueLateAlphaModels(Camera camera) {
-		alphaSortingJob.queueAdditionalModels(alphaModels, camera);
 	}
 
 	void renderAlpha(
@@ -797,7 +796,7 @@ public class Zone implements Destructible {
 			if (m.isTemp()) {
 				// these are already sorted and so just requires a glMultiDrawArrays() from the active vao
 				drawMode = TEMP;
-			} else if (depthOnly) {
+			} else if (depthOnly || m.asyncSortIdx < 0) {
 				drawMode = STATIC_UNSORTED;
 			}
 
@@ -946,6 +945,7 @@ public class Zone implements Destructible {
 				m2.doubleSidedBitSet = m.doubleSidedBitSet;
 				m2.radius = m.radius;
 				m2.doubleSidedCount = m.doubleSidedCount;
+				m2.asyncSortIdx = m.asyncSortIdx;
 				m2.tempSortedFaces = m.tempSortedFaces;
 				m2.sortedFacesLen = m.sortedFacesLen;
 
