@@ -12,15 +12,19 @@
         },
         {
           "altitude": -15,
-          "color": "#03040A"
+          "color": "#060D20"
+        },
+        {
+          "altitude": -12,
+          "color": "#10264D"
         },
         {
           "altitude": -8,
-          "color": "#2D2346"
+          "color": "#284878"
         },
         {
           "altitude": -3,
-          "color": "#503C64"
+          "color": "#465E8C"
         },
         {
           "altitude": 0,
@@ -54,11 +58,15 @@
         },
         {
           "altitude": -15,
-          "color": "#04050C"
+          "color": "#20100E"
+        },
+        {
+          "altitude": -12,
+          "color": "#482B30"
         },
         {
           "altitude": -8,
-          "color": "#3C2D41"
+          "color": "#785450"
         },
         {
           "altitude": -3,
@@ -99,12 +107,24 @@
           "color": "#000000"
         },
         {
-          "altitude": -10,
-          "color": "#140A1E"
+          "altitude": -18,
+          "color": "#000000"
+        },
+        {
+          "altitude": -15,
+          "color": "#140704"
+        },
+        {
+          "altitude": -12,
+          "color": "#32120C"
+        },
+        {
+          "altitude": -8,
+          "color": "#59271B"
         },
         {
           "altitude": -5,
-          "color": "#50283C"
+          "color": "#783629"
         },
         {
           "altitude": -2,

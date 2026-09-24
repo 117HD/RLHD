@@ -308,7 +308,8 @@ public class SkyConfiguration {
 			if (blend > 0)
 				blendSky(zenith, horizon, fogColor, blend);
 		}
-		float nightBlend = smoothstep(0, -15, sunAltitudeDegrees);
+		// Preserve the twilight gradient through civil dusk, then fade to the night tint.
+		float nightBlend = smoothstep(-6, -18, sunAltitudeDegrees);
 		if (nightBlend > 0)
 			blendSky(zenith, horizon, profile.nightSkyColor, nightBlend);
 	}
