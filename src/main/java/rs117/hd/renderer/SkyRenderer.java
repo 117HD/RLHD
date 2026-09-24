@@ -376,8 +376,10 @@ public class SkyRenderer {
 		copyTo(out.fog, endpointSample.horizonLinear);
 		if (sky.skyFogColor != null)
 			mix(out.fog, out.fog, sky.skyFogColor, saturate(sky.skyFogColorMix));
-		float boostFraction = mix(1, MIN_BRIGHTNESS_BOOST_RESIDUAL, saturate(moonPresence));
-		out.ambientStrength = max(out.ambientStrength, 1 + sky.minBrightnessBoost * boostFraction);
+		if (config.useMinBrightnessBoost()) {
+			float boostFraction = mix(1, MIN_BRIGHTNESS_BOOST_RESIDUAL, saturate(moonPresence));
+			out.ambientStrength = max(out.ambientStrength, 1 + sky.minBrightnessBoost * boostFraction);
+		}
 
 		float lightingScale = brightnessMultiplier * sky.sunlightStrength;
 		// Fade residual sunlight through twilight before transferring blurred shadows into ambient.
