@@ -87,7 +87,7 @@ public class Zone implements Destructible {
 	public boolean hasWater; // whether the zone has any water tiles
 	public boolean onlyWater; // whether the zone only contains water tiles
 	public boolean hasGapFiller; // whether the zone has any gap filler geometry
-	public boolean inSceneFrustum; // whether the zone is visible to the scene camera
+	public boolean inSceneFrustum = true; // whether the zone is visible to the scene camera
 	public boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
 	public boolean isFirstLoadingAttempt = true;
 
