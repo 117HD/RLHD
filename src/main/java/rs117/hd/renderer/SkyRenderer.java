@@ -330,7 +330,7 @@ public class SkyRenderer {
 			float adaptation = plugin.configNightBrightness * smoothstep(0, -18, state.sunAltitudeDegrees);
 //			float adaptation = plugin.configNightBrightness * ColorUtils.linearToSrgb(COLOR_PICKER[1]);
 			float exposure = mix(1, adaptedExposure * max(plugin.configNightBrightness, 1), adaptation);
-			log.debug("adaptedExposure: {}, adaptation: {}, exposure: {}", adaptedExposure, adaptation, exposure);
+//			log.debug("adaptedExposure: {}, adaptation: {}, exposure: {}", adaptedExposure, adaptation, exposure);
 			ambientStrength *= exposure;
 			directionalStrength *= exposure;
 		}
@@ -405,13 +405,13 @@ public class SkyRenderer {
 
 //		sky.moonDirectionalColor = COLOR_PICKER;
 //		sky.moonAmbientColor = COLOR_PICKER;
-		log.debug(
-			"derived ambient moon: {}", ColorUtils.linearToSrgb(multiply(
-				sky.moonAmbientColor,
-				ColorUtils.linearSrgbLuminance(ColorUtils.rgb("#101010"))
-				/ ColorUtils.linearSrgbLuminance(sky.moonAmbientColor)
-			))
-		);
+//		log.debug(
+//			"derived ambient moon: {}", ColorUtils.linearToSrgb(multiply(
+//				sky.moonAmbientColor,
+//				ColorUtils.linearSrgbLuminance(ColorUtils.rgb("#101010"))
+//				/ ColorUtils.linearSrgbLuminance(sky.moonAmbientColor)
+//			))
+//		);
 //		log.debug("derived ambient moon: {}", sky.moonAmbientColor);
 
 		// Only one source can cast shadows. Keep moonlight ambient until sunset,
