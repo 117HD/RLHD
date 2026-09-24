@@ -910,12 +910,7 @@ public final class ResourcePackManager {
 		if (fromIndex < 0 || fromIndex > lastIndex || toIndex < 0)
 			return -1;
 
-		// The built-in default pack is always the base layer and must stay pinned to the bottom.
-		if (installedPacks.get(fromIndex) instanceof DefaultResourcePack)
-			return -1;
-
-		int maxIndex = installedPacks.get(lastIndex) instanceof DefaultResourcePack ? lastIndex - 1 : lastIndex;
-		int targetIndex = Math.min(toIndex, maxIndex);
+		int targetIndex = Math.min(toIndex, lastIndex);
 		if (targetIndex == fromIndex)
 			return -1;
 
@@ -946,12 +941,9 @@ public final class ResourcePackManager {
 
 		installedPacks.clear();
 		for (String internalName : packState.packOrder) {
-			AbstractResourcePack pack = packsByName.get(internalName.trim());
-			// The default pack is always the base layer; never restore it to a non-final position.
-			if (pack != null && !(pack instanceof DefaultResourcePack)) {
+			AbstractResourcePack pack = packsByName.remove(internalName.trim());
+			if (pack != null)
 				installedPacks.add(pack);
-				packsByName.remove(internalName.trim());
-			}
 		}
 		installedPacks.addAll(packsByName.values());
 	}
