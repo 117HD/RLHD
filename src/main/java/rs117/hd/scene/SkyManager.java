@@ -34,6 +34,7 @@ import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.collections.Util;
 
 import static rs117.hd.HdPlugin.SEED;
+import static rs117.hd.utils.DeveloperTools.COLOR_PICKER;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -328,6 +329,7 @@ public class SkyManager {
 
 		out.moonVisibility = mix(fromMoon.visibility, toMoon.visibility, t);
 		out.moonDirectionalStrength = mix(fromMoon.directionalStrength, toMoon.directionalStrength, t);
+		out.moonDirectionalStrength *= COLOR_PICKER[3];
 		out.moonIllumination = mix(fromMoon.illumination, toMoon.illumination, t);
 		out.moonLightIllumination = mix(fromMoon.lightIllumination, toMoon.lightIllumination, t);
 		out.moonIlluminationDirection = interpolateDirection(fromMoon.illuminationDirection, toMoon.illuminationDirection, t);
