@@ -14,10 +14,12 @@ import rs117.hd.overlays.Timer;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
+import static org.lwjgl.opengl.ARBDirectStateAccess.glBindTextureUnit;
 import static org.lwjgl.opengl.GL33C.*;
 import static org.lwjgl.opengl.GL40.glDrawArraysIndirect;
 import static org.lwjgl.opengl.GL40.glDrawElementsIndirect;
 import static org.lwjgl.opengl.GL43.glMultiDrawArraysIndirect;
+import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -331,8 +333,14 @@ public class CommandBuffer {
 						int texUnit = (int) (packed >> 32);
 						int texId = (int) packed;
 
-						glActiveTexture(texUnit);
-						glBindTexture(texType, texId);
+						if(GL_CAPS.GL_ARB_direct_state_access){
+							if(texUnit >= GL_TEXTURE0)
+								texUnit -= GL_TEXTURE0;
+							glBindTextureUnit(texUnit, texId);
+						} else {
+							glActiveTexture(texUnit);
+							glBindTexture(texType, texId);
+						}
 						break;
 					}
 					case GL_USE_PROGRAM: {
