@@ -34,7 +34,6 @@ import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.collections.Util;
 
 import static rs117.hd.HdPlugin.SEED;
-import static rs117.hd.utils.DeveloperTools.COLOR_PICKER;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 
