@@ -1,6 +1,7 @@
 package rs117.hd.renderer.zone.passes;
 
 import com.google.inject.Injector;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Set;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
+import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
@@ -79,6 +81,7 @@ public final class RenderPipeline {
 	}
 
 	public void preprocess() {
+		frameTimer.begin(Timer.RENDER_PIPELINE);
 		enabledCount = 0;
 		zoneCount = 0;
 
@@ -97,6 +100,7 @@ public final class RenderPipeline {
 			if((flags & RenderPass.PASS_ZONE_DRAWS) != 0)
 				zonePasses[zoneCount++] = i;
 		}
+		frameTimer.end(Timer.RENDER_PIPELINE);
 	}
 
 	private int[] getIndicesForFunctionType(int functionType) {
@@ -122,44 +126,50 @@ public final class RenderPipeline {
 	}
 
 	private boolean internalExecute(BaseRenderPassFunction function, int functionType) {
-		boolean result = false;
-
+		final long pipelineTimestamp = plugin.enableDetailedTimers ? frameTimer.getTimeStamp() : 0;
 		final int[] passIndices = getIndicesForFunctionType(functionType);
 		final int passCount = getCountForFunctionType(functionType);
+
+		boolean result = false;
+		long renderPassNanos = 0;
+
 		for (int i = 0; i < passCount; i++) {
+			final long passStamp = plugin.enableDetailedTimers ? frameTimer.getTimeStamp() : 0;
 			final int passIdx = passIndices != null ? passIndices[i] : i;
 			final RenderPass renderPass = passes[passIdx];
 			final RenderPassType type = types[passIdx];
 
-			if (renderPass == null || type == null)
-				continue;
-
-			long timestamp = plugin.enableDetailedTimers ? System.nanoTime() : 0;
 			try {
-				result |= function.consumer.accept(renderPass);
+				result |= function.accept(renderPass);
 			} catch (Throwable e) {
 				log.error("Error during {} for render pass {}:", function.action, type.name, e);
 				if (!function.handleExceptions)
 					throw new RuntimeException(e);
 				plugin.requestPluginStop();
 			} finally {
-				if(plugin.enableDetailedTimers)
-					frameTimer.add(type.timer, System.nanoTime() - timestamp);
-
 				if (function.checkGL)
 					checkGLErrors(() -> type.name + "::" + function.action);
+
+				if(passStamp != 0) {
+					final long nanos = frameTimer.getTimeStamp() - passStamp;
+					frameTimer.add(type.timer, nanos);
+					renderPassNanos += nanos;
+				}
 			}
 		}
+		if(pipelineTimestamp != 0)
+			frameTimer.add(Timer.RENDER_PIPELINE, (frameTimer.getTimeStamp() - pipelineTimestamp) - renderPassNanos);
 		return result;
 	}
 
 	public final class InitializeFunction extends BaseRenderPassFunction {
 		private InitializeFunction() {
 			super("initializeShaders", GENERIC_FUNCTION_TYPE, false, false);
-			consumer = (renderPass) -> {
-				renderPass.initialize();
-				return true;
-			};
+		}
+
+		protected boolean accept(RenderPass renderPass) {
+			renderPass.initialize();
+			return true;
 		}
 	}
 
@@ -169,53 +179,56 @@ public final class RenderPipeline {
 
 		private InitializeShadersFunction() {
 			super("initializeShaders", GENERIC_FUNCTION_TYPE, false, false);
-			consumer = renderPass -> {
-				renderPass.initializeShaders(includes);
-				return true;
-			};
 		}
 
 		public void execute(ShaderIncludes includes) {
 			this.includes = includes;
 			execute();
+		}
+
+		protected boolean accept(RenderPass renderPass) throws ShaderException, IOException {
+			renderPass.initializeShaders(includes);
+			return true;
 		}
 	}
 
 	public final class DestroyFunction extends BaseRenderPassFunction {
 		private DestroyFunction() {
 			super("destroy", GENERIC_FUNCTION_TYPE, false, true);
-			consumer = renderPass -> {
-				renderPass.destroy();
-				return true;
-			};
+		}
+
+		protected boolean accept(RenderPass renderPass) {
+			renderPass.destroy();
+			return true;
 		}
 	}
 
 	public final class DestroyShadersFunction extends BaseRenderPassFunction {
 		private DestroyShadersFunction() {
 			super("destroyShaders", GENERIC_FUNCTION_TYPE, false, true);
-			consumer = renderPass -> {
-				renderPass.destroyShaders();
-				return true;
-			};
+		}
+
+		protected boolean accept(RenderPass renderPass) {
+			renderPass.destroyShaders();
+			return true;
 		}
 	}
 
 	public final class AddShaderIncludesFunction extends BaseRenderPassFunction {
-
 		private ShaderIncludes includes;
 
 		private AddShaderIncludesFunction() {
 			super("addShaderIncludes", GENERIC_FUNCTION_TYPE, false, false);
-			consumer = renderPass -> {
-				renderPass.addShaderIncludes(includes);
-				return true;
-			};
 		}
 
 		public void execute(ShaderIncludes includes) {
 			this.includes = includes;
 			execute();
+		}
+
+		protected boolean accept(RenderPass renderPass) {
+			renderPass.addShaderIncludes(includes);
+			return true;
 		}
 	}
 
@@ -224,29 +237,25 @@ public final class RenderPipeline {
 
 		private ProcessConfigChangesFunction() {
 			super("processConfigChanges", GENERIC_FUNCTION_TYPE, false, false);
-			consumer = renderPass -> {
-				renderPass.processConfigChanges(keys);
-				return true;
-			};
 		}
 
 		public void execute(Set<String> keys) {
 			this.keys = keys;
 			execute();
 		}
+
+		protected boolean accept(RenderPass renderPass) {
+			renderPass.processConfigChanges(keys);
+			return true;
+		}
 	}
 
 	public final class PreSceneDrawFunction extends BaseRenderPassFunction {
-
 		private WorldViewContext ctx;
 		private boolean isTopLevel;
 
 		private PreSceneDrawFunction() {
 			super("preSceneDraw", DRAW_FUNCTION_TYPE, true, false);
-			consumer = renderPass -> {
-				renderPass.preSceneDraw(ctx, isTopLevel);
-				return true;
-			};
 		}
 
 		public void execute(WorldViewContext ctx, boolean isTopLevel) {
@@ -254,23 +263,28 @@ public final class RenderPipeline {
 			this.isTopLevel = isTopLevel;
 			execute();
 		}
+
+		protected boolean accept(RenderPass renderPass) {
+			renderPass.preSceneDraw(ctx, isTopLevel);
+			return true;
+		}
 	}
 
 	public final class PostSceneDrawFunction extends BaseRenderPassFunction {
-
 		private WorldViewContext ctx;
 
 		private PostSceneDrawFunction() {
 			super("postSceneDraw", DRAW_FUNCTION_TYPE, true, false);
-			consumer = renderPass -> {
-				renderPass.postSceneDraw(ctx);
-				return true;
-			};
 		}
 
 		public void execute(WorldViewContext ctx) {
 			this.ctx = ctx;
 			execute();
+		}
+
+		protected boolean accept(RenderPass renderPass) {
+			renderPass.postSceneDraw(ctx);
+			return true;
 		}
 	}
 
@@ -281,7 +295,6 @@ public final class RenderPipeline {
 
 		private ZoneInFrustumFunction() {
 			super("zoneInFrustum", ZONE_FUNCTION_TYPE, false, true);
-			consumer = renderPass -> renderPass.zoneInFrustum(zone, zx, zz, minX, minY, minZ, maxX, maxY, maxZ);
 		}
 
 		public boolean execute(Zone zone, int zx, int zz, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
@@ -296,6 +309,8 @@ public final class RenderPipeline {
 			this.maxZ = maxZ;
 			return execute();
 		}
+
+		protected boolean accept(RenderPass renderPass) { return renderPass.zoneInFrustum(zone, zx, zz, minX, minY, minZ, maxX, maxY, maxZ); }
 	}
 
 	public final class DynamicInFrustumFunction extends BaseRenderPassFunction {
@@ -308,7 +323,6 @@ public final class RenderPipeline {
 
 		private DynamicInFrustumFunction() {
 			super("dynamicInFrustum", ZONE_FUNCTION_TYPE, false, true);
-			consumer = renderPass -> renderPass.dynamicInFrustum(ctx, renderable, model, modelOverride, x, y, z);
 		}
 
 		public boolean execute(WorldViewContext ctx, Renderable renderable, Model model, ModelOverride modelOverride, int x, int y, int z) {
@@ -321,6 +335,18 @@ public final class RenderPipeline {
 			this.z             = z;
 			return execute();
 		}
+
+		protected boolean accept(RenderPass renderPass) {
+			return renderPass.dynamicInFrustum(
+				ctx,
+				renderable,
+				model,
+				modelOverride,
+				x,
+				y,
+				z
+			);
+		}
 	}
 
 	public final class DrawZoneOpaqueFunction extends BaseRenderPassFunction {
@@ -330,10 +356,6 @@ public final class RenderPipeline {
 
 		private DrawZoneOpaqueFunction() {
 			super("drawZoneOpaque", ZONE_FUNCTION_TYPE, false, false);
-			consumer = renderPass -> {
-				renderPass.drawZoneOpaque(ctx, zone, zx, zz);
-				return true;
-			};
 		}
 
 		public void execute(WorldViewContext ctx, Zone zone, int zx, int zz) {
@@ -342,6 +364,11 @@ public final class RenderPipeline {
 			this.zx   = zx;
 			this.zz   = zz;
 			execute();
+		}
+
+		protected boolean accept(RenderPass renderPass) {
+			renderPass.drawZoneOpaque(ctx, zone, zx, zz);
+			return true;
 		}
 	}
 
@@ -352,10 +379,6 @@ public final class RenderPipeline {
 
 		private DrawZoneAlphaFunction() {
 			super("drawZoneAlpha", ZONE_FUNCTION_TYPE, false, false);
-			consumer = (renderPass) -> {
-				renderPass.drawZoneAlpha(ctx, zone, level, zx, zz);
-				return true;
-			};
 		}
 
 		public void execute(WorldViewContext ctx, Zone zone, int level, int zx, int zz) {
@@ -366,19 +389,19 @@ public final class RenderPipeline {
 			this.zz    = zz;
 			execute();
 		}
+
+		protected boolean accept(RenderPass renderPass) {
+			renderPass.drawZoneAlpha(ctx, zone, level, zx, zz);
+			return true;
+		}
 	}
 
 	public final class DrawPassFunction extends BaseRenderPassFunction {
-
 		private WorldViewContext ctx;
 		private int pass;
 
 		private DrawPassFunction() {
 			super("drawPass", DRAW_FUNCTION_TYPE, true, false);
-			consumer = (renderPass) -> {
-				renderPass.drawPass(ctx, pass);
-				return true;
-			};
 		}
 
 		public void execute(WorldViewContext ctx, int pass) {
@@ -386,31 +409,36 @@ public final class RenderPipeline {
 			this.pass = pass;
 			execute();
 		}
+
+		protected boolean accept(RenderPass renderPass) {
+			renderPass.drawPass(ctx, pass);
+			return true;
+		}
 	}
 
 	public final class DrawFunction extends BaseRenderPassFunction {
-
 		private RenderState renderState;
+
 		private DrawFunction() {
 			super("draw", DRAW_FUNCTION_TYPE, true, false);
-
-			consumer = (renderPass) -> {
-				final Timer gpuTimer = renderPass.getType().gpuTimer;
-				if(gpuTimer != null)
-					frameTimer.begin(gpuTimer);
-				try {
-					renderPass.draw(renderState);
-				} finally {
-					if(gpuTimer != null)
-						frameTimer.end(gpuTimer);
-				}
-				return true;
-			};
 		}
 
 		public void execute(RenderState renderState) {
 			this.renderState = renderState;
 			execute();
+		}
+
+		protected boolean accept(RenderPass renderPass) {
+			final Timer gpuTimer = renderPass.getType().gpuTimer;
+			if(gpuTimer != null)
+				frameTimer.begin(gpuTimer);
+			try {
+				renderPass.draw(renderState);
+			} finally {
+				if(gpuTimer != null)
+					frameTimer.end(gpuTimer);
+			}
+			return true;
 		}
 	}
 
@@ -419,21 +447,17 @@ public final class RenderPipeline {
 
 		private PostDrawFunction() {
 			super("postDraw", DRAW_FUNCTION_TYPE, true, false);
-			consumer = (renderPass) -> {
-				renderPass.postDraw(renderState);
-				return true;
-			};
 		}
 
 		public void execute(RenderState renderState) {
 			this.renderState = renderState;
 			execute();
 		}
-	}
 
-	@FunctionalInterface
-	private interface RenderPassConsumer {
-		boolean accept(RenderPass renderPass) throws Throwable;
+		protected boolean accept(RenderPass renderPass) {
+			renderPass.postDraw(renderState);
+			return true;
+		}
 	}
 
 	@RequiredArgsConstructor
@@ -442,10 +466,9 @@ public final class RenderPipeline {
 		private final int functionType;
 		private final boolean checkGL;
 		private final boolean handleExceptions;
-		protected RenderPassConsumer consumer;
 
-		public boolean execute() {
-			return internalExecute(this, functionType);
-		}
+		public final boolean execute() { return internalExecute(this, functionType); }
+
+		protected abstract boolean accept(RenderPass renderPass) throws Throwable;
 	}
 }

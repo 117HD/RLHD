@@ -141,6 +141,11 @@ public class FrameTimer {
 		cumulativeError = 0;
 	}
 
+	public long getTimeStamp() {
+		cumulativeError += errorCompensation + 1 >> 1;
+		return System.nanoTime() - cumulativeError;
+	}
+
 	public AutoTimer begin(Timer timer) {
 		int index = timer.ordinal();
 		if (log.isDebugEnabled() && timer.hasGpuDebugGroup() && HdPlugin.GL_CAPS.OpenGL43) {
@@ -160,8 +165,7 @@ public class FrameTimer {
 				throw new UnsupportedOperationException("Cumulative GPU timing isn't supported");
 			glQueryCounter(gpuQueries[index * 2], GL_TIMESTAMP);
 		} else if (!activeTimers[index]) {
-			cumulativeError += errorCompensation + 1 >> 1;
-			timings[index] -= System.nanoTime() - cumulativeError;
+			timings[index] -= getTimeStamp();
 		}
 		activeTimers[index] = true;
 
@@ -186,8 +190,7 @@ public class FrameTimer {
 			glQueryCounter(gpuQueries[timer.ordinal() * 2 + 1], GL_TIMESTAMP);
 			// leave the GPU timer active, since it needs to be gathered at a later point
 		} else {
-			cumulativeError += errorCompensation >> 1;
-			timings[timer.ordinal()] += System.nanoTime() - cumulativeError;
+			timings[timer.ordinal()] += getTimeStamp();
 			activeTimers[timer.ordinal()] = false;
 		}
 	}
