@@ -339,9 +339,6 @@ public class Zone implements Destructible {
 	private static final int NUM_DRAW_RANGES = 512;
 	private static final int[] drawOff = new int[NUM_DRAW_RANGES];
 	private static final int[] drawEnd = new int[NUM_DRAW_RANGES];
-
-	private static final int[] glDrawOffset = new int[NUM_DRAW_RANGES];
-	private static final int[] glDrawLength = new int[NUM_DRAW_RANGES];
 	private static int drawIdx = 0;
 
 	private void convertForDraw(int vertSize) {
@@ -354,9 +351,6 @@ public class Zone implements Destructible {
 
 			drawEnd[i] -= drawOff[i]; // convert from end pos to length
 		}
-
-		copyTo(glDrawOffset, drawOff, 0, drawIdx);
-		copyTo(glDrawLength, drawEnd, 0, drawIdx);
 	}
 
 	public void renderOpaque(CommandBuffer cmd, WorldViewContext ctx, Camera camera, boolean ignoreRoofRemoval) {
@@ -959,9 +953,9 @@ public class Zone implements Destructible {
 				}
 			} else {
 				if (SUPPORTS_MULTI_INDIRECT_DRAW) {
-					cmd.MultiDrawArraysIndirect(GL_TRIANGLES, glDrawOffset, glDrawLength, drawIdx, ZoneRenderer.indirectDrawCmdsStaging);
+					cmd.MultiDrawArraysIndirect(GL_TRIANGLES, drawOff, drawEnd, drawIdx, ZoneRenderer.indirectDrawCmdsStaging);
 				} else {
-					cmd.MultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength, drawIdx);
+					cmd.MultiDrawArrays(GL_TRIANGLES, drawOff, drawEnd, drawIdx);
 				}
 			}
 			drawIdx = 0;

@@ -215,7 +215,7 @@ public class DirectionalShadowPass implements RenderPass {
 
 	@Override
 	public void drawZoneOpaque(WorldViewContext ctx, Zone z, int zx, int zz) {
-		if(z.isVisible(directionalCamera))
+		if(!z.isVisible(directionalCamera))
 			return;
 
 		final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
