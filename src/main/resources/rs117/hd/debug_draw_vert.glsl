@@ -84,7 +84,7 @@ void main() {
         vec4(aCenter,                                         1.0)
     );
     fColor      = unpackArgb(aArgb);
-    gl_Position = projectionMatrix * model * vec4(aPosition, 1.0);
+    gl_Position = sceneCamera.viewProjMatrix * model * vec4(aPosition, 1.0);
 
 #elif PRIMITIVE_TYPE == PRIMITIVE_SPHERE
     mat4 model = mat4(
@@ -94,40 +94,25 @@ void main() {
         vec4(aCenter,                   1.0)
     );
     fColor      = unpackArgb(aArgb);
-    gl_Position = projectionMatrix * model * vec4(aPosition, 1.0);
+    gl_Position = sceneCamera.viewProjMatrix * model * vec4(aPosition, 1.0);
 
 #elif PRIMITIVE_TYPE == PRIMITIVE_LINE
     fColor      = unpackArgb(aArgb);
-    gl_Position = projectionMatrix * lineModelMatrix(aStart, aEnd, aThickness) * vec4(aPosition, 1.0);
+    gl_Position = sceneCamera.viewProjMatrix * lineModelMatrix(aStart, aEnd, aThickness) * vec4(aPosition, 1.0);
 
 #elif PRIMITIVE_TYPE == PRIMITIVE_TEXT
     vec2 quad = aPosition.xy - vec2(0.5);
 
-    // Extract camera basis from the view-projection matrix.
-    // If you have a separate view matrix available, use that instead.
-    vec3 cameraRight = vec3(
-        projectionMatrix[0][0],
-        projectionMatrix[1][0],
-        projectionMatrix[2][0]
-    );
-
-    vec3 cameraUp = vec3(
-        projectionMatrix[0][1],
-        projectionMatrix[1][1],
-        projectionMatrix[2][1]
-    );
-
     float glyphSize = aCharScale;
-
     vec3 worldPos =
         aCenter +
-        cameraRight * ((float(aCharIndex) + quad.x) * glyphSize) +
-        cameraUp    * (quad.y * glyphSize);
+        Camera_getRight(sceneCamera) * ((float(aCharIndex) + quad.x) * glyphSize) +
+        Camera_getUp(sceneCamera)    * (quad.y * glyphSize);
 
     fUV    = aPosition.xy;
     fColor = unpackArgb(aArgb);
     fChar  = aCharCode;
 
-    gl_Position = projectionMatrix * vec4(worldPos, 1.0);
+    gl_Position = sceneCamera.viewProjMatrix * vec4(worldPos, 1.0);
 #endif
 }

@@ -110,7 +110,7 @@ layout (location = 0) in vec3 vPosition;
         if (waterDepth > 1) {
             const int TILE_SIZE = 128;
             const int CHUNK_SIZE = TILE_SIZE * 8;
-            ivec2 cam = ivec2(cameraPos.xz / CHUNK_SIZE) * CHUNK_SIZE + CHUNK_SIZE / 2;
+            ivec2 cam = ivec2(sceneCamera.position.xz / CHUNK_SIZE) * CHUNK_SIZE + CHUNK_SIZE / 2;
             ivec2 d = ivec2(abs(worldPosition.xz - cam) / TILE_SIZE);
             if (max(d.x, d.y) > int(drawDistance / 8) * 8 + 3)
                 worldPosition.y -= waterDepth;
@@ -126,9 +126,9 @@ layout (location = 0) in vec3 vPosition;
             fFlatNormal = worldNormal;
         #endif
 
-        vec4 clipPosition = projectionMatrix * vec4(worldPosition, 1.0);
+        vec4 clipPosition = sceneCamera.viewProjMatrix * vec4(worldPosition, 1.0);
         int depthBias = (alphaBiasHsl >> 16) & 0xff;
-        if (projectionMatrix[2][3] != 0) // Disable depth bias for orthographic projection
+        if (Camera_isPerspective(sceneCamera)) // Disable depth bias for orthographic projection
             clipPosition.z += depthBias / 128.0;
 
         gl_Position = clipPosition;

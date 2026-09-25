@@ -377,10 +377,7 @@ public class ZoneRenderer implements Renderer {
 				return;
 			}
 
-			plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
-			plugin.uboGlobal.viewMatrix.set(plugin.viewMatrix);
-			plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);
-			plugin.uboGlobal.invProjectionMatrix.set(plugin.invViewProjMatrix);
+			plugin.uboGlobal.sceneCamera.write(sceneCamera);
 
 			if (plugin.configDynamicLights != DynamicLights.NONE) {
 				// Update lights UBO
