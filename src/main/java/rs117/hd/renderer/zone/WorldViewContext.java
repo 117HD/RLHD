@@ -16,7 +16,6 @@ import rs117.hd.HdPlugin;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
 import rs117.hd.overlays.FrameTimer;
-import rs117.hd.overlays.Timer;
 import rs117.hd.scene.SceneCullingManager;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
@@ -277,14 +276,17 @@ public class WorldViewContext {
 		completeInvalidation();
 
 		if(!plugin.freezeCulling) {
-			for (int zx = 0; zx < sizeX; ++zx)
+			final Projection projection = uboWorldViewStruct != null ? uboWorldViewStruct.worldView.getMainWorldProjection() : null;
+			for (int zx = 0; zx < sizeX; ++zx) {
 				for (int zz = 0; zz < sizeZ; ++zz)
-					zones[zx][zz].queueVisibility(this, zx, zz);
-
-			sceneCullingManager.flush();
+					zones[zx][zz].queueVisibility(this, zx, zz, projection);
+				sceneCullingManager.flush();
+			}
 		}
 
-		frameTimer.begin(Timer.VISIBILITY_CHECK);
+		for (int i = 0; i < VAO_COUNT; i++)
+			dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][i].map();
+
 		int offset = sceneContext.sceneOffset >> 3;
 		for (int zx = 0; zx < sizeX; ++zx) {
 			for (int zz = 0; zz < sizeZ; ++zz) {
@@ -295,12 +297,8 @@ public class WorldViewContext {
 					z.multizoneLocs(sceneContext, zx - offset, zz - offset, camera, zones);
 			}
 		}
-		frameTimer.end(Timer.VISIBILITY_CHECK);
 
 		sortStaticAlphaModels(camera);
-
-		for (int i = 0; i < VAO_COUNT; i++)
-			dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][i].map();
 	}
 
 	void debugDraw(Camera camera) {

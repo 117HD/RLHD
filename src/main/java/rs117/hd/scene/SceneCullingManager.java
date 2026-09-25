@@ -1,9 +1,11 @@
 package rs117.hd.scene;
 
 import java.awt.Color;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Queue;
 import javax.inject.Singleton;
 import lombok.Getter;
 import net.runelite.api.*;
@@ -57,10 +59,12 @@ public class SceneCullingManager {
 	private final ConcurrentPool<CullingJob> CULLING_JOB_POOL = new ConcurrentPool<>(CullingJob::new);
 	private final ConcurrentPool<CullingResult> CULLING_RESULT_POOL = new ConcurrentPool<>(CullingResult::new);
 
-	private final List<CullingResult> pendingCullingResults = new ArrayList<>();
+	private final Queue<CullingResult> pendingCullingResults = new ArrayDeque<>();
 	private final List<Camera> cullingCameras = new ArrayList<>();
 	private final float[] debugProjected = new float[4];
 	private float[] debugScratch = new float[INITIAL_SCRATCH_SIZE];
+
+	private int nextJobId = 0;
 
 	private static int[] identitySlots(int capacity) {
 		int[] slots = new int[capacity];
@@ -120,7 +124,8 @@ public class SceneCullingManager {
 
 	public synchronized CullingResult obtainResult() {
 		CullingResult result = CULLING_RESULT_POOL.acquire();
-		result.prepareForReuse();
+		assert result.state == STATE_RELEASED && result.primitiveCount == 0 : "Acquired a CullingResult that still owns primitives";
+		result.state = STATE_USED;
 		return result;
 	}
 
@@ -129,16 +134,15 @@ public class SceneCullingManager {
 			return;
 
 		CullingJob job = CULLING_JOB_POOL.acquire();
-		job.id++;
+		job.id = nextJobId++;
 		job.cullingCameras.addAll(cullingCameras);
 
-		for (int i = 0; i < pendingCullingResults.size(); i++) {
-			final CullingResult result = pendingCullingResults.get(i);
+		CullingResult result;
+		while ((result = pendingCullingResults.poll()) != null) {
 			result.job = job;
 			result.cullingJobId = job.id;
 			job.pendingCullingResults.add(result);
 		}
-		pendingCullingResults.clear();
 
 		job.queue();
 	}
@@ -262,7 +266,7 @@ public class SceneCullingManager {
 	}
 
 	private final class CullingJob extends Job {
-		private final List<CullingResult> pendingCullingResults = new ArrayList<>();
+		private final Queue<CullingResult> pendingCullingResults = new ArrayDeque<>();
 		private final List<Camera> cullingCameras = new ArrayList<>();
 		private final float[] projected = new float[4];
 		private float[] scratch = new float[INITIAL_SCRATCH_SIZE];
@@ -270,12 +274,9 @@ public class SceneCullingManager {
 
 		@Override
 		protected void onRun() {
-			for (int i = 0; i < pendingCullingResults.size(); i++) {
-				CullingResult result = pendingCullingResults.get(i);
-				if (result == null)
-					continue;
-
-				int required = result.requiredScratchSize();
+			CullingResult result;
+			while ((result = pendingCullingResults.poll()) != null){
+				final int required = result.requiredScratchSize();
 				if (scratch.length < required)
 					scratch = new float[required];
 
@@ -288,6 +289,7 @@ public class SceneCullingManager {
 				}
 
 				result.visibilityFlags = newFlags;
+				result.cullingJobId = -1;
 			}
 
 		}
@@ -301,6 +303,10 @@ public class SceneCullingManager {
 			CULLING_JOB_POOL.recycle(this);
 		}
 	}
+
+	private static final byte STATE_RELEASED = 0;
+	private static final byte STATE_USED = 1;
+	private static final byte STATE_QUEUED = 2;
 
 	public final class CullingResult {
 		private int[] primitiveTypes = new int[INITIAL_PRIMITIVE_CAPACITY];
@@ -317,23 +323,13 @@ public class SceneCullingManager {
 		public Projection projection;
 
 		public float offsetX, offsetY, offsetZ;
-		private int cullingJobId;
-		private boolean released;
+		private int cullingJobId = -1;
+		private byte state;
 
 		private int requiredScratchSize() { return PRIMITIVES_OFFSET + primitiveCount * FLOATS_PER_PRIMITIVE; }
 
-		private synchronized void prepareForReuse() {
-			assert released || primitiveCount == 0 : "Acquired a CullingResult that still owns primitives";
-			released = false;
-			visibilityFlags = 0;
-			projection = null;
-			offsetX = offsetY = offsetZ = 0;
-			job = null;
-			cullingJobId = 0;
-		}
-
 		private void checkNotReleased() {
-			if (released)
+			if (state == STATE_RELEASED)
 				throw new IllegalStateException("CullingResult has been released");
 		}
 
@@ -684,10 +680,10 @@ public class SceneCullingManager {
 		private void ensureJobCompletion() {
 			if (job == null)
 				return;
-
-			if (cullingJobId == job.id)
-				job.waitForCompletion();
+			while (cullingJobId == job.id)
+				job.waitForCompletion(100);
 			job = null;
+			state = STATE_USED;
 		}
 
 		public boolean isVisible() {
@@ -700,13 +696,17 @@ public class SceneCullingManager {
 			return (visibilityFlags & camera.getCullingMask()) != 0;
 		}
 
-		public synchronized void queue() {
+		public void queue() { queue(true); }
+
+		public synchronized void queue(boolean shouldFlush) {
 			checkNotReleased();
+			ensureJobCompletion();
+
 			synchronized (SceneCullingManager.this) {
-				assert !pendingCullingResults.contains(this);
+				state = STATE_QUEUED;
 				pendingCullingResults.add(this);
 
-				if (pendingCullingResults.size() >= HdPlugin.PROCESSOR_COUNT)
+				if (shouldFlush && pendingCullingResults.size() >= HdPlugin.PROCESSOR_COUNT)
 					flush();
 			}
 		}
@@ -717,7 +717,7 @@ public class SceneCullingManager {
 		}
 
 		public synchronized void release() {
-			if (released)
+			if (state == STATE_RELEASED)
 				return;
 
 			synchronized (SceneCullingManager.this) {
@@ -725,7 +725,6 @@ public class SceneCullingManager {
 			}
 
 			ensureJobCompletion();
-
 			for (int i = 0; i < primitiveCount; i++)
 				freePrimitiveSlot(unpackSlot(primitiveTypes[i]));
 
@@ -734,8 +733,8 @@ public class SceneCullingManager {
 			visibilityFlags = 0;
 			projection = null;
 			job = null;
-			cullingJobId = 0;
-			released = true;
+			cullingJobId = -1;
+			state = STATE_RELEASED;
 			CULLING_RESULT_POOL.recycle(this);
 		}
 	}
