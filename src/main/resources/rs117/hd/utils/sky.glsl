@@ -72,6 +72,6 @@ SkyGradient computeSkyGradient(vec3 viewDir) {
 }
 
 vec3 blendSkyBackground(vec3 gradient, vec3 background, float amount) {
-    // Keep an authored gradient visible behind stars and nebulas, including below the horizon.
+    // Keep an authored gradient visible behind stars and nebulae, including below the horizon.
     return mix(gradient, background + gradient * uboSky.customGradient, amount);
 }

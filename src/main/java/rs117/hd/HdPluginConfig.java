@@ -622,19 +622,36 @@ public interface HdPluginConfig extends Config
 			"'Off' disables the day & night cycle entirely.<br>" +
 			"'Default' everyone sees the same sky, with a full day passing per hour.<br>" +
 			"'Real-Time' follows your local time, roughly matching the real sun in your hemisphere.<br>" +
+			"'Custom' follows the sun and moon at the configured location, respecting the Custom duration.<br>" +
 			"'Dawn' shows the sky just before sunrise.<br>" +
 			"'Sunrise' shows a constant sunrise.<br>" +
 			"'Day' shows constant daytime.<br>" +
 			"'Sunset' shows a constant sunset.<br>" +
 			"'Dusk' shows the sky just after sunset.<br>" +
-			"'Night' shows constant night-time.<br>" +
-			"'Custom Realistic' follows the sun and moon at the configured location, respecting the Custom duration.<br>" +
-			"'Custom Basic' moves the sun on a circular cycle, respecting the Custom duration and Basic night portion.",
+			"'Night' shows constant night-time.",
 		position = 0,
 		section = daylightCycleSettings
 	)
 	default DaylightCycle daylightCycle() {
 		return DaylightCycle.DEFAULT;
+	}
+
+	String KEY_NIGHT_ADAPTATION = "nightAdaptation";
+	@Range(min = 0, max = 300)
+	@Units(Units.PERCENT)
+	@ConfigItem(
+		keyName = KEY_NIGHT_ADAPTATION,
+		name = "Night adaptation",
+		description =
+			"Simulates your eyes adapting to darkness by brightening night-time lighting.<br>" +
+			"'0%' disables adaptation entirely.<br>" +
+			"'100%' yields good visibility.<br>" +
+			"Values above 100% amplify the adjustment further, if needed.",
+		position = 1,
+		section = daylightCycleSettings
+	)
+	default int nightBrightness() {
+		return 100;
 	}
 
 	String KEY_STARS = "stars";
@@ -646,22 +663,22 @@ public interface HdPluginConfig extends Config
 			"'Realistic' follows the sky's celestial rotation.<br>" +
 			"'Artistic' rotates horizontally with slight parallax.<br>" +
 			"'Static' keeps the realistic star field fixed in place.",
-		position = 1,
+		position = 2,
 		section = daylightCycleSettings
 	)
 	default StarMode starMode() {
 		return StarMode.REALISTIC;
 	}
 
-	String KEY_NEBULAS = "nebulas";
+	String KEY_NEBULAE = "nebulae";
 	@ConfigItem(
-		keyName = KEY_NEBULAS,
-		name = "Nebulas",
-		description = "Show nebulas in the night sky",
-		position = 2,
+		keyName = KEY_NEBULAE,
+		name = "Nebulae",
+		description = "Show nebulae in the night sky",
+		position = 3,
 		section = daylightCycleSettings
 	)
-	default boolean enableNebulas() {
+	default boolean enableNebulae() {
 		return true;
 	}
 
@@ -673,9 +690,9 @@ public interface HdPluginConfig extends Config
 			"Controls how the moon moves across the sky.<br>" +
 			"'Disabled' hides the moon, keeping half-moon illumination for scene lighting.<br>" +
 			"'Realistic' makes the moon orbit naturally, independent of the sun.<br>" +
-			"'Mirrored' keeps the moon at the opposite side of the sun.<br>" +
+			"'Mirror the sun' keeps the moon at the opposite side of the sun.<br>" +
 			"'Static' keeps the moon at a fixed point in the sky.",
-		position = 3,
+		position = 4,
 		section = daylightCycleSettings
 	)
 	default MoonBehavior moonBehavior() {
@@ -688,31 +705,13 @@ public interface HdPluginConfig extends Config
 		name = "Moon phase",
 		description =
 			"Controls the portion of the moon which is lit by the sun.<br>" +
-			"'Realistic' lights up the moon based on its position relative to the sun.<br>" +
-			"Other options lock the moon in a particular lunar phase.",
-		position = 4,
-		section = daylightCycleSettings
-	)
-	default MoonPhase moonPhase() {
-		return MoonPhase.REALISTIC;
-	}
-
-	String KEY_NIGHT_BRIGHTNESS = "nightBrightness";
-	@Range(min = 0, max = 300)
-	@Units(Units.PERCENT)
-	@ConfigItem(
-		keyName = KEY_NIGHT_BRIGHTNESS,
-		name = "Night brightness",
-		description =
-			"Simulates your eyes adapting to darkness by brightening night-time lighting.<br>" +
-			"'0%' disables adaptation.<br>" +
-			"'100%' yields good visibility.<br>" +
-			"Values above '100%' amplify the adjustment further, if needed.",
+			"'Dynamic' lights up the moon based on its position relative to the sun.<br>" +
+			"All other options lock the moon in a particular lunar phase.",
 		position = 5,
 		section = daylightCycleSettings
 	)
-	default int nightBrightness() {
-		return 100;
+	default MoonPhase moonPhase() {
+		return MoonPhase.DYNAMIC;
 	}
 
 	String KEY_REPLACE_VANILLA_SKYBOXES = "replaceVanillaSkyboxes";
@@ -739,20 +738,6 @@ public interface HdPluginConfig extends Config
 	)
 	default double customCycleDurationMinutes() {
 		return 60;
-	}
-
-	String KEY_CUSTOM_NIGHT_PERCENTAGE = "basicNightPercentage";
-	@Range(min = 0, max = 100)
-	@Units(Units.PERCENT)
-	@ConfigItem(
-		keyName = KEY_CUSTOM_NIGHT_PERCENTAGE,
-		name = "Custom night portion",
-		description = "Sets the share of each Custom cycle spent at night, without changing its duration.",
-		position = 8,
-		section = daylightCycleSettings
-	)
-	default int basicNightPercentage() {
-		return 50;
 	}
 
 	String KEY_LATITUDE_DEGREES = "latitudeDegrees";

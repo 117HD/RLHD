@@ -7,7 +7,6 @@
 #include <utils/color_filters.glsl>
 #include <utils/misc.glsl>
 
-// Input is nonlinear sRGB. Scene fog is applied after these color adjustments.
 vec3 applyColorAdjustments(vec3 color) {
     color = clamp(color, 0.0, 1.0);
     if (saturation != 1.0 || contrast != 1.0) {
@@ -23,7 +22,6 @@ vec3 applyColorAdjustments(vec3 color) {
     return color;
 }
 
-// Apply after fog and all other color composition.
 vec3 applyOutputCorrection(vec3 color) {
     color = pow(color, vec3(gammaCorrection));
     #if WINDOWS_HDR_CORRECTION

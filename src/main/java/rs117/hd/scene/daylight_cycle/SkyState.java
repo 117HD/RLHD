@@ -18,8 +18,7 @@ public final class SkyState {
 	public float[] shadowAngles;
 	public float[] sunDirection;
 	public float[] moonDirection;
-	/** Direction from the moon toward its illuminant. */
-	public float[] moonIlluminationDirection;
+	public float[] moonSurfaceLightDirection;
 	public final float[] moonLibration = new float[2];
 	public float[] celestialPole;
 	public float celestialRotation;
@@ -38,6 +37,8 @@ public final class SkyState {
 	}
 
 	public static final class LightingSample extends GradientSample {
+		public int frame;
+		public Environment environment;
 		public final SkyState sky = new SkyState();
 		public float[] referenceFogColorLinear;
 	}

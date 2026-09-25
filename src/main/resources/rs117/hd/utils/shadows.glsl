@@ -29,10 +29,10 @@
 #include <utils/misc.glsl>
 #include <utils/shadow_filtering.glsl>
 
-#if SHADOW_FILTERING_KERNAL == 3
+#if SHADOW_FILTERING_KERNEL == 3
     #define sampleShadow sampleShadowPCF3x3
     #define sampleHardwareShadow sampleHardwareShadow3x3
-#elif SHADOW_FILTERING_KERNAL == 2
+#elif SHADOW_FILTERING_KERNEL == 2
     #define sampleShadow sampleShadowPCF2x2
     #define sampleHardwareShadow sampleHardwareShadow2x2
 #else

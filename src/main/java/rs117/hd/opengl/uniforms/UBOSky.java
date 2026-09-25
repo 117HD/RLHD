@@ -10,7 +10,6 @@ public class UBOSky extends UniformBuffer<GLBuffer> {
 		super(GL_DYNAMIC_DRAW);
 	}
 
-	// Sky gradient and celestial state
 	public Property gradientEnabled = addProperty(PropertyType.Int, "gradientEnabled");
 	public Property zenithColor = addProperty(PropertyType.FVec3, "zenithColor");
 	public Property horizonColor = addProperty(PropertyType.FVec3, "horizonColor");
@@ -24,10 +23,9 @@ public class UBOSky extends UniformBuffer<GLBuffer> {
 	public Property moonDir = addProperty(PropertyType.FVec3, "moonDir");
 	public Property moonDiskColor = addProperty(PropertyType.FVec3, "moonDiskColor");
 	public Property moonIllumination = addProperty(PropertyType.Float, "moonIllumination");
-	public Property moonIlluminationDirection = addProperty(PropertyType.FVec3, "moonIlluminationDirection");
+	public Property moonSurfaceLightDirection = addProperty(PropertyType.FVec3, "moonSurfaceLightDirection");
 	public Property moonLibration = addProperty(PropertyType.FVec2, "moonLibration");
 
-	// Environment visibility controls
 	public Property fogColor = addProperty(PropertyType.FVec3, "fogColor");
 	public Property fogDensity = addProperty(PropertyType.Float, "fogDensity");
 	public Property visibility = addProperty(PropertyType.Float, "visibility");

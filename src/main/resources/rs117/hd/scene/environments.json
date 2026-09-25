@@ -2712,9 +2712,7 @@
     "directionalStrength": 2,
     "fogColor": "#fddcb4",
     "fogDepth": 6.5,
-    "windStrength": 50,
-    "sky": {
-    }
+    "windStrength": 50
   },
   {
     "area": "FISHING_TRAWLER_SUNK",
