@@ -329,7 +329,6 @@ public class SkyManager {
 
 		out.moonVisibility = mix(fromMoon.visibility, toMoon.visibility, t);
 		out.moonDirectionalStrength = mix(fromMoon.directionalStrength, toMoon.directionalStrength, t);
-		out.moonDirectionalStrength *= COLOR_PICKER[3];
 		out.moonIllumination = mix(fromMoon.illumination, toMoon.illumination, t);
 		out.moonLightIllumination = mix(fromMoon.lightIllumination, toMoon.lightIllumination, t);
 		out.moonIlluminationDirection = interpolateDirection(fromMoon.illuminationDirection, toMoon.illuminationDirection, t);
