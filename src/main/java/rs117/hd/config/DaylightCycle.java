@@ -18,8 +18,6 @@ public enum DaylightCycle {
 	NIGHT("Night", "NIGHT", true, false, false),
 	// Moving astronomical sun and moon driven by the configured Custom duration.
 	CUSTOM_REALISTIC("Custom Realistic", null, false, true, true),
-	// Synthetic sun orbit; the warped simulated timestamp also drives the moon and stars.
-	CUSTOM_BASIC("Custom Basic", null, false, true, false),
 	;
 
 	private final String name;

@@ -629,7 +629,7 @@ public interface HdPluginConfig extends Config
 			"'Dusk' shows the sky just after sunset.<br>" +
 			"'Night' shows constant night-time.<br>" +
 			"'Custom Realistic' follows the sun and moon at the configured location, respecting the Custom duration.<br>" +
-			"'Custom Basic' moves the sun on a circular cycle, respecting the Custom duration and Basic night portion.",
+			"'Custom Basic' moves the sun on a circular cycle, respecting the Custom duration.",
 		position = 0,
 		section = daylightCycleSettings
 	)
@@ -739,20 +739,6 @@ public interface HdPluginConfig extends Config
 	)
 	default double customCycleDurationMinutes() {
 		return 60;
-	}
-
-	String KEY_CUSTOM_NIGHT_PERCENTAGE = "basicNightPercentage";
-	@Range(min = 0, max = 100)
-	@Units(Units.PERCENT)
-	@ConfigItem(
-		keyName = KEY_CUSTOM_NIGHT_PERCENTAGE,
-		name = "Custom night portion",
-		description = "Sets the share of each Custom cycle spent at night, without changing its duration.",
-		position = 8,
-		section = daylightCycleSettings
-	)
-	default int basicNightPercentage() {
-		return 50;
 	}
 
 	String KEY_LATITUDE_DEGREES = "latitudeDegrees";
