@@ -90,16 +90,16 @@ public final class StarField {
 
 		int stride = FLOATS_PER_STAR * Float.BYTES;
 		// direction.xyz, size, brightness, color.rgb, artistic rotation speed
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0L);
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(1, 1, GL_FLOAT, false, stride, 3L * Float.BYTES);
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0L);
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(2, 1, GL_FLOAT, false, stride, 4L * Float.BYTES);
+		glVertexAttribPointer(1, 1, GL_FLOAT, false, stride, 3L * Float.BYTES);
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(3, 3, GL_FLOAT, false, stride, 5L * Float.BYTES);
+		glVertexAttribPointer(2, 1, GL_FLOAT, false, stride, 4L * Float.BYTES);
 		glEnableVertexAttribArray(3);
-		glVertexAttribPointer(4, 1, GL_FLOAT, false, stride, 8L * Float.BYTES);
+		glVertexAttribPointer(3, 3, GL_FLOAT, false, stride, 5L * Float.BYTES);
 		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(4, 1, GL_FLOAT, false, stride, 8L * Float.BYTES);
 
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -110,7 +110,7 @@ public final class StarField {
 		glActiveTexture(TEXTURE_UNIT_NEBULA);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texNebulaCubemap);
 
-		for (int face = 0; face < 6; face++)
+		for (int face = 0; face < 6; face++) {
 			glTexImage2D(
 				GL_TEXTURE_CUBE_MAP_POSITIVE_X + face,
 				0,
@@ -122,6 +122,7 @@ public final class StarField {
 				GL_FLOAT,
 				0
 			);
+		}
 
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -220,7 +221,7 @@ public final class StarField {
 		final float[] center = new float[3];
 		for (int i = 0; i < count; i++) {
 			randomPointOnSphere(center, random);
-			writeStar(vertexBuffer, center[0], center[1], center[2], maxBrightness, sizeScale, artisticRotationSpeed, 1);
+			writeStar(vertexBuffer, center, maxBrightness, sizeScale, artisticRotationSpeed, 1);
 		}
 	}
 
@@ -251,6 +252,8 @@ public final class StarField {
 			plugin.uboSky.nebulaClusters[c].set(dir[0], dir[1], dir[2], CLUSTER_ANGULAR_SPREAD * 0.5f);
 		}
 
+		float[] pos = new float[3];
+
 		for (int i = 0; i < count; i++) {
 			final int c = random.nextInt(clusterCount);
 
@@ -258,26 +261,22 @@ public final class StarField {
 			final float[] u = clusterTangentU[c];
 			final float[] v = clusterTangentV[c];
 
-			float radius = (float) (Math.min(Math.abs(random.nextGaussian()), 3.0) * angularSpread);
-			float theta = (float) (random.nextDouble() * 2.0 * Math.PI);
+			float radius = min(abs((float) random.nextGaussian()), 3) * angularSpread;
+			float theta = (float) (random.nextFloat() * 2.0 * PI);
 			float cosR = cos(radius);
 			float sinR = sin(radius);
 			float cosT = cos(theta);
 			float sinT = sin(theta);
+			for (int j = 0; j < 3; j++)
+				pos[j] = cosR * dir[j] + sinR * (cosT * u[j] + sinT * v[j]);
 
-			float dx = cosR * dir[0] + sinR * (cosT * u[0] + sinT * v[0]);
-			float dy = cosR * dir[1] + sinR * (cosT * u[1] + sinT * v[1]);
-			float dz = cosR * dir[2] + sinR * (cosT * u[2] + sinT * v[2]);
-
-			writeStar(vertexBuffer, dx, dy, dz, maxBrightness, sizeScale, artisticRotationSpeed, .5f);
+			writeStar(vertexBuffer, pos, maxBrightness, sizeScale, artisticRotationSpeed, .5f);
 		}
 	}
 
 	private void writeStar(
 		FloatBuffer vertexBuffer,
-		float dx,
-		float dy,
-		float dz,
+		float[] position,
 		float maxBrightness,
 		float sizeScale,
 		float artisticRotationSpeed,
@@ -285,7 +284,7 @@ public final class StarField {
 	) {
 		// Power-law brightness: many dim, few bright (matches pow(seed, 2.5)).
 		float brightnessSeed = random.nextFloat();
-		float brightness = min((float) Math.pow(brightnessSeed, 2.5) * maxBrightness, .4f) * brightnessScale;
+		float brightness = min(pow(brightnessSeed, 2.5f) * maxBrightness, .4f) * brightnessScale;
 
 		// Per-star size variation, skewed toward the small end (squaring the
 		// random factor biases most stars small with only a few larger ones),
@@ -297,9 +296,7 @@ public final class StarField {
 		final float[] starColor = STAR_COLORS[random.nextInt(STAR_COLORS.length)];
 
 		vertexBuffer
-			.put(dx)
-			.put(dy)
-			.put(dz)
+			.put(position)
 			.put(size)
 			.put(brightness)
 			.put(starColor)
