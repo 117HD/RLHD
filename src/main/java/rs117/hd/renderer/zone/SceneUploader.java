@@ -35,6 +35,8 @@ import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
+import rs117.hd.scene.SceneCullingManager;
+import rs117.hd.scene.SceneCullingManager.CullingResult;
 import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
@@ -84,6 +86,8 @@ public class SceneUploader implements AutoCloseable {
 	// the minimum amount by which each color will be lightened
 	private static final int BASE_LIGHTEN = 10;
 
+	private static final float CULLING_MERGE_THRESHOLD = 32;
+
 	static {
 		for (int i = 0; i < 8; i++) {
 			int brightness = (int) (127 - 72 * Math.pow(i / 7f, .05));
@@ -109,6 +113,9 @@ public class SceneUploader implements AutoCloseable {
 	@Inject
 	private ProceduralGenerator proceduralGenerator;
 
+	@Inject
+	private SceneCullingManager sceneCullingManager;
+
 	@FunctionalInterface
 	public interface OnBeforeProcessTileFunc {
 		void invoke(Tile t, boolean isEstimate) throws InterruptedException;
@@ -117,6 +124,8 @@ public class SceneUploader implements AutoCloseable {
 	public OnBeforeProcessTileFunc onBeforeProcessTile;
 
 	private int basex, basez, rid, level;
+	private float tileMinX, tileMinY, tileMinZ;
+	private float tileMaxX, tileMaxY, tileMaxZ;
 
 	private final PrimitiveIntArray roofIds = new PrimitiveIntArray();
 	private Scene currentScene;
@@ -237,24 +246,31 @@ public class SceneUploader implements AutoCloseable {
 		for (int z = 0; z <= 3; ++z) {
 			this.level = z;
 
+			final CullingResult cr = zone.levelCullingResults[z] = sceneCullingManager.obtainResult();
+
 			if (z == 0) {
-				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 2, true, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 3, true, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, cr, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, cr, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, cr, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 2, true, cr, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 3, true, cr, vb, ab, fb);
 			} else {
-				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, cr, vb, ab, fb);
 			}
 
 			if (vb != null)
 				zone.levelOffsets[z] = vb.position();
+
+			cr.optimise(32);
 		}
 
 		if (vb != null) {
 			// Upload water surface tiles to be drawn after everything else
-			if (zone.hasWater)
-				uploadZoneWater(ctx, zone, mzx, mzz, vb, fb);
+			if (zone.hasWater) {
+				final CullingResult cr = zone.levelCullingResults[Zone.LEVEL_WATER_SURFACE] = sceneCullingManager.obtainResult();
+				uploadZoneWater(ctx, zone, mzx, mzz, cr, vb, fb);
+				cr.optimise(32);
+			}
 			zone.levelOffsets[Zone.LEVEL_WATER_SURFACE] = vb.position();
 
 			if (zone.hasGapFiller)
@@ -270,6 +286,7 @@ public class SceneUploader implements AutoCloseable {
 		int mzz,
 		int level,
 		boolean visbelow,
+		CullingResult cr,
 		GpuIntBuffer vb,
 		GpuIntBuffer ab,
 		GpuIntBuffer fb
@@ -281,7 +298,7 @@ public class SceneUploader implements AutoCloseable {
 			final int id = roofIds.array[i];
 			int pos = vb != null ? vb.position() : 0;
 
-			uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, id, visbelow, vb, ab, fb);
+			uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, id, visbelow, cr, vb, ab, fb);
 
 			int endpos = vb != null ? vb.position() : 0;
 
@@ -294,7 +311,7 @@ public class SceneUploader implements AutoCloseable {
 		}
 
 		// upload everything else
-		uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, 0, visbelow, vb, ab, fb);
+		uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, 0, visbelow, cr, vb, ab, fb);
 	}
 
 	private void uploadZoneLevelRoof(
@@ -305,6 +322,7 @@ public class SceneUploader implements AutoCloseable {
 		int level,
 		int roofId,
 		boolean visbelow,
+		CullingResult cullingResult,
 		GpuIntBuffer vb,
 		GpuIntBuffer ab,
 		GpuIntBuffer fb
@@ -341,7 +359,7 @@ public class SceneUploader implements AutoCloseable {
 						this.rid = rid;
 						if (onBeforeProcessTile != null)
 							onBeforeProcessTile.invoke(t, false);
-						uploadZoneTile(ctx, zone, t, false, false, vb, ab, fb);
+						uploadZoneTile(ctx, zone, t, false, false, cullingResult, vb, ab, fb);
 					}
 				}
 			}
@@ -353,6 +371,7 @@ public class SceneUploader implements AutoCloseable {
 		Zone zone,
 		int mzx,
 		int mzz,
+		CullingResult cr,
 		GpuIntBuffer vb,
 		GpuIntBuffer fb
 	) throws InterruptedException {
@@ -360,6 +379,7 @@ public class SceneUploader implements AutoCloseable {
 		this.basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
 
 		for (int level = 0; level < MAX_Z; level++) {
+			this.level = level;
 			for (int xoff = 0; xoff < CHUNK_SIZE; ++xoff) {
 				for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
 					final int msx = (mzx << 3) + xoff;
@@ -371,7 +391,7 @@ public class SceneUploader implements AutoCloseable {
 					if (onBeforeProcessTile != null)
 						onBeforeProcessTile.invoke(t, false);
 
-					uploadZoneTile(ctx, zone, t, false, true, vb, null, fb);
+					uploadZoneTile(ctx, zone, t, false, true, cr, vb, null, fb);
 				}
 			}
 		}
@@ -494,6 +514,7 @@ public class SceneUploader implements AutoCloseable {
 		Tile t,
 		boolean isBridge,
 		boolean onlyWaterSurface,
+		CullingResult cullingResult,
 		GpuIntBuffer vertexBuffer,
 		GpuIntBuffer alphaBuffer,
 		GpuIntBuffer textureBuffer
@@ -508,6 +529,14 @@ public class SceneUploader implements AutoCloseable {
 			return;
 
 		boolean drawTile = renderCallbackManager.drawTile(ctx.scene, t);
+
+		tileMinX = Float.POSITIVE_INFINITY;
+		tileMinY = Float.POSITIVE_INFINITY;
+		tileMinZ = Float.POSITIVE_INFINITY;
+
+		tileMaxX = Float.NEGATIVE_INFINITY;
+		tileMaxY = Float.NEGATIVE_INFINITY;
+		tileMaxZ = Float.NEGATIVE_INFINITY;
 
 		SceneTilePaint paint = t.getSceneTilePaint();
 		if (paint != null && drawTile) {
@@ -528,11 +557,21 @@ public class SceneUploader implements AutoCloseable {
 			uploadTileModel(ctx, t, model, onlyWaterSurface, tileExX, tileExY, tileZ, basex, basez, vertexBuffer, textureBuffer);
 
 		if (!onlyWaterSurface)
-			uploadZoneTileRenderables(ctx, zone, t, tileExX, tileExY, tileZ, vertexBuffer, alphaBuffer, textureBuffer);
+			uploadZoneTileRenderables(ctx, zone, t, tileExX, tileExY, tileZ, cullingResult, vertexBuffer, alphaBuffer, textureBuffer);
+
+		if(cullingResult != null &&
+		   tileMinX != Float.POSITIVE_INFINITY &&
+		   tileMinY != Float.POSITIVE_INFINITY &&
+		   tileMinZ != Float.POSITIVE_INFINITY &&
+		   tileMaxX != Float.NEGATIVE_INFINITY &&
+		   tileMaxY != Float.NEGATIVE_INFINITY &&
+		   tileMaxZ != Float.NEGATIVE_INFINITY) {
+			cullingResult.addAABB(tileMinX, tileMinY, tileMinZ, tileMaxX, tileMaxY, tileMaxZ);
+		}
 
 		Tile bridge = t.getBridge();
 		if (bridge != null)
-			uploadZoneTile(ctx, zone, bridge, true, onlyWaterSurface, vertexBuffer, alphaBuffer, textureBuffer);
+			uploadZoneTile(ctx, zone, bridge, true, onlyWaterSurface, cullingResult, vertexBuffer, alphaBuffer, textureBuffer);
 	}
 
 	private void uploadZoneTileRenderables(
@@ -540,6 +579,7 @@ public class SceneUploader implements AutoCloseable {
 		Zone zone,
 		Tile t,
 		int tileExX, int tileExY, int tileZ,
+		CullingResult cullingResult,
 		GpuIntBuffer vertexBuffer,
 		GpuIntBuffer alphaBuffer,
 		GpuIntBuffer textureBuffer
@@ -565,6 +605,7 @@ public class SceneUploader implements AutoCloseable {
 				-1,
 				wallObject.getId(),
 				tileExX, tileExY, tileZ,
+				cullingResult,
 				vertexBuffer,
 				alphaBuffer,
 				textureBuffer
@@ -588,6 +629,7 @@ public class SceneUploader implements AutoCloseable {
 				-1,
 				wallObject.getId(),
 				tileExX, tileExY, tileZ,
+				cullingResult,
 				vertexBuffer,
 				alphaBuffer,
 				textureBuffer
@@ -616,6 +658,7 @@ public class SceneUploader implements AutoCloseable {
 				-1,
 				decorativeObject.getId(),
 				tileExX, tileExY, tileZ,
+				cullingResult,
 				vertexBuffer,
 				alphaBuffer,
 				textureBuffer
@@ -639,6 +682,7 @@ public class SceneUploader implements AutoCloseable {
 				-1,
 				decorativeObject.getId(),
 				tileExX, tileExY, tileZ,
+				cullingResult,
 				vertexBuffer,
 				alphaBuffer,
 				textureBuffer
@@ -662,6 +706,7 @@ public class SceneUploader implements AutoCloseable {
 				-1,
 				groundObject.getId(),
 				tileExX, tileExY, tileZ,
+				cullingResult,
 				vertexBuffer,
 				alphaBuffer,
 				textureBuffer
@@ -697,6 +742,7 @@ public class SceneUploader implements AutoCloseable {
 				max.getY(),
 				gameObject.getId(),
 				tileExX, tileExY, tileZ,
+				cullingResult,
 				vertexBuffer,
 				alphaBuffer,
 				textureBuffer
@@ -756,6 +802,7 @@ public class SceneUploader implements AutoCloseable {
 		int uz,
 		int id,
 		int tileExX, int tileExY, int tileZ,
+		CullingResult cullingResult,
 		GpuIntBuffer opaqueBuffer,
 		GpuIntBuffer alphaBuffer,
 		GpuIntBuffer textureBuffer
@@ -791,6 +838,7 @@ public class SceneUploader implements AutoCloseable {
 				preOrientation, orient,
 				x - basex, y, z - basez,
 				tileExX, tileExY, tileZ,
+				cullingResult,
 				opaqueBuffer,
 				alphaBuffer,
 				textureBuffer
@@ -827,6 +875,7 @@ public class SceneUploader implements AutoCloseable {
 			try {
 				zone.addAlphaModel(
 					plugin,
+					sceneCullingManager,
 					materialManager,
 					zone.glVaoA,
 					zone.tboF.getTexId(),
@@ -1078,21 +1127,21 @@ public class SceneUploader implements AutoCloseable {
 			lx2, neHeight, lz2,
 			uvx, uvy, 0,
 			neNormals[0], neNormals[1], neNormals[2],
-			texturedFaceIdx, false
+			0, texturedFaceIdx, false
 		);
 
 		vb.putStaticVertex(
 			lx3, nwHeight, lz3,
 			uvx - uvcos, uvy - uvsin, 0,
 			nwNormals[0], nwNormals[1], nwNormals[2],
-			texturedFaceIdx, false
+			0, texturedFaceIdx, false
 		);
 
 		vb.putStaticVertex(
 			lx1, seHeight, lz1,
 			uvx + uvsin, uvy - uvcos, 0,
 			seNormals[0], seNormals[1], seNormals[2],
-			texturedFaceIdx, false
+			0, texturedFaceIdx, false
 		);
 
 		boolean isDoubleSided = !onlyWaterSurface && (tileZ != 0 || override.doubleSidedFaces);
@@ -1101,21 +1150,21 @@ public class SceneUploader implements AutoCloseable {
 				lx1, seHeight, lz1,
 				uvx + uvsin, uvy - uvcos, 0,
 				-seNormals[0], -seNormals[1], -seNormals[2],
-				texturedFaceIdx, true
+				0, texturedFaceIdx, true
 			);
 
 			vb.putStaticVertex(
 				lx3, nwHeight, lz3,
 				uvx - uvcos, uvy - uvsin, 0,
 				-nwNormals[0], -nwNormals[1], -nwNormals[2],
-				texturedFaceIdx, true
+				0, texturedFaceIdx, true
 			);
 
 			vb.putStaticVertex(
 				lx2, neHeight, lz2,
 				uvx, uvy, 0,
 				-neNormals[0], -neNormals[1], -neNormals[2],
-				texturedFaceIdx, true
+				0, texturedFaceIdx, true
 			);
 		}
 
@@ -1129,21 +1178,21 @@ public class SceneUploader implements AutoCloseable {
 			lx0, swHeight, lz0,
 			uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0,
 			swNormals[0], swNormals[1], swNormals[2],
-			texturedFaceIdx, false
+			0, texturedFaceIdx, false
 		);
 
 		vb.putStaticVertex(
 			lx1, seHeight, lz1,
 			uvx + uvsin, uvy - uvcos, 0,
 			seNormals[0], seNormals[1], seNormals[2],
-			texturedFaceIdx, false
+			0, texturedFaceIdx, false
 		);
 
 		vb.putStaticVertex(
 			lx3, nwHeight, lz3,
 			uvx - uvcos, uvy - uvsin, 0,
 			nwNormals[0], nwNormals[1], nwNormals[2],
-			texturedFaceIdx, false
+			0, texturedFaceIdx, false
 		);
 
 		if (isDoubleSided) {
@@ -1151,23 +1200,31 @@ public class SceneUploader implements AutoCloseable {
 				lx3, nwHeight, lz3,
 				uvx - uvcos, uvy - uvsin, 0,
 				-nwNormals[0], -nwNormals[1], -nwNormals[2],
-				texturedFaceIdx, true
+				0, texturedFaceIdx, true
 			);
 
 			vb.putStaticVertex(
 				lx1, seHeight, lz1,
 				uvx + uvsin, uvy - uvcos, 0,
 				-seNormals[0], -seNormals[1], -seNormals[2],
-				texturedFaceIdx, true
+				0, texturedFaceIdx, true
 			);
 
 			vb.putStaticVertex(
 				lx0, swHeight, lz0,
 				uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0,
 				-swNormals[0], -swNormals[1], -swNormals[2],
-				texturedFaceIdx, true
+				0, texturedFaceIdx, true
 			);
 		}
+
+		tileMinX = Math.min(tileMinX, Math.min(Math.min(lx0, lx1), Math.min(lx2, lx3)));
+		tileMinY = Math.min(tileMinY, Math.min(Math.min(neHeight, nwHeight), Math.min(seHeight, swHeight)));
+		tileMinZ = Math.min(tileMinZ, Math.min(Math.min(lz0, lz1), Math.min(lz2, lz3)));
+
+		tileMaxX = Math.max(tileMaxX, Math.max(Math.max(lx0, lx1), Math.max(lx2, lx3)));
+		tileMaxY = Math.max(tileMaxY, Math.max(Math.max(neHeight, nwHeight), Math.max(seHeight, swHeight)));
+		tileMaxZ = Math.max(tileMaxZ, Math.max(Math.max(lz0, lz1), Math.max(lz2, lz3)));
 
 		writeCache.release();
 	}
@@ -1224,6 +1281,14 @@ public class SceneUploader implements AutoCloseable {
 		var sceneLoc = tile.getSceneLocation();
 		int tileX = sceneLoc.getX();
 		int tileY = sceneLoc.getY();
+
+		float minX = Float.POSITIVE_INFINITY;
+		float minY = Float.POSITIVE_INFINITY;
+		float minZ = Float.POSITIVE_INFINITY;
+
+		float maxX = Float.NEGATIVE_INFINITY;
+		float maxY = Float.NEGATIVE_INFINITY;
+		float maxZ = Float.NEGATIVE_INFINITY;
 
 		for (int face = 0; face < faceCount; ++face) {
 			int colorA = triangleColorA[face];
@@ -1447,21 +1512,21 @@ public class SceneUploader implements AutoCloseable {
 				lx0, ly0, lz0,
 				uvAx, uvAy, 0,
 				normalsA[0], normalsA[1], normalsA[2],
-				texturedFaceIdx, false
+				0, texturedFaceIdx, false
 			);
 
 			vb.putStaticVertex(
 				lx1, ly1, lz1,
 				uvBx, uvBy, 0,
 				normalsB[0], normalsB[1], normalsB[2],
-				texturedFaceIdx, false
+				0, texturedFaceIdx, false
 			);
 
 			vb.putStaticVertex(
 				lx2, ly2, lz2,
 				uvCx, uvCy, 0,
 				normalsC[0], normalsC[1], normalsC[2],
-				texturedFaceIdx, false
+				0, texturedFaceIdx, false
 			);
 
 			boolean isDoubleSided = !onlyWaterSurface && (tileZ != 0 || override.doubleSidedFaces);
@@ -1470,23 +1535,31 @@ public class SceneUploader implements AutoCloseable {
 					lx2, ly2, lz2,
 					uvCx, uvCy, 0,
 					-normalsC[0], -normalsC[1], -normalsC[2],
-					texturedFaceIdx, true
+					0, texturedFaceIdx, true
 				);
 
 				vb.putStaticVertex(
 					lx1, ly1, lz1,
 					uvBx, uvBy, 0,
 					-normalsB[0], -normalsB[1], -normalsB[2],
-					texturedFaceIdx, true
+					0, texturedFaceIdx, true
 				);
 
 				vb.putStaticVertex(
 					lx0, ly0, lz0,
 					uvAx, uvAy, 0,
 					-normalsA[0], -normalsA[1], -normalsA[2],
-					texturedFaceIdx, true
+					0, texturedFaceIdx, true
 				);
 			}
+
+			tileMinX = Math.min(tileMinX, Math.min(lx0, Math.min(lx1, lx2)));
+			tileMinY = Math.min(tileMinY, Math.min(ly0, Math.min(ly1, ly2)));
+			tileMinZ = Math.min(tileMinZ, Math.min(lz0, Math.min(lz1, lz2)));
+
+			tileMaxX = Math.max(tileMaxX, Math.max(lx0, Math.max(lx1, lx2)));
+			tileMaxY = Math.max(tileMaxY, Math.max(ly0, Math.max(ly1, ly2)));
+			tileMaxZ = Math.max(tileMaxZ, Math.max(lz0, Math.max(lz1, lz2)));
 		}
 		writeCache.release();
 	}
@@ -1501,6 +1574,7 @@ public class SceneUploader implements AutoCloseable {
 		int preOrientation, int orientation,
 		int x, int y, int z,
 		int tileExX, int tileExY, int tileZ,
+		CullingResult cullingResult,
 		GpuIntBuffer opaqueBuffer,
 		GpuIntBuffer alphaBuffer,
 		GpuIntBuffer textureBuffer
@@ -1553,6 +1627,14 @@ public class SceneUploader implements AutoCloseable {
 
 		y += modelOverride.heightOffset;
 
+		float minX = Float.POSITIVE_INFINITY;
+		float minY = Float.POSITIVE_INFINITY;
+		float minZ = Float.POSITIVE_INFINITY;
+
+		float maxX = Float.NEGATIVE_INFINITY;
+		float maxY = Float.NEGATIVE_INFINITY;
+		float maxZ = Float.NEGATIVE_INFINITY;
+
 		for (int v = 0, vertexOffset = 0; v < vertexCount; ++v) {
 			int vx = (int) vertexX[v];
 			int vy = (int) vertexY[v];
@@ -1589,7 +1671,18 @@ public class SceneUploader implements AutoCloseable {
 			modelVertices[vertexOffset++] = vx;
 			modelVertices[vertexOffset++] = vy;
 			modelVertices[vertexOffset++] = vz;
+
+			minX = Math.min(minX, vx);
+			minY = Math.min(minY, vy);
+			minZ = Math.min(minZ, vz);
+
+			maxX = Math.max(maxX, vx);
+			maxY = Math.max(maxY, vy);
+			maxZ = Math.max(maxZ, vz);
 		}
+
+		if(cullingResult != null && vertexCount > 0)
+			cullingResult.addAABB(minX, minY, minZ, maxX, maxY, maxZ);
 
 		boolean isVanillaTextured = faceTextures != null;
 		boolean isVanillaUVMapped =
@@ -1841,21 +1934,21 @@ public class SceneUploader implements AutoCloseable {
 				vx1, vy1, vz1,
 				faceUVs[0], faceUVs[1], faceUVs[2],
 				modelNormals[0], modelNormals[1], modelNormals[2],
-				texturedFaceIdx, false
+				depthBias, texturedFaceIdx, false
 			);
 
 			vb.putStaticVertex(
 				vx2, vy2, vz2,
 				faceUVs[4], faceUVs[5], faceUVs[6],
 				modelNormals[3], modelNormals[4], modelNormals[5],
-				texturedFaceIdx, false
+				depthBias, texturedFaceIdx, false
 			);
 
 			vb.putStaticVertex(
 				vx3, vy3, vz3,
 				faceUVs[8], faceUVs[9], faceUVs[10],
 				modelNormals[6], modelNormals[7], modelNormals[8],
-				texturedFaceIdx, false
+				depthBias, texturedFaceIdx, false
 			);
 
 			if (faceOverride.doubleSidedFaces || material.doubleSidedFaces) {
@@ -1863,21 +1956,21 @@ public class SceneUploader implements AutoCloseable {
 					vx3, vy3, vz3,
 					faceUVs[8], faceUVs[9], faceUVs[10],
 					-modelNormals[6], -modelNormals[7], -modelNormals[8],
-					texturedFaceIdx, true
+					depthBias, texturedFaceIdx, true
 				);
 
 				vb.putStaticVertex(
 					vx2, vy2, vz2,
 					faceUVs[4], faceUVs[5], faceUVs[6],
 					-modelNormals[3], -modelNormals[4], -modelNormals[5],
-					texturedFaceIdx, true
+					depthBias, texturedFaceIdx, true
 				);
 
 				vb.putStaticVertex(
 					vx1, vy1, vz1,
 					faceUVs[0], faceUVs[1], faceUVs[2],
 					-modelNormals[0], -modelNormals[1], -modelNormals[2],
-					texturedFaceIdx, true
+					depthBias, texturedFaceIdx, true
 				);
 			}
 			len += 3;
@@ -2323,19 +2416,19 @@ public class SceneUploader implements AutoCloseable {
 				modelVertices[vertexOffsetA], modelVertices[vertexOffsetA + 1], modelVertices[vertexOffsetA + 2],
 				faceUVs[0], faceUVs[1], faceUVs[2],
 				faceNormals[0], faceNormals[1], faceNormals[2],
-				texturedFaceIdx
+				0, texturedFaceIdx
 			);
 			vb.putDynamicVertex(
 				modelVertices[vertexOffsetB], modelVertices[vertexOffsetB + 1], modelVertices[vertexOffsetB + 2],
 				faceUVs[4], faceUVs[5], faceUVs[6],
 				faceNormals[3], faceNormals[4], faceNormals[5],
-				texturedFaceIdx
+				depthBias, texturedFaceIdx
 			);
 			vb.putDynamicVertex(
 				modelVertices[vertexOffsetC], modelVertices[vertexOffsetC + 1], modelVertices[vertexOffsetC + 2],
 				faceUVs[8], faceUVs[9], faceUVs[10],
 				faceNormals[6], faceNormals[7], faceNormals[8],
-				texturedFaceIdx
+				depthBias, texturedFaceIdx
 			);
 		}
 
@@ -2375,6 +2468,8 @@ public class SceneUploader implements AutoCloseable {
 		int basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		int basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
 		Material blackMaterial = materialManager.getMaterial("BLACK");
+
+		level = 0;
 
 		for (int xoff = 0; xoff < CHUNK_SIZE; ++xoff) {
 			for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
@@ -2533,9 +2628,9 @@ public class SceneUploader implements AutoCloseable {
 			packedMaterial, packedMaterial, packedMaterial,
 			terrainData, terrainData, terrainData
 		);
-		vb.putStaticVertex(x0, y0, z0, u0, v0, 0, 0, -1, 0, faceIdx, false);
-		vb.putStaticVertex(x1, y1, z1, u1, v1, 0, 0, -1, 0, faceIdx, false);
-		vb.putStaticVertex(x2, y2, z2, u2, v2, 0, 0, -1, 0, faceIdx, false);
+		vb.putStaticVertex(x0, y0, z0, u0, v0, 0, 0, -1, 0, 0, faceIdx, false);
+		vb.putStaticVertex(x1, y1, z1, u1, v1, 0, 0, -1, 0, 0, faceIdx, false);
+		vb.putStaticVertex(x2, y2, z2, u2, v2, 0, 0, -1, 0, 0, faceIdx, false);
 	}
 
 	public static void calculateFaceNormalInt(

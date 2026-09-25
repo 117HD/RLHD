@@ -1,6 +1,7 @@
 #pragma once
 
 #include <utils/constants.glsl>
+#include <utils/camera.glsl>
 
 layout(std140) uniform UBOGlobal {
     int expandedMapLoadingChunks;
@@ -44,10 +45,8 @@ layout(std140) uniform UBOGlobal {
 
     int pointLightsCount;
 
-    vec3 cameraPos;
-    mat4 viewMatrix;
-    mat4 projectionMatrix;
-    mat4 invProjectionMatrix;
+    Camera sceneCamera;
+
     mat4 lightProjectionMatrix;
 
     float lightningBrightness;
