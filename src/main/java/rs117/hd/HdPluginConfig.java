@@ -636,15 +636,15 @@ public interface HdPluginConfig extends Config
 		return DaylightCycle.DEFAULT;
 	}
 
-	String KEY_NIGHT_BRIGHTNESS = "nightBrightness";
+	String KEY_NIGHT_ADAPTATION = "nightAdaptation";
 	@Range(min = 0, max = 300)
 	@Units(Units.PERCENT)
 	@ConfigItem(
-		keyName = KEY_NIGHT_BRIGHTNESS,
-		name = "Night brightness",
+		keyName = KEY_NIGHT_ADAPTATION,
+		name = "Night adaptation",
 		description =
 			"Simulates your eyes adapting to darkness by brightening night-time lighting.<br>" +
-			"'0%' disables adaptation.<br>" +
+			"'0%' disables adaptation entirely.<br>" +
 			"'100%' yields good visibility.<br>" +
 			"Values above 100% amplify the adjustment further, if needed.",
 		position = 1,
