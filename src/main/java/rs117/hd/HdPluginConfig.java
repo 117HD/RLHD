@@ -705,13 +705,13 @@ public interface HdPluginConfig extends Config
 		name = "Moon phase",
 		description =
 			"Controls the portion of the moon which is lit by the sun.<br>" +
-			"'Realistic' lights up the moon based on its position relative to the sun.<br>" +
-			"Other options lock the moon in a particular lunar phase.",
+			"'Dynamic' lights up the moon based on its position relative to the sun.<br>" +
+			"All other options lock the moon in a particular lunar phase.",
 		position = 5,
 		section = daylightCycleSettings
 	)
 	default MoonPhase moonPhase() {
-		return MoonPhase.REALISTIC;
+		return MoonPhase.DYNAMIC;
 	}
 
 	String KEY_REPLACE_VANILLA_SKYBOXES = "replaceVanillaSkyboxes";

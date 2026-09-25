@@ -428,7 +428,7 @@ public class SkyManager {
 			illumination = saturate((1 - dot(sunDirection, moonDirection)) * .5f);
 			orbit = 0;
 		}
-		if (phase != MoonPhase.REALISTIC)
+		if (phase != MoonPhase.DYNAMIC)
 			illumination = phase.illuminatedFraction;
 
 		float[] illuminationDirection = configCycle == DaylightCycle.NIGHT || configMoonBehavior == MoonBehavior.MIRRORED ?
