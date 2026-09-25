@@ -143,6 +143,7 @@ public class HdSidebar extends PluginPanel {
 
 		JPanel buttons = new JPanel(new GridLayout(1, 3, 10, 0));
 		buttons.setBackground(ColorScheme.DARK_GRAY_COLOR);
+		buttons.add(titleButton("folder_icon.png", "Open the local resource-pack folder", resourcePackPanel::openPackFolder));
 		buttons.add(titleButton("discord.png", "Get help or make suggestions", HdPlugin.DISCORD_URL));
 		buttons.add(titleButton("github.png", "Report issues or contribute on GitHub", HdPlugin.REPOSITORY_URL));
 		container.add(buttons, BorderLayout.EAST);
@@ -151,13 +152,17 @@ public class HdSidebar extends PluginPanel {
 	}
 
 	private JButton titleButton(String icon, String tooltip, String link) {
+		return titleButton(icon, tooltip, () -> LinkBrowser.browse(link));
+	}
+
+	private JButton titleButton(String icon, String tooltip, Runnable onClick) {
 		JButton button = new JButton();
 		SwingUtil.removeButtonDecorations(button);
 		button.setIcon(new ImageIcon(ImageUtil.resizeImage(ImageUtil.loadImageResource(getClass(), icon), 16, 16)));
 		button.setToolTipText(tooltip);
 		button.setBackground(ColorScheme.DARK_GRAY_COLOR);
 		button.setUI(new BasicButtonUI());
-		button.addActionListener((ev) -> LinkBrowser.browse(link));
+		button.addActionListener((ev) -> onClick.run());
 		return button;
 	}
 }

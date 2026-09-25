@@ -225,7 +225,7 @@ public class ResourcePackPanel extends JPanel {
 		scrollPane.setViewportView(scrollContainer);
 		add(scrollPane, BorderLayout.CENTER);
 
-		JPanel actions = new JPanel(new GridLayout(1, 2, 5, 0));
+		JPanel actions = new JPanel(new GridLayout(1, 1, 5, 0));
 		actions.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		actions.setBackground(ColorScheme.DARK_GRAY_COLOR);
 		actions.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
@@ -238,12 +238,6 @@ public class ResourcePackPanel extends JPanel {
 		officialPacksButton.addActionListener(ev -> setState(
 			currentState == PanelState.SELECTION ? PanelState.DOWNLOAD : PanelState.SELECTION));
 		actions.add(officialPacksButton);
-		JButton openFolderButton = new JButton("Open folder");
-		openFolderButton.setFocusPainted(false);
-		openFolderButton.setMargin(new Insets(2, 4, 2, 4));
-		openFolderButton.setToolTipText("Open the local resource-pack folder");
-		openFolderButton.addActionListener(ev -> LinkBrowser.open(resourcePackManager.getPackDirectory().getAbsolutePath()));
-		actions.add(openFolderButton);
 		topControls.add(actions);
 
 		// Search bar
@@ -289,6 +283,10 @@ public class ResourcePackPanel extends JPanel {
 		topControls.add(filterPanel);
 
 		setState(PanelState.SELECTION);
+	}
+
+	public void openPackFolder() {
+		LinkBrowser.open(resourcePackManager.getPackDirectory().getAbsolutePath());
 	}
 
 	private void setState(PanelState state) {
