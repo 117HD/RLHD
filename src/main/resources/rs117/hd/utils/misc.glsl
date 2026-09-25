@@ -194,8 +194,9 @@ vec2 getPoissonDisk(int idx) {
         case 12: return vec2(-0.24188840,   0.99706507);
         case 13: return vec2(-0.81409955,   0.91437590);
         case 14: return vec2( 0.19984126,   0.78641367);
-        default: return vec2( 0.14383161,  -0.14100790);
+        case 15: return vec2( 0.14383161,  -0.14100790);
     }
+    return vec2(0);
 }
 
 float unpackHalfFloat(uint h) {
