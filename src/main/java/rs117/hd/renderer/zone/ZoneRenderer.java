@@ -316,6 +316,8 @@ public class ZoneRenderer implements Renderer {
 		glFlush();
 		frameTimer.end(Timer.DRAW_FLUSH);
 
+		renderPipeline.preprocess();
+
 		plugin.updateSceneFbo();
 
 		if (!sceneManager.isTopLevelValid() || plugin.sceneViewport == null)

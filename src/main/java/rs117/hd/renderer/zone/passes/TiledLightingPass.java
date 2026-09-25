@@ -22,9 +22,6 @@ public class TiledLightingPass implements RenderPass {
 
 	@Override
 	public void draw(RenderState renderState) {
-		if (!plugin.configTiledLighting || plugin.configDynamicLights == DynamicLights.NONE)
-			return;
-
 		plugin.updateTiledLightingFbo(); // TODO: Once Legacy is deprecated, move this into here
 		assert plugin.fboTiledLighting != 0;
 
@@ -50,5 +47,8 @@ public class TiledLightingPass implements RenderPass {
 	}
 
 	@Override
-	public RenderPassType getType() { return RenderPassType.TILED_LIGHTING; }
+	public int getFlags() { return plugin.configTiledLighting && plugin.configDynamicLights != DynamicLights.NONE ? PASS_ENABLED : 0; }
+
+	@Override
+	public RenderPassType getType() { return  RenderPassType.TILED_LIGHTING; }
 }

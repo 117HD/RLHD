@@ -113,10 +113,10 @@ void main() {
     vec4 pBL = sceneCamera.invViewProjMatrix * vec4(ndcBL, eps, 1.0);
     vec4 pBR = sceneCamera.invViewProjMatrix * vec4(ndcBR, eps, 1.0);
 
-    vec3 rTL = normalize((viewMatrix * vec4((pTL.xyz / pTL.w) - sceneCamera.position, 1.0)).xyz);
-    vec3 rTR = normalize((viewMatrix * vec4((pTR.xyz / pTR.w) - sceneCamera.position, 1.0)).xyz);
-    vec3 rBL = normalize((viewMatrix * vec4((pBL.xyz / pBL.w) - sceneCamera.position, 1.0)).xyz);
-    vec3 rBR = normalize((viewMatrix * vec4((pBR.xyz / pBR.w) - sceneCamera.position, 1.0)).xyz);
+    vec3 rTL = normalize((sceneCamera.viewMatrix * vec4((pTL.xyz / pTL.w) - sceneCamera.position, 1.0)).xyz);
+    vec3 rTR = normalize((sceneCamera.viewMatrix * vec4((pTR.xyz / pTR.w) - sceneCamera.position, 1.0)).xyz);
+    vec3 rBL = normalize((sceneCamera.viewMatrix * vec4((pBL.xyz / pBL.w) - sceneCamera.position, 1.0)).xyz);
+    vec3 rBR = normalize((sceneCamera.viewMatrix * vec4((pBR.xyz / pBR.w) - sceneCamera.position, 1.0)).xyz);
 
     vec3 tileCenterVec = normalize(rTL + rTR + rBL + rBR);
     float tileCos = min(min(dot(tileCenterVec, rTL), dot(tileCenterVec, rTR)), min(dot(tileCenterVec, rBL), dot(tileCenterVec, rBR)));

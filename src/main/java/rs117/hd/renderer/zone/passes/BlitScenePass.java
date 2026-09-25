@@ -2,10 +2,13 @@ package rs117.hd.renderer.zone.passes;
 
 import java.util.Set;
 import javax.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.SceneScalingMode;
+import rs117.hd.renderer.zone.WorldViewContext;
+import rs117.hd.renderer.zone.Zone;
 import rs117.hd.utils.RenderState;
 
 import static org.lwjgl.opengl.GL11C.GL_COLOR_BUFFER_BIT;
@@ -18,6 +21,7 @@ import static org.lwjgl.opengl.GL30C.glBindFramebuffer;
 import static org.lwjgl.opengl.GL30C.glBlitFramebuffer;
 import static rs117.hd.HdPlugin.APPLE;
 
+@Slf4j
 public class BlitScenePass implements RenderPass {
 
 	@Inject
@@ -39,6 +43,11 @@ public class BlitScenePass implements RenderPass {
 	@Override
 	public void processConfigChanges(Set<String> keys) {
 		scalingMode = config.sceneScalingMode();
+	}
+
+	@Override
+	public void drawZoneOpaque(WorldViewContext ctx, Zone z, int zx, int zz) {
+		log.debug("BlitScenePass.drawZoneOpaque({}, {}, {})", z, zx, zz);
 	}
 
 	@Override
@@ -82,6 +91,9 @@ public class BlitScenePass implements RenderPass {
 			scalingMode.glFilter
 		);
 	}
+
+	@Override
+	public int getFlags() { return PASS_ENABLED; }
 
 	@Override
 	public RenderPassType getType() { return RenderPassType.BLIT_SCENE; }

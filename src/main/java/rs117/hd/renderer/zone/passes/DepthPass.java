@@ -1,6 +1,7 @@
 package rs117.hd.renderer.zone.passes;
 
 import java.io.IOException;
+import java.util.Set;
 import javax.inject.Inject;
 import net.runelite.api.hooks.*;
 import rs117.hd.HdPlugin;
@@ -48,6 +49,7 @@ public class DepthPass implements RenderPass {
 
 	public final CommandBuffer opaqueDepthCmd = new CommandBuffer("DepthPass");
 
+	private boolean depthPassEnabled = true;
 	private Camera sceneCamera;
 
 	@Override
@@ -59,6 +61,11 @@ public class DepthPass implements RenderPass {
 	@Override
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
 		sceneDepthProgram.compile(includes);
+	}
+
+	@Override
+	public void processConfigChanges(Set<String> keys) {
+		depthPassEnabled = config.depthPrePass();
 	}
 
 	@Override
@@ -87,9 +94,6 @@ public class DepthPass implements RenderPass {
 
 	@Override
 	public void draw(RenderState renderState) {
-		if(!config.depthPrePass())
-			return;
-
 		sceneDepthProgram.use();
 
 		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboSceneDepth);
@@ -118,6 +122,9 @@ public class DepthPass implements RenderPass {
 		renderState.disable.set(GL_DEPTH_TEST);
 		renderState.apply();
 	}
+
+	@Override
+	public int getFlags() { return depthPassEnabled ? PASS_DEFAULT : 0; }
 
 	@Override
 	public RenderPassType getType() { return RenderPassType.DEPTH_PASS; }

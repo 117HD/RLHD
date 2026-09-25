@@ -100,9 +100,6 @@ public class DebugDrawPass implements RenderPass {
 	private DebugDrawTextShaderProgram textShader;
 
 	@Override
-	public RenderPassType getType() { return RenderPassType.DEBUG_DRAW; }
-
-	@Override
 	public void initialize() {
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			cubeDraw = new PrimitiveDraw(GLPrimitives.buildCube(stack), "Cube", cubeShader, CUBE_FLOATS);
@@ -486,4 +483,10 @@ public class DebugDrawPass implements RenderPass {
 			instanceVbo.destroy();
 		}
 	}
+
+	@Override
+	public int getFlags() { return PASS_ENABLED; }
+
+	@Override
+	public RenderPassType getType() { return RenderPassType.DEBUG_DRAW; }
 }

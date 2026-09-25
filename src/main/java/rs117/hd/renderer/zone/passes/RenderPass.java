@@ -1,7 +1,6 @@
 package rs117.hd.renderer.zone.passes;
 
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.Set;
 import net.runelite.api.*;
 import rs117.hd.opengl.shader.ShaderException;
@@ -12,9 +11,15 @@ import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.RenderState;
 
 public interface RenderPass {
+	int PASS_ENABLED = 1;
+	int PASS_ZONE_DRAWS = 1 << 1;
+	int PASS_DEFAULT = PASS_ENABLED | PASS_ZONE_DRAWS;
+
 	RenderPassType[] TYPES = RenderPassType.values();
 
 	RenderPassType getType();
+
+	default int getFlags() { return PASS_DEFAULT; }
 
 	default void initialize() {}
 

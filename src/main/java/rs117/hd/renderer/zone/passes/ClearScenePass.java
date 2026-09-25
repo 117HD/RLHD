@@ -2,7 +2,6 @@ package rs117.hd.renderer.zone.passes;
 
 import javax.inject.Inject;
 import rs117.hd.HdPlugin;
-import rs117.hd.overlays.FrameTimer;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.RenderState;
@@ -23,9 +22,6 @@ public class ClearScenePass implements RenderPass {
 
 	@Inject
 	private EnvironmentManager environmentManager;
-
-	@Inject
-	private FrameTimer frameTimer;
 
 	@Override
 	public void draw(RenderState renderState) {
@@ -51,6 +47,9 @@ public class ClearScenePass implements RenderPass {
 
 		renderState.disable.set(GL_MULTISAMPLE);
 	}
+
+	@Override
+	public int getFlags() { return PASS_ENABLED; }
 
 	@Override
 	public RenderPassType getType() { return RenderPassType.CLEAR_SCENE; }

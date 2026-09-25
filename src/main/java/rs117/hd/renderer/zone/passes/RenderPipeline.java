@@ -24,6 +24,9 @@ import static rs117.hd.utils.collections.Util.quickSort;
 @Slf4j
 @Singleton
 public final class RenderPipeline {
+	private static final int GENERIC_FUNCTION_TYPE = 0;
+	private static final int ZONE_FUNCTION_TYPE = 1;
+	private static final int DRAW_FUNCTION_TYPE = 2;
 
 	@Inject
 	private Injector injector;
@@ -54,6 +57,11 @@ public final class RenderPipeline {
 	private final RenderPassType[] types = new RenderPassType[passCount];
 	private final RenderPass[] passes = new RenderPass[passCount];
 
+	private final int[] enabledPasses = new int[passCount];
+	private final int[] zonePasses = new int[passCount];
+	private int enabledCount = 0;
+	private int zoneCount = 0;
+
 	public void initialize() {
 		for(int i = 0; i < passCount; i++)
 			passes[i] = injector.getInstance(RenderPass.TYPES[i].clazz);
@@ -70,12 +78,58 @@ public final class RenderPipeline {
 		Arrays.fill(passes, null);
 	}
 
-	private boolean internalExecute(BaseRenderPassFunction function) {
-		boolean result = false;
+	public void preprocess() {
+		enabledCount = 0;
+		zoneCount = 0;
 
-		for (int i = 0; i < passCount; i++) {
+		for(int i = 0; i < passCount; i++) {
 			final RenderPass renderPass = passes[i];
 			final RenderPassType type = types[i];
+
+			if (renderPass == null || type == null)
+				continue;
+
+			int flags = renderPass.getFlags();
+			if(flags == 0)
+				continue;
+
+			enabledPasses[enabledCount++] = i;
+			if((flags & RenderPass.PASS_ZONE_DRAWS) != 0)
+				zonePasses[zoneCount++] = i;
+		}
+	}
+
+	private int[] getIndicesForFunctionType(int functionType) {
+		switch (functionType) {
+			case ZONE_FUNCTION_TYPE:
+				return zonePasses;
+			case DRAW_FUNCTION_TYPE:
+				return enabledPasses;
+			default:
+				return null;
+		}
+	}
+
+	private int getCountForFunctionType(int functionType) {
+		switch (functionType) {
+			case ZONE_FUNCTION_TYPE:
+				return zoneCount;
+			case DRAW_FUNCTION_TYPE:
+				return enabledCount;
+			default:
+				return passCount;
+		}
+	}
+
+	private boolean internalExecute(BaseRenderPassFunction function, int functionType) {
+		boolean result = false;
+
+		final int[] passIndices = getIndicesForFunctionType(functionType);
+		final int passCount = getCountForFunctionType(functionType);
+		for (int i = 0; i < passCount; i++) {
+			final int passIdx = passIndices != null ? passIndices[i] : i;
+			final RenderPass renderPass = passes[passIdx];
+			final RenderPassType type = types[passIdx];
 
 			if (renderPass == null || type == null)
 				continue;
@@ -101,7 +155,7 @@ public final class RenderPipeline {
 
 	public final class InitializeFunction extends BaseRenderPassFunction {
 		private InitializeFunction() {
-			super("initializeShaders", false, false);
+			super("initializeShaders", GENERIC_FUNCTION_TYPE, false, false);
 			consumer = (renderPass) -> {
 				renderPass.initialize();
 				return true;
@@ -114,7 +168,7 @@ public final class RenderPipeline {
 		private ShaderIncludes includes;
 
 		private InitializeShadersFunction() {
-			super("initializeShaders", false, false);
+			super("initializeShaders", GENERIC_FUNCTION_TYPE, false, false);
 			consumer = renderPass -> {
 				renderPass.initializeShaders(includes);
 				return true;
@@ -129,7 +183,7 @@ public final class RenderPipeline {
 
 	public final class DestroyFunction extends BaseRenderPassFunction {
 		private DestroyFunction() {
-			super("destroy", false, true);
+			super("destroy", GENERIC_FUNCTION_TYPE, false, true);
 			consumer = renderPass -> {
 				renderPass.destroy();
 				return true;
@@ -139,7 +193,7 @@ public final class RenderPipeline {
 
 	public final class DestroyShadersFunction extends BaseRenderPassFunction {
 		private DestroyShadersFunction() {
-			super("destroyShaders", false, true);
+			super("destroyShaders", GENERIC_FUNCTION_TYPE, false, true);
 			consumer = renderPass -> {
 				renderPass.destroyShaders();
 				return true;
@@ -152,7 +206,7 @@ public final class RenderPipeline {
 		private ShaderIncludes includes;
 
 		private AddShaderIncludesFunction() {
-			super("addShaderIncludes", false, false);
+			super("addShaderIncludes", GENERIC_FUNCTION_TYPE, false, false);
 			consumer = renderPass -> {
 				renderPass.addShaderIncludes(includes);
 				return true;
@@ -169,7 +223,7 @@ public final class RenderPipeline {
 		private Set<String> keys;
 
 		private ProcessConfigChangesFunction() {
-			super("processConfigChanges", false, false);
+			super("processConfigChanges", GENERIC_FUNCTION_TYPE, false, false);
 			consumer = renderPass -> {
 				renderPass.processConfigChanges(keys);
 				return true;
@@ -188,7 +242,7 @@ public final class RenderPipeline {
 		private boolean isTopLevel;
 
 		private PreSceneDrawFunction() {
-			super("preSceneDraw", true, false);
+			super("preSceneDraw", DRAW_FUNCTION_TYPE, true, false);
 			consumer = renderPass -> {
 				renderPass.preSceneDraw(ctx, isTopLevel);
 				return true;
@@ -207,7 +261,7 @@ public final class RenderPipeline {
 		private WorldViewContext ctx;
 
 		private PostSceneDrawFunction() {
-			super("postSceneDraw", true, false);
+			super("postSceneDraw", DRAW_FUNCTION_TYPE, true, false);
 			consumer = renderPass -> {
 				renderPass.postSceneDraw(ctx);
 				return true;
@@ -226,7 +280,7 @@ public final class RenderPipeline {
 		private int zx, zz, minX, minY, minZ, maxX, maxY, maxZ;
 
 		private ZoneInFrustumFunction() {
-			super("zoneInFrustum", false, true);
+			super("zoneInFrustum", ZONE_FUNCTION_TYPE, false, true);
 			consumer = renderPass -> renderPass.zoneInFrustum(zone, zx, zz, minX, minY, minZ, maxX, maxY, maxZ);
 		}
 
@@ -253,7 +307,7 @@ public final class RenderPipeline {
 		private int x, y, z;
 
 		private DynamicInFrustumFunction() {
-			super("dynamicInFrustum", false, true);
+			super("dynamicInFrustum", ZONE_FUNCTION_TYPE, false, true);
 			consumer = renderPass -> renderPass.dynamicInFrustum(ctx, renderable, model, modelOverride, x, y, z);
 		}
 
@@ -275,7 +329,7 @@ public final class RenderPipeline {
 		private int zx, zz;
 
 		private DrawZoneOpaqueFunction() {
-			super("drawZoneOpaque", false, false);
+			super("drawZoneOpaque", ZONE_FUNCTION_TYPE, false, false);
 			consumer = renderPass -> {
 				renderPass.drawZoneOpaque(ctx, zone, zx, zz);
 				return true;
@@ -297,7 +351,7 @@ public final class RenderPipeline {
 		private int level, zx, zz;
 
 		private DrawZoneAlphaFunction() {
-			super("drawZoneAlpha", false, false);
+			super("drawZoneAlpha", ZONE_FUNCTION_TYPE, false, false);
 			consumer = (renderPass) -> {
 				renderPass.drawZoneAlpha(ctx, zone, level, zx, zz);
 				return true;
@@ -320,7 +374,7 @@ public final class RenderPipeline {
 		private int pass;
 
 		private DrawPassFunction() {
-			super("drawPass", true, false);
+			super("drawPass", DRAW_FUNCTION_TYPE, true, false);
 			consumer = (renderPass) -> {
 				renderPass.drawPass(ctx, pass);
 				return true;
@@ -338,7 +392,7 @@ public final class RenderPipeline {
 
 		private RenderState renderState;
 		private DrawFunction() {
-			super("draw", true, false);
+			super("draw", DRAW_FUNCTION_TYPE, true, false);
 
 			consumer = (renderPass) -> {
 				final Timer gpuTimer = renderPass.getType().gpuTimer;
@@ -364,7 +418,7 @@ public final class RenderPipeline {
 		private RenderState renderState;
 
 		private PostDrawFunction() {
-			super("postDraw", true, false);
+			super("postDraw", DRAW_FUNCTION_TYPE, true, false);
 			consumer = (renderPass) -> {
 				renderPass.postDraw(renderState);
 				return true;
@@ -385,12 +439,13 @@ public final class RenderPipeline {
 	@RequiredArgsConstructor
 	public abstract class BaseRenderPassFunction {
 		private final String  action;
+		private final int functionType;
 		private final boolean checkGL;
 		private final boolean handleExceptions;
 		protected RenderPassConsumer consumer;
 
 		public boolean execute() {
-			return internalExecute(this);
+			return internalExecute(this, functionType);
 		}
 	}
 }
