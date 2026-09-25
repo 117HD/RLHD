@@ -208,7 +208,7 @@ public class TextureManager {
 
 	@Nullable
 	public BufferedImage loadTexture(String filename) {
-		for (var pack : resourcePackManager.getEnabledPacks()) {
+		for (var pack : resourcePackManager.getEnabledPacks("materials")) {
 			for (String ext : SUPPORTED_IMAGE_EXTENSIONS) {
 				ResourcePath path = pack.getResource("materials", filename + "." + ext);
 				if (!path.exists())

@@ -513,7 +513,7 @@ public class EnvironmentManager {
 	}
 
 	public void mergeEnvironmentsFromResourcePacks(List<Environment> existingEnvironments) {
-		for (var pack : resourcePackManager.getEnabledPacks()) {
+		for (var pack : resourcePackManager.getEnabledPacks("environments")) {
 			try {
 				var jsonFiles = pack.listJsonFiles("environments");
 				for (var jsonPath : jsonFiles) {

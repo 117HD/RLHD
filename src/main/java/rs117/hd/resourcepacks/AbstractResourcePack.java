@@ -52,6 +52,15 @@ public abstract class AbstractResourcePack {
 	}
 
 	/**
+	 * Checks whether this pack has any content under the given category directory (e.g. "materials", "environments").
+	 * Unlike {@link #hasResource}, this doesn't require the directory itself to exist as its own resource entry,
+	 * which archive-based packs generally don't have.
+	 */
+	public boolean hasCategoryContent(String directory) {
+		return getResource(directory).exists();
+	}
+
+	/**
 	 * Lists all JSON files in the specified directory.
 	 * @param directory The directory path (e.g., "environments")
 	 * @return List of ResourcePath objects pointing to JSON files

@@ -106,6 +106,24 @@ public final class ZipResourcePack extends AbstractResourcePack {
 	}
 
 	@Override
+	public boolean hasCategoryContent(String directory) {
+		if (zipFile == null)
+			return false;
+
+		String dirPath = normalizeZipPath(directory);
+		if (!dirPath.endsWith("/"))
+			dirPath += "/";
+
+		var entries = zipFile.entries();
+		while (entries.hasMoreElements()) {
+			ZipEntry entry = entries.nextElement();
+			if (!entry.isDirectory() && entry.getName().startsWith(dirPath))
+				return true;
+		}
+		return false;
+	}
+
+	@Override
 	public List<ResourcePath> listJsonFiles(String directory) {
 		if (zipFile == null)
 			return List.of();

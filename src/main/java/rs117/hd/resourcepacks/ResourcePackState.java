@@ -15,6 +15,7 @@ final class ResourcePackState {
 	@SerializedName(value = "packIdentities", alternate = "unofficialPackIdentities")
 	Map<String, PackIdentity> packIdentities = new LinkedHashMap<>();
 	Set<String> disabledPacks = new LinkedHashSet<>();
+	Map<String, Set<String>> disabledCategoriesByPack = new LinkedHashMap<>();
 	Map<String, Map<String, AppliedSetting>> settingsByPack = new LinkedHashMap<>();
 
 	static final class AppliedSetting {

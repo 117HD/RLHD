@@ -808,8 +808,43 @@ public final class ResourcePackManager {
 		return installedPacks.stream().filter(this::isPackEnabled).collect(Collectors.toList());
 	}
 
+	public List<AbstractResourcePack> getEnabledPacks(String category) {
+		return installedPacks.stream()
+			.filter(this::isPackEnabled)
+			.filter(pack -> isCategoryEnabled(pack, category))
+			.collect(Collectors.toList());
+	}
+
 	public boolean isPackEnabled(AbstractResourcePack pack) {
 		return pack instanceof DefaultResourcePack || !packState.disabledPacks.contains(pack.getManifest().getInternalName());
+	}
+
+	public boolean isCategoryEnabled(AbstractResourcePack pack, String category) {
+		if (pack instanceof DefaultResourcePack)
+			return true;
+		Set<String> disabledCategories = packState.disabledCategoriesByPack.get(pack.getManifest().getInternalName());
+		return disabledCategories == null || !disabledCategories.contains(category);
+	}
+
+	public void setCategoryEnabled(AbstractResourcePack pack, String category, boolean enabled) {
+		if (pack instanceof DefaultResourcePack)
+			return;
+
+		String internalName = pack.getManifest().getInternalName();
+		if (enabled) {
+			Set<String> disabledCategories = packState.disabledCategoriesByPack.get(internalName);
+			if (disabledCategories == null || !disabledCategories.remove(category))
+				return;
+			if (disabledCategories.isEmpty())
+				packState.disabledCategoriesByPack.remove(internalName);
+		} else {
+			if (!packState.disabledCategoriesByPack
+				.computeIfAbsent(internalName, k -> new LinkedHashSet<>())
+				.add(category))
+				return;
+		}
+		savePackOrder();
+		eventBus.post(new ResourcePackUpdate(PackEventType.CONTENT_CHANGED));
 	}
 
 	public boolean hasSettingsConflict(AbstractResourcePack pack) {
@@ -961,6 +996,8 @@ public final class ResourcePackManager {
 					loaded.packIdentities = new LinkedHashMap<>();
 				if (loaded.disabledPacks == null)
 					loaded.disabledPacks = new LinkedHashSet<>();
+				if (loaded.disabledCategoriesByPack == null)
+					loaded.disabledCategoriesByPack = new LinkedHashMap<>();
 				if (loaded.settingsByPack == null)
 					loaded.settingsByPack = new LinkedHashMap<>();
 				packState = loaded;

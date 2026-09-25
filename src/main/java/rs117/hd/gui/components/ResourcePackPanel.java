@@ -26,6 +26,7 @@ package rs117.hd.gui.components;
 
 import com.google.inject.Inject;
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -49,6 +50,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -62,7 +64,6 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -117,6 +118,7 @@ public class ResourcePackPanel extends JPanel {
 	private static final ImageIcon REFRESH;
 	private static final ImageIcon ADD_ICON;
 	private static final ImageIcon BACK;
+	private static final ImageIcon GEAR;
 	private static final Color DISABLED_PACK_COLOR = new Color(0x252525);
 	private static final BasicButtonUI SHADOW_TEXT_BUTTON_UI = new BasicButtonUI() {
 		@Override
@@ -151,6 +153,7 @@ public class ResourcePackPanel extends JPanel {
 			ImageUtil.loadImageResource(ScreenMarkerPlugin.class, "add_icon.png"), 16, 16));
 		BACK = new ImageIcon(ImageUtil.flipImage(
 			ImageUtil.loadImageResource(HdSidebar.class, "arrow_right.png"), true, false));
+		GEAR = new ImageIcon(ImageUtil.loadImageResource(HdSidebar.class, "gear_icon.png"));
 	}
 
 	@Inject
@@ -189,15 +192,34 @@ public class ResourcePackPanel extends JPanel {
 	private final JPanel filterPanel;
 	private final IconTextField searchBar;
 
+	private static final String CARD_LIST = "list";
+	private static final String CARD_SETTINGS = "settings";
+	private static final Map<String, String> PACK_CATEGORIES = new LinkedHashMap<>();
+	static {
+		PACK_CATEGORIES.put("materials", "Textures");
+		PACK_CATEGORIES.put("environments", "Environments");
+	}
+
+	private final CardLayout rootCardLayout = new CardLayout();
+	private final JPanel rootPanel = new JPanel(rootCardLayout);
+	private final JPanel packSettingsCard = new JPanel(new BorderLayout());
+
 	ResourcePackPanel() {
 		setLayout(new BorderLayout());
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
 		setBorder(BorderFactory.createEmptyBorder());
 		installHint.setBorder(BorderFactory.createEmptyBorder(20, 0, 38, 0));
+
+		JPanel listCard = new JPanel(new BorderLayout());
+		listCard.setBackground(ColorScheme.DARK_GRAY_COLOR);
+		rootPanel.add(listCard, CARD_LIST);
+		rootPanel.add(packSettingsCard, CARD_SETTINGS);
+		add(rootPanel, BorderLayout.CENTER);
+
 		JPanel topControls = new JPanel();
 		topControls.setLayout(new BoxLayout(topControls, BoxLayout.Y_AXIS));
 		topControls.setBackground(ColorScheme.DARK_GRAY_COLOR);
-		add(topControls, BorderLayout.NORTH);
+		listCard.add(topControls, BorderLayout.NORTH);
 
 		list = new DragAndDropReorderPane();
 		list.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 3));
@@ -223,7 +245,7 @@ public class ResourcePackPanel extends JPanel {
 		listContent.add(hints, BorderLayout.SOUTH);
 		scrollContainer.add(listContent, BorderLayout.NORTH);
 		scrollPane.setViewportView(scrollContainer);
-		add(scrollPane, BorderLayout.CENTER);
+		listCard.add(scrollPane, BorderLayout.CENTER);
 
 		JPanel actions = new JPanel(new GridLayout(1, 1, 5, 0));
 		actions.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
@@ -287,6 +309,90 @@ public class ResourcePackPanel extends JPanel {
 
 	public void openPackFolder() {
 		LinkBrowser.open(resourcePackManager.getPackDirectory().getAbsolutePath());
+	}
+
+	private void openPackSettings(AbstractResourcePack pack) {
+		packSettingsCard.removeAll();
+		packSettingsCard.add(buildPackSettingsPanel(pack), BorderLayout.CENTER);
+		rootCardLayout.show(rootPanel, CARD_SETTINGS);
+		packSettingsCard.revalidate();
+		packSettingsCard.repaint();
+	}
+
+	private void closePackSettings() {
+		rootCardLayout.show(rootPanel, CARD_LIST);
+	}
+
+	private JPanel buildPackSettingsPanel(AbstractResourcePack pack) {
+		JPanel root = new JPanel(new BorderLayout());
+		root.setBackground(ColorScheme.DARK_GRAY_COLOR);
+
+		JPanel header = new JPanel(new BorderLayout());
+		header.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		header.setBackground(ColorScheme.DARK_GRAY_COLOR);
+
+		JButton back = new JButton(BACK);
+		SwingUtil.removeButtonDecorations(back);
+		back.setToolTipText("Back");
+		back.addActionListener(ev -> closePackSettings());
+		header.add(back, BorderLayout.WEST);
+
+		JLabel title = new JLabel(pack.getManifest().getDisplayName());
+		title.setForeground(Color.WHITE);
+		title.setHorizontalAlignment(SwingConstants.CENTER);
+		header.add(title, BorderLayout.CENTER);
+
+		ToggleSwitch packToggle = new ToggleSwitch(resourcePackManager.isPackEnabled(pack));
+		packToggle.setEnabled(!(pack instanceof DefaultResourcePack));
+		packToggle.setToolTipText(pack instanceof DefaultResourcePack
+			? "The built-in pack is always enabled"
+			: "Enable or disable this pack");
+		packToggle.addActionListener(ev -> resourcePackManager.setPackEnabled(pack, packToggle.isSelected()));
+		header.add(packToggle, BorderLayout.EAST);
+
+		root.add(header, BorderLayout.NORTH);
+
+		JPanel body = new JPanel();
+		body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
+		body.setBackground(ColorScheme.DARK_GRAY_COLOR);
+		body.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+
+		JLabel sectionLabel = new JLabel("General");
+		sectionLabel.setForeground(ColorScheme.BRAND_ORANGE);
+		sectionLabel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+		sectionLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		body.add(sectionLabel);
+
+		for (var category : PACK_CATEGORIES.entrySet())
+			body.add(buildCategoryToggleRow(pack, category.getKey(), category.getValue()));
+
+		root.add(body, BorderLayout.CENTER);
+		return root;
+	}
+
+	private JPanel buildCategoryToggleRow(AbstractResourcePack pack, String category, String label) {
+		boolean hasCategory = pack.hasCategoryContent(category);
+
+		JPanel row = new JPanel(new BorderLayout());
+		row.setBackground(ColorScheme.DARK_GRAY_COLOR);
+		row.setBorder(BorderFactory.createEmptyBorder(4, 0, 4, 0));
+		row.setAlignmentX(Component.LEFT_ALIGNMENT);
+		row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 24));
+
+		JLabel rowLabel = new JLabel(label);
+		rowLabel.setForeground(hasCategory ? Color.WHITE : Color.GRAY);
+		row.add(rowLabel, BorderLayout.WEST);
+
+		ToggleSwitch toggle = new ToggleSwitch(hasCategory && resourcePackManager.isCategoryEnabled(pack, category));
+		toggle.setEnabled(hasCategory);
+		toggle.addActionListener(ev -> resourcePackManager.setCategoryEnabled(pack, category, toggle.isSelected()));
+		row.add(toggle, BorderLayout.EAST);
+
+		String tooltip = hasCategory ? null : "This pack does not include " + label.toLowerCase();
+		row.setToolTipText(tooltip);
+		rowLabel.setToolTipText(tooltip);
+
+		return row;
 	}
 
 	private void setState(PanelState state) {
@@ -644,18 +750,19 @@ public class ResourcePackPanel extends JPanel {
 		author.setForeground(textColor);
 		panel.add(author);
 
-		JCheckBox enabled = new JCheckBox();
-		enabled.setOpaque(false);
-		enabled.setFocusPainted(false);
-		enabled.setSelected(packEnabled);
-		enabled.setEnabled(!(pack instanceof DefaultResourcePack));
-		enabled.setToolTipText(pack instanceof DefaultResourcePack
-			? "The built-in pack is always enabled"
-			: packEnabled ? "Disable this pack" : "Enable this pack");
-		enabled.setMargin(new Insets(0, 0, 0, 0));
-		enabled.setBounds(190, 4, 25, 22);
-		enabled.addActionListener(ev -> resourcePackManager.setPackEnabled(pack, enabled.isSelected()));
-		panel.add(enabled);
+		JButton settingsButton = new JButton();
+		settingsButton.setIcon(GEAR);
+		SwingUtil.removeButtonDecorations(settingsButton);
+		settingsButton.setContentAreaFilled(false);
+		settingsButton.setBorderPainted(false);
+		settingsButton.setFocusPainted(false);
+		settingsButton.setOpaque(false);
+		settingsButton.setUI(new BasicButtonUI());
+		settingsButton.setEnabled(!isDefaultPack);
+		settingsButton.setToolTipText(isDefaultPack ? "The built-in pack cannot be configured" : "Pack settings");
+		settingsButton.setBounds(190, 4, 25, 22);
+		settingsButton.addActionListener(ev -> openPackSettings(pack));
+		panel.add(settingsButton);
 		if (resourcePackManager.hasSettingsConflict(pack)) {
 			JLabel settingsConflict = new JLabel("!");
 			settingsConflict.setFont(FontManager.getRunescapeBoldFont());
