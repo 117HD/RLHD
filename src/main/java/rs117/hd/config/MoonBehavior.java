@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum MoonBehavior {
 	DISABLED("Disabled"),
-	REALISTIC("Realistic"),
+	REALISTIC("Realistic orbit"),
 	MIRRORED("Mirror the sun"),
 	STATIC("Static"),
 	;

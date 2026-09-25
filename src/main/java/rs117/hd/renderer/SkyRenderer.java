@@ -158,7 +158,7 @@ public class SkyRenderer {
 	}
 
 	public void processConfigChanges(Set<String> keys) {
-		if (keys.contains(KEY_NEBULAS))
+		if (keys.contains(KEY_NEBULAE))
 			starField.resetStarfield();
 		if (keys.contains(KEY_STARS))
 			commandBuffer.reset();
@@ -344,8 +344,9 @@ public class SkyRenderer {
 		out.directionalStrength = env.directionalStrength;
 
 		float moonLightIllumination = state.moonLightIllumination;
-		float moonPresence = isMoonLighting(moonAltDeg, moonLightIllumination) ?
-			moonLightIllumination * smoothstep(MOON_ELEVATION_FADE_START_DEG, MOON_ELEVATION_FADE_END_DEG, moonAltDeg) : 0;
+		float moonPresence = 0;
+		if (isMoonLighting(moonAltDeg, moonLightIllumination))
+			moonPresence = moonLightIllumination * smoothstep(MOON_ELEVATION_FADE_START_DEG, MOON_ELEVATION_FADE_END_DEG, moonAltDeg);
 		// Moonlight is already negligible beside daylight. Bring it to its natural strength
 		// before the shadow camera changes source, then vary only its shadow contrast.
 		float moonLighting = moonPresence * smoothstep(5, 0, sunAltDeg);
@@ -372,10 +373,7 @@ public class SkyRenderer {
 		out.adaptationLuminance = ambientLuminance + (sunLuminance + moonLuminance) * .25f;
 		float exposure = getNightExposure(out.adaptationLuminance, sunAltDeg);
 		float litLuminance = (ambientLuminance + sunLuminance + moonLuminance) * exposure;
-		float shadowedLuminance = max(
-			0,
-			litLuminance - sunLuminance * getShadowVisibility(sunAltDeg, .533f) * exposure
-		);
+		float shadowedLuminance = max(0, litLuminance - sunLuminance * getShadowVisibility(sunAltDeg, .533f) * exposure);
 		// Switch sources while the disappearing sun shadow spans only a few display values.
 		// Applying exposure first keeps eye adaptation from hiding an otherwise visible shadow.
 		float sunShadowContrast = linearToSrgb(litLuminance) - linearToSrgb(shadowedLuminance);
@@ -395,16 +393,6 @@ public class SkyRenderer {
 			1,
 			out.moonShadowFade > 0 ? 0 : 1
 		);
-//		sky.moonDirectionalColor = COLOR_PICKER;
-//		sky.moonAmbientColor = COLOR_PICKER;
-//		log.debug(
-//			"derived ambient moon: {}", ColorUtils.linearToSrgb(multiply(
-//				sky.moonAmbientColor,
-//				ColorUtils.linearSrgbLuminance(ColorUtils.rgb("#101010"))
-//				/ ColorUtils.linearSrgbLuminance(sky.moonAmbientColor)
-//			))
-//		);
-//		log.debug("derived ambient moon: {}", sky.moonAmbientColor);
 
 		distributeDirectionalAndAmbientLight(
 			out,
@@ -425,9 +413,6 @@ public class SkyRenderer {
 		out.configuration.interpolateLightingParameters(sky, sky, 1);
 	}
 
-	/**
-	 * Apply a celestial light's atmospheric ambient contribution and softened directional shadows.
-	 */
 	private static void distributeDirectionalAndAmbientLight(
 		LightingFrame out,
 		float[] directionalColor,
@@ -473,16 +458,12 @@ public class SkyRenderer {
 	}
 
 	private float getNightExposure(float luminance, float sunAltitudeDegrees) {
-//		float target = ColorUtils.linearToSrgb(COLOR_PICKER[2]);
-//		float softFloor = .05f * COLOR_PICKER[3];
-		float target = 1;
-		float softFloor = 0.006f;
-		// .05f * 30/255: good for Auburnvale
+		final float target = 1;
+		final float softFloor = 0.006f;
 		float adaptedExposure = max(1, (target + softFloor) / (max(0, luminance) + softFloor));
 		// Establish adaptation during sunset, before direct sunlight disappears at the horizon.
 		// The cycle's overworld gate excludes interiors; daytime above 10 degrees is unchanged.
 		float adaptation = plugin.configNightBrightness * smoothstep(10, 0, sunAltitudeDegrees);
-//		float adaptation = plugin.configNightBrightness * ColorUtils.linearToSrgb(COLOR_PICKER[1]);
 		return mix(1, adaptedExposure * max(plugin.configNightBrightness, 1), adaptation);
 	}
 
@@ -498,7 +479,7 @@ public class SkyRenderer {
 		ubo.celestialRotation.set(state.celestialRotation);
 		ubo.moonDir.set(state.moonDirection);
 		ubo.moonIllumination.set(state.moonIllumination);
-		ubo.moonIlluminationDirection.set(state.moonIlluminationDirection);
+		ubo.moonSurfaceLightDirection.set(state.moonSurfaceLightDirection);
 		ubo.moonLibration.set(state.moonLibration);
 		ubo.moonVisibility.set(state.moonVisibility);
 		ubo.moonSizeMult.set(configuration.moonSizeMult);

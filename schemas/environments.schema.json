@@ -416,7 +416,7 @@
               },
               "nebulaVisibility": {
                 "type": "number",
-                "description": "Nebula visibility multiplier (0 to 1). Defaults to 1. Cannot enable nebulas when the Nebulas option is off.",
+                "description": "Nebula visibility multiplier (0 to 1). Defaults to 1. Cannot enable nebulae when the Nebulae option is off.",
                 "minimum": 0,
                 "maximum": 1
               },
@@ -433,7 +433,7 @@
               },
               "starHorizonHeight": {
                 "type": "number",
-                "description": "Night-sky horizon height, where stars, nebulas, shooting stars and the moon fade into fog. 1 (default) is just above the horizon; 0 removes the horizon line; 2 hides the night sky at the zenith. Does not affect brightness.",
+                "description": "Night-sky horizon height, where stars, nebulae, shooting stars and the moon fade into fog. 1 (default) is just above the horizon; 0 removes the horizon line; 2 hides the night sky at the zenith. Does not affect brightness.",
                 "minimum": 0,
                 "maximum": 2
               },

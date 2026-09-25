@@ -175,7 +175,7 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_TERRAIN_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_NEBULA = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_NEBULA_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -952,9 +952,9 @@ public class HdPlugin extends Plugin {
 			.define("TERRAIN_ONLY_PASS", false)
 			.define("SHADOW_TRANSPARENCY", configShadowTransparency)
 			.define("SHADOW_FILTERING", config.shadowFiltering().filtering)
-			.define("SHADOW_FILTERING_KERNAL", config.shadowFiltering().kernelSize)
+			.define("SHADOW_FILTERING_KERNEL", config.shadowFiltering().kernelSize)
 			.define("STAR_MODE", config.starMode())
-			.define("NEBULAS", config.enableNebulas())
+			.define("NEBULAE", config.enableNebulae())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
 			.define("UNDO_VANILLA_SHADING", configShadingMode.undoVanillaShading)
 			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)
@@ -1931,7 +1931,7 @@ public class HdPlugin extends Plugin {
 							case KEY_SHADOW_FILTERING:
 							case KEY_WINDOWS_HDR_CORRECTION:
 							case KEY_STARS:
-							case KEY_NEBULAS:
+							case KEY_NEBULAE:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:

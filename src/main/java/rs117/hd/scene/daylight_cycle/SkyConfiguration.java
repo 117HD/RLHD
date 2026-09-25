@@ -25,6 +25,7 @@ import rs117.hd.utils.HDUtils;
 
 import static rs117.hd.utils.MathUtils.*;
 
+@SuppressWarnings({ "FieldCanBeLocal", "FieldMayBeFinal" })
 public class SkyConfiguration {
 	public static SkyConfiguration DEFAULT_PRESET;
 
@@ -119,6 +120,7 @@ public class SkyConfiguration {
 		profile.normalize();
 	}
 
+	@SuppressWarnings("unused")
 	public static class SkyProfile {
 		private Keyframe[] zenith;
 		private Keyframe[] horizon;

@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
-import static rs117.hd.HdPlugin.TEXTURE_UNIT_NEBULA;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_NEBULA_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TERRAIN_SHADOW_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILED_LIGHTING_MAP;
@@ -36,7 +36,7 @@ public class SceneShaderProgram extends ShaderProgram {
 		uniTerrainShadowMap.set(TEXTURE_UNIT_TERRAIN_SHADOW_MAP);
 		uniTiledLightingTextureArray.set(TEXTURE_UNIT_TILED_LIGHTING_MAP);
 		uniTextureFaces.set(TEXTURE_UNIT_TEXTURED_FACES);
-		uniNebulaMap.set(TEXTURE_UNIT_NEBULA);
+		uniNebulaMap.set(TEXTURE_UNIT_NEBULA_MAP);
 	}
 
 	@Override

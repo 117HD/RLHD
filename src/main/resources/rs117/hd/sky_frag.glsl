@@ -93,7 +93,7 @@ void main() {
     if (uboSky.moonVisibility > 0.001) {
         // Apply the sun's perceived-horizon offset.
         vec3 moonDir = normalize(vec3(uboSky.moonDir.x, -uboSky.moonDir.y + HORIZON_OFFSET, uboSky.moonDir.z));
-        vec3 moonIlluminationDir = normalize(vec3(uboSky.moonIlluminationDirection.x, -uboSky.moonIlluminationDirection.y + HORIZON_OFFSET, uboSky.moonIlluminationDirection.z));
+        vec3 moonIlluminationDir = normalize(vec3(uboSky.moonSurfaceLightDirection.x, -uboSky.moonSurfaceLightDirection.y + HORIZON_OFFSET, uboSky.moonSurfaceLightDirection.z));
 
         float moonDot = dot(viewDir, moonDir);
 
@@ -254,7 +254,7 @@ void main() {
                 }
                 surfaceNoise = mix(surfaceNoise, 1, impactHighlight * 0.52);
 
-                // The opaque disk occludes stars and nebulas while its dark side matches the night sky.
+                // The opaque disk occludes stars and nebulae while its dark side matches the night sky.
                 vec3 moonDarkSide = skyColorPreStars;
                 if (skyBlend > 0.001) {
                     float horizonStarFade = nightSkyHorizonFade(sky.upAmount, horizonShift);

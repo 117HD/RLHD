@@ -251,7 +251,7 @@ vec3 proceduralNebula(vec3 dir) {
     vec3 sampleNebula(vec3 dir) {
         return proceduralNebula(dir);
     }
-#elif NEBULAS
+#elif NEBULAE
     uniform samplerCube nebulaMap;
 
     vec3 sampleNebula(vec3 dir) {
@@ -259,7 +259,7 @@ vec3 proceduralNebula(vec3 dir) {
     }
 #endif
 
-#if NEBULAS
+#if NEBULAE
     // Returns only the background sky color + nebula (no individual stars).
     // Used for fog blending so the fog matches the sky darkness without
     // showing star points through terrain.

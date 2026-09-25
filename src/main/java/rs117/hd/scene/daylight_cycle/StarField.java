@@ -18,7 +18,7 @@ import rs117.hd.utils.buffer.GLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.SEED;
-import static rs117.hd.HdPlugin.TEXTURE_UNIT_NEBULA;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_NEBULA_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_UI;
 import static rs117.hd.utils.ColorUtils.rgb;
 import static rs117.hd.utils.HDUtils.randomPointOnSphere;
@@ -107,7 +107,7 @@ public final class StarField {
 		fboNebulaBake = glGenFramebuffers();
 		texNebulaCubemap = glGenTextures();
 
-		glActiveTexture(TEXTURE_UNIT_NEBULA);
+		glActiveTexture(TEXTURE_UNIT_NEBULA_MAP);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texNebulaCubemap);
 
 		for (int face = 0; face < 6; face++) {
@@ -176,7 +176,7 @@ public final class StarField {
 			generateLayer(vertexData, BRIGHT_STAR_COUNT, 1.2f, 1.0f, 1);
 			generateLayer(vertexData, DIM_STAR_COUNT, 0.4f, 0.8f, .7f);
 
-			if (config.enableNebulas())
+			if (config.enableNebulae())
 				generateClusteredLayer(vertexData, CLUSTER_STAR_COUNT, CLUSTER_COUNT, CLUSTER_ANGULAR_SPREAD, 0.5f, 0.5f, 1);
 
 			starCount = vertexData.position() / FLOATS_PER_STAR;
@@ -185,7 +185,7 @@ public final class StarField {
 			rebuilt = true;
 		}
 
-		if (!config.enableNebulas() || nebulaMapCurrent || fboNebulaBake == 0 || texNebulaCubemap == 0 || !nebulaBakeProgram.isValid())
+		if (!config.enableNebulae() || nebulaMapCurrent || fboNebulaBake == 0 || texNebulaCubemap == 0 || !nebulaBakeProgram.isValid())
 			return rebuilt;
 
 		nebulaBakeRenderState.framebuffer.set(GL_FRAMEBUFFER, fboNebulaBake);

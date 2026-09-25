@@ -3,7 +3,6 @@
 #include NEBULA_CLUSTER_COUNT
 
 layout(std140) uniform UBOSky {
-    // All color fields are linear sRGB.
     bool gradientEnabled;
     vec3 zenithColor;
     vec3 horizonColor;
@@ -17,7 +16,7 @@ layout(std140) uniform UBOSky {
     vec3 moonDir;
     vec3 moonDiskColor;
     float moonIllumination;
-    vec3 moonIlluminationDirection;
+    vec3 moonSurfaceLightDirection;
     vec2 moonLibration;
 
     vec3 fogColor;

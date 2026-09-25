@@ -109,12 +109,10 @@ public class LightManager {
 	private final ListMultimap<Integer, LightDefinition> PROJECTILE_LIGHTS = ArrayListMultimap.create();
 	private final ListMultimap<Integer, LightDefinition> GRAPHICS_OBJECT_LIGHTS = ArrayListMultimap.create();
 
-	private final Renderable[] imposterRenderables = new Renderable[2];
-	private final LightingSample outdoorLightingSample = new LightingSample();
-	private Environment outdoorLightingEnvironment;
-	private int outdoorLightingFrame;
 	private boolean reloadLights;
 	private int currentPlane;
+	private final Renderable[] imposterRenderables = new Renderable[2];
+	private final LightingSample outdoorLightingSample = new LightingSample();
 
 	public void loadConfig(Gson gson, ResourcePath path) {
 		LightDefinition[] lights;
@@ -649,14 +647,16 @@ public class LightManager {
 	}
 
 	private LightingSample sampleOutdoorLighting(Environment environment) {
-		if (environment != outdoorLightingEnvironment || plugin.frame != outdoorLightingFrame) {
+		var sample = outdoorLightingSample;
+		if (environment != sample.environment || plugin.frame != sample.frame) {
+			sample.environment = environment;
+			sample.frame = plugin.frame;
+
 			float[] fogColor = environmentManager.getFogColor(environment);
-			skyManager.sampleLighting(outdoorLightingSample, environment, fogColor);
-			outdoorLightingEnvironment = environment;
-			outdoorLightingFrame = plugin.frame;
+			skyManager.sampleLighting(sample, environment, fogColor);
 		}
 
-		return outdoorLightingSample;
+		return sample;
 	}
 
 	private boolean isRenderableHidden(@Nonnull Renderable renderable) {
