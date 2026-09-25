@@ -92,7 +92,7 @@ public final class RenderPipeline {
 			if (renderPass == null || type == null)
 				continue;
 
-			int flags = renderPass.getFlags();
+			int flags = renderPass.preprocess();
 			if(flags == 0)
 				continue;
 

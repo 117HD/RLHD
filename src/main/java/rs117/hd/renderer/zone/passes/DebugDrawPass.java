@@ -18,7 +18,6 @@ import rs117.hd.opengl.shader.DebugDrawShaderProgram.DebugDrawSphereShaderProgra
 import rs117.hd.opengl.shader.DebugDrawShaderProgram.DebugDrawTextShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
-import rs117.hd.overlays.FrameTimer;
 import rs117.hd.utils.DebugDraw;
 import rs117.hd.utils.RenderState;
 import rs117.hd.utils.buffer.GLBuffer;
@@ -83,9 +82,6 @@ public class DebugDrawPass implements RenderPass {
 
 	@Inject
 	private HdPlugin plugin;
-
-	@Inject
-	private FrameTimer frameTimer;
 
 	@Inject
 	private DebugDrawCubeShaderProgram cubeShader;
@@ -270,6 +266,9 @@ public class DebugDrawPass implements RenderPass {
 		sphereQueue.clear();
 		textQueue.clear();
 	}
+
+	@Override
+	public int preprocess() { return PASS_ENABLED; }
 
 	@Override
 	public void draw(RenderState renderState) {
@@ -483,9 +482,6 @@ public class DebugDrawPass implements RenderPass {
 			instanceVbo.destroy();
 		}
 	}
-
-	@Override
-	public int getFlags() { return PASS_ENABLED; }
 
 	@Override
 	public RenderPassType getType() { return RenderPassType.DEBUG_DRAW; }

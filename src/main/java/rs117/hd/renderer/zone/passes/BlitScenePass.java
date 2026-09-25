@@ -46,6 +46,9 @@ public class BlitScenePass implements RenderPass {
 	}
 
 	@Override
+	public int preprocess() { return PASS_ENABLED; }
+
+	@Override
 	public void drawZoneOpaque(WorldViewContext ctx, Zone z, int zx, int zz) {
 		log.debug("BlitScenePass.drawZoneOpaque({}, {}, {})", z, zx, zz);
 	}
@@ -91,9 +94,6 @@ public class BlitScenePass implements RenderPass {
 			scalingMode.glFilter
 		);
 	}
-
-	@Override
-	public int getFlags() { return PASS_ENABLED; }
 
 	@Override
 	public RenderPassType getType() { return RenderPassType.BLIT_SCENE; }

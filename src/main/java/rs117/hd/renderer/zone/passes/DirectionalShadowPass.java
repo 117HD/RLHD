@@ -13,7 +13,6 @@ import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.uniforms.UBOGlobal;
 import rs117.hd.overlays.FrameTimer;
-import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.WorldViewContext;
 import rs117.hd.renderer.zone.Zone;
 import rs117.hd.renderer.zone.ZoneRenderer;
@@ -53,9 +52,6 @@ public class DirectionalShadowPass implements RenderPass {
 
 	@Inject
 	private FrameTimer frameTimer;
-
-	@Inject
-	private SceneManager sceneManager;
 
 	@Inject
 	private EnvironmentManager environmentManager;
@@ -102,6 +98,22 @@ public class DirectionalShadowPass implements RenderPass {
 	}
 
 	@Override
+	public int preprocess() {
+		if(!plugin.configShadowsEnabled || sceneCamera.isOrthographic()) {
+			if(isCameraAddedToCulling)
+				sceneCullingManager.removeCamera(directionalCamera);
+			isCameraAddedToCulling = false;
+			return 0;
+		}
+
+		if(!isCameraAddedToCulling)
+			sceneCullingManager.addCamera(directionalCamera);
+		isCameraAddedToCulling = true;
+
+		return PASS_DEFAULT;
+	}
+
+	@Override
 	public void preSceneDraw(WorldViewContext ctx, boolean isTopLevel) {
 		if(!isTopLevel)
 			return;
@@ -109,17 +121,6 @@ public class DirectionalShadowPass implements RenderPass {
 		directionalCamera.setPitch(environmentManager.currentSunAngles[0]);
 		directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
 		uboGlobal.lightDir.set(directionalCamera.getForwardDirection());
-
-		if(!plugin.configShadowsEnabled || sceneCamera.isOrthographic()) {
-			if(isCameraAddedToCulling)
-				sceneCullingManager.removeCamera(directionalCamera);
-			isCameraAddedToCulling = false;
-			return;
-		}
-
-		if(!isCameraAddedToCulling)
-			sceneCullingManager.addCamera(directionalCamera);
-		isCameraAddedToCulling = true;
 
 		float drawDistance = (float) plugin.getDrawDistance();
 		int shadowDrawDistance = 90 * LOCAL_TILE_SIZE;
@@ -198,9 +199,6 @@ public class DirectionalShadowPass implements RenderPass {
 
 	@Override
 	public boolean zoneInFrustum(Zone z, int zx, int zz, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
-		if(!plugin.configShadowsEnabled)
-			return false;
-
 		if(z.isVisible(sceneCamera))
 			return true;
 
@@ -217,10 +215,7 @@ public class DirectionalShadowPass implements RenderPass {
 
 	@Override
 	public void drawZoneOpaque(WorldViewContext ctx, Zone z, int zx, int zz) {
-		if(!plugin.configShadowsEnabled)
-			return;
-
-		if(sceneManager.isRoot(ctx) && !z.isVisible(directionalCamera))
+		if(z.isVisible(directionalCamera))
 			return;
 
 		final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
@@ -232,13 +227,7 @@ public class DirectionalShadowPass implements RenderPass {
 
 	@Override
 	public void drawZoneAlpha(WorldViewContext ctx, Zone z, int level, int zx, int zz) {
-		if(!plugin.configShadowsEnabled)
-			return;
-
-		if(sceneManager.isRoot(ctx) && !z.isVisible(directionalCamera))
-			return;
-
-		if (z.sizeA == 0 || z.visibleAlphaModels.isEmpty())
+		if(!z.isVisible(directionalCamera) || z.sizeA == 0 || z.visibleAlphaModels.isEmpty())
 			return;
 
 		final int offset = ctx.sceneContext.sceneOffset >> 3;
@@ -251,7 +240,7 @@ public class DirectionalShadowPass implements RenderPass {
 
 	@Override
 	public boolean dynamicInFrustum(WorldViewContext ctx, Renderable renderable, Model model, ModelOverride modelOverride, int x, int y, int z) {
-		if(!plugin.configShadowsEnabled || !modelOverride.castShadows)
+		if(!modelOverride.castShadows)
 			return false;
 
 		return directionalShadowCasterVolume.intersectsPoint(x, y, z);

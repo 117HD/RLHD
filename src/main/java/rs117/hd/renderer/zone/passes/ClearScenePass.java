@@ -24,6 +24,9 @@ public class ClearScenePass implements RenderPass {
 	private EnvironmentManager environmentManager;
 
 	@Override
+	public int preprocess() { return PASS_ENABLED; }
+
+	@Override
 	public void draw(RenderState renderState) {
 		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
 		if (plugin.msaaSamples > 1) {
@@ -48,8 +51,6 @@ public class ClearScenePass implements RenderPass {
 		renderState.disable.set(GL_MULTISAMPLE);
 	}
 
-	@Override
-	public int getFlags() { return PASS_ENABLED; }
 
 	@Override
 	public RenderPassType getType() { return RenderPassType.CLEAR_SCENE; }

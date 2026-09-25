@@ -19,7 +19,7 @@ public interface RenderPass {
 
 	RenderPassType getType();
 
-	default int getFlags() { return PASS_DEFAULT; }
+	default int preprocess() { return PASS_DEFAULT; }
 
 	default void initialize() {}
 

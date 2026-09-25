@@ -10,7 +10,6 @@ import rs117.hd.opengl.shader.SceneDepthShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.overlays.FrameTimer;
-import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.WorldViewContext;
 import rs117.hd.renderer.zone.Zone;
 import rs117.hd.renderer.zone.ZoneRenderer;
@@ -34,9 +33,6 @@ public class DepthPass implements RenderPass {
 
 	@Inject
 	private HdPluginConfig config;
-
-	@Inject
-	private SceneManager sceneManager;
 
 	@Inject
 	private ZoneRenderer renderer;
@@ -74,13 +70,14 @@ public class DepthPass implements RenderPass {
 	}
 
 	@Override
-	public void preSceneDraw(WorldViewContext ctx, boolean isTopLevel) {
+	public int preprocess() {
 		opaqueDepthCmd.reset();
+		return depthPassEnabled ? PASS_DEFAULT : 0;
 	}
 
 	@Override
 	public void drawZoneOpaque(WorldViewContext ctx, Zone z, int zx, int zz) {
-		if (sceneManager.isRoot(ctx) && !z.isVisible(sceneCamera))
+		if (!z.isVisible(sceneCamera))
 			return;
 
 		z.renderOpaque(opaqueDepthCmd, ctx, sceneCamera, false);
@@ -122,9 +119,6 @@ public class DepthPass implements RenderPass {
 		renderState.disable.set(GL_DEPTH_TEST);
 		renderState.apply();
 	}
-
-	@Override
-	public int getFlags() { return depthPassEnabled ? PASS_DEFAULT : 0; }
 
 	@Override
 	public RenderPassType getType() { return RenderPassType.DEPTH_PASS; }

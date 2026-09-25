@@ -21,6 +21,11 @@ public class TiledLightingPass implements RenderPass {
 	private HdPlugin plugin;
 
 	@Override
+	public int preprocess() {
+		return plugin.configTiledLighting && plugin.configDynamicLights != DynamicLights.NONE ? PASS_ENABLED : 0;
+	}
+
+	@Override
 	public void draw(RenderState renderState) {
 		plugin.updateTiledLightingFbo(); // TODO: Once Legacy is deprecated, move this into here
 		assert plugin.fboTiledLighting != 0;
@@ -45,9 +50,6 @@ public class TiledLightingPass implements RenderPass {
 			}
 		}
 	}
-
-	@Override
-	public int getFlags() { return plugin.configTiledLighting && plugin.configDynamicLights != DynamicLights.NONE ? PASS_ENABLED : 0; }
 
 	@Override
 	public RenderPassType getType() { return  RenderPassType.TILED_LIGHTING; }
