@@ -288,12 +288,14 @@ void main() {
                 float crescentEdgeFade = smoothstep(0.0, 0.25, moonLocalZ);
                 isLit *= mix(1.0, crescentEdgeFade, terminatorProximity);
 
-                // Earth has the complementary phase. Approximate it as a diffuse sphere
-                // with Bond albedo 0.3 (geometric albedo 0.2), at the mean lunar distance.
-                float earthPhaseCos = clamp(-phaseCos, -1.0, 1.0);
+                // Earth appears full from the moon when their Earth-to-sun and Earth-to-moon
+                // directions align, independently of overrides to the displayed lunar phase.
+                // Use unshifted directions so the artistic horizon offset does not affect this.
+                float earthPhaseCos = clamp(dot(uboSky.sunDir, uboSky.moonDir), -1.0, 1.0);
                 float earthPhaseAngle = acos(earthPhaseCos);
-                float earthPhase = max(0.0,
-                    (phaseSin + (PI - earthPhaseAngle) * earthPhaseCos) / PI);
+                float earthPhaseSin = sqrt(max(0.0, 1.0 - earthPhaseCos * earthPhaseCos));
+                // Disk-integrated diffuse reflection includes both illuminated area and incidence.
+                float earthPhase = max(0.0, (earthPhaseSin + (PI - earthPhaseAngle) * earthPhaseCos) / PI);
                 const float earthRadiusOverDistance = 6371.0 / 384400.0;
                 float earthshine = 0.4 * earthRadiusOverDistance * earthRadiusOverDistance * earthPhase;
                 // Earth is approximately along the viewing direction: the same regolith
