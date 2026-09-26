@@ -22,22 +22,27 @@ import static rs117.hd.utils.MathUtils.*;
 public class ColorUtils {
 	private static final float EPS = 1e-4f;
 
+	private static final float[] LINEAR_SRGB_LUMINANCE_COEFFICIENTS = { .2126f, .7152f, .0722f };
+
+	// Approximate the downward half of single Rayleigh scattering relative to already-attenuated red, green and blue directional light.
+	private static final float[] AMBIENT_SCATTERING = { .026f, .053f, .136f };
+	// Approximate mesopic vision
+	private static final float[] MESOPIC_TINT = { .85f, .95f, 1.15f };
+
 	/**
-	 * Row-major transformation matrices for conversion between RGB and XYZ color spaces.
-	 * Fairman, H. S., Brill, M. H., & Hemmendinger, H. (1997).
-	 * How the CIE 1931 color-matching functions were derived from Wright-Guild data.
-	 * Color Research & Application, 22(1), 11–23.
-	 * doi:10.1002/(sici)1520-6378(199702)22:1<11::aid-col4>3.0.co;2-7
+	 * Row-major transforms between CIE XYZ (D65) and linear sRGB.
+	 * Coefficients are the sRGB matrices from
+	 * <a href="https://www.w3.org/TR/css-color-4/#color-conversion-code">CSS Color Module Level 4</a>
 	 */
 	private static final float[] RGB_TO_XYZ_MATRIX = {
-		.49f, .31f, .2f,
-		.1769f, .8124f, .0107f,
-		.0f,    .0099f, .9901f
+		.4123908f, .35758434f, .1804808f,
+		.212639f, .7151687f, .07219232f,
+		.01933082f, .11919478f, .95053215f
 	};
 	private static final float[] XYZ_TO_RGB_MATRIX = {
-		2.36449f,    -.896553f,  -.467937f,
-		-.514935f,   1.42633f,    .0886025f,
-		 .00514883f, -.0142619f, 1.00911f
+		3.24097f, -1.5373832f, -.49861076f,
+		-.96924365f, 1.8759675f, .041555058f,
+		.05563008f, -.20397696f, 1.0569715f
 	};
 
 	/**
@@ -74,7 +79,7 @@ public class ColorUtils {
 	 * @param XYZ coordinates
 	 * @return linear RGB coordinates
 	 */
-	public static float[] XYZtoRGB(float[] XYZ) {
+	public static float[] XYZtoRGB(float... XYZ) {
 		float[] RGB = new float[3];
 		mat3MulVec3(RGB, XYZ_TO_RGB_MATRIX, XYZ);
 		return RGB;
@@ -85,7 +90,7 @@ public class ColorUtils {
 	 * @param RGB linear RGB color coordinates
 	 * @return XYZ color coordinates
 	 */
-	public static float[] RGBtoXYZ(float[] RGB) {
+	public static float[] RGBtoXYZ(float... RGB) {
 		float[] XYZ = new float[3];
 		mat3MulVec3(XYZ, RGB_TO_XYZ_MATRIX, RGB);
 		return XYZ;
@@ -114,6 +119,7 @@ public class ColorUtils {
 	}
 
 	public static float[] linearToSrgb(float... c) {
+		assert c.length <= 3;
 		float[] result = new float[c.length];
 		for (int i = 0; i < c.length; i++)
 			result[i] = linearToSrgb(c[i]);
@@ -121,10 +127,49 @@ public class ColorUtils {
 	}
 
 	public static float[] srgbToLinear(float... c) {
+		assert c.length <= 3;
 		float[] result = new float[c.length];
 		for (int i = 0; i < c.length; i++)
 			result[i] = srgbToLinear(c[i]);
 		return result;
+	}
+
+	/**
+	 * Calculate the linear luminance of a linear sRGB color.
+	 */
+	public static float linearSrgbLuminance(float[] linearSrgb) {
+		return dot(linearSrgb, LINEAR_SRGB_LUMINANCE_COEFFICIENTS, 3);
+	}
+
+	/**
+	 * Approximate clear-atmosphere ambient light from linear directional light.
+	 */
+	public static void deriveAmbientLight(float[] out, float[] directionalColor) {
+		multiply(out, directionalColor, AMBIENT_SCATTERING);
+	}
+
+	/**
+	 * Apply an approximate color shift due to mesopic vision, in linear sRGB, preserving luminance.
+	 */
+	public static void applyMesopicShift(float[] out) {
+		float luminance = linearSrgbLuminance(out);
+		for (int i = 0; i < 3; i++)
+			out[i] = out[i] * MESOPIC_TINT[i];
+		float shiftedLuminance = linearSrgbLuminance(out);
+		if (shiftedLuminance > 0)
+			multiply(out, out, luminance / shiftedLuminance);
+	}
+
+	/**
+	 * Approximately invert the color shift due to mesopic vision, in linear sRGB, preserving luminance.
+	 */
+	public static void invertMesopicShift(float[] out) {
+		float luminance = linearSrgbLuminance(out);
+		for (int i = 0; i < 3; i++)
+			out[i] = out[i] / MESOPIC_TINT[i];
+		float shiftedLuminance = linearSrgbLuminance(out);
+		if (shiftedLuminance > 0)
+			multiply(out, out, luminance / shiftedLuminance);
 	}
 
 	/**
@@ -134,7 +179,7 @@ public class ColorUtils {
 	 * @return hsl float[3]
 	 * @link <a href="https://web.archive.org/web/20230619214343/https://en.wikipedia.org/wiki/HSL_and_HSV#Color_conversion_formulae">Wikipedia: HSL and HSV</a>
 	 */
-	public static float[] srgbToHsl(float[] srgb) {
+	public static float[] srgbToHsl(float... srgb) {
 		float V = max(srgb);
 		float X_min = min(srgb);
 		float C = V - X_min;
@@ -154,7 +199,7 @@ public class ColorUtils {
 		float L = (V + X_min) / 2;
 		float divisor = 1 - abs(2 * L - 1);
 		float S_L = abs(divisor) < EPS ? 0 : C / divisor;
-		return new float[] { H / 6, S_L, L };
+		return vec(H / 6, S_L, L);
 	}
 
 	/**
@@ -164,7 +209,7 @@ public class ColorUtils {
 	 * @return srgb float[3]
 	 * @link <a href="https://web.archive.org/web/20230619214343/https://en.wikipedia.org/wiki/HSL_and_HSV#Color_conversion_formulae">Wikipedia: HSL and HSV</a>
 	 */
-	public static float[] hslToSrgb(float[] hsl) {
+	public static float[] hslToSrgb(float... hsl) {
 		float C = hsl[1] * (1 - abs(2 * hsl[2] - 1));
 		float H_prime = fract(hsl[0]) * 6;
 		float m = hsl[2] - C / 2;
@@ -181,7 +226,7 @@ public class ColorUtils {
 	 * @param hsl float[3]
 	 * @return hsv float[3]
 	 */
-	public static float[] hslToHsv(float[] hsl) {
+	public static float[] hslToHsv(float... hsl) {
 		float v = hsl[2] + hsl[1] * min(hsl[2], 1 - hsl[2]);
 		return vec(hsl[0], abs(v) < EPS ? 0 : 2 * (1 - hsl[2] / v), v);
 	}
@@ -192,7 +237,7 @@ public class ColorUtils {
 	 * @param hsv float[3]
 	 * @return hsl float[3]
 	 */
-	public static float[] hsvToHsl(float[] hsv) {
+	public static float[] hsvToHsl(float... hsv) {
 		float l = hsv[2] * (1 - hsv[1] / 2);
 		float divisor = min(l, 1 - l);
 		return vec(hsv[0], abs(divisor) < EPS ? 0 : (hsv[2] - l) / divisor, l);
@@ -205,7 +250,7 @@ public class ColorUtils {
 	 * @return hsv float[3]
 	 * @link <a href="https://web.archive.org/web/20230619214343/https://en.wikipedia.org/wiki/HSL_and_HSV#Color_conversion_formulae">Wikipedia: HSL and HSV</a>
 	 */
-	public static float[] srgbToHsv(float[] srgb) {
+	public static float[] srgbToHsv(float... srgb) {
 		return hslToHsv(srgbToHsl(srgb));
 	}
 
@@ -216,7 +261,7 @@ public class ColorUtils {
 	 * @return srgb float[3]
 	 * @link <a href="https://web.archive.org/web/20230619214343/https://en.wikipedia.org/wiki/HSL_and_HSV#Color_conversion_formulae">Wikipedia: HSL and HSV</a>
 	 */
-	public static float[] hsvToSrgb(float[] hsv) {
+	public static float[] hsvToSrgb(float... hsv) {
 		return hslToSrgb(hsvToHsl(hsv));
 	}
 
@@ -255,6 +300,16 @@ public class ColorUtils {
 	}
 
 	/**
+	 * Convert Color instance from sRGB to linear RGB in the range 0-1.
+	 *
+	 * @param color sRGB Color instance
+	 * @return float[3] linear RGB values from 0-1
+	 */
+	public static float[] rgb(Color color) {
+		return srgbToLinear(srgb(color));
+	}
+
+	/**
 	 * Convert red, green and blue in the range 0-255 from sRGB to sRGB in the range 0-1.
 	 *
 	 * @param r red color
@@ -263,7 +318,7 @@ public class ColorUtils {
 	 * @return float[3] non-linear sRGB values from 0-1
 	 */
 	public static float[] srgb(float r, float g, float b) {
-		return new float[] { r / 255f, g / 255f, b / 255f };
+		return vec(r / 255f, g / 255f, b / 255f);
 	}
 
 	/**
@@ -273,7 +328,16 @@ public class ColorUtils {
 	 * @return float[3] non-linear sRGB values from 0-1
 	 */
 	public static float[] srgb(String hex) {
-		Color color = Color.decode(hex);
+		return srgb(Color.decode(hex));
+	}
+
+	/**
+	 * Convert Color instance from sRGB to sRGB in the range 0-1.
+	 *
+	 * @param color sRGB Color instance
+	 * @return float[3] non-linear sRGB values from 0-1
+	 */
+	public static float[] srgb(Color color) {
 		return srgb(color.getRed(), color.getGreen(), color.getBlue());
 	}
 
@@ -289,10 +353,6 @@ public class ColorUtils {
 			(srgb >> 8 & 0xFF) / (float) 0xFF,
 			(srgb & 0xFF) / (float) 0xFF,
 		};
-	}
-
-	public static float[] srgb(Color c) {
-		return srgb(c.getRed(), c.getGreen(), c.getBlue());
 	}
 
 	/**
@@ -348,7 +408,7 @@ public class ColorUtils {
 		return rgb[0] << 16 | rgb[1] << 8 | rgb[2];
 	}
 
-	public static int packSrgb(float[] srgb) {
+	public static int packSrgb(float... srgb) {
 		return packRawRgb(ivec(multiply(saturate(srgb), 0xFF)));
 	}
 

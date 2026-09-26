@@ -1101,6 +1101,11 @@
     "doubleSidedFaces": true
   },
   {
+    "name": "GLASS_1",
+    "parent": "NONE",
+    "subsurface": 1.0
+  },
+  {
     "name": "WHITE",
     "parent": "NONE"
   },
@@ -1827,6 +1832,11 @@
     "brightness": 0.827
   },
   {
+    "name": "ROCK_3_VERY_DARK",
+    "parent": "ROCK_3",
+    "brightness": 0.73
+  },
+  {
     "name": "ROCK_3_LIGHT",
     "parent": "ROCK_3",
     "brightness": 1.194
@@ -2106,6 +2116,22 @@
     "name": "BURLAP_LIGHT",
     "parent": "BURLAP",
     "brightness": 1.1
+  },
+  {
+    "name": "SAIL_CLOTH",
+    "parent": "CARPET",
+    "brightness": 1.22,
+    "subsurface": 0.25,
+    "subsurfaceGlow": 2.0,
+    "normalMap": null
+  },
+  {
+    "name": "SAIL_CLOTH_LIGHT",
+    "parent": "CARPET",
+    "brightness": 1.45,
+    "subsurface": 0.25,
+    "subsurfaceGlow": 2.0,
+    "normalMap": null
   },
   {
     "name": "FUR_N"
@@ -3222,6 +3248,11 @@
     "parent": "GRUNGE_2",
     "specularStrength": 0.2,
     "specularGloss": 20.0
+  },
+  {
+    "name": "PLANT_GRUNGE_2_DARK",
+    "parent": "PLANT_GRUNGE_2",
+    "brightness": 0.8
   },
   {
     "name": "HD_CONCRETE_D"

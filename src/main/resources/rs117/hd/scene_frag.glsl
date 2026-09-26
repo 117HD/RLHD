@@ -33,14 +33,22 @@
 #define DISPLAY_LIGHTING 0
 
 #include <uniforms/global.glsl>
+#include <uniforms/sky.glsl>
 #include <uniforms/world_views.glsl>
 #include <uniforms/materials.glsl>
 #include <uniforms/water_types.glsl>
 
+#include <utils/sky_fog.glsl>
+#include <utils/hash.glsl>
+
+#include GAP_FILLER
 #include MATERIAL_CONSTANTS
 
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
+#if TERRAIN_SHADOWS
+    uniform sampler2DShadow terrainShadowMap;
+#endif
 uniform usampler2DArray tiledLightingArray;
 
 // general HD settings
@@ -49,10 +57,6 @@ flat in int fWorldViewId;
 flat in ivec3 fAlphaBiasHsl;
 flat in ivec3 fMaterialData;
 flat in ivec3 fTerrainData;
-
-#if FLAT_SHADING && ZONE_RENDERER
-    flat in vec3 fFlatNormal;
-#endif
 
 in FragmentData {
     vec3 position;
@@ -69,7 +73,7 @@ vec2 worldUvs(float scale) {
 
 #include <utils/constants.glsl>
 #include <utils/misc.glsl>
-#include <utils/color_blindness.glsl>
+#include <utils/output_transform.glsl>
 #include <utils/caustics.glsl>
 #include <utils/color_utils.glsl>
 #include <utils/normals.glsl>
@@ -77,15 +81,24 @@ vec2 worldUvs(float scale) {
 #include <utils/displacement.glsl>
 #include <utils/shadows.glsl>
 #include <utils/water.glsl>
-#include <utils/color_filters.glsl>
 #include <utils/fog.glsl>
 #include <utils/wireframe.glsl>
 #include <utils/lights.glsl>
+#include <utils/starfield.glsl>
+#include <utils/sky.glsl>
 
 void main() {
+    #if GAP_FILLER
+        // Write the smallest depth which won't round to zero for DEPTH_COMPONENT_32F
+        gl_FragDepth = 1.17549435e-38;
+        FragColor = vec4(0, 0, 0, 1);
+        if (GAP_FILLER == 1) return; // Redundant, for syntax highlighting in IntelliJ
+    #endif
+
     vec3 downDir = vec3(0, -1, 0);
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(cameraPos - IN.position);
+    vec3 flatNormal = normalize(cross(dFdx(IN.position), dFdy(IN.position)));
 
     Material material1 = getMaterial(fMaterialData[0] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
     Material material2 = getMaterial(fMaterialData[1] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
@@ -160,8 +173,8 @@ void main() {
         // Set up tangent-space transformation matrix
 
         vec3 N;
-        #if FLAT_SHADING && ZONE_RENDERER
-            N = normalize(fFlatNormal);
+        #if FLAT_SHADING
+            N = flatNormal;
         #else
             N = normalize(IN.normal);
         #endif
@@ -334,7 +347,7 @@ void main() {
 
         float shadow = 0;
         if ((fMaterialData[0] >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0)
-            shadow = sampleShadowMap(fragPos, vec2(0), lightDotNormals);
+            shadow = sampleShadowMap(fragPos, vec2(0), flatNormal);
         shadow = max(shadow, selfShadowing);
         float inverseShadow = 1 - shadow;
 
@@ -425,6 +438,35 @@ void main() {
         float lightningDotNormals = downDotNormals;
         vec3 lightningOut = max(lightningDotNormals, 0.0) * lightningColor * lightningStrength;
 
+       // fake/simple Subsurface scattering
+       float subsurface = getMaterialSubsurface(material1);
+
+       vec3 transmissionOut = vec3(0.0);
+       if (subsurface > 0.0) {
+           float backLightDotNormals = max(dot(-normals, lightDir), 0.0);
+           vec3 backLightOut = backLightDotNormals * lightColor;
+
+           float subsurfaceGlow = getMaterialSubsurfaceGlow(material1);
+
+           float transmissionFocus = 0.0;
+           if (subsurfaceGlow > 1.0) {
+               float viewTowardLight = max(dot(-viewDir, lightDir), 0.0);
+               // Sharpen into a small hotspot rather than a broad highlight.
+               // pow(x, 8) folded via repeated squaring.
+               float t2 = viewTowardLight * viewTowardLight;
+               float t4 = t2 * t2;
+               transmissionFocus = t4 * t4;
+           }
+
+           const float SUBSURFACE_BASE_FRACTION = 0.35;
+           transmissionOut += backLightOut * (subsurface * SUBSURFACE_BASE_FRACTION + transmissionFocus * subsurfaceGlow);
+
+           vec3 backPointLightsOut = vec3(0);
+           vec3 backPointLightsSpecularOut = vec3(0); // Ignored - specular doesn't make sense for backside lighting
+           calculateLighting(IN.position, -normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength, backPointLightsOut, backPointLightsSpecularOut);
+
+           transmissionOut += backPointLightsOut * subsurface;
+       }
 
         // underglow
         vec3 underglowOut = underglowColor * max(normals.y, 0) * underglowStrength;
@@ -440,7 +482,7 @@ void main() {
 
         // apply lighting
         vec3 compositeLight = ambientLightOut + lightOut + lightSpecularOut + skyLightOut + lightningOut +
-        underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut;
+        underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut + transmissionOut;
 
         #if DISPLAY_LIGHTING
             FragColor = vec4(compositeLight, 1.0);
@@ -483,31 +525,6 @@ void main() {
         }
     #endif
 
-    outputColor.rgb = clamp(outputColor.rgb, 0, 1);
-
-    // Skip unnecessary color conversion if possible
-    if (saturation != 1 || contrast != 1) {
-        vec3 hsv = srgbToHsv(outputColor.rgb);
-
-        // Apply saturation setting
-        hsv.y *= saturation;
-
-        // Apply contrast setting
-        if (hsv.z > 0.5) {
-            hsv.z = 0.5 + ((hsv.z - 0.5) * contrast);
-        } else {
-            hsv.z = 0.5 - ((0.5 - hsv.z) * contrast);
-        }
-
-        outputColor.rgb = hsvToSrgb(hsv);
-    }
-
-    outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
-
-    #if APPLY_COLOR_FILTER
-        outputColor.rgb = applyColorFilter(outputColor.rgb);
-    #endif
-
     #if WIREFRAME
         outputColor.rgb *= wireframeMask();
     #endif
@@ -529,14 +546,51 @@ void main() {
             outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
         }
 
-        outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
+        if (uboSky.gradientEnabled) {
+            // Reconstruct the sky only where fog blends geometry toward it.
+            vec3 skyColorAtFragment = outputColor.rgb;
+
+            if (combinedFog > 1e-4) {
+                vec3 fogViewDir = normalize(IN.position - cameraPos);
+                SkyGradient sky = computeSkyGradient(fogViewDir);
+                skyColorAtFragment = sky.color;
+
+                float baseProgress = 1.0 - sky.nightFade;
+                float sunProximity = sky.sunSideBlend * (1.0 - sky.zenithBlend);
+                float nightSkyBlend = pow(baseProgress, mix(0.4, 0.9, sunProximity));
+                if (nightSkyBlend > 0.001) {
+                    float horizonShift = nightHorizonOffset(uboSky.starHorizonHeight);
+                    float horizonFade = smoothstep(-0.1 + horizonShift, 0.07 + horizonShift, sky.upAmount);
+                    skyColorAtFragment = blendSkyBackground(
+                        skyColorAtFragment,
+                        nightSkyBackground(fogViewDir, elapsedTime),
+                        nightSkyBlend * horizonFade
+                    );
+                }
+
+                vec3 moonDir = normalize(vec3(
+                    uboSky.moonDir.x,
+                    -uboSky.moonDir.y + HORIZON_OFFSET,
+                    uboSky.moonDir.z
+                ));
+                float skyTransmittance = skyFogTransmittance(sky.upAmount);
+                skyColorAtFragment = applySkyFog(skyColorAtFragment, skyTransmittance);
+                skyColorAtFragment += skyFogGlow(fogViewDir, sky.sunDir, moonDir, skyTransmittance);
+                // Scene fog is composed after the scene's sRGB conversion.
+                skyColorAtFragment = linearToSrgb(skyColorAtFragment);
+            }
+
+            outputColor.rgb = mix(outputColor.rgb, skyColorAtFragment, combinedFog);
+        } else {
+            outputColor.rgb = mix(outputColor.rgb, linearToSrgb(fogColor), combinedFog);
+        }
     }
 
-    outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));
+    outputColor.rgb = applyColorAdjustments(outputColor.rgb);
+    outputColor.rgb = applyOutputCorrection(outputColor.rgb);
 
-    #if WINDOWS_HDR_CORRECTION
-        outputColor.rgb = windowsHdrCorrection(outputColor.rgb);
-    #endif
+    // Reduce color banding
+    outputColor.rgb += (hash12(gl_FragCoord.xy + elapsedTime) - 0.5) / 255.0;
 
     FragColor = outputColor;
 }

@@ -47,19 +47,22 @@ import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
+import rs117.hd.opengl.shader.TerrainShadowShaderProgram;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
+import rs117.hd.renderer.SkyRenderer;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
+import rs117.hd.scene.SkyManager;
+import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
-import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
@@ -129,16 +132,28 @@ public class ZoneRenderer implements Renderer {
 	private ModelStreamingManager modelStreamingManager;
 
 	@Inject
+	private SkyManager skyManager;
+
+	@Inject
+	private SkyRenderer skyRenderer;
+
+	@Inject
 	private FrameTimer frameTimer;
 
 	@Inject
 	private SceneShaderProgram sceneProgram;
 
 	@Inject
+	private SceneShaderProgram.GapFiller gapFillerProgram;
+
+	@Inject
 	private ShadowShaderProgram.Fast fastShadowProgram;
 
 	@Inject
 	private ShadowShaderProgram.Detailed detailedShadowProgram;
+
+	@Inject
+	private TerrainShadowShaderProgram terrainShadowProgram;
 
 	@Inject
 	private JobSystem jobSystem;
@@ -152,8 +167,9 @@ public class ZoneRenderer implements Renderer {
 
 	public final RenderState renderState = new RenderState();
 	public final CommandBuffer sceneCmd = new CommandBuffer("Scene");
-	public final CommandBuffer directionalCmd = new CommandBuffer("Directional");
 	public final CommandBuffer gapFillerCmd = new CommandBuffer("GapFiller");
+	public final CommandBuffer directionalCmd = new CommandBuffer("Directional");
+	public final CommandBuffer terrainShadowCmd = new CommandBuffer("TerrainShadow");
 
 	private GLBuffer indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
@@ -162,8 +178,8 @@ public class ZoneRenderer implements Renderer {
 	public static GLMappedBufferIntWriter eboAlphaWriter;
 
 	private boolean sceneFboValid;
-	private boolean shouldRenderSkybox;
 	private boolean shouldRenderScene;
+	private boolean shouldRenderVanillaSkybox;
 	private boolean shouldClearShadowFbo;
 	private boolean shouldDrawRoofShadows;
 
@@ -191,13 +207,16 @@ public class ZoneRenderer implements Renderer {
 			FacePrioritySorter.POOL = new ConcurrentPool<>(() -> injector.getInstance(FacePrioritySorter.class));
 
 		sceneCmd.setFrameTimer(frameTimer);
-		directionalCmd.setFrameTimer(frameTimer);
 		gapFillerCmd.setFrameTimer(frameTimer);
+		directionalCmd.setFrameTimer(frameTimer);
+		terrainShadowCmd.setFrameTimer(frameTimer);
 
 		jobSystem.startUp(config.cpuUsageLimit());
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
 		sceneManager.initialize(uboWorldViews);
 		modelStreamingManager.initialize();
+
+		skyRenderer.initialize();
 
 		// Force updates that only run when the cameras change
 		sceneCamera.setDirty();
@@ -207,6 +226,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void destroy() {
 		destroyBuffers();
+		skyRenderer.destroy();
 
 		jobSystem.shutDown();
 		modelStreamingManager.destroy();
@@ -237,15 +257,21 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
 		sceneProgram.compile(includes);
+		gapFillerProgram.compile(includes);
 		fastShadowProgram.compile(includes);
 		detailedShadowProgram.compile(includes);
+		terrainShadowProgram.compile(includes);
+		skyRenderer.initializeShaders(includes);
 	}
 
 	@Override
 	public void destroyShaders() {
 		sceneProgram.destroy();
+		gapFillerProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
+		terrainShadowProgram.destroy();
+		skyRenderer.destroyShaders();
 	}
 
 	private void initializeBuffers() {
@@ -281,11 +307,16 @@ public class ZoneRenderer implements Renderer {
 	public void processConfigChanges(Set<String> keys) {
 		if (keys.contains(KEY_ASYNC_MODEL_PROCESSING))
 			modelStreamingManager.reinitialize();
+
+		if (keys.contains(KEY_SHADOW_RESOLUTION) || keys.contains(KEY_SHADOW_MODE))
+			directionalCamera.setDirty();
+
+		skyRenderer.processConfigChanges(keys);
 	}
 
 	@Override
 	public void preSceneDraw(
-		Scene scene,
+		Scene scene, Projection entityProjection,
 		float cameraX, float cameraY, float cameraZ, float cameraPitch, float cameraYaw,
 		int minLevel, int level, int maxLevel, Set<Integer> hideRoofIds
 	) {
@@ -293,10 +324,12 @@ public class ZoneRenderer implements Renderer {
 			return;
 
 		try {
+			boolean isTopLevel = scene.getWorldViewId() == WorldView.TOPLEVEL;
+
 			WorldViewContext ctx = sceneManager.getContext(scene);
 			if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading) {
 				// When triggering plugin restarts in rapid succession, it can end up in a state where no scene is loaded initially
-				if (scene.getWorldViewId() == WorldView.TOPLEVEL && client.getGameState() == GameState.LOGGED_IN)
+				if (isTopLevel && client.getGameState() == GameState.LOGGED_IN)
 					clientThread.invokeLater(() -> client.setGameState(GameState.LOADING));
 				return;
 			}
@@ -312,7 +345,7 @@ public class ZoneRenderer implements Renderer {
 			if (ctx.uboWorldViewStruct != null)
 				ctx.uboWorldViewStruct.update();
 
-			if (scene.getWorldViewId() == WorldView.TOPLEVEL)
+			if (isTopLevel)
 				preSceneDrawTopLevel(scene, cameraX, cameraY, cameraZ, cameraPitch, cameraYaw);
 
 			ctx.completeInvalidation();
@@ -326,7 +359,7 @@ public class ZoneRenderer implements Renderer {
 
 			ctx.map();
 
-			if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
+			if (isTopLevel && shouldRenderVanillaSkybox) {
 				Model skybox = scene.getSkybox();
 				if (skybox != null) {
 					skybox.calculateBoundsCylinder();
@@ -421,6 +454,10 @@ public class ZoneRenderer implements Renderer {
 				environmentManager.update(ctx.sceneContext);
 				frameTimer.end(Timer.UPDATE_ENVIRONMENT);
 
+				frameTimer.begin(Timer.UPDATE_SKY);
+				skyManager.update();
+				frameTimer.end(Timer.UPDATE_SKY);
+
 				frameTimer.begin(Timer.UPDATE_LIGHTS);
 				lightManager.update(ctx.sceneContext, plugin.cameraShift, plugin.cameraFrustum);
 				frameTimer.end(Timer.UPDATE_LIGHTS);
@@ -434,8 +471,9 @@ public class ZoneRenderer implements Renderer {
 				return;
 			}
 
-			directionalCamera.setPitch(environmentManager.currentSunAngles[0]);
-			directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
+			skyRenderer.prepareFrame(plugin.uboGlobal);
+			skyManager.updateDirectionalCamera(directionalCamera, skyRenderer.usesMoonShadows);
+
 			boolean hasDirectionalCameraChanged = directionalCamera.isViewDirty() || directionalCamera.isProjDirty();
 
 			if (plugin.configShadowsEnabled &&
@@ -448,8 +486,8 @@ public class ZoneRenderer implements Renderer {
 					.build(sceneCamera, drawDistance * LOCAL_TILE_SIZE, shadowDrawDistance);
 
 				final float[] sceneCenter = new float[3];
-				for (float[] corner : volumeCorners)
-					add(sceneCenter, sceneCenter, corner);
+				for (int i = 0; i < volumeCorners.length; i++)
+					add(sceneCenter, sceneCenter, volumeCorners[i]);
 				divide(sceneCenter, sceneCenter, (float) volumeCorners.length);
 
 				// Reset position before transforming points
@@ -459,7 +497,8 @@ public class ZoneRenderer implements Renderer {
 				float minY = Float.POSITIVE_INFINITY, maxY = Float.NEGATIVE_INFINITY;
 				float minZ = Float.POSITIVE_INFINITY, maxZ = Float.NEGATIVE_INFINITY;
 				float radius = 0f;
-				for (float[] corner : volumeCorners) {
+				for (int i = 0; i < volumeCorners.length; i++) {
+					final float[] corner = volumeCorners[i];
 					radius = max(radius, distance(sceneCenter, corner));
 
 					directionalCamera.transformPoint(corner, corner);
@@ -482,7 +521,7 @@ public class ZoneRenderer implements Renderer {
 				// Calculate directional size from the AABB of the scene frustum corners
 				// Then snap to the nearest multiple of `LOCAL_HALF_TILE_SIZE` to prevent shimmering
 				int directionalSize = (int) max(abs(maxY - minY), abs(maxX - minX), abs(maxZ - minZ));
-				directionalSize = Math.round(directionalSize / (float) LOCAL_HALF_TILE_SIZE) * LOCAL_HALF_TILE_SIZE;
+				directionalSize = round(directionalSize / (float) LOCAL_HALF_TILE_SIZE) * LOCAL_HALF_TILE_SIZE;
 				directionalSize = max(8000, directionalSize); // Clamp the size to prevent going too small at reduced draw distances
 
 				// Ignore directional size changes below the change threshold to avoid inducing shimmering
@@ -499,25 +538,30 @@ public class ZoneRenderer implements Renderer {
 				sceneCenter[1] = (float) floor(sceneCenter[1] / texelSize + 0.5f) * texelSize;
 
 				directionalCamera.setPosition(directionalCamera.inverseTransformPoint(sceneCenter, sceneCenter));
-				directionalCamera.setNearPlane(Math.max(0.1f, radius * 0.05f));
-				directionalCamera.setFarPlane(radius * 2.0f);
-				directionalCamera.setZoom(1.0f);
+				directionalCamera.setNearPlane(max(.1f, radius * .05f));
+				directionalCamera.setFarPlane(radius * 2);
+				directionalCamera.setZoom(1);
 				directionalCamera.setViewportWidth(directionalSize);
 				directionalCamera.setViewportHeight(directionalSize);
 
 				plugin.uboGlobal.lightProjectionMatrix.set(directionalCamera.getViewProjMatrix());
+				plugin.uboGlobal.invLightProjectionMatrix.set(directionalCamera.getInvViewProjMatrix());
+				float depthRange = 2 * (directionalCamera.getFarPlane() - directionalCamera.getNearPlane());
+				plugin.uboGlobal.shadowBiasScale.set(texelSize / depthRange);
 			}
 
 			shouldDrawRoofShadows =
 				plugin.configShadowsEnabled &&
 				plugin.configRoofShadows &&
-				environmentManager.allowRoofShadows();
+				environmentManager.getTargetEnvironment().allowRoofShadows;
 
 			plugin.uboGlobal.lightDir.set(directionalCamera.getForwardDirection());
+			plugin.uboGlobal.viewportSize.set(slice(plugin.sceneViewport, 2));
 			plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
 			plugin.uboGlobal.viewMatrix.set(plugin.viewMatrix);
 			plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);
 			plugin.uboGlobal.invProjectionMatrix.set(plugin.invViewProjMatrix);
+			plugin.uboGlobal.orthographicProjection.set(plugin.orthographicProjection ? 1 : 0);
 
 			if (plugin.configDynamicLights != DynamicLights.NONE) {
 				// Update lights UBO
@@ -561,83 +605,55 @@ public class ZoneRenderer implements Renderer {
 		if (client.getGameState().getState() >= GameState.LOGGED_IN.getState())
 			plugin.hasLoggedIn = true;
 
-		shouldRenderSkybox = scene.getSkybox() != null;
+		if (plugin.enableFreezeFrame || plugin.redrawPreviousFrame)
+			skyRenderer.prepareFrame(plugin.uboGlobal);
 
+		boolean replaceVanillaSkybox =
+			skyRenderer.shouldReplaceVanillaSkybox() &&
+			config.replaceVanillaSkyboxes() &&
+			environmentManager.getTargetEnvironment().hideVanillaSkyboxes;
+		shouldRenderVanillaSkybox = scene.getSkybox() != null && !replaceVanillaSkybox;
+
+		Environment env = environmentManager.getCurrentEnvironment();
 		float fogDepth = 0;
-		if (!shouldRenderSkybox) {
+		if (!shouldRenderVanillaSkybox) {
 			switch (config.fogDepthMode()) {
 				case USER_DEFINED:
 					fogDepth = config.fogDepth();
 					break;
 				case DYNAMIC:
-					fogDepth = environmentManager.currentFogDepth;
+					fogDepth = env.fogDepth;
 					break;
 			}
 			fogDepth *= min(plugin.getDrawDistance(), 90) / 10.f;
 		}
 		plugin.uboGlobal.useFog.set(fogDepth > 0 ? 1 : 0);
 		plugin.uboGlobal.fogDepth.set(fogDepth);
-		plugin.uboGlobal.fogColor.set(ColorUtils.linearToSrgb(environmentManager.currentFogColor));
 
 		plugin.uboGlobal.drawDistance.set((float) plugin.getDrawDistance());
 		plugin.uboGlobal.expandedMapLoadingChunks.set(ctx.sceneContext.expandedMapLoadingChunks);
 		plugin.uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
 
-		float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor);
-		float lightBrightnessMultiplier = 0.8f;
-		float midBrightnessMultiplier = 0.45f;
-		float darkBrightnessMultiplier = 0.05f;
-		float[] waterColorLight = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
-			waterColorHsv[0],
-			waterColorHsv[1],
-			waterColorHsv[2] * lightBrightnessMultiplier
-		}));
-		float[] waterColorMid = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
-			waterColorHsv[0],
-			waterColorHsv[1],
-			waterColorHsv[2] * midBrightnessMultiplier
-		}));
-		float[] waterColorDark = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
-			waterColorHsv[0],
-			waterColorHsv[1],
-			waterColorHsv[2] * darkBrightnessMultiplier
-		}));
-		plugin.uboGlobal.waterColorLight.set(waterColorLight);
-		plugin.uboGlobal.waterColorMid.set(waterColorMid);
-		plugin.uboGlobal.waterColorDark.set(waterColorDark);
-
 		plugin.uboGlobal.gammaCorrection.set(plugin.getGammaCorrection());
-		float ambientStrength = environmentManager.currentAmbientStrength;
-		float directionalStrength = environmentManager.currentDirectionalStrength;
-		if (config.useLegacyBrightness()) {
-			float factor = config.legacyBrightness() / 20f;
-			ambientStrength *= factor;
-			directionalStrength *= factor;
-		}
-		plugin.uboGlobal.ambientStrength.set(ambientStrength);
-		plugin.uboGlobal.ambientColor.set(environmentManager.currentAmbientColor);
-		plugin.uboGlobal.lightStrength.set(directionalStrength);
-		plugin.uboGlobal.lightColor.set(environmentManager.currentDirectionalColor);
 
-		plugin.uboGlobal.underglowStrength.set(environmentManager.currentUnderglowStrength);
-		plugin.uboGlobal.underglowColor.set(environmentManager.currentUnderglowColor);
+		plugin.uboGlobal.underglowStrength.set(env.underglowStrength);
+		plugin.uboGlobal.underglowColor.set(env.getUnderglowColor());
 
-		plugin.uboGlobal.groundFogStart.set(environmentManager.currentGroundFogStart);
-		plugin.uboGlobal.groundFogEnd.set(environmentManager.currentGroundFogEnd);
-		plugin.uboGlobal.groundFogOpacity.set(config.groundFog() ?
-			environmentManager.currentGroundFogOpacity :
-			0);
+		plugin.uboGlobal.groundFogStart.set(env.groundFogStart);
+		plugin.uboGlobal.groundFogEnd.set(env.groundFogEnd);
+		plugin.uboGlobal.groundFogOpacity.set(config.groundFog() ? env.groundFogOpacity : 0);
 
 		// Lights & lightning
 		plugin.uboGlobal.lightningBrightness.set(environmentManager.getLightningBrightness());
 
 		plugin.uboGlobal.saturation.set(config.saturation() / 100f);
 		plugin.uboGlobal.contrast.set(config.contrast() / 100f);
-		plugin.uboGlobal.underwaterEnvironment.set(environmentManager.isUnderwater() ? 1 : 0);
+		plugin.uboGlobal.underwaterEnvironment.set(environmentManager.getTargetEnvironment().isUnderwater ? 1 : 0);
 		plugin.uboGlobal.underwaterCaustics.set(config.underwaterCaustics() ? 1 : 0);
-		plugin.uboGlobal.underwaterCausticsColor.set(environmentManager.currentUnderwaterCausticsColor);
-		plugin.uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
+		plugin.uboGlobal.underwaterCausticsColor.set(env.getWaterCausticsColor());
+		plugin.uboGlobal.underwaterCausticsStrength.set(env.waterCausticsStrength);
 		plugin.uboGlobal.elapsedTime.set((float) (plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
+		plugin.uboGlobal.orthographicProjection.set(plugin.orthographicProjection ? 1 : 0);
 
 		if (plugin.configColorFilter != ColorFilter.NONE) {
 			plugin.uboGlobal.colorFilter.set(plugin.configColorFilter.ordinal());
@@ -653,6 +669,7 @@ public class ZoneRenderer implements Renderer {
 			indirectDrawCmdsStaging.clear();
 		sceneCmd.reset();
 		directionalCmd.reset();
+		terrainShadowCmd.reset();
 		gapFillerCmd.reset();
 		renderState.reset();
 
@@ -751,9 +768,18 @@ public class ZoneRenderer implements Renderer {
 		final boolean shouldRenderShadows =
 			plugin.configShadowsEnabled &&
 			plugin.fboShadowMap != 0 &&
-			environmentManager.currentDirectionalStrength > 0;
+			skyRenderer.castsShadows;
 
 		if (shouldRenderShadows || shouldClearShadowFbo) {
+			if (plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0) {
+				renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTerrainShadowMap);
+				renderState.viewport.set(0, 0, plugin.terrainShadowMapResolution, plugin.terrainShadowMapResolution);
+				renderState.apply();
+
+				glClearDepth(1);
+				glClear(GL_DEPTH_BUFFER_BIT);
+			}
+
 			// Render to the shadow depth map
 			renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboShadowMap);
 			renderState.viewport.set(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
@@ -771,22 +797,44 @@ public class ZoneRenderer implements Renderer {
 
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.disable.set(GL_CULL_FACE);
-		renderState.depthFunc.set(GL_LEQUAL);
+		renderState.depthFunc.set(plugin.configShadowTransparency ? GL_LEQUAL : GL_LESS);
+		renderState.enable.set(GL_POLYGON_OFFSET_FILL);
+		renderState.polygonOffset.set(0.5f, 1.0f);
 		if (SUPPORTS_INDIRECT_DRAW)
 			renderState.ido.set(indirectDrawCmds.id);
+
 		directionalCmd.execute(renderState);
+
+		frameTimer.end(Timer.RENDER_SHADOWS);
+
+		// Render terrain-only shadow map
+		if (plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0) {
+			frameTimer.begin(Timer.RENDER_TERRAIN_SHADOWS);
+
+			renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTerrainShadowMap);
+			renderState.viewport.set(0, 0, plugin.terrainShadowMapResolution, plugin.terrainShadowMapResolution);
+			renderState.depthFunc.set(GL_LESS);
+			renderState.cullFace.set(GL_FRONT);
+			renderState.enable.set(GL_CULL_FACE);
+			renderState.apply();
+
+			terrainShadowProgram.use();
+			terrainShadowCmd.execute(renderState);
+
+			frameTimer.end(Timer.RENDER_TERRAIN_SHADOWS);
+		}
 
 		glBindVertexArray(0);
 
+		renderState.cullFace.set(GL_BACK);
+		renderState.disable.set(GL_CULL_FACE);
 		renderState.disable.set(GL_DEPTH_TEST);
+		renderState.disable.set(GL_POLYGON_OFFSET_FILL);
 
 		shouldClearShadowFbo = true;
-		frameTimer.end(Timer.RENDER_SHADOWS);
 	}
 
 	private void scenePass() {
-		sceneProgram.use();
-
 		frameTimer.begin(Timer.DRAW_SCENE);
 		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
 		if (plugin.msaaSamples > 1) {
@@ -799,33 +847,21 @@ public class ZoneRenderer implements Renderer {
 			renderState.ido.set(indirectDrawCmds.id);
 		renderState.apply();
 
-		// Clear scene
-		frameTimer.begin(Timer.CLEAR_SCENE);
-
-		float[] clearColor = { 0, 0, 0 };
-		if (!shouldRenderSkybox) {
-			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
-			pow(clearColor, fogColor, plugin.getGammaCorrection());
-		}
-		glClearColor(clearColor[0], clearColor[1], clearColor[2], 1f);
-		glClearDepth(0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		frameTimer.end(Timer.CLEAR_SCENE);
+		skyRenderer.clear(shouldRenderVanillaSkybox);
 
 		frameTimer.begin(Timer.RENDER_SCENE);
 
-		renderState.enable.set(GL_BLEND);
 		renderState.enable.set(GL_CULL_FACE);
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
 		if (!gapFillerCmd.isEmpty()) {
-			renderState.depthMask.set(false);
+			gapFillerProgram.use();
 			gapFillerCmd.execute(renderState);
-			renderState.depthMask.set(true);
 		}
 
+		sceneProgram.use();
 		sceneCmd.execute(renderState);
 
 		frameTimer.end(Timer.RENDER_SCENE);
@@ -928,6 +964,8 @@ public class ZoneRenderer implements Renderer {
 
 			frameTimer.begin(Timer.DRAW_ZONE_OPAQUE);
 			if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
+				sceneCmd.Disable(GL_BLEND);
+				z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_TERRAIN);
 				z.renderOpaque(sceneCmd, ctx, false);
 
 				if (z.hasGapFiller)
@@ -935,9 +973,14 @@ public class ZoneRenderer implements Renderer {
 			}
 
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
-			if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
-				directionalCmd.SetShader(fastShadowProgram);
-				z.renderOpaque(directionalCmd, ctx, shouldDrawRoofShadows);
+			if (skyRenderer.castsShadows && !isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
+				if (!z.onlyWater || z.modelCount > 0) {
+					directionalCmd.SetShader(fastShadowProgram);
+					z.renderOpaque(directionalCmd, ctx, shouldDrawRoofShadows);
+				}
+
+				if (plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0)
+					z.renderOpaqueLevel(terrainShadowCmd, Zone.LEVEL_TERRAIN);
 			}
 			frameTimer.end(Timer.DRAW_ZONE_OPAQUE);
 
@@ -963,6 +1006,8 @@ public class ZoneRenderer implements Renderer {
 				return;
 
 			frameTimer.begin(Timer.DRAW_ZONE_ALPHA);
+			sceneCmd.Enable(GL_BLEND);
+
 			final boolean renderWater = z.inSceneFrustum && level == 0 && z.hasWater;
 			if (renderWater)
 				z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
@@ -977,7 +1022,7 @@ public class ZoneRenderer implements Renderer {
 					z.alphaSort(zx - offset, zz - offset, sceneCamera);
 
 				final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
-				if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
+				if (skyRenderer.castsShadows && !isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 					directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
 					z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, shouldDrawRoofShadows);
 				}
@@ -1036,6 +1081,12 @@ public class ZoneRenderer implements Renderer {
 					directionalCmd.ExecuteSubCommandBuffer(ctx.vaoDirectionalCmd);
 
 					sceneCmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
+
+					if (skyRenderer.shouldRender(shouldRenderVanillaSkybox) && sceneManager.isRoot(ctx)) {
+						// Draw the sky after drawing top-level scene opaque
+						skyRenderer.appendTo(sceneCmd);
+						sceneCmd.SetShader(sceneProgram);
+					}
 					break;
 				case DrawCallbacks.PASS_ALPHA:
 					modelStreamingManager.ensureAsyncUploadsComplete(null);

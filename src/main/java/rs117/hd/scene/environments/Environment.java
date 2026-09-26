@@ -1,29 +1,38 @@
 package rs117.hd.scene.environments;
 
 import com.google.gson.annotations.JsonAdapter;
-import java.util.Objects;
 import javax.annotation.Nullable;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.areas.Area;
+import rs117.hd.scene.daylight_cycle.SkyConfiguration;
+import rs117.hd.utils.ExpressionParser;
+import rs117.hd.utils.ExpressionPredicate;
 import rs117.hd.utils.GsonUtils.DegreesToRadians;
 import rs117.hd.utils.HDUtils;
 
 import static rs117.hd.utils.ColorUtils.SrgbToLinearAdapter;
+import static rs117.hd.utils.ColorUtils.deriveAmbientLight;
 import static rs117.hd.utils.ColorUtils.rgb;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Setter(value = AccessLevel.PRIVATE)
 public class Environment {
-	public static final float[] DEFAULT_SUN_ANGLES = HDUtils.sunAngles(52, 235);
+	private static final float[] DEFAULT_SHADOW_ANGLES = HDUtils.sunAngles(52, 235);
+	private static final float[] DEFAULT_FOG_COLOR = rgb("#000000");
+	private static final float[] DEFAULT_WATER_COLOR = rgb("#66eaff");
 	public static final Environment DEFAULT = new Environment()
 		.setKey("DEFAULT")
 		.setArea(Area.ALL)
-		.setFogColor(rgb("#000000"))
-		.setWaterColor(rgb("#66eaff"))
-		.setSunAngles(DEFAULT_SUN_ANGLES)
+		.setAmbientColor(rgb("#ffffff"))
+		.setAmbientStrength(1)
+		.setFogColor(DEFAULT_FOG_COLOR)
+		.setWaterColor(DEFAULT_WATER_COLOR)
+		.setShadowAngles(DEFAULT_SHADOW_ANGLES)
 		.normalize();
 	public static final Environment NONE = new Environment()
 		.setKey("NONE")
@@ -43,65 +52,168 @@ public class Environment {
 	public boolean allowRoofShadows = true;
 	public boolean lightningEffects = false;
 	public boolean instantTransition = false;
+	@JsonAdapter(ExpressionParser.PredicateAdapter.class)
+	public ExpressionPredicate varbitCondition = ExpressionPredicate.TRUE;
+	@JsonAdapter(ExpressionParser.PredicateAdapter.class)
+	public ExpressionPredicate varpCondition = ExpressionPredicate.TRUE;
 	@JsonAdapter(SrgbToLinearAdapter.class)
-	public float[] ambientColor = rgb("#ffffff");
-	public float ambientStrength = 1;
+	@Getter
+	private float[] ambientColor;
+	public float ambientStrength = -1;
 	@JsonAdapter(SrgbToLinearAdapter.class)
-	public float[] directionalColor = rgb("#ffffff");
+	@Getter
+	private float[] directionalColor = rgb("#ffffff");
 	public float directionalStrength = .25f;
-	@Nullable
 	@JsonAdapter(SrgbToLinearAdapter.class)
-	public float[] waterColor;
+	@Getter
+	private float[] waterColor;
 	@JsonAdapter(SrgbToLinearAdapter.class)
-	public float[] waterCausticsColor;
+	@Getter
+	private float[] waterCausticsColor;
 	public float waterCausticsStrength = -1;
 	@JsonAdapter(SrgbToLinearAdapter.class)
-	public float[] underglowColor = rgb("#000000");
+	@Getter
+	private float[] underglowColor = rgb("#000000");
 	public float underglowStrength = 0;
-	@Nullable
 	@JsonAdapter(DegreesToRadians.class)
-	public float[] sunAngles; // horizontal coordinate system, in radians
-	@Nullable
+	@Getter
+	private float[] shadowAngles; // horizontal coordinate system, in radians
 	@JsonAdapter(SrgbToLinearAdapter.class)
-	public float[] fogColor;
+	@Getter
+	private float[] fogColor;
 	public float fogDepth = 25;
-	public int groundFogStart = -200;
-	public int groundFogEnd = -500;
+	public float groundFogStart = -200;
+	public float groundFogEnd = -500;
 	public float groundFogOpacity = 0;
 	@JsonAdapter(DegreesToRadians.class)
 	public float windAngle = 0.0f;
 	public float windSpeed = 15.0f;
 	public float windStrength = 0.0f;
 	public float windCeiling = 1280.0f;
+	@JsonAdapter(SkyConfiguration.Adapter.class)
+	@Nullable
+	private SkyConfiguration sky;
+	public boolean hideVanillaSkyboxes = false;
+
+	public transient boolean hasWaterColorOverride;
+	public transient boolean hasFogColorOverride;
+	private transient boolean normalized;
 
 	public Environment normalize() {
+		if (area == null)
+			area = Area.NONE;
+		if (varbitCondition == null)
+			varbitCondition = ExpressionPredicate.TRUE;
+		if (varpCondition == null)
+			varpCondition = ExpressionPredicate.TRUE;
+		if (directionalColor == null)
+			directionalColor = rgb("#ffffff");
+		directionalColor = HDUtils.ensureArrayLength(directionalColor, 3);
+		if (underglowColor == null)
+			underglowColor = rgb("#000000");
+
+		if (!normalized) {
+			hasFogColorOverride = fogColor != null;
+			hasWaterColorOverride = waterColor != null;
+		}
+		if (fogColor == null)
+			fogColor = DEFAULT_FOG_COLOR;
+		if (waterColor == null)
+			waterColor = DEFAULT_WATER_COLOR;
+
 		if (area != Area.ALL && area != Area.NONE) {
 			isOverworld = Area.OVERWORLD.intersects(area);
-			// Certain nullable fields will fall back to using the current overworld theme's values later,
-			// but for environments that aren't part of the overworld, we want to fall back to the default
-			// (underground) environment's values for any unspecified fields
-			if (!isOverworld && DEFAULT != null) {
-				sunAngles = Objects.requireNonNullElse(sunAngles, DEFAULT.sunAngles);
-				fogColor = Objects.requireNonNullElse(fogColor, DEFAULT.fogColor);
-				waterColor = Objects.requireNonNullElse(waterColor, DEFAULT.waterColor);
+			if (!isOverworld) {
+				if (!hasFogColorOverride) {
+					fogColor = DEFAULT.fogColor;
+					hasFogColorOverride = true;
+				}
+				if (!hasWaterColorOverride) {
+					waterColor = DEFAULT.waterColor;
+					hasWaterColorOverride = true;
+				}
 			}
 		}
 
-		if (sunAngles != null)
-			sunAngles = HDUtils.ensureArrayLength(sunAngles, 2);
+		if (ambientColor == null) {
+			if (isOverworld) {
+				ambientColor = new float[3];
+				deriveAmbientLight(ambientColor, directionalColor);
+			} else {
+				ambientColor = DEFAULT.ambientColor;
+			}
+		}
+		ambientColor = HDUtils.ensureArrayLength(ambientColor, 3);
+		if (ambientStrength < 0)
+			ambientStrength = isOverworld ? directionalStrength : DEFAULT.ambientStrength;
 
-		// Base water caustics on directional lighting by default
+		if (shadowAngles == null) {
+			shadowAngles = DEFAULT_SHADOW_ANGLES;
+		} else {
+			shadowAngles = HDUtils.ensureArrayLength(shadowAngles, 2);
+		}
+
 		if (waterCausticsColor == null)
 			waterCausticsColor = directionalColor;
 		if (waterCausticsStrength == -1)
 			waterCausticsStrength = directionalStrength;
+
+		fogDepth = max(0, fogDepth);
+
+		if (sky != null)
+			sky.normalize();
+
+		normalized = true;
+		return this;
+	}
+
+	public SkyConfiguration getSky() {
+		return sky != null ? sky : SkyConfiguration.DEFAULT_PRESET;
+	}
+
+	public Environment copy() {
+		var env = new Environment();
+		env.fogColor = new float[3];
+		env.waterColor = new float[3];
+		env.ambientColor = new float[3];
+		env.directionalColor = new float[3];
+		env.underglowColor = new float[3];
+		env.shadowAngles = new float[3];
+		env.waterCausticsColor = new float[3];
+		this.copyTo(env);
+		return env;
+	}
+
+	public void copyTo(Environment target) {
+		target.interpolate(this, this, 0);
+	}
+
+	public Environment interpolate(Environment from, Environment to, float t) {
+		mix(fogColor, from.fogColor, to.fogColor, t);
+		mix(waterColor, from.waterColor, to.waterColor, t);
+		mix(ambientColor, from.ambientColor, to.ambientColor, t);
+		mix(directionalColor, from.directionalColor, to.directionalColor, t);
+		mix(underglowColor, from.underglowColor, to.underglowColor, t);
+		mix(shadowAngles, from.shadowAngles, to.shadowAngles, t);
+		mix(waterCausticsColor, from.waterCausticsColor, to.waterCausticsColor, t);
+		fogDepth = mix(from.fogDepth, to.fogDepth, t);
+		ambientStrength = mix(from.ambientStrength, to.ambientStrength, t);
+		directionalStrength = mix(from.directionalStrength, to.directionalStrength, t);
+		underglowStrength = mix(from.underglowStrength, to.underglowStrength, t);
+		groundFogStart = mix(from.groundFogStart, to.groundFogStart, t);
+		groundFogEnd = mix(from.groundFogEnd, to.groundFogEnd, t);
+		groundFogOpacity = mix(from.groundFogOpacity, to.groundFogOpacity, t);
+		waterCausticsStrength = mix(from.waterCausticsStrength, to.waterCausticsStrength, t);
+		windAngle = mix(from.windAngle, to.windAngle, t);
+		windSpeed = mix(from.windSpeed, to.windSpeed, t);
+		windStrength = mix(from.windStrength, to.windStrength, t);
+		windCeiling = mix(from.windCeiling, to.windCeiling, t);
+		sky = t == 1 ? to.sky : from.sky;
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		if (key != null)
-			return key;
-		return area.name;
+		return key != null ? key : area.name;
 	}
 }

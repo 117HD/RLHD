@@ -47,9 +47,48 @@
         "type": "boolean",
         "description": "Whether transitions to and from this area should always be instant."
       },
+      "varbitCondition": {
+        "description": "Optional condition that must be true in addition to the area check. Variables are varbit gameval names; nonzero numbers are truthy, so bare names work with `&&`, `||` and `!`. Arrays match when any expression is true. Example: \"CUTSCENE_STATUS && 0 < MYQ6 && MYQ6 < 170\".",
+        "oneOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "string"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          }
+        ]
+      },
+      "varpCondition": {
+        "description": "Optional condition that must be true in addition to the area check. Variables are varplayer gameval names; nonzero numbers are truthy. Arrays match when any expression is true.",
+        "oneOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "string"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          }
+        ]
+      },
       "ambientColor": {
-        "type": [ "string", "array" ],
-        "description": "Ambient light color in sRGB, specified as a hex color code or an array in the range 0-255. Accepts decimals.",
+        "type": [
+          "string",
+          "array"
+        ],
+        "description": "Ambient light color in sRGB. In overworld environments, defaults to an approximate clear-atmosphere scattering of directionalColor; otherwise defaults to white.",
         "pattern": "^#[A-Fa-f0-9]{6}$",
         "minItems": 3,
         "maxItems": 3,
@@ -59,10 +98,14 @@
       },
       "ambientStrength": {
         "type": "number",
-        "description": "Ambient light strength multiplier. Defaults to 1."
+        "description": "Ambient light strength multiplier. In overworld environments, defaults to directionalStrength; otherwise defaults to 1.",
+        "minimum": 0
       },
       "directionalColor": {
-        "type": [ "string", "array" ],
+        "type": [
+          "string",
+          "array"
+        ],
         "description": "Directional light color in sRGB, specified as a hex color code or an array in the range 0-255. Accepts decimals.",
         "pattern": "^#[A-Fa-f0-9]{6}$",
         "minItems": 3,
@@ -76,7 +119,10 @@
         "description": "Directional light strength multiplier. Defaults to 0.25."
       },
       "waterColor": {
-        "type": [ "string", "array" ],
+        "type": [
+          "string",
+          "array"
+        ],
         "description": "Water color in sRGB, specified as a hex color code or an array in the range 0-255. Accepts decimals.",
         "pattern": "^#[A-Fa-f0-9]{6}$",
         "minItems": 3,
@@ -86,7 +132,10 @@
         }
       },
       "waterCausticsColor": {
-        "type": [ "string", "array" ],
+        "type": [
+          "string",
+          "array"
+        ],
         "description": "Water caustics color in sRGB (as hex or array). Defaults to the environment's directional light color.",
         "pattern": "^#[A-Fa-f0-9]{6}$",
         "minItems": 3,
@@ -100,7 +149,10 @@
         "description": "Water caustics strength. Defaults to the environment's directional light strength."
       },
       "underglowColor": {
-        "type": [ "string", "array" ],
+        "type": [
+          "string",
+          "array"
+        ],
         "description": "Underglow color in sRGB (as hex or array). Acts as light emanating from the ground.",
         "pattern": "^#[A-Fa-f0-9]{6}$",
         "minItems": 3,
@@ -113,10 +165,12 @@
         "type": "number",
         "description": "Underglow strength multiplier. Acts as light emanating from the ground."
       },
-      "sunAngles": {
+      "shadowAngles": {
         "type": "array",
-        "description": "The sun's altitude and azimuth specified in degrees in the horizontal coordinate system. Altitude is from the ground up, azimuth is clockwise from north.",
-        "items": [
+        "description": "Directional shadow altitude and azimuth in degrees. Altitude is from the ground up; azimuth is clockwise from north.",
+        "minItems": 2,
+        "maxItems": 2,
+        "prefixItems": [
           {
             "type": "number",
             "minimum": 0,
@@ -130,7 +184,10 @@
         ]
       },
       "fogColor": {
-        "type": [ "string", "array" ],
+        "type": [
+          "string",
+          "array"
+        ],
         "description": "Sky/fog color in sRGB, specified as a hex color code or an array in the range 0-255. Accepts decimals.",
         "pattern": "^#[A-Fa-f0-9]{6}$",
         "minItems": 3,
@@ -144,11 +201,11 @@
         "description": "Fog depth normally ranging from 0 to 100, which combined with draw distance decides the fog amount. Defaults to 25."
       },
       "groundFogStart": {
-        "type": "integer",
+        "type": "number",
         "description": "Only matters with groundFogOpacity > 0. Specified in local units (1 tile = 128 units), where zero is the lowest height, and larger negative numbers are further up. Defaults to -200."
       },
       "groundFogEnd": {
-        "type": "integer",
+        "type": "number",
         "description": "Only matters with groundFogOpacity > 0. Specified in local units (1 tile = 128 units), where zero is the lowest height, and larger negative numbers are further up. Defaults to -500."
       },
       "groundFogOpacity": {
@@ -170,6 +227,400 @@
       "windCeiling": {
         "type": "number",
         "description": "The height where the `windStrength` will be reached. The closer objects are to this height, the stronger the wind will be. Defaults to 1280 (10 tiles in height)."
+      },
+      "sky": {
+        "description": "Cycle-driven sky configuration, specified either as a preset, or as an object inheriting from a preset as its parent. Defaults to GIELINOR.",
+        "oneOf": [
+          {
+            "type": "string",
+            "enum": [
+              "GIELINOR",
+              "DAWN",
+              "SUNRISE",
+              "DAY",
+              "SUNSET",
+              "DUSK",
+              "NIGHT",
+              "BLOOD_MOON",
+              "VOID"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "parent": {
+                "type": "string",
+                "enum": [
+                  "GIELINOR",
+                  "DAWN",
+                  "SUNRISE",
+                  "DAY",
+                  "SUNSET",
+                  "DUSK",
+                  "NIGHT",
+                  "BLOOD_MOON",
+                  "VOID"
+                ]
+              },
+              "sunAngles": {
+                "$ref": "#/$defs/celestialAngles"
+              },
+              "moonAngles": {
+                "$ref": "#/$defs/celestialAngles"
+              },
+              "hideMoon": {
+                "type": "boolean",
+                "description": "Hide the moon disk, halo and default moonlight. Explicit moonlight visibility, strength or minimum illumination can retain lighting."
+              },
+              "profile": {
+                "$ref": "#/$defs/skyProfile"
+              },
+              "customGradient": {
+                "type": "boolean",
+                "description": "Use profile colors directly, without automatic fog/night replacement or sun-facing bias. Stars remain visible at any sun altitude. Defaults to false."
+              },
+              "horizonWidth": {
+                "type": "number",
+                "minimum": 0.001,
+                "maximum": 90,
+                "description": "Degrees above and below the horizon where a custom gradient reaches its zenith color. Defaults to 15."
+              },
+              "forceMoonPhase": {
+                "type": "string",
+                "description": "Moon phase to force in this area, overriding the player's setting and showing the moon even when the configured behavior is Disabled. REALISTIC forces an advancing phase even when the player has locked one; omit to use the player's setting. Only applies when the cycle is enabled.",
+                "enum": [
+                  "REALISTIC",
+                  "NEW_MOON",
+                  "WAXING_CRESCENT",
+                  "FIRST_QUARTER",
+                  "WAXING_GIBBOUS",
+                  "FULL_MOON",
+                  "WANING_GIBBOUS",
+                  "LAST_QUARTER",
+                  "WANING_CRESCENT"
+                ]
+              },
+              "moonDirectionalStrength": {
+                "type": "number",
+                "description": "Directional moonlight strength. Defaults to `moonDiskStrength`. Only applies while the daylight cycle is active.",
+                "minimum": 0
+              },
+              "moonAmbientStrength": {
+                "type": "number",
+                "description": "Atmospheric ambient moonlight strength. Defaults to `moonDirectionalStrength`. Only applies while the daylight cycle is active.",
+                "minimum": 0
+              },
+              "moonShadowStrength": {
+                "type": "number",
+                "description": "Moon shadow contrast multiplier, clamped to 0-1. Defaults to 1. Blurred directional light is transferred into ambient independently of the atmospheric ambient contribution. Does not affect sunlight.",
+                "minimum": 0
+              },
+              "minMoonIllumination": {
+                "type": "number",
+                "description": "Minimum illumination for scene lighting, including when hideMoon is true. Defaults to 0; does not affect the disk's phase.",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "moonDiskColor": {
+                "type": [
+                  "string",
+                  "array"
+                ],
+                "description": "Moon-disk color in sRGB, specified as a hex color code or an array in the range 0-255. Controls the disk and glow. Defaults to cool silver (~8000K).",
+                "pattern": "^#[A-Fa-f0-9]{6}$",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "number"
+                }
+              },
+              "moonDirectionalColor": {
+                "type": [
+                  "string",
+                  "array"
+                ],
+                "description": "Final directional moonlight color in sRGB. Defaults to moonDiskColor with a luminance-preserving cool tint approximating mesopic vision.",
+                "pattern": "^#[A-Fa-f0-9]{6}$",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "number"
+                }
+              },
+              "moonAmbientColor": {
+                "type": [
+                  "string",
+                  "array"
+                ],
+                "description": "Final ambient moonlight color in sRGB. Defaults to clear-atmosphere scattering of directional moonlight, undoing its mesopic tint before scattering and reapplying it afterward.",
+                "pattern": "^#[A-Fa-f0-9]{6}$",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "number"
+                }
+              },
+              "moonDiskStrength": {
+                "type": "number",
+                "description": "Lit moon-disk brightness multiplier. Defaults to 1.",
+                "minimum": 0
+              },
+              "nightAmbientColor": {
+                "type": [ "string", "array" ],
+                "description": "Constant artistic airglow/starlight ambient color in sRGB while the cycle is active, independent of moonlight and daytime environment strength. Defaults to black.",
+                "pattern": "^#[A-Fa-f0-9]{6}$",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "number"
+                }
+              },
+              "nightAmbientStrength": {
+                "type": "number",
+                "description": "Linear multiplier for nightAmbientColor before exposure adaptation. Defaults to 1; 0 disables the baseline.",
+                "minimum": 0
+              },
+              "skyFogColor": {
+                "type": [
+                  "string",
+                  "array"
+                ],
+                "description": "Fog color in sRGB. Omit to follow the sky's horizon color. Blends with that color using skyFogColorMix.",
+                "pattern": "^#[A-Fa-f0-9]{6}$",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "number"
+                }
+              },
+              "skyFogColorMix": {
+                "type": "number",
+                "description": "Color blend: 0 follows the horizon color; 1 uses skyFogColor. Defaults to 1. Does not change fog opacity.",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "skyFogDensity": {
+                "type": "number",
+                "description": "Horizon optical depth: 0 disables horizon fog; 0.69 halves transmission at the horizon. Fades upward. Defaults to 0.16 + environment fogDepth / 100; ground fog is independent.",
+                "minimum": 0
+              },
+              "skyVisibility": {
+                "type": "number",
+                "description": "Transmission through uniform sky haze: 1 is clear; 0.25 lets 25% of linear light through; 0 is opaque. Multiplies the transmission through horizon fog. Affects the sky and all celestial objects.",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "moonVisibility": {
+                "type": "number",
+                "description": "Moon disk and halo visibility multiplier (0 to 1). Defaults to 1; it does not affect moonlight or shadows.",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "moonLightVisibility": {
+                "type": "number",
+                "description": "Moonlight multiplier. -1 (default) follows hideMoon; explicit 0-1 values override it. minMoonIllumination still provides a floor before this multiplier.",
+                "minimum": -1,
+                "maximum": 1
+              },
+              "starVisibility": {
+                "type": "number",
+                "description": "Star visibility multiplier for this area (0 to 1). Defaults to 1. Stars still appear only at night and fade with daylight.",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "nebulaVisibility": {
+                "type": "number",
+                "description": "Nebula visibility multiplier (0 to 1). Defaults to 1. Cannot enable nebulae when the Nebulae option is off.",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "auroraVisibility": {
+                "type": "number",
+                "description": "Aurora brightness multiplier (0 to 1), before sky fog. Defaults to 1. Auroras appear only during aurora events and fade with daylight.",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "moonSizeMult": {
+                "type": "number",
+                "description": "Moon size multiplier for this area. Scales the disk, glow and star-occlusion mask. Defaults to 1.",
+                "minimum": 0
+              },
+              "starHorizonHeight": {
+                "type": "number",
+                "description": "Night-sky horizon height, where stars, nebulae, shooting stars and the moon fade into fog. 1 (default) is just above the horizon; 0 removes the horizon line; 2 hides the night sky at the zenith. Does not affect brightness.",
+                "minimum": 0,
+                "maximum": 2
+              },
+              "sunStrength": {
+                "type": "number",
+                "description": "Procedural sun strength for the sky gradient (0 to 1). Defaults to 1. Lower values favor `fogColor` by day and the night sky after sunset, and suppress the sun glow. Does not affect directional light; use `sunlightStrength` for that.",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "sunriseSunsetStrength": {
+                "type": "number",
+                "description": "Procedural sunrise/sunset strength for the sky gradient (0 to 1). Defaults to 1. Lower values retain `fogColor` around sunrise and sunset and fade the sun glow. Does not affect directional light.",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "skyColorTakeoverAngle": {
+                "type": "number",
+                "description": "Sun altitude in degrees where `fogColor` fully replaces the procedural sky gradient. Lower values shorten the low-sun gradient; 0 replaces it at the horizon. Defaults to 40.",
+                "minimum": 0,
+                "maximum": 90
+              }
+            }
+          }
+        ]
+      },
+      "hideVanillaSkyboxes": {
+        "type": "boolean",
+        "description": "Whether to hide the game's built-in skybox models in this area so the daylight cycle's sky is shown. Requires the 'Override Vanilla Skyboxes' option. Defaults to false."
+      }
+    }
+  },
+  "$defs": {
+    "celestialAngles": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "prefixItems": [
+        {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 360
+        }
+      ]
+    },
+    "skyGradientKeyframes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "altitude",
+          "color"
+        ],
+        "properties": {
+          "altitude": {
+            "type": "number",
+            "description": "Sun altitude in degrees. Keyframes must be ordered from low to high altitude."
+          },
+          "color": {
+            "type": [
+              "string",
+              "array"
+            ],
+            "description": "sRGB color, specified as a hex code or an array in the range 0-255.",
+            "pattern": "^#[A-Fa-f0-9]{6}$",
+            "minItems": 3,
+            "maxItems": 3,
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "skyLightingScalarKeyframes": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "altitude",
+          "value"
+        ],
+        "properties": {
+          "altitude": {
+            "type": "number",
+            "description": "Sun altitude in degrees. Keyframes must be ordered from low to high altitude."
+          },
+          "value": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "skyLightingColorKeyframes": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "altitude",
+          "color"
+        ],
+        "properties": {
+          "altitude": {
+            "type": "number",
+            "description": "Sun altitude in degrees. Keyframes must be ordered from low to high altitude."
+          },
+          "color": {
+            "type": [
+              "string",
+              "array"
+            ],
+            "description": "sRGB color, specified as a hex code or an array in the range 0-255.",
+            "pattern": "^#[A-Fa-f0-9]{6}$",
+            "minItems": 3,
+            "maxItems": 3,
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "skyProfile": {
+      "type": "object",
+      "description": "Sky colors and lighting curves keyed by sun altitude.",
+      "additionalProperties": false,
+      "properties": {
+        "zenith": {
+          "$ref": "#/$defs/skyGradientKeyframes"
+        },
+        "horizon": {
+          "$ref": "#/$defs/skyGradientKeyframes"
+        },
+        "sunGlow": {
+          "$ref": "#/$defs/skyGradientKeyframes"
+        },
+        "directionalTemperature": {
+          "$ref": "#/$defs/skyLightingScalarKeyframes"
+        },
+        "regionalBlend": {
+          "$ref": "#/$defs/skyLightingScalarKeyframes"
+        },
+        "nightSkyColor": {
+          "type": [
+            "string",
+            "array"
+          ],
+          "pattern": "^#[A-Fa-f0-9]{6}$",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number"
+          }
+        },
+        "directionalBaseTemperature": {
+          "type": "number",
+          "minimum": 1000
+        },
+        "directionalBaseStrength": {
+          "type": "number",
+          "minimum": 0
+        }
       }
     }
   }

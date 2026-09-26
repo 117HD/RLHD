@@ -59,7 +59,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     float viewDotNormals = dot(viewDir, normals);
 
     vec2 distortion = uvFlow * .00075;
-    float shadow = sampleShadowMap(IN.position, distortion, lightDotNormals);
+    float shadow = sampleShadowMap(IN.position, distortion, vec3(0.0));
     float inverseShadow = 1 - shadow;
 
     vec3 vSpecularStrength = vec3(waterType.specularStrength);
@@ -90,7 +90,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     calculateLighting(IN.position, normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength, pointLightsOut, pointLightsSpecularOut);
 
     // sky light
-    vec3 skyLightColor = fogColor.rgb;
+    vec3 skyLightColor = fogColor;
     float skyLightStrength = 0.5;
     float skyDotNormals = downDotNormals;
     vec3 skyLightOut = max(skyDotNormals, 0.0) * skyLightColor * skyLightStrength;
@@ -143,7 +143,6 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     vec3 specularComposite = mix(lightSpecularOut, vec3(0.0), foamAmount);
     float flatFresnel = (1.0 - dot(viewDir, vec3(0, -1, 0))) * 1.0;
     finalFresnel = max(finalFresnel, flatFresnel);
-    finalFresnel -= finalFresnel * shadow * 0.2;
     baseColor += pointLightsSpecularOut + lightSpecularOut / 3;
 
     float alpha = max(waterType.baseOpacity, max(foamAmount, max(finalFresnel, length(specularComposite / 3))));

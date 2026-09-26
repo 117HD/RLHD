@@ -14,6 +14,12 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 		super.initialize();
 	}
 
+	// Ordered by frequency of updates, from least to most frequent
+
+	public Property colorPicker = addProperty(PropertyType.FVec4, "colorPicker");
+
+	public Property orthographicProjection = addProperty(PropertyType.Int, "orthographicProjection");
+
 	public Property expandedMapLoadingChunks = addProperty(PropertyType.Int, "expandedMapLoadingChunks");
 	public Property drawDistance = addProperty(PropertyType.Float, "drawDistance");
 
@@ -25,6 +31,7 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public Property colorFilter = addProperty(PropertyType.Int, "colorFilter");
 	public Property colorFilterFade = addProperty(PropertyType.Float, "colorFilterFade");
 
+	public Property viewportSize = addProperty(PropertyType.IVec2, "viewportSize");
 	public Property sceneResolution = addProperty(PropertyType.IVec2, "sceneResolution");
 	public Property tiledLightingResolution = addProperty(PropertyType.IVec2, "tiledLightingResolution");
 
@@ -60,6 +67,8 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public Property projectionMatrix = addProperty(PropertyType.Mat4, "projectionMatrix");
 	public Property invProjectionMatrix = addProperty(PropertyType.Mat4, "invProjectionMatrix");
 	public Property lightProjectionMatrix = addProperty(PropertyType.Mat4, "lightProjectionMatrix");
+	public Property invLightProjectionMatrix = addProperty(PropertyType.Mat4, "invLightProjectionMatrix");
+	public Property shadowBiasScale = addProperty(PropertyType.Float, "shadowBiasScale");
 
 	public Property lightningBrightness = addProperty(PropertyType.Float, "lightningBrightness");
 	public Property elapsedTime = addProperty(PropertyType.Float, "elapsedTime");

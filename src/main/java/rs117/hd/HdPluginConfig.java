@@ -36,12 +36,15 @@ import rs117.hd.config.ColorBlindMode;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
 import rs117.hd.config.CpuUsageLimit;
+import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DefaultBoolean;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.GroundBlending;
 import rs117.hd.config.InfernalCape;
+import rs117.hd.config.MoonBehavior;
+import rs117.hd.config.MoonPhase;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SceneScalingMode;
 import rs117.hd.config.SeasonalHemisphere;
@@ -51,6 +54,7 @@ import rs117.hd.config.ShadowDistance;
 import rs117.hd.config.ShadowFiltering;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.ShadowResolution;
+import rs117.hd.config.StarMode;
 import rs117.hd.config.TextureResolution;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
@@ -58,6 +62,7 @@ import rs117.hd.config.VanillaShadowMode;
 import static rs117.hd.HdPlugin.MAX_DISTANCE;
 import static rs117.hd.HdPlugin.MAX_FOG_DEPTH;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.scene.SkyManager.DEFAULT_LATLON;
 import static rs117.hd.utils.MathUtils.*;
 
 @ConfigGroup(CONFIG_GROUP)
@@ -421,14 +426,16 @@ public interface HdPluginConfig extends Config
 		name = "Shadow filtering",
 		description =
 			"Filtering technique used when smoothing the edges of shadows.<br>" +
-			"'Smooth' smooths the shadow pixels evenly (PCF 3x3).<br>" +
-			"'Dithered' smooths out pixelation using dithering.<br>" +
+			"'Smooth Low' smooths the shadow pixels evenly (PCF 2x2).<br>" +
+			"'Smooth High' smooths the shadow pixels evenly (PCF 3x3).<br>" +
+			"'Dithered Low' smooths out pixelation using dithering.<br>" +
+			"'Dithered High' smooths out pixelation using dithering (PCF 2x2).<br>" +
 			"'Pixelated' retains slightly pixelated shadow edges.",
 		position = 3,
 		section = shadowSettings
 	)
 	default ShadowFiltering shadowFiltering() {
-		return ShadowFiltering.SMOOTH;
+		return ShadowFiltering.SMOOTH_HIGH;
 	}
 
 	String KEY_SHADOW_TRANSPARENCY = "enableShadowTransparency";
@@ -467,6 +474,18 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean expandShadowDraw() {
 		return false;
+	}
+
+	String KEY_TERRAIN_SHADOWS = "terrainShadows";
+	@ConfigItem(
+		keyName = KEY_TERRAIN_SHADOWS,
+		name = "Terrain Shadows",
+		description = "Allow terrain to cast shadows. May cause visual artifacts on slopes.",
+		position = 7,
+		section = shadowSettings
+	)
+	default boolean terrainShadows() {
+		return true;
 	}
 
 
@@ -584,12 +603,188 @@ public interface HdPluginConfig extends Config
 	}
 
 
+	/*====== Day & night settings ======*/
+
+	@ConfigSection(
+		name = "Day & night",
+		description = "Daylight cycle settings",
+		position = 3,
+		closedByDefault = true
+	)
+	String daylightCycleSettings = "daylightCycleSettings";
+
+	String KEY_DAYLIGHT_CYCLE = "daylightCycle";
+	@ConfigItem(
+		keyName = KEY_DAYLIGHT_CYCLE,
+		name = "Cycle mode",
+		description =
+			"Controls the day & night cycle behavior.<br>" +
+			"'Off' disables the day & night cycle entirely.<br>" +
+			"'Default' everyone sees the same sky, with a full day passing per hour.<br>" +
+			"'Real-Time' follows your local time, roughly matching the real sun in your hemisphere.<br>" +
+			"'Custom' follows the sun and moon at the configured location, respecting the Custom duration.<br>" +
+			"'Dawn' shows the sky just before sunrise.<br>" +
+			"'Sunrise' shows a constant sunrise.<br>" +
+			"'Day' shows constant daytime.<br>" +
+			"'Sunset' shows a constant sunset.<br>" +
+			"'Dusk' shows the sky just after sunset.<br>" +
+			"'Night' shows constant night-time.",
+		position = 0,
+		section = daylightCycleSettings
+	)
+	default DaylightCycle daylightCycle() {
+		return DaylightCycle.DEFAULT;
+	}
+
+	String KEY_NIGHT_ADAPTATION = "nightAdaptation";
+	@Range(min = 0, max = 300)
+	@Units(Units.PERCENT)
+	@ConfigItem(
+		keyName = KEY_NIGHT_ADAPTATION,
+		name = "Night adaptation",
+		description =
+			"Simulates your eyes adapting to darkness by brightening night-time lighting.<br>" +
+			"'0%' disables adaptation entirely.<br>" +
+			"'100%' yields good visibility.<br>" +
+			"Values above 100% amplify the adjustment further, if needed.",
+		position = 1,
+		section = daylightCycleSettings
+	)
+	default int nightBrightness() {
+		return 100;
+	}
+
+	String KEY_STARS = "stars";
+	@ConfigItem(
+		keyName = KEY_STARS,
+		name = "Stars",
+		description =
+			"'Off' hides stars.<br>" +
+			"'Realistic' follows the sky's celestial rotation.<br>" +
+			"'Artistic' rotates horizontally with slight parallax.<br>" +
+			"'Static' keeps the realistic star field fixed in place.",
+		position = 2,
+		section = daylightCycleSettings
+	)
+	default StarMode starMode() {
+		return StarMode.REALISTIC;
+	}
+
+	String KEY_NEBULAE = "nebulae";
+	@ConfigItem(
+		keyName = KEY_NEBULAE,
+		name = "Nebulae",
+		description = "Show nebulae in the night sky",
+		position = 3,
+		section = daylightCycleSettings
+	)
+	default boolean enableNebulae() {
+		return true;
+	}
+
+	String KEY_MOON_BEHAVIOR = "moonBehavior";
+	@ConfigItem(
+		keyName = KEY_MOON_BEHAVIOR,
+		name = "Moon behavior",
+		description =
+			"Controls how the moon moves across the sky.<br>" +
+			"'Disabled' hides the moon, keeping half-moon illumination for scene lighting.<br>" +
+			"'Realistic' makes the moon orbit naturally, independent of the sun.<br>" +
+			"'Mirror the sun' keeps the moon at the opposite side of the sun.<br>" +
+			"'Static' keeps the moon at a fixed point in the sky.",
+		position = 4,
+		section = daylightCycleSettings
+	)
+	default MoonBehavior moonBehavior() {
+		return MoonBehavior.REALISTIC;
+	}
+
+	String KEY_MOON_PHASE = "moonPhase";
+	@ConfigItem(
+		keyName = KEY_MOON_PHASE,
+		name = "Moon phase",
+		description =
+			"Controls the portion of the moon which is lit by the sun.<br>" +
+			"'Dynamic' lights up the moon based on its position relative to the sun.<br>" +
+			"All other options lock the moon in a particular lunar phase.",
+		position = 5,
+		section = daylightCycleSettings
+	)
+	default MoonPhase moonPhase() {
+		return MoonPhase.DYNAMIC;
+	}
+
+	String KEY_REPLACE_VANILLA_SKYBOXES = "replaceVanillaSkyboxes";
+	@ConfigItem(
+		keyName = KEY_REPLACE_VANILLA_SKYBOXES,
+		name = "Replace vanilla skyboxes",
+		description = "Replace the game's built-in skybox models with 117 HD's own implementation.",
+		position = 6,
+		section = daylightCycleSettings
+	)
+	default boolean replaceVanillaSkyboxes() {
+		return true;
+	}
+
+	String KEY_CUSTOM_CYCLE_DURATION = "customCycleDurationMinutes";
+	@Range(min = 1)
+	@Units(Units.MINUTES)
+	@ConfigItem(
+		keyName = KEY_CUSTOM_CYCLE_DURATION,
+		name = "Custom cycle duration",
+		description = "Configures how long each Custom day & night cycle lasts.",
+		position = 7,
+		section = daylightCycleSettings
+	)
+	default double customCycleDurationMinutes() {
+		return 60;
+	}
+
+	String KEY_LATITUDE_DEGREES = "latitudeDegrees";
+	@Range(min = -90, max = 90)
+	@Units("°")
+	@ConfigItem(
+		keyName = KEY_LATITUDE_DEGREES,
+		name = "Real-time latitude",
+		description =
+			"<b>Advanced setting</b>: Change the latitude coordinate for realistic sun and moon movement for a location on Earth.<br>" +
+			"Only applies to Real-Time and Custom Realistic cycle modes. Defaults to Jagex's offices in Cambridge, England.<br>" +
+			"For southern latitudes, use negative values. For higher precision than to within a few minutes, you can provide<br>" +
+			"coordinates including decimals in the in-game chat with: <b>::117hd latlon &lt;latitude&gt; &lt;longitude&gt;</b><br>" +
+			"To revert back to using the values specified in the config panel, type: <b>::117hd latlon reset</b>",
+		position = 9,
+		section = daylightCycleSettings
+	)
+	default int latitudeDegrees() {
+		return (int) DEFAULT_LATLON[0];
+	}
+
+	String KEY_LONGITUDE_DEGREES = "longitudeDegrees";
+	@Range(min = -180, max = 180)
+	@Units("°")
+	@ConfigItem(
+		keyName = KEY_LONGITUDE_DEGREES,
+		name = "Real-time longitude",
+		description =
+			"<b>Advanced setting</b>: Change the longitude coordinate for realistic sun and moon movement for a location on Earth.<br>" +
+			"Only applies to Real-Time and Custom Realistic cycle modes. Defaults to Jagex's offices in Cambridge, England.<br>" +
+			"For western longitudes, use negative values. For higher precision than to within a few minutes, you can provide<br>" +
+			"coordinates including decimals in the in-game chat with: <b>::117hd latlon &lt;latitude&gt; &lt;longitude&gt;</b><br>" +
+			"To revert back to using the values specified in the config panel, type: <b>::117hd latlon reset</b>",
+		position = 10,
+		section = daylightCycleSettings
+	)
+	default int longitudeDegrees() {
+		return (int) DEFAULT_LATLON[1];
+	}
+
+
 	/*====== Environment settings ======*/
 
 	@ConfigSection(
 		name = "Environment",
 		description = "Environment settings",
-		position = 3,
+		position = 4,
 		closedByDefault = true
 	)
 	String environmentSettings = "environmentSettings";
@@ -821,7 +1016,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Miscellaneous",
 		description = "Miscellaneous settings",
-		position = 4,
+		position = 5,
 		closedByDefault = true
 	)
 	String miscellaneousSettings = "miscellaneousSettings";
@@ -975,7 +1170,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Legacy",
 		description = "Legacy options. If you dislike a change, you might find an option to change it back here.",
-		position = 5,
+		position = 6,
 		closedByDefault = true
 	)
 	String legacySettings = "legacySettings";
@@ -1128,7 +1323,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Experimental",
 		description = "Experimental features - if you're experiencing issues you should consider disabling these.",
-		position = 6,
+		position = 7,
 		closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";
@@ -1259,4 +1454,12 @@ public interface HdPluginConfig extends Config
 	default int getPluginUpdateMessage() {
 		return 0;
 	}
+
+	String KEY_PRECISE_LATITUDE_LONGITUDE = "preciseLatitudeLongitude";
+	@ConfigItem(keyName = KEY_PRECISE_LATITUDE_LONGITUDE, hidden = true, name = "", description = "")
+	default String preciseLatLon() {
+		return "";
+	}
+	@ConfigItem(keyName = KEY_PRECISE_LATITUDE_LONGITUDE, hidden = true, name = "", description = "")
+	void setPreciseLatLon(String coordinates);
 }

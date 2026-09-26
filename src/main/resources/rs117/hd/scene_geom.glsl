@@ -92,11 +92,7 @@ void main() {
 
         OUT.position = pos.xyz;
         OUT.uv = vUv[i].xy;
-        #if FLAT_SHADING
-            OUT.normal = N;
-        #else
-            OUT.normal = length(normal) == 0 ? N : normalize(normal);
-        #endif
+        OUT.normal = length(normal) == 0 ? N : normalize(normal);
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
 
