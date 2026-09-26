@@ -102,18 +102,12 @@ void main() {
 
         float moonDot = dot(viewDir, moonDir);
 
-        // Daylight lowers lunar contrast rather than making the disk transparent.
-        // Scale against the local sky brightness so the moon remains subtly visible
-        // in daytime, but naturally becomes prominent as the sky darkens.
-        float skyLuminance = linearSrgbLuminance(skyColorPreStars);
-        float moonDayVisibility = 1.0 / (1.0 + skyLuminance * 10.0);
-
         // Suppress lunar contrast only near overlap of the artistically enlarged disks.
         const float moonBaseRadius = 0.03317f;
         float overlapRadius = sunRadius + moonBaseRadius * uboSky.moonSizeMult;
         float sunMoonDot = dot(moonDir, sky.sunDir);
         float sunProximityFade = 1.0 - smoothstep(cos(overlapRadius * 1.1), cos(overlapRadius * 0.5), sunMoonDot);
-        moonDayVisibility *= sunProximityFade;
+        float moonDayVisibility = sunProximityFade;
 
         if (moonDot > 0.0 && moonDayVisibility > 0.001) {
             // Deliberately enlarged ~1.9° moon radius, scaled per environment.
@@ -289,15 +283,19 @@ void main() {
                 // Ejecta raise reflectance toward the same peak.
                 float surfaceContrast = smoothstep(0.65, 1.0, surfaceNoise);
                 float surfaceDetail = mix(0.14, 1.0, surfaceContrast);
-                vec3 moonBrightSide = moonDarkSide + uboSky.moonDiskColor * surfaceDetail;
-
-                // Keep the disk opaque so stars and the sky gradient cannot show through crescents.
-                vec3 moonColor = mix(moonDarkSide, moonBrightSide, isLit * moonDayVisibility);
-                moonCompositeColor = applySkyFog(moonColor, fogTransmittance);
-                vec3 toneMappedMoon = softClipColor(tonemap_hue_preserving(moonCompositeColor));
-                // Remove the moon-only tone mapping with the light it operates on, so an
-                // entirely obscured disk converges to the same fog color as its surroundings.
-                moonCompositeColor = mix(moonCompositeColor, toneMappedMoon, fogTransmittance);
+                vec3 moonLight = uboSky.moonDiskColor * surfaceDetail * isLit * fogTransmittance;
+                vec3 background = applySkyFog(moonDarkSide, fogTransmittance);
+                // Let atmospheric brightness influence compression without its hue shifting
+                // the lunar contribution toward the complementary color of a sunset.
+                vec3 neutralBackground = vec3(linearSrgbLuminance(background));
+                vec3 mappedBackground = softClipColor(tonemap_hue_preserving(neutralBackground));
+                vec3 mappedMoon = softClipColor(tonemap_hue_preserving(neutralBackground + moonLight));
+                // Anchor the selective tone map to the unchanged atmosphere. No lunar light
+                // then means exactly the background, including when fog obscures the disk.
+                // Gamut compression can reduce individual channels; lunar light cannot.
+                vec3 moonContribution = max(mappedMoon - mappedBackground, vec3(0.0));
+                // Fade after compression so HDR highlights cannot undo the daytime fade.
+                moonCompositeColor = background + moonContribution * moonDayVisibility;
 
                 // Fade moon near the horizon to match the star/nebula horizon fade
                 float moonHorizonFade = nightSkyHorizonFade(sky.upAmount, horizonShift);
