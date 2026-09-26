@@ -282,8 +282,8 @@ public class SkyRenderer {
 			multiply(directionalLight, directionalLight, factor);
 		}
 		float effectiveAmbientStrength = linearSrgbLuminance(ambientLight);
-		divide(ambientLight, ambientLight, effectiveAmbientStrength);
 		float effectiveDirectionalStrength = linearSrgbLuminance(directionalLight);
+		divide(ambientLight, ambientLight, effectiveAmbientStrength);
 		divide(directionalLight, directionalLight, effectiveDirectionalStrength);
 		castsShadows = effectiveDirectionalStrength > 0;
 		ubo.ambientStrength.set(effectiveAmbientStrength);

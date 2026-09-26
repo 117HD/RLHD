@@ -279,10 +279,8 @@ public final class MathUtils {
 	}
 
 	public static float[] divide(float[] out, float[] a, float... b) {
-		for (int i = 0; i < out.length; i++) {
-			float divisor = b[i % b.length];
-			out[i] = a[i % a.length] * (divisor == 0 ? 0 : 1 / divisor);
-		}
+		for (int i = 0; i < out.length; i++)
+			out[i] = divide(a[i % a.length], b[i % b.length]);
 		return out;
 	}
 
