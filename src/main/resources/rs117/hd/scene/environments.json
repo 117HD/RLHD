@@ -658,7 +658,8 @@
     "windSpeed": 10,
     "windStrength": 30,
     "sky": {
-      "moonDiskColor": "#FF0000",
+      "moonDiskColor": "#FF3D25",
+	  "moonDiskStrength": 2,
       "skyVisibility": 0.32,
       "auroraVisibility": 0,
       "sunStrength": 0.02,
@@ -1817,7 +1818,6 @@
     "windSpeed": 15,
     "windStrength": 50,
     "sky": {
-      "moonDirectionalStrength": 2,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.13,
       "profile": {
@@ -2919,7 +2919,6 @@
     "windStrength": 50,
     "fogColor": "#330D0D",
     "sky": {
-      "moonDirectionalStrength": 3,
       "skyVisibility": 0.8,
       "auroraVisibility": 0,
       "sunStrength": 0.075,
