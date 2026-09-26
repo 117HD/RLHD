@@ -72,8 +72,8 @@ public class SkyRenderer {
 
 	private final CommandBuffer commandBuffer = new CommandBuffer("Sky");
 	private final RenderState localRenderState = new RenderState();
-	private final float[] directionalColor = new float[3];
-	private final float[] ambientColor = new float[3];
+	private final float[] directionalLight = new float[3];
+	private final float[] ambientLight = new float[3];
 	private final float[] waterColor = new float[3];
 	private final float[] endpointFogColor = new float[3];
 	private final SkyState.LightingSample endpointSample = new SkyState.LightingSample();
@@ -84,23 +84,21 @@ public class SkyRenderer {
 	private float previousTransition = 1;
 	private boolean interruptedTransition;
 	private final float[] fogColor = new float[3];
-	private float directionalStrength;
-	private float ambientStrength;
 	private boolean skyEnabled;
 	public boolean castsShadows;
 	public boolean usesMoonShadows;
 
 	private static final class LightingFrame extends GradientSample {
-		private final float[] ambient = new float[3];
-		private final float[] directional = new float[3];
+		private final float[] directionalLight = new float[3];
+		private final float[] ambientLight = new float[3];
+		private final float[] sunDirectionalLight = new float[3];
+		private final float[] moonDirectionalLight = new float[3];
 		private final float[] fog = new float[3];
 		private final float[] moonDisk = new float[3];
 		private final SkyConfiguration configuration = new SkyConfiguration();
 		private float fogDensity;
 		private float visibility;
 		private float customGradient;
-		private float ambientStrength;
-		private float directionalStrength;
 		private float moonShadowFade;
 		private float adaptationLuminance;
 
@@ -111,13 +109,10 @@ public class SkyRenderer {
 		}
 
 		private void interpolate(LightingFrame from, LightingFrame to, float t) {
-			ambientStrength = mix(from.ambientStrength, to.ambientStrength, t);
-			directionalStrength = mix(from.directionalStrength, to.directionalStrength, t);
 			moonShadowFade = mix(from.moonShadowFade, to.moonShadowFade, t);
 			adaptationLuminance = mix(from.adaptationLuminance, to.adaptationLuminance, t);
-			// Weight colors by their contributions without taking a potentially overflowing reciprocal.
-			mix(ambient, from.ambient, to.ambient, ambientStrength > 0 ? to.ambientStrength * t / ambientStrength : t);
-			mix(directional, from.directional, to.directional, directionalStrength > 0 ? to.directionalStrength * t / directionalStrength : t);
+			mix(directionalLight, from.directionalLight, to.directionalLight, t);
+			mix(ambientLight, from.ambientLight, to.ambientLight, t);
 			mix(fog, from.fog, to.fog, t);
 			mix(moonDisk, from.moonDisk, to.moonDisk, t);
 			mix(zenithLinear, from.zenithLinear, to.zenithLinear, t);
@@ -172,12 +167,12 @@ public class SkyRenderer {
 		skyEnabled = skyManager.getState().cycleActive;
 
 		Environment env = environmentManager.getCurrentEnvironment();
-		copyTo(directionalColor, env.getDirectionalColor());
-		copyTo(ambientColor, env.getAmbientColor());
+		copyTo(directionalLight, env.getDirectionalColor());
+		multiply(directionalLight, directionalLight, env.directionalStrength);
+		copyTo(ambientLight, env.getAmbientColor());
+		multiply(ambientLight, ambientLight, env.ambientStrength);
 		copyTo(waterColor, env.getWaterColor());
 		copyTo(fogColor, env.getFogColor());
-		directionalStrength = env.directionalStrength;
-		ambientStrength = env.ambientStrength;
 
 		if (skyEnabled)
 			updateSky(skyManager.getState());
@@ -276,18 +271,20 @@ public class SkyRenderer {
 		ubo.waterColorMid.set(linearToSrgb(ColorUtils.hsvToSrgb(waterColorHsv[0], waterColorHsv[1], waterColorHsv[2] * .45f)));
 		ubo.waterColorDark.set(linearToSrgb(ColorUtils.hsvToSrgb(waterColorHsv[0], waterColorHsv[1], waterColorHsv[2] * .05f)));
 
-		float effectiveAmbientStrength = ambientStrength;
-		float effectiveDirectionalStrength = directionalStrength;
 		if (config.useLegacyBrightness()) {
 			float factor = (float) config.legacyBrightness() / 20;
-			effectiveAmbientStrength *= factor;
-			effectiveDirectionalStrength *= factor;
+			multiply(ambientLight, ambientLight, factor);
+			multiply(directionalLight, directionalLight, factor);
 		}
+		float effectiveAmbientStrength = linearSrgbLuminance(ambientLight);
+		divide(ambientLight, ambientLight, effectiveAmbientStrength);
+		float effectiveDirectionalStrength = linearSrgbLuminance(directionalLight);
+		divide(directionalLight, directionalLight, effectiveDirectionalStrength);
 		castsShadows = effectiveDirectionalStrength > 0;
 		ubo.ambientStrength.set(effectiveAmbientStrength);
-		ubo.ambientColor.set(ambientColor);
+		ubo.ambientColor.set(ambientLight);
 		ubo.lightStrength.set(effectiveDirectionalStrength);
-		ubo.lightColor.set(directionalColor);
+		ubo.lightColor.set(directionalLight);
 	}
 
 	private void updateSky(SkyState state) {
@@ -307,14 +304,18 @@ public class SkyRenderer {
 			currentFrame.interpolate(toFrame, toFrame, 1);
 		}
 		previousTransition = transition;
-		// Blend linear-light contributions, including strength, before encoding the global UBO.
-		copyTo(directionalColor, currentFrame.directional);
-		copyTo(ambientColor, currentFrame.ambient);
-		directionalStrength = currentFrame.directionalStrength;
-		ambientStrength = currentFrame.ambientStrength;
+		// Blend complete HDR light contributions before encoding the global UBO.
+		copyTo(directionalLight, currentFrame.directionalLight);
+		copyTo(ambientLight, currentFrame.ambientLight);
 		float exposure = getNightExposure(currentFrame.adaptationLuminance, state.sunAltitudeDegrees);
-		ambientStrength *= exposure;
-		directionalStrength *= exposure;
+		log.debug(
+			"ambientLight: {}, directionalLight: {}, exposure: {}",
+			ambientLight,
+			directionalLight,
+			exposure
+		);
+		multiply(ambientLight, ambientLight, exposure);
+		multiply(directionalLight, directionalLight, exposure);
 		usesMoonShadows = currentFrame.moonShadowFade > 0;
 		copyTo(fogColor, currentFrame.horizonLinear);
 		copyTo(waterColor, currentFrame.horizonLinear);
@@ -336,12 +337,11 @@ public class SkyRenderer {
 		{
 			SkyProfile profile = sky.profile;
 			float regionalBlend = profile.getRegionalBlend(sunAltDeg);
-			mix(out.directional, profile.getDirectionalLight(state.sunAngles[0]), env.getDirectionalColor(), regionalBlend);
-			mix(out.ambient, profile.getAmbientLight(sunAltDeg), env.getAmbientColor(), regionalBlend);
+			mix(out.sunDirectionalLight, profile.getDirectionalLight(state.sunAngles[0]), env.getDirectionalColor(), regionalBlend);
+			mix(out.ambientLight, profile.getAmbientLight(sunAltDeg), env.getAmbientColor(), regionalBlend);
 		}
 		float moonAltDeg = state.moonAltitudeDegrees;
-		out.ambientStrength = env.ambientStrength;
-		out.directionalStrength = env.directionalStrength;
+		multiply(out.ambientLight, out.ambientLight, env.ambientStrength);
 
 		float moonLightIllumination = state.moonLightIllumination;
 		float moonPresence = 0;
@@ -360,15 +360,15 @@ public class SkyRenderer {
 
 		// Fade direct sunlight near the horizon; the ambient profile supplies twilight below it.
 		// Carrying the warm directional baseline into twilight produces a red cast under exposure.
-		float sunlightStrength = out.directionalStrength * smoothstep(0, 5, sunAltDeg);
+		multiply(out.sunDirectionalLight, out.sunDirectionalLight, env.directionalStrength * smoothstep(0, 5, sunAltDeg));
 
-		float moonDirectionalStrength = state.moonDirectionalStrength * moonLighting;
+		multiply(out.moonDirectionalLight, sky.moonDirectionalColor, state.moonDirectionalStrength * moonLighting);
 		float moonAmbientStrength = sky.moonAmbientStrength * moonLighting;
-		float ambientLuminance =
-			linearSrgbLuminance(out.ambient) * out.ambientStrength +
-			linearSrgbLuminance(sky.moonAmbientColor) * moonAmbientStrength;
-		float sunLuminance = linearSrgbLuminance(out.directional) * sunlightStrength;
-		float moonLuminance = linearSrgbLuminance(sky.moonDirectionalColor) * moonDirectionalStrength;
+		for (int i = 0; i < out.ambientLight.length; i++)
+			out.ambientLight[i] += sky.moonAmbientColor[i] * moonAmbientStrength;
+		float ambientLuminance = linearSrgbLuminance(out.ambientLight);
+		float sunLuminance = linearSrgbLuminance(out.sunDirectionalLight);
+		float moonLuminance = linearSrgbLuminance(out.moonDirectionalLight);
 		// Meter the established lighting so adaptation does not compensate for the handoff.
 		out.adaptationLuminance = ambientLuminance + (sunLuminance + moonLuminance) * .25f;
 		float exposure = getNightExposure(out.adaptationLuminance, sunAltDeg);
@@ -380,26 +380,20 @@ public class SkyRenderer {
 		out.moonShadowFade = moonAltDeg > 0 && moonLightIllumination > 0 ?
 			1 - smoothstep(SHADOW_HANDOFF_MIN_CONTRAST, SHADOW_HANDOFF_MAX_CONTRAST, sunShadowContrast) : 0;
 
-		out.directionalStrength = 0;
+		copyTo(out.directionalLight, BLACK);
 
-		distributeDirectionalAndAmbientLight(
+		distributeDirectionalLight(
 			out,
-			out.directional,
-			sunlightStrength,
-			out.directional,
-			0,
+			out.sunDirectionalLight,
 			sunAltDeg,
 			.533f,
 			1,
 			out.moonShadowFade > 0 ? 0 : 1
 		);
 
-		distributeDirectionalAndAmbientLight(
+		distributeDirectionalLight(
 			out,
-			sky.moonDirectionalColor,
-			moonDirectionalStrength,
-			sky.moonAmbientColor,
-			moonAmbientStrength,
+			out.moonDirectionalLight,
 			moonAltDeg,
 			.517f,
 			saturate(sky.moonShadowStrength),
@@ -413,38 +407,25 @@ public class SkyRenderer {
 		out.configuration.interpolateLightingParameters(sky, sky, 1);
 	}
 
-	private static void distributeDirectionalAndAmbientLight(
+	private static void distributeDirectionalLight(
 		LightingFrame out,
-		float[] directionalColor,
-		float directionalStrength,
-		float[] ambientColor,
-		float ambientStrength,
+		float[] directionalLight,
 		float altitudeDegrees,
 		float diameterDegrees,
 		float shadowStrength,
 		float directionalFade
 	) {
 		float visibility = getShadowVisibility(altitudeDegrees, diameterDegrees) * shadowStrength;
-		float ambientTransfer = ambientStrength;
-		float combinedStrength = out.ambientStrength + ambientTransfer;
-		if (combinedStrength > 0)
-			mix(out.ambient, out.ambient, ambientColor, ambientTransfer / combinedStrength);
-		out.ambientStrength = combinedStrength;
-
 		// The spherical average of max(dot(normal, light), 0) is 1/4. Transfer the
 		// non-shadow-casting part without changing its average incident energy.
-		ambientTransfer = directionalStrength * (1 - visibility) * .25f;
-		combinedStrength = out.ambientStrength + ambientTransfer;
-		if (combinedStrength > 0)
-			mix(out.ambient, out.ambient, directionalColor, ambientTransfer / combinedStrength);
-		out.ambientStrength = combinedStrength;
+		float ambientTransfer = (1 - visibility) * .25f;
+		for (int i = 0; i < out.ambientLight.length; i++)
+			out.ambientLight[i] += directionalLight[i] * ambientTransfer;
 
 		// Handoff suppression is temporary: unlike physical softening, it adds no ambient light.
-		float directionalTransfer = directionalStrength * visibility * directionalFade;
-		combinedStrength = out.directionalStrength + directionalTransfer;
-		if (combinedStrength > 0)
-			mix(out.directional, out.directional, directionalColor, directionalTransfer / combinedStrength);
-		out.directionalStrength = combinedStrength;
+		float directionalTransfer = visibility * directionalFade;
+		for (int i = 0; i < out.directionalLight.length; i++)
+			out.directionalLight[i] += directionalLight[i] * directionalTransfer;
 	}
 
 	private static float getShadowVisibility(float altitudeDegrees, float diameterDegrees) {
