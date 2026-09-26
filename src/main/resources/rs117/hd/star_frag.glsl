@@ -11,7 +11,7 @@ in float vBrightness;
 out vec4 FragColor;
 
 void main() {
-    if (vBrightness <= 0.0)
+    if (!uboSky.gradientEnabled || orthographicProjection || vBrightness <= 0.0)
         discard;
 
     float d = length(gl_PointCoord - vec2(0.5)) * 2.0;

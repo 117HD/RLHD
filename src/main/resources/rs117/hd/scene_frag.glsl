@@ -525,8 +525,6 @@ void main() {
         }
     #endif
 
-    outputColor.rgb = applyColorAdjustments(outputColor.rgb);
-
     #if WIREFRAME
         outputColor.rgb *= wireframeMask();
     #endif
@@ -588,6 +586,7 @@ void main() {
         }
     }
 
+    outputColor.rgb = applyColorAdjustments(outputColor.rgb);
     outputColor.rgb = applyOutputCorrection(outputColor.rgb);
 
     // Reduce color banding

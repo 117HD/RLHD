@@ -16,53 +16,52 @@
 #define COLOR_FILTER_BLACK_AND_WHITE 6
 #define COLOR_FILTER_CEL_SHADING 7
 
-vec3 applySingleColorFilter(int filterIndex, vec3 color) {
+float perceptualLuminance(vec3 srgb) {
+    return linearToSrgb(linearSrgbLuminance(srgbToLinear(srgb)));
+}
+
+vec3 applySingleColorFilter(int filterIndex, vec3 srgb) {
     switch (filterIndex) {
         case COLOR_FILTER_GREYSCALE:
-            return vec3(linearSrgbLuminance(color));
+            return vec3(perceptualLuminance(srgb));
         case COLOR_FILTER_SEPIA:
-            return color * mat3(
+            return srgb * mat3(
                 0.393, 0.769, 0.189,
                 0.349, 0.686, 0.168,
                 0.272, 0.534, 0.131
             );
         case COLOR_FILTER_HIGH_CONTRAST: {
-            vec3 srgbColor = linearToSrgb(max(color, 0.0));
-            float intensity = linearToSrgb(max(linearSrgbLuminance(color), 0.0));
-            // Only apply the full boost in daylight. At night, lightStrength drops
-            // towards 0, so the modifier relaxes towards 1 (no contrast change) instead
-            // of exaggerating night's blue ambient tint into a wall of pure blue.
-            float modifier = mix(1.0, 2.2, clamp(lightStrength, 0.0, 1.0));
-            vec3 srgbResult = intensity + (srgbColor - intensity) * modifier;
-            return srgbToLinear(clamp(srgbResult, 0.0, 1.0));
+            float intensity = perceptualLuminance(srgb);
+            float modifier = 2.2;
+            return clamp(intensity + (srgb - intensity) * modifier, 0.0, 1.0);
         }
         case COLOR_FILTER_CARTOON: {
             float quantizationLevels = 7.0;
-            vec3 srgbColor = linearToSrgb(max(color, 0.0));
-            vec3 quantizedSrgbColor = floor(srgbColor * quantizationLevels) / quantizationLevels;
-            return srgbToLinear(quantizedSrgbColor);
+            return floor(srgb * quantizationLevels) / quantizationLevels;
         }
         case COLOR_FILTER_INVERT:
-            return srgbToLinear(1 - linearToSrgb(max(color, 0.0)));
+            return 1 - srgb;
         case COLOR_FILTER_BLACK_AND_WHITE:
-            return linearToSrgb(max(linearSrgbLuminance(color), 0.0)) > 0.4 ? vec3(1) : vec3(0);
+            return perceptualLuminance(srgb) > 0.4 ? vec3(1) : vec3(0);
         case COLOR_FILTER_CEL_SHADING: {
-            vec3 srgbColor = linearToSrgb(max(color, 0.0));
-            float perceptual = linearToSrgb(max(linearSrgbLuminance(color), 0.0));
+            float intensity = perceptualLuminance(srgb);
             float quantizationLevels = 8.0;
-            float quantizedPerceptual = floor(perceptual * quantizationLevels + 0.5) / quantizationLevels;
-            vec3 srgbResult = srgbColor - (perceptual - quantizedPerceptual);
-            return srgbToLinear(clamp(srgbResult, 0.0, 1.0));
+            float quantizedIntensity = floor(intensity * quantizationLevels + 0.5) / quantizationLevels;
+            return clamp(srgb + quantizedIntensity - intensity, 0.0, 1.0);
         }
-        default:
-            return color;
     }
+
+    return srgb;
 }
 
-vec3 applyColorFilter(vec3 color) {
-    vec3 previous = applySingleColorFilter(colorFilterPrevious, color);
-    vec3 current = applySingleColorFilter(colorFilter, color);
-    // Fade smoothly between the previous and current filters
-    return mix(previous, current, smoothstep(0, 1, colorFilterFade));
+vec3 applyColorFilter(vec3 srgb) {
+    srgb = clamp(srgb, 0.0, 1.0);
+    vec3 previous = applySingleColorFilter(colorFilterPrevious, srgb);
+    vec3 current = applySingleColorFilter(colorFilter, srgb);
+    return linearToSrgb(mix(
+        srgbToLinear(previous),
+        srgbToLinear(current),
+        smoothstep(0, 1, colorFilterFade)
+    ));
 }
 #endif

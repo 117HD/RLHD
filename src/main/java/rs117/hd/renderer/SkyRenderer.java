@@ -164,7 +164,10 @@ public class SkyRenderer {
 	 * Upload sky resources here; the caller owns the global UBO upload.
 	 */
 	public void prepareFrame(UBOGlobal uboGlobal) {
+		boolean wasSkyEnabled = skyEnabled;
 		skyEnabled = skyManager.getState().cycleActive;
+		if (skyEnabled != wasSkyEnabled)
+			commandBuffer.reset();
 
 		Environment env = environmentManager.getCurrentEnvironment();
 		copyTo(directionalLight, env.getDirectionalColor());
@@ -185,16 +188,18 @@ public class SkyRenderer {
 		}
 		updateGlobalUbo(uboGlobal);
 
-		if (skyEnabled)
-			updateCommandBuffer();
+		updateCommandBuffer();
 	}
 
-	public boolean shouldRenderSky(boolean hasVanillaSkybox) {
+	public boolean shouldReplaceVanillaSkybox() {
 		return
 			skyEnabled &&
 			skyProgram.isValid() &&
-			!plugin.orthographicProjection &&
-			!hasVanillaSkybox;
+			!plugin.orthographicProjection;
+	}
+
+	public boolean shouldRender(boolean hasVanillaSkybox) {
+		return skyProgram.isValid() && !hasVanillaSkybox;
 	}
 
 	public void clear(boolean hasVanillaSkybox) {
@@ -202,7 +207,7 @@ public class SkyRenderer {
 
 		glClearDepth(0);
 
-		if (shouldRenderSky(hasVanillaSkybox)) {
+		if (shouldRender(hasVanillaSkybox)) {
 			glClear(GL_DEPTH_BUFFER_BIT);
 		} else {
 			float[] fogColorSrgb = hasVanillaSkybox ? BLACK : linearToSrgb(fogColor);
@@ -225,14 +230,14 @@ public class SkyRenderer {
 
 	public void renderImmediately() {
 		clear(false);
-		if (shouldRenderSky(false)) {
+		if (shouldRender(false)) {
 			localRenderState.reset();
 			commandBuffer.execute(localRenderState);
 		}
 	}
 
 	private void updateCommandBuffer() {
-		boolean starfieldChanged = starField.rebuildIfNeeded();
+		boolean starfieldChanged = skyEnabled && starField.rebuildIfNeeded();
 		if (!starfieldChanged && !commandBuffer.isEmpty())
 			return;
 
@@ -244,7 +249,7 @@ public class SkyRenderer {
 		commandBuffer.BindVertexArray(plugin.vaoTri);
 		commandBuffer.DrawArrays(GL_TRIANGLES, 0, 3);
 
-		if (config.starMode() != StarMode.OFF && starProgram.isValid() && starField.getVaoStars() != 0) {
+		if (skyEnabled && config.starMode() != StarMode.OFF && starProgram.isValid() && starField.getVaoStars() != 0) {
 			commandBuffer.SetShader(starProgram);
 			commandBuffer.Enable(GL_PROGRAM_POINT_SIZE);
 			if (!GL_CAPS.forwardCompatible)

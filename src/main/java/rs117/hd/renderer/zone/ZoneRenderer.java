@@ -609,7 +609,7 @@ public class ZoneRenderer implements Renderer {
 			skyRenderer.prepareFrame(plugin.uboGlobal);
 
 		boolean replaceVanillaSkybox =
-			skyRenderer.shouldRenderSky(false) &&
+			skyRenderer.shouldReplaceVanillaSkybox() &&
 			config.replaceVanillaSkyboxes() &&
 			environmentManager.getTargetEnvironment().hideVanillaSkyboxes;
 		shouldRenderVanillaSkybox = scene.getSkybox() != null && !replaceVanillaSkybox;
@@ -1082,7 +1082,7 @@ public class ZoneRenderer implements Renderer {
 
 					sceneCmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
 
-					if (skyRenderer.shouldRenderSky(shouldRenderVanillaSkybox) && sceneManager.isRoot(ctx)) {
+					if (skyRenderer.shouldRender(shouldRenderVanillaSkybox) && sceneManager.isRoot(ctx)) {
 						// Draw the sky after drawing top-level scene opaque
 						skyRenderer.appendTo(sceneCmd);
 						sceneCmd.SetShader(sceneProgram);

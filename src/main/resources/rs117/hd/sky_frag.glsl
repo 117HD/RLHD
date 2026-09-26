@@ -33,6 +33,15 @@ float nightSkyHorizonFade(float upAmount, float horizonShift) {
 }
 
 void main() {
+    if (!uboSky.gradientEnabled || orthographicProjection) {
+        vec3 srgb = linearToSrgb(fogColor);
+        srgb = applyColorAdjustments(srgb);
+        srgb = applyOutputCorrection(srgb);
+        srgb += (hash12(gl_FragCoord.xy + elapsedTime) - 0.5) / 255.0;
+        FragColor = vec4(srgb, 1.0);
+        return;
+    }
+
     // Unproject a near/far ray to get the view direction.
     vec4 nearClip = vec4(fScreenPos, -1.0, 1.0);
     vec4 farClip = vec4(fScreenPos, 1.0, 1.0);
@@ -350,11 +359,12 @@ void main() {
     // Shooting stars and auroras are in front of the moon, but still attenuated by fog.
     skyColor += atmosphericForeground * fogTransmittance;
 
-    skyColor = applyColorAdjustments(linearToSrgb(skyColor));
-    skyColor = applyOutputCorrection(skyColor);
+    vec3 srgb = linearToSrgb(skyColor);
+    srgb = applyColorAdjustments(srgb);
+    srgb = applyOutputCorrection(srgb);
 
     // Reduce color banding
-    skyColor.rgb += (hash12(gl_FragCoord.xy + elapsedTime) - 0.5) / 255.0;
+    srgb.rgb += (hash12(gl_FragCoord.xy + elapsedTime) - 0.5) / 255.0;
 
-    FragColor = vec4(skyColor, 1.0);
+    FragColor = vec4(srgb, 1.0);
 }
