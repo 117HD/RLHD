@@ -11,6 +11,7 @@
 #include <utils/sky.glsl>
 #include <utils/sky_fog.glsl>
 #include <utils/hash.glsl>
+#include <utils/tone_mapping.glsl>
 
 in vec2 fScreenPos;
 
@@ -46,6 +47,7 @@ void main() {
 
     SkyGradient sky = computeSkyGradient(viewDir);
     vec3 skyColor = sky.color;
+    float fogTransmittance = skyFogTransmittance(sky.upAmount);
     // Keep a star-free sky reference for opaque celestial bodies. This lets the
     // moon cover stars without allowing the day gradient to show through it.
     vec3 skyColorPreStars = skyColor;
@@ -89,10 +91,13 @@ void main() {
     // Mild limb darkening; the moon is composited afterward and can cover the sun.
     skyColor += uboSky.sunColor * sunDisk * sunHorizon * mix(0.6, 1.0, sunMu);
 
+    // Apply the same perceived-horizon offset as the sun.
+    vec3 moonDir = normalize(vec3(uboSky.moonDir.x, -uboSky.moonDir.y + HORIZON_OFFSET, uboSky.moonDir.z));
+    vec3 moonCompositeColor = vec3(0.0);
+    float moonCompositeAlpha = 0.0;
+
     // Render the moon disk
     if (uboSky.moonVisibility > 0.001) {
-        // Apply the sun's perceived-horizon offset.
-        vec3 moonDir = normalize(vec3(uboSky.moonDir.x, -uboSky.moonDir.y + HORIZON_OFFSET, uboSky.moonDir.z));
         vec3 moonIlluminationDir = normalize(vec3(uboSky.moonSurfaceLightDirection.x, -uboSky.moonSurfaceLightDirection.y + HORIZON_OFFSET, uboSky.moonSurfaceLightDirection.z));
 
         float moonDot = dot(viewDir, moonDir);
@@ -288,12 +293,15 @@ void main() {
 
                 // Keep the disk opaque so stars and the sky gradient cannot show through crescents.
                 vec3 moonColor = mix(moonDarkSide, moonBrightSide, isLit * moonDayVisibility);
+                moonCompositeColor = applySkyFog(moonColor, fogTransmittance);
+                vec3 toneMappedMoon = softClipColor(tonemap_hue_preserving(moonCompositeColor));
+                // Remove the moon-only tone mapping with the light it operates on, so an
+                // entirely obscured disk converges to the same fog color as its surroundings.
+                moonCompositeColor = mix(moonCompositeColor, toneMappedMoon, fogTransmittance);
 
                 // Fade moon near the horizon to match the star/nebula horizon fade
                 float moonHorizonFade = nightSkyHorizonFade(sky.upAmount, horizonShift);
-                float moonAlpha = moonDisk * uboSky.moonVisibility * moonHorizonFade;
-
-                skyColor = mix(skyColor, moonColor, moonAlpha);
+                moonCompositeAlpha = moonDisk * uboSky.moonVisibility * moonHorizonFade;
             }
 
             // Place a real-sized moon's glare outside the artistic disk without scaling its width or intensity.
@@ -311,19 +319,26 @@ void main() {
             // https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=917534
             float halo = 0.3 * 0.0006 / (glareAngleDegrees * glareAngleDegrees + 0.75 * 0.75);
             halo *= (1.0 - moonDisk) * uboSky.moonIllumination * phaseWeight * moonDayVisibility * uboSky.moonVisibility;
+            halo *= 6; // looks about right
+            halo *= uboSky.moonSizeMult * uboSky.moonSizeMult;
             skyColor += uboSky.moonDiskColor * halo * nightSkyHorizonFade(sky.upAmount, horizonShift);
         }
     }
 
-    skyColor += shootingStarColor;
+    vec3 atmosphericForeground = shootingStarColor;
 
     // Auroras lose contrast against a bright sky much sooner than the moon.
     float auroraContrast = 1.0 / (1.0 + linearSrgbLuminance(skyColorPreStars) * 1200.0);
     float auroraStrength = nightFactor * uboSky.auroraVisibility * auroraContrast;
     if (auroraStrength > 0.001)
-        skyColor += proceduralAurora(viewDir, elapsedTime) * auroraStrength;
+        atmosphericForeground += proceduralAurora(viewDir, elapsedTime) * auroraStrength;
 
-    skyColor = applySkyFog(skyColor, sky.upAmount);
+    skyColor = applySkyFog(skyColor, fogTransmittance);
+    skyColor = mix(skyColor, moonCompositeColor, moonCompositeAlpha);
+    skyColor += skyFogGlow(viewDir, sky.sunDir, moonDir, fogTransmittance);
+    // Shooting stars and auroras are in front of the moon, but still attenuated by fog.
+    skyColor += atmosphericForeground * fogTransmittance;
+
     skyColor = applyColorAdjustments(linearToSrgb(skyColor));
     skyColor = applyOutputCorrection(skyColor);
 

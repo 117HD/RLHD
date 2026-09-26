@@ -351,7 +351,7 @@ public class SkyRenderer {
 		// before the shadow camera changes source, then vary only its shadow contrast.
 		float moonLighting = moonPresence * smoothstep(5, 0, sunAltDeg);
 		// fogDepth is an artistic density control, not a physical extinction coefficient.
-		float defaultDensity = 0.9f + max(0, env.fogDepth * 100) / 100;
+		float defaultDensity = .6f + (exp(6.7f * env.fogDepth / 100) - 1);
 		out.fogDensity = max(0, sky.skyFogDensity < 0 ? defaultDensity : sky.skyFogDensity);
 		out.visibility = saturate(sky.skyVisibility);
 		copyTo(out.fog, endpointSample.horizonLinear);

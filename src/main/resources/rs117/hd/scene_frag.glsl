@@ -570,7 +570,14 @@ void main() {
                     );
                 }
 
-                skyColorAtFragment = applySkyFog(skyColorAtFragment, sky.upAmount);
+                vec3 moonDir = normalize(vec3(
+                    uboSky.moonDir.x,
+                    -uboSky.moonDir.y + HORIZON_OFFSET,
+                    uboSky.moonDir.z
+                ));
+                float skyTransmittance = skyFogTransmittance(sky.upAmount);
+                skyColorAtFragment = applySkyFog(skyColorAtFragment, skyTransmittance);
+                skyColorAtFragment += skyFogGlow(fogViewDir, sky.sunDir, moonDir, skyTransmittance);
                 // Scene fog is composed after the scene's sRGB conversion.
                 skyColorAtFragment = linearToSrgb(skyColorAtFragment);
             }

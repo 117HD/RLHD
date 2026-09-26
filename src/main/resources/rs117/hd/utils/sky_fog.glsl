@@ -10,6 +10,21 @@ float skyFogTransmittance(float upAmount) {
     return uboSky.visibility * exp(-uboSky.fogDensity * pathLength);
 }
 
-vec3 applySkyFog(vec3 color, float upAmount) {
-    return mix(uboSky.fogColor, color, skyFogTransmittance(upAmount));
+// Forward lobe of Henyey-Greenstein scattering, normalized to one on-axis.
+float skyFogForwardScatter(float lightDot) {
+    const float anisotropy = 0.85;
+    float denominator = 1.0 + anisotropy * anisotropy - 2.0 * anisotropy * clamp(lightDot, -1.0, 1.0);
+    return pow(1.0 - anisotropy, 3.0) / max(denominator * sqrt(denominator), 1e-5);
+}
+
+vec3 applySkyFog(vec3 color, float transmittance) {
+    return mix(uboSky.fogColor, color, transmittance);
+}
+
+vec3 skyFogGlow(vec3 viewDir, vec3 sunDir, vec3 moonDir, float transmittance) {
+    vec3 glow =
+        uboSky.sunColor * skyFogForwardScatter(dot(viewDir, sunDir)) * 0.08 +
+        uboSky.moonDiskColor * skyFogForwardScatter(dot(viewDir, moonDir)) *
+            uboSky.moonIllumination * uboSky.moonVisibility * 0.003;
+    return glow * (1.0 - transmittance);
 }

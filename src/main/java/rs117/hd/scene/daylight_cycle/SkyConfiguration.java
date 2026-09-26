@@ -86,7 +86,7 @@ public class SkyConfiguration {
 			moonDirectionalColor = HDUtils.ensureArrayLength(moonDirectionalColor, 3);
 		}
 		if (moonDirectionalStrength < 0)
-			moonDirectionalStrength = 0.001f * moonDiskStrength * pow2(moonSizeMult);
+			moonDirectionalStrength = 0.0007f * moonDiskStrength * pow2(moonSizeMult);
 
 		boolean deriveAmbient = moonAmbientColor == null;
 		if (deriveAmbient) {

@@ -158,6 +158,8 @@ public class Environment {
 		if (waterCausticsStrength == -1)
 			waterCausticsStrength = directionalStrength;
 
+		fogDepth = max(0, fogDepth);
+
 		if (sky != null)
 			sky.normalize();
 
