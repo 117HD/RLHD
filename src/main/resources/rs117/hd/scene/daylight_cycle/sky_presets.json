@@ -1,6 +1,8 @@
 [
   {
     "name": "GIELINOR",
+    "nightAmbientColor": "#030713",
+    "nightAmbientStrength": 1,
     "moonDiskColor": "#7F92FF",
     "moonDiskStrength": 6.2,
     "profile": {
@@ -152,32 +154,6 @@
         {
           "altitude": 90,
           "color": "#FFFFFA"
-        }
-      ],
-      "ambientColor": [
-        {
-          "altitude": -18,
-          "color": "#030713"
-        },
-        {
-          "altitude": -12,
-          "color": "#0D1933"
-        },
-        {
-          "altitude": -6,
-          "color": "#334F78"
-        },
-        {
-          "altitude": 0,
-          "color": "#718CB4"
-        },
-        {
-          "altitude": 25,
-          "color": "#C0B9FF"
-        },
-        {
-          "altitude": 40,
-          "color": "#B9D6FF"
         }
       ],
       "directionalTemperature": [

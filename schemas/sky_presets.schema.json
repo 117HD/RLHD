@@ -97,6 +97,15 @@
         "$ref": "#/$defs/color",
         "description": "Final ambient moonlight color in sRGB. Defaults to clear-atmosphere scattering of directional moonlight, undoing its mesopic tint before scattering and reapplying it afterward."
       },
+      "nightAmbientColor": {
+        "$ref": "#/$defs/color",
+        "description": "Constant artistic airglow/starlight ambient color in sRGB while the cycle is active, independent of moonlight and daytime environment strength. Defaults to black."
+      },
+      "nightAmbientStrength": {
+        "type": "number",
+        "minimum": 0,
+        "description": "Linear multiplier for nightAmbientColor before exposure adaptation. Defaults to 1; 0 disables the baseline."
+      },
       "moonDiskStrength": {
         "type": "number",
         "minimum": 0

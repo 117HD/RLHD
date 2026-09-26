@@ -366,6 +366,21 @@
                 "description": "Lit moon-disk brightness multiplier. Defaults to 1.",
                 "minimum": 0
               },
+              "nightAmbientColor": {
+                "type": [ "string", "array" ],
+                "description": "Constant artistic airglow/starlight ambient color in sRGB while the cycle is active, independent of moonlight and daytime environment strength. Defaults to black.",
+                "pattern": "^#[A-Fa-f0-9]{6}$",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "number"
+                }
+              },
+              "nightAmbientStrength": {
+                "type": "number",
+                "description": "Linear multiplier for nightAmbientColor before exposure adaptation. Defaults to 1; 0 disables the baseline.",
+                "minimum": 0
+              },
               "skyFogColor": {
                 "type": [
                   "string",
@@ -579,9 +594,6 @@
         },
         "sunGlow": {
           "$ref": "#/$defs/skyGradientKeyframes"
-        },
-        "ambientColor": {
-          "$ref": "#/$defs/skyLightingColorKeyframes"
         },
         "directionalTemperature": {
           "$ref": "#/$defs/skyLightingScalarKeyframes"
