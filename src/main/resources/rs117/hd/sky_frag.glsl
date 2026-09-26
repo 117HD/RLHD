@@ -279,11 +279,24 @@ void main() {
                 float crescentEdgeFade = smoothstep(0.0, 0.25, moonLocalZ);
                 isLit *= mix(1.0, crescentEdgeFade, terminatorProximity);
 
+                // Earth has the complementary phase. Approximate it as a diffuse sphere
+                // with Bond albedo 0.3 (geometric albedo 0.2), at the mean lunar distance.
+                float earthPhaseCos = clamp(-phaseCos, -1.0, 1.0);
+                float earthPhaseAngle = acos(earthPhaseCos);
+                float earthPhase = max(0.0,
+                    (phaseSin + (PI - earthPhaseAngle) * earthPhaseCos) / PI);
+                const float earthRadiusOverDistance = 6371.0 / 384400.0;
+                float earthshine = 0.4 * earthRadiusOverDistance * earthRadiusOverDistance * earthPhase;
+                // Earth is approximately along the viewing direction: the same regolith
+                // response as full sunlight, including its mild Lambertian limb falloff.
+                earthshine *= mix(1.0, viewCos, 0.15);
+                earthshine *= 100; // looks about right
+
                 // Keep surface contrast below the output's clipping threshold.
                 // Ejecta raise reflectance toward the same peak.
                 float surfaceContrast = smoothstep(0.65, 1.0, surfaceNoise);
                 float surfaceDetail = mix(0.14, 1.0, surfaceContrast);
-                vec3 moonLight = uboSky.moonDiskColor * surfaceDetail * isLit * fogTransmittance;
+                vec3 moonLight = uboSky.moonDiskColor * surfaceDetail * (isLit + earthshine) * fogTransmittance;
                 vec3 background = applySkyFog(moonDarkSide, fogTransmittance);
                 // Let atmospheric brightness influence compression without its hue shifting
                 // the lunar contribution toward the complementary color of a sunset.
