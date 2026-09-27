@@ -12683,16 +12683,37 @@
     ]
   },
   {
-    "name": "VAMPYRIUM_FOREST_INSTANCE",
-    "regions": [ 11383, 11642 ],
-    "regionBoxes": [
-      [ 11641, 12150 ],
-      [ 11643, 12155 ]
-    ],
+    "name": "VAMPYRIUM_SMALL_FOREST_INSTANCE",
     "aabbs": [
       [ 2944, 7808, 2975, 7839 ],
       [ 2944, 7840, 2983, 7871 ],
       [ 2976, 7808, 3007, 7839 ]
+    ],
+    "fillGaps": false,
+    "hideOtherAreas": true
+  },
+  {
+    "name": "VAMPYRIUM_LARGE_FOREST_INSTANCE",
+    "regions": [ 11383, 11642 ],
+    "regionBoxes": [
+      [ 11643, 12155 ]
+    ],
+    "fillGaps": false,
+    "hideOtherAreas": true
+  },
+  {
+    "name": "VAMPYRIUM_BRIDGE_INSTANCE",
+    "regionBoxes": [
+      [ 11641, 12150 ]
+    ],
+    "fillGaps": false,
+    "hideOtherAreas": true
+  },
+  {
+    "name": "VAMPYRIUM_FOREST_INSTANCE",
+    "areas": [
+      "VAMPYRIUM_SMALL_FOREST_INSTANCE",
+      "VAMPYRIUM_LARGE_FOREST_INSTANCE"
     ]
   },
   {
@@ -12722,7 +12743,8 @@
       [ 9597, 11128 ]
     ],
     "areas": [
-      "VAMPYRIUM_FOREST_INSTANCE"
+      "VAMPYRIUM_FOREST_INSTANCE",
+      "VAMPYRIUM_BRIDGE_INSTANCE"
     ]
   },
   {

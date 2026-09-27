@@ -819,6 +819,7 @@
   {
     "description": "With blood moon and Night, for the portion of the quest immediately after returning from Vampyrium to the overworld. Must remain above the default Morytania environment",
     "area": "MORYTANIA",
+    "nightExposure": 2,
     "instantTransition": true,
     "varbitCondition": "MYQ6 >=128 && MYQ6 < 178",
     "ambientColor": "#FFFFFF",
@@ -837,6 +838,7 @@
   {
     "description": "Default Morytania Environment",
     "area": "MORYTANIA",
+    "nightExposure": 2.5,
     "ambientColor": "#5a8cc0",
     "ambientStrength": 1.5,
     "directionalColor": "#f8bf68",
@@ -2861,6 +2863,77 @@
     "waterCausticsStrength": 0
   },
   {
+    "area": "VAMPYRIUM_SMALL_FOREST_INSTANCE",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
+    "sky": {
+      "parent": "DUSK",
+      "auroraVisibility": 0,
+      "sunStrength": 0.075,
+      "sunriseSunsetStrength": 0.2,
+      "moonVisibility": 0,
+      "profile": {
+        "nightSkyColor": "#0F070E"
+      },
+      "starVisibility": 0.604,
+      "skyFogColor": "#000000",
+      "skyFogColorMix": 1,
+      "skyFogDensity": 3,
+      "skyVisibility": 1
+    },
+    "fogDepth": 65,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 50,
+    "fogColor": "#330D0D"
+  },
+  {
+    "area": "VAMPYRIUM_LARGE_FOREST_INSTANCE",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
+    "sky": {
+      "parent": "DUSK",
+      "auroraVisibility": 0,
+      "sunStrength": 0.075,
+      "sunriseSunsetStrength": 0.2,
+      "moonVisibility": 0,
+      "profile": {
+        "nightSkyColor": "#0F070E"
+      },
+      "starVisibility": 0.604,
+      "skyFogColor": "#000000",
+      "skyFogColorMix": 1,
+      "skyFogDensity": 3,
+      "skyVisibility": 1
+    },
+    "fogDepth": 40,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 50,
+    "fogColor": "#330D0D"
+  },
+  {
+    "area": "MAGGOT_KING_ARENA",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
+    "fogDepth": 50,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 50,
+    "fogColor": "#160404",
+    "sky": {
+      "skyVisibility": 0.8,
+      "auroraVisibility": 0,
+      "sunStrength": 0.01,
+      "sunriseSunsetStrength": 0.2,
+      "skyFogDensity": 0.16,
+      "profile": {
+        "nightSkyColor": "#0F070E"
+      },
+      "starVisibility": 0.755
+    }
+  },
+  {
     "description": "Environment for the final battle during The Blood Moon Rises",
     "area": "VAMPYRIUM_CASTLE_DRAKAN_ROOF",
     "hideVanillaSkyboxes": true,
@@ -2892,6 +2965,7 @@
     "area": "VAMPYRIUM",
     "description": "Environment for Vampyrium during the quest, set to fixed twilight to simulate being on the cusp of the blood moon rising",
     "varbitCondition": "MYQ6 >= 80 && MYQ6 != 178",
+    "nightExposure": 2.6,
     "ambientColor": "#FFFFFF",
     "ambientStrength": 1,
     "sky": {
@@ -2916,6 +2990,8 @@
   {
     "description": "Environment for Vampyrium post quest, normal cycle since the events of the quest are now past",
     "area": "VAMPYRIUM",
+    "nightExposure": 2.6,
+    "directionalColor": "#ffa8a8",
     "ambientColor": "#FFFFFF",
     "ambientStrength": 1,
     "fogDepth": 17.5,
@@ -2923,50 +2999,6 @@
     "windSpeed": 15,
     "windStrength": 50,
     "fogColor": "#330D0D",
-    "sky": {
-      "skyVisibility": 0.8,
-      "auroraVisibility": 0,
-      "sunStrength": 0.075,
-      "sunriseSunsetStrength": 0.2,
-      "skyFogDensity": 0.16,
-      "profile": {
-        "nightSkyColor": "#0F070E"
-      },
-      "starVisibility": 0.755
-    }
-  },
-  {
-    "area": "VAMPYRIUM_FOREST_INSTANCE",
-    "ambientColor": "#FFFFFF",
-    "ambientStrength": 1,
-    "sky": {
-      "parent": "DUSK",
-      "skyVisibility": 1,
-      "auroraVisibility": 0,
-      "sunStrength": 0.075,
-      "sunriseSunsetStrength": 0.2,
-      "skyFogDensity": 0,
-      "moonVisibility": 0,
-      "profile": {
-        "nightSkyColor": "#0F070E"
-      },
-      "starVisibility": 0.604
-    },
-    "fogDepth": 40,
-    "windAngle": 40,
-    "windSpeed": 15,
-    "windStrength": 50,
-    "fogColor": "#330D0D"
-  },
-  {
-    "area": "MAGGOT_KING_ARENA",
-    "ambientColor": "#FFFFFF",
-    "ambientStrength": 1,
-    "fogDepth": 50,
-    "windAngle": 40,
-    "windSpeed": 15,
-    "windStrength": 50,
-    "fogColor": "#160404",
     "sky": {
       "skyVisibility": 0.8,
       "auroraVisibility": 0,
