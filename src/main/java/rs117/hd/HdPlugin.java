@@ -93,6 +93,7 @@ import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.opengl.uniforms.UBOUI;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.GammaCalibrationOverlay;
+import rs117.hd.overlays.NativeItemIcons;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TiledLightingOverlay;
 import rs117.hd.overlays.Timer;
@@ -168,6 +169,9 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_ITEM_ICONS = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_ITEM_BACKGROUNDS = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_ITEM_ICON_SURROUNDINGS = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -316,6 +320,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private TiledLightingOverlay tiledLightingOverlay;
+
+	@Inject
+	private NativeItemIcons nativeItemIcons;
 
 	@Inject
 	public HDVariables vars;
@@ -724,6 +731,8 @@ public class HdPlugin extends Plugin {
 				fishingSpotReplacer.startUp();
 				gammaCalibrationOverlay.initialize();
 				npcDisplacementCache.initialize();
+				if (config.nativeItemIcons())
+					nativeItemIcons.startUp();
 
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
 				redrawPreviousFrame = false;
@@ -795,6 +804,7 @@ public class HdPlugin extends Plugin {
 			gamevalManager.shutDown();
 			gammaCalibrationOverlay.destroy();
 			npcDisplacementCache.destroy();
+			nativeItemIcons.shutDown();
 			waterTypeManager.shutDown();
 			materialManager.shutDown();
 			textureManager.shutDown();
@@ -1551,7 +1561,6 @@ public class HdPlugin extends Plugin {
 
 		tiledLightingOverlay.render();
 
-		uiProgram.use();
 		uboUI.sourceDimensions.set(uiResolution);
 		uboUI.targetDimensions.set(actualUiResolution);
 		uboUI.alphaOverlay.set(ColorUtils.srgba(overlayColor));
@@ -1584,6 +1593,9 @@ public class HdPlugin extends Plugin {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, function);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, function);
 
+		nativeItemIcons.render(uiResolution, actualUiResolution);
+
+		uiProgram.use();
 		glEnable(GL_BLEND);
 		glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 		glBindVertexArray(vaoTri);
@@ -1878,6 +1890,11 @@ public class HdPlugin extends Plugin {
 							case KEY_UNLOCK_FPS:
 							case KEY_VSYNC_MODE:
 								setupSyncMode();
+								break;
+							case KEY_NATIVE_ITEM_ICONS:
+								nativeItemIcons.shutDown();
+								if (config.nativeItemIcons())
+									nativeItemIcons.startUp();
 								break;
 						}
 					}
