@@ -409,7 +409,7 @@ public class ColorUtils {
 	}
 
 	public static int packSrgb(float... srgb) {
-		return packRawRgb(ivec(multiply(saturate(srgb), 0xFF)));
+		return packRawRgb(ivec(round(multiply(saturate(srgb), 0xFF))));
 	}
 
 	public static int packRawHsl(int... hsl) {
