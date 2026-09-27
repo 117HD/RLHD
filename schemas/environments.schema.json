@@ -361,6 +361,24 @@
                 "description": "Lit moon-disk brightness multiplier. Defaults to 1.",
                 "minimum": 0
               },
+              "nightAmbientColor": {
+                "type": [
+                  "string",
+                  "array"
+                ],
+                "description": "Airglow/starlight ambient color, independent of moon phase and environment daytime lighting.",
+                "pattern": "^#[A-Fa-f0-9]{6}$",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "number"
+                }
+              },
+              "nightAmbientStrength": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Airglow/starlight ambient strength. Defaults to 1; added at all times while the cycle is active."
+              },
               "skyFogColor": {
                 "type": [
                   "string",
@@ -509,61 +527,9 @@
         }
       }
     },
-    "skyLightingScalarKeyframes": {
-      "type": "array",
-      "minItems": 2,
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "altitude",
-          "value"
-        ],
-        "properties": {
-          "altitude": {
-            "type": "number",
-            "description": "Sun altitude in degrees. Keyframes must be ordered from low to high altitude."
-          },
-          "value": {
-            "type": "number"
-          }
-        }
-      }
-    },
-    "skyLightingColorKeyframes": {
-      "type": "array",
-      "minItems": 2,
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "altitude",
-          "color"
-        ],
-        "properties": {
-          "altitude": {
-            "type": "number",
-            "description": "Sun altitude in degrees. Keyframes must be ordered from low to high altitude."
-          },
-          "color": {
-            "type": [
-              "string",
-              "array"
-            ],
-            "description": "sRGB color, specified as a hex code or an array in the range 0-255.",
-            "pattern": "^#[A-Fa-f0-9]{6}$",
-            "minItems": 3,
-            "maxItems": 3,
-            "items": {
-              "type": "number"
-            }
-          }
-        }
-      }
-    },
     "skyProfile": {
       "type": "object",
-      "description": "Sky colors and lighting curves keyed by sun altitude.",
+      "description": "Sky gradient colors keyed by sun altitude.",
       "additionalProperties": false,
       "properties": {
         "zenith": {
@@ -574,15 +540,6 @@
         },
         "sunGlow": {
           "$ref": "#/$defs/skyGradientKeyframes"
-        },
-        "ambientColor": {
-          "$ref": "#/$defs/skyLightingColorKeyframes"
-        },
-        "directionalTemperature": {
-          "$ref": "#/$defs/skyLightingScalarKeyframes"
-        },
-        "regionalBlend": {
-          "$ref": "#/$defs/skyLightingScalarKeyframes"
         },
         "nightSkyColor": {
           "type": [
@@ -595,14 +552,6 @@
           "items": {
             "type": "number"
           }
-        },
-        "directionalBaseTemperature": {
-          "type": "number",
-          "minimum": 1000
-        },
-        "directionalBaseStrength": {
-          "type": "number",
-          "minimum": 0
         }
       }
     }

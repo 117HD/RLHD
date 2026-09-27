@@ -19,7 +19,6 @@ import rs117.hd.overlays.Timer;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.SkyManager;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration;
-import rs117.hd.scene.daylight_cycle.SkyConfiguration.SkyProfile;
 import rs117.hd.scene.daylight_cycle.SkyState;
 import rs117.hd.scene.daylight_cycle.SkyState.GradientSample;
 import rs117.hd.scene.daylight_cycle.StarField;
@@ -39,10 +38,6 @@ import static rs117.hd.utils.MathUtils.*;
 @Singleton
 public class SkyRenderer {
 	private static final float[] BLACK = { 0, 0, 0 };
-	private static final float MOON_HORIZON_CUTOFF_DEG = -10;
-	private static final float MIN_MOON_ILLUMINATION = .01f;
-	private static final float MOON_ELEVATION_FADE_START_DEG = -10;
-	private static final float MOON_ELEVATION_FADE_END_DEG = 20;
 	private static final float SHADOW_HANDOFF_MIN_CONTRAST = 1 / 255.f;
 	private static final float SHADOW_HANDOFF_MAX_CONTRAST = 3 / 255.f;
 
@@ -332,22 +327,14 @@ public class SkyRenderer {
 		skyManager.sampleLighting(endpointSample, env, endpointFogColor);
 		SkyState state = endpointSample.sky;
 		float sunAltDeg = state.sunAltitudeDegrees;
-		{
-			SkyProfile profile = sky.profile;
-			float regionalBlend = profile.getRegionalBlend(sunAltDeg);
-			mix(out.sunDirectionalLight, profile.getDirectionalLight(state.sunAngles[0]), env.getDirectionalColor(), regionalBlend);
-			mix(out.ambientLight, profile.getAmbientLight(sunAltDeg), env.getAmbientColor(), regionalBlend);
-		}
+		multiply(out.sunDirectionalLight, env.getDirectionalColor(), env.directionalStrength);
+		multiply(out.ambientLight, env.getAmbientColor(), env.ambientStrength);
 		float moonAltDeg = state.moonAltitudeDegrees;
-		multiply(out.ambientLight, out.ambientLight, env.ambientStrength);
 
 		float moonLightIllumination = state.moonLightIllumination;
-		float moonPresence = 0;
-		if (isMoonLighting(moonAltDeg, moonLightIllumination))
-			moonPresence = moonLightIllumination * smoothstep(MOON_ELEVATION_FADE_START_DEG, MOON_ELEVATION_FADE_END_DEG, moonAltDeg);
 		// Moonlight is already negligible beside daylight. Bring it to its natural strength
 		// before the shadow camera changes source, then vary only its shadow contrast.
-		float moonLighting = moonPresence * smoothstep(5, 0, sunAltDeg);
+		float moonLighting = moonLightIllumination * smoothstep(5, 0, sunAltDeg);
 		// fogDepth is an artistic density control, not a physical extinction coefficient.
 		float defaultDensity = .6f + (exp(6.7f * env.fogDepth / 100) - 1);
 		out.fogDensity = max(0, sky.skyFogDensity < 0 ? defaultDensity : sky.skyFogDensity);
@@ -356,14 +343,14 @@ public class SkyRenderer {
 		if (sky.skyFogColor != null)
 			mix(out.fog, out.fog, sky.skyFogColor, saturate(sky.skyFogColorMix));
 
-		// Fade direct sunlight near the horizon; the ambient profile supplies twilight below it.
-		// Carrying the warm directional baseline into twilight produces a red cast under exposure.
-		multiply(out.sunDirectionalLight, out.sunDirectionalLight, env.directionalStrength * smoothstep(0, 5, sunAltDeg));
-
 		multiply(out.moonDirectionalLight, sky.moonDirectionalColor, state.moonDirectionalStrength * moonLighting);
-		float moonAmbientStrength = sky.moonAmbientStrength * moonLighting;
+		float[] moonAmbientLight = multiply(sky.moonAmbientColor, sky.moonAmbientStrength * moonLighting);
+		applyAtmosphere(out.sunDirectionalLight, out.ambientLight, sunAltDeg);
+		applyAtmosphere(out.moonDirectionalLight, moonAmbientLight, moonAltDeg);
+		add(out.ambientLight, out.ambientLight, moonAmbientLight);
+		// Airglow/starlight is independent of the environment's daytime lighting and moon phase.
 		for (int i = 0; i < out.ambientLight.length; i++)
-			out.ambientLight[i] += sky.moonAmbientColor[i] * moonAmbientStrength;
+			out.ambientLight[i] += sky.nightAmbientColor[i] * sky.nightAmbientStrength;
 		float ambientLuminance = linearSrgbLuminance(out.ambientLight);
 		float sunLuminance = linearSrgbLuminance(out.sunDirectionalLight);
 		float moonLuminance = linearSrgbLuminance(out.moonDirectionalLight);
@@ -390,47 +377,6 @@ public class SkyRenderer {
 		out.configuration.interpolateLightingParameters(sky, sky, 1);
 	}
 
-	private static void distributeDirectionalLight(
-		LightingFrame out,
-		float[] directionalLight,
-		float altitudeDegrees,
-		float diameterDegrees,
-		float shadowStrength,
-		float directionalFade
-	) {
-		float visibility = getShadowVisibility(altitudeDegrees, diameterDegrees) * shadowStrength;
-		// The spherical average of max(dot(normal, light), 0) is 1/4. Transfer the
-		// non-shadow-casting part without changing its average incident energy.
-		float ambientTransfer = (1 - visibility) * .25f;
-		for (int i = 0; i < out.ambientLight.length; i++)
-			out.ambientLight[i] += directionalLight[i] * ambientTransfer;
-
-		// Handoff suppression is temporary: unlike physical softening, it adds no ambient light.
-		float directionalTransfer = visibility * directionalFade;
-		for (int i = 0; i < out.directionalLight.length; i++)
-			out.directionalLight[i] += directionalLight[i] * directionalTransfer;
-	}
-
-	private static float getShadowVisibility(float altitudeDegrees, float diameterDegrees) {
-		if (altitudeDegrees <= 0)
-			return 0;
-		// A 10 m caster projects a disk-shaped penumbra. Approximate its long-axis
-		// variance with a Gaussian and retain its contrast at a 1 m feature wavelength.
-		float elevation = sin(altitudeDegrees * DEG_TO_RAD);
-		float sigma = 10 * diameterDegrees * DEG_TO_RAD / (4 * elevation * elevation);
-		return exp(-2 * PI * PI * sigma * sigma);
-	}
-
-	private float getNightExposure(float luminance, float sunAltitudeDegrees) {
-		final float target = 1;
-		final float softFloor = 0.006f;
-		float adaptedExposure = max(1, (target + softFloor) / (max(0, luminance) + softFloor));
-		// Establish adaptation during sunset, before direct sunlight disappears at the horizon.
-		// The cycle's overworld gate excludes interiors; daytime above 10 degrees is unchanged.
-		float adaptation = plugin.configNightBrightness * smoothstep(10, 0, sunAltitudeDegrees);
-		return mix(1, adaptedExposure * max(plugin.configNightBrightness, 1), adaptation);
-	}
-
 	private void updateSkyUbo(SkyConfiguration configuration, SkyState state, GradientSample sky) {
 		var ubo = plugin.uboSky;
 		ubo.gradientEnabled.set(1);
@@ -454,7 +400,34 @@ public class SkyRenderer {
 		ubo.upload();
 	}
 
-	private static boolean isMoonLighting(float moonAltDeg, float moonIllumination) {
-		return moonAltDeg > MOON_HORIZON_CUTOFF_DEG && moonIllumination > MIN_MOON_ILLUMINATION;
+	private float getNightExposure(float luminance, float sunAltitudeDegrees) {
+		final float target = 1;
+		final float softFloor = 0.006f;
+		float adaptedExposure = max(1, (target + softFloor) / (max(0, luminance) + softFloor));
+		// Establish adaptation during sunset, before direct sunlight disappears at the horizon.
+		// The cycle's overworld gate excludes interiors; daytime above 10 degrees is unchanged.
+		float adaptation = plugin.configNightBrightness * smoothstep(10, 0, sunAltitudeDegrees);
+		return mix(1, adaptedExposure * max(plugin.configNightBrightness, 1), adaptation);
+	}
+
+	/**
+	 * Attenuate overhead-calibrated linear lighting through a shared clear atmosphere, in place.
+	 * Authored ambient/direct ratios do not determine atmospheric density.
+	 */
+	public static void applyAtmosphere(float[] directional, float[] ambient, float altitudeDegrees) {
+		float elevation = sin(max(0, altitudeDegrees) * DEG_TO_RAD);
+		float curvature = 1 / 38.f;
+		float airMass = sqrt(1 + curvature * curvature) / sqrt(elevation * elevation + curvature * curvature);
+		float directVisibility = smoothstep(0, .5f, altitudeDegrees);
+		float twilight = smoothstep(-18, -12, altitudeDegrees);
+		for (int i = 0; i < 3; i++) {
+			// Invert the same single-scattering ratio used by deriveAmbientLight.
+			float depth = log(1 + 2 * ColorUtils.AMBIENT_SCATTERING[i]);
+			directional[i] *= exp(-depth * (airMass - 1)) * directVisibility;
+			float scattering = (1 - exp(-depth * airMass)) / (1 - exp(-depth)) / airMass;
+			// Approximate upper-atmosphere twilight: red fades faster than blue below sunset.
+			float twilightDecay = exp(min(0, altitudeDegrees) * (.65f - .1f * i));
+			ambient[i] *= scattering * twilightDecay * twilight;
+		}
 	}
 }

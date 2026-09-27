@@ -96,6 +96,15 @@
         "type": "number",
         "minimum": 0
       },
+      "nightAmbientColor": {
+        "$ref": "#/$defs/color",
+        "description": "Airglow/starlight ambient color, independent of moon phase and environment daytime lighting."
+      },
+      "nightAmbientStrength": {
+        "type": "number",
+        "minimum": 0,
+        "description": "Airglow/starlight ambient strength. Defaults to 1; added at all times while the cycle is active."
+      },
       "skyFogColor": {
         "$ref": "#/$defs/color",
         "description": "Fog color in sRGB. Omit to follow the sky's horizon color. Blends with that color using skyFogColorMix."

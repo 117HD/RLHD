@@ -54,6 +54,9 @@ public class SkyConfiguration {
 	public float[] moonDirectionalColor;
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] moonAmbientColor;
+	@JsonAdapter(SrgbToLinearAdapter.class)
+	public float[] nightAmbientColor;
+	public float nightAmbientStrength = 1;
 	public float moonDiskStrength = 1;
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	@Nullable
@@ -74,6 +77,10 @@ public class SkyConfiguration {
 	private float skyColorTakeoverAngle = 40;
 
 	public void normalize() {
+		if (nightAmbientColor == null)
+			nightAmbientColor = new float[3];
+		nightAmbientColor = HDUtils.ensureArrayLength(nightAmbientColor, 3);
+		nightAmbientStrength = max(0, nightAmbientStrength);
 		if (moonDiskColor == null)
 			moonDiskColor = ColorUtils.colorTemperatureToLinearRgb(8000);
 		moonDiskColor = HDUtils.ensureArrayLength(moonDiskColor, 3);
@@ -124,38 +131,25 @@ public class SkyConfiguration {
 		private Keyframe[] zenith;
 		private Keyframe[] horizon;
 		private Keyframe[] sunGlow;
-		private Keyframe[] ambientColor;
-		private Keyframe[] directionalTemperature;
-		private Keyframe[] regionalBlend;
 		@JsonAdapter(SrgbToLinearAdapter.class)
 		private float[] nightSkyColor;
-		private float directionalBaseTemperature;
-		private float directionalBaseStrength;
 
 		private static class Keyframe {
 			private float altitude;
 			@JsonAdapter(SrgbToLinearAdapter.class)
 			private float[] color;
-			private Float value;
-
-			private float[] values() {
-				return color != null ? color : vec(value);
-			}
 		}
 
 		public void normalize() {
 			if (nightSkyColor == null)
 				throw new IllegalStateException("Invalid sky profile");
 			nightSkyColor = HDUtils.ensureArrayLength(nightSkyColor, 3);
-			normalizeKeyframes(zenith, true);
-			normalizeKeyframes(horizon, true);
-			normalizeKeyframes(sunGlow, true);
-			normalizeKeyframes(ambientColor, true);
-			normalizeKeyframes(directionalTemperature, false);
-			normalizeKeyframes(regionalBlend, false);
+			normalizeKeyframes(zenith);
+			normalizeKeyframes(horizon);
+			normalizeKeyframes(sunGlow);
 		}
 
-		private static void normalizeKeyframes(@Nullable Keyframe[] keyframes, boolean colors) {
+		private static void normalizeKeyframes(@Nullable Keyframe[] keyframes) {
 			if (keyframes == null || keyframes.length == 0)
 				throw new IllegalStateException("Missing sky keyframes");
 			float previousAltitude = Float.NEGATIVE_INFINITY;
@@ -163,35 +157,11 @@ public class SkyConfiguration {
 				Keyframe keyframe = keyframes[i];
 				if (keyframe == null || keyframe.altitude <= previousAltitude)
 					throw new IllegalStateException("Sky keyframes must be ordered by altitude");
-				if (colors) {
-					if (keyframe.value != null || keyframe.color == null)
-						throw new IllegalStateException("Expected a sky color keyframe");
-					keyframe.color = HDUtils.ensureArrayLength(keyframe.color, 3);
-				} else if (keyframe.color != null || keyframe.value == null) {
-					throw new IllegalStateException("Expected a scalar sky keyframe");
-				}
+				if (keyframe.color == null)
+					throw new IllegalStateException("Expected a sky color keyframe");
+				keyframe.color = HDUtils.ensureArrayLength(keyframe.color, 3);
 				previousAltitude = keyframe.altitude;
 			}
-		}
-
-		public float[] getDirectionalLight(float sunAltitude) {
-			float[] directionalLight = ColorUtils.colorTemperatureToLinearRgb(directionalBaseTemperature);
-			multiply(directionalLight, directionalLight, directionalBaseStrength);
-			if (sunAltitude >= 0) {
-				float temperature = interpolate(sunAltitude * RAD_TO_DEG, directionalTemperature)[0];
-				float strength = sin(sunAltitude);
-				strength *= strength * 3;
-				add(directionalLight, directionalLight, multiply(ColorUtils.colorTemperatureToLinearRgb(temperature), strength));
-			}
-			return directionalLight;
-		}
-
-		public float[] getAmbientLight(float sunAltitudeDegrees) {
-			return interpolate(sunAltitudeDegrees, ambientColor);
-		}
-
-		public float getRegionalBlend(float sunAltitudeDegrees) {
-			return interpolate(sunAltitudeDegrees, regionalBlend)[0];
 		}
 
 		private static float[] interpolate(float altitude, Keyframe[] keyframes) {
@@ -201,9 +171,9 @@ public class SkyConfiguration {
 				i++;
 			Keyframe from = keyframes[i];
 			if (i == end)
-				return copy(from.values());
+				return copy(from.color);
 			Keyframe to = keyframes[i + 1];
-			return mix(from.values(), to.values(), saturate((altitude - from.altitude) / (to.altitude - from.altitude)));
+			return mix(from.color, to.color, saturate((altitude - from.altitude) / (to.altitude - from.altitude)));
 		}
 	}
 

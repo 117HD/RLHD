@@ -22,12 +22,12 @@ import static rs117.hd.utils.MathUtils.*;
 public class ColorUtils {
 	private static final float EPS = 1e-4f;
 
-	private static final float[] LINEAR_SRGB_LUMINANCE_COEFFICIENTS = { .2126f, .7152f, .0722f };
+	public static final float[] LINEAR_SRGB_LUMINANCE_COEFFICIENTS = { .2126f, .7152f, .0722f };
 
 	// Approximate the downward half of single Rayleigh scattering relative to already-attenuated red, green and blue directional light.
-	private static final float[] AMBIENT_SCATTERING = { .026f, .053f, .136f };
+	public static final float[] AMBIENT_SCATTERING = { .026f, .053f, .136f };
 	// Approximate mesopic vision
-	private static final float[] MESOPIC_TINT = { .85f, .95f, 1.15f };
+	public static final float[] MESOPIC_TINT = { .85f, .95f, 1.15f };
 
 	/**
 	 * Row-major transforms between CIE XYZ (D65) and linear sRGB.
