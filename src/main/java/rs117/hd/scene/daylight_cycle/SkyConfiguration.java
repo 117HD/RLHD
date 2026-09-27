@@ -54,9 +54,6 @@ public class SkyConfiguration {
 	public float[] moonDirectionalColor;
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] moonAmbientColor;
-	@JsonAdapter(SrgbToLinearAdapter.class)
-	public float[] nightAmbientColor;
-	public float nightAmbientStrength = 1;
 	public float moonDiskStrength = 1;
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	@Nullable
@@ -77,10 +74,6 @@ public class SkyConfiguration {
 	private float skyColorTakeoverAngle = 40;
 
 	public void normalize() {
-		if (nightAmbientColor == null)
-			nightAmbientColor = new float[3];
-		nightAmbientColor = HDUtils.ensureArrayLength(nightAmbientColor, 3);
-		nightAmbientStrength = max(0, nightAmbientStrength);
 		if (moonDiskColor == null)
 			moonDiskColor = ColorUtils.colorTemperatureToLinearRgb(8000);
 		moonDiskColor = HDUtils.ensureArrayLength(moonDiskColor, 3);
@@ -131,6 +124,7 @@ public class SkyConfiguration {
 		private Keyframe[] zenith;
 		private Keyframe[] horizon;
 		private Keyframe[] sunGlow;
+		private Keyframe[] ambientColor;
 		private Keyframe[] directionalTemperature;
 		private Keyframe[] regionalBlend;
 		@JsonAdapter(SrgbToLinearAdapter.class)
@@ -156,6 +150,7 @@ public class SkyConfiguration {
 			normalizeKeyframes(zenith, true);
 			normalizeKeyframes(horizon, true);
 			normalizeKeyframes(sunGlow, true);
+			normalizeKeyframes(ambientColor, true);
 			normalizeKeyframes(directionalTemperature, false);
 			normalizeKeyframes(regionalBlend, false);
 		}
@@ -189,6 +184,10 @@ public class SkyConfiguration {
 				add(directionalLight, directionalLight, multiply(ColorUtils.colorTemperatureToLinearRgb(temperature), strength));
 			}
 			return directionalLight;
+		}
+
+		public float[] getAmbientLight(float sunAltitudeDegrees) {
+			return interpolate(sunAltitudeDegrees, ambientColor);
 		}
 
 		public float getRegionalBlend(float sunAltitudeDegrees) {
@@ -247,9 +246,8 @@ public class SkyConfiguration {
 		if (customGradient)
 			return;
 		if (fogColor != null && sunStrength < 1) {
-			// Retain the authored suppression through twilight. Fading it out below
-			// the horizon reveals the bright gradient again before the night tint takes over.
-			float suppression = 1 - sunStrength;
+			float window = smoothstep(-25, 0, sunAltitudeDegrees);
+			float suppression = (1 - sunStrength) * window;
 			if (suppression > 0) {
 				float[] target = mix(fogColor, profile.nightSkyColor, smoothstep(5, -5, sunAltitudeDegrees));
 				blendSky(zenith, horizon, target, suppression);
