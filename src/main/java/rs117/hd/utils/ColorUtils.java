@@ -24,10 +24,16 @@ public class ColorUtils {
 
 	public static final float[] LINEAR_SRGB_LUMINANCE_COEFFICIENTS = { .2126f, .7152f, .0722f };
 
-	// Approximate the downward half of single Rayleigh scattering relative to already-attenuated red, green and blue directional light.
-	public static final float[] AMBIENT_SCATTERING = { .026f, .053f, .136f };
 	// Approximate mesopic vision
 	public static final float[] MESOPIC_TINT = { .85f, .95f, 1.15f };
+
+	private static final float HAZE_OPTICAL_DEPTH = .08f;
+	// Reference Rayleigh extinction plus neutral haze; independent of authored environment lighting.
+	public static final float[] ATMOSPHERIC_OPTICAL_DEPTH = {
+		log(1 + 2 * .026f) + HAZE_OPTICAL_DEPTH,
+		log(1 + 2 * .053f) + HAZE_OPTICAL_DEPTH,
+		log(1 + 2 * .136f) + HAZE_OPTICAL_DEPTH
+	};
 
 	/**
 	 * Row-major transforms between CIE XYZ (D65) and linear sRGB.
@@ -142,10 +148,11 @@ public class ColorUtils {
 	}
 
 	/**
-	 * Approximate clear-atmosphere ambient light from linear directional light.
+	 * Approximate downward single scattering relative to overhead, already-attenuated directional light.
 	 */
 	public static void deriveAmbientLight(float[] out, float[] directionalColor) {
-		multiply(out, directionalColor, AMBIENT_SCATTERING);
+		for (int i = 0; i < 3; i++)
+			out[i] = directionalColor[i] * .5f * (exp(ATMOSPHERIC_OPTICAL_DEPTH[i]) - 1);
 	}
 
 	/**

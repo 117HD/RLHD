@@ -2,7 +2,7 @@
   {
     "name": "GIELINOR",
     "nightAmbientColor": "#94B8FF",
-    "nightAmbientStrength": 0.008,
+    "nightAmbientStrength": 0.005,
     "moonDiskColor": "#7F92FF",
     "moonDiskStrength": 6.2,
     "profile": {

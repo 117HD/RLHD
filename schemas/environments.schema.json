@@ -475,6 +475,10 @@
       "hideVanillaSkyboxes": {
         "type": "boolean",
         "description": "Whether to hide the game's built-in skybox models in this area so the daylight cycle's sky is shown. Requires the 'Override Vanilla Skyboxes' option. Defaults to false."
+      },
+      "nightExposure": {
+        "type": "number",
+        "description": "Adaptation target multiplier for moonlight and the night ambient baseline. Defaults to 1. Does not amplify sunlight or solar ambient lighting."
       }
     }
   },

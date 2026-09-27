@@ -9,13 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration;
+import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.ExpressionParser;
 import rs117.hd.utils.ExpressionPredicate;
 import rs117.hd.utils.GsonUtils.DegreesToRadians;
 import rs117.hd.utils.HDUtils;
 
 import static rs117.hd.utils.ColorUtils.SrgbToLinearAdapter;
-import static rs117.hd.utils.ColorUtils.deriveAmbientLight;
 import static rs117.hd.utils.ColorUtils.rgb;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -94,6 +94,7 @@ public class Environment {
 	@Nullable
 	private SkyConfiguration sky;
 	public boolean hideVanillaSkyboxes = false;
+	public float nightExposure = 1;
 
 	public transient boolean hasWaterColorOverride;
 	public transient boolean hasFogColorOverride;
@@ -138,7 +139,7 @@ public class Environment {
 		if (ambientColor == null) {
 			if (isOverworld) {
 				ambientColor = new float[3];
-				deriveAmbientLight(ambientColor, directionalColor);
+				ColorUtils.deriveAmbientLight(ambientColor, directionalColor);
 			} else {
 				ambientColor = DEFAULT.ambientColor;
 			}
@@ -197,6 +198,7 @@ public class Environment {
 		mix(shadowAngles, from.shadowAngles, to.shadowAngles, t);
 		mix(waterCausticsColor, from.waterCausticsColor, to.waterCausticsColor, t);
 		fogDepth = mix(from.fogDepth, to.fogDepth, t);
+		nightExposure = mix(from.nightExposure, to.nightExposure, t);
 		ambientStrength = mix(from.ambientStrength, to.ambientStrength, t);
 		directionalStrength = mix(from.directionalStrength, to.directionalStrength, t);
 		underglowStrength = mix(from.underglowStrength, to.underglowStrength, t);

@@ -31,7 +31,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class DeveloperTools implements KeyListener {
-	public static final float[] COLOR_PICKER = new float[4];
+	public static final float[] COLOR_PICKER = new float[4]; // linear sRGB, non-linear alpha
 
 	// This could be part of the config if we had developer mode config sections
 	private static final Keybind KEY_TOGGLE_TILE_INFO = new Keybind(KeyEvent.VK_F3, CTRL_DOWN_MASK);
