@@ -76,6 +76,7 @@
   },
   {
     "area": "WILDERNESS_HIGH",
+    "nightExposure": 1.8,
     "lightningEffects": true,
     "ambientColor": "#d7d2d2",
     "ambientStrength": 1,
@@ -103,6 +104,7 @@
   },
   {
     "area": "WILDERNESS_LOW",
+    "nightExposure": 1.8,
     "ambientColor": "#d7d2d2",
     "ambientStrength": 0.75,
     "directionalColor": "#8a9eb6",
@@ -126,6 +128,7 @@
   },
   {
     "area": "WILDERNESS_MID",
+    "nightExposure": 1.8,
     "ambientColor": "#d7d2d2",
     "ambientStrength": 0.75,
     "directionalColor": "#c5b8b6",
@@ -409,6 +412,7 @@
     "area": "VER_SINHAZA_TRANSITION",
     "instantTransition": true,
     "ambientColor": "#6b9cd1",
+    "nightExposure": 4,
     "ambientStrength": 1.5,
     "directionalColor": "#67a8f8",
     "directionalStrength": 5,
@@ -454,6 +458,7 @@
   {
     "area": "VER_SINHAZA",
     "ambientColor": "#6b9cd1",
+    "nightExposure": 4,
     "ambientStrength": 1.5,
     "directionalColor": "#67a8f8",
     "directionalStrength": 5,
@@ -607,6 +612,7 @@
   {
     "area": "BARROWS",
     "lightningEffects": true,
+    "nightExposure": 1.8,
     "ambientColor": "#5b83b3",
     "ambientStrength": 2,
     "directionalColor": "#526e8b",
@@ -652,6 +658,7 @@
   {
     "area": "DARKMEYER",
     "ambientColor": "#8aabd5",
+    "nightExposure": 2.2,
     "ambientStrength": 1,
     "directionalColor": "#62a3ff",
     "directionalStrength": 4,
@@ -678,6 +685,7 @@
   },
   {
     "area": "MEIYERDITCH",
+    "nightExposure": 2.6,
     "ambientColor": "#dad8ce",
     "ambientStrength": 2,
     "directionalColor": "#ced6da",
@@ -728,6 +736,7 @@
   {
     "description": "Environment for the cutscene in the middle of the The Blood Moon Rises",
     "area": "BMR_MORYTANIA_MOON_CUTSCENE",
+    "nightExposure": 2.3,
     "instantTransition": true,
     "varbitCondition": "CUTSCENE_STATUS && MYQ6 !=0 && MYQ6 < 178",
     "hideVanillaSkyboxes": true,
@@ -902,6 +911,7 @@
   },
   {
     "area": "DRAYNOR_MANOR",
+    "nightExposure": 1.2,
     "lightningEffects": true,
     "ambientColor": "#615c57",
     "ambientStrength": 3,
@@ -1203,6 +1213,7 @@
   },
   {
     "area": "MOUNTAIN_CAMP_ENTRY_PATH",
+    "nightExposure": 1.3,
     "ambientColor": "#97baff",
     "ambientStrength": 0.9,
     "directionalStrength": 1,
@@ -1225,6 +1236,7 @@
   },
   {
     "area": "MOUNTAIN_CAMP",
+    "nightExposure": 1.3,
     "ambientColor": "#97baff",
     "ambientStrength": 0.9,
     "directionalStrength": 1,
@@ -1247,6 +1259,7 @@
   },
   {
     "area": "FREMENNIK_PROVINCE",
+    "nightExposure": 1.2,
     "ambientColor": "#96a3cb",
     "ambientStrength": 0.9,
     "directionalColor": "#abc2d3",
@@ -1531,6 +1544,7 @@
   },
   {
     "area": "POISON_WASTE",
+    "nightExposure": 1.4,
     "ambientColor": "#c0dbad",
     "ambientStrength": 1,
     "directionalColor": "#adb08b",
@@ -1777,6 +1791,7 @@
   },
   {
     "area": "ARCEUUS",
+    "nightExposure": 2.5,
     "ambientColor": "#6369ff",
     "ambientStrength": 1,
     "directionalColor": "#4eeeff",
@@ -1817,6 +1832,7 @@
   },
   {
     "area": "BATTLEFRONT_LIZARDMAN_CANYON_SHAMANS",
+    "nightExposure": 2,
     "ambientColor": "#FFFFFF",
     "ambientStrength": 1,
     "fogColor": "#121216",
@@ -2618,6 +2634,7 @@
   },
   {
     "area": "Hueycoatl Arena",
+    "nightExposure": 1.3,
     "ambientColor": "#6fb0ff",
     "ambientStrength": 1,
     "directionalColor": "#f4e5c9",
@@ -2640,6 +2657,7 @@
   },
   {
     "area": "VARLAMORE_SNOWY_MOUNTAINS_UPPER",
+    "nightExposure": 1.3,
     "ambientColor": "#6fb0ff",
     "ambientStrength": 0.8,
     "directionalColor": "#f4e5c9",
@@ -2660,6 +2678,7 @@
   },
   {
     "area": "VARLAMORE_SNOWY_MOUNTAINS_LOWER",
+    "nightExposure": 1.3,
     "ambientColor": "#6fb0ff",
     "ambientStrength": 1.25,
     "directionalColor": "#f4e5c9",
@@ -2705,6 +2724,7 @@
   },
   {
     "area": "AUBURNVALE",
+    "nightExposure": 1.4,
     "ambientColor": [
       295.8393,
       245.74895,
@@ -2936,6 +2956,7 @@
   {
     "description": "Environment for the final battle during The Blood Moon Rises",
     "area": "VAMPYRIUM_CASTLE_DRAKAN_ROOF",
+    "nightExposure": 1.5,
     "hideVanillaSkyboxes": true,
     "ambientColor": "#FFFFFF",
     "ambientStrength": 1,
@@ -3041,6 +3062,7 @@
   },
   {
     "area": "PLAYER_OWNED_HOUSE_FREM",
+    "nightExposure": 1.3,
     "isPohTheme": true,
     "ambientColor": "#96a3cb",
     "ambientStrength": 0.9,
@@ -3066,6 +3088,7 @@
   },
   {
     "area": "PLAYER_OWNED_HOUSE_MORY",
+    "nightExposure": 1.8,
     "isPohTheme": true,
     "ambientColor": "#5a8cc0",
     "ambientStrength": 1.5,
@@ -3134,6 +3157,7 @@
   },
   {
     "area": "WYRMSCRAIG",
+    "nightExposure": 1.8,
     "ambientColor": "#96a3cb",
     "ambientStrength": 0.9,
     "directionalColor": "#abc2d3",
