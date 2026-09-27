@@ -42,6 +42,11 @@
     "fogDepth": 65
   },
   {
+    "area": "BLACK_CAVES",
+    "fogColor": "#000000",
+    "hideVanillaSkyboxes": true
+  },
+  {
     "area": "FROZEN_WASTE_PLATEAU",
     "ambientColor": "#3b87e4",
     "ambientStrength": 0.4,

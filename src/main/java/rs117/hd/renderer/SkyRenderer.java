@@ -186,13 +186,6 @@ public class SkyRenderer {
 		updateCommandBuffer();
 	}
 
-	public boolean shouldReplaceVanillaSkybox() {
-		return
-			skyEnabled &&
-			skyProgram.isValid() &&
-			!plugin.orthographicProjection;
-	}
-
 	public boolean shouldRender(boolean hasVanillaSkybox) {
 		return skyProgram.isValid() && !hasVanillaSkybox;
 	}

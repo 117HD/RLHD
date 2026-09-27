@@ -609,7 +609,6 @@ public class ZoneRenderer implements Renderer {
 			skyRenderer.prepareFrame(plugin.uboGlobal);
 
 		boolean replaceVanillaSkybox =
-			skyRenderer.shouldReplaceVanillaSkybox() &&
 			config.replaceVanillaSkyboxes() &&
 			environmentManager.getTargetEnvironment().hideVanillaSkyboxes;
 		shouldRenderVanillaSkybox = scene.getSkybox() != null && !replaceVanillaSkybox;

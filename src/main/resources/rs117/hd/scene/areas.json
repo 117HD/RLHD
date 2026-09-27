@@ -9861,6 +9861,12 @@
     ]
   },
   {
+    "name": "BLACK_CAVES",
+    "areas": [
+      "VAMPYRIUM_CAVES"
+    ]
+  },
+  {
     "name": "CLAN_HALL",
     "aabbs": [
       [ 1730, 5442, 1789, 5501 ]
