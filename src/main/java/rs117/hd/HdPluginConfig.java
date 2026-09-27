@@ -689,7 +689,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Controls how the moon moves across the sky.<br>" +
 			"'Disabled' hides the moon, keeping half-moon illumination for scene lighting.<br>" +
-			"'Realistic' makes the moon orbit naturally, independent of the sun.<br>" +
+			"'Realistic orbit' makes the moon orbit naturally, independent of the sun.<br>" +
 			"'Mirror the sun' keeps the moon at the opposite side of the sun.<br>" +
 			"'Static' keeps the moon at a fixed point in the sky.",
 		position = 4,
@@ -736,7 +736,7 @@ public interface HdPluginConfig extends Config
 		position = 7,
 		section = daylightCycleSettings
 	)
-	default double customCycleDurationMinutes() {
+	default int customCycleDurationMinutes() {
 		return 60;
 	}
 

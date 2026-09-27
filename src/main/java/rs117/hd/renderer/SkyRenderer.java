@@ -347,11 +347,9 @@ public class SkyRenderer {
 		multiply(out.moonDirectionalLight, out.moonDirectionalLight, exposure);
 		add(out.ambientLight, out.ambientLight, nightAmbientLight);
 
-		float ambientLuminance = linearSrgbLuminance(out.ambientLight);
-		float sunLuminance = linearSrgbLuminance(out.sunDirectionalLight);
+		float shadowedLuminance = linearSrgbLuminance(out.ambientLight);
 		// The moon's directional contribution is metered above, but not rendered until handoff.
-		float litLuminance = ambientLuminance + sunLuminance;
-		float shadowedLuminance = ambientLuminance;
+		float litLuminance = shadowedLuminance + linearSrgbLuminance(out.sunDirectionalLight);
 		// Switch sources while the disappearing sun shadow spans only a few display values.
 		float sunShadowContrast = linearToSrgb(litLuminance) - linearToSrgb(shadowedLuminance);
 		out.moonShadowHandoff = moonAltDeg > 0 && moonLightIllumination > 0 ?

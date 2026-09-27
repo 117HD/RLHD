@@ -93,7 +93,6 @@ public class SkyConfiguration {
 		}
 		if (moonDirectionalStrength < 0)
 			moonDirectionalStrength = 0.0008f * moonDiskStrength * pow2(moonSizeMult);
-//			moonDirectionalStrength = 0.002f * moonDiskStrength * pow2(moonSizeMult) * COLOR_PICKER[3] * 2;
 
 		boolean deriveAmbient = moonAmbientColor == null;
 		if (deriveAmbient) {
