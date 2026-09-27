@@ -80,6 +80,7 @@ void main() {
     float s2 = sin(elapsedTime * twinkleRate * 0.37 + twinklePhase * 2.13);
     float osc = (s1 + s2) * 0.5; // [-1, 1]
     float twinkle = 1.0 + twinkleAmt * osc; // swing around baseline
+    twinkle = pow(twinkle, 2.2) / (1.0 + 0.33 * twinkleAmt * twinkleAmt);
 
     vBrightness = min(aStarBright, .4) * visibility * twinkle;
 
