@@ -94,7 +94,7 @@ public class SkyRenderer {
 		private float fogDensity;
 		private float visibility;
 		private float customGradient;
-		private float moonShadowFade;
+		private float moonShadowHandoff;
 		private float adaptationLuminance;
 
 		private LightingFrame() {
@@ -104,7 +104,7 @@ public class SkyRenderer {
 		}
 
 		private void interpolate(LightingFrame from, LightingFrame to, float t) {
-			moonShadowFade = mix(from.moonShadowFade, to.moonShadowFade, t);
+			moonShadowHandoff = mix(from.moonShadowHandoff, to.moonShadowHandoff, t);
 			adaptationLuminance = mix(from.adaptationLuminance, to.adaptationLuminance, t);
 			mix(directionalLight, from.directionalLight, to.directionalLight, t);
 			mix(ambientLight, from.ambientLight, to.ambientLight, t);
@@ -309,7 +309,7 @@ public class SkyRenderer {
 		);
 		multiply(ambientLight, ambientLight, exposure);
 		multiply(directionalLight, directionalLight, exposure);
-		usesMoonShadows = currentFrame.moonShadowFade > 0;
+		usesMoonShadows = currentFrame.moonShadowHandoff > 0;
 		copyTo(fogColor, currentFrame.horizonLinear);
 		copyTo(waterColor, currentFrame.horizonLinear);
 		plugin.uboSky.fogDensity.set(currentFrame.fogDensity);
@@ -368,32 +368,17 @@ public class SkyRenderer {
 		out.adaptationLuminance = ambientLuminance + (sunLuminance + moonLuminance) * .25f;
 		float exposure = getNightExposure(out.adaptationLuminance);
 		float litLuminance = (ambientLuminance + sunLuminance + moonLuminance) * exposure;
-		float shadowedLuminance = max(0, litLuminance - sunLuminance * getShadowVisibility(sunAltDeg, .533f) * exposure);
+		float shadowedLuminance = max(0, litLuminance - sunLuminance * exposure);
 		// Switch sources while the disappearing sun shadow spans only a few display values.
 		// Applying exposure first keeps eye adaptation from hiding an otherwise visible shadow.
 		float sunShadowContrast = linearToSrgb(litLuminance) - linearToSrgb(shadowedLuminance);
-		out.moonShadowFade = moonAltDeg > 0 && moonLightIllumination > 0 ?
+		out.moonShadowHandoff = moonAltDeg > 0 && moonLightIllumination > 0 ?
 			1 - smoothstep(SHADOW_HANDOFF_MIN_CONTRAST, SHADOW_HANDOFF_MAX_CONTRAST, sunShadowContrast) : 0;
-
-		copyTo(out.directionalLight, BLACK);
-
-		distributeDirectionalLight(
-			out,
-			out.sunDirectionalLight,
-			sunAltDeg,
-			.533f,
-			1,
-			out.moonShadowFade > 0 ? 0 : 1
-		);
-
-		distributeDirectionalLight(
-			out,
-			out.moonDirectionalLight,
-			moonAltDeg,
-			.517f,
-			saturate(sky.moonShadowStrength),
-			out.moonShadowFade
-		);
+		if (out.moonShadowHandoff > 0) {
+			multiply(out.directionalLight, out.moonDirectionalLight, out.moonShadowHandoff);
+		} else {
+			copyTo(out.directionalLight, out.sunDirectionalLight);
+		}
 		copyTo(out.zenithLinear, endpointSample.zenithLinear);
 		copyTo(out.horizonLinear, endpointSample.horizonLinear);
 		copyTo(out.sunGlowLinear, endpointSample.sunGlowLinear);
@@ -419,37 +404,6 @@ public class SkyRenderer {
 			float scattering = depth > 1e-4f ? (1 - exp(-depth * airMass)) / (1 - exp(-depth)) / airMass : 1;
 			ambient[i] *= scattering * twilight;
 		}
-	}
-
-	private static void distributeDirectionalLight(
-		LightingFrame out,
-		float[] directionalLight,
-		float altitudeDegrees,
-		float diameterDegrees,
-		float shadowStrength,
-		float directionalFade
-	) {
-		float visibility = getShadowVisibility(altitudeDegrees, diameterDegrees) * shadowStrength;
-		// The spherical average of max(dot(normal, light), 0) is 1/4. Transfer the
-		// non-shadow-casting part without changing its average incident energy.
-		float ambientTransfer = (1 - visibility) * .25f;
-		for (int i = 0; i < out.ambientLight.length; i++)
-			out.ambientLight[i] += directionalLight[i] * ambientTransfer;
-
-		// Handoff suppression is temporary: unlike physical softening, it adds no ambient light.
-		float directionalTransfer = visibility * directionalFade;
-		for (int i = 0; i < out.directionalLight.length; i++)
-			out.directionalLight[i] += directionalLight[i] * directionalTransfer;
-	}
-
-	private static float getShadowVisibility(float altitudeDegrees, float diameterDegrees) {
-		if (altitudeDegrees <= 0)
-			return 0;
-		// A 10 m caster projects a disk-shaped penumbra. Approximate its long-axis
-		// variance with a Gaussian and retain its contrast at a 1 m feature wavelength.
-		float elevation = sin(altitudeDegrees * DEG_TO_RAD);
-		float sigma = 10 * diameterDegrees * DEG_TO_RAD / (4 * elevation * elevation);
-		return exp(-2 * PI * PI * sigma * sigma);
 	}
 
 	private float getNightExposure(float luminance) {

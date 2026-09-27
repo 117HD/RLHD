@@ -311,11 +311,6 @@
                 "description": "Atmospheric ambient moonlight strength. Defaults to `moonDirectionalStrength`. Only applies while the daylight cycle is active.",
                 "minimum": 0
               },
-              "moonShadowStrength": {
-                "type": "number",
-                "description": "Moon shadow contrast multiplier, clamped to 0-1. Defaults to 1. Blurred directional light is transferred into ambient independently of the atmospheric ambient contribution. Does not affect sunlight.",
-                "minimum": 0
-              },
               "minMoonIllumination": {
                 "type": "number",
                 "description": "Minimum illumination for scene lighting, including when hideMoon is true. Defaults to 0; does not affect the disk's phase.",

@@ -47,7 +47,6 @@ public class SkyConfiguration {
 	public MoonPhase forceMoonPhase;
 	public float moonDirectionalStrength = -1;
 	public float moonAmbientStrength = -1;
-	public float moonShadowStrength = 1;
 	public float minMoonIllumination;
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] moonDiskColor;
@@ -214,7 +213,6 @@ public class SkyConfiguration {
 	 * Profile curves and celestial overrides are resolved separately.
 	 */
 	public SkyConfiguration interpolateLightingParameters(SkyConfiguration from, SkyConfiguration to, float t) {
-		moonShadowStrength = mix(from.moonShadowStrength, to.moonShadowStrength, t);
 		if (moonDiskColor == null)
 			moonDiskColor = new float[3];
 		mix(moonDiskColor, from.moonDiskColor, to.moonDiskColor, t);
