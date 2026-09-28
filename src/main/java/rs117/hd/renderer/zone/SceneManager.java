@@ -615,9 +615,9 @@ public class SceneManager {
 						.queue(ctx.streamingGroup, roundRobinDependencies[robinIdx]);
 
 						// Round Robin the streaming in zones to avoid saturating the Job queue
-						roundRobinDependencies[robinIdx] = sorted.zone.uploadJob;
+						roundRobinDependencies[robinIdx] = upload;
 						robinIdx = (robinIdx + 1) % robinSize;
-							sorted.zone.setUploadJob(upload);
+						sorted.zone.setUploadJob(upload);
 					}
 				} else {
 					nextZones[sorted.x][sorted.z] = newZone;
