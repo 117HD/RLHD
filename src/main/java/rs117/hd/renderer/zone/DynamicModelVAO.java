@@ -11,7 +11,7 @@ import rs117.hd.utils.Destructible;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLMappedBufferIntWriter;
 import rs117.hd.utils.buffer.GLMappedBufferIntWriter.ReservedView;
-import rs117.hd.utils.buffer.GLTextureBuffer;
+import rs117.hd.utils.buffer.GLShaderStorage;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
@@ -23,6 +23,8 @@ import static rs117.hd.renderer.zone.Zone.MODEL_DATA_NUM_INTS;
 import static rs117.hd.renderer.zone.Zone.MODEL_FACE_NUM_INTS;
 import static rs117.hd.renderer.zone.Zone.ZONE_VERTEX_NUM_BYTES;
 import static rs117.hd.renderer.zone.Zone.ZONE_VERTEX_NUM_INTS;
+import static rs117.hd.renderer.zone.ZoneRenderer.SHADER_STORAGE_BUFFER_MODEL_DATA;
+import static rs117.hd.renderer.zone.ZoneRenderer.SHADER_STORAGE_BUFFER_TEXTURED_FACES;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_MODEL_DATA;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.utils.MathUtils.*;
@@ -41,8 +43,8 @@ public class DynamicModelVAO implements Destructible {
 	private final GLBuffer vboRender;
 	private final GLBuffer vboStaging;
 	private final GLBuffer stubMetadata;
-	private final GLTextureBuffer tboF;
-	private final GLTextureBuffer tboM;
+	private final GLShaderStorage tboF;
+	private final GLShaderStorage tboM;
 
 	private final ArrayDeque<View> usedViews = new ArrayDeque<>();
 	private final ArrayDeque<View> freeViews = new ArrayDeque<>();
@@ -89,12 +91,12 @@ public class DynamicModelVAO implements Destructible {
 		this.stubMetadata = new GLBuffer("DynamicModel::Metadata", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 		this.vboWriter = new GLMappedBufferIntWriter(this.vboStaging);
 
-		this.tboF = new GLTextureBuffer(
+		this.tboF = new GLShaderStorage(
 			"DynamicModel::TexturedFaces::" + name,
 			GL_STREAM_DRAW,
 			storageFlags
 		);
-		this.tboM = new GLTextureBuffer(
+		this.tboM = new GLShaderStorage(
 			"DynamicModel::ModelData::" + name,
 			GL_STREAM_DRAW,
 			storageFlags
@@ -109,8 +111,8 @@ public class DynamicModelVAO implements Destructible {
 
 	void initialize() {
 		vao = glGenVertexArrays();
-		tboF.initialize(INITIAL_SIZE);
-		tboM.initialize(INITIAL_SIZE);
+		tboF.initialize(INITIAL_SIZE, SHADER_STORAGE_BUFFER_TEXTURED_FACES, TEXTURE_UNIT_TEXTURED_FACES);
+		tboM.initialize(INITIAL_SIZE, SHADER_STORAGE_BUFFER_MODEL_DATA, TEXTURE_UNIT_MODEL_DATA);
 		vboRender.initialize(INITIAL_SIZE);
 		if (vboRender != vboStaging)
 			vboStaging.initialize(INITIAL_SIZE);
@@ -249,8 +251,8 @@ public class DynamicModelVAO implements Destructible {
 		view.tboF = tboFWriter.reserve(faceCount * MODEL_FACE_NUM_INTS);
 		view.tboM = tboMWriter.reserve(MODEL_DATA_NUM_INTS);
 		view.vao = vao;
-		view.tboFId = tboF.getTexId();
-		view.tboMId = tboM.getTexId();
+		view.tboFBuffer = tboF;
+		view.tboMBuffer = tboM;
 		view.drawIdx = drawIdx;
 
 		return view;
@@ -271,6 +273,8 @@ public class DynamicModelVAO implements Destructible {
 		view.vbo = null;
 		view.tboF = null;
 		view.tboM = null;
+		view.tboFBuffer = null;
+		view.tboMBuffer = null;
 
 		usedViews.add(view);
 	}
@@ -354,8 +358,8 @@ public class DynamicModelVAO implements Destructible {
 			return;
 
 		cmd.BindVertexArray(vao);
-		cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tboF.getTexId(), TEXTURE_UNIT_TEXTURED_FACES);
-		cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tboM.getTexId(), TEXTURE_UNIT_MODEL_DATA);
+		cmd.bindShaderStorage(tboF);
+		cmd.bindShaderStorage(tboM);
 
 		if (rangeCount == 1) {
 			if (SUPPORTS_INDIRECT_DRAW) {
@@ -389,8 +393,8 @@ public class DynamicModelVAO implements Destructible {
 		public ReservedView tboF;
 		public ReservedView tboM;
 		public int vao;
-		public int tboFId;
-		public int tboMId;
+		public GLShaderStorage tboFBuffer;
+		public GLShaderStorage tboMBuffer;
 
 		@Getter
 		private int drawIdx;

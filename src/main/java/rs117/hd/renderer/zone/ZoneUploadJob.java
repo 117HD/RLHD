@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.buffer.GLBuffer;
-import rs117.hd.utils.buffer.GLTextureBuffer;
+import rs117.hd.utils.buffer.GLShaderStorage;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.jobs.Job;
 
@@ -12,6 +12,10 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.renderer.zone.Zone.MODEL_DATA_NUM_BYTES;
 import static rs117.hd.renderer.zone.Zone.STATIC_FACE_NUM_BYTES;
 import static rs117.hd.renderer.zone.Zone.ZONE_VERTEX_NUM_BYTES;
+import static rs117.hd.renderer.zone.ZoneRenderer.SHADER_STORAGE_BUFFER_MODEL_DATA;
+import static rs117.hd.renderer.zone.ZoneRenderer.SHADER_STORAGE_BUFFER_TEXTURED_FACES;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_MODEL_DATA;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
 
 @Slf4j
@@ -72,19 +76,19 @@ public final class ZoneUploadJob extends Job {
 				a.map(MAP_WRITE);
 			}
 
-			GLTextureBuffer f = null;
+			GLShaderStorage f = null;
 			sz = zoneBeingUploaded.sizeF * STATIC_FACE_NUM_BYTES;
 			if (sz > 0) {
-				f = new GLTextureBuffer("Zone::TexturedFaces", GL_STATIC_DRAW);
-				f.initialize(sz);
+				f = new GLShaderStorage("Zone::TexturedFaces", GL_STATIC_DRAW);
+				f.initialize(sz, SHADER_STORAGE_BUFFER_TEXTURED_FACES, TEXTURE_UNIT_TEXTURED_FACES);
 				f.map(MAP_WRITE);
 			}
 
-			GLTextureBuffer m = null;
+			GLShaderStorage m = null;
 			sz = zoneBeingUploaded.sizeM * MODEL_DATA_NUM_BYTES;
 			if (sz > 0) {
-				m = new GLTextureBuffer("Zone::ModelData", GL_STATIC_DRAW);
-				m.initialize(sz);
+				m = new GLShaderStorage("Zone::ModelData", GL_STATIC_DRAW);
+				m.initialize(sz, SHADER_STORAGE_BUFFER_MODEL_DATA, TEXTURE_UNIT_MODEL_DATA);
 				m.map(MAP_WRITE);
 			}
 

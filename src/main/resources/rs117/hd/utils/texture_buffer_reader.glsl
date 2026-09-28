@@ -1,5 +1,34 @@
 #pragma once
 
+// Shader storage blocks are read as tightly-packed scalars, like the texture buffer below,
+// just without the texel caching and texel size to account for
+
+#ifdef SHADER_STORAGE_BUFFERS
+    struct TexBufferReader {
+        int position;
+    };
+
+    TexBufferReader buildTexBufferReader(int position, bool scalar) {
+        TexBufferReader reader;
+        reader.position = position;
+        return reader;
+    }
+
+    #define readInt(buf, reader) ((buf).data[(reader).position++])
+    #define readUInt(buf, reader) uint((buf).data[(reader).position++])
+    #define readFloat(buf, reader) intBitsToFloat((buf).data[(reader).position++])
+    #define readBool(buf, reader) ((buf).data[(reader).position++] != 0)
+    #define readIVec2(buf, reader) ivec2(readInt(buf, reader), readInt(buf, reader))
+    #define readIVec3(buf, reader) ivec3(readInt(buf, reader), readInt(buf, reader), readInt(buf, reader))
+    #define readIVec4(buf, reader) ivec4(readInt(buf, reader), readInt(buf, reader), readInt(buf, reader), readInt(buf, reader))
+    #define readUVec2(buf, reader) uvec2(readUInt(buf, reader), readUInt(buf, reader))
+    #define readUVec3(buf, reader) uvec3(readUInt(buf, reader), readUInt(buf, reader), readUInt(buf, reader))
+    #define readUVec4(buf, reader) uvec4(readUInt(buf, reader), readUInt(buf, reader), readUInt(buf, reader), readUInt(buf, reader))
+    #define readVec2(buf, reader) vec2(readFloat(buf, reader), readFloat(buf, reader))
+    #define readVec3(buf, reader) vec3(readFloat(buf, reader), readFloat(buf, reader), readFloat(buf, reader))
+    #define readVec4(buf, reader) vec4(readFloat(buf, reader), readFloat(buf, reader), readFloat(buf, reader), readFloat(buf, reader))
+#else
+
 // Number of scalar components per fetched texel.
 // Valid range: 1-4.
 #include TEXEL_SIZE
@@ -184,6 +213,8 @@ vec4 readVec4(isamplerBuffer buf, inout TexBufferReader reader) {
         readFloat(buf, reader)
     );
 }
+
+#endif
 
 void skipScalars(inout TexBufferReader reader, int count) {
     reader.position += count;
