@@ -485,7 +485,7 @@
   },
   {
     "description": "Needs to be above the non-legacy version",
-    "key": "TOB_ROOM_VAULT_LEGACY",
+    "isLegacyTob": true,
     "area": "TOB_ROOM_VAULT",
     "ambientColor": "#7575ea",
     "ambientStrength": 3,
@@ -513,7 +513,7 @@
   },
   {
     "description": "Needs to be above the non-legacy version",
-    "key": "THEATRE_OF_BLOOD_LEGACY",
+    "isLegacyTob": true,
     "area": "THEATRE_OF_BLOOD",
     "ambientColor": "#8282b0",
     "ambientStrength": 3,

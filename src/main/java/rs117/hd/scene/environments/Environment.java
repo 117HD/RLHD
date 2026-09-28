@@ -46,6 +46,7 @@ public class Environment {
 	public Area area = Area.NONE;
 	public boolean isOverworld = false;
 	public boolean isPohTheme = false;
+	public boolean isLegacyTob = false;
 	public boolean isUnderwater = false;
 	public boolean force = false;
 	public boolean allowSkyOverride = true;

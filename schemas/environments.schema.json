@@ -23,6 +23,10 @@
         "type": "boolean",
         "description": "Whether the environment is for a player-owned house theme."
       },
+      "isLegacyTob": {
+        "type": "boolean",
+        "description": "Whether the environment only should apply with the legacy Theatre of Blood setting enabled."
+      },
       "isUnderwater": {
         "type": "boolean",
         "description": "Whether the environment is for an underwater area, such as Guardians of the Rift."

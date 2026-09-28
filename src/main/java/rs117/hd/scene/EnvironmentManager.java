@@ -27,7 +27,6 @@ package rs117.hd.scene;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -118,45 +117,41 @@ public class EnvironmentManager {
 
 	public void startUp() {
 		fileWatcher = ENVIRONMENTS_PATH.watch((path, first) -> {
-			try (var gamevals = gamevalManager.obtainHandle()) {
-				environments = loadEnvironments(path);
-				log.debug("Loaded {} environments", environments.length);
-
-				if (!config.legacyTobEnvironment()) {
-					var legacyEnvs = List.of("TOB_ROOM_VAULT_LEGACY", "THEATRE_OF_BLOOD_LEGACY");
-					environments = Arrays.stream(environments)
-						.filter(env -> env.key == null || !legacyEnvs.contains(env.key))
-						.toArray(Environment[]::new);
-				}
-
-				if (!config.pohThemeEnvironments())
-					environments = Arrays.stream(environments)
-						.filter(env -> !env.isPohTheme)
-						.toArray(Environment[]::new);
-
-				HashMap<String, Environment> map = new HashMap<>();
-				for (var env : environments)
-					if (env.key != null)
-						map.put(env.key, env);
-
-				Environment.OVERWORLD = map.getOrDefault("OVERWORLD", Environment.DEFAULT);
-				Environment.AUTUMN = map.getOrDefault("AUTUMN", Environment.DEFAULT);
-				Environment.WINTER = map.getOrDefault("WINTER", Environment.DEFAULT);
-
-				for (var env : environments)
-					env.normalize();
-
-				bindConditionVars(gamevals);
-
+			try {
+				var newEnvironments = loadEnvironments(path);
 				clientThread.invoke(() -> {
+					environments = newEnvironments;
+
+					try (var gamevals = gamevalManager.obtainHandle()) {
+						bindConditionVars(gamevals);
+					}
+
+					Environment.OVERWORLD = Environment.AUTUMN = Environment.WINTER = Environment.DEFAULT;
+					for (var env : environments) {
+						if (env.key == null)
+							continue;
+						switch (env.key) {
+							case "OVERWORLD":
+								Environment.OVERWORLD = env;
+								break;
+							case "AUTUMN":
+								Environment.AUTUMN = env;
+								break;
+							case "WINTER":
+								Environment.WINTER = env;
+								break;
+						}
+					}
+
 					// Force instant transition during development
 					if (!first)
 						reset();
 
-					if (client.getGameState().getState() >= GameState.LOGGED_IN.getState() && plugin.getSceneContext() != null)
-						loadSceneEnvironments(plugin.getSceneContext());
+					var ctx = plugin.getSceneContext();
+					if (ctx != null && client.getGameState().getState() >= GameState.LOGGED_IN.getState())
+						loadSceneEnvironments(ctx);
 				});
-			} catch (IOException ex) {
+			} catch (Exception ex) {
 				log.error("Failed to load environments:", ex);
 			}
 		});
@@ -166,7 +161,27 @@ public class EnvironmentManager {
 		Environment[] loaded = path.loadJson(plugin.getGson(), Environment[].class);
 		if (loaded == null)
 			throw new IOException("Empty or invalid: " + path);
-		return loaded;
+
+		boolean skipLegacyTob = !config.legacyTobEnvironment();
+		boolean skipPohThemes = !config.pohThemeEnvironments();
+		int count = 0;
+		for (int i = 0; i < loaded.length; i++) {
+			Environment env = loaded[i];
+			try {
+				if (env == null)
+					throw new IllegalStateException("Expected an environment object");
+				if (skipLegacyTob && env.isLegacyTob ||
+					skipPohThemes && env.isPohTheme)
+					continue;
+
+				env.normalize();
+				loaded[count++] = env;
+			} catch (RuntimeException ex) {
+				log.error("Ignoring invalid environment '{}' at {} index {}: {}", env, path, i, ex.getMessage());
+			}
+		}
+		log.debug("Loaded {} environments", count);
+		return Arrays.copyOf(loaded, count);
 	}
 
 	public void shutDown() {
@@ -203,34 +218,42 @@ public class EnvironmentManager {
 	private void bindConditionVars(GamevalManager.Handle gamevals) {
 		varbitConditionVars.clear();
 		varpConditionVars.clear();
-		if (environments == null)
-			return;
-
-		for (var env : environments) {
-			bindConditionVars(env.varbitCondition, gamevals.getVarbits(), varbitConditionVars, "varbit");
-			bindConditionVars(env.varpCondition, gamevals.getVarps(), varpConditionVars, "varp");
+		int count = 0;
+		for (int i = 0; i < environments.length; i++) {
+			Environment env = environments[i];
+			boolean valid = bindConditionVars(env.varbitCondition, gamevals.getVarbits(), varbitConditionVars, "varbit");
+			valid &= bindConditionVars(env.varpCondition, gamevals.getVarps(), varpConditionVars, "varp");
+			if (!valid) {
+				log.error("Ignoring environment '{}' with unknown condition variable(s)", env);
+				continue;
+			}
+			environments[count++] = env;
 		}
+		environments = Arrays.copyOf(environments, count);
 	}
 
-	private void bindConditionVars(
+	private boolean bindConditionVars(
 		ExpressionPredicate condition,
 		Map<String, Integer> gamevals,
 		Map<String, Integer> bindings,
 		String kind
 	) {
 		if (!(condition instanceof ExpressionParser.SerializableExpressionPredicate))
-			return;
+			return true;
 		var expr = ((ExpressionParser.SerializableExpressionPredicate) condition).expression;
+		boolean valid = true;
 		for (String name : expr.variables) {
 			if (bindings.containsKey(name))
 				continue;
 			Integer id = gamevals.get(name.toUpperCase());
 			if (id == null) {
 				log.error("Unknown {} condition variable '{}'", kind, name, new Throwable());
+				valid = false;
 				continue;
 			}
 			bindings.put(name, id);
 		}
+		return valid;
 	}
 
 	private boolean isConditionSatisfied(Environment environment) {
