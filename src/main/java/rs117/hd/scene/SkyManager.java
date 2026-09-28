@@ -442,8 +442,7 @@ public class SkyManager {
 		boolean naturalMoonlightEnabled =
 			!sky.hideMoon ||
 			sky.moonLightVisibility >= 0 ||
-			sky.moonDirectionalStrength >= 0 ||
-			sky.moonAmbientStrength >= 0;
+			sky.hasExplicitMoonlight();
 		float moonLightVisibility = sky.moonLightVisibility < 0 ? 1 : sky.moonLightVisibility;
 		float lightIllumination = moonLightVisibility * max(sky.minMoonIllumination, naturalMoonlightEnabled ? illumination : 0);
 		float visibility = sky.moonVisibility;

@@ -76,6 +76,11 @@ public class SkyConfiguration {
 	private float sunriseSunsetStrength = 1;
 	private float skyColorTakeoverAngle = 40;
 
+	private transient boolean derivedMoonDirectionalColor;
+	private transient boolean derivedMoonAmbientColor;
+	private transient boolean derivedMoonDirectionalStrength;
+	private transient boolean derivedMoonAmbientStrength;
+
 	public void normalize() {
 		if (nightAmbientColor == null)
 			nightAmbientColor = new float[3];
@@ -87,15 +92,19 @@ public class SkyConfiguration {
 
 		boolean deriveDirectional = moonDirectionalColor == null;
 		if (deriveDirectional) {
+			derivedMoonDirectionalColor = true;
 			moonDirectionalColor = copy(moonDiskColor);
 		} else {
 			moonDirectionalColor = HDUtils.ensureArrayLength(moonDirectionalColor, 3);
 		}
-		if (moonDirectionalStrength < 0)
+		if (moonDirectionalStrength < 0) {
+			derivedMoonDirectionalStrength = true;
 			moonDirectionalStrength = 0.0008f * moonDiskStrength * pow2(moonSizeMult);
+		}
 
 		boolean deriveAmbient = moonAmbientColor == null;
 		if (deriveAmbient) {
+			derivedMoonAmbientColor = true;
 			moonAmbientColor = copy(moonDirectionalColor);
 			if (!deriveDirectional) {
 				// We assume that authored directional colors already include the mesopic shift.
@@ -106,8 +115,10 @@ public class SkyConfiguration {
 		} else {
 			moonAmbientColor = HDUtils.ensureArrayLength(moonAmbientColor, 3);
 		}
-		if (moonAmbientStrength < 0)
+		if (moonAmbientStrength < 0) {
+			derivedMoonAmbientStrength = true;
 			moonAmbientStrength = moonDirectionalStrength;
+		}
 
 		// Apply mesopic shifts to derived night colors, since our renderer does not account for this in later stages
 		if (deriveDirectional)
@@ -124,6 +135,10 @@ public class SkyConfiguration {
 		if (profile == null)
 			throw new IllegalStateException("Invalid sky profile");
 		profile.normalize();
+	}
+
+	public boolean hasExplicitMoonlight() {
+		return !derivedMoonDirectionalStrength || !derivedMoonAmbientStrength;
 	}
 
 	@SuppressWarnings("unused")
@@ -178,22 +193,10 @@ public class SkyConfiguration {
 	}
 
 	/**
-	 * Interpolate the properties evaluated outside of {@link SkyProfile}.
-	 * Profile curves and celestial overrides are resolved separately.
+	 * Interpolate shader parameters. Lighting, disk color, gradients, and celestial state
+	 * are evaluated separately before blending.
 	 */
 	public SkyConfiguration interpolateLightingParameters(SkyConfiguration from, SkyConfiguration to, float t) {
-		if (moonDiskColor == null)
-			moonDiskColor = new float[3];
-		mix(moonDiskColor, from.moonDiskColor, to.moonDiskColor, t);
-		if (moonDirectionalColor == null)
-			moonDirectionalColor = new float[3];
-		mix(moonDirectionalColor, from.moonDirectionalColor, to.moonDirectionalColor, t);
-		if (moonAmbientColor == null)
-			moonAmbientColor = new float[3];
-		mix(moonAmbientColor, from.moonAmbientColor, to.moonAmbientColor, t);
-		moonDiskStrength = mix(from.moonDiskStrength, to.moonDiskStrength, t);
-		moonDirectionalStrength = mix(from.moonDirectionalStrength, to.moonDirectionalStrength, t);
-		moonAmbientStrength = mix(from.moonAmbientStrength, to.moonAmbientStrength, t);
 		horizonWidth = mix(from.horizonWidth, to.horizonWidth, t);
 		// Sky fog defaults are resolved against the environment before interpolation by the renderer.
 		starVisibility = mix(from.starVisibility, to.starVisibility, t);
@@ -263,6 +266,20 @@ public class SkyConfiguration {
 			TypeAdapter<SkyConfiguration> delegate = gson.getDelegateAdapter(this, TypeToken.get(SkyConfiguration.class));
 			TypeAdapter<JsonElement> jsonElementAdapter = gson.getAdapter(JsonElement.class);
 			return (TypeAdapter<T>) new TypeAdapter<SkyConfiguration>() {
+				private JsonObject toDefinition(SkyConfiguration sky) {
+					JsonObject json = delegate.toJsonTree(sky).getAsJsonObject();
+					// Derived values must not become authored overrides through inheritance or serialization.
+					if (sky.derivedMoonDirectionalColor)
+						json.remove("moonDirectionalColor");
+					if (sky.derivedMoonAmbientColor)
+						json.remove("moonAmbientColor");
+					if (sky.derivedMoonDirectionalStrength)
+						json.remove("moonDirectionalStrength");
+					if (sky.derivedMoonAmbientStrength)
+						json.remove("moonAmbientStrength");
+					return json;
+				}
+
 				@Nullable
 				private SkyConfiguration resolveParent(String name, String location) {
 					SkyConfiguration parent = SkyManager.PRESETS.get(name);
@@ -309,7 +326,7 @@ public class SkyConfiguration {
 						log.error("No default sky preset at {}; ignoring sky", location);
 						return null;
 					}
-					var parentJson = delegate.toJsonTree(parent).getAsJsonObject();
+					var parentJson = toDefinition(parent);
 					GsonUtils.removeNulls(parentJson);
 					parentJson.remove("name");
 					parentJson.remove("parent");
@@ -328,7 +345,7 @@ public class SkyConfiguration {
 						out.nullValue();
 						return;
 					}
-					JsonObject json = delegate.toJsonTree(sky).getAsJsonObject();
+					JsonObject json = toDefinition(sky);
 					var base = DEFAULT_PRESET;
 					if (sky.parent != null)
 						base = SkyManager.PRESETS.getOrDefault(sky.parent, base);
@@ -336,7 +353,7 @@ public class SkyConfiguration {
 						jsonElementAdapter.write(out, json);
 						return;
 					}
-					JsonObject baseJson = delegate.toJsonTree(base).getAsJsonObject();
+					JsonObject baseJson = toDefinition(base);
 					GsonUtils.removeMatching(json, baseJson);
 					if (json.size() == 0) {
 						if (sky.parent == null || base == DEFAULT_PRESET) {
