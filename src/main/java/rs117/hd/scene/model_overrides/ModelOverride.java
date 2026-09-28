@@ -88,6 +88,7 @@ public class ModelOverride
 	public int positionTileSnapping = -1;
 	public int depthBias = -1;
 	public boolean disablePrioritySorting = false;
+	public int heightOffset = 0;
 
 	private int setHue = -1;
 	private int shiftHue;
@@ -323,6 +324,7 @@ public class ModelOverride
 			positionTileSnapping,
 			depthBias,
 			disablePrioritySorting,
+			heightOffset,
 			setHue,
 			shiftHue,
 			minHue,

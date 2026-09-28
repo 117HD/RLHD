@@ -43,7 +43,11 @@ public final class MathUtils {
 	public static final float DEG_TO_RAD = TWO_PI / 360;
 	public static final float RAD_TO_DEG = 1 / DEG_TO_RAD;
 	public static final float JAU_TO_RAD = TWO_PI / 2048;
-	public static final float JAU_TO_RAD_FINE = TWO_PI / 16384;
+	public static final float RAD_TO_JAU = 1 / JAU_TO_RAD;
+	public static final float JAU_FINE_TO_RAD = TWO_PI / 16384;
+	public static final float RAD_TO_JAU_FINE = 1 / JAU_FINE_TO_RAD;
+	public static final float JAU_TO_DEG = JAU_TO_RAD * RAD_TO_DEG;
+	public static final float DEG_TO_JAU = 1 / JAU_TO_DEG;
 
 	public static float[] vec(float... vec) {
 		return vec;

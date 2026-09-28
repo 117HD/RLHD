@@ -31,8 +31,8 @@ import rs117.hd.utils.collections.PooledArrayType;
 
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
+import static rs117.hd.HdPlugin.SUPPORTS_MULTI_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_MODEL_DATA;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
@@ -112,7 +112,7 @@ public class Zone implements Destructible {
 	public boolean hasWater; // whether the zone has any water tiles
 	public boolean onlyWater; // whether the zone only contains water tiles
 	public boolean hasGapFiller; // whether the zone has any gap filler geometry
-	public boolean inSceneFrustum; // whether the zone is visible to the scene camera
+	public boolean inSceneFrustum = true; // whether the zone is visible to the scene camera
 	public boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
 	public boolean sceneCameraIntersects; // whether the scene camera intersects the zone with a radius of 2 tiles
 	public boolean isFirstLoadingAttempt = true;
@@ -122,6 +122,12 @@ public class Zone implements Destructible {
 	final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob();
 	ZoneUploadJob uploadJob;
 	float fadingAlpha;
+
+	void setUploadJob(ZoneUploadJob uploadJob) {
+		this.uploadJob = uploadJob;
+		if (uploadJob != null)
+			uploadJob.zoneToBeReplaced = this;
+	}
 
 	int[] levelOffsets = new int[LEVEL_COUNT]; // buffer pos in ints for the end of the level
 
@@ -213,7 +219,7 @@ public class Zone implements Destructible {
 
 		if (uploadJob != null) {
 			uploadJob.cancel();
-			DestructibleHandler.destroy(uploadJob.zone);
+			DestructibleHandler.destroy(uploadJob.zoneBeingUploaded);
 			uploadJob = null;
 		}
 
@@ -449,6 +455,8 @@ public class Zone implements Destructible {
 
 	private static void pushRange(int start, int end) {
 		assert end >= start;
+		if (end <= start)
+			return;
 
 		if (drawIdx > 0 && drawEnd[drawIdx - 1] == start) {
 			drawEnd[drawIdx - 1] = end;
@@ -900,7 +908,7 @@ public class Zone implements Destructible {
 				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboM, TEXTURE_UNIT_MODEL_DATA);
 				// The EBO & IDO is bound by in ZoneRenderer
-				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
+				if (SUPPORTS_INDIRECT_DRAW) {
 					cmd.DrawElementsIndirect(GL_TRIANGLES, vertexCount, (int) (byteOffset / 4L), ZoneRenderer.indirectDrawCmdsStaging);
 				} else {
 					cmd.DrawElements(GL_TRIANGLES, vertexCount, byteOffset);
@@ -913,13 +921,13 @@ public class Zone implements Destructible {
 			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboM, TEXTURE_UNIT_MODEL_DATA);
 			if (drawIdx == 1) {
-				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
+				if (SUPPORTS_INDIRECT_DRAW) {
 					cmd.DrawArraysIndirect(GL_TRIANGLES, drawOff[0], drawEnd[0], ZoneRenderer.indirectDrawCmdsStaging);
 				} else {
 					cmd.DrawArrays(GL_TRIANGLES, drawOff[0], drawEnd[0]);
 				}
 			} else {
-				if (GL_CAPS.OpenGL43 && SUPPORTS_INDIRECT_DRAW) {
+				if (SUPPORTS_MULTI_INDIRECT_DRAW) {
 					cmd.MultiDrawArraysIndirect(GL_TRIANGLES, glDrawOffset, glDrawLength, drawIdx, ZoneRenderer.indirectDrawCmdsStaging);
 				} else {
 					cmd.MultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength, drawIdx);

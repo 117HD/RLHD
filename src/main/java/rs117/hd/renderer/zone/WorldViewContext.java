@@ -156,11 +156,23 @@ public class WorldViewContext {
 		if (uploadTask.isDone()) {
 			curZone.uploadJob = null;
 			if (uploadTask.ranToCompletion() && !uploadTask.wasCancelled()) {
-				log.trace("swapping zone({}): [{}-{},{}]", uploadTask.zone.hashCode(), worldViewId, zx, zz);
+				Zone uploadedZone = uploadTask.zoneBeingUploaded;
+				if (uploadedZone == null) {
+					log.error(
+						"Completed zone upload job [{}] has already been released: [{}-{},{}]",
+						uploadTask.hashCode(),
+						worldViewId,
+						zx,
+						zz
+					);
+					curZone.rebuild = true;
+					return;
+				}
+				log.trace("swapping zone({}): [{}-{},{}]", uploadedZone.hashCode(), worldViewId, zx, zz);
 
 				Zone prevZone = curZone;
 				// Swap the zone out with the one we just uploaded
-				zones[zx][zz] = curZone = uploadTask.zone;
+				zones[zx][zz] = curZone = uploadedZone;
 				clientThread.invoke(curZone::unmap);
 
 				if (prevZone != curZone) {
@@ -254,10 +266,13 @@ public class WorldViewContext {
 				invalidateZone(x, z);
 	}
 
-	void invalidateZone(int zx, int zz) {
+	// Synchronize creation of delayed upload jobs with zone swaps and invalidation
+	synchronized void invalidateZone(int zx, int zz) {
 		Zone curZone = zones[zx][zz];
-		if (curZone.uploadJob != null) {
-			Zone pendingZone = curZone.uploadJob.zone;
+		ZoneUploadJob previousUpload = curZone.uploadJob;
+		if (previousUpload != null) {
+			curZone.uploadJob = null;
+			Zone pendingZone = previousUpload.zoneBeingUploaded;
 			log.trace(
 				"Invalidate Zone({}) - Cancelled upload task: [{}-{},{}] task zone({})",
 				curZone.hashCode(),
@@ -266,8 +281,9 @@ public class WorldViewContext {
 				zz,
 				pendingZone.hashCode()
 			);
-			curZone.uploadJob.cancel();
-			curZone.uploadJob.release();
+
+			previousUpload.cancel();
+			previousUpload.release();
 
 			if (pendingZone != curZone)
 				DestructibleHandler.destroy(pendingZone);
@@ -276,7 +292,7 @@ public class WorldViewContext {
 		Zone newZone = injector.getInstance(Zone.class);
 		newZone.dirty = zones[zx][zz].dirty;
 
-		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz);
+		curZone.setUploadJob(ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz));
 		curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
 	}
 }

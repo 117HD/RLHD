@@ -608,13 +608,17 @@ public class SceneManager {
 
 					// Reuse the old zone while uploading a correct one
 					sorted.zone.cull = false;
-					sorted.zone.uploadJob = ZoneUploadJob
+					// Synchronize creation of delayed upload jobs with zone swaps and invalidation
+					synchronized (ctx) {
+						ZoneUploadJob upload = ZoneUploadJob
 						.build(ctx, nextSceneContext, newZone, false, sorted.x, sorted.z)
 						.queue(ctx.streamingGroup, roundRobinDependencies[robinIdx]);
 
-					// Round Robin the streaming in zones to avoid saturating the Job queue
-					roundRobinDependencies[robinIdx] = sorted.zone.uploadJob;
-					robinIdx = (robinIdx + 1) % robinSize;
+						// Round Robin the streaming in zones to avoid saturating the Job queue
+						roundRobinDependencies[robinIdx] = sorted.zone.uploadJob;
+						robinIdx = (robinIdx + 1) % robinSize;
+							sorted.zone.setUploadJob(upload);
+					}
 				} else {
 					nextZones[sorted.x][sorted.z] = newZone;
 					ZoneUploadJob
