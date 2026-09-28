@@ -2,6 +2,10 @@
 
 #include <utils/texture_buffer_reader.glsl>
 
+#define TEXTURE_FACE_IS_WINDING_REVERSED (1 << 31)
+#define TEXTURE_FACE_IS_MODEL (1 << 30)
+#define TEXTURE_FACE_OFFSET_MASK 0x3FFFFFFF
+
 #define PARSER_TARGET_BUFFER textureFaces
 
 SETUP_BUFFER(textureFaces, TEXTURE_FACES_SSBO_BINDING)
@@ -20,15 +24,15 @@ struct ModelFaceData {
 };
 
 bool isFaceWindingReversed(int packedFaceData) {
-    return (packedFaceData & 0x80000000) != 0;
+    return (packedFaceData & TEXTURE_FACE_IS_WINDING_REVERSED) != 0;
 }
 
 bool isModelFace(int packedFaceData) {
-    return (packedFaceData & 0x40000000) != 0;
+    return (packedFaceData & TEXTURE_FACE_IS_MODEL) != 0;
 }
 
 int getFaceOffset(int packedFaceData) {
-    return packedFaceData & 0x3FFFFFFF;
+    return packedFaceData & TEXTURE_FACE_OFFSET_MASK;
 }
 
 // STATIC_FACE_FORMAT
