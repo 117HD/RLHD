@@ -40,7 +40,16 @@ END_BUFFER_PARSER()
 
 // MODEL_FACE_FORMAT
 BEGIN_BUFFER_PARSER(getModelFaceData, ModelFaceData, false)
-    READ_IVEC3(AlphaBiasHsl)
+    int packedHslAB = READ_RAW_INT();
+    int packedHslCAlphaBias = READ_RAW_INT();
+    int alphaBias = packedHslCAlphaBias & 0xFFFF0000;
+
+    data.AlphaBiasHsl = ivec3(
+        (packedHslAB & 0xFFFF) | alphaBias,
+        ((packedHslAB >> 16) & 0xFFFF) | alphaBias,
+        packedHslCAlphaBias
+    );
+
     READ_INT(MaterialData)
 END_BUFFER_PARSER()
 

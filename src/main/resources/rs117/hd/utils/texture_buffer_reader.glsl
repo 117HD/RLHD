@@ -204,6 +204,7 @@ StructType FuncName(int offset) {                         \
     return data;            \
 }
 
+#define READ_RAW_INT() readInt(PARSER_TARGET_BUFFER, reader)
 #define READ_INT(field) data.field = readInt(PARSER_TARGET_BUFFER, reader);
 #define READ_FLOAT(field) data.field = readFloat(PARSER_TARGET_BUFFER, reader);
 #define READ_BOOL(field) data.field = readBool(PARSER_TARGET_BUFFER, reader);

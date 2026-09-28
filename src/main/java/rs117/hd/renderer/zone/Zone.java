@@ -66,9 +66,10 @@ public class Zone implements Destructible {
 	public static final int STATIC_FACE_NUM_INTS = STATIC_FACE_NUM_BYTES / Integer.BYTES;
 
 	// MODEL_FACE_FORMAT
-	// alphaBiasHsl: int32 vec3
+	// packedHslAB: int32
+	// packedHslCDepthAlpha: int32
 	// materialData: int32
-	public static final int MODEL_FACE_NUM_BYTES = 16;
+	public static final int MODEL_FACE_NUM_BYTES = 12;
 	public static final int MODEL_FACE_NUM_INTS = MODEL_FACE_NUM_BYTES / Integer.BYTES;
 
 	// MODEL_DATA_FORMAT

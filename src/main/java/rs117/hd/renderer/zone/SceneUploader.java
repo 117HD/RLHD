@@ -1931,18 +1931,13 @@ public class SceneUploader implements AutoCloseable {
 
 			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
 				bias == null ? 0 : bias[face] & 0xFF;
-			int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
 			final VertexWriteCache vb = writeCache.getVertexBuffer(material.hasTransparency || transparency != 0);
 			final VertexWriteCache tb = writeCache.opaqueTex;
 
-			color1 |= packedAlphaBiasHsl;
-			color2 |= packedAlphaBiasHsl;
-			color3 |= packedAlphaBiasHsl;
-
 			// Check if we can reuse an existing model face to dedup the amount of faces written
-			int texturedFaceIdx = tb.findModelFace(color1, color2, color3, materialData);
+			int texturedFaceIdx = tb.findModelFace(color1, color2, color3, transparency, depthBias, materialData);
 			if (texturedFaceIdx == -1)
-				texturedFaceIdx = tb.putModelFace(color1, color2, color3, materialData);
+				texturedFaceIdx = tb.putModelFace(color1, color2, color3, transparency, depthBias, materialData);
 
 			vb.putVertex(
 				vx1, vy1, vz1,
@@ -2416,18 +2411,13 @@ public class SceneUploader implements AutoCloseable {
 
 			final int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
 				hasBias ? bias[face] & 0xFF : 0;
-			final int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
 			final boolean hasAlpha = material.hasTransparency || transparency != 0;
-
-			color1 |= packedAlphaBiasHsl;
-			color2 |= packedAlphaBiasHsl;
-			color3 |= packedAlphaBiasHsl;
 
 			final VertexWriteCache vb = writeCache.getVertexBuffer(hasAlpha);
 			final VertexWriteCache tb = writeCache.getTextureBuffer(hasAlpha);
 
 			final int modelIdx = hasAlpha ? alphaModelIdx : opaqueModelIdx;
-			final int texturedFaceIdx = tb.putModelFace(color1, color2, color3, materialData);
+			final int texturedFaceIdx = tb.putModelFace(color1, color2, color3, transparency, depthBias, materialData);
 
 			vb.putVertex(
 				intModelVertices[vertexOffsetA], intModelVertices[vertexOffsetA + 1], intModelVertices[vertexOffsetA + 2],

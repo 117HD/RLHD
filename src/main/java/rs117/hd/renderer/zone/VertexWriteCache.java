@@ -113,15 +113,30 @@ public final class VertexWriteCache {
 		return textureFaceIdx;
 	}
 
-	public int findModelFace(int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC, int materialData) {
+	public int findModelFace(
+		int hslA,
+		int hslB,
+		int hslC,
+		int transparency,
+		int depthBias,
+		int materialData) {
+
 		final int[] stagingBuffer = this.stagingBuffer;
 		final int stagingPosition = this.stagingPosition;
 
-		for (int i = 0; i < stagingPosition; i += 4) {
-			if (stagingBuffer[i] == alphaBiasHslA &&
-				stagingBuffer[i + 1] == alphaBiasHslB &&
-				stagingBuffer[i + 2] == alphaBiasHslC &&
-				stagingBuffer[i + 3] == materialData
+		final int packedHslAB =
+			(hslA & 0xFFFF) |
+			((hslB & 0xFFFF) << 16);
+
+		final int packedHslCAlphaBias =
+			(hslC & 0xFFFF) |
+			((depthBias & 0xFF) << 16) |
+			((transparency & 0xFF) << 24);
+
+		for (int i = 0; i < stagingPosition; i += MODEL_FACE_NUM_INTS) {
+			if (stagingBuffer[i] == packedHslAB &&
+				stagingBuffer[i + 1] == packedHslCAlphaBias &&
+				stagingBuffer[i + 2] == materialData
 			) {
 				final int textureFaceIdx = outputBuffer.position() + i;
 				return TEXTURE_FACE_IS_MODEL | textureFaceIdx;
@@ -131,8 +146,15 @@ public final class VertexWriteCache {
 		return -1;
 	}
 
-	public int putModelFace(int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC, int materialData) {
-		if (stagingPosition + 4 > stagingBuffer.length)
+	public int putModelFace(
+		int hslA,
+		int hslB,
+		int hslC,
+		int transparency,
+		int depthBias,
+		int materialData) {
+
+		if (stagingPosition + MODEL_FACE_NUM_INTS > stagingBuffer.length)
 			flushAndGrow();
 
 		final int textureFaceIdx = outputBuffer.position() + stagingPosition;
@@ -140,15 +162,20 @@ public final class VertexWriteCache {
 		final int[] stagingBuffer = this.stagingBuffer;
 		final int stagingPosition = this.stagingPosition;
 
-		// MODEL_FACE_FORMAT
-		stagingBuffer[stagingPosition] = alphaBiasHslA;
-		stagingBuffer[stagingPosition + 1] = alphaBiasHslB;
-		stagingBuffer[stagingPosition + 2] = alphaBiasHslC;
-		stagingBuffer[stagingPosition + 3] = materialData;
+		stagingBuffer[stagingPosition] =
+			(hslA & 0xFFFF) |
+			((hslB & 0xFFFF) << 16);
+		stagingBuffer[stagingPosition + 1] =
+			(hslC & 0xFFFF) |
+			((depthBias & 0xFF) << 16) |
+			((transparency & 0xFF) << 24);
+
+		stagingBuffer[stagingPosition + 2] = materialData;
 
 		this.stagingPosition += MODEL_FACE_NUM_INTS;
 		return TEXTURE_FACE_IS_MODEL | textureFaceIdx;
 	}
+
 
 	public void putVertex(
 		int x, int y, int z,
