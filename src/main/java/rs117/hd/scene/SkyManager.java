@@ -196,7 +196,7 @@ public class SkyManager {
 		float[] latLon = HDUtils.parseLatLon(latLonString);
 		if (latLon == null) {
 			if (!latLonString.isEmpty())
-				log.warn("Ignoring invalid latitude & longitude coordinates: {}", latLon);
+				log.warn("Ignoring invalid latitude & longitude coordinates: {}", latLonString);
 			latLon = vec(config.latitudeDegrees(), config.longitudeDegrees());
 		}
 		copyTo(configLatLon, latLon);
@@ -366,7 +366,7 @@ public class SkyManager {
 				float timeOfDay = (float) fract(customCycleElapsedDays);
 				return customCycleStartMillis + floor(customCycleElapsedDays) * DAY_MS + (long) (timeOfDay * DAY_MS);
 			default:
-				return frameUtcMillis * DAY_MS / HOUR_MS; // One simulated day per real hour
+				return frameUtcMillis * (DAY_MS / HOUR_MS); // One simulated day per real hour
 		}
 	}
 
@@ -505,7 +505,7 @@ public class SkyManager {
 		isSunDescending =
 			AstronomyUtils.getSunAngles(millis + 1000, state.latLon)[0] <=
 			AstronomyUtils.getSunAngles(millis - 1000, state.latLon)[0];
-		// Change offsets at solar noon, outside every dusk-to-dawn schedule. Basic starts at sunrise.
+		// Change offsets at noon UTC, normally outside dusk-to-dawn schedules at the default coordinates.
 		scheduleNightIndex = Math.floorDiv(state.utcMillis - DAY_MS / 2, DAY_MS);
 		if (state.cycleActive)
 			nightFactor = smoothstep(5, -18, state.sunAltitudeDegrees);

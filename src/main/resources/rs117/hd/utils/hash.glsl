@@ -67,7 +67,7 @@ vec2 hash23(vec3 p3) {
 vec3 hash31(float p) {
    vec3 p3 = fract(vec3(p) * vec3(.1031, .1030, .0973));
    p3 += dot(p3, p3.yzx + 33.33);
-   return fract((p3.xxy + p3.yzz) * p3.zyx); 
+   return fract((p3.xxy + p3.yzz) * p3.zyx);
 }
 
 vec3 hash32(vec2 p) {
@@ -87,7 +87,6 @@ vec4 hash41(float p) {
 	vec4 p4 = fract(vec4(p) * vec4(.1031, .1030, .0973, .1099));
     p4 += dot(p4, p4.wzxy + 33.33);
     return fract((p4.xxyz + p4.yzzw) * p4.zywx);
-    
 }
 
 vec4 hash42(vec2 p) {

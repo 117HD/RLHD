@@ -21,6 +21,14 @@ out float vBrightness;
 const float SKY_HORIZON_OFFSET = 0.087;
 
 void main() {
+    if (orthographicProjection) {
+        gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
+        gl_PointSize = 0.0;
+        vColor = vec3(0.0);
+        vBrightness = 0.0;
+        return;
+    }
+
     vec3 dir = inverseRotateStarfield(aStarDir, elapsedTime, aStarRotationSpeed);
 
     // Softly occlude additively blended stars behind the opaque moon disk.
