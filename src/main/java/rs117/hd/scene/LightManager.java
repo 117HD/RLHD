@@ -466,13 +466,15 @@ public class LightManager {
 			if (light.visible && light.hiddenTemporarily)
 				light.visible = light.changedVisibilityAt != -1 && light.elapsedTime - light.changedVisibilityAt < Light.VISIBILITY_FADE;
 
+			if (light.visible)
+				skyManager.prepareLightSchedule(light);
+
 			if (light.visible) {
 				// Prioritize lights closer to the focal point
 				float distX = plugin.cameraFocalPoint[0] - light.pos[0];
 				float distZ = plugin.cameraFocalPoint[1] - light.pos[2];
 				light.distanceSquared = distX * distX + distZ * distZ;
 
-				skyManager.prepareLightSchedule(light);
 				float maxRadius = light.def.radius * light.daylightCycleRadiusScale;
 				switch (light.def.type) {
 					case FLICKER:
