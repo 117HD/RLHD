@@ -1,65 +1,70 @@
 #pragma once
 
+// Sequential reader for tightly-packed scalar data stored in a buffer texture.
+//
+// Layout assumptions:
+// - Data is packed scalar-by-scalar with NO padding.
+// - Floats are stored as IEEE-754 bit patterns inside integer components.
+// - TEXEL_SIZE defines how many usable components exist per fetched texel.
+//
+// Example packed stream:
+// [int][float][vec3][ivec2]...
+//
+// This reader caches the currently loaded texel to avoid redundant texelFetch
+// calls during sequential access.
+//
+// If GL_KHR_shader_subgroup_vote is supported & then data reads can be scalarized
+// when the starting position is the same across all invoked lanes
+
+#ifdef GL_KHR_shader_subgroup_vote
+    #extension GL_KHR_shader_subgroup_basic : enable
+    #extension GL_KHR_shader_subgroup_vote : enable
+    #extension GL_KHR_shader_subgroup_ballot : enable
+#endif
+
+// Number of scalar components per fetched texel.
+// Valid range: 1-4.
+#include TEXEL_SIZE
+#ifndef TEXEL_SIZE
+    #define TEXEL_SIZE 4
+#endif
+
+#if TEXEL_SIZE < 1 || TEXEL_SIZE > 4
+    #error TEXEL_SIZE must be between 1 and 4
+#endif
+
 #if SHADER_STORAGE_BUFFERS
     struct TexBufferReader {
-        int position;
+        int  position;
+        bool scalar;
     };
 
     TexBufferReader buildTexBufferReader(int position, bool scalar) {
         TexBufferReader reader;
         reader.position = position;
+    #ifdef GL_KHR_shader_subgroup_vote
+        reader.scalar = scalar && subgroupAllEqual(position);
+    #else
+        reader.scalar = false;
+    #endif
         return reader;
     }
 
-    #define SETUP_BUFFER(name, bindingPoint) layout(std430, binding = bindingPoint) buffer name##Buffer { int data[]; } name;
-
-    #define readInt(buf, reader) ((buf).data[(reader).position++])
-    #define readUInt(buf, reader) uint((buf).data[(reader).position++])
-    #define readFloat(buf, reader) intBitsToFloat((buf).data[(reader).position++])
-    #define readBool(buf, reader) ((buf).data[(reader).position++] != 0)
-    #define readIVec2(buf, reader) ivec2(readInt(buf, reader), readInt(buf, reader))
-    #define readIVec3(buf, reader) ivec3(readInt(buf, reader), readInt(buf, reader), readInt(buf, reader))
-    #define readIVec4(buf, reader) ivec4(readInt(buf, reader), readInt(buf, reader), readInt(buf, reader), readInt(buf, reader))
-    #define readUVec2(buf, reader) uvec2(readUInt(buf, reader), readUInt(buf, reader))
-    #define readUVec3(buf, reader) uvec3(readUInt(buf, reader), readUInt(buf, reader), readUInt(buf, reader))
-    #define readUVec4(buf, reader) uvec4(readUInt(buf, reader), readUInt(buf, reader), readUInt(buf, reader), readUInt(buf, reader))
-    #define readVec2(buf, reader) vec2(readFloat(buf, reader), readFloat(buf, reader))
-    #define readVec3(buf, reader) vec3(readFloat(buf, reader), readFloat(buf, reader), readFloat(buf, reader))
-    #define readVec4(buf, reader) vec4(readFloat(buf, reader), readFloat(buf, reader), readFloat(buf, reader), readFloat(buf, reader))
-#else
-    // Number of scalar components per fetched texel.
-    // Valid range: 1-4.
-    #include TEXEL_SIZE
-    #ifndef TEXEL_SIZE
-        #define TEXEL_SIZE 4
-    #endif
-
-    #if TEXEL_SIZE < 1 || TEXEL_SIZE > 4
-        #error TEXEL_SIZE must be between 1 and 4
-    #endif
+    #define SETUP_BUFFER(name, bindingPoint) \
+        layout(std430, binding = bindingPoint) buffer name##Buffer { int data[]; } name;
 
     #ifdef GL_KHR_shader_subgroup_vote
-        #extension GL_KHR_shader_subgroup_vote : enable
-        #extension GL_KHR_shader_subgroup_ballot : enable
+        #define SSBO_LOAD(buf, reader, idx) \
+            ((reader).scalar \
+                ? subgroupBroadcastFirst(subgroupElect() ? (buf).data[idx] : 0) \
+                : (buf).data[idx])
+    #else
+        #define SSBO_LOAD(buf, reader, idx) ((buf).data[idx])
     #endif
 
+    #define readInt(buf, reader)  (++(reader).position, SSBO_LOAD(buf, reader, (reader).position - 1))
+#else
     #define SETUP_BUFFER(name, bindingPoint) uniform isamplerBuffer name;
-
-    // Sequential reader for tightly-packed scalar data stored in a buffer texture.
-    //
-    // Layout assumptions:
-    // - Data is packed scalar-by-scalar with NO padding.
-    // - Floats are stored as IEEE-754 bit patterns inside integer components.
-    // - TEXEL_SIZE defines how many usable components exist per fetched texel.
-    //
-    // Example packed stream:
-    // [int][float][vec3][ivec2]...
-    //
-    // This reader caches the currently loaded texel to avoid redundant texelFetch
-    // calls during sequential access.
-    //
-    // If GL_KHR_shader_subgroup_vote is supported & then data reads can be scalarized
-    // when the starting position is the same across all invoked lanes
 
     struct TexBufferReader {
         // Cached texel data.
@@ -129,91 +134,6 @@
             default: return reader.data.w;
         }
     }
-
-    uint readUInt(isamplerBuffer buf, inout TexBufferReader reader) {
-        return uint(readInt(buf, reader));
-    }
-
-    float readFloat(isamplerBuffer buf, inout TexBufferReader reader) {
-        return intBitsToFloat(readInt(buf, reader));
-    }
-
-    bool readBool(isamplerBuffer buf, inout TexBufferReader reader) {
-        return readInt(buf, reader) != 0;
-    }
-
-    ivec2 readIVec2(isamplerBuffer buf, inout TexBufferReader reader) {
-        return ivec2(
-            readInt(buf, reader),
-            readInt(buf, reader)
-        );
-    }
-
-    ivec3 readIVec3(isamplerBuffer buf, inout TexBufferReader reader) {
-        return ivec3(
-            readInt(buf, reader),
-            readInt(buf, reader),
-            readInt(buf, reader)
-        );
-    }
-
-    ivec4 readIVec4(isamplerBuffer buf, inout TexBufferReader reader) {
-        return ivec4(
-            readInt(buf, reader),
-            readInt(buf, reader),
-            readInt(buf, reader),
-            readInt(buf, reader)
-        );
-    }
-
-    uvec2 readUVec2(isamplerBuffer buf, inout TexBufferReader reader) {
-        return uvec2(
-            readUInt(buf, reader),
-            readUInt(buf, reader)
-        );
-    }
-
-    uvec3 readUVec3(isamplerBuffer buf, inout TexBufferReader reader) {
-        return uvec3(
-            readUInt(buf, reader),
-            readUInt(buf, reader),
-            readUInt(buf, reader)
-        );
-    }
-
-    uvec4 readUVec4(isamplerBuffer buf, inout TexBufferReader reader) {
-        return uvec4(
-            readUInt(buf, reader),
-            readUInt(buf, reader),
-            readUInt(buf, reader),
-            readUInt(buf, reader)
-        );
-    }
-
-    vec2 readVec2(isamplerBuffer buf, inout TexBufferReader reader) {
-        return vec2(
-            readFloat(buf, reader),
-            readFloat(buf, reader)
-        );
-    }
-
-    vec3 readVec3(isamplerBuffer buf, inout TexBufferReader reader) {
-        return vec3(
-            readFloat(buf, reader),
-            readFloat(buf, reader),
-            readFloat(buf, reader)
-        );
-    }
-
-    vec4 readVec4(isamplerBuffer buf, inout TexBufferReader reader) {
-        return vec4(
-            readFloat(buf, reader),
-            readFloat(buf, reader),
-            readFloat(buf, reader),
-            readFloat(buf, reader)
-        );
-    }
-
 #endif
 
 void skipScalars(inout TexBufferReader reader, int count) {
@@ -235,13 +155,24 @@ StructType FuncName(int offset) {                         \
     return data;            \
 }
 
-#define READ_RAW_INT() readInt(PARSER_TARGET_BUFFER, reader)
-#define READ_INT(field) data.field = readInt(PARSER_TARGET_BUFFER, reader);
-#define READ_FLOAT(field) data.field = readFloat(PARSER_TARGET_BUFFER, reader);
-#define READ_BOOL(field) data.field = readBool(PARSER_TARGET_BUFFER, reader);
-#define READ_IVEC2(field) data.field = readIVec2(PARSER_TARGET_BUFFER, reader);
-#define READ_IVEC3(field) data.field = readIVec3(PARSER_TARGET_BUFFER, reader);
-#define READ_IVEC4(field) data.field = readIVec4(PARSER_TARGET_BUFFER, reader);
-#define READ_VEC2(field) data.field = readVec2(PARSER_TARGET_BUFFER, reader);
-#define READ_VEC3(field) data.field = readVec3(PARSER_TARGET_BUFFER, reader);
-#define READ_VEC4(field) data.field = readVec4(PARSER_TARGET_BUFFER, reader);
+#define READ_RAW_INT()   readInt(PARSER_TARGET_BUFFER, reader)
+#define READ_RAW_UINT()  uint(READ_RAW_INT())
+#define READ_RAW_FLOAT() intBitsToFloat(READ_RAW_INT())
+#define READ_RAW_BOOL()  (READ_RAW_INT() != 0)
+
+#define READ_INT(field)   data.field = READ_RAW_INT();
+#define READ_UINT(field)  data.field = READ_RAW_UINT();
+#define READ_FLOAT(field) data.field = READ_RAW_FLOAT();
+#define READ_BOOL(field)  data.field = READ_RAW_BOOL();
+
+#define READ_IVEC2(field) data.field = ivec2(READ_RAW_INT(), READ_RAW_INT());
+#define READ_IVEC3(field) data.field = ivec3(READ_RAW_INT(), READ_RAW_INT(), READ_RAW_INT());
+#define READ_IVEC4(field) data.field = ivec4(READ_RAW_INT(), READ_RAW_INT(), READ_RAW_INT(), READ_RAW_INT());
+
+#define READ_UVEC2(field) data.field = uvec2(READ_RAW_UINT(), READ_RAW_UINT());
+#define READ_UVEC3(field) data.field = uvec3(READ_RAW_UINT(), READ_RAW_UINT(), READ_RAW_UINT());
+#define READ_UVEC4(field) data.field = uvec4(READ_RAW_UINT(), READ_RAW_UINT(), READ_RAW_UINT(), READ_RAW_UINT());
+
+#define READ_VEC2(field)  data.field = vec2(READ_RAW_FLOAT(), READ_RAW_FLOAT());
+#define READ_VEC3(field)  data.field = vec3(READ_RAW_FLOAT(), READ_RAW_FLOAT(), READ_RAW_FLOAT());
+#define READ_VEC4(field)  data.field = vec4(READ_RAW_FLOAT(), READ_RAW_FLOAT(), READ_RAW_FLOAT(), READ_RAW_FLOAT());
