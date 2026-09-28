@@ -5,14 +5,7 @@
 #define MODEL_DATA_SIZE 7
 #define PARSER_TARGET_BUFFER modelData
 
-#ifdef SHADER_STORAGE_BUFFERS
-// Same tightly-packed scalar layout as the texture buffer below
-layout(std430, binding = MODEL_DATA_SSBO_BINDING) buffer ModelDataBuffer {
-    int data[];
-} modelData;
-#else
-uniform isamplerBuffer modelData;
-#endif
+SETUP_BUFFER(modelData, MODEL_DATA_SSBO_BINDING)
 
 struct ModelData {
     // MODEL_DATA_FORMAT

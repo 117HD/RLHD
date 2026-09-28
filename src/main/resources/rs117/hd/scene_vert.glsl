@@ -27,9 +27,9 @@
 
 #include SHADER_STORAGE_BUFFERS
 
-#ifdef SHADER_STORAGE_BUFFERS
-#extension GL_ARB_shader_storage_buffer_object : enable
-#extension GL_ARB_shading_language_420pack : enable
+#if SHADER_STORAGE_BUFFERS
+    #extension GL_ARB_shader_storage_buffer_object : enable
+    #extension GL_ARB_shading_language_420pack : enable
 #endif
 
 #include TEXTURE_FACES_SSBO_BINDING

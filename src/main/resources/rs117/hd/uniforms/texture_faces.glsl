@@ -4,14 +4,7 @@
 
 #define PARSER_TARGET_BUFFER textureFaces
 
-#ifdef SHADER_STORAGE_BUFFERS
-// Same tightly-packed scalar layout as the texture buffer below
-layout(std430, binding = TEXTURE_FACES_SSBO_BINDING) buffer TextureFacesBuffer {
-    int data[];
-} textureFaces;
-#else
-uniform isamplerBuffer textureFaces;
-#endif
+SETUP_BUFFER(textureFaces, TEXTURE_FACES_SSBO_BINDING)
 
 struct StaticFaceData {
     // STATIC_FACE_FORMAT

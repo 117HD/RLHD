@@ -4,15 +4,14 @@ import java.io.IOException;
 import rs117.hd.config.ShadowMode;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.HdPlugin.SUPPORTS_SHADER_STORAGE;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_MODEL_DATA;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 
 public abstract class ShadowShaderProgram extends ShaderProgram {
 	protected final UniformTexture uniTextureArray = addUniformTexture("textureArray");
-	protected final UniformTexture uniTextureFaces = addUniformTexture("textureFaces");
-	protected final UniformTexture uniModelData = addUniformTexture("modelData");
+	protected final UniformTexture uniTextureFaces = addUniformTexBuffer("textureFaces");
+	protected final UniformTexture uniModelData = addUniformTexBuffer("modelData");
 
 	protected ShadowMode mode;
 
@@ -20,7 +19,6 @@ public abstract class ShadowShaderProgram extends ShaderProgram {
 		super(t -> t
 			.add(GL_VERTEX_SHADER, "shadow_vert.glsl")
 			.add(GL_FRAGMENT_SHADER, "shadow_frag.glsl"));
-		uniTextureFaces.ignoreMissing = uniModelData.ignoreMissing = SUPPORTS_SHADER_STORAGE;
 	}
 
 	@Override

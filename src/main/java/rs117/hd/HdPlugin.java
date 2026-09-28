@@ -588,10 +588,7 @@ public class HdPlugin extends Plugin {
 					config.indirectDraw().get(NVIDIA_GPU && !APPLE);
 				SUPPORTS_MULTI_INDIRECT_DRAW = SUPPORTS_INDIRECT_DRAW && (GL_CAPS.OpenGL43 || GL_CAPS.GL_ARB_multi_draw_indirect);
 				SUPPORTS_STORAGE_BUFFERS = GL_CAPS.GL_ARB_buffer_storage && !DEBUG_MAC_OS && config.storageBuffers().get(!INTEL_GPU);
-				SUPPORTS_SHADER_STORAGE =
-					(GL_CAPS.OpenGL43 || GL_CAPS.GL_ARB_shader_storage_buffer_object) &&
-					glGetInteger(GL44C.GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS) >= ZoneRenderer.SHADER_STORAGE_BUFFER_COUNT &&
-					glGetInteger(GL44C.GL_MAX_VERTEX_SHADER_STORAGE_BLOCKS) >= ZoneRenderer.SHADER_STORAGE_BUFFER_COUNT;
+				SUPPORTS_SHADER_STORAGE = GL_CAPS.OpenGL43 || GL_CAPS.GL_ARB_shader_storage_buffer_object;
 
 				log.info("Starting 117 HD... (count: {})", startupCount);
 				log.info("Renderer:            {}", rendererClass.getSimpleName());

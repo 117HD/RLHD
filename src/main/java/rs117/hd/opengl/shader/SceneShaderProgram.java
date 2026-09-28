@@ -3,7 +3,6 @@ package rs117.hd.opengl.shader;
 import java.io.IOException;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.HdPlugin.SUPPORTS_SHADER_STORAGE;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILED_LIGHTING_MAP;
@@ -14,8 +13,8 @@ public class SceneShaderProgram extends ShaderProgram {
 	protected final UniformTexture uniTextureArray = addUniformTexture("textureArray");
 	protected final UniformTexture uniShadowMap = addUniformTexture("shadowMap");
 	protected final UniformTexture uniTiledLightingTextureArray = addUniformTexture("tiledLightingArray");
-	protected final UniformTexture uniTextureFaces = addUniformTexture("textureFaces");
-	protected final UniformTexture uniModelData = addUniformTexture("modelData");
+	protected final UniformTexture uniTextureFaces = addUniformTexBuffer("textureFaces");
+	protected final UniformTexture uniModelData = addUniformTexBuffer("modelData");
 
 	protected boolean allowDiscard = false;
 
@@ -24,7 +23,6 @@ public class SceneShaderProgram extends ShaderProgram {
 			.add(GL_VERTEX_SHADER, "scene_vert.glsl")
 			.add(GL_FRAGMENT_SHADER, "scene_frag.glsl"));
 		uniTiledLightingTextureArray.ignoreMissing = true;
-		uniTextureFaces.ignoreMissing = uniModelData.ignoreMissing = SUPPORTS_SHADER_STORAGE;
 	}
 
 	@Override
