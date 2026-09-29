@@ -59,8 +59,12 @@ void main() {
     vec4 overlays = otherOverlays(gridUv, icon.a, iconShadow);
     icon *= fOpacity;
     vec4 background = texture(itemBackgrounds, vec3(gridUv, fLayers.y));
-    // Only fill in what the stretched interface lets through
-    background *= background.a > ui ? (background.a - ui) / (background.a * (1 - ui)) : 0;
+    // Only fill in what the stretched interface lets through, and around the item only what the interface covers,
+    // since items next to it fill in their own cut out backgrounds
+    float covered = background.a;
+    if (any(lessThan(gridUv, vec2(0))) || any(greaterThanEqual(gridUv, vec2(1))))
+        covered = min(covered, texelFetch(uiTexture, ivec2(uiUv * vec2(sourceDimensions)), 0).a);
+    background *= covered > ui ? (covered - ui) / (background.a * (1 - ui)) : 0;
 
     float shadow = iconShadow * fShadow.a;
     background = fShadow * shadow + background * (1 - shadow);
