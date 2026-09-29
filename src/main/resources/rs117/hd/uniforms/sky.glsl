@@ -16,6 +16,7 @@ layout(std140) uniform UBOSky {
     vec3 moonDir;
     vec3 moonDiskColor;
     float moonIllumination;
+    float moonReflectionVisibility;
     vec3 moonSurfaceLightDirection;
     vec2 moonLibration;
 

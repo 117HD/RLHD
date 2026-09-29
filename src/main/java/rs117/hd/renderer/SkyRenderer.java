@@ -96,9 +96,11 @@ public class SkyRenderer {
 		private float visibility;
 		private float customGradient;
 		private float moonShadowHandoff;
+		private float moonReflectionVisibility;
 
 		private void interpolate(LightingFrame from, LightingFrame to, float t) {
 			moonShadowHandoff = mix(from.moonShadowHandoff, to.moonShadowHandoff, t);
+			moonReflectionVisibility = mix(from.moonReflectionVisibility, to.moonReflectionVisibility, t);
 			mix(directionalLight, from.directionalLight, to.directionalLight, t);
 			mix(ambientLight, from.ambientLight, to.ambientLight, t);
 			mix(fog, from.fog, to.fog, t);
@@ -301,6 +303,7 @@ public class SkyRenderer {
 		plugin.uboSky.fogColor.set(currentFrame.fog);
 		plugin.uboSky.customGradient.set(currentFrame.customGradient);
 		plugin.uboSky.moonDiskColor.set(currentFrame.moonDisk);
+		plugin.uboSky.moonReflectionVisibility.set(currentFrame.moonReflectionVisibility);
 		updateSkyUbo(currentFrame.configuration, state, currentFrame);
 	}
 
@@ -339,6 +342,8 @@ public class SkyRenderer {
 		float exposure = getNightExposure(adaptationLuminance, env.nightExposure * 1.5f);
 		multiply(nightAmbientLight, nightAmbientLight, exposure);
 		multiply(out.moonDirectionalLight, out.moonDirectionalLight, exposure);
+		// Moon reflections lose contrast as twilight brightens the sky.
+		out.moonReflectionVisibility = 1 - smoothstep(-12, 0, sunAltDeg);
 		add(out.ambientLight, out.ambientLight, nightAmbientLight);
 
 		float shadowedLuminance = linearSrgbLuminance(out.ambientLight);

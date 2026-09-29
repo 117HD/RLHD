@@ -82,19 +82,33 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     vec3 lightOut = max(lightDotNormals, 0.0) * lightColor;
 
     // directional light specular
-    vec3 lightReflectDir = reflect(-lightDir, normals);
-    vec3 reflectionColor = lightColor;
+    vec3 lightSpecularOut;
     if (uboSky.enabled) {
-        // Match the active shadow source; sky directions use upward-positive Y.
+        // Reflect both disks independently of the scene-lighting handoff.
         vec3 sunDir = uboSky.sunDir * vec3(1, -1, 1);
         vec3 moonDir = uboSky.moonDir * vec3(1, -1, 1);
-        bool reflectsMoon = dot(lightDir, moonDir) > dot(lightDir, sunDir);
-        reflectionColor = reflectsMoon ? uboSky.moonDiskColor * uboSky.moonVisibility : uboSky.sunColor;
-        // Keep the existing attenuation and shadow handoff. Moon phase already
-        // contributes to lightStrength, so do not multiply it a second time.
-        reflectionColor *= lightStrength * inverseShadow;
+        bool moonOwnsShadowMap = dot(lightDir, moonDir) > dot(lightDir, sunDir);
+        float sunVisibility = smoothstep(0.0, 0.04, uboSky.sunDir.y);
+        float moonVisibility = smoothstep(0.0, 0.04, uboSky.moonDir.y) *
+            uboSky.moonVisibility * uboSky.moonIllumination;
+        moonVisibility *= uboSky.moonReflectionVisibility;
+        // The single shadow map can only occlude its active source.
+        sunVisibility *= moonOwnsShadowMap ? 1.0 : inverseShadow;
+        moonVisibility *= moonOwnsShadowMap ? inverseShadow : 1.0;
+        // Compress disk intensity before shaping the highlight; visibility and
+        // shadows remain outside the tone map so they can still fade it fully.
+        vec3 sunReflectionColor = 14 * uboSky.sunColor;
+        vec3 moonReflectionColor = 7.15 * uboSky.moonDiskColor;
+        vSpecularGloss *= 4;
+        lightSpecularOut =
+            sunReflectionColor * sunVisibility *
+                specular(IN.texBlend, viewDir, reflect(-sunDir, normals), vSpecularGloss, vSpecularStrength) +
+            moonReflectionColor * moonVisibility *
+                specular(IN.texBlend, viewDir, reflect(-moonDir, normals), vSpecularGloss, vSpecularStrength);
+        lightSpecularOut = linearToSrgb(lightSpecularOut);
+    } else {
+        lightSpecularOut = lightColor * specular(IN.texBlend, viewDir, reflect(-lightDir, normals), vSpecularGloss, vSpecularStrength);
     }
-    vec3 lightSpecularOut = reflectionColor * specular(IN.texBlend, viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength);
 
     // point lights
     vec3 pointLightsOut = vec3(0);
