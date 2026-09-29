@@ -23,6 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <uniforms/global.glsl>
+#include <uniforms/sky.glsl>
 #include <uniforms/materials.glsl>
 #include <uniforms/water_types.glsl>
 
@@ -82,7 +83,18 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
 
     // directional light specular
     vec3 lightReflectDir = reflect(-lightDir, normals);
-    vec3 lightSpecularOut = lightColor * specular(IN.texBlend, viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength);
+    vec3 reflectionColor = lightColor;
+    if (uboSky.gradientEnabled) {
+        // Match the active shadow source; sky directions use upward-positive Y.
+        vec3 sunDir = uboSky.sunDir * vec3(1, -1, 1);
+        vec3 moonDir = uboSky.moonDir * vec3(1, -1, 1);
+        bool reflectsMoon = dot(lightDir, moonDir) > dot(lightDir, sunDir);
+        reflectionColor = reflectsMoon ? uboSky.moonDiskColor * uboSky.moonVisibility : uboSky.sunColor;
+        // Keep the existing attenuation and shadow handoff. Moon phase already
+        // contributes to lightStrength, so do not multiply it a second time.
+        reflectionColor *= lightStrength * inverseShadow;
+    }
+    vec3 lightSpecularOut = reflectionColor * specular(IN.texBlend, viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength);
 
     // point lights
     vec3 pointLightsOut = vec3(0);
