@@ -34,18 +34,16 @@ import static rs117.hd.utils.MathUtils.*;
 public enum DynamicLights
 {
 	NONE("Disabled", 0, 0),
-	FEW("Few", 4, 25),
-	SOME("Some", 8, 50),
-	MANY("Many", 12, 100);
+	FEW("Few", 2, 25),
+	SOME("Some", 4, 50),
+	MANY("Many", 6, 100);
 
 	public static final int MAX_LAYERS_PER_TILE;
 
 	static {
 		int max = 0;
-		for (var e : values()) {
-			assert e.tiledLightingLayers % 4 == 0; // Needs to be divisible by 4
+		for (var e : values())
 			max = max(max, e.tiledLightingLayers);
-		}
 		MAX_LAYERS_PER_TILE = max;
 	}
 
