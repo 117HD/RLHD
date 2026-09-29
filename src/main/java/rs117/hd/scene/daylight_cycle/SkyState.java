@@ -13,14 +13,14 @@ public final class SkyState {
 	public Environment toEnvironment;
 	public float transitionProgress;
 	public float moonDirectionalStrength;
-	public float[] sunAngles;
-	public float[] moonAngles;
-	public float[] shadowAngles;
-	public float[] sunDirection;
-	public float[] moonDirection;
-	public float[] moonSurfaceLightDirection;
+	public final float[] sunAngles = new float[2];
+	public final float[] moonAngles = new float[2];
+	public final float[] shadowAngles = new float[2];
+	public final float[] sunDirection = new float[3];
+	public final float[] moonDirection = new float[3];
+	public final float[] moonSurfaceLightDirection = new float[3];
 	public final float[] moonLibration = new float[2];
-	public float[] celestialPole;
+	public final float[] celestialPole = new float[3];
 	public float celestialRotation;
 	public float moonIllumination;
 	public float moonLightIllumination;
@@ -30,16 +30,15 @@ public final class SkyState {
 	public float auroraStrength;
 
 	public static class GradientSample {
-		// Keep evaluated colors linear through transitions, moon tinting, and UBO upload.
-		public float[] zenithLinear;
-		public float[] horizonLinear;
-		public float[] sunGlowLinear;
+		public final float[] zenith = new float[3];
+		public final float[] horizon = new float[3];
+		public final float[] sunGlow = new float[3];
 	}
 
 	public static final class LightingSample extends GradientSample {
 		public int frame;
 		public Environment environment;
 		public final SkyState sky = new SkyState();
-		public float[] referenceFogColorLinear;
+		public final float[] referenceFogColorLinear = new float[3];
 	}
 }

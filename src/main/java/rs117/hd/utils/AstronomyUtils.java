@@ -33,7 +33,6 @@ import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.tan;
-import static rs117.hd.utils.MathUtils.*;
 
 public final class AstronomyUtils {
 	private static final double
@@ -45,97 +44,114 @@ public final class AstronomyUtils {
 		J1970 = 2440588,
 		J2000 = 2451545;
 
-	public static float[] getSunAngles(long millis, float... latLong) {
-		return vec(getSunAngles(millis, (double) latLong[0], latLong[1]));
-	}
-
 	/**
 	 * Calculate angles for the sun's position in the sky at a given time and location.
 	 *
+	 * @param out     output altitude and azimuth angles in radians
 	 * @param millis  time in milliseconds since the Unix epoch
 	 * @param latLong latitude and longitude coordinates
-	 * @return the altitude and azimuth angles in radians. Azimuth is clockwise from north.
+	 * @return {@code out}. Azimuth is clockwise from north.
 	 * @see <a href="https://en.wikipedia.org/wiki/Horizontal_coordinate_system">Horizontal coordinate system</a>
 	 * @see <a href="https://github.com/mourner/suncalc#sun-position">suncalc npm documentation</a>
 	 */
-	public static double[] getSunAngles(long millis, double... latLong) {
+	public static float[] getSunAngles(float[] out, long millis, float[] latLong) {
 		double
 			phi = rad * latLong[0],
 			lw = rad * -latLong[1],
-			d = toDays(millis); // Real (non-reversed) time so season, phase, and E/W match the real sky
+			d = toDays(millis), // Real (non-reversed) time so season, phase, and E/W match the real sky
+			M = solarMeanAnomaly(d),
+			L = eclipticLongitude(M),
+			dec = declination(L, 0),
+			ra = rightAscension(L, 0),
+			H = siderealTime(d, lw) - ra;
 
-		double[] c = sunCoords(d);
-		double H = siderealTime(d, lw) - c[1];
-
-		double azimuth = azimuth(H, phi, c[0]);
-		double altitude = altitude(H, phi, c[0]);
-		return new double[] { altitude, azimuth + PI };
+		out[0] = (float) altitude(H, phi, dec);
+		out[1] = (float) (azimuth(H, phi, dec) + PI);
+		return out;
 	}
 
-	public static float[] getMoonPosition(long millis, float... latLong) {
-		return vec(getMoonPosition(millis, (double) latLong[0], latLong[1]));
+	public static float getSunAltitude(long millis, float[] latLong) {
+		double
+			phi = rad * latLong[0],
+			lw = rad * -latLong[1],
+			d = toDays(millis),
+			M = solarMeanAnomaly(d),
+			L = eclipticLongitude(M),
+			dec = declination(L, 0),
+			ra = rightAscension(L, 0),
+			H = siderealTime(d, lw) - ra;
+		return (float) altitude(H, phi, dec);
 	}
 
 	/**
 	 * Calculate angles for the moon's position in the sky at a given time and location.
 	 *
+	 * @param out     output altitude, azimuth, and optionally distance and parallactic angle
 	 * @param millis  time in milliseconds since the Unix epoch
 	 * @param latLong latitude and longitude coordinates
-	 * @return altitude, azimuth, distance, and parallactic angle. Angles are in radians, and
-	 * azimuth is clockwise from north.
+	 * @return {@code out}. Angles are in radians, and azimuth is clockwise from north.
 	 * @see <a href="https://en.wikipedia.org/wiki/Horizontal_coordinate_system">Horizontal coordinate system</a>
 	 * @see <a href="https://github.com/mourner/suncalc#moon-position">suncalc npm documentation</a>
 	 */
-	public static double[] getMoonPosition(long millis, double... latLong) {
+	public static float[] getMoonPosition(float[] out, long millis, float[] latLong) {
 		double
 			phi = rad * latLong[0],
 			lw = rad * -latLong[1],
-			d = toDays(millis); // Real (non-reversed) time so season, phase, and E/W match the real sky
-
-		double[] c = moonCoords(d);
-		double
-			dec = c[0],
-			ra = c[1],
-			dist = c[2],
+			d = toDays(millis), // Real (non-reversed) time so season, phase, and E/W match the real sky
+			L = rad * (218.316 + 13.176396 * d),
+			M = rad * (134.963 + 13.064993 * d),
+			F = rad * (93.272 + 13.229350 * d),
+			l = L + rad * 6.289 * sin(M),
+			b = rad * 5.128 * sin(F),
+			dec = declination(l, b),
+			ra = rightAscension(l, b),
 			H = siderealTime(d, lw) - ra,
 			h = altitude(H, phi, dec),
 			// formula 14.1 of "Astronomical Algorithms" 2nd edition by Jean Meeus (Willmann-Bell, Richmond) 1998.
 			pa = atan2(sin(H), tan(phi) * cos(dec) - sin(dec) * cos(H));
 
-		double azimuth = azimuth(H, phi, dec);
-		double altitude = h + astroRefraction(h); // altitude correction for refraction
-		return new double[] {
-			altitude,
-			azimuth + PI,
-			dist,
-			pa
-		};
+		out[0] = (float) (h + astroRefraction(h)); // altitude correction for refraction
+		out[1] = (float) (azimuth(H, phi, dec) + PI);
+		if (out.length > 2)
+			out[2] = (float) (385001 - 20905 * cos(M)); // distance to the moon in km
+		if (out.length > 3)
+			out[3] = (float) pa;
+		return out;
 	}
 
-	public static float[] getMoonIllumination(long millis) {
+	public static float[] getMoonIllumination(float[] out, long millis) {
 		double d = toDays(millis); // Real (non-reversed) time so the phase matches the real-world moon
-		return getMoonIllumination(sunCoords(d), moonCoords(d));
+		double sunM = solarMeanAnomaly(d);
+		double sunL = eclipticLongitude(sunM);
+		double moonL = rad * (218.316 + 13.176396 * d);
+		double moonM = rad * (134.963 + 13.064993 * d);
+		double moonF = rad * (93.272 + 13.229350 * d);
+		double l = moonL + rad * 6.289 * sin(moonM);
+		double b = rad * 5.128 * sin(moonF);
+		return getMoonIllumination(
+			out,
+			declination(sunL, 0), rightAscension(sunL, 0),
+			declination(l, b), rightAscension(l, b),
+			385001 - 20905 * cos(moonM)
+		);
 	}
 
 	// https://github.com/mourner/suncalc#moon-illumination
-	public static float[] getMoonIllumination(double[] sunCoords, double[] moonCoords) {
+	public static float[] getMoonIllumination(float[] out, double[] sunCoords, double[] moonCoords) {
+		return getMoonIllumination(out, sunCoords[0], sunCoords[1], moonCoords[0], moonCoords[1], moonCoords[2]);
+	}
+
+	private static float[] getMoonIllumination(float[] out, double sdec, double sra, double mdec, double mra, double mdist) {
 		double
 			sdist = 149598000, // distance from Earth to Sun in km
-			sdec = sunCoords[0],
-			mdec = moonCoords[0],
-			sra = sunCoords[1],
-			mra = moonCoords[1],
-			mdist = moonCoords[2],
-
 			phi = acos(sin(sdec) * sin(mdec) + cos(sdec) * cos(mdec) * cos(sra - mra)),
 			inc = atan2(sdist * sin(phi), mdist - sdist * cos(phi)),
 			angle = atan2(cos(sdec) * sin(sra - mra), sin(sdec) * cos(mdec) - cos(sdec) * sin(mdec) * cos(sra - mra));
 
-		return vec(
-			(1 + cos(inc)) / 2, // fraction
-			0.5 + 0.5 * inc * (angle < 0 ? -1 : 1) / Math.PI, // phase
-			angle
-		);
+		out[0] = (float) ((1 + cos(inc)) / 2); // fraction
+		out[1] = (float) (0.5 + 0.5 * inc * (angle < 0 ? -1 : 1) / Math.PI); // phase
+		out[2] = (float) angle;
+		return out;
 	}
 
 	private static double toJulian(long millis) {
@@ -144,34 +160,6 @@ public final class AstronomyUtils {
 
 	private static double toDays(long millis) {
 		return toJulian(millis) - J2000;
-	}
-
-	private static double[] sunCoords(double julianDay) {
-		double
-			M = solarMeanAnomaly(julianDay),
-			L = eclipticLongitude(M);
-
-		return new double[] {
-			declination(L, 0),
-			rightAscension(L, 0)
-		};
-	}
-
-	private static double[] moonCoords(double julianDay) { // geocentric ecliptic coordinates of the moon
-		double
-			L = rad * (218.316 + 13.176396 * julianDay), // ecliptic longitude
-			M = rad * (134.963 + 13.064993 * julianDay), // mean anomaly
-			F = rad * (93.272 + 13.229350 * julianDay),  // mean distance
-
-			l = L + rad * 6.289 * sin(M), // longitude
-			b = rad * 5.128 * sin(F),     // latitude
-			dt = 385001 - 20905 * cos(M);  // distance to the moon in km
-
-		return new double[] {
-			declination(l, b),
-			rightAscension(l, b),
-			dt
-		};
 	}
 
 	private static double solarMeanAnomaly(double julianDay) {

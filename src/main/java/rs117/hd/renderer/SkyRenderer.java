@@ -97,21 +97,15 @@ public class SkyRenderer {
 		private float customGradient;
 		private float moonShadowHandoff;
 
-		private LightingFrame() {
-			zenithLinear = new float[3];
-			horizonLinear = new float[3];
-			sunGlowLinear = new float[3];
-		}
-
 		private void interpolate(LightingFrame from, LightingFrame to, float t) {
 			moonShadowHandoff = mix(from.moonShadowHandoff, to.moonShadowHandoff, t);
 			mix(directionalLight, from.directionalLight, to.directionalLight, t);
 			mix(ambientLight, from.ambientLight, to.ambientLight, t);
 			mix(fog, from.fog, to.fog, t);
 			mix(moonDisk, from.moonDisk, to.moonDisk, t);
-			mix(zenithLinear, from.zenithLinear, to.zenithLinear, t);
-			mix(horizonLinear, from.horizonLinear, to.horizonLinear, t);
-			mix(sunGlowLinear, from.sunGlowLinear, to.sunGlowLinear, t);
+			mix(zenith, from.zenith, to.zenith, t);
+			mix(horizon, from.horizon, to.horizon, t);
+			mix(sunGlow, from.sunGlow, to.sunGlow, t);
 			fogDensity = mix(from.fogDensity, to.fogDensity, t);
 			visibility = mix(from.visibility, to.visibility, t);
 			customGradient = mix(from.customGradient, to.customGradient, t);
@@ -300,8 +294,8 @@ public class SkyRenderer {
 		copyTo(directionalLight, currentFrame.directionalLight);
 		copyTo(ambientLight, currentFrame.ambientLight);
 		usesMoonShadows = currentFrame.moonShadowHandoff > 0;
-		copyTo(fogColor, currentFrame.horizonLinear);
-		copyTo(waterColor, currentFrame.horizonLinear);
+		copyTo(fogColor, currentFrame.horizon);
+		copyTo(waterColor, currentFrame.horizon);
 		plugin.uboSky.fogDensity.set(currentFrame.fogDensity);
 		plugin.uboSky.visibility.set(currentFrame.visibility);
 		plugin.uboSky.fogColor.set(currentFrame.fog);
@@ -326,7 +320,7 @@ public class SkyRenderer {
 		float defaultDensity = .6f + (exp(6.7f * env.fogDepth / 100) - 1);
 		out.fogDensity = max(0, sky.skyFogDensity < 0 ? defaultDensity : sky.skyFogDensity);
 		out.visibility = saturate(sky.skyVisibility);
-		copyTo(out.fog, endpointSample.horizonLinear);
+		copyTo(out.fog, endpointSample.horizon);
 		if (sky.skyFogColor != null)
 			mix(out.fog, out.fog, sky.skyFogColor, saturate(sky.skyFogColorMix));
 
@@ -359,9 +353,9 @@ public class SkyRenderer {
 		} else {
 			copyTo(out.directionalLight, out.sunDirectionalLight);
 		}
-		copyTo(out.zenithLinear, endpointSample.zenithLinear);
-		copyTo(out.horizonLinear, endpointSample.horizonLinear);
-		copyTo(out.sunGlowLinear, endpointSample.sunGlowLinear);
+		copyTo(out.zenith, endpointSample.zenith);
+		copyTo(out.horizon, endpointSample.horizon);
+		copyTo(out.sunGlow, endpointSample.sunGlow);
 		multiply(out.moonDisk, sky.moonDiskColor, sky.moonDiskStrength);
 		out.customGradient = sky.customGradient ? 1 : 0;
 		out.configuration.interpolateLightingParameters(sky, sky, 1);
@@ -370,9 +364,9 @@ public class SkyRenderer {
 	private void updateSkyUbo(SkyConfiguration configuration, SkyState state, GradientSample sky) {
 		var ubo = plugin.uboSky;
 		ubo.enabled.set(1);
-		ubo.zenithColor.set(sky.zenithLinear);
-		ubo.horizonColor.set(sky.horizonLinear);
-		ubo.sunColor.set(sky.sunGlowLinear);
+		ubo.zenithColor.set(sky.zenith);
+		ubo.horizonColor.set(sky.horizon);
+		ubo.sunColor.set(sky.sunGlow);
 		ubo.horizonWidth.set(sin(clamp(configuration.horizonWidth, .001f, 90) * DEG_TO_RAD));
 		ubo.sunDir.set(state.sunDirection);
 		ubo.celestialPole.set(state.celestialPole[0], -state.celestialPole[1], state.celestialPole[2]);

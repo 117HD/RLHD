@@ -610,7 +610,7 @@ public class LightManager {
 		float[] authoredColor = light.def.color;
 		float defLuminance = linearSrgbLuminance(authoredColor);
 		float referenceLuminance = max(linearSrgbLuminance(lighting.referenceFogColorLinear), 1e-4f);
-		float[] lightColor = copy(lighting.horizonLinear);
+		float[] lightColor = copy(lighting.horizon);
 		float sunAltDeg = skyState.sunAltitudeDegrees;
 
 		float moonStrengthFloor = 0;

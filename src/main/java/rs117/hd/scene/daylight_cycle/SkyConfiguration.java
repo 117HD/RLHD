@@ -179,16 +179,18 @@ public class SkyConfiguration {
 			}
 		}
 
-		private static float[] interpolate(float altitude, Keyframe[] keyframes) {
+		private static void interpolate(float[] out, float altitude, Keyframe[] keyframes) {
 			int end = keyframes.length - 1;
 			int i = 0;
 			while (i < end && altitude > keyframes[i + 1].altitude)
 				i++;
 			Keyframe from = keyframes[i];
-			if (i == end)
-				return copy(from.color);
+			if (i == end) {
+				copyTo(out, from.color);
+				return;
+			}
 			Keyframe to = keyframes[i + 1];
-			return mix(from.color, to.color, saturate((altitude - from.altitude) / (to.altitude - from.altitude)));
+			mix(out, from.color, to.color, saturate((altitude - from.altitude) / (to.altitude - from.altitude)));
 		}
 	}
 
@@ -209,12 +211,9 @@ public class SkyConfiguration {
 
 	public void evaluateGradient(GradientSample out, float sunAltitudeDegrees, float[] fogColor) {
 		float takeover = max(0, skyColorTakeoverAngle);
-		float[] zenith = SkyProfile.interpolate(sunAltitudeDegrees, profile.zenith);
-		float[] horizon = SkyProfile.interpolate(sunAltitudeDegrees, profile.horizon);
-		float[] sunGlow = SkyProfile.interpolate(sunAltitudeDegrees, profile.sunGlow);
-		out.zenithLinear = zenith;
-		out.horizonLinear = horizon;
-		out.sunGlowLinear = sunGlow;
+		SkyProfile.interpolate(out.zenith, sunAltitudeDegrees, profile.zenith);
+		SkyProfile.interpolate(out.horizon, sunAltitudeDegrees, profile.horizon);
+		SkyProfile.interpolate(out.sunGlow, sunAltitudeDegrees, profile.sunGlow);
 		// Authored gradients bypass the automatic fog takeover and night-color replacement.
 		if (customGradient)
 			return;
@@ -222,9 +221,13 @@ public class SkyConfiguration {
 			float window = smoothstep(-25, 0, sunAltitudeDegrees);
 			float suppression = (1 - sunStrength) * window;
 			if (suppression > 0) {
-				float[] target = mix(fogColor, profile.nightSkyColor, smoothstep(5, -5, sunAltitudeDegrees));
-				blendSky(zenith, horizon, target, suppression);
-				multiply(sunGlow, sunGlow, 1 - suppression);
+				float nightBlend = smoothstep(5, -5, sunAltitudeDegrees);
+				for (int i = 0; i < 3; i++) {
+					float target = mix(fogColor[i], profile.nightSkyColor[i], nightBlend);
+					out.zenith[i] = mix(out.zenith[i], target, suppression);
+					out.horizon[i] = mix(out.horizon[i], target, suppression);
+				}
+				multiply(out.sunGlow, out.sunGlow, 1 - suppression);
 			}
 		}
 		if (fogColor != null && sunriseSunsetStrength < 1) {
@@ -233,19 +236,19 @@ public class SkyConfiguration {
 				takeover == 0 ? 0 : smoothstep(takeover, 0, sunAltitudeDegrees);
 			float suppression = (1 - sunriseSunsetStrength) * window;
 			if (suppression > 0) {
-				blendSky(zenith, horizon, fogColor, suppression);
-				multiply(sunGlow, sunGlow, 1 - suppression);
+				blendSky(out.zenith, out.horizon, fogColor, suppression);
+				multiply(out.sunGlow, out.sunGlow, 1 - suppression);
 			}
 		}
 		if (fogColor != null) {
 			float blend = sunAltitudeDegrees < 0 ? 0 : takeover == 0 ? 1 : smoothstep(0, takeover, sunAltitudeDegrees);
 			if (blend > 0)
-				blendSky(zenith, horizon, fogColor, blend);
+				blendSky(out.zenith, out.horizon, fogColor, blend);
 		}
 		// Preserve the twilight gradient through civil dusk, then fade to the night tint.
 		float nightBlend = smoothstep(-6, -18, sunAltitudeDegrees);
 		if (nightBlend > 0)
-			blendSky(zenith, horizon, profile.nightSkyColor, nightBlend);
+			blendSky(out.zenith, out.horizon, profile.nightSkyColor, nightBlend);
 	}
 
 	private static void blendSky(float[] zenith, float[] horizon, float[] color, float t) {
