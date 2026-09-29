@@ -4,20 +4,17 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
-import rs117.hd.HdPlugin;
+import net.runelite.client.util.Filepath;
 
 import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -28,19 +25,19 @@ class ItemIconCache {
 	// Bump when icons are drawn differently
 	private static final int VERSION = 2;
 	private static final int MAX_FOLDERS = 3;
-	private static final Path ROOT = HdPlugin.PLUGIN_DIR.resolve("item-icons").toPath();
 
-	private final Path folder;
+	private final Filepath folder;
 	private final int width;
 	private final int height;
 
-	ItemIconCache(float scaleX, float scaleY, double brightness, int width, int height) {
-		folder = ROOT.resolve(String.format(Locale.ROOT, "v%d-%.4fx%.4f-%.3f", VERSION, scaleX, scaleY, brightness));
+	ItemIconCache(Filepath root, float scaleX, float scaleY, double brightness, int width, int height) {
+		folder = root.joinSegment(String.format(Locale.ROOT, "v%d-%.4fx%.4f-%.3f", VERSION, scaleX, scaleY, brightness));
 		this.width = width;
 		this.height = height;
 		try {
-			if (Files.isDirectory(folder))
-				Files.setLastModifiedTime(folder, FileTime.fromMillis(System.currentTimeMillis()));
+			// Marks the folder as recently used
+			if (folder.isDirectory())
+				folder.createTempFile("used", ".tmp").delete();
 		} catch (IOException ex) {
 			log.debug("Unable to mark item icons as used:", ex);
 		}
@@ -48,7 +45,10 @@ class ItemIconCache {
 
 	boolean load(long key, NativeItemIcons.Icon icon) {
 		try {
-			byte[] file = Files.readAllBytes(folder.resolve(fileName(key)));
+			byte[] file;
+			try (var in = folder.joinSegment(fileName(key)).openInputStream()) {
+				file = in.readAllBytes();
+			}
 			if (file.length == 0) {
 				icon.failed = true;
 				return true;
@@ -99,41 +99,37 @@ class ItemIconCache {
 			}
 
 			// Moved into place, since other clients may be reading it
-			Files.createDirectories(folder);
-			var temporary = Files.createTempFile(folder, fileName(key), ".tmp");
-			Files.write(temporary, file);
-			Files.move(temporary, folder.resolve(fileName(key)), REPLACE_EXISTING, ATOMIC_MOVE);
+			folder.createDirectories();
+			var temporary = folder.createTempFile(fileName(key), ".tmp");
+			temporary.write(file);
+			temporary.moveTo(folder.joinSegment(fileName(key)), REPLACE_EXISTING, ATOMIC_MOVE);
 		} catch (IOException ex) {
 			log.debug("Unable to keep item icon {}:", fileName(key), ex);
 		}
 	}
 
-	static void removeUnused() {
-		if (!Files.isDirectory(ROOT))
+	static void removeUnused(Filepath root) {
+		if (!root.isDirectory())
 			return;
 
 		try {
-			List<Path> folders;
-			try (var list = Files.list(ROOT)) {
+			List<Filepath> folders;
+			try (var list = root.walk(1)) {
 				folders = list
-					.filter(Files::isDirectory)
+					.filter(folder -> !folder.equals(root) && folder.isDirectory())
 					.sorted(Comparator.comparing(ItemIconCache::lastModified).reversed())
 					.collect(Collectors.toList());
 			}
-			for (var unused : folders.subList(min(MAX_FOLDERS, folders.size()), folders.size())) {
-				try (Stream<Path> files = Files.walk(unused)) {
-					for (var path : files.sorted(Comparator.reverseOrder()).collect(Collectors.toList()))
-						Files.delete(path);
-				}
-			}
+			for (var unused : folders.subList(min(MAX_FOLDERS, folders.size()), folders.size()))
+				unused.deleteRecursively();
 		} catch (IOException ex) {
 			log.debug("Unable to remove unused item icons:", ex);
 		}
 	}
 
-	private static FileTime lastModified(Path path) {
+	private static FileTime lastModified(Filepath folder) {
 		try {
-			return Files.getLastModifiedTime(path);
+			return folder.getLastModifiedTime();
 		} catch (IOException ex) {
 			return FileTime.fromMillis(0);
 		}

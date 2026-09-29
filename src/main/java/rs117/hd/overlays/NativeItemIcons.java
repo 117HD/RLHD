@@ -34,6 +34,7 @@ import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.WidgetItemOverlay;
+import net.runelite.client.util.Filepath;
 import org.lwjgl.BufferUtils;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.shader.ShaderException;
@@ -41,7 +42,6 @@ import rs117.hd.opengl.shader.ShaderProgram;
 import rs117.hd.utils.ShaderRecompile;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.HdPlugin.PROCESSOR_COUNT;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_ITEM_BACKGROUNDS;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_ITEM_ICONS;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_ITEM_ICON_SURROUNDINGS;
@@ -232,6 +232,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private float scaleX;
 	private float scaleY;
 	private double brightness;
+	private Filepath cacheFolder;
 	private ItemIconCache cache;
 
 	private final Map<Long, Icon> icons = new HashMap<>();
@@ -270,7 +271,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		setPriority(PRIORITY_LOW - 1);
 	}
 
-	public void startUp() {
+	public void startUp(Filepath pluginDirectory) {
 		try {
 			shader.compile(plugin.getShaderIncludes());
 		} catch (ShaderException | IOException ex) {
@@ -298,12 +299,13 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 		texIcons = glGenTextures();
 		texIconSurroundings = glGenTextures();
-		executor = Executors.newFixedThreadPool(clamp(PROCESSOR_COUNT / 2, 1, 4), r -> {
+		executor = Executors.newFixedThreadPool(2, r -> {
 			var thread = new Thread(r, "117 HD - Item icons");
 			thread.setDaemon(true);
 			return thread;
 		});
-		executor.execute(ItemIconCache::removeUnused);
+		cacheFolder = pluginDirectory.joinSegment("item-icons");
+		executor.execute(() -> ItemIconCache.removeUnused(cacheFolder));
 
 		showOnInterface(client.getTopLevelInterfaceId());
 		for (var node : client.getComponentTable())
@@ -739,7 +741,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			scaleX = newScaleX;
 			scaleY = newScaleY;
 			brightness = newBrightness;
-			cache = new ItemIconCache(scaleX, scaleY, brightness, iconWidth(), iconHeight());
+			cache = new ItemIconCache(cacheFolder, scaleX, scaleY, brightness, iconWidth(), iconHeight());
 			clearIcons();
 			glActiveTexture(TEXTURE_UNIT_ITEM_ICONS);
 			glBindTexture(GL_TEXTURE_2D_ARRAY, texIcons);

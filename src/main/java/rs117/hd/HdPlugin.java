@@ -148,6 +148,7 @@ import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
 @Singleton
 @PluginDescriptor(
 	name = "117 HD",
+	internalName = "117hd",
 	description = "GPU renderer with a suite of graphical enhancements",
 	tags = { "hd", "high", "detail", "graphics", "shaders", "textures", "gpu", "shadows", "lights" },
 	conflicts = "GPU"
@@ -732,7 +733,7 @@ public class HdPlugin extends Plugin {
 				gammaCalibrationOverlay.initialize();
 				npcDisplacementCache.initialize();
 				if (config.nativeItemIcons())
-					nativeItemIcons.startUp();
+					nativeItemIcons.startUp(getPluginDirectory());
 
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
 				redrawPreviousFrame = false;
@@ -1894,7 +1895,7 @@ public class HdPlugin extends Plugin {
 							case KEY_NATIVE_ITEM_ICONS:
 								nativeItemIcons.shutDown();
 								if (config.nativeItemIcons())
-									nativeItemIcons.startUp();
+									nativeItemIcons.startUp(getPluginDirectory());
 								break;
 						}
 					}
