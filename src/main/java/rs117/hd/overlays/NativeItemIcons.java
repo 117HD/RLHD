@@ -150,6 +150,21 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		final int index;
 		final Rectangle bounds, drawn;
 		final GameIcon gameIcon;
+		final Slot slot;
+	}
+
+	// What's behind an item and what other overlays draw over it rarely change, so they're only worked out again when they do
+	private static class Slot {
+		final int[] behind = new int[GRID_SIZE];
+		final int[] cut = new int[GRID_SIZE];
+		final int[] background = new int[GRID_SIZE];
+		final int[] overlays = new int[GRID_SIZE];
+		final int[] elsewhere = new int[GRID_SIZE];
+		boolean kept;
+		int shadow;
+		int fill;
+		int outline;
+		int frame;
 	}
 
 	@RequiredArgsConstructor
@@ -248,13 +263,16 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private final Map<Long, Integer> stackModelSearches = new HashMap<>();
 	private final Map<Integer, Item[]> containers = new HashMap<>();
 
+	private int frame;
 	private int newItemsThisFrame;
 	private int itemCount;
 	private final Set<Rectangle> cutThisFrame = new HashSet<>();
+	private final Map<Long, Slot> slots = new HashMap<>();
 	private final List<CutItem> uncaptured = new ArrayList<>();
 	private final List<WidgetItem> draggedItems = new ArrayList<>();
 	private final List<CutItem> draggedCuts = new ArrayList<>();
 	private final int[] backgrounds = new int[MAX_ITEMS * LAYERS_PER_ITEM * GRID_SIZE];
+	private final boolean[] overlaidLayers = new boolean[MAX_ITEMS];
 	private final FloatBuffer vertices = BufferUtils.createFloatBuffer(MAX_ITEMS * FLOATS_PER_ITEM);
 	private final boolean[] known = new boolean[GRID_SIZE];
 	private final boolean[] spread = new boolean[GRID_SIZE];
@@ -341,6 +359,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		gameIcons.clear();
 		stackModels.clear();
 		stackModelSearches.clear();
+		slots.clear();
 		containers.clear();
 		scaleX = scaleY = 0;
 	}
@@ -352,6 +371,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 	@Subscribe
 	public void onBeforeRender(BeforeRender event) {
+		frame++;
+		slots.values().removeIf(slot -> slot.frame < frame - 1);
 		newItemsThisFrame = 0;
 		itemCount = 0;
 		vertices.clear();
@@ -429,10 +450,17 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		// The game draws dragged items half transparent
 		float opacity = (dragged ? 128 : 256 - widget.getOpacity()) / 256f;
 		var gameIcon = getGameIcon(widgetItem.getId(), widgetItem.getQuantity(), widget.getItemQuantityMode(), widget.getBorderType(), true);
+		long slotKey = GameIcon.hash(gameIcon.key, bounds.x, bounds.y, drawn.x, drawn.y, drawn.width, drawn.height);
+		var slot = slots.computeIfAbsent(slotKey, key -> new Slot());
+		slot.frame = frame;
+		cutOut(buffer.getPixels(), buffer.getWidth(), bounds, drawn, gameIcon, slot);
 		int offset = itemCount * LAYERS_PER_ITEM * GRID_SIZE;
-		int shadow = cutOut(buffer.getPixels(), buffer.getWidth(), bounds, drawn, gameIcon, offset);
-		Arrays.fill(backgrounds, offset + GRID_SIZE, offset + 2 * GRID_SIZE, 0);
-		var cutItem = new CutItem(itemCount, bounds, drawn, gameIcon);
+		System.arraycopy(slot.background, 0, backgrounds, offset, GRID_SIZE);
+		if (overlaidLayers[itemCount]) {
+			Arrays.fill(backgrounds, offset + GRID_SIZE, offset + 2 * GRID_SIZE, 0);
+			overlaidLayers[itemCount] = false;
+		}
+		var cutItem = new CutItem(itemCount, bounds, drawn, gameIcon, slot);
 		uncaptured.add(cutItem);
 		if (dragged)
 			draggedCuts.add(cutItem);
@@ -452,7 +480,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				.put(itemCount * LAYERS_PER_ITEM)
 				.put(opacity)
 				.put(widget.getBorderType());
-			putColor(shadow);
+			putColor(slot.shadow);
 			putColor(0);
 			putColor(0);
 		}
@@ -789,17 +817,31 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, wrap);
 	}
 
-	private int cutOut(int[] pixels, int width, Rectangle bounds, Rectangle drawn, GameIcon gameIcon, int offset) {
-		Arrays.fill(backgrounds, offset, offset + GRID_SIZE, 0);
+	private void cutOut(int[] pixels, int width, Rectangle bounds, Rectangle drawn, GameIcon gameIcon, Slot slot) {
+		boolean unchanged = slot.kept;
+		for (int y = drawn.y; unchanged && y < drawn.y + drawn.height; y++) {
+			int i = y * width + drawn.x;
+			int g = GameIcon.grid(drawn.x - bounds.x, y - bounds.y);
+			unchanged = Arrays.equals(pixels, i, i + drawn.width, slot.behind, g, g + drawn.width);
+		}
+		if (!unchanged)
+			paintOver(pixels, width, bounds, drawn, gameIcon, slot);
+
+		for (int y = drawn.y; y < drawn.y + drawn.height; y++)
+			System.arraycopy(slot.cut, GameIcon.grid(drawn.x - bounds.x, y - bounds.y), pixels, y * width + drawn.x, drawn.width);
+	}
+
+	private void paintOver(int[] pixels, int width, Rectangle bounds, Rectangle drawn, GameIcon gameIcon, Slot slot) {
+		int[] background = slot.background;
+		Arrays.fill(background, 0);
 		Arrays.fill(known, false);
 		for (int y = drawn.y; y < drawn.y + drawn.height; y++) {
 			for (int x = drawn.x; x < drawn.x + drawn.width; x++) {
-				int i = y * width + x;
 				int g = GameIcon.grid(x - bounds.x, y - bounds.y);
-				backgrounds[offset + g] = pixels[i];
+				int pixel = pixels[y * width + x];
+				background[g] = slot.behind[g] = pixel;
+				slot.cut[g] = gameIcon.stackSize[g] ? pixel : 0;
 				known[g] = !gameIcon.item[g] && !gameIcon.stackSize[g];
-				if (!gameIcon.stackSize[g])
-					pixels[i] = 0;
 			}
 		}
 
@@ -809,7 +851,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		for (int g = 0; g < GRID_SIZE; g++) {
 			if (!known[g] || !gameIcon.shadow[g])
 				continue;
-			int color = backgrounds[offset + g];
+			int color = background[g];
 			if (first) {
 				shadow = color;
 				first = false;
@@ -837,7 +879,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 					int ny = y + NEIGHBOR_Y[n];
 					if (nx < 0 || nx >= GRID_WIDTH || ny < 0 || ny >= GRID_HEIGHT || !known[ny * GRID_WIDTH + nx])
 						continue;
-					int neighbor = backgrounds[offset + ny * GRID_WIDTH + nx];
+					int neighbor = background[ny * GRID_WIDTH + nx];
 					alpha += neighbor >>> 24;
 					red += neighbor >> 16 & 0xFF;
 					green += neighbor >> 8 & 0xFF;
@@ -845,16 +887,29 @@ public class NativeItemIcons extends WidgetItemOverlay {
 					count++;
 				}
 				if (count > 0) {
-					backgrounds[offset + g] = alpha / count << 24 | red / count << 16 | green / count << 8 | blue / count;
+					background[g] = alpha / count << 24 | red / count << 16 | green / count << 8 | blue / count;
 					spread[g] = true;
 				}
 			}
 			System.arraycopy(spread, 0, known, 0, GRID_SIZE);
 		}
-		return shadow;
+		slot.shadow = shadow;
+		slot.kept = true;
 	}
 
 	private void captureOverlays(int[] pixels, int width, CutItem item) {
+		// Nothing was drawn over the item while its pixels are still as they were cut out
+		var slot = item.slot;
+		boolean overlaid = false;
+		for (int y = item.drawn.y; !overlaid && y < item.drawn.y + item.drawn.height; y++) {
+			int i = y * width + item.drawn.x;
+			int g = GameIcon.grid(item.drawn.x - item.bounds.x, y - item.bounds.y);
+			overlaid = !Arrays.equals(pixels, i, i + item.drawn.width, slot.cut, g, g + item.drawn.width);
+		}
+		if (!overlaid)
+			return;
+
+		Arrays.fill(overlays, 0);
 		Arrays.fill(captured, false);
 		for (int y = item.drawn.y; y < item.drawn.y + item.drawn.height; y++) {
 			for (int x = item.drawn.x; x < item.drawn.x + item.drawn.width; x++) {
@@ -868,20 +923,23 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			}
 		}
 
-		// Fills and outlines, like those of Inventory Tags, are redrawn to fit the native icon. Fills cover the shadow too.
-		var gameIcon = item.gameIcon;
-		int fill = shapeColor(gameIcon.item, gameIcon.shadow);
-		int outline = shapeColor(gameIcon.outline, gameIcon.shadow);
-		setColor(item.index, FILL_OFFSET, fill);
-		setColor(item.index, OUTLINE_OFFSET, outline);
-
-		int offset = (item.index * LAYERS_PER_ITEM + 1) * GRID_SIZE;
-		for (int g = 0; g < GRID_SIZE; g++) {
-			boolean redrawn =
-				fill != 0 && (gameIcon.item[g] && overlays[g] == fill || gameIcon.shadow[g]) ||
-				outline != 0 && gameIcon.outline[g] && overlays[g] == outline;
-			backgrounds[offset + g] = captured[g] && !redrawn ? overlays[g] : 0;
+		if (!Arrays.equals(overlays, slot.overlays)) {
+			System.arraycopy(overlays, 0, slot.overlays, 0, GRID_SIZE);
+			// Fills and outlines, like those of Inventory Tags, are redrawn to fit the native icon. Fills cover the shadow too.
+			var gameIcon = item.gameIcon;
+			int fill = slot.fill = shapeColor(gameIcon.item, gameIcon.shadow);
+			int outline = slot.outline = shapeColor(gameIcon.outline, gameIcon.shadow);
+			for (int g = 0; g < GRID_SIZE; g++) {
+				boolean redrawn =
+					fill != 0 && (gameIcon.item[g] && overlays[g] == fill || gameIcon.shadow[g]) ||
+					outline != 0 && gameIcon.outline[g] && overlays[g] == outline;
+				slot.elsewhere[g] = captured[g] && !redrawn ? overlays[g] : 0;
+			}
 		}
+		setColor(item.index, FILL_OFFSET, slot.fill);
+		setColor(item.index, OUTLINE_OFFSET, slot.outline);
+		System.arraycopy(slot.elsewhere, 0, backgrounds, (item.index * LAYERS_PER_ITEM + 1) * GRID_SIZE, GRID_SIZE);
+		overlaidLayers[item.index] = true;
 	}
 
 	private int shapeColor(boolean[] shape, boolean[] shared) {
