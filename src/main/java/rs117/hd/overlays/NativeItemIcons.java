@@ -577,8 +577,9 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	@Nullable
 	private GameIcon getGameIcon(int itemId, int quantity, int quantityMode, int border, boolean visible) {
 		long key = (long) quantity << 24 | (long) itemId << 4 | quantityMode << 2 | border;
-		if (gameIcons.containsKey(key))
-			return gameIcons.get(key);
+		var cached = gameIcons.get(key);
+		if (cached != null || gameIcons.containsKey(key))
+			return cached;
 		if (!lookInto(visible))
 			return UNKNOWN;
 
