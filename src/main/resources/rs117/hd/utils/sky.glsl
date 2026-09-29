@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utils/celestial_projection.glsl>
+
 struct SkyGradient {
     vec3 sunDir;         // sun direction with the perceived-horizon offset applied
     float upAmount;      // how much the view is looking up (-viewDir.y)
@@ -65,6 +67,8 @@ SkyGradient computeSkyGradient(vec3 viewDir) {
         float innerGlow = s32 * 0.25;
         float midGlow = s8 * 0.15;
         float outerGlow = s2 * sunDot * sqrt(sunDot) * 0.08;
+        float diskDot = dot(celestialViewDirection(viewDir, g.sunDir), g.sunDir);
+        float disk = smoothstep(0.99933, 0.99955, diskDot);
         g.color += uboSky.sunColor * (coreGlow + innerGlow + midGlow + outerGlow);
     }
 

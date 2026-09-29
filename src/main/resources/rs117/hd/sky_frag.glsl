@@ -12,6 +12,7 @@
 #include <utils/sky_fog.glsl>
 #include <utils/hash.glsl>
 #include <utils/tone_mapping.glsl>
+#include <utils/celestial_projection.glsl>
 
 in vec2 fScreenPos;
 
@@ -88,9 +89,7 @@ void main() {
             shootingStarColor = shootingStars(viewDir, elapsedTime) * starBlend;
     #endif
 
-    // Match the moon's default apparent size. Reuse the authored sun-glow color
-    // so environmental suppression and sunset colors still apply.
-    float sunDot = dot(viewDir, sky.sunDir);
+    float sunDot = dot(celestialViewDirection(viewDir, sky.sunDir), sky.sunDir);
     float sunRadius = acos(0.99945);
     float sunEdge = cos(sunRadius);
     float sunAntialias = max(fwidth(sunDot), 1e-7);
@@ -109,7 +108,8 @@ void main() {
     if (uboSky.moonVisibility > 0.001) {
         vec3 moonIlluminationDir = normalize(vec3(uboSky.moonSurfaceLightDirection.x, -uboSky.moonSurfaceLightDirection.y + HORIZON_OFFSET, uboSky.moonSurfaceLightDirection.z));
 
-        float moonDot = dot(viewDir, moonDir);
+        vec3 moonViewDir = celestialViewDirection(viewDir, moonDir);
+        float moonDot = dot(moonViewDir, moonDir);
 
         // Suppress lunar contrast only near overlap of the artistically enlarged disks.
         const float moonBaseRadius = 0.03317f;
@@ -135,7 +135,8 @@ void main() {
                 vec3 moonRight = normalize(cross(moonUp, moonDir));
                 moonUp = normalize(cross(moonDir, moonRight));
 
-                vec3 toView = normalize(viewDir - moonDir * moonDot);
+                vec3 toView = moonViewDir - moonDir * moonDot;
+                toView /= max(length(toView), 1e-7);
                 float localX = dot(toView, moonRight) * angDist / moonRadius;
                 float localY = dot(toView, moonUp) * angDist / moonRadius;
 
@@ -330,7 +331,7 @@ void main() {
             float rimDistanceDegrees = degrees(max(0.0,
                 acos(clamp(moonDot, 0.0, 1.0)) - moonBaseRadius * uboSky.moonSizeMult));
             float glareAngleDegrees = rimDistanceDegrees + 0.25;
-            vec3 toRim = viewDir - moonDir * moonDot;
+            vec3 toRim = moonViewDir - moonDir * moonDot;
             vec3 toLight = moonIlluminationDir - moonDir * dot(moonIlluminationDir, moonDir);
             float litSide = dot(toRim, toLight) / max(length(toRim) * length(toLight), 1e-5);
             float phaseCos = 2.0 * uboSky.moonIllumination - 1.0;

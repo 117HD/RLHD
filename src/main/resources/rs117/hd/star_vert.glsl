@@ -8,6 +8,7 @@
 #include <utils/hash.glsl>
 #include <utils/starfield.glsl>
 #include <utils/sky_fog.glsl>
+#include <utils/celestial_projection.glsl>
 
 layout(location = 0) in vec3 aStarDir;     // field-space unit direction
 layout(location = 1) in float aStarSize;   // relative size
@@ -35,7 +36,7 @@ void main() {
     float moonOcclusion = 1.0;
     if (uboSky.moonVisibility > 0.0) {
         vec3 moonDir = normalize(vec3(uboSky.moonDir.x, -uboSky.moonDir.y + SKY_HORIZON_OFFSET, uboSky.moonDir.z));
-        float moonDot = dot(dir, moonDir);
+        float moonDot = dot(celestialViewDirection(dir, moonDir), moonDir);
         // Match the moon disk's per-environment angular scale.
         float innerAngle = acos(0.99951) * uboSky.moonSizeMult;
         float outerAngle = acos(0.9991) * uboSky.moonSizeMult;
