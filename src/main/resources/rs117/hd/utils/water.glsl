@@ -84,7 +84,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     // directional light specular
     vec3 lightReflectDir = reflect(-lightDir, normals);
     vec3 reflectionColor = lightColor;
-    if (uboSky.gradientEnabled) {
+    if (uboSky.enabled) {
         // Match the active shadow source; sky directions use upward-positive Y.
         vec3 sunDir = uboSky.sunDir * vec3(1, -1, 1);
         vec3 moonDir = uboSky.moonDir * vec3(1, -1, 1);

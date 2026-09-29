@@ -177,7 +177,7 @@ public class SkyRenderer {
 			usesMoonShadows = false;
 			previousTransition = 1;
 			interruptedTransition = false;
-			plugin.uboSky.gradientEnabled.set(0);
+			plugin.uboSky.enabled.set(0);
 			plugin.uboSky.upload();
 		}
 		updateGlobalUbo(uboGlobal);
@@ -369,7 +369,7 @@ public class SkyRenderer {
 
 	private void updateSkyUbo(SkyConfiguration configuration, SkyState state, GradientSample sky) {
 		var ubo = plugin.uboSky;
-		ubo.gradientEnabled.set(1);
+		ubo.enabled.set(1);
 		ubo.zenithColor.set(sky.zenithLinear);
 		ubo.horizonColor.set(sky.horizonLinear);
 		ubo.sunColor.set(sky.sunGlowLinear);

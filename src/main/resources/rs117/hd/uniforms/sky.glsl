@@ -3,7 +3,7 @@
 #include NEBULA_CLUSTER_COUNT
 
 layout(std140) uniform UBOSky {
-    bool gradientEnabled;
+    bool enabled;
     vec3 zenithColor;
     vec3 horizonColor;
     vec3 sunColor;

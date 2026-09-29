@@ -546,7 +546,7 @@ void main() {
             outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
         }
 
-        if (uboSky.gradientEnabled) {
+        if (uboSky.enabled) {
             // Reconstruct the sky only where fog blends geometry toward it.
             vec3 skyColorAtFragment = outputColor.rgb;
 

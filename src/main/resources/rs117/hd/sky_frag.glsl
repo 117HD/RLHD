@@ -34,7 +34,7 @@ float nightSkyHorizonFade(float upAmount, float horizonShift) {
 }
 
 void main() {
-    if (!uboSky.gradientEnabled || orthographicProjection) {
+    if (!uboSky.enabled || orthographicProjection) {
         vec3 srgb = linearToSrgb(fogColor);
         srgb = applyColorAdjustments(srgb);
         srgb = applyOutputCorrection(srgb);
