@@ -34,8 +34,11 @@ class ItemIconCache {
 		folder = root.joinSegment(String.format(Locale.ROOT, "v%d-%.4fx%.4f-%.3f", VERSION, scaleX, scaleY, brightness));
 		this.width = width;
 		this.height = height;
+	}
+
+	void markUsed() {
 		try {
-			// Marks the folder as recently used
+			// Creating a file updates the folder's modification time
 			if (folder.isDirectory())
 				folder.createTempFile("used", ".tmp").delete();
 		} catch (IOException ex) {

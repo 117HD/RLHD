@@ -97,6 +97,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 	static class Icon {
 		volatile boolean failed;
+		volatile boolean uncached;
 		float[] surroundings;
 		volatile int[] pixels;
 		int layer = -1;
@@ -497,22 +498,20 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			if (!lookInto(visible))
 				return PENDING;
 
-			icon = new Icon();
-			if (cache.load(gameIcon.key, icon)) {
-				if (!icon.failed && !freeLayers.isEmpty())
-					icon.layer = freeLayers.pop();
-			} else {
-				int modelItemId = findModelItem(itemId, quantity, border, gameIcon);
-				if (modelItemId == -1)
-					return null;
-				if (modelItemId == -2) {
-					icon.failed = true;
-					cache.save(gameIcon.key, null, null);
-				} else {
-					drawIcon(icon, modelItemId, border, gameIcon.key);
-				}
-			}
+			icon = loadIcon(gameIcon.key);
 			icons.put(gameIcon.key, icon);
+		} else if (icon.uncached) {
+			int modelItemId = findModelItem(itemId, quantity, border, gameIcon);
+			if (modelItemId == -1)
+				return null;
+			icon.uncached = false;
+			if (modelItemId == -2) {
+				icon.failed = true;
+				var cache = this.cache;
+				executor.execute(() -> cache.save(gameIcon.key, null, null));
+			} else {
+				drawIcon(icon, modelItemId, border, gameIcon.key);
+			}
 		}
 		return icon.failed ? null : icon;
 	}
@@ -600,6 +599,13 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private int[] gamePixels(int itemId, int quantity, int border, int quantityMode, boolean noted) {
 		var sprite = client.createItemSprite(itemId, quantity, border, 0, quantityMode, noted, Constants.CLIENT_DEFAULT_ZOOM);
 		return sprite == null ? null : sprite.getPixels();
+	}
+
+	private Icon loadIcon(long key) {
+		var icon = new Icon();
+		var cache = this.cache;
+		executor.execute(() -> icon.uncached = !cache.load(key, icon));
+		return icon;
 	}
 
 	private void drawIcon(Icon icon, int itemId, int border, long key) {
@@ -742,6 +748,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			scaleY = newScaleY;
 			brightness = newBrightness;
 			cache = new ItemIconCache(cacheFolder, scaleX, scaleY, brightness, iconWidth(), iconHeight());
+			executor.execute(cache::markUsed);
 			clearIcons();
 			glActiveTexture(TEXTURE_UNIT_ITEM_ICONS);
 			glBindTexture(GL_TEXTURE_2D_ARRAY, texIcons);
