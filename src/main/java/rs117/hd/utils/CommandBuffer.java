@@ -290,6 +290,7 @@ public class CommandBuffer {
 		if (frameTimer != null)
 			frameTimer.begin(Timer.EXECUTE_COMMAND_BUFFER);
 		try (MemoryStack stack = MemoryStack.stackPush()) {
+			ArrayDeque<CommandBuffer> callStack = null;
 			IntBuffer offsets = null, counts = null;
 			int readHead = 0;
 			int lastType = -1;
@@ -424,7 +425,8 @@ public class CommandBuffer {
 					}
 					case GL_EXECUTE_SUB_COMMAND_BUFFER: {
 						final CommandBuffer subCmd = (CommandBuffer) objects[(int) (data >> 8)];
-						var callStack = CALL_STACK.get();
+						if(callStack == null)
+							callStack = CALL_STACK.get();
 						if (callStack.contains(subCmd))
 							throw new IllegalStateException(String.format(
 								"Command buffer recursion error: [%s, %s]",
