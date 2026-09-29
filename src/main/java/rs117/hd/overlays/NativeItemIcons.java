@@ -56,6 +56,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private static final int MAX_ICONS = 1024;
 	private static final int MAX_GAME_ICONS = 2048;
 	private static final int MAX_ITEMS = 256;
+	// Slots are kept for the items of this frame and the last
+	private static final int MAX_SLOTS = 2 * MAX_ITEMS;
 	private static final int MAX_NEW_ITEMS_PER_FRAME = 16;
 	// Native icons can reach a little past the game's icons
 	private static final int MARGIN = 2;
@@ -63,6 +65,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private static final int GRID_HEIGHT = ICON_HEIGHT + 2 * MARGIN;
 	private static final int GRID_SIZE = GRID_WIDTH * GRID_HEIGHT;
 	private static final int LAYERS_PER_ITEM = 2;
+	private static final int[] NO_OVERLAYS = new int[GRID_SIZE];
 	private static final float MIN_SHAPE_COVERAGE = .9f;
 	private static final int[] VERTEX_ATTRIBUTE_SIZES = { 2, 2, 2, 1, 1, 4, 4, 4 };
 	private static final int FLOATS_PER_VERTEX = 20;
@@ -154,13 +157,18 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	}
 
 	// What's behind an item and what other overlays draw over it rarely change, so they're only worked out again when they do
+	@RequiredArgsConstructor
 	private static class Slot {
+		final int layer;
 		final int[] behind = new int[GRID_SIZE];
 		final int[] cut = new int[GRID_SIZE];
 		final int[] background = new int[GRID_SIZE];
 		final int[] overlays = new int[GRID_SIZE];
 		final int[] elsewhere = new int[GRID_SIZE];
 		boolean kept;
+		boolean overlaid;
+		boolean backgroundChanged;
+		boolean overlaysChanged = true;
 		int shadow;
 		int fill;
 		int outline;
@@ -272,8 +280,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private final List<CutItem> uncaptured = new ArrayList<>();
 	private final List<WidgetItem> draggedItems = new ArrayList<>();
 	private final List<CutItem> draggedCuts = new ArrayList<>();
-	private final int[] backgrounds = new int[MAX_ITEMS * LAYERS_PER_ITEM * GRID_SIZE];
-	private final boolean[] overlaidLayers = new boolean[MAX_ITEMS];
+	private final Slot[] itemSlots = new Slot[MAX_ITEMS];
+	private final ArrayDeque<Integer> freeSlotLayers = new ArrayDeque<>();
 	private final FloatBuffer vertices = BufferUtils.createFloatBuffer(MAX_ITEMS * FLOATS_PER_ITEM);
 	private final boolean[] known = new boolean[GRID_SIZE];
 	private final boolean[] spread = new boolean[GRID_SIZE];
@@ -314,8 +322,11 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		texBackgrounds = glGenTextures();
 		glActiveTexture(TEXTURE_UNIT_ITEM_BACKGROUNDS);
 		glBindTexture(GL_TEXTURE_2D_ARRAY, texBackgrounds);
-		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, GRID_WIDTH, GRID_HEIGHT, MAX_ITEMS * LAYERS_PER_ITEM, 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
+		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, GRID_WIDTH, GRID_HEIGHT, MAX_SLOTS * LAYERS_PER_ITEM, 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
 		setTextureParameters(GL_NEAREST, GL_CLAMP_TO_EDGE);
+		freeSlotLayers.clear();
+		for (int i = 0; i < MAX_SLOTS; i++)
+			freeSlotLayers.push(i * LAYERS_PER_ITEM);
 
 		texIcons = glGenTextures();
 		texIconSurroundings = glGenTextures();
@@ -373,7 +384,13 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	@Subscribe
 	public void onBeforeRender(BeforeRender event) {
 		frame++;
-		slots.values().removeIf(slot -> slot.frame < frame - 1);
+		for (var it = slots.values().iterator(); it.hasNext(); ) {
+			var slot = it.next();
+			if (slot.frame < frame - 1) {
+				freeSlotLayers.push(slot.layer);
+				it.remove();
+			}
+		}
 		newItemsThisFrame = 0;
 		itemCount = 0;
 		vertices.clear();
@@ -453,15 +470,14 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		float opacity = (dragged ? 128 : 256 - widget.getOpacity()) / 256f;
 		var gameIcon = getGameIcon(widgetItem.getId(), widgetItem.getQuantity(), widget.getItemQuantityMode(), widget.getBorderType(), true);
 		long slotKey = GameIcon.hash(gameIcon.key, bounds.x, bounds.y, drawn.x, drawn.y, drawn.width, drawn.height);
-		var slot = slots.computeIfAbsent(slotKey, key -> new Slot());
-		slot.frame = frame;
-		cutOut(buffer.getPixels(), buffer.getWidth(), bounds, drawn, gameIcon, slot);
-		int offset = itemCount * LAYERS_PER_ITEM * GRID_SIZE;
-		System.arraycopy(slot.background, 0, backgrounds, offset, GRID_SIZE);
-		if (overlaidLayers[itemCount]) {
-			Arrays.fill(backgrounds, offset + GRID_SIZE, offset + 2 * GRID_SIZE, 0);
-			overlaidLayers[itemCount] = false;
+		var slot = slots.get(slotKey);
+		if (slot == null) {
+			slot = new Slot(freeSlotLayers.pop());
+			slots.put(slotKey, slot);
 		}
+		slot.frame = frame;
+		itemSlots[itemCount] = slot;
+		cutOut(buffer.getPixels(), buffer.getWidth(), bounds, drawn, gameIcon, slot);
 		var cutItem = new CutItem(itemCount, bounds, drawn, gameIcon, slot);
 		uncaptured.add(cutItem);
 		if (dragged)
@@ -479,7 +495,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				.put((float) (x - bounds.x) / ICON_WIDTH)
 				.put((float) (y - bounds.y) / ICON_HEIGHT)
 				.put(icon.layer)
-				.put(itemCount * LAYERS_PER_ITEM)
+				.put(slot.layer)
 				.put(opacity)
 				.put(widget.getBorderType());
 			putColor(slot.shadow);
@@ -763,7 +779,15 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		if (itemCount > 0) {
 			glActiveTexture(TEXTURE_UNIT_ITEM_BACKGROUNDS);
 			glBindTexture(GL_TEXTURE_2D_ARRAY, texBackgrounds);
-			glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, GRID_WIDTH, GRID_HEIGHT, itemCount * LAYERS_PER_ITEM, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, backgrounds);
+			// Only what changed is uploaded, right before it's drawn
+			for (int i = 0; i < itemCount; i++) {
+				var slot = itemSlots[i];
+				if (slot.backgroundChanged)
+					uploadSlotLayer(slot.layer, slot.background);
+				if (slot.overlaysChanged)
+					uploadSlotLayer(slot.layer + 1, slot.overlaid ? slot.elsewhere : NO_OVERLAYS);
+				slot.backgroundChanged = slot.overlaysChanged = false;
+			}
 
 			shader.use();
 			glBindVertexArray(vao);
@@ -820,6 +844,10 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 	private int iconHeight() {
 		return round(GRID_HEIGHT * scaleY);
+	}
+
+	private static void uploadSlotLayer(int layer, int[] pixels) {
+		glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, layer, GRID_WIDTH, GRID_HEIGHT, 1, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, pixels);
 	}
 
 	private static void setTextureParameters(int filter, int wrap) {
@@ -907,6 +935,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		}
 		slot.shadow = shadow;
 		slot.kept = true;
+		slot.backgroundChanged = true;
 	}
 
 	private void captureOverlays(int[] pixels, int width, CutItem item) {
@@ -918,8 +947,11 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			int g = GameIcon.grid(item.drawn.x - item.bounds.x, y - item.bounds.y);
 			overlaid = !Arrays.equals(pixels, i, i + item.drawn.width, slot.cut, g, g + item.drawn.width);
 		}
-		if (!overlaid)
+		if (!overlaid) {
+			slot.overlaysChanged |= slot.overlaid;
+			slot.overlaid = false;
 			return;
+		}
 
 		Arrays.fill(overlays, 0);
 		Arrays.fill(captured, false);
@@ -947,11 +979,12 @@ public class NativeItemIcons extends WidgetItemOverlay {
 					outline != 0 && gameIcon.outline[g] && overlays[g] == outline;
 				slot.elsewhere[g] = captured[g] && !redrawn ? overlays[g] : 0;
 			}
+			slot.overlaysChanged = true;
 		}
+		slot.overlaysChanged |= !slot.overlaid;
+		slot.overlaid = true;
 		setColor(item.index, FILL_OFFSET, slot.fill);
 		setColor(item.index, OUTLINE_OFFSET, slot.outline);
-		System.arraycopy(slot.elsewhere, 0, backgrounds, (item.index * LAYERS_PER_ITEM + 1) * GRID_SIZE, GRID_SIZE);
-		overlaidLayers[item.index] = true;
 	}
 
 	private int shapeColor(boolean[] shape, boolean[] shared) {
