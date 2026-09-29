@@ -1,6 +1,7 @@
 package rs117.hd.renderer.zone.passes;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Set;
 import javax.inject.Inject;
 import net.runelite.api.hooks.*;
@@ -20,11 +21,20 @@ import rs117.hd.utils.RenderState;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.GL_GREATER;
+import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11C.GL_CULL_FACE;
+import static org.lwjgl.opengl.GL11C.glClear;
+import static org.lwjgl.opengl.GL11C.glClearDepth;
 import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
+import static org.lwjgl.opengl.GL30.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL30.GL_DRAW_FRAMEBUFFER;
+import static org.lwjgl.opengl.GL30.GL_READ_FRAMEBUFFER;
+import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL31C.glBlitFramebuffer;
+import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
+import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
 
 public class DepthPass implements RenderPass {
 
@@ -43,7 +53,10 @@ public class DepthPass implements RenderPass {
 	@Inject
 	private SceneDepthShaderProgram sceneDepthProgram;
 
-	public final CommandBuffer opaqueDepthCmd = new CommandBuffer("DepthPass");
+	private final ArrayList<Zone> alphaZoneDraws = new ArrayList<>();
+
+	private final CommandBuffer opaqueDepthCmd = new CommandBuffer("DepthPass::Opaque");
+	private final CommandBuffer alphaDepthCmd = new CommandBuffer("DepthPass::Alpha");
 
 	private boolean depthPassEnabled = true;
 	private Camera sceneCamera;
@@ -52,6 +65,7 @@ public class DepthPass implements RenderPass {
 	public void initialize() {
 		sceneCamera = renderer.sceneCamera;
 		opaqueDepthCmd.setFrameTimer(frameTimer);
+		alphaDepthCmd.setFrameTimer(frameTimer);
 	}
 
 	@Override
@@ -72,6 +86,8 @@ public class DepthPass implements RenderPass {
 	@Override
 	public int preprocess() {
 		opaqueDepthCmd.reset();
+		alphaDepthCmd.reset();
+		alphaZoneDraws.clear();
 		return depthPassEnabled ? PASS_DEFAULT : 0;
 	}
 
@@ -84,9 +100,33 @@ public class DepthPass implements RenderPass {
 	}
 
 	@Override
+	public void drawZoneAlpha(WorldViewContext ctx, Zone z, int level, int zx, int zz) {
+		if (!z.isVisible(sceneCamera) || level != 0 || z.sizeA == 0 || z.visibleAlphaModels.isEmpty())
+			return;
+
+		final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
+		if (!isSquashed)
+			alphaZoneDraws.add(ctx.zones[zx][zz]);
+	}
+
+	@Override
 	public void drawPass(WorldViewContext ctx, int pass) {
-		if (pass == DrawCallbacks.PASS_ALPHA)
+		if (pass == DrawCallbacks.PASS_ALPHA) {
 			ctx.drawAll(VAO_OPAQUE, opaqueDepthCmd);
+
+			for(int i = alphaZoneDraws.size() - 1; i >= 0; i--) {
+				final Zone zone = alphaZoneDraws.get(i);
+				if(zone == null)
+					continue;
+
+				if (zone.hasWater)
+					zone.renderOpaqueLevel(alphaDepthCmd, Zone.LEVEL_WATER_SURFACE);
+
+				zone.renderAlpha(alphaDepthCmd, 0, 0, -1, ctx, sceneCamera, true, false); // TODO: Should really have a alpha depth draw function
+			}
+			ctx.drawAll(VAO_PLAYER, alphaDepthCmd);
+			alphaZoneDraws.clear();
+		}
 	}
 
 	@Override
@@ -106,11 +146,30 @@ public class DepthPass implements RenderPass {
 		renderState.enable.set(GL_CULL_FACE);
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.disable.set(GL_BLEND);
+		renderState.depthMask.set(true);
 		renderState.depthFunc.set(GL_GREATER);
 		renderState.colorMask.set(false, false, false, false);
 		renderState.apply();
 
 		opaqueDepthCmd.execute(renderState);
+
+		// Alpha geometry is sorted back to front, so it would destroy the opaque depth ordering if it
+		// shared the same buffer. It gets its own single-sampled buffer, which has to be cleared every
+		// frame, even when nothing was drawn, so we never sample depth from a previous frame.
+		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboSceneAlphaDepth);
+		renderState.disable.set(GL_MULTISAMPLE);
+		renderState.apply();
+
+		glClearDepth(0);
+		glClear(GL_DEPTH_BUFFER_BIT);
+
+		alphaDepthCmd.execute(renderState);
+
+		// Resolve the opaque depth into a texture, so it can be sampled later on
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboSceneDepth);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboSceneDepthResolve);
+		glBlitFramebuffer(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1], 0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1], GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+		checkGLErrors();
 
 		glBindVertexArray(0);
 

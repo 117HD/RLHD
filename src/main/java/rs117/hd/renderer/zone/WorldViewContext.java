@@ -64,11 +64,11 @@ public class WorldViewContext {
 	private SceneCullingManager sceneCullingManager;
 
 	final int worldViewId;
-	final int sizeX, sizeZ;
+	public final int sizeX, sizeZ;
 	@Nullable
 	public WorldViewStruct uboWorldViewStruct;
 	public ZoneSceneContext sceneContext;
-	Zone[][] zones;
+	public Zone[][] zones;
 	GLBuffer vboM;
 	boolean isLoading = true;
 

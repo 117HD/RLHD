@@ -47,6 +47,17 @@ vec3 Camera_getUp(const Camera cam) {
     return vec3(cam.viewMatrix[1]);
 }
 
+
+bool Camera_depth01ToViewZ(const Camera cam, float depth01, out float viewZ) {
+    float zNdc  = depth01 * 2.0 - 1.0;
+    float denom = zNdc * cam.projMatrix[2][3] - cam.projMatrix[2][2];
+    if (abs(denom) < 1e-20)
+        return false;
+
+    viewZ = (cam.projMatrix[3][2] - zNdc * cam.projMatrix[3][3]) / denom;
+    return true;
+}
+
 float Camera_lineariseDepth(const Camera cam, float depth) {
     if (Camera_isReverseZ(cam)) {
         if (Camera_isInfiniteFar(cam))

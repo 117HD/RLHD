@@ -864,14 +864,14 @@ public class Zone implements Destructible {
 		int eboAlphaStart = eboAlphaOffset = ZoneRenderer.eboAlphaWriter.getWrittenInts();
 		for (int i = 0; i < visibleAlphaModels.size(); i++) {
 			final AlphaModel m = visibleAlphaModels.get(i);
-			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level || m.vao == -1)
+			final int l = level != -1 ? level : m.level;
+			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != l || m.vao == -1)
 				continue;
 
-			if (level < minLevel || level > maxLevel ||
-				level > currentLevel && !hiddenRoofIds.isEmpty() && hiddenRoofIds.contains((int) m.rid))
+			if (l < minLevel || l > maxLevel || l > currentLevel && !hiddenRoofIds.isEmpty() && hiddenRoofIds.contains((int) m.rid))
 				continue;
 
-			if(camera != null && (levelCullingResults[m.level] != null && !levelCullingResults[m.level].isVisible(camera)))
+			if(camera != null && (levelCullingResults[l] != null && !levelCullingResults[l].isVisible(camera)))
 				continue;
 
 			int drawMode = STATIC;

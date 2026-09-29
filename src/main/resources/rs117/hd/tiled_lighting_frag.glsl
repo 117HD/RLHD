@@ -2,6 +2,7 @@
 
 #include TILED_LIGHTING_LAYER
 #include TILED_IMAGE_STORE
+#include TILE_MIN_MAX
 
 #if TILED_IMAGE_STORE
     #extension GL_EXT_shader_image_load_store : enable
@@ -16,6 +17,11 @@
 #include <uniforms/lights.glsl>
 
 #include <utils/constants.glsl>
+
+#if TILE_MIN_MAX
+    uniform sampler2D sceneOpaqueDepth;
+    uniform sampler2D sceneAlphaDepth;
+#endif
 
 in vec2 fUv;
 
@@ -60,6 +66,46 @@ uint packLightIndices(in SortedLight bin[SORTING_BIN_SIZE], in int binSize, inou
     return (idx0 <= 32767) ? uint(idx0 & 0x7FFF) : 0u;
 }
 
+#if TILE_MIN_MAX
+bool calculateTileMinMax(vec2 bl, vec2 tr, out float tileMin, out float tileMax) {
+    ivec2 minPix = clamp(ivec2(floor(bl)), ivec2(0), ivec2(sceneResolution) - 1);
+    ivec2 maxPix = clamp(ivec2(ceil(tr)), ivec2(0), ivec2(sceneResolution));
+
+    float minDepth = 1e20;
+    float maxDepth = -1e20;
+
+    float stepSize = 1.0 / 2.0;
+    for (float x = 0.0; x <= 1.0; x += stepSize) {
+        for (float y = 0.0; y <= 1.0; y += stepSize) {
+            ivec2 pix = ivec2(int(mix(float(minPix.x), float(maxPix.x), x)),
+                              int(mix(float(minPix.y), float(maxPix.y), y)));
+
+            float depth = texelFetch(sceneOpaqueDepth, pix, 0).r;
+            if (depth > 0.0) {
+                minDepth = min(minDepth, depth);
+                maxDepth = max(maxDepth, depth);
+            }
+
+            float alphaDepth = texelFetch(sceneAlphaDepth, pix, 0).r;
+            if (alphaDepth > 0.0)
+                maxDepth = max(maxDepth, alphaDepth);
+        }
+    }
+
+    if (minDepth >= maxDepth)
+        return false;
+
+    float zMin, zMax;
+    if (!Camera_depth01ToViewZ(sceneCamera, minDepth, zMin) ||
+        !Camera_depth01ToViewZ(sceneCamera, maxDepth, zMax))
+        return false;
+
+    tileMin = zMin;
+    tileMax = zMax;
+    return true;
+}
+#endif
+
 void main() {
     ivec2 pixelCoord = ivec2(fUv * tiledLightingResolution);
 
@@ -101,6 +147,21 @@ void main() {
     vec2 bl = tileOrigin;                         // bottom-left
     vec2 br = tileOrigin + vec2(tileSize.x, 0.0); // bottom-right
 
+    float tileMin = 0.0;
+    float tileMax = 1.0;
+
+#if TILE_MIN_MAX
+    if (!calculateTileMinMax(bl, tr, tileMin, tileMax)) {
+    #if TILED_IMAGE_STORE
+        for (int layer = 0; layer < TILED_LIGHTING_LAYER_COUNT; layer++)
+            imageStore(tiledLightingImage, ivec3(pixelCoord, layer), uvec4(0u));
+    #else
+        TiledData = uvec4(0u);
+    #endif
+        return;
+    }
+#endif
+
     vec2 ndcTL = (tl / sceneResolution) * 2.0 - 1.0;
     vec2 ndcTR = (tr / sceneResolution) * 2.0 - 1.0;
     vec2 ndcBL = (bl / sceneResolution) * 2.0 - 1.0;
@@ -119,8 +180,8 @@ void main() {
     vec3 rBR = normalize((sceneCamera.viewMatrix * vec4((pBR.xyz / pBR.w) - sceneCamera.position, 1.0)).xyz);
 
     vec3 tileCenterVec = normalize(rTL + rTR + rBL + rBR);
-    float tileCos = min(min(dot(tileCenterVec, rTL), dot(tileCenterVec, rTR)), min(dot(tileCenterVec, rBL), dot(tileCenterVec, rBR)));
-    float tileSin = sqrt(max(0.0, 1.0 - tileCos * tileCos));
+    float tileCos = min(min(dot(tileCenterVec, rTL), dot(tileCenterVec, rTR)),
+                        min(dot(tileCenterVec, rBL), dot(tileCenterVec, rBR)));
 
     SortedLight sortingBin[SORTING_BIN_SIZE];
     int sortingBinSize = 0;
@@ -130,16 +191,19 @@ void main() {
         vec3 lightViewPos = lightData.xyz;
         float lightRadiusSqr = lightData.w;
 
+        #if TILE_MIN_MAX
+            float dz = max(lightViewPos.z - tileMin, tileMax - lightViewPos.z);
+            if (dz > 0.0 && dz * dz > lightRadiusSqr)
+                continue;
+        #endif
+
+        float lightTileDot = dot(lightViewPos, tileCenterVec);
+        if (lightTileDot <= 0.0)
+            continue;
+
         float lightDistSqr = dot(lightViewPos, lightViewPos);
-
-        vec3 lightCenterVec = (lightDistSqr > 0.0) ? lightViewPos / sqrt(lightDistSqr) : vec3(0.0);
-
-        float lightSinSqr = clamp(lightRadiusSqr / max(lightDistSqr, 1e-6), 0.0, 1.0);
-        float lightCos = sqrt(0.999 - lightSinSqr);
-        float lightTileCos = dot(lightCenterVec, tileCenterVec);
-
-        float sumCos = (lightRadiusSqr > lightDistSqr) ? -1.0 : (tileCos * lightCos - tileSin * sqrt(lightSinSqr));
-        if (lightTileCos < sumCos)
+        float rhs = lightDistSqr * tileCos * tileCos - lightRadiusSqr;
+        if (lightTileDot * lightTileDot < rhs)
             continue;
 
         #if USE_LIGHTS_MASK
@@ -150,22 +214,26 @@ void main() {
         #endif
 
         const float PROXIMITY_WEIGHT = 0.75;
-        float distanceScore = clamp(1.0 - sqrt(lightDistSqr) / (sqrt(lightRadiusSqr) + 1e-6), 0.0, 1.0);
-        float combinedScore = (lightTileCos * PROXIMITY_WEIGHT) + distanceScore * (1.0 - PROXIMITY_WEIGHT);
+        float distanceScore = clamp(1.0 - lightDistSqr / (lightRadiusSqr + 1e-6), 0.0, 1.0);
+        float angularScore = lightTileDot * lightTileDot / (lightDistSqr + 1e-6);
+        float combinedScore = (angularScore * PROXIMITY_WEIGHT) + distanceScore * (1.0 - PROXIMITY_WEIGHT);
 
+        // Insertion sort, descending by score, bounded by SORTING_BIN_SIZE
         int idx = 0;
         for (; idx < sortingBinSize; idx++) {
             if (combinedScore > sortingBin[idx].score) {
-                for (int j = sortingBinSize; j > idx; j--)
+                for (int j = min(sortingBinSize, SORTING_BIN_SIZE - 1); j > idx; j--)
                     sortingBin[j] = sortingBin[j - 1];
                 break;
             }
         }
 
-        sortingBin[idx].score = combinedScore;
-        sortingBin[idx].lightIdx = lightIdx;
-        if (sortingBinSize < SORTING_BIN_SIZE)
-            sortingBinSize++;
+        if (idx < SORTING_BIN_SIZE) {
+            sortingBin[idx].score = combinedScore;
+            sortingBin[idx].lightIdx = lightIdx;
+            if (sortingBinSize < SORTING_BIN_SIZE)
+                sortingBinSize++;
+        }
     }
 
 #if TILED_IMAGE_STORE
