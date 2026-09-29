@@ -84003,7 +84003,7 @@
         "baseMaterial": "CARPET_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.3,
-        "shadowNormalBias": true,
+        "shadowNormalBias": true
       },
       {
         "description": "Hammer and model Boat",
