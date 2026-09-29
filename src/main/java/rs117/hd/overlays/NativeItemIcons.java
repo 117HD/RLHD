@@ -64,12 +64,12 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private static final int GRID_SIZE = GRID_WIDTH * GRID_HEIGHT;
 	private static final int LAYERS_PER_ITEM = 2;
 	private static final float MIN_SHAPE_COVERAGE = .9f;
-	private static final int[] VERTEX_ATTRIBUTE_SIZES = { 2, 2, 2, 1, 4, 4, 4 };
-	private static final int FLOATS_PER_VERTEX = 19;
+	private static final int[] VERTEX_ATTRIBUTE_SIZES = { 2, 2, 2, 1, 1, 4, 4, 4 };
+	private static final int FLOATS_PER_VERTEX = 20;
 	private static final int FLOATS_PER_ITEM = FLOATS_PER_VERTEX * 6;
-	private static final int SHADOW_OFFSET = 7;
-	private static final int FILL_OFFSET = 11;
-	private static final int OUTLINE_OFFSET = 15;
+	private static final int SHADOW_OFFSET = 8;
+	private static final int FILL_OFFSET = 12;
+	private static final int OUTLINE_OFFSET = 16;
 	private static final int[] QUAD_CORNERS = { 0, 1, 2, 2, 1, 3 };
 	private static final int[] NEIGHBOR_X = { -1, 1, 0, 0 };
 	private static final int[] NEIGHBOR_Y = { 0, 0, -1, 1 };
@@ -450,7 +450,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				.put((float) (y - bounds.y) / ICON_HEIGHT)
 				.put(icon.layer)
 				.put(itemCount * LAYERS_PER_ITEM)
-				.put(opacity);
+				.put(opacity)
+				.put(widget.getBorderType());
 			putColor(shadow);
 			putColor(0);
 			putColor(0);
@@ -482,7 +483,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			return null;
 
 		var widget = widgetItem.getWidget();
-		return findIcon(widgetItem.getId(), widgetItem.getQuantity(), widget.getItemQuantityMode(), widget.getBorderType(), true);
+		// Selected items use the normal icon, and the shader adds their white border
+		return findIcon(widgetItem.getId(), widgetItem.getQuantity(), widget.getItemQuantityMode(), min(widget.getBorderType(), 1), true);
 	}
 
 	@Nullable

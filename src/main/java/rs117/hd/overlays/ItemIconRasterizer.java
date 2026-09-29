@@ -217,7 +217,6 @@ public class ItemIconRasterizer {
 	}
 
 	public int[] draw(float scaleX, float scaleY, int margin, int border, int[] palette) {
-		float distance = border == 2 ? this.distance * 1.04f : this.distance;
 		int width = round((ICON_WIDTH + 2 * margin) * scaleX);
 		int height = round((ICON_HEIGHT + 2 * margin) * scaleY);
 		return drawPixels(distance, scaleX, scaleY, -margin, -margin, width, height, border, palette);
@@ -277,7 +276,7 @@ public class ItemIconRasterizer {
 		for (int face : drawOrder(sampleX, sampleY, depth))
 			drawFace(face, sampleX, sampleY, camera, toRay, samplesWide, samplesHigh, palette, samples);
 		if (border > 0)
-			addOutline(samples, samplesWide, samplesHigh, scaleX, scaleY, border);
+			addOutline(samples, samplesWide, samplesHigh, scaleX, scaleY);
 
 		int[] pixels = new int[width * height];
 		int samplesPerPixel = SAMPLES * SAMPLES;
@@ -460,37 +459,34 @@ public class ItemIconRasterizer {
 			((color & 0xFF00) * opacity + (behind & 0xFF00) * alpha >> 8 & 0xFF00);
 	}
 
-	private static void addOutline(int[] samples, int width, int height, float scaleX, float scaleY, int border) {
+	private static void addOutline(int[] samples, int width, int height, float scaleX, float scaleY) {
 		boolean[] model = new boolean[samples.length];
 		for (int i = 0; i < samples.length; i++)
 			model[i] = samples[i] != 0;
 
-		for (int ring = 1; ring <= border; ring++) {
-			// 0 means nothing was drawn, so black is 1
-			int color = ring == 1 ? 1 : 0xFFFFFF;
-			int reachX = floor(ring * scaleX * SAMPLES);
-			int reachY = floor(ring * scaleY * SAMPLES);
-			int[] offsets = new int[(reachX * 2 + 1) * (reachY * 2 + 1) * 2];
-			int offsetCount = 0;
-			for (int dy = -reachY; dy <= reachY; dy++) {
-				for (int dx = -reachX; dx <= reachX; dx++) {
-					if (square(dx / (scaleX * SAMPLES)) + square(dy / (scaleY * SAMPLES)) <= ring * ring) {
-						offsets[offsetCount++] = dx;
-						offsets[offsetCount++] = dy;
-					}
+		int reachX = floor(scaleX * SAMPLES);
+		int reachY = floor(scaleY * SAMPLES);
+		int[] offsets = new int[(reachX * 2 + 1) * (reachY * 2 + 1) * 2];
+		int offsetCount = 0;
+		for (int dy = -reachY; dy <= reachY; dy++) {
+			for (int dx = -reachX; dx <= reachX; dx++) {
+				if (square(dx / (scaleX * SAMPLES)) + square(dy / (scaleY * SAMPLES)) <= 1) {
+					offsets[offsetCount++] = dx;
+					offsets[offsetCount++] = dy;
 				}
 			}
+		}
 
-			for (int y = 0; y < height; y++) {
-				for (int x = 0; x < width; x++) {
-					if (!model[y * width + x] || isSurrounded(model, x, y, width, height))
-						continue;
-					for (int o = 0; o < offsetCount; o += 2) {
-						int sx = x + offsets[o];
-						int sy = y + offsets[o + 1];
-						if (sx >= 0 && sx < width && sy >= 0 && sy < height && samples[sy * width + sx] == 0)
-							samples[sy * width + sx] = color;
-					}
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				if (!model[y * width + x] || isSurrounded(model, x, y, width, height))
+					continue;
+				for (int o = 0; o < offsetCount; o += 2) {
+					int sx = x + offsets[o];
+					int sy = y + offsets[o + 1];
+					// 0 means nothing was drawn, so black is 1
+					if (sx >= 0 && sx < width && sy >= 0 && sy < height && samples[sy * width + sx] == 0)
+						samples[sy * width + sx] = 1;
 				}
 			}
 		}

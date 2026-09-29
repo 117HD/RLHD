@@ -19,6 +19,7 @@ const ivec2 ICON_SIZE = ivec2(36, 32);
 in vec2 fUv;
 flat in vec2 fLayers;
 flat in float fOpacity;
+flat in float fBorder;
 flat in vec4 fShadow;
 flat in vec4 fFill;
 flat in vec4 fOutline;
@@ -27,6 +28,14 @@ out vec4 FragColor;
 
 ivec2 gridSize() {
     return textureSize(itemBackgrounds, 0).xy;
+}
+
+vec4 iconAt(vec2 gridUv) {
+    vec4 icon = texture(itemIcons, vec3(gridUv, fLayers.x));
+    // Selected items have a white border around their black one
+    if (fBorder == 2)
+        icon += texture(itemIconSurroundings, vec3(gridUv, fLayers.x)).r * (1 - icon.a);
+    return icon;
 }
 
 vec4 otherOverlays(vec2 gridUv, float item, float shadow) {
@@ -54,8 +63,8 @@ void main() {
     vec2 gridUv = (fUv * vec2(ICON_SIZE) + (grid - vec2(ICON_SIZE)) / 2) / grid;
     vec2 gamePixel = 1 / grid;
 
-    vec4 icon = texture(itemIcons, vec3(gridUv, fLayers.x));
-    float iconShadow = texture(itemIcons, vec3(gridUv - gamePixel, fLayers.x)).a;
+    vec4 icon = iconAt(gridUv);
+    float iconShadow = iconAt(gridUv - gamePixel).a;
     vec4 overlays = otherOverlays(gridUv, icon.a, iconShadow);
     icon *= fOpacity;
     vec4 background = texture(itemBackgrounds, vec3(gridUv, fLayers.y));
