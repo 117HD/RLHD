@@ -94,7 +94,9 @@ void main() {
     float sunEdge = cos(sunRadius);
     float sunAntialias = max(fwidth(sunDot), 1e-7);
     float sunDisk = smoothstep(sunEdge - sunAntialias, sunEdge + sunAntialias, sunDot);
-    float sunHorizon = smoothstep(-0.002, 0.002, -viewDir.y + HORIZON_OFFSET);
+    // Fade the sun gradually into the horizon
+    float sunHorizon = smoothstep(-0.09, 0.04, sky.upAmount + HORIZON_OFFSET);
+    sunHorizon *= smoothstep(sin(radians(-4.0)), sin(radians(-0.5)), uboSky.sunDir.y);
     float sunMu = sqrt(clamp((sunDot - sunEdge) / (1.0 - sunEdge), 0.0, 1.0));
     // Mild limb darkening; the moon is composited afterward and can cover the sun.
     skyColor += uboSky.sunColor * sunDisk * sunHorizon * mix(0.6, 1.0, sunMu);
