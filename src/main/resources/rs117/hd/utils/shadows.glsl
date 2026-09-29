@@ -41,7 +41,7 @@
 #endif
 
 #if SHADOW_MODE != SHADOW_MODE_OFF
-float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal) {
+float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal, bool applyNormalBias) {
     if (lightStrength <= 0)
         return 0.f;
 
@@ -63,34 +63,46 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal) {
     // NDC to texture space
     shadowPos.xyz += 1;
     shadowPos.xyz /= 2;
-    shadowPos.xy += distortion;
-    shadowPos.xy = clamp(shadowPos.xy, 0, 1);
     vec2 shadowMapSize = vec2(textureSize(shadowMap, 0));
     float bias = 0.0;
-    float minimumDepthBias = 0.0;
     float depthPrecisionBias = 0.0;
+    float receiverVisibility = 1.0;
     vec2 receiverDepthPerTexel = vec2(0.0);
     if (dot(surfaceNormal, surfaceNormal) > 0) {
-        vec3 receiverNormal = surfaceNormal * mat3(invLightProjectionMatrix);
-        float normalZ = max(abs(receiverNormal.z), length(receiverNormal) * 1e-4);
-        receiverDepthPerTexel = -receiverNormal.xy / (receiverNormal.z < 0 ? -normalZ : normalZ) / shadowMapSize;
-        // Bound extrapolation when the receiver is nearly edge-on to the light
-        float gradientLimit = shadowBiasScale * 16.0;
-        receiverDepthPerTexel *= min(1.0, gradientLimit / max(length(receiverDepthPerTexel), 1e-8));
+        // Measure grazing incidence in world space, independent of shadow projection dimensions.
+        vec3 lightAxis = invLightProjectionMatrix[2].xyz;
+        float lightCosine = abs(dot(surfaceNormal, lightAxis)) /
+            sqrt(dot(surfaceNormal, surfaceNormal) * dot(lightAxis, lightAxis));
+        // Fade received shadows within roughly 1 degree of edge-on, before plane correction becomes unstable.
+        receiverVisibility = smoothstep(0.005, 0.02, lightCosine);
+        if (receiverVisibility <= 0.0)
+            return 0.0;
 
-        // Retain the texel-sized safety margin; the gradient already includes projection and resolution scaling
-        bias = max(shadowBiasScale, length(receiverDepthPerTexel));
-        minimumDepthBias = minimumShadowBias;
+        vec3 receiverNormal = surfaceNormal * mat3(invLightProjectionMatrix);
+        // Keep the actual plane slope for each filter tap; clipping it creates self-shadowing.
+        receiverDepthPerTexel = -receiverNormal.xy / receiverNormal.z / shadowMapSize;
+
+        // Move the receiver plane toward the light along its normal, by 2 units in world space.
+        // Shift XY as well as depth so every filter tap evaluates the displaced plane.
+        if (applyNormalBias) {
+            vec3 normalOffset = -normalize(surfaceNormal) * sign(dot(surfaceNormal, lightAxis)) * 2;
+            shadowPos.xyz += (mat3(lightProjectionMatrix) * normalOffset) * 0.5;
+        }
+
+        // Bound only the extra safety margin to limit detached shadows at grazing angles.
+        bias = clamp(length(receiverDepthPerTexel), shadowBiasScale, shadowBiasScale * 16.0);
         // Both the depth texture and packed transparent shadows retain 16 depth bits
         // Cover one truncated depth step plus a step of rounding margin, independently of resolution
         depthPrecisionBias = 2.0 / float(SHADOW_DEPTH_MAX);
     }
+    shadowPos.xy += distortion;
+    shadowPos.xy = clamp(shadowPos.xy, 0, 1);
     vec4 receiverPlane = vec4(shadowPos.xy * shadowMapSize, receiverDepthPerTexel);
 
     float shadow = sampleShadow(
         shadowMap,
         SHADOW_TRANSPARENCY == 1,
-        shadowPos.z - (max(bias, minimumDepthBias) + depthPrecisionBias),
+        shadowPos.z - (bias + depthPrecisionBias),
         shadowPos,
         receiverPlane
     );
@@ -111,8 +123,8 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal) {
         }
     #endif
 
-    return shadow * (1 - fadeOut);
+    return shadow * receiverVisibility * (1 - fadeOut);
 }
 #else
-#define sampleShadowMap(fragPos, distortion, surfaceNormal) 0
+#define sampleShadowMap(fragPos, distortion, surfaceNormal, applyNormalBias) 0
 #endif

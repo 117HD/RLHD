@@ -177,6 +177,10 @@
         "type": "number",
         "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
       },
+      "shadowNormalBias": {
+        "type": "boolean",
+        "description": "Whether to offset shadow receivers along their surface normal to prevent self-shadowing. Defaults to false."
+      },
       "tzHaarRecolorType": {
         "type": "string",
         "description": "Specify a type of TzHaar recolor style to apply. Only relevant for the TzHaar area.",
@@ -395,6 +399,10 @@
               "type": "number",
               "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
             },
+            "shadowNormalBias": {
+              "type": "boolean",
+              "description": "Whether to offset shadow receivers along their surface normal to prevent self-shadowing. Defaults to false."
+            },
             "inheritTileColorType": {
               "type": "string",
               "description": "Whether to inherit color from the overlay or underlay of the tile beneath. Defaults to NONE.",
@@ -606,6 +614,10 @@
             "shadowOpacityThreshold": {
               "type": "number",
               "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
+            },
+            "shadowNormalBias": {
+              "type": "boolean",
+              "description": "Whether to offset shadow receivers along their surface normal to prevent self-shadowing. Defaults to false."
             },
             "inheritTileColorType": {
               "type": "string",

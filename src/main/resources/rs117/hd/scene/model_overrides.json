@@ -42844,7 +42844,8 @@
         "colors": "h == 5 && s == 1",
         "baseMaterial": "CARPET_LIGHT",
         "uvType": "MODEL_XZ",
-        "uvScale": 0.25
+        "uvScale": 0.25,
+        "shadowNormalBias": true
       }
     ]
   },
@@ -42864,7 +42865,8 @@
         "uvType": "BOX",
         "uvScale": 0.25,
         "uvOrientation": 256,
-        "upwardsNormals": true
+        "upwardsNormals": true,
+        "shadowNormalBias": true
       }
     ]
   },
@@ -42989,7 +42991,8 @@
     "colorOverrides": [
       {
         "colors": "h == 0",
-        "baseMaterial": "GRAY_85"
+        "baseMaterial": "GRAY_85",
+        "shadowNormalBias": true
       }
     ]
   },
@@ -75065,7 +75068,8 @@
     "colorOverrides": [
       {
         "colors": "h == 5",
-        "baseMaterial": "CARPET_LIGHT"
+        "baseMaterial": "CARPET_LIGHT",
+        "shadowNormalBias": true
       },
       {
         "colors": "h == 21",
@@ -81555,7 +81559,8 @@
       {
         "description": "Sail",
         "colors": "h == 8",
-        "baseMaterial": "CARPET_LIGHT_SMOOTH"
+        "baseMaterial": "CARPET_LIGHT_SMOOTH",
+        "shadowNormalBias": true
       }
     ]
   },
@@ -81580,7 +81585,8 @@
       {
         "description": "Sail",
         "colors": "h == 8",
-        "baseMaterial": "CARPET_LIGHT_SMOOTH"
+        "baseMaterial": "CARPET_LIGHT_SMOOTH",
+        "shadowNormalBias": true
       }
     ]
   },
@@ -82434,6 +82440,7 @@
       "SAILING_BOAT_SAIL_KANDARIN_1X3_ROSEWOOD"
     ],
     "disableDetailCulling": true,
+    "shadowNormalBias": true,
     "colorOverrides": [
       {
         "description": "Rope",
@@ -82574,6 +82581,7 @@
       "SAILING_BOAT_SAIL_KANDARIN_3X8_WOOD"
     ],
     "disableDetailCulling": true,
+    "shadowNormalBias": true,
     "colorOverrides": [
       {
         "description": "Rope",
@@ -82650,6 +82658,7 @@
     "description": "Sailing - Raft, Skiff and Sloop - Sails Linen And Yellow",
     "baseMaterial": "SAIL_CLOTH",
     "disableDetailCulling": true,
+    "shadowNormalBias": true,
     "objectIds": [
       "SAILING_BOAT_SAIL_KANDARIN_1X3_LINEN",
       "SAILING_BOAT_SAIL_KANDARIN_2X5_LINEN",
@@ -82663,6 +82672,7 @@
     "description": "Sailing - Raft, Skiff and Sloop - Sails - Canvas, Cotton and Other Colors",
     "baseMaterial": "SAIL_CLOTH_LIGHT",
     "disableDetailCulling": true,
+    "shadowNormalBias": true,
     "objectIds": [
       "SAILING_BOAT_SAIL_KANDARIN_1X3_CANVAS",
       "SAILING_BOAT_SAIL_KANDARIN_1X3_COTTON",
@@ -82696,6 +82706,7 @@
       "SAILING_BOAT_SAIL_KANDARIN_3X8_PIRATE"
     ],
     "disableDetailCulling": true,
+    "shadowNormalBias": true,
     "colorOverrides": [
       {
         "description": "Rope",
@@ -83991,7 +84002,8 @@
         "colors": "h == 4 && s == 1",
         "baseMaterial": "CARPET_LIGHT",
         "uvType": "BOX",
-        "uvScale": 0.3
+        "uvScale": 0.3,
+        "shadowNormalBias": true,
       },
       {
         "description": "Hammer and model Boat",
@@ -89552,7 +89564,8 @@
       {
         "description": "Sail",
         "colors": "h == 0 && s == 3",
-        "baseMaterial": "CARPET_SUPER_LIGHT_SMOOTH"
+        "baseMaterial": "CARPET_SUPER_LIGHT_SMOOTH",
+        "shadowNormalBias": true
       }
     ]
   },
@@ -89575,7 +89588,8 @@
       {
         "description": "Sail",
         "colors": "h == 0 && s == 3",
-        "baseMaterial": "CARPET_LIGHT_SMOOTH"
+        "baseMaterial": "CARPET_LIGHT_SMOOTH",
+        "shadowNormalBias": true
       }
     ]
   },

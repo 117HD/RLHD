@@ -3,7 +3,6 @@ package rs117.hd.opengl.uniforms;
 import rs117.hd.utils.buffer.GLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.utils.MathUtils.*;
 
 public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public UBOGlobal() {
@@ -67,21 +66,10 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public final Property viewMatrix = addProperty(PropertyType.Mat4, "viewMatrix");
 	public final Property projectionMatrix = addProperty(PropertyType.Mat4, "projectionMatrix");
 	public final Property invProjectionMatrix = addProperty(PropertyType.Mat4, "invProjectionMatrix");
-	private final Property lightProjectionMatrix = addProperty(PropertyType.Mat4, "lightProjectionMatrix");
-	private final Property invLightProjectionMatrix = addProperty(PropertyType.Mat4, "invLightProjectionMatrix");
+	public final Property lightProjectionMatrix = addProperty(PropertyType.Mat4, "lightProjectionMatrix");
+	public final Property invLightProjectionMatrix = addProperty(PropertyType.Mat4, "invLightProjectionMatrix");
 	public final Property shadowBiasScale = addProperty(PropertyType.Float, "shadowBiasScale");
-	private final Property minimumShadowBias = addProperty(PropertyType.Float, "minimumShadowBias");
 
 	public final Property lightningBrightness = addProperty(PropertyType.Float, "lightningBrightness");
 	public final Property elapsedTime = addProperty(PropertyType.Float, "elapsedTime");
-
-	public void setLightProjectionMatrix(float[] projection, float[] inverse) {
-		lightProjectionMatrix.set(projection);
-		invLightProjectionMatrix.set(inverse);
-
-		// World-space minimum bias to prevent sail self-shadowing, independent of resolution.
-		final float minimumWorldBias = 2.35f;
-		// The depth row converts world distance to NDC depth; halve for texture depth.
-		minimumShadowBias.set(minimumWorldBias * .5f * length(projection[2], projection[6], projection[10]));
-	}
 }

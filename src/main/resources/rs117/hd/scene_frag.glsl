@@ -345,9 +345,11 @@ void main() {
             lightDotNormals = .7;
         #endif
 
-        float shadow = 0;
-        if ((fMaterialData[0] >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0)
-            shadow = sampleShadowMap(fragPos, vec2(0), flatNormal);
+		float shadow = 0;
+		if ((fMaterialData[0] >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0) {
+			bool applyNormalBias = (fMaterialData[0] >> MATERIAL_FLAG_SHADOW_NORMAL_BIAS & 1) == 1;
+			shadow = sampleShadowMap(fragPos, vec2(0), flatNormal, applyNormalBias);
+		}
         shadow = max(shadow, selfShadowing);
         float inverseShadow = 1 - shadow;
 
