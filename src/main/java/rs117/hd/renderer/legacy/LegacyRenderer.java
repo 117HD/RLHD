@@ -1105,8 +1105,7 @@ public class LegacyRenderer implements Renderer {
 				Mat4.mul(lightProjectionMatrix, lightViewMatrix);
 				Mat4.mul(lightProjectionMatrix, Mat4.translate(-(width / 2f + west), 0, -(height / 2f + south)));
 
-				plugin.uboGlobal.lightProjectionMatrix.set(lightProjectionMatrix);
-				plugin.uboGlobal.invLightProjectionMatrix.set(Mat4.inverse(lightProjectionMatrix));
+				plugin.uboGlobal.setLightProjectionMatrix(lightProjectionMatrix, Mat4.inverse(lightProjectionMatrix));
 				float texelSize = (float) max(width, height) / plugin.shadowMapResolution;
 				plugin.uboGlobal.shadowBiasScale.set(texelSize / depthRange);
 				plugin.uboGlobal.upload();

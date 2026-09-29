@@ -547,8 +547,10 @@ public class ZoneRenderer implements Renderer {
 				directionalCamera.setViewportWidth(directionalSize);
 				directionalCamera.setViewportHeight(directionalSize);
 
-				plugin.uboGlobal.lightProjectionMatrix.set(directionalCamera.getViewProjMatrix());
-				plugin.uboGlobal.invLightProjectionMatrix.set(directionalCamera.getInvViewProjMatrix());
+				plugin.uboGlobal.setLightProjectionMatrix(
+					directionalCamera.getViewProjMatrix(),
+					directionalCamera.getInvViewProjMatrix()
+				);
 				float depthRange = 2 * (directionalCamera.getFarPlane() - directionalCamera.getNearPlane());
 				plugin.uboGlobal.shadowBiasScale.set(texelSize / depthRange);
 			}

@@ -67,6 +67,7 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal) {
     shadowPos.xy = clamp(shadowPos.xy, 0, 1);
     vec2 shadowMapSize = vec2(textureSize(shadowMap, 0));
     float bias = 0.0;
+    float minimumDepthBias = 0.0;
     float depthPrecisionBias = 0.0;
     vec2 receiverDepthPerTexel = vec2(0.0);
     if (dot(surfaceNormal, surfaceNormal) > 0) {
@@ -79,6 +80,7 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal) {
 
         // Retain the texel-sized safety margin; the gradient already includes projection and resolution scaling
         bias = max(shadowBiasScale, length(receiverDepthPerTexel));
+        minimumDepthBias = minimumShadowBias;
         // Both the depth texture and packed transparent shadows retain 16 depth bits
         // Cover one truncated depth step plus a step of rounding margin, independently of resolution
         depthPrecisionBias = 2.0 / float(SHADOW_DEPTH_MAX);
@@ -88,7 +90,7 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal) {
     float shadow = sampleShadow(
         shadowMap,
         SHADOW_TRANSPARENCY == 1,
-        shadowPos.z - max(depthPrecisionBias, bias),
+        shadowPos.z - (max(bias, minimumDepthBias) + depthPrecisionBias),
         shadowPos,
         receiverPlane
     );
