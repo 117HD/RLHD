@@ -239,6 +239,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 	private ExecutorService executor;
 	private boolean active;
+	private boolean prepared;
 	private int vao;
 	private int vbo;
 	private int texIcons;
@@ -396,6 +397,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	@Subscribe
 	public void onItemContainerChanged(ItemContainerChanged event) {
 		containers.put(event.getContainerId(), event.getItemContainer().getItems());
+		prepared = false;
 	}
 
 	private boolean showOnInterface(int groupId) {
@@ -533,7 +535,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		} else if (icon.uncached) {
 			int modelItemId = findModelItem(itemId, quantity, border, gameIcon);
 			if (modelItemId == -1)
-				return null;
+				return PENDING;
 			icon.uncached = false;
 			if (modelItemId == -2) {
 				icon.failed = true;
@@ -554,14 +556,22 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	}
 
 	private void prepareIcons() {
+		if (prepared)
+			return;
+		boolean ready = true;
 		for (var items : containers.values()) {
 			for (var item : items) {
 				if (icons.size() >= MAX_ICONS - MAX_ITEMS)
 					return;
-				if (item.getId() != -1 && findIcon(item.getId(), item.getQuantity(), ItemQuantityMode.NEVER, 1, false) == PENDING)
+				if (item.getId() == -1)
+					continue;
+				var icon = findIcon(item.getId(), item.getQuantity(), ItemQuantityMode.NEVER, 1, false);
+				if (icon == PENDING)
 					return;
+				ready &= icon == null || icon.layer != -1;
 			}
 		}
+		prepared = ready;
 	}
 
 	@Nullable
@@ -796,6 +806,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	}
 
 	private void clearIcons() {
+		prepared = false;
 		icons.clear();
 		freeLayers.clear();
 		for (int i = 0; i < MAX_ICONS; i++)
