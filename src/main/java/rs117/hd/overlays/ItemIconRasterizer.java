@@ -124,6 +124,11 @@ public class ItemIconRasterizer {
 
 	// RuneLite doesn't expose the icon's zoom and offsets, so the model is fitted to the game's icon
 	public boolean lineUpWith(int[] gameIcon, int[] palette) {
+		return lineUpWith(gameIcon, palette, true);
+	}
+
+	// Images with colors of their own, like those of RuneLite's Rune Pouch plugin, only have to match in shape
+	public boolean lineUpWith(int[] gameIcon, int[] palette, boolean matchColors) {
 		float[] coverage = new float[gameIcon.length];
 		for (int i = 0; i < gameIcon.length; i++)
 			coverage[i] = gameIcon[i] == 0 ? 0 : 1;
@@ -193,7 +198,7 @@ public class ItemIconRasterizer {
 		}
 		if (mismatches > max(MAX_MISMATCHED_PIXELS, MAX_MISMATCHED_AREA * area))
 			return false;
-		for (int c = 0; c < 3; c++)
+		for (int c = 0; c < 3 && matchColors; c++)
 			if (abs(ourColor[c] / ourArea - theirColor[c] / area) > MAX_COLOR_ERROR)
 				return false;
 		return true;

@@ -4,6 +4,7 @@ import com.google.inject.Singleton;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.ArrayDeque;
@@ -14,11 +15,13 @@ import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.annotation.Nullable;
+import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +33,7 @@ import net.runelite.api.widgets.ItemQuantityMode;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetItem;
 import net.runelite.api.widgets.WidgetUtil;
+import net.runelite.client.RuneLite;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.overlay.Overlay;
@@ -169,6 +173,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		final int[] overlays = new int[GRID_SIZE];
 		final int[] elsewhere = new int[GRID_SIZE];
 		final boolean[] taken = new boolean[GRID_SIZE];
+		final List<RuneMatch> runes = new ArrayList<>();
+		List<RuneImage> runeImages;
 		boolean kept;
 		boolean overlaid;
 		boolean dragged;
@@ -186,6 +192,27 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		final int pitch, yaw, roll;
 		final int[] gameIcon;
 		final int border;
+		final boolean matchColors;
+	}
+
+	// RuneLite's Rune Pouch plugin draws small images of the runes in the pouch over it, which are drawn natively too
+	@RequiredArgsConstructor
+	private static class RuneImage {
+		final int itemId;
+		final int width, height;
+		final int[] pixels;
+		// Its opaque pixels, as offsets on an item's grid from where the image is drawn
+		final int[] offsets, colors;
+		// Where the image is in the shape the rune's model is lined up with
+		final int left, top;
+		final int[] shape;
+		final long key;
+	}
+
+	@RequiredArgsConstructor
+	private static class RuneMatch {
+		final RuneImage image;
+		final int x, y;
 	}
 
 	private class OverlayCapture extends WidgetItemOverlay {
@@ -237,6 +264,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 	private static final Icon PENDING = new Icon();
 	private static final GameIcon UNKNOWN = new GameIcon(-1, 0, new int[ICON_WIDTH * ICON_HEIGHT], new int[ICON_WIDTH * ICON_HEIGHT]);
+	// Drawn over an item, with nothing behind it
+	private static final Slot NO_SLOT = new Slot(MAX_SLOTS * LAYERS_PER_ITEM);
 
 	@Inject
 	private Client client;
@@ -306,6 +335,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 	private int[] palette;
 	private double paletteBrightness;
+	private volatile List<RuneImage> runeImages;
 
 	public NativeItemIcons() {
 		showOnInventory();
@@ -339,8 +369,10 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		texBackgrounds = glGenTextures();
 		glActiveTexture(TEXTURE_UNIT_ITEM_BACKGROUNDS);
 		glBindTexture(GL_TEXTURE_2D_ARRAY, texBackgrounds);
-		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, GRID_WIDTH, GRID_HEIGHT, MAX_SLOTS * LAYERS_PER_ITEM, 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
+		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, GRID_WIDTH, GRID_HEIGHT, (MAX_SLOTS + 1) * LAYERS_PER_ITEM, 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
 		setTextureParameters(GL_NEAREST, GL_CLAMP_TO_EDGE);
+		uploadSlotLayer(NO_SLOT.layer, NO_OVERLAYS);
+		uploadSlotLayer(NO_SLOT.layer + 1, NO_OVERLAYS);
 		freeSlotLayers.clear();
 		for (int i = 0; i < MAX_SLOTS; i++)
 			freeSlotLayers.push(i * LAYERS_PER_ITEM);
@@ -541,7 +573,10 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		uncaptured.add(cutItem);
 		if (dragged)
 			draggedCuts.add(cutItem);
+		putQuad(bounds, drawn, icon.layer, slot.layer, opacity, widget.getBorderType(), slot.shadow);
+	}
 
+	private void putQuad(Rectangle bounds, Rectangle drawn, int iconLayer, int slotLayer, float opacity, int border, int shadow) {
 		int canvasWidth = client.getCanvasWidth();
 		int canvasHeight = client.getCanvasHeight();
 		var quad = new Rectangle(drawn.x - 1, drawn.y - 1, drawn.width + 2, drawn.height + 2);
@@ -553,11 +588,11 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				.put(1 - y * 2f / canvasHeight)
 				.put((float) (x - bounds.x) / ICON_WIDTH)
 				.put((float) (y - bounds.y) / ICON_HEIGHT)
-				.put(icon.layer)
-				.put(slot.layer)
+				.put(iconLayer)
+				.put(slotLayer)
 				.put(opacity)
-				.put(widget.getBorderType());
-			putColor(slot.shadow);
+				.put(border);
+			putColor(shadow);
 			putColor(0);
 			putColor(0);
 		}
@@ -736,7 +771,10 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				return;
 			}
 		}
+		drawIcon(icon, layers, itemId, key);
+	}
 
+	private void drawIcon(Icon icon, Layer[] layers, int itemId, long key) {
 		float scaleX = this.scaleX;
 		float scaleY = this.scaleY;
 		int width = iconWidth();
@@ -749,7 +787,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				int[] pixels = null;
 				for (var layer : layers) {
 					var rasterizer = new ItemIconRasterizer(layer.mesh, layer.pitch, layer.yaw, layer.roll);
-					if (!rasterizer.lineUpWith(layer.gameIcon, palette)) {
+					if (!rasterizer.lineUpWith(layer.gameIcon, palette, layer.matchColors)) {
 						icon.failed = true;
 						cache.save(key, null, null);
 						return;
@@ -771,6 +809,15 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	@Nullable
 	private Layer loadLayer(int itemId, int quantity, boolean noted, int border) {
 		var item = client.getItemDefinition(itemId);
+		var mesh = loadMesh(item);
+		int[] gameIcon = gamePixels(itemId, quantity, 0, ItemQuantityMode.NEVER, noted);
+		if (mesh == null || gameIcon == null)
+			return null;
+		return new Layer(mesh, item.getXan2d(), item.getYan2d(), item.getZan2d(), gameIcon, border, true);
+	}
+
+	@Nullable
+	private ItemIconRasterizer.Mesh loadMesh(ItemComposition item) {
 		var data = client.loadModelData(item.getInventoryModel());
 		if (data == null)
 			return null;
@@ -793,11 +840,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 		// Lit like the game lights item models
 		var model = data.light(item.getAmbient() + 64, item.getContrast() + 768, -50, -10, -50);
-		var mesh = ItemIconRasterizer.Mesh.copyOf(model, client.getTextureProvider());
-		int[] gameIcon = gamePixels(itemId, quantity, 0, ItemQuantityMode.NEVER, noted);
-		if (mesh == null || gameIcon == null)
-			return null;
-		return new Layer(mesh, item.getXan2d(), item.getYan2d(), item.getZan2d(), gameIcon, border);
+		return ItemIconRasterizer.Mesh.copyOf(model, client.getTextureProvider());
 	}
 
 	private synchronized int[] getPalette(double brightness) {
@@ -1029,9 +1072,14 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 		// The game draws dragged items again once the interface is drawn, so everything over them is drawn with the native icon
 		boolean dragged = draggedCuts.contains(item);
-		if (!Arrays.equals(overlays, slot.overlays) || dragged != slot.dragged) {
+		if (runeImages == null && active)
+			loadRuneImages();
+		var images = runeImages;
+		if (!Arrays.equals(overlays, slot.overlays) || dragged != slot.dragged || images != slot.runeImages) {
 			System.arraycopy(overlays, 0, slot.overlays, 0, GRID_SIZE);
 			slot.dragged = dragged;
+			slot.runeImages = images;
+			findRunes(slot, dragged ? null : images);
 			// Fills and outlines, like those of Inventory Tags, are redrawn to fit the native icon. Fills cover the shadow too.
 			var gameIcon = item.gameIcon;
 			int fill = slot.fill = shapeColor(gameIcon.item, gameIcon.shadow);
@@ -1053,10 +1101,138 @@ public class NativeItemIcons extends WidgetItemOverlay {
 					pixels[y * width + x] = 0;
 			}
 		}
+		for (var rune : slot.runes)
+			drawRune(pixels, width, item, rune);
 		slot.overlaysChanged |= !slot.overlaid;
 		slot.overlaid = true;
 		setColor(item.index, FILL_OFFSET, slot.fill);
 		setColor(item.index, OUTLINE_OFFSET, slot.outline);
+	}
+
+	private void loadRuneImages() {
+		runeImages = List.of();
+		var runes = client.getEnum(EnumID.RUNEPOUCH_RUNE);
+		if (runes == null)
+			return;
+
+		// Named after the runes, like air_rune.png
+		var paths = new HashMap<Integer, String>();
+		for (int itemId : runes.getIntVals())
+			paths.put(itemId, "/net/runelite/client/plugins/runepouch/" + client.getItemDefinition(itemId).getName().toLowerCase(Locale.ROOT).replace(' ', '_') + ".png");
+		executor.execute(() -> {
+			var images = new ArrayList<RuneImage>();
+			paths.forEach((itemId, path) -> {
+				try (var in = RuneLite.class.getResourceAsStream(path)) {
+					if (in == null)
+						return;
+					BufferedImage image;
+					synchronized (ImageIO.class) {
+						image = ImageIO.read(in);
+					}
+					if (image != null && image.getWidth() <= ICON_WIDTH && image.getHeight() <= ICON_HEIGHT)
+						images.add(runeImage(itemId, image));
+				} catch (IOException | RuntimeException ex) {
+					log.debug("Unable to load {}:", path, ex);
+				}
+			});
+			runeImages = images;
+		});
+	}
+
+	private static RuneImage runeImage(int itemId, BufferedImage image) {
+		int width = image.getWidth();
+		int height = image.getHeight();
+		int[] pixels = image.getRGB(0, 0, width, height, null, 0, width);
+		int left = (ICON_WIDTH - width) / 2;
+		int top = (ICON_HEIGHT - height) / 2;
+		int[] shape = new int[ICON_WIDTH * ICON_HEIGHT];
+		int opaque = 0;
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				int pixel = pixels[y * width + x];
+				if (pixel >>> 24 == 0xFF)
+					opaque++;
+				// The black ring around the rune is its outline, which is drawn around the native one again
+				boolean outline = pixel == 0xFF000000 && (
+					isClear(pixels, width, height, x - 1, y) || isClear(pixels, width, height, x + 1, y) ||
+					isClear(pixels, width, height, x, y - 1) || isClear(pixels, width, height, x, y + 1));
+				if (pixel >>> 24 != 0 && !outline)
+					shape[(top + y) * ICON_WIDTH + left + x] = pixel;
+			}
+		}
+
+		int[] offsets = new int[opaque];
+		int[] colors = new int[opaque];
+		for (int i = 0, y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				if (pixels[y * width + x] >>> 24 == 0xFF) {
+					offsets[i] = y * GRID_WIDTH + x;
+					colors[i++] = pixels[y * width + x];
+				}
+			}
+		}
+		long key = GameIcon.hash(GameIcon.hash(0xCBF29CE484222325L, itemId, 1), shape);
+		return new RuneImage(itemId, width, height, pixels, offsets, colors, left, top, shape, key);
+	}
+
+	private static boolean isClear(int[] pixels, int width, int height, int x, int y) {
+		return x < 0 || y < 0 || x >= width || y >= height || pixels[y * width + x] >>> 24 == 0;
+	}
+
+	private void findRunes(Slot slot, @Nullable List<RuneImage> images) {
+		slot.runes.clear();
+		if (images == null)
+			return;
+		for (var image : images)
+			for (int y = 0; y + image.height <= GRID_HEIGHT; y++)
+				for (int x = 0; x + image.width <= GRID_WIDTH; x++)
+					if (isDrawnAt(image, y * GRID_WIDTH + x))
+						slot.runes.add(new RuneMatch(image, x, y));
+	}
+
+	private boolean isDrawnAt(RuneImage image, int at) {
+		for (int i = 0; i < image.offsets.length; i++) {
+			int g = at + image.offsets[i];
+			if (!captured[g] || overlays[g] != image.colors[i])
+				return false;
+		}
+		return true;
+	}
+
+	private void drawRune(int[] pixels, int width, CutItem item, RuneMatch rune) {
+		var icon = findRuneIcon(rune.image);
+		if (icon == null || icon.layer == -1 || itemCount == MAX_ITEMS)
+			return;
+
+		// RuneLite's image is taken out once the native rune can be drawn in its place
+		var image = rune.image;
+		int left = item.bounds.x - MARGIN + rune.x;
+		int top = item.bounds.y - MARGIN + rune.y;
+		var drawn = new Rectangle(left, top, image.width, image.height).intersection(item.drawn);
+		for (int y = drawn.y; y < drawn.y + drawn.height; y++)
+			for (int x = drawn.x; x < drawn.x + drawn.width; x++)
+				if (image.pixels[(y - top) * image.width + x - left] >>> 24 != 0)
+					pixels[y * width + x] = 0;
+		itemSlots[itemCount] = NO_SLOT;
+		putQuad(new Rectangle(left - image.left, top - image.top, ICON_WIDTH, ICON_HEIGHT), drawn, icon.layer, NO_SLOT.layer, 1, 0, 0);
+	}
+
+	@Nullable
+	private Icon findRuneIcon(RuneImage image) {
+		var icon = icons.get(image.key);
+		if (icon == null) {
+			icon = loadIcon(image.key);
+			icons.put(image.key, icon);
+		} else if (icon.uncached) {
+			icon.uncached = false;
+			var item = client.getItemDefinition(image.itemId);
+			var mesh = loadMesh(item);
+			if (mesh == null)
+				icon.failed = true;
+			else
+				drawIcon(icon, new Layer[] { new Layer(mesh, item.getXan2d(), item.getYan2d(), item.getZan2d(), image.shape, 1, false) }, image.itemId, image.key);
+		}
+		return icon.failed ? null : icon;
 	}
 
 	private int shapeColor(boolean[] shape, boolean[] shared) {
