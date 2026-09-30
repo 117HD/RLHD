@@ -962,8 +962,9 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				if (gameIcon.shadow[g])
 					known[g] = false;
 
-		// Paint over the item with what surrounds it
-		for (int step = 0; step < 3; step++) {
+		// Paint over the item with what surrounds it, a pixel further in each step until it's all covered
+		for (boolean spreading = true; spreading; ) {
+			spreading = false;
 			System.arraycopy(known, 0, spread, 0, GRID_SIZE);
 			for (int g = 0; g < GRID_SIZE; g++) {
 				if (known[g])
@@ -986,6 +987,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				if (count > 0) {
 					background[g] = alpha / count << 24 | red / count << 16 | green / count << 8 | blue / count;
 					spread[g] = true;
+					spreading = true;
 				}
 			}
 			System.arraycopy(spread, 0, known, 0, GRID_SIZE);
