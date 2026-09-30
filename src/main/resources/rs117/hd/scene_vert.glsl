@@ -46,6 +46,10 @@
 #include <utils/misc.glsl>
 #include <utils/wind_character_displacement.glsl>
 
+#if DITHER_FADE
+    uniform float roofFade;
+#endif
+
 layout (location = 0) in vec3 vPosition;
 
 #if ZONE_RENDERER
@@ -109,7 +113,7 @@ layout (location = 0) in vec3 vPosition;
         }
 
         #if DITHER_FADE
-            fFade = vFade;
+            fFade = max(vFade, roofFade);
         #endif
 
         int worldViewIdx = vWorldViewId;

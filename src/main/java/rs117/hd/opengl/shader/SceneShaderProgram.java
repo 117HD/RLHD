@@ -15,6 +15,7 @@ public class SceneShaderProgram extends ShaderProgram {
 	protected final UniformTexture uniTiledLightingTextureArray = addUniformTexture("tiledLightingArray");
 	protected final UniformTexture uniTextureFaces = addUniformTexBuffer("textureFaces");
 	protected final UniformTexture uniModelData = addUniformTexBuffer("modelData");
+	public final Uniform1f uniRoofFade = addUniform1f("roofFade");
 
 	protected boolean allowDiscard = false;
 
@@ -23,6 +24,7 @@ public class SceneShaderProgram extends ShaderProgram {
 			.add(GL_VERTEX_SHADER, "scene_vert.glsl")
 			.add(GL_FRAGMENT_SHADER, "scene_frag.glsl"));
 		uniTiledLightingTextureArray.ignoreMissing = true;
+		uniRoofFade.ignoreMissing = true;
 	}
 
 	@Override

@@ -436,6 +436,8 @@ public class HdPlugin extends Plugin {
 	public ShadingMode configShadingMode;
 	public ColorFilter configColorFilter = ColorFilter.NONE;
 	public ColorFilter configColorFilterPrevious;
+	public boolean configDitherFadeRoofs;
+	public int configDitherFadeRoofDuration;
 
 	public boolean useLowMemoryMode;
 	public boolean enableDetailedTimers;
@@ -925,6 +927,7 @@ public class HdPlugin extends Plugin {
 			.define("UI_SCALING_MODE", config.uiScalingMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
 			.define("DITHER_FADE", config.ditherFade())
+			.define("DITHER_FADE_ROOFS", configDitherFadeRoofs)
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
 			.define("MATERIAL_COUNT", MaterialManager.MATERIALS.length)
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
@@ -1679,6 +1682,8 @@ public class HdPlugin extends Plugin {
 		configModelBatching = config.modelBatching();
 		configModelCaching = config.modelCaching();
 		configDynamicLights = config.dynamicLights();
+		configDitherFadeRoofs = config.ditherFade() && config.ditherFadeRoofs();
+		configDitherFadeRoofDuration = config.ditherFadeRoofDuration();
 		configTiledLighting = config.tiledLighting();
 		configTiledLightingImageLoadStore = config.tiledLightingImageLoadStore();
 		configDetailDrawDistance = config.detailDrawDistance();
@@ -1843,6 +1848,7 @@ public class HdPlugin extends Plugin {
 							case KEY_SHADOW_FILTERING:
 							case KEY_WINDOWS_HDR_CORRECTION:
 							case KEY_DITHER_FADE:
+							case KEY_DITHER_FADE_ROOFS:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:

@@ -139,6 +139,9 @@ public class ZoneRenderer implements Renderer {
 	private ModelStreamingManager modelStreamingManager;
 
 	@Inject
+	private ZoneRoofFades roofFades;
+
+	@Inject
 	private DisplacementManager displacementManager;
 
 	@Inject
@@ -151,7 +154,7 @@ public class ZoneRenderer implements Renderer {
 	private SceneShaderProgram sceneProgram;
 
 	@Inject
-	private SceneShaderProgram.Discard sceneDiscardProgram;
+	public SceneShaderProgram.Discard sceneDiscardProgram;
 
 	@Inject
 	private ShadowShaderProgram.Fast fastShadowProgram;
@@ -217,6 +220,8 @@ public class ZoneRenderer implements Renderer {
 
 		if (FacePrioritySorter.POOL == null)
 			FacePrioritySorter.POOL = new ConcurrentPool<>(() -> injector.getInstance(FacePrioritySorter.class));
+
+		roofFades.initialize();
 
 		sceneCmd.setFrameTimer(frameTimer);
 		directionalCmd.setFrameTimer(frameTimer);
@@ -349,10 +354,13 @@ public class ZoneRenderer implements Renderer {
 			ctx.minLevel = minLevel;
 			ctx.level = level;
 			ctx.maxLevel = maxLevel;
-			ctx.hideRoofIds = hideRoofIds;
 			ctx.vaoSceneCmd.reset();
 			ctx.vaoDirectionalCmd.reset();
 			ctx.resetDrawRanges();
+
+			ctx.hideRoofIds.clear();
+			for(int rid : hideRoofIds)
+				ctx.hideRoofIds.add(rid);
 
 			if (ctx.uboWorldViewStruct != null)
 				ctx.uboWorldViewStruct.update();
@@ -706,6 +714,8 @@ public class ZoneRenderer implements Renderer {
 		sceneCmd.reset();
 		directionalCmd.reset();
 		gapFillerCmd.reset();
+		if (plugin.configDitherFadeRoofs)
+			roofFades.reset();
 		renderState.reset();
 
 		eboAlpha.orphan();
@@ -880,11 +890,14 @@ public class ZoneRenderer implements Renderer {
 
 		sceneCmd.execute(renderState);
 
+		roofFades.execute(renderState);
+
 		frameTimer.end(Timer.RENDER_SCENE);
 
 		glBindVertexArray(0);
 
 		// Done rendering the scene
+		renderState.depthMask.set(true);
 		renderState.disable.set(GL_BLEND);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.disable.set(GL_DEPTH_TEST);
@@ -979,21 +992,31 @@ public class ZoneRenderer implements Renderer {
 			return;
 
 		try {
-			WorldViewContext ctx = sceneManager.getContext(scene);
+			final WorldViewContext ctx = sceneManager.getContext(scene);
 			if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
 				return;
 
-			Zone z = ctx.zones[zx][zz];
+			final Zone z = ctx.zones[zx][zz];
 			if (!z.initialized || z.sizeO == 0)
 				return;
 
 			frameTimer.begin(Timer.DRAW_ZONE_OPAQUE);
+
+			// Partway geometry goes to its own buffer. At the start of a fade it's still fully visible, and at the end it's
+			// fully gone, so it stays in the normal pass.
+			final ZoneRoofFades.Fade fade = roofFades.update(z, ctx);
+			final CommandBuffer roofCmd = fade.cmd;
+
 			if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
 				final boolean allowDiscard = !sceneManager.isRoot(ctx) || z.sceneCameraIntersects;
+
+				if (roofCmd != null)
+					z.renderOpaque(roofCmd, ctx, fade, Zone.DRAW_FADING_ONLY);
+
 				if (allowDiscard)
 					sceneCmd.SetShader(sceneDiscardProgram);
 
-				z.renderOpaque(sceneCmd, ctx, false);
+				z.renderOpaque(sceneCmd, ctx, fade, 0);
 
 				if (allowDiscard)
 					sceneCmd.SetShader(sceneProgram);
@@ -1005,7 +1028,7 @@ public class ZoneRenderer implements Renderer {
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
 			if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 				directionalCmd.SetShader(fastShadowProgram);
-				z.renderOpaque(directionalCmd, ctx, shouldDrawRoofShadows);
+				z.renderOpaque(directionalCmd, ctx, null, shouldDrawRoofShadows ? Zone.DRAW_INCLUDE_ROOFS : 0);
 			}
 			frameTimer.end(Timer.DRAW_ZONE_OPAQUE);
 
@@ -1039,16 +1062,27 @@ public class ZoneRenderer implements Renderer {
 
 			final boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
 			if (hasAlpha) {
+				final ZoneRoofFades.Fade fade = roofFades.current(z);
+				final CommandBuffer roofCmd = fade.cmd;
 				final int offset = ctx.sceneContext.sceneOffset >> 3;
+				final int lzx = zx - offset;
+				final int lzz = zz - offset;
+
 				// Only sort if the alpha will be directly visible, since shadows don't require sorting
 				if (level == 0 && (!sceneManager.isRoot(ctx) || z.inSceneFrustum))
-					z.alphaSort(zx - offset, zz - offset, sceneCamera);
+					z.alphaSort(lzx, lzz, sceneCamera);
 
 				final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
 				if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 					directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
-					z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, shouldDrawRoofShadows);
+					int shadowFlags = Zone.DRAW_DEPTH_ONLY;
+					if (shouldDrawRoofShadows)
+						shadowFlags |= Zone.DRAW_INCLUDE_ROOFS;
+					z.renderAlpha(directionalCmd, lzx, lzz, level, ctx, null, shadowFlags);
 				}
+
+				// Called per visible level, but fading geometry can be outside the visible range, so draw it all here
+				final boolean drawFadingAlpha = roofCmd != null && roofFades.claimAlpha(z);
 
 				if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
 					if (renderWater) {
@@ -1056,7 +1090,9 @@ public class ZoneRenderer implements Renderer {
 						// can Z-fight depending on draw order. To avoid alpha models above water causing the water surface to fail its
 						// depth test, we disable depth writes for alpha models and rely on correct back to front ordering of the zones
 						sceneCmd.DepthMask(false);
-						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
+						z.renderAlpha(sceneCmd, lzx, lzz, level, ctx, fade, 0);
+						if (drawFadingAlpha)
+							renderFadingAlpha(roofCmd, z, lzx, lzz, ctx, fade);
 						sceneCmd.DepthMask(true);
 					} else {
 						// Draw alpha models in two passes, first blending colors correctly, then writing depth for subsequent opaque models
@@ -1065,12 +1101,14 @@ public class ZoneRenderer implements Renderer {
 						// Write color without depth writes
 						sceneCmd.DepthMask(false);
 						sceneCmd.ColorMask(true, true, true, true);
-						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
+						z.renderAlpha(sceneCmd, lzx, lzz, level, ctx, fade, 0);
+						if (drawFadingAlpha)
+							renderFadingAlpha(roofCmd, z, lzx, lzz, ctx, fade);
 
 						// Write depth without color
 						sceneCmd.DepthMask(true);
 						sceneCmd.ColorMask(false, false, false, false);
-						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, true, false);
+						z.renderAlpha(sceneCmd, lzx, lzz, level, ctx, fade, Zone.DRAW_DEPTH_ONLY);
 
 						// Restore color writes
 						sceneCmd.ColorMask(true, true, true, true);
@@ -1084,6 +1122,11 @@ public class ZoneRenderer implements Renderer {
 			log.error("Error in drawZoneAlpha({}, {}, {}, {}):", zx, zz, level, scene != null ? scene.getWorldViewId() : null, ex);
 			plugin.requestPluginStop();
 		}
+	}
+
+	private static void renderFadingAlpha(CommandBuffer cmd, Zone z, int zx, int zz, WorldViewContext ctx, ZoneRoofFades.Fade fade) {
+		for (int l = 0; l <= 3; ++l)
+			z.renderAlpha(cmd, zx, zz, l, ctx, fade, Zone.DRAW_FADING_ONLY);
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import com.google.inject.Injector;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +15,7 @@ import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.DestructibleHandler;
+import rs117.hd.utils.collections.IntHashSet;
 import rs117.hd.utils.jobs.JobGroup;
 
 import static rs117.hd.renderer.zone.FrameContext.VAO_COUNT;
@@ -49,7 +49,7 @@ public class WorldViewContext {
 	boolean isLoading = true;
 
 	int minLevel, level, maxLevel;
-	Set<Integer> hideRoofIds;
+	final IntHashSet hideRoofIds = new IntHashSet();
 
 	private final Comparator<Zone> alphaSortComparator = Comparator.comparingInt((Zone z) -> z.dist).reversed();
 	private final List<Zone> alphaZones = new ArrayList<>();
