@@ -29,6 +29,7 @@ import net.runelite.api.*;
 import net.runelite.api.events.BeforeRender;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.WidgetLoaded;
+import net.runelite.api.gameval.InventoryID;
 import net.runelite.api.widgets.ItemQuantityMode;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetItem;
@@ -66,6 +67,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	// Slots are kept for the items of this frame and the last
 	private static final int MAX_SLOTS = 2 * MAX_ITEMS;
 	private static final int MAX_NEW_ITEMS_PER_FRAME = 16;
+	private static final int[] KEPT_CONTAINERS = { InventoryID.INV, InventoryID.WORN };
 	// Native icons can reach a little past the game's icons
 	private static final int MARGIN = 2;
 	private static final int GRID_WIDTH = ICON_WIDTH + 2 * MARGIN;
@@ -396,6 +398,12 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		showOnInterface(client.getTopLevelInterfaceId());
 		for (var node : client.getComponentTable())
 			showOnInterface(node.getId());
+		// Also when turned on after logging in, before any of them changes
+		for (int id : new int[] { InventoryID.INV, InventoryID.WORN, InventoryID.BANK }) {
+			var container = client.getItemContainer(id);
+			if (container != null)
+				containers.put(id, container.getItems());
+		}
 		overlayManager.add(this);
 		overlayManager.add(overlayCapture);
 		overlayManager.add(draggedItemsOverlay);
@@ -678,6 +686,20 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	}
 
 	private void prepareIcons() {
+		// What's carried and worn stays ready, even while it isn't shown
+		for (int id : KEPT_CONTAINERS) {
+			var items = containers.get(id);
+			if (items == null)
+				continue;
+			for (var item : items) {
+				if (item.getId() == -1)
+					continue;
+				var icon = findIcon(item.getId(), item.getQuantity(), ItemQuantityMode.NEVER, 1, false);
+				if (icon != null && icon != PENDING)
+					icon.frame = frame;
+			}
+		}
+
 		if (prepared)
 			return;
 		boolean ready = true;
@@ -688,9 +710,10 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				if (item.getId() == -1)
 					continue;
 				var icon = findIcon(item.getId(), item.getQuantity(), ItemQuantityMode.NEVER, 1, false);
-				if (icon == PENDING)
+				// A stack whose model is still being looked for doesn't hold up the rest
+				if (icon == PENDING && newItemsThisFrame >= MAX_NEW_ITEMS_PER_FRAME)
 					return;
-				ready &= icon == null || icon.layer != -1;
+				ready &= icon == null || icon != PENDING && icon.layer != -1;
 			}
 		}
 		prepared = ready;
