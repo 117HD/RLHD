@@ -6,6 +6,13 @@ vec3 celestialViewDirection(vec3 viewDir, vec3 center) {
     vec4 centerClip = projectionMatrix * vec4(center, 0.0);
     vec4 viewClip = projectionMatrix * vec4(viewDir, 0.0);
     if (centerClip.w > 0.001 && viewClip.w > 0.001) {
+        // The local area scale diverges near the camera plane and can map the
+        // entire screen onto an off-screen disk. Stop before evaluating it there.
+        float screenDistance = max(abs(centerClip.x), abs(centerClip.y));
+        if (screenDistance >= 2.0 * centerClip.w)
+            return viewDir;
+        float correction = 1.0 - smoothstep(1.2, 2.0, screenDistance / centerClip.w);
+
         // Preserve the projected center and local area, but make the disk round.
         mat3 cameraAxes = transpose(mat3(viewMatrix));
         vec3 right = cameraAxes[0] - center * dot(cameraAxes[0], center);
@@ -25,7 +32,8 @@ vec3 celestialViewDirection(vec3 viewDir, vec3 center) {
         // magnification: retain enlargement without its directional stretch.
         float magnification = sqrt(max(abs(dx.x * dy.y - dx.y * dy.x), 1e-8));
         vec2 offset = (viewClip.xy / viewClip.w - centerNdc) / (scale * magnification);
-        return normalize(center + right * offset.x + up * offset.y);
+        vec3 correctedDir = normalize(center + right * offset.x + up * offset.y);
+        return normalize(mix(viewDir, correctedDir, correction));
     }
     return viewDir;
 }
