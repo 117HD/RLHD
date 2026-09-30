@@ -1,6 +1,7 @@
 #pragma once
 
 #include <utils/celestial_projection.glsl>
+#include <utils/starfield.glsl>
 
 struct SkyGradient {
     vec3 sunDir;         // sun direction with the perceived-horizon offset applied
@@ -78,4 +79,23 @@ SkyGradient computeSkyGradient(vec3 viewDir) {
 vec3 blendSkyBackground(vec3 gradient, vec3 background, float amount) {
     // Keep an authored gradient visible behind stars and nebulae, including below the horizon.
     return mix(gradient, background + gradient * uboSky.customGradient, amount);
+}
+
+float nightSkyBlend(SkyGradient sky) {
+    float baseProgress = 1.0 - sky.nightFade;
+    float sunProximity = sky.sunSideBlend * (1.0 - sky.zenithBlend);
+    return pow(baseProgress, mix(0.4, 0.9, sunProximity));
+}
+
+float nightSkyHorizonFade(float upAmount, float horizonShift) {
+    return smoothstep(-0.1 + horizonShift, 0.07 + horizonShift, upAmount);
+}
+
+// Broad visible sky color, excluding celestial disks, aurorae, and individual stars.
+vec3 visibleSkyColor(SkyGradient sky, vec3 viewDir, float elapsedSeconds) {
+    float horizonShift = nightHorizonOffset(uboSky.starHorizonHeight);
+    float amount = nightSkyBlend(sky) * nightSkyHorizonFade(sky.upAmount, horizonShift);
+    if (amount <= 0.001)
+        return sky.color;
+    return blendSkyBackground(sky.color, nightSkyBackground(viewDir, elapsedSeconds), amount);
 }

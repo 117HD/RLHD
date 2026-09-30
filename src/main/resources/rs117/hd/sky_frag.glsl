@@ -6,9 +6,8 @@
 #include <utils/constants.glsl>
 #include <utils/output_transform.glsl>
 #include <utils/misc.glsl>
-#include <utils/starfield.glsl>
-#include <utils/aurora.glsl>
 #include <utils/sky.glsl>
+#include <utils/aurora.glsl>
 #include <utils/sky_fog.glsl>
 #include <utils/hash.glsl>
 #include <utils/tone_mapping.glsl>
@@ -27,10 +26,6 @@ float moonFbm(in vec2 st) {
         amplitude *= 0.5;
     }
     return value;
-}
-
-float nightSkyHorizonFade(float upAmount, float horizonShift) {
-    return smoothstep(-0.1 + horizonShift, 0.07 + horizonShift, upAmount);
 }
 
 void main() {
@@ -66,23 +61,15 @@ void main() {
     float horizonShift = nightHorizonOffset(uboSky.starHorizonHeight);
 
     // Stars appear first opposite the sun, then spread across the low-sun sky.
-    float baseProgress = 1.0 - sky.nightFade;
-    float sunProximity = sky.sunSideBlend * (1.0 - sky.zenithBlend);
     // Aurora visibility is independent of the night-sky background.
-    float nightFactor = pow(baseProgress, mix(0.4, 0.9, sunProximity));
+    float nightFactor = nightSkyBlend(sky);
     float skyBlend = nightFactor;
     #if STAR_MODE != STAR_MODE_OFF
         float starBlend = nightFactor * uboSky.starVisibility;
     #endif
     vec3 shootingStarColor = vec3(0.0);
-    if (skyBlend > 0.001) {
-        // Individual stars are drawn separately as point sprites.
-        vec3 nightHorizonColor = nightSkyBackground(viewDir, elapsedTime);
-
-        // Converge to the fog-matched gradient at the horizon.
-        float horizonStarFade = nightSkyHorizonFade(sky.upAmount, horizonShift);
-        skyColor = blendSkyBackground(skyColor, nightHorizonColor, skyBlend * horizonStarFade);
-    }
+    // Individual stars are drawn separately as point sprites.
+    skyColor = visibleSkyColor(sky, viewDir, elapsedTime);
     // Shooting stars are atmospheric and render in front of the moon.
     #if STAR_MODE != STAR_MODE_OFF
         if (starBlend > 0.001 && -viewDir.y > 0.05 + horizonShift)

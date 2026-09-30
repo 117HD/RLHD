@@ -139,8 +139,27 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     float finalFresnel = clamp(mix(baseOpacity, 1.0, fresnel * 1.2), 0.0, 1.0);
     vec3 surfaceColor = vec3(0);
 
-    // add sky gradient
-    if (finalFresnel < 0.5) {
+    // Add the broad sky reflected by the water. Individual stars are omitted,
+    // but the directional gradient, night background, nebulae, and haze match
+    // the visible sky instead of inheriting a single horizon color.
+    if (uboSky.enabled) {
+        vec3 skyViewDir = reflect(-viewDir, normals);
+        SkyGradient sky = computeSkyGradient(skyViewDir);
+        vec3 skyColor = visibleSkyColor(sky, skyViewDir, elapsedTime);
+        vec3 moonDir = normalize(vec3(
+            uboSky.moonDir.x,
+            -uboSky.moonDir.y + HORIZON_OFFSET,
+            uboSky.moonDir.z
+        ));
+        float skyTransmittance = skyFogTransmittance(sky.upAmount);
+        skyColor = applySkyFog(skyColor, skyTransmittance);
+        skyColor += skyFogGlow(skyViewDir, sky.sunDir, moonDir, skyTransmittance);
+
+        float reflectionStrength = finalFresnel < 0.5 ?
+            mix(0.05, 0.45, finalFresnel * 2.0) :
+            mix(0.45, 0.8, (finalFresnel - 0.5) * 2.0);
+        surfaceColor = linearToSrgb(skyColor * reflectionStrength);
+    } else if (finalFresnel < 0.5) {
         surfaceColor = mix(waterColorDark, waterColorMid, finalFresnel * 2);
     } else {
         surfaceColor = mix(waterColorMid, waterColorLight, (finalFresnel - 0.5) * 2);

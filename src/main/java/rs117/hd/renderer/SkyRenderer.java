@@ -312,7 +312,6 @@ public class SkyRenderer {
 		for (int i = 0; i < ambientLight.length; i++)
 			ambientLight[i] += .25f * (currentFrame.sunDirectionalLight[i] + currentFrame.moonDirectionalLight[i] - directionalLight[i]);
 		copyTo(fogColor, currentFrame.horizon);
-		copyTo(waterColor, currentFrame.horizon);
 		plugin.uboSky.fogDensity.set(currentFrame.fogDensity);
 		plugin.uboSky.visibility.set(currentFrame.visibility);
 		plugin.uboSky.fogColor.set(currentFrame.fog);
