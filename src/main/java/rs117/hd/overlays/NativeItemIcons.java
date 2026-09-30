@@ -77,7 +77,6 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private static final int[] VERTEX_ATTRIBUTE_SIZES = { 2, 2, 2, 1, 1, 4, 4, 4 };
 	private static final int FLOATS_PER_VERTEX = 20;
 	private static final int FLOATS_PER_ITEM = FLOATS_PER_VERTEX * 6;
-	private static final int SHADOW_OFFSET = 8;
 	private static final int FILL_OFFSET = 12;
 	private static final int OUTLINE_OFFSET = 16;
 	private static final int[] QUAD_CORNERS = { 0, 1, 2, 2, 1, 3 };
@@ -161,6 +160,10 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		final Rectangle bounds, drawn;
 		final GameIcon gameIcon;
 		final Slot slot;
+		// Dragged items are only drawn once the rest is, like the game draws them
+		int iconLayer;
+		float opacity;
+		int border;
 	}
 
 	// What's behind an item and what other overlays draw over it rarely change, so they're only worked out again when they do
@@ -177,7 +180,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		List<RuneImage> runeImages;
 		boolean kept;
 		boolean overlaid;
-		boolean dragged;
+		boolean takeAll;
 		boolean backgroundChanged;
 		boolean overlaysChanged = true;
 		int shadow;
@@ -256,7 +259,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		public Dimension render(Graphics2D graphics) {
 			var buffer = client.getBufferProvider();
 			for (var item : draggedCuts)
-				removeDraggedItem(buffer.getPixels(), buffer.getWidth(), item);
+				drawDraggedItem(buffer.getPixels(), buffer.getWidth(), item);
 			draggedCuts.clear();
 			return null;
 		}
@@ -332,6 +335,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private final boolean[] spread = new boolean[GRID_SIZE];
 	private final int[] overlays = new int[GRID_SIZE];
 	private final boolean[] captured = new boolean[GRID_SIZE];
+	private final boolean[] runePixels = new boolean[GRID_SIZE];
 
 	private int[] palette;
 	private double paletteBrightness;
@@ -567,12 +571,17 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			slots.put(slotKey, slot);
 		}
 		slot.frame = frame;
-		itemSlots[itemCount] = slot;
 		cutOut(buffer.getPixels(), buffer.getWidth(), bounds, drawn, gameIcon, slot);
-		var cutItem = new CutItem(itemCount, bounds, drawn, gameIcon, slot);
+		var cutItem = new CutItem(dragged ? -1 : itemCount, bounds, drawn, gameIcon, slot);
 		uncaptured.add(cutItem);
-		if (dragged)
+		if (dragged) {
+			cutItem.iconLayer = icon.layer;
+			cutItem.opacity = opacity;
+			cutItem.border = widget.getBorderType();
 			draggedCuts.add(cutItem);
+			return;
+		}
+		itemSlots[itemCount] = slot;
 		putQuad(bounds, drawn, icon.layer, slot.layer, opacity, widget.getBorderType(), slot.shadow);
 	}
 
@@ -1070,16 +1079,25 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			}
 		}
 
-		// The game draws dragged items again once the interface is drawn, so everything over them is drawn with the native icon
-		boolean dragged = draggedCuts.contains(item);
+		// The game draws the dragged item over the rest of the interface once it's drawn, so everything over it, and over
+		// what it's dragged over, is drawn with the native icons
+		boolean takeAll = draggedCuts.contains(item) || isDraggedOver(item);
 		if (runeImages == null && active)
 			loadRuneImages();
 		var images = runeImages;
-		if (!Arrays.equals(overlays, slot.overlays) || dragged != slot.dragged || images != slot.runeImages) {
+		if (!Arrays.equals(overlays, slot.overlays) || takeAll != slot.takeAll || images != slot.runeImages) {
 			System.arraycopy(overlays, 0, slot.overlays, 0, GRID_SIZE);
-			slot.dragged = dragged;
+			slot.takeAll = takeAll;
 			slot.runeImages = images;
-			findRunes(slot, dragged ? null : images);
+			findRunes(slot, images);
+			Arrays.fill(runePixels, false);
+			for (var rune : slot.runes) {
+				if (takeAll && findRuneIcon(rune.image) != null) {
+					for (int y = 0; y < rune.image.height; y++)
+						for (int x = 0; x < rune.image.width; x++)
+							runePixels[(rune.y + y) * GRID_WIDTH + rune.x + x] = rune.image.pixels[y * rune.image.width + x] >>> 24 != 0;
+				}
+			}
 			// Fills and outlines, like those of Inventory Tags, are redrawn to fit the native icon. Fills cover the shadow too.
 			var gameIcon = item.gameIcon;
 			int fill = slot.fill = shapeColor(gameIcon.item, gameIcon.shadow);
@@ -1088,8 +1106,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				boolean redrawn =
 					fill != 0 && (gameIcon.item[g] && overlays[g] == fill || gameIcon.shadow[g]) ||
 					outline != 0 && gameIcon.outline[g] && overlays[g] == outline;
-				slot.taken[g] = captured[g] && (redrawn || dragged);
-				slot.elsewhere[g] = dragged && captured[g] && !redrawn ? overlays[g] : 0;
+				slot.taken[g] = captured[g] && (redrawn || takeAll);
+				slot.elsewhere[g] = takeAll && captured[g] && !redrawn && !runePixels[g] ? overlays[g] : 0;
 			}
 			slot.overlaysChanged = true;
 		}
@@ -1101,12 +1119,21 @@ public class NativeItemIcons extends WidgetItemOverlay {
 					pixels[y * width + x] = 0;
 			}
 		}
-		for (var rune : slot.runes)
-			drawRune(pixels, width, item, rune);
 		slot.overlaysChanged |= !slot.overlaid;
 		slot.overlaid = true;
+		if (item.index == -1)
+			return;
+		for (var rune : slot.runes)
+			drawRune(pixels, width, item, rune, 1);
 		setColor(item.index, FILL_OFFSET, slot.fill);
 		setColor(item.index, OUTLINE_OFFSET, slot.outline);
+	}
+
+	private boolean isDraggedOver(CutItem item) {
+		for (var dragged : draggedCuts)
+			if (dragged.drawn.intersects(item.drawn))
+				return true;
+		return false;
 	}
 
 	private void loadRuneImages() {
@@ -1199,7 +1226,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		return true;
 	}
 
-	private void drawRune(int[] pixels, int width, CutItem item, RuneMatch rune) {
+	private void drawRune(int[] pixels, int width, CutItem item, RuneMatch rune, float opacity) {
 		var icon = findRuneIcon(rune.image);
 		if (icon == null || icon.layer == -1 || itemCount == MAX_ITEMS)
 			return;
@@ -1214,7 +1241,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				if (image.pixels[(y - top) * image.width + x - left] >>> 24 != 0)
 					pixels[y * width + x] = 0;
 		itemSlots[itemCount] = NO_SLOT;
-		putQuad(new Rectangle(left - image.left, top - image.top, ICON_WIDTH, ICON_HEIGHT), drawn, icon.layer, NO_SLOT.layer, 1, 0, 0);
+		putQuad(new Rectangle(left - image.left, top - image.top, ICON_WIDTH, ICON_HEIGHT), drawn, icon.layer, NO_SLOT.layer, opacity, 0, 0);
 	}
 
 	@Nullable
@@ -1260,7 +1287,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		return covered >= MIN_SHAPE_COVERAGE * pixels ? color : 0;
 	}
 
-	private void removeDraggedItem(int[] pixels, int width, CutItem item) {
+	// The game's icon is taken out again, and the native one drawn over the other items
+	private void drawDraggedItem(int[] pixels, int width, CutItem item) {
 		int shadow = 0;
 		for (int y = item.drawn.y; y < item.drawn.y + item.drawn.height; y++) {
 			for (int x = item.drawn.x; x < item.drawn.x + item.drawn.width; x++) {
@@ -1273,6 +1301,18 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				pixels[i] = 0;
 			}
 		}
-		setColor(item.index, SHADOW_OFFSET, shadow);
+		if (itemCount == MAX_ITEMS)
+			return;
+
+		var slot = item.slot;
+		int index = itemCount;
+		itemSlots[index] = slot;
+		putQuad(item.bounds, item.drawn, item.iconLayer, slot.layer, item.opacity, item.border, shadow);
+		if (!slot.overlaid)
+			return;
+		setColor(index, FILL_OFFSET, slot.fill);
+		setColor(index, OUTLINE_OFFSET, slot.outline);
+		for (var rune : slot.runes)
+			drawRune(pixels, width, item, rune, item.opacity);
 	}
 }
