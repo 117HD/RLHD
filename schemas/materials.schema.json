@@ -95,6 +95,23 @@
         "type": "number",
         "description": "The gloss of specular reflections. Defaults to 0. Commonly ranges from 10 to 500."
       },
+      "hexTilingScale": {
+        "type": "number",
+        "description": "The scale of the hexagonal tiling pattern. Factors below 1 shrink the hexagons. Defaults to 0, which disables hex tiling."
+      },
+      "hexTilingBlend": {
+        "type": "number",
+        "description": "The blending smoothness between hexagonal tiles, from 0 to 1. Defaults to 0.25."
+      },
+      "hexTilingMode": {
+        "type": "string",
+        "description": "Set the hex tile randomization mode used to break up tiling patterns. 'OFFSET' is cheapest & will offset & slightly scale hexagons at random. 'OFFSET_WITH_MIRROR' will also randomly flip hexagons in a cheap way. 'OFFSET_WITH_ROTATION' will randomly rotate the texture for each hexagon to further break up any tiling patterns. Defaults to 'OFFSET_WITH_MIRROR'.",
+        "enum": [
+          "OFFSET",
+          "OFFSET_WITH_MIRROR",
+          "OFFSET_WITH_ROTATION"
+        ]
+      },
       "scrollSpeed": {
         "type": "array",
         "description": "The duration in seconds, per UV direction, before texture scrolling repeats. Defaults to [ 0, 0 ], which disables scrolling.",
