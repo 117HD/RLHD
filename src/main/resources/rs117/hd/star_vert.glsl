@@ -106,10 +106,8 @@ void main() {
     // Two independent turbulence scales give irregular flickers within slower swells.
     // Squared weights sum to one, preserving the unit Gaussian distribution.
     vec3 noise = 0.8 * starNoise(time, seed) + 0.6 * starNoise(time * 0.19, seed + 8192.0);
-    // Scintillation increases with air mass, but a bounded 1–1.75x response is
-    // easier to tune than the singular geometric air-mass curve at the horizon.
     float lowAltitude = 1.0 - smoothstep(0.0, 0.6, max(upAmount, 0.0));
-    float altitudeScale = mix(1.0, 1.75, lowAltitude);
+    float altitudeScale = 1.0 + 0.15 * lowAltitude;
     float sigma = 0.9 * tuning.r * altitudeScale;
     // A slowly drifting continuous field makes strong dispersion sparse without
     // assigning abruptly different behavior to neighboring or moving stars.

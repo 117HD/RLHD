@@ -80,12 +80,11 @@ vec2 worldUvs(float scale) {
 #include <utils/specular.glsl>
 #include <utils/displacement.glsl>
 #include <utils/shadows.glsl>
-#include <utils/water.glsl>
 #include <utils/fog.glsl>
 #include <utils/wireframe.glsl>
 #include <utils/lights.glsl>
-#include <utils/starfield.glsl>
 #include <utils/sky.glsl>
+#include <utils/water.glsl>
 
 void main() {
     #if GAP_FILLER
@@ -555,20 +554,7 @@ void main() {
             if (combinedFog > 1e-4) {
                 vec3 fogViewDir = normalize(IN.position - cameraPos);
                 SkyGradient sky = computeSkyGradient(fogViewDir);
-                skyColorAtFragment = sky.color;
-
-                float baseProgress = 1.0 - sky.nightFade;
-                float sunProximity = sky.sunSideBlend * (1.0 - sky.zenithBlend);
-                float nightSkyBlend = pow(baseProgress, mix(0.4, 0.9, sunProximity));
-                if (nightSkyBlend > 0.001) {
-                    float horizonShift = nightHorizonOffset(uboSky.starHorizonHeight);
-                    float horizonFade = smoothstep(-0.1 + horizonShift, 0.07 + horizonShift, sky.upAmount);
-                    skyColorAtFragment = blendSkyBackground(
-                        skyColorAtFragment,
-                        nightSkyBackground(fogViewDir, elapsedTime),
-                        nightSkyBlend * horizonFade
-                    );
-                }
+                skyColorAtFragment = visibleSkyColor(sky, fogViewDir, elapsedTime);
 
                 vec3 moonDir = normalize(vec3(
                     uboSky.moonDir.x,
