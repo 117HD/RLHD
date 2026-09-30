@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,9 @@ import net.runelite.api.events.BeforeRender;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.ItemQuantityMode;
+import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetItem;
+import net.runelite.api.widgets.WidgetUtil;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.overlay.Overlay;
@@ -195,6 +198,10 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			drawAfterInterface(groupId);
 		}
 
+		void showAfterLayer(int layerId) {
+			drawAfterLayer(layerId);
+		}
+
 		@Override
 		public Dimension render(Graphics2D graphics) {
 			var buffer = client.getBufferProvider();
@@ -272,6 +279,13 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private final Map<Long, Integer> stackModelSearches = new HashMap<>();
 	private final Map<Integer, Item[]> containers = new HashMap<>();
 
+	// Where other item overlays draw, so they can be fitted to the native icons
+	private final Set<Integer> standardHooks;
+	// Layers of other interfaces, whose items are cut out right after them
+	private final Set<Integer> itemLayers = new HashSet<>();
+	private final Set<Integer> newItemLayers = new HashSet<>();
+	private final Map<Widget, Rectangle> visibleAreas = new IdentityHashMap<>();
+
 	private int frame;
 	private int newItemsThisFrame;
 	private int itemCount;
@@ -295,6 +309,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		showOnInventory();
 		showOnBank();
 		showOnEquipment();
+		standardHooks = Set.copyOf(getDrawHooks());
 		// Before other item overlays
 		setPriority(PRIORITY_LOW - 1);
 	}
@@ -373,6 +388,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		stackModelSearches.clear();
 		slots.clear();
 		containers.clear();
+		newItemLayers.clear();
+		visibleAreas.clear();
 		scaleX = scaleY = 0;
 	}
 
@@ -383,6 +400,16 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 	@Subscribe
 	public void onBeforeRender(BeforeRender event) {
+		if (!newItemLayers.isEmpty()) {
+			for (int layerId : newItemLayers) {
+				drawAfterLayer(layerId);
+				overlayCapture.showAfterLayer(layerId);
+			}
+			itemLayers.addAll(newItemLayers);
+			newItemLayers.clear();
+			updateHooks();
+		}
+
 		frame++;
 		for (var it = slots.values().iterator(); it.hasNext(); ) {
 			var slot = it.next();
@@ -395,6 +422,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		itemCount = 0;
 		vertices.clear();
 		cutThisFrame.clear();
+		visibleAreas.clear();
 		uncaptured.clear();
 		draggedItems.clear();
 		draggedCuts.clear();
@@ -402,13 +430,16 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 	@Subscribe
 	public void onWidgetLoaded(WidgetLoaded event) {
-		if (showOnInterface(event.getGroupId())) {
-			// Re-add so the overlay manager picks up the new interface
-			overlayManager.remove(this);
-			overlayManager.remove(overlayCapture);
-			overlayManager.add(this);
-			overlayManager.add(overlayCapture);
-		}
+		if (showOnInterface(event.getGroupId()))
+			updateHooks();
+	}
+
+	// Re-added so the overlay manager picks up the new hooks
+	private void updateHooks() {
+		overlayManager.remove(this);
+		overlayManager.remove(overlayCapture);
+		overlayManager.add(this);
+		overlayManager.add(overlayCapture);
 	}
 
 	@Subscribe
@@ -436,6 +467,9 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 	@Override
 	public void renderItemOverlay(Graphics2D graphics, int itemId, WidgetItem widgetItem) {
+		if (!isHooked(widgetItem.getWidget()))
+			return;
+
 		if (isDragged(widgetItem)) {
 			draggedItems.add(widgetItem);
 		} else {
@@ -443,8 +477,31 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		}
 	}
 
+	// Items are cut out right after their own layer, before the interface can draw over them, except where other item overlays draw
+	private boolean isHooked(Widget widget) {
+		int layerId = widget.getParentId();
+		if (layerId == -1 || itemLayers.contains(layerId) || standardHooks.contains(layerId) ||
+			standardHooks.contains(WidgetUtil.componentToInterface(widget.getId()) << 16 | 0xFFFF))
+			return true;
+		newItemLayers.add(layerId);
+		return false;
+	}
+
 	private boolean isDragged(WidgetItem widgetItem) {
 		return widgetItem.getWidget() == client.getDraggedWidget();
+	}
+
+	// Layers only show their children within their own bounds, and their parents'
+	private Rectangle visibleArea(Widget widget) {
+		var parent = widget.getParent();
+		var area = visibleAreas.get(parent);
+		if (area == null) {
+			area = parent.getBounds();
+			for (var ancestor = parent.getParent(); ancestor != null; ancestor = ancestor.getParent())
+				area = area.intersection(ancestor.getBounds());
+			visibleAreas.put(parent, area);
+		}
+		return area;
 	}
 
 	private void cutOut(WidgetItem widgetItem) {
@@ -455,7 +512,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		var widget = widgetItem.getWidget();
 		boolean dragged = isDragged(widgetItem);
 		var bounds = widgetItem.getDraggingCanvasBounds() != null ? widgetItem.getDraggingCanvasBounds() : widgetItem.getCanvasBounds();
-		var visible = bounds.intersection(widget.getParent().getBounds());
+		var visible = bounds.intersection(dragged ? widget.getParent().getBounds() : visibleArea(widget));
 		// Some interfaces report their items twice
 		if (visible.isEmpty() || !cutThisFrame.add(bounds))
 			return;
