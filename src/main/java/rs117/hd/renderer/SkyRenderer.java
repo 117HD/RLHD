@@ -39,8 +39,6 @@ import static rs117.hd.utils.MathUtils.*;
 @Singleton
 public class SkyRenderer {
 	private static final float[] BLACK = { 0, 0, 0 };
-	private static final float SHADOW_HANDOFF_MIN_CONTRAST = 1 / 255.f;
-	private static final float SHADOW_HANDOFF_MAX_CONTRAST = 3 / 255.f;
 
 	@Inject
 	private HdPlugin plugin;
@@ -85,7 +83,6 @@ public class SkyRenderer {
 	public boolean usesMoonShadows;
 
 	private static final class LightingFrame extends GradientSample {
-		private final float[] directionalLight = new float[3];
 		private final float[] ambientLight = new float[3];
 		private final float[] sunDirectionalLight = new float[3];
 		private final float[] moonDirectionalLight = new float[3];
@@ -95,13 +92,13 @@ public class SkyRenderer {
 		private float fogDensity;
 		private float visibility;
 		private float customGradient;
-		private float moonShadowHandoff;
+		private float dayLuminance;
+		private float nightLuminance;
 		private float moonReflectionVisibility;
 
 		private void interpolate(LightingFrame from, LightingFrame to, float t) {
-			moonShadowHandoff = mix(from.moonShadowHandoff, to.moonShadowHandoff, t);
-			moonReflectionVisibility = mix(from.moonReflectionVisibility, to.moonReflectionVisibility, t);
-			mix(directionalLight, from.directionalLight, to.directionalLight, t);
+			mix(sunDirectionalLight, from.sunDirectionalLight, to.sunDirectionalLight, t);
+			mix(moonDirectionalLight, from.moonDirectionalLight, to.moonDirectionalLight, t);
 			mix(ambientLight, from.ambientLight, to.ambientLight, t);
 			mix(fog, from.fog, to.fog, t);
 			mix(moonDisk, from.moonDisk, to.moonDisk, t);
@@ -111,6 +108,9 @@ public class SkyRenderer {
 			fogDensity = mix(from.fogDensity, to.fogDensity, t);
 			visibility = mix(from.visibility, to.visibility, t);
 			customGradient = mix(from.customGradient, to.customGradient, t);
+			dayLuminance = mix(from.dayLuminance, to.dayLuminance, t);
+			nightLuminance = mix(from.nightLuminance, to.nightLuminance, t);
+			moonReflectionVisibility = mix(from.moonReflectionVisibility, to.moonReflectionVisibility, t);
 			configuration.interpolateLightingParameters(from.configuration, to.configuration, t);
 		}
 	}
@@ -293,9 +293,24 @@ public class SkyRenderer {
 		}
 		previousTransition = transition;
 		// Blend complete HDR light contributions before encoding the global UBO.
-		copyTo(directionalLight, currentFrame.directionalLight);
 		copyTo(ambientLight, currentFrame.ambientLight);
-		usesMoonShadows = currentFrame.moonShadowHandoff > 0;
+		// Let adapted night lighting take over as daylight, including twilight, fades.
+		// The 20–80% range preserves full shadows when either source clearly dominates.
+		float totalLuminance = currentFrame.dayLuminance + currentFrame.nightLuminance;
+		float handoff = totalLuminance > 0 ? currentFrame.nightLuminance / totalLuminance : 0;
+		// Both directional contributions reach zero at the camera switch. Apply this
+		// after environment blending so mixed endpoints cannot expose the angle jump.
+		usesMoonShadows = handoff >= .5f;
+		if (usesMoonShadows) {
+			multiply(directionalLight, currentFrame.moonDirectionalLight, smoothstep(.5f, .8f, handoff));
+		} else {
+			multiply(directionalLight, currentFrame.sunDirectionalLight, 1 - smoothstep(.2f, .5f, handoff));
+		}
+		// Redistribute both sources' suppressed directional light into ambient.
+		// max(dot(normal, lightDir), 0) averages to 1/4 over the sphere of normals;
+		// this preserves average diffuse illumination while shadow contrast fades.
+		for (int i = 0; i < ambientLight.length; i++)
+			ambientLight[i] += .25f * (currentFrame.sunDirectionalLight[i] + currentFrame.moonDirectionalLight[i] - directionalLight[i]);
 		copyTo(fogColor, currentFrame.horizon);
 		copyTo(waterColor, currentFrame.horizon);
 		plugin.uboSky.fogDensity.set(currentFrame.fogDensity);
@@ -340,24 +355,18 @@ public class SkyRenderer {
 			linearSrgbLuminance(nightAmbientLight) +
 			moonLuminance * max(0, sin(moonAltDeg * DEG_TO_RAD));
 		float exposure = getNightExposure(adaptationLuminance, env.nightExposure * 1.5f);
+		// Use the same upward-facing reference surface as adaptation, before any
+		// shadow handoff attenuation, so fading shadows cannot drive their own fade.
+		out.dayLuminance =
+			linearSrgbLuminance(out.ambientLight) +
+			linearSrgbLuminance(out.sunDirectionalLight) * max(0, sin(sunAltDeg * DEG_TO_RAD));
+		out.nightLuminance = adaptationLuminance * exposure;
 		multiply(nightAmbientLight, nightAmbientLight, exposure);
 		multiply(out.moonDirectionalLight, out.moonDirectionalLight, exposure);
 		// Moon reflections lose contrast as twilight brightens the sky.
 		out.moonReflectionVisibility = 1 - smoothstep(-12, 0, sunAltDeg);
 		add(out.ambientLight, out.ambientLight, nightAmbientLight);
 
-		float shadowedLuminance = linearSrgbLuminance(out.ambientLight);
-		// The moon's directional contribution is metered above, but not rendered until handoff.
-		float litLuminance = shadowedLuminance + linearSrgbLuminance(out.sunDirectionalLight);
-		// Switch sources while the disappearing sun shadow spans only a few display values.
-		float sunShadowContrast = linearToSrgb(litLuminance) - linearToSrgb(shadowedLuminance);
-		out.moonShadowHandoff = moonAltDeg > 0 && moonLightIllumination > 0 ?
-			1 - smoothstep(SHADOW_HANDOFF_MIN_CONTRAST, SHADOW_HANDOFF_MAX_CONTRAST, sunShadowContrast) : 0;
-		if (out.moonShadowHandoff > 0) {
-			multiply(out.directionalLight, out.moonDirectionalLight, out.moonShadowHandoff);
-		} else {
-			copyTo(out.directionalLight, out.sunDirectionalLight);
-		}
 		copyTo(out.zenith, endpointSample.zenith);
 		copyTo(out.horizon, endpointSample.horizon);
 		copyTo(out.sunGlow, endpointSample.sunGlow);
