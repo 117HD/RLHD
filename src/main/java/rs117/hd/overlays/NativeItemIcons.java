@@ -110,6 +110,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		float[] surroundings;
 		volatile int[] pixels;
 		int layer = -1;
+		int frame;
 	}
 
 	private static class GameIcon {
@@ -303,6 +304,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 	private final Map<Long, Icon> icons = new HashMap<>();
 	private final ArrayDeque<Integer> freeLayers = new ArrayDeque<>();
+	private final List<Icon> uploads = new ArrayList<>();
 	private final Map<Long, GameIcon> gameIcons = new LinkedHashMap<>(MAX_GAME_ICONS, .75f, true) {
 		@Override
 		protected boolean removeEldestEntry(Map.Entry<Long, GameIcon> eldest) {
@@ -554,6 +556,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		// Some interfaces report their items twice
 		if (visible.isEmpty() || !cutThisFrame.add(bounds))
 			return;
+		icon.frame = frame;
 
 		var buffer = client.getBufferProvider();
 		// Partly visible items stay clipped like the interface clips them
@@ -864,21 +867,16 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		if (!active)
 			return;
 
-		boolean full = false;
 		glActiveTexture(TEXTURE_UNIT_ITEM_ICON_SURROUNDINGS);
 		glBindTexture(GL_TEXTURE_2D_ARRAY, texIconSurroundings);
 		glActiveTexture(TEXTURE_UNIT_ITEM_ICONS);
 		glBindTexture(GL_TEXTURE_2D_ARRAY, texIcons);
-		for (var icon : icons.values()) {
-			if (icon.pixels == null)
+		for (var icon : icons.values())
+			if (icon.pixels != null)
+				uploads.add(icon);
+		for (var icon : uploads) {
+			if (icon.layer == -1 && (icon.layer = takeLayer()) == -1)
 				continue;
-			if (icon.layer == -1) {
-				if (freeLayers.isEmpty()) {
-					full = true;
-					continue;
-				}
-				icon.layer = freeLayers.pop();
-			}
 			glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, icon.layer, iconWidth(), iconHeight(), 1, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, icon.pixels);
 			glActiveTexture(TEXTURE_UNIT_ITEM_ICON_SURROUNDINGS);
 			glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, icon.layer, iconWidth(), iconHeight(), 1, GL_RED, GL_FLOAT, icon.surroundings);
@@ -886,6 +884,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			icon.pixels = null;
 			icon.surroundings = null;
 		}
+		uploads.clear();
 
 		if (itemCount > 0) {
 			glActiveTexture(TEXTURE_UNIT_ITEM_BACKGROUNDS);
@@ -908,9 +907,6 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 			glDrawArrays(GL_TRIANGLES, 0, itemCount * 6);
 		}
-
-		if (full)
-			clearIcons();
 
 		// Rounded, so small window resizes don't invalidate the icons kept on disk
 		float newScaleX = round(8f * actualUiResolution[0] / uiResolution[0]) / 8f;
@@ -947,6 +943,25 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		freeLayers.clear();
 		for (int i = 0; i < MAX_ICONS; i++)
 			freeLayers.push(i);
+	}
+
+	// Once there's no room left, the icon drawn longest ago makes way, and is loaded again when it's needed
+	private int takeLayer() {
+		if (!freeLayers.isEmpty())
+			return freeLayers.pop();
+
+		Map.Entry<Long, Icon> oldest = null;
+		for (var entry : icons.entrySet()) {
+			var icon = entry.getValue();
+			if (icon.layer != -1 && icon.frame < frame && (oldest == null || icon.frame < oldest.getValue().frame))
+				oldest = entry;
+		}
+		if (oldest == null)
+			return -1;
+		var icon = icons.remove(oldest.getKey());
+		int layer = icon.layer;
+		icon.layer = -1;
+		return layer;
 	}
 
 	private int iconWidth() {
@@ -1230,6 +1245,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		var icon = findRuneIcon(rune.image);
 		if (icon == null || icon.layer == -1 || itemCount == MAX_ITEMS)
 			return;
+		icon.frame = frame;
 
 		// RuneLite's image is taken out once the native rune can be drawn in its place
 		var image = rune.image;
