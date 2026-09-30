@@ -18,8 +18,6 @@ vec3 celestialViewDirection(vec3 viewDir, vec3 center) {
         vec3 right = cameraAxes[0] - center * dot(cameraAxes[0], center);
         right = normalize(right);
         vec3 up = normalize(cross(center, right));
-        if (dot(up, cameraAxes[1]) < 0.0)
-            up = -up;
 
         mat4 projectionRows = transpose(projectionMatrix);
         vec2 scale = vec2(length(projectionRows[0].xyz), length(projectionRows[1].xyz));
@@ -28,6 +26,16 @@ vec3 celestialViewDirection(vec3 viewDir, vec3 center) {
         vec4 upClip = projectionMatrix * vec4(up, 0.0);
         vec2 dx = (rightClip.xy - centerNdc * rightClip.w) / (centerClip.w * scale);
         vec2 dy = (upClip.xy - centerNdc * upClip.w) / (centerClip.w * scale);
+        // Match NDC offset signs, including the projection's Y flip. Mirrored
+        // offsets can cancel against the plain direction during the off-screen fade.
+        if (dx.x < 0.0) {
+            right = -right;
+            dx = -dx;
+        }
+        if (dy.y < 0.0) {
+            up = -up;
+            dy = -dy;
+        }
         // The square root of the projection's area scale gives an isotropic
         // magnification: retain enlargement without its directional stretch.
         float magnification = sqrt(max(abs(dx.x * dy.y - dx.y * dy.x), 1e-8));
