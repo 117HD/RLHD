@@ -5,7 +5,8 @@
     "nightAmbientStrength": 0.005,
     "moonDiskColor": "#7F92FF",
     "moonDiskStrength": 6.2,
-    "nightHorizonColor": "#05070F",
+    "nightHorizonColor": "#548DFF",
+    "nightHorizonStrength": 0.004,
     "profile": {
       "zenith": [
         {
@@ -235,6 +236,7 @@
     "skyVisibility": 0.85,
     "starVisibility": 0.71,
     "auroraVisibility": 0,
-    "nightHorizonColor": "#1E060E"
+    "nightHorizonColor": "#FF699D",
+    "nightHorizonStrength": 0.01558
   }
 ]
