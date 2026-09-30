@@ -105,6 +105,16 @@
         "minimum": 0,
         "description": "Airglow/starlight ambient strength. Defaults to 1; added at all times while the cycle is active."
       },
+      "nightHorizonColor": {
+        "$ref": "#/$defs/color",
+        "description": "Night sky tint in sRGB, scaled in linear light by nightHorizonStrength. Custom gradients bypass this tint."
+      },
+      "nightHorizonStrength": {
+        "type": "number",
+        "minimum": 0,
+        "default": 1,
+        "description": "Linear brightness multiplier for nightHorizonColor; values above 1 allow HDR brightness."
+      },
       "skyFogColor": {
         "$ref": "#/$defs/color",
         "description": "Fog color in sRGB. Omit to follow the sky's horizon color. Blends with that color using skyFogColorMix."

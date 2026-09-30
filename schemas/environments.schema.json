@@ -383,6 +383,25 @@
                 "minimum": 0,
                 "description": "Airglow/starlight ambient strength. Defaults to 1; added at all times while the cycle is active."
               },
+              "nightHorizonColor": {
+                "type": [
+                  "string",
+                  "array"
+                ],
+                "description": "Night sky tint in sRGB, scaled in linear light by nightHorizonStrength. Custom gradients bypass this tint.",
+                "pattern": "^#[A-Fa-f0-9]{6}$",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "number"
+                }
+              },
+              "nightHorizonStrength": {
+                "type": "number",
+                "minimum": 0,
+                "default": 1,
+                "description": "Linear brightness multiplier for nightHorizonColor; values above 1 allow HDR brightness."
+              },
               "skyFogColor": {
                 "type": [
                   "string",
@@ -548,18 +567,6 @@
         },
         "sunGlow": {
           "$ref": "#/$defs/skyGradientKeyframes"
-        },
-        "nightSkyColor": {
-          "type": [
-            "string",
-            "array"
-          ],
-          "pattern": "^#[A-Fa-f0-9]{6}$",
-          "minItems": 3,
-          "maxItems": 3,
-          "items": {
-            "type": "number"
-          }
         }
       }
     }

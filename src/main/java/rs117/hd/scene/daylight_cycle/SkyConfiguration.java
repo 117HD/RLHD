@@ -57,6 +57,9 @@ public class SkyConfiguration {
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] nightAmbientColor;
 	public float nightAmbientStrength = 1;
+	@JsonAdapter(SrgbToLinearAdapter.class)
+	public float[] nightHorizonColor;
+	public float nightHorizonStrength = 1;
 	public float moonDiskStrength = 1;
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	@Nullable
@@ -82,10 +85,16 @@ public class SkyConfiguration {
 	private transient boolean derivedMoonAmbientStrength;
 
 	public void normalize() {
+		if (nightHorizonColor == null)
+			throw new IllegalStateException("Missing night sky color");
+		nightHorizonColor = HDUtils.ensureArrayLength(nightHorizonColor, 3);
+		nightHorizonStrength = max(0, nightHorizonStrength);
+
 		if (nightAmbientColor == null)
 			nightAmbientColor = new float[3];
 		nightAmbientColor = HDUtils.ensureArrayLength(nightAmbientColor, 3);
 		nightAmbientStrength = max(0, nightAmbientStrength);
+
 		if (moonDiskColor == null)
 			moonDiskColor = ColorUtils.colorTemperatureToLinearRgb(8000);
 		moonDiskColor = HDUtils.ensureArrayLength(moonDiskColor, 3);
@@ -146,8 +155,6 @@ public class SkyConfiguration {
 		private Keyframe[] zenith;
 		private Keyframe[] horizon;
 		private Keyframe[] sunGlow;
-		@JsonAdapter(SrgbToLinearAdapter.class)
-		private float[] nightSkyColor;
 
 		private static class Keyframe {
 			private float altitude;
@@ -156,9 +163,6 @@ public class SkyConfiguration {
 		}
 
 		public void normalize() {
-			if (nightSkyColor == null)
-				throw new IllegalStateException("Invalid sky profile");
-			nightSkyColor = HDUtils.ensureArrayLength(nightSkyColor, 3);
 			normalizeKeyframes(zenith);
 			normalizeKeyframes(horizon);
 			normalizeKeyframes(sunGlow);
@@ -217,13 +221,14 @@ public class SkyConfiguration {
 		// Authored gradients bypass the automatic fog takeover and night-color replacement.
 		if (customGradient)
 			return;
+		float[] nightColor = multiply(nightHorizonColor, nightHorizonStrength);
 		if (fogColor != null && sunStrength < 1) {
 			float window = smoothstep(-25, 0, sunAltitudeDegrees);
 			float suppression = (1 - sunStrength) * window;
 			if (suppression > 0) {
 				float nightBlend = smoothstep(5, -5, sunAltitudeDegrees);
 				for (int i = 0; i < 3; i++) {
-					float target = mix(fogColor[i], profile.nightSkyColor[i], nightBlend);
+					float target = mix(fogColor[i], nightColor[i], nightBlend);
 					out.zenith[i] = mix(out.zenith[i], target, suppression);
 					out.horizon[i] = mix(out.horizon[i], target, suppression);
 				}
@@ -248,7 +253,7 @@ public class SkyConfiguration {
 		// Preserve the twilight gradient through civil dusk, then fade to the night tint.
 		float nightBlend = smoothstep(-6, -18, sunAltitudeDegrees);
 		if (nightBlend > 0)
-			blendSky(out.zenith, out.horizon, profile.nightSkyColor, nightBlend);
+			blendSky(out.zenith, out.horizon, nightColor, nightBlend);
 	}
 
 	private static void blendSky(float[] zenith, float[] horizon, float[] color, float t) {

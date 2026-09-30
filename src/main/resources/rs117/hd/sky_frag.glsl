@@ -77,11 +77,11 @@ void main() {
     vec3 shootingStarColor = vec3(0.0);
     if (skyBlend > 0.001) {
         // Individual stars are drawn separately as point sprites.
-        vec3 nightSkyColor = nightSkyBackground(viewDir, elapsedTime);
+        vec3 nightHorizonColor = nightSkyBackground(viewDir, elapsedTime);
 
         // Converge to the fog-matched gradient at the horizon.
         float horizonStarFade = nightSkyHorizonFade(sky.upAmount, horizonShift);
-        skyColor = blendSkyBackground(skyColor, nightSkyColor, skyBlend * horizonStarFade);
+        skyColor = blendSkyBackground(skyColor, nightHorizonColor, skyBlend * horizonStarFade);
     }
     // Shooting stars are atmospheric and render in front of the moon.
     #if STAR_MODE != STAR_MODE_OFF
