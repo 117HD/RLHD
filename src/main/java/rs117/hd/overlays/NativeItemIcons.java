@@ -168,8 +168,10 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		final int[] background = new int[GRID_SIZE];
 		final int[] overlays = new int[GRID_SIZE];
 		final int[] elsewhere = new int[GRID_SIZE];
+		final boolean[] taken = new boolean[GRID_SIZE];
 		boolean kept;
 		boolean overlaid;
+		boolean dragged;
 		boolean backgroundChanged;
 		boolean overlaysChanged = true;
 		int shadow;
@@ -1022,12 +1024,14 @@ public class NativeItemIcons extends WidgetItemOverlay {
 					continue;
 				overlays[g] = pixels[i];
 				captured[g] = true;
-				pixels[i] = 0;
 			}
 		}
 
-		if (!Arrays.equals(overlays, slot.overlays)) {
+		// The game draws dragged items again once the interface is drawn, so everything over them is drawn with the native icon
+		boolean dragged = draggedCuts.contains(item);
+		if (!Arrays.equals(overlays, slot.overlays) || dragged != slot.dragged) {
 			System.arraycopy(overlays, 0, slot.overlays, 0, GRID_SIZE);
+			slot.dragged = dragged;
 			// Fills and outlines, like those of Inventory Tags, are redrawn to fit the native icon. Fills cover the shadow too.
 			var gameIcon = item.gameIcon;
 			int fill = slot.fill = shapeColor(gameIcon.item, gameIcon.shadow);
@@ -1036,9 +1040,18 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				boolean redrawn =
 					fill != 0 && (gameIcon.item[g] && overlays[g] == fill || gameIcon.shadow[g]) ||
 					outline != 0 && gameIcon.outline[g] && overlays[g] == outline;
-				slot.elsewhere[g] = captured[g] && !redrawn ? overlays[g] : 0;
+				slot.taken[g] = captured[g] && (redrawn || dragged);
+				slot.elsewhere[g] = dragged && captured[g] && !redrawn ? overlays[g] : 0;
 			}
 			slot.overlaysChanged = true;
+		}
+
+		// Everything else stays in the interface, drawn over the native icon and scaled like the rest of it
+		for (int y = item.drawn.y; y < item.drawn.y + item.drawn.height; y++) {
+			for (int x = item.drawn.x; x < item.drawn.x + item.drawn.width; x++) {
+				if (slot.taken[GameIcon.grid(x - item.bounds.x, y - item.bounds.y)])
+					pixels[y * width + x] = 0;
+			}
 		}
 		slot.overlaysChanged |= !slot.overlaid;
 		slot.overlaid = true;
