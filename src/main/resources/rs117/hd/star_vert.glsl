@@ -6,6 +6,7 @@
 #include <uniforms/sky.glsl>
 
 #include <utils/hash.glsl>
+#include <utils/color_utils.glsl>
 #include <utils/starfield.glsl>
 #include <utils/sky_fog.glsl>
 #include <utils/celestial_projection.glsl>
@@ -20,6 +21,22 @@ out vec3 vColor;
 out float vBrightness;
 
 const float SKY_HORIZON_OFFSET = 0.087;
+
+vec3 starGaussian(vec2 seed) {
+    vec4 u = hash42(seed);
+    vec2 radius = sqrt(-2.0 * log(max(u.xy, vec2(1e-6))));
+    vec2 angle = TAU * u.zw;
+    return vec3(radius.x * cos(angle.x), radius.x * sin(angle.x), radius.y * cos(angle.y));
+}
+
+vec3 starNoise(float time, float seed) {
+    float cell = floor(time);
+    float t = fract(time);
+    float w = t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
+    // Independent unit Gaussians, smoothly joined without losing variance between knots.
+    return mix(starGaussian(vec2(cell, seed)), starGaussian(vec2(cell + 1.0, seed)), w)
+        * inversesqrt((1.0 - w) * (1.0 - w) + w * w);
+}
 
 void main() {
     if (orthographicProjection) {
@@ -77,21 +94,46 @@ void main() {
 
     float visibility = nightSkyBlend * horizonStarFade * moonOcclusion;
 
-    vColor = aStarColor;
-
-    // Stable per-star hashes give each deliberate twinkle its own phase, rate, and depth.
+    // R = log-intensity deviation
+    // G = fluctuation rate
+    // B = chromatic deviation
+    // A = coherence averaging
+    vec4 tuning = vec4(0.35, 0.43, 0.35, 0.6);
     vec2 starHash = hash23(aStarDir);
-    float twinklePhase = starHash.x * TAU;
-    float twinkleRate = mix(4.0, 13.2, starHash.y);
-    float twinkleAmt = mix(0.35, 0.5, starHash.x);
-    // Two incommensurate oscillators keep the shimmer from visibly repeating.
-    float s1 = sin(elapsedTime * twinkleRate + twinklePhase);
-    float s2 = sin(elapsedTime * twinkleRate * 0.37 + twinklePhase * 2.13);
-    float osc = (s1 + s2) * 0.5; // [-1, 1]
-    float twinkle = 1.0 + twinkleAmt * osc; // swing around baseline
-    twinkle = pow(twinkle, 2.2) / (1.0 + 0.33 * twinkleAmt * twinkleAmt);
-
-    vBrightness = min(aStarBright, .4) * visibility * twinkle;
+    float rate = mix(3.0, 16.0, tuning.g) * mix(0.8, 1.2, starHash.y);
+    float seed = starHash.x * 4096.0;
+    float time = elapsedTime * rate + starHash.y;
+    // Two independent turbulence scales give irregular flickers within slower swells.
+    // Squared weights sum to one, preserving the unit Gaussian distribution.
+    vec3 noise = 0.8 * starNoise(time, seed) + 0.6 * starNoise(time * 0.19, seed + 8192.0);
+    // Scintillation increases with air mass, but a bounded 1–1.75x response is
+    // easier to tune than the singular geometric air-mass curve at the horizon.
+    float lowAltitude = 1.0 - smoothstep(0.0, 0.6, max(upAmount, 0.0));
+    float altitudeScale = mix(1.0, 1.75, lowAltitude);
+    float sigma = 0.9 * tuning.r * altitudeScale;
+    // A slowly drifting continuous field makes strong dispersion sparse without
+    // assigning abruptly different behavior to neighboring or moving stars.
+    vec3 chromaFieldPosition = dir * 12.0 + elapsedTime * vec3(0.017, -0.013, 0.011);
+    float chromaHotspot = smoothstep(0.78, 0.95, sf_noise(chromaFieldPosition + vec3(73.0)));
+    float chroma = 0.65 * tuning.b * 2 * altitudeScale * mix(0.2, 1.35, chromaHotspot);
+    // Dispersion mostly shifts the visible spectrum between its red and blue extremes.
+    // Retain a much weaker green-magenta component for occasional intermediate flashes.
+    const vec3 redBlueDispersion = vec3(1.0, 0.0, -1.0);
+    const vec3 greenDispersion = vec3(-0.0525, 0.105, -0.0525);
+    vec3 logGain = vec3(sigma * noise.x)
+        + chroma * (noise.y * redBlueDispersion + noise.z * greenDispersion);
+    vec3 chromaVariance = redBlueDispersion * redBlueDispersion + greenDispersion * greenDispersion;
+    vec3 variance = vec3(sigma * sigma) + chroma * chroma * chromaVariance;
+    // Positive lognormal gains: E[exp(X - variance/2)] = 1 for each RGB channel.
+    // Dispersion redistributes color over time without adding a permanent tint or energy.
+    vec3 scintillation = exp(logGain - 0.5 * variance);
+    // A larger/brighter apparent disk averages multiple refracted contributions:
+    // only part of its light scintillates coherently. Faint point-like stars can
+    // follow the full gain and briefly fall below the display/visual threshold.
+    float prominence = clamp(aStarSize, 0.0, 1.0) * sqrt(clamp(aStarBright / 0.4, 0.0, 1.0));
+    float coherentFraction = 1.0 - 0.75 * tuning.a * prominence;
+    vColor = aStarColor * mix(vec3(1.0), scintillation, coherentFraction);
+    vBrightness = min(aStarBright, .4) * visibility;
 
     // Size in screen pixels, then enforce the same anti-flicker floor in FBO pixels.
     float viewportHeight = max(float(viewportSize.y), 1.0);

@@ -20,7 +20,7 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.SEED;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_NEBULA_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_UI;
-import static rs117.hd.utils.ColorUtils.rgb;
+import static rs117.hd.utils.ColorUtils.colorTemperatureToLinearRgb;
 import static rs117.hd.utils.HDUtils.randomPointOnSphere;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -31,13 +31,20 @@ public final class StarField {
 	private static final float[] LEFT_VECTOR = { 1, 0, 0 };
 
 	private static final float[][] STAR_COLORS = {
-		rgb(255, 179, 115), // warm orange
-		rgb(255, 230, 166), // golden yellow
-		rgb(255, 242, 217), // pale warm white
-		rgb(255, 255, 255), // neutral white
-		rgb(217, 235, 255), // pale blue-white
-		rgb(179, 204, 255), // cool blue
+		colorTemperatureToLinearRgb(4000),
+		colorTemperatureToLinearRgb(5000),
+		colorTemperatureToLinearRgb(6000),
+		colorTemperatureToLinearRgb(7000),
+		colorTemperatureToLinearRgb(9000),
+		colorTemperatureToLinearRgb(12000),
 	};
+
+	static {
+		// Temperature colors have unit luminance. Retain roughly the old palette's
+		// mean luminance while keeping temperature independent of stellar brightness.
+		for (float[] color : STAR_COLORS)
+			multiply(color, color, 0.78f);
+	}
 
 	// VBO layout: direction.xyz, size, brightness, color.rgb, artistic rotation speed.
 	private static final int FLOATS_PER_STAR = 9;
@@ -292,7 +299,7 @@ public final class StarField {
 		float sizeSeed = random.nextFloat();
 		float size = (0.4f + sizeSeed * sizeSeed * 0.6f) * sizeScale;
 
-		// Stellar color tint by population fraction (same bands as the shader).
+		// Representative stellar temperatures, rather than independent RGB tints.
 		final float[] starColor = STAR_COLORS[random.nextInt(STAR_COLORS.length)];
 
 		vertexBuffer
