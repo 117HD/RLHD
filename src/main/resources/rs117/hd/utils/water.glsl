@@ -144,16 +144,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     // the visible sky instead of inheriting a single horizon color.
     if (uboSky.enabled) {
         vec3 skyViewDir = reflect(-viewDir, normals);
-        SkyGradient sky = computeSkyGradient(skyViewDir);
-        vec3 skyColor = visibleSkyColor(sky, skyViewDir, elapsedTime);
-        vec3 moonDir = normalize(vec3(
-            uboSky.moonDir.x,
-            -uboSky.moonDir.y + HORIZON_OFFSET,
-            uboSky.moonDir.z
-        ));
-        float skyTransmittance = skyFogTransmittance(sky.upAmount);
-        skyColor = applySkyFog(skyColor, skyTransmittance);
-        skyColor += skyFogGlow(skyViewDir, sky.sunDir, moonDir, skyTransmittance);
+        vec3 skyColor = foggedSkyColor(skyViewDir);
 
         float reflectionStrength = finalFresnel < 0.5 ?
             mix(0.05, 0.45, finalFresnel * 2.0) :

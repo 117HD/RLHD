@@ -22,6 +22,7 @@ layout(std140) uniform UBOSky {
 
     vec3 fogColor;
     float fogDensity;
+    vec3 groundFogLight;
     float visibility;
     float moonVisibility;
     float starVisibility;

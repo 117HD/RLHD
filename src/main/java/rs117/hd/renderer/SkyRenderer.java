@@ -87,6 +87,7 @@ public class SkyRenderer {
 		private final float[] sunDirectionalLight = new float[3];
 		private final float[] moonDirectionalLight = new float[3];
 		private final float[] fog = new float[3];
+		private final float[] groundFogLight = new float[3];
 		private final float[] moonDisk = new float[3];
 		private final SkyConfiguration configuration = new SkyConfiguration();
 		private float fogDensity;
@@ -101,6 +102,7 @@ public class SkyRenderer {
 			mix(moonDirectionalLight, from.moonDirectionalLight, to.moonDirectionalLight, t);
 			mix(ambientLight, from.ambientLight, to.ambientLight, t);
 			mix(fog, from.fog, to.fog, t);
+			mix(groundFogLight, from.groundFogLight, to.groundFogLight, t);
 			mix(moonDisk, from.moonDisk, to.moonDisk, t);
 			mix(zenith, from.zenith, to.zenith, t);
 			mix(horizon, from.horizon, to.horizon, t);
@@ -294,15 +296,18 @@ public class SkyRenderer {
 		previousTransition = transition;
 		// Blend complete HDR light contributions before encoding the global UBO.
 		copyTo(ambientLight, currentFrame.ambientLight);
-		// Let adapted night lighting take over as daylight, including twilight, fades.
-		// The 20–80% range preserves full shadows when either source clearly dominates.
+		// Sunlight owns shadows above the horizon; atmospheric attenuation already
+		// fades it to zero at sunset. Below it, use adapted contrast for the handoff.
 		float totalLuminance = currentFrame.dayLuminance + currentFrame.nightLuminance;
 		float handoff = totalLuminance > 0 ? currentFrame.nightLuminance / totalLuminance : 0;
-		// Both directional contributions reach zero at the camera switch. Apply this
-		// after environment blending so mixed endpoints cannot expose the angle jump.
-		usesMoonShadows = handoff >= .5f;
+		if (state.sunAltitudeDegrees >= 0)
+			handoff = 0;
+		usesMoonShadows = state.sunAltitudeDegrees < 0 && state.moonAltitudeDegrees > 0 && handoff >= .5f;
 		if (usesMoonShadows) {
-			multiply(directionalLight, currentFrame.moonDirectionalLight, smoothstep(.5f, .8f, handoff));
+			// Hide the camera switch even if strong night lighting already dominates
+			// at sunset. Lunar atmospheric attenuation handles the moon's own horizon.
+			float visibility = smoothstep(.5f, .8f, handoff) * (1 - smoothstep(-.5f, 0, state.sunAltitudeDegrees));
+			multiply(directionalLight, currentFrame.moonDirectionalLight, visibility);
 		} else {
 			multiply(directionalLight, currentFrame.sunDirectionalLight, 1 - smoothstep(.2f, .5f, handoff));
 		}
@@ -315,6 +320,7 @@ public class SkyRenderer {
 		plugin.uboSky.fogDensity.set(currentFrame.fogDensity);
 		plugin.uboSky.visibility.set(currentFrame.visibility);
 		plugin.uboSky.fogColor.set(currentFrame.fog);
+		plugin.uboSky.groundFogLight.set(currentFrame.groundFogLight);
 		plugin.uboSky.customGradient.set(currentFrame.customGradient);
 		plugin.uboSky.moonDiskColor.set(currentFrame.moonDisk);
 		plugin.uboSky.moonReflectionVisibility.set(currentFrame.moonReflectionVisibility);
@@ -349,22 +355,31 @@ public class SkyRenderer {
 		for (int i = 0; i < nightAmbientLight.length; i++)
 			nightAmbientLight[i] += sky.nightAmbientColor[i] * sky.nightAmbientStrength;
 		float moonLuminance = linearSrgbLuminance(out.moonDirectionalLight);
-		// Adapt only night sources, independently of sunlight and shadow ownership.
-		float adaptationLuminance =
+		float nightLuminance =
 			linearSrgbLuminance(nightAmbientLight) +
 			moonLuminance * max(0, sin(moonAltDeg * DEG_TO_RAD));
-		float exposure = getNightExposure(adaptationLuminance, env.nightExposure * 1.5f);
 		// Use the same upward-facing reference surface as adaptation, before any
 		// shadow handoff attenuation, so fading shadows cannot drive their own fade.
 		out.dayLuminance =
 			linearSrgbLuminance(out.ambientLight) +
 			linearSrgbLuminance(out.sunDirectionalLight) * max(0, sin(sunAltDeg * DEG_TO_RAD));
-		out.nightLuminance = adaptationLuminance * exposure;
+		// Meter all illumination, but amplify only night sources. Ignoring daylight
+		// here lets adapted airglow overpower the sun in darker environments.
+		float exposure = getNightExposure(out.dayLuminance + nightLuminance, env.nightExposure * 1.5f);
+		out.nightLuminance = nightLuminance * exposure;
 		multiply(nightAmbientLight, nightAmbientLight, exposure);
 		multiply(out.moonDirectionalLight, out.moonDirectionalLight, exposure);
 		// Moon reflections lose contrast as twilight brightens the sky.
 		out.moonReflectionVisibility = 1 - smoothstep(-12, 0, sunAltDeg);
 		add(out.ambientLight, out.ambientLight, nightAmbientLight);
+		// Broad local scattering, independent of shadow ownership. The quarter is
+		// the spherical average of a directional source in our diffuse-light units;
+		// this omits forward scattering and local lights. Night exposure is already applied.
+		for (int i = 0; i < out.groundFogLight.length; i++)
+			out.groundFogLight[i] = out.ambientLight[i] + .25f * (out.sunDirectionalLight[i] + out.moonDirectionalLight[i]);
+		// Transition environments already contain the resolved authored/default fog color,
+		// not the definition's override flags. Use it as an artistic tint, preserving magnitude.
+		multiply(out.groundFogLight, out.groundFogLight, env.getFogColor());
 
 		copyTo(out.zenith, endpointSample.zenith);
 		copyTo(out.horizon, endpointSample.horizon);

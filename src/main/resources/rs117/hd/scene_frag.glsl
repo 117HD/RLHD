@@ -538,6 +538,13 @@ void main() {
         float groundFog = 1.0 - clamp((IN.position.y - groundFogStart) / (groundFogEnd - groundFogStart), 0.0, 1.0);
         groundFog = mix(0.0, groundFogOpacity, groundFog);
         groundFog *= clamp(distance / closeFadeDistance, 0.0, 1.0);
+        float nightFogBlend = 0.0;
+
+        // Scale optical depth, with lighter haze at night. Apply before water coverage too.
+        if (uboSky.enabled) {
+            nightFogBlend = 1.0 - smoothstep(sin(radians(-6.0)), 0.0, uboSky.sunDir.y);
+            groundFog = 1.0 - pow(1.0 - clamp(groundFog, 0.0, 1.0), mix(0.88, 0.352, nightFogBlend));
+        }
 
         // multiply the visibility of each fog
         float fogAmount = calculateFogAmount(IN.position);
@@ -548,27 +555,23 @@ void main() {
         }
 
         if (uboSky.enabled) {
-            // Reconstruct the sky only where fog blends geometry toward it.
-            vec3 skyColorAtFragment = outputColor.rgb;
-
             if (combinedFog > 1e-4) {
                 vec3 fogViewDir = normalize(IN.position - cameraPos);
-                SkyGradient sky = computeSkyGradient(fogViewDir);
-                skyColorAtFragment = visibleSkyColor(sky, fogViewDir, elapsedTime);
-
-                vec3 moonDir = normalize(vec3(
-                    uboSky.moonDir.x,
-                    -uboSky.moonDir.y + HORIZON_OFFSET,
-                    uboSky.moonDir.z
-                ));
-                float skyTransmittance = skyFogTransmittance(sky.upAmount);
-                skyColorAtFragment = applySkyFog(skyColorAtFragment, skyTransmittance);
-                skyColorAtFragment += skyFogGlow(fogViewDir, sky.sunDir, moonDir, skyTransmittance);
-                // Scene fog is composed after the scene's sRGB conversion.
-                skyColorAtFragment = linearToSrgb(skyColorAtFragment);
+                vec3 distanceFogColor = foggedSkyColor(fogViewDir);
+                if (groundFog > 1e-4 && fogAmount < 1.0) {
+                    // Approximate reduced nighttime color sensitivity without changing luminance.
+                    vec3 nightFogColor = mix(uboSky.groundFogLight,
+                        vec3(linearSrgbLuminance(uboSky.groundFogLight)), 0.5);
+                    // Preserve the regular fog color by day; introduce adapted local
+                    // illumination only through civil dusk, from sun altitude 0 to -6 degrees.
+                    vec3 groundFogColor = mix(distanceFogColor, nightFogColor, nightFogBlend);
+                    outputColor.rgb = linearToSrgb(mix(srgbToLinear(outputColor.rgb), groundFogColor, groundFog));
+                }
+                // Preserve the scene's existing distance-fog composition. It hides
+                // the local haze at the far boundary, matching the sky behind it.
+                if (fogAmount > 1e-4)
+                    outputColor.rgb = mix(outputColor.rgb, linearToSrgb(distanceFogColor), fogAmount);
             }
-
-            outputColor.rgb = mix(outputColor.rgb, skyColorAtFragment, combinedFog);
         } else {
             outputColor.rgb = mix(outputColor.rgb, linearToSrgb(fogColor), combinedFog);
         }
