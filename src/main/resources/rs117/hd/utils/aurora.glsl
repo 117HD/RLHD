@@ -127,7 +127,7 @@ vec3 proceduralAurora(vec3 viewDir, float time) {
     float detail = 1.0 - smoothstep(0.03, 0.10, stepU);
 
     // Offset the march per pixel so a short march does not band.
-    float jitter = hash12(gl_FragCoord.xy);
+    float jitter = hash12(gl_FragCoord.xy + elapsedTime);
 
     vec3 aurora = vec3(0.0);
     for (int i = 0; i < AURORA_STEPS; i++) {
