@@ -91,7 +91,8 @@ void main() {
         // Write the smallest depth which won't round to zero for DEPTH_COMPONENT_32F
         gl_FragDepth = 1.17549435e-38;
         FragColor = vec4(0, 0, 0, 1);
-        if (GAP_FILLER == 1) return; // Redundant, for syntax highlighting in IntelliJ
+        if (GAP_FILLER == 1) // Redundant, for syntax highlighting in IntelliJ
+            return;
     #endif
 
     vec3 downDir = vec3(0, -1, 0);
@@ -181,17 +182,20 @@ void main() {
 
         #if DISPLAY_UV
             FragColor = vec4(fract(uv1 * IN.texBlend.x + uv2 * IN.texBlend.y + uv3 * IN.texBlend.z), 0.0, 1.0);
-            if (DISPLAY_UV == 1) return; // Redundant, for syntax highlighting in IntelliJ
+            if (DISPLAY_UV == 1) // Redundant, for syntax highlighting in IntelliJ
+                return;
         #endif
 
         #if DISPLAY_NORMAL
             FragColor = vec4(N * 0.5 + 0.5, 1.0);
-            if (DISPLAY_NORMAL == 1) return; // Redundant, for syntax highlighting in IntelliJ
+            if (DISPLAY_NORMAL == 1) // Redundant, for syntax highlighting in IntelliJ
+                return;
         #endif
 
         #if DISPLAY_TANGENT
             FragColor = vec4(TBN[0] * 0.5 + 0.5, 1.0);
-            if (DISPLAY_TANGENT == 1) return; // Redundant, for syntax highlighting in IntelliJ
+            if (DISPLAY_TANGENT == 1) // Redundant, for syntax highlighting in IntelliJ
+                return;
         #endif
 
         float selfShadowing = 0;
@@ -354,7 +358,8 @@ void main() {
 
         #if DISPLAY_SHADOWS
             FragColor = vec4(inverseShadow, inverseShadow, inverseShadow, 1.0);
-            if (DISPLAY_SHADOWS == 1) return; // Redundant, for syntax highlighting in IntelliJ
+            if (DISPLAY_SHADOWS == 1) // Redundant, for syntax highlighting in IntelliJ
+                return;
         #endif
 
         // specular
@@ -487,7 +492,8 @@ void main() {
 
         #if DISPLAY_LIGHTING
             FragColor = vec4(compositeLight, 1.0);
-            if (DISPLAY_LIGHTING == 1) return; // Redundant, for syntax highlighting in IntelliJ
+            if (DISPLAY_LIGHTING == 1) // Redundant, for syntax highlighting in IntelliJ
+                return;
         #endif
 
         float unlit = dot(IN.texBlend, vec3(
