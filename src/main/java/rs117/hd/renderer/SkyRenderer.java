@@ -169,9 +169,9 @@ public class SkyRenderer {
 		copyTo(waterColor, env.getWaterColor());
 		copyTo(fogColor, env.getFogColor());
 
-		if (skyEnabled)
+		if (skyEnabled) {
 			updateSky(skyManager.getState());
-		else {
+		} else {
 			usesMoonShadows = false;
 			previousTransition = 1;
 			interruptedTransition = false;
