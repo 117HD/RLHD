@@ -1134,9 +1134,10 @@ public class LegacyRenderer implements Renderer {
 			}
 			glViewport(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
 
+			frameTimer.begin(Timer.RENDER_SCENE_AND_SKY);
+
 			skyRenderer.renderImmediately();
 
-			frameTimer.begin(Timer.RENDER_SCENE);
 			sceneProgram.use();
 
 			// We just allow the GL to do face culling. Note this requires the priority renderer
@@ -1188,7 +1189,7 @@ public class LegacyRenderer implements Renderer {
 				glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
 			}
 
-			frameTimer.end(Timer.RENDER_SCENE);
+			frameTimer.end(Timer.RENDER_SCENE_AND_SKY);
 
 			glDisable(GL_BLEND);
 			glDisable(GL_CULL_FACE);

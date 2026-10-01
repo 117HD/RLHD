@@ -851,7 +851,7 @@ public class ZoneRenderer implements Renderer {
 
 		skyRenderer.clear(shouldRenderVanillaSkybox);
 
-		frameTimer.begin(Timer.RENDER_SCENE);
+		frameTimer.begin(Timer.RENDER_SCENE_AND_SKY);
 
 		renderState.enable.set(GL_CULL_FACE);
 		renderState.enable.set(GL_DEPTH_TEST);
@@ -866,7 +866,7 @@ public class ZoneRenderer implements Renderer {
 		sceneProgram.use();
 		sceneCmd.execute(renderState);
 
-		frameTimer.end(Timer.RENDER_SCENE);
+		frameTimer.end(Timer.RENDER_SCENE_AND_SKY);
 
 		glBindVertexArray(0);
 
