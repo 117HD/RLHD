@@ -22,7 +22,10 @@ float fetchShadowTexel(
     int i
 ) {
     pixelCoord += ivec2(getShadowDitherOffset(i));
-    fragDepth += dot(vec2(pixelCoord) + 0.5 - receiverPlane.xy, receiverPlane.zw);
+    float bias = dot(vec2(pixelCoord) + 0.5 - receiverPlane.xy, receiverPlane.zw);
+    // The inverse projection's Z column spans half the camera's depth range.
+    float correctionLimit = 64. / (2.0 * length(invLightProjectionMatrix[2].xyz));
+    fragDepth += clamp(bias, -correctionLimit, correctionLimit);
 
     if (hasTransparency) {
         int alphaDepth = int(texelFetch(tex, pixelCoord, 0).r * SHADOW_COMBINED_MAX);
