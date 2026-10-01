@@ -41,7 +41,7 @@
 #endif
 
 #if SHADOW_MODE != SHADOW_MODE_OFF
-float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal, bool applyNormalBias) {
+float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal, bool applyBias, bool applyNormalBias) {
     if (lightStrength <= 0)
         return 0.f;
 
@@ -66,27 +66,19 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal, bool ap
     vec2 shadowMapSize = vec2(textureSize(shadowMap, 0));
     float bias = 0.0;
     float depthPrecisionBias = 0.0;
-    float receiverVisibility = 1.0;
     vec2 receiverDepthPerTexel = vec2(0.0);
-    if (dot(surfaceNormal, surfaceNormal) > 0) {
-        // Measure grazing incidence in world space, independent of shadow projection dimensions.
-        vec3 lightAxis = invLightProjectionMatrix[2].xyz;
-        float lightCosine = abs(dot(surfaceNormal, lightAxis)) /
-            sqrt(dot(surfaceNormal, surfaceNormal) * dot(lightAxis, lightAxis));
-        // Fade received shadows within roughly 1 degree of edge-on, before plane correction becomes unstable.
-        receiverVisibility = smoothstep(0.005, 0.02, lightCosine);
-        if (receiverVisibility <= 0.0)
-            return 0.0;
-
+    if (applyBias) {
         vec3 receiverNormal = surfaceNormal * mat3(invLightProjectionMatrix);
         // Keep the actual plane slope for each filter tap; clipping it creates self-shadowing.
         receiverDepthPerTexel = -receiverNormal.xy / receiverNormal.z / shadowMapSize;
 
-        // Move the receiver plane toward the light along its normal, by 2 units in world space.
+        // Move the receiver plane toward the light along its normal.
         // Shift XY as well as depth so every filter tap evaluates the displaced plane.
         if (applyNormalBias) {
-            vec3 normalOffset = -normalize(surfaceNormal) * sign(dot(surfaceNormal, lightAxis)) * 2;
-            shadowPos.xyz += (mat3(lightProjectionMatrix) * normalOffset) * 0.5;
+            const float worldSpaceBias = 3.f;
+            vec3 lightAxis = invLightProjectionMatrix[2].xyz;
+            vec3 normalOffset = -normalize(surfaceNormal) * sign(dot(surfaceNormal, lightAxis));
+            shadowPos.xyz += (mat3(lightProjectionMatrix) * normalOffset * worldSpaceBias) * 0.5;
         }
 
         // Bound only the extra safety margin to limit detached shadows at grazing angles.
@@ -123,8 +115,8 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal, bool ap
         }
     #endif
 
-    return shadow * receiverVisibility * (1 - fadeOut);
+    return shadow * (1 - fadeOut);
 }
 #else
-#define sampleShadowMap(fragPos, distortion, surfaceNormal, applyNormalBias) 0
+#define sampleShadowMap(fragPos, distortion, surfaceNormal, applyBias, applyNormalBias) 0
 #endif

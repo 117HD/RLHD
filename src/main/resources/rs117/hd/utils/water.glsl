@@ -60,7 +60,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     float viewDotNormals = dot(viewDir, normals);
 
     vec2 distortion = uvFlow * .00075;
-    float shadow = sampleShadowMap(IN.position, distortion, vec3(0.0), false);
+    float shadow = sampleShadowMap(IN.position, distortion, vec3(0.0), false, false);
     float inverseShadow = 1 - shadow;
 
     vec3 vSpecularStrength = vec3(waterType.specularStrength);
