@@ -340,7 +340,7 @@ public class SkyRenderer {
 
 		float moonLightIllumination = state.moonLightIllumination;
 		// fogDepth is an artistic density control, not a physical extinction coefficient.
-		float defaultDensity = .6f + (exp(6.7f * env.fogDepth / 100) - 1);
+		float defaultDensity = max(0, env.fogDepth) / 100;
 		out.fogDensity = max(0, sky.skyFogDensity < 0 ? defaultDensity : sky.skyFogDensity);
 		out.visibility = saturate(sky.skyVisibility);
 		copyTo(out.fog, endpointSample.horizon);
