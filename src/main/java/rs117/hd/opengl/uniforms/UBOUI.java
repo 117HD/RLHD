@@ -15,4 +15,5 @@ public class UBOUI extends UniformBuffer<GLBuffer> {
 
 	public Property hdMinimapActive = addProperty(PropertyType.Int, "hdMinimapActive");
 	public Property minimapViewport = addProperty(PropertyType.IVec4, "minimapViewport");
+	public Property minimapShowLines = addProperty(PropertyType.Int, "minimapShowLines");
 }

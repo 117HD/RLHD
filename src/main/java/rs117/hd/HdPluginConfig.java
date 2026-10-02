@@ -375,22 +375,6 @@ public interface HdPluginConfig extends Config
 		return 100;
 	}
 
-	String KEY_MINIMAP_TYPE = "minimapType";
-	@ConfigItem(
-		keyName = KEY_MINIMAP_TYPE,
-		name = "Minimap mode",
-		description =
-			"Changes how the minimap is rendered.<br>" +
-			"'Normal' keeps the default oldschool minimap.<br>" +
-			"'HD Topdown' renders a top-down 3D view of the scene into the minimap.",
-		position = 19,
-		section = generalSettings
-	)
-	default MinimapType minimapType() {
-		return MinimapType.NORMAL;
-	}
-
-
 	/*====== Shadow settings ======*/
 
 	@ConfigSection(
@@ -1276,6 +1260,46 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean depthPrePass() {
 		return true;
+	}
+
+	/*====== Minimap settings ======*/
+
+	@ConfigSection(
+		name = "Minimap",
+		description = "Minimap settings",
+		position = 7,
+		closedByDefault = true
+	)
+	String minimapSettings = "minimapSettings";
+
+	String KEY_MINIMAP_TYPE = "minimapType";
+	@ConfigItem(
+		keyName = KEY_MINIMAP_TYPE,
+		name = "Minimap mode",
+		description =
+			"Changes how the minimap is rendered.<br>" +
+			"'Normal' keeps the default oldschool minimap.<br>" +
+			"'HD Topdown' renders a top-down 3D view of the scene into the minimap.",
+		position = 1,
+		section = minimapSettings
+	)
+	default MinimapType minimapType() {
+		return MinimapType.NORMAL;
+	}
+
+	String KEY_MINIMAP_SHOW_LINES = "minimapShowLines";
+	@ConfigItem(
+		keyName = KEY_MINIMAP_SHOW_LINES,
+		name = "Show map lines",
+		description =
+			"Keeps vanilla's wall/door boundary lines visible on top of the HD topdown minimap.<br>" +
+			"When off, these lines are hidden so they don't clutter the 3D render.<br>" +
+			"Only applies when minimap mode is set to 'HD Topdown'.",
+		position = 2,
+		section = minimapSettings
+	)
+	default boolean minimapShowLines() {
+		return false;
 	}
 
 	/*====== Internal settings ======*/

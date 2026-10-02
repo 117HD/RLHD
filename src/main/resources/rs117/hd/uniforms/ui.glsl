@@ -7,6 +7,7 @@ layout(std140) uniform UBOUI {
 
     bool hdMinimapActive;
     ivec4 minimapViewport;
+    bool minimapShowLines;
 };
 
 #include UI_SCALING_MODE

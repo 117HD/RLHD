@@ -427,6 +427,22 @@ public class Zone implements Destructible {
 		flush(cmd);
 	}
 
+	public void renderFloorLevel(CommandBuffer cmd, int level) {
+		drawIdx = 0;
+
+		final int start = level == 0 ? 0 : this.levelOffsets[level - 1];
+		final int end = this.levelOffsets[level];
+		pushRange(start, end);
+
+		if (drawIdx == 0)
+			return;
+
+		lastDrawMode = STATIC_UNSORTED;
+		lastVao = glVao;
+		lastTboF = tboF.getTexId();
+		flush(cmd);
+	}
+
 	private static void pushRange(int start, int end) {
 		assert end >= start;
 		if (end <= start)
