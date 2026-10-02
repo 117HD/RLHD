@@ -2967,8 +2967,8 @@
       "moonVisibility": 0.7,
       "sunStrength": 0.05,
       "skyFogDensity": 0.11,
-      "nightHorizonColor": "#0A0C16",
       "starVisibility": 0.439,
+      "starHorizonHeight": 0.93,
       "auroraVisibility": 0.439
     }
   },
