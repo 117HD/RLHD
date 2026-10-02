@@ -100,6 +100,7 @@ import rs117.hd.renderer.Renderer;
 import rs117.hd.renderer.legacy.LegacyRenderer;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.ZoneRenderer;
+import rs117.hd.renderer.zone.passes.MinimapPass;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
@@ -267,6 +268,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private TextureManager textureManager;
+
+	@Inject
+	private MinimapPass minimapPass;
 
 	@Inject
 	private MaterialManager materialManager;
@@ -1637,6 +1641,8 @@ public class HdPlugin extends Plugin {
 		uboUI.sourceDimensions.set(uiResolution);
 		uboUI.targetDimensions.set(actualUiResolution);
 		uboUI.alphaOverlay.set(ColorUtils.srgba(overlayColor));
+		uboUI.hdMinimapActive.set(minimapPass.active ? 1 : 0);
+		uboUI.minimapViewport.set(minimapPass.viewportRect);
 		uboUI.upload();
 
 		// Set the sampling function used when stretching the UI.

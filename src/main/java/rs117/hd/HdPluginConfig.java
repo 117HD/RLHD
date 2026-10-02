@@ -42,6 +42,7 @@ import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.GroundBlending;
 import rs117.hd.config.InfernalCape;
+import rs117.hd.config.MinimapType;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SceneScalingMode;
 import rs117.hd.config.SeasonalHemisphere;
@@ -372,6 +373,21 @@ public interface HdPluginConfig extends Config
 	)
 	default int brightness() {
 		return 100;
+	}
+
+	String KEY_MINIMAP_TYPE = "minimapType";
+	@ConfigItem(
+		keyName = KEY_MINIMAP_TYPE,
+		name = "Minimap mode",
+		description =
+			"Changes how the minimap is rendered.<br>" +
+			"'Normal' keeps the default oldschool minimap.<br>" +
+			"'HD Topdown' renders a top-down 3D view of the scene into the minimap.",
+		position = 19,
+		section = generalSettings
+	)
+	default MinimapType minimapType() {
+		return MinimapType.NORMAL;
 	}
 
 

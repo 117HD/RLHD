@@ -35,6 +35,7 @@ public enum Timer {
 	SCENE_PASS,
 	DEBUG_DRAW_PASS,
 	BLIT_SCENE_PASS,
+	MINIMAP_PASS,
 
 	// Miscellaneous
 	SWAP_BUFFERS,
@@ -83,6 +84,7 @@ public enum Timer {
 	RENDER_SCENE(GPU_TIMER),
 	RENDER_UI(GPU_TIMER, "Render UI"),
 	RENDER_DEBUG_DRAW(GPU_TIMER),
+	RENDER_MINIMAP(GPU_TIMER),
 	;
 
 	public static final Timer[] TIMERS = values();

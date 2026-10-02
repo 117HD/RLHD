@@ -12,4 +12,7 @@ public class UBOUI extends UniformBuffer<GLBuffer> {
 	public Property sourceDimensions = addProperty(PropertyType.IVec2, "sourceDimensions");
 	public Property targetDimensions = addProperty(PropertyType.IVec2, "targetDimensions");
 	public Property alphaOverlay = addProperty(PropertyType.FVec4, "alphaOverlay");
+
+	public Property hdMinimapActive = addProperty(PropertyType.Int, "hdMinimapActive");
+	public Property minimapViewport = addProperty(PropertyType.IVec4, "minimapViewport");
 }

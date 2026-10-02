@@ -46,6 +46,22 @@ in vec2 fUv;
 
 out vec4 FragColor;
 
+// Magic placeholder color MinimapPass's tile-drawer hook paints over real terrain pixels in HD minimap
+// mode, so it can be told apart here from the marker/dot/flag/compass pixels vanilla draws on top of it.
+// Vanilla also draws wall/door boundary lines on the minimap outside of the tile-drawer callback, in a
+// couple of fixed colors, so those are stripped out here too, the same way as the placeholder color.
+#define MINIMAP_PLACEHOLDER_COLOR_PACKED 12345678
+#define MINIMAP_WALL_COLOR_PACKED 0xF1E6F3
+#define MINIMAP_DOOR_COLOR_PACKED 0xEC0000
+#define MINIMAP_OBJECT_COLOR_PACKED 0xEEEEEE
+
+#define UNPACK_RGB(packed) ivec3(packed >> 16 & 0xFF, packed >> 8 & 0xFF, packed & 0xFF)
+
+const ivec3 MINIMAP_PLACEHOLDER_COLOR = UNPACK_RGB(MINIMAP_PLACEHOLDER_COLOR_PACKED);
+const ivec3 MINIMAP_WALL_COLOR = UNPACK_RGB(MINIMAP_WALL_COLOR_PACKED);
+const ivec3 MINIMAP_DOOR_COLOR = UNPACK_RGB(MINIMAP_DOOR_COLOR_PACKED);
+const ivec3 MINIMAP_OBJECT_COLOR = UNPACK_RGB(MINIMAP_OBJECT_COLOR_PACKED);
+
 vec4 alphaBlend(vec4 src, vec4 dst) {
     return vec4(
         src.rgb + dst.rgb * (1.0f - src.a),
@@ -71,6 +87,22 @@ void main() {
     #if WINDOWS_HDR_CORRECTION
         c.rgb = windowsHdrCorrection(c.rgb);
     #endif
+
+    ivec2 fragCoord = ivec2(gl_FragCoord.xy);
+    if (hdMinimapActive &&
+        fragCoord.x >= minimapViewport.x && fragCoord.x < minimapViewport.x + minimapViewport.z &&
+        fragCoord.y >= minimapViewport.y && fragCoord.y < minimapViewport.y + minimapViewport.w
+    ) {
+        // c is premultiplied, so un-premultiply before comparing against known colors to strip
+        vec3 unpremultiplied = c.a > 0 ? c.rgb / c.a : c.rgb;
+        ivec3 rgb255 = ivec3(round(unpremultiplied * 255.0));
+        if (rgb255 == MINIMAP_PLACEHOLDER_COLOR ||
+            rgb255 == MINIMAP_WALL_COLOR ||
+            rgb255 == MINIMAP_DOOR_COLOR ||
+            rgb255 == MINIMAP_OBJECT_COLOR
+        )
+            c = vec4(0);
+    }
 
     FragColor = c;
 }

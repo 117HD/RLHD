@@ -281,6 +281,7 @@ public class ZoneRenderer implements Renderer {
 			ctx.hideRoofIds = hideRoofIds;
 			ctx.vaoSceneCmd.reset();
 			ctx.vaoDirectionalCmd.reset();
+			ctx.vaoMinimapCmd.reset();
 
 			if (ctx.uboWorldViewStruct != null)
 				ctx.uboWorldViewStruct.update();

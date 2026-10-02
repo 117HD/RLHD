@@ -9,7 +9,8 @@ public enum RenderPassType {
 	DIRECTIONAL(DirectionalShadowPass.class, Timer.DIRECTIONAL_PASS, Timer.RENDER_SHADOWS),
 	SCENE(ScenePass.class, Timer.SCENE_PASS, Timer.RENDER_SCENE),
 	DEBUG_DRAW(DebugDrawPass.class, Timer.DEBUG_DRAW_PASS, Timer.RENDER_DEBUG_DRAW),
-	BLIT_SCENE(BlitScenePass.class, Timer.BLIT_SCENE_PASS);
+	BLIT_SCENE(BlitScenePass.class, Timer.BLIT_SCENE_PASS),
+	MINIMAP(MinimapPass.class, Timer.MINIMAP_PASS, Timer.RENDER_MINIMAP);
 
 	public final Class<? extends RenderPass> clazz;
 	public final String name;
