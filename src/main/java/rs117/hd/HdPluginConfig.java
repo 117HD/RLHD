@@ -1251,6 +1251,42 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_DITHER_FADE = "experimentalDitherFade";
+	@ConfigItem(
+		keyName = KEY_DITHER_FADE,
+		name = "Dither fade",
+		description = "Let objects and chunks fade gradually, at the expense of GPU performance.",
+		section = experimentalSettings
+	)
+	default boolean ditherFade() {
+		return false;
+	}
+
+	String KEY_DITHER_FADE_ROOFS = "experimentalDitherFadeRoofs";
+	@ConfigItem(
+		keyName = KEY_DITHER_FADE_ROOFS,
+		name = "Dither fade roofs",
+		description = "Fade roofs in and out instead of hiding them instantly. Requires dither fade to be enabled.",
+		section = experimentalSettings
+	)
+	default boolean ditherFadeRoofs() {
+		return false;
+	}
+
+	String KEY_DITHER_FADE_ROOF_DURATION = "experimentalDitherFadeRoofDuration";
+	@Range(min = 0)
+	@Units(Units.MILLISECONDS)
+	@ConfigItem(
+		keyName = KEY_DITHER_FADE_ROOF_DURATION,
+		name = "Roof fade duration",
+		description = "How long it takes for roofs to fade in or out. Set to 0 to fade instantly.",
+		section = experimentalSettings
+	)
+	default int ditherFadeRoofDuration() {
+		return 250;
+	}
+
+
 	/*====== Internal settings ======*/
 
 	@ConfigItem(keyName = "pluginUpdateMessage", hidden = true, name = "", description = "")

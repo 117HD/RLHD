@@ -87,7 +87,6 @@ import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.TiledLightingShaderProgram;
 import rs117.hd.opengl.shader.UIShaderProgram;
-import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.opengl.uniforms.UBOGlobal;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.opengl.uniforms.UBOUI;
@@ -101,6 +100,7 @@ import rs117.hd.renderer.legacy.LegacyRenderer;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.scene.AreaManager;
+import rs117.hd.scene.DisplacementManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.GamevalManager;
@@ -127,6 +127,7 @@ import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.ShaderRecompile;
 import rs117.hd.utils.buffer.GLBuffer;
+import rs117.hd.utils.buffer.GLShaderStorage;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.GenericJob;
@@ -135,6 +136,8 @@ import rs117.hd.utils.jobs.JobSystem;
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.scene.DisplacementManager.MAX_BOAT_COUNT;
+import static rs117.hd.scene.DisplacementManager.MAX_CHARACTER_POSITION_COUNT;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 import static rs117.hd.utils.buffer.GLBuffer.DEBUG_MAC_OS;
@@ -282,6 +285,9 @@ public class HdPlugin extends Plugin {
 	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
+	private DisplacementManager displacementManager;
+
+	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
 
 	@Inject
@@ -333,6 +339,7 @@ public class HdPlugin extends Plugin {
 	public static boolean SUPPORTS_INDIRECT_DRAW;
 	public static boolean SUPPORTS_MULTI_INDIRECT_DRAW;
 	public static boolean SUPPORTS_STORAGE_BUFFERS;
+	public static boolean SUPPORTS_SHADER_STORAGE;
 
 	public Canvas canvas;
 	public JFrame clientJFrame;
@@ -429,6 +436,8 @@ public class HdPlugin extends Plugin {
 	public ShadingMode configShadingMode;
 	public ColorFilter configColorFilter = ColorFilter.NONE;
 	public ColorFilter configColorFilterPrevious;
+	public boolean configDitherFadeRoofs;
+	public int configDitherFadeRoofDuration;
 
 	public boolean useLowMemoryMode;
 	public boolean enableDetailedTimers;
@@ -581,6 +590,7 @@ public class HdPlugin extends Plugin {
 					config.indirectDraw().get(NVIDIA_GPU && !APPLE);
 				SUPPORTS_MULTI_INDIRECT_DRAW = SUPPORTS_INDIRECT_DRAW && (GL_CAPS.OpenGL43 || GL_CAPS.GL_ARB_multi_draw_indirect);
 				SUPPORTS_STORAGE_BUFFERS = GL_CAPS.GL_ARB_buffer_storage && !DEBUG_MAC_OS && config.storageBuffers().get(!INTEL_GPU);
+				SUPPORTS_SHADER_STORAGE = GL_CAPS.OpenGL43 || GL_CAPS.GL_ARB_shader_storage_buffer_object;
 
 				log.info("Starting 117 HD... (count: {})", startupCount);
 				log.info("Renderer:            {}", rendererClass.getSimpleName());
@@ -596,6 +606,7 @@ public class HdPlugin extends Plugin {
 				log.info("Indirect draw:       {}", SUPPORTS_INDIRECT_DRAW);
 				log.info("Multi indirect draw: {}", SUPPORTS_MULTI_INDIRECT_DRAW);
 				log.info("Storage buffers:     {}", SUPPORTS_STORAGE_BUFFERS);
+				log.info("Shader storage:      {}", SUPPORTS_SHADER_STORAGE);
 				log.info("Low memory mode:     {}", useLowMemoryMode);
 
 				renderer = injector.getInstance(rendererClass);
@@ -909,8 +920,14 @@ public class HdPlugin extends Plugin {
 		var includes = new ShaderIncludes()
 			.addIncludePath(SHADER_PATH)
 			.addInclude("VERSION_HEADER", OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER)
+			.define("TEXEL_SIZE", GLShaderStorage.isRGBASupported() ? 4 : 3)
+			.define("SHADER_STORAGE_BUFFERS", SUPPORTS_SHADER_STORAGE)
+			.define("TEXTURE_FACES_SSBO_BINDING", ZoneRenderer.SHADER_STORAGE_BUFFER_TEXTURED_FACES)
+			.define("MODEL_DATA_SSBO_BINDING", ZoneRenderer.SHADER_STORAGE_BUFFER_MODEL_DATA)
 			.define("UI_SCALING_MODE", config.uiScalingMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
+			.define("DITHER_FADE", config.ditherFade())
+			.define("DITHER_FADE_ROOFS", configDitherFadeRoofs)
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
 			.define("MATERIAL_COUNT", MaterialManager.MATERIALS.length)
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
@@ -933,7 +950,8 @@ public class HdPlugin extends Plugin {
 			.define("WIND_DISPLACEMENT", configWindDisplacement)
 			.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", WIND_DISPLACEMENT_NOISE_RESOLUTION)
 			.define("CHARACTER_DISPLACEMENT", configCharacterDisplacement)
-			.define("MAX_CHARACTER_POSITION_COUNT", max(1, UBOCompute.MAX_CHARACTER_POSITION_COUNT))
+			.define("MAX_CHARACTER_POSITION_COUNT", max(1, MAX_CHARACTER_POSITION_COUNT))
+			.define("MAX_BOAT_COUNT", max(1, MAX_BOAT_COUNT))
 			.define("WIREFRAME", config.wireframe())
 			.define("WINDOWS_HDR_CORRECTION", config.windowsHdrCorrection())
 			.define("LEGACY_RENDERER", renderer instanceof LegacyRenderer)
@@ -1664,6 +1682,8 @@ public class HdPlugin extends Plugin {
 		configModelBatching = config.modelBatching();
 		configModelCaching = config.modelCaching();
 		configDynamicLights = config.dynamicLights();
+		configDitherFadeRoofs = config.ditherFade() && config.ditherFadeRoofs();
+		configDitherFadeRoofDuration = config.ditherFadeRoofDuration();
 		configTiledLighting = config.tiledLighting();
 		configTiledLightingImageLoadStore = config.tiledLightingImageLoadStore();
 		configDetailDrawDistance = config.detailDrawDistance();
@@ -1827,6 +1847,8 @@ public class HdPlugin extends Plugin {
 							case KEY_WIREFRAME:
 							case KEY_SHADOW_FILTERING:
 							case KEY_WINDOWS_HDR_CORRECTION:
+							case KEY_DITHER_FADE:
+							case KEY_DITHER_FADE_ROOFS:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:

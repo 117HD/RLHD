@@ -32,16 +32,19 @@ import java.awt.Graphics2D;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.lang.management.ManagementFactory;
+import java.util.Arrays;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import javax.swing.JFrame;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.geometry.*;
 import net.runelite.client.util.OSType;
 import rs117.hd.data.ObjectType;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.water_types.WaterType;
+import rs117.hd.utils.collections.PooledArrayType;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
@@ -470,6 +473,24 @@ public final class HDUtils {
 		return true;
 	}
 
+	public static boolean isSphereIntersectingAABB(
+		float sx, float sy, float sz, float radius,
+		float minX, float minY, float minZ,
+		float maxX, float maxY, float maxZ
+	) {
+		// Find the closest point on the AABB to the sphere center by clamping
+		final float closestX = Math.max(minX, Math.min(sx, maxX));
+		final float closestY = Math.max(minY, Math.min(sy, maxY));
+		final float closestZ = Math.max(minZ, Math.min(sz, maxZ));
+
+		final float dx = sx - closestX;
+		final float dy = sy - closestY;
+		final float dz = sz - closestZ;
+
+		final float distSq = dx * dx + dy * dy + dz * dz;
+		return distSq <= radius * radius;
+	}
+
 	public static int packTerrainData(boolean isTerrain, int waterDepth, WaterType waterType, int plane) {
 		// Up to 12-bit water depth | 8-bit water type | 2-bit plane | terrain flag
 		assert waterType.index < 1 << 7 : "Too many water types";
@@ -580,5 +601,42 @@ public final class HDUtils {
 	public static void drawStringCentered(Graphics2D g, String s) {
 		var b = g.getClipBounds();
 		drawStringCentered(g, s, b.width / 2.f, b.height / 2.f);
+	}
+
+	public static SimplePolygon reducePolygon(SimplePolygon polygon, int maxPoints) {
+		int size = polygon.size();
+		final int[] x = PooledArrayType.INT.borrow(size);
+		final int[] y = PooledArrayType.INT.borrow(size);
+
+		try {
+			polygon.copyTo(x, y, 0);
+
+			while (size > maxPoints) {
+				int worst = 0;
+				long worstArea = Long.MAX_VALUE;
+				for (int i = 0; i < size; i++) {
+					int prev = (i - 1 + size) % size;
+					int next = (i + 1) % size;
+
+					// Twice the area of the triangle that would be shaved off by dropping vertex i
+					int area = abs(area2D(x[prev], y[prev], x[i], y[i], x[next], y[next]));
+					if (area < worstArea) {
+						worstArea = area;
+						worst = i;
+					}
+				}
+
+				for (int i = worst; i < size - 1; i++) {
+					x[i] = x[i + 1];
+					y[i] = y[i + 1];
+				}
+				size--;
+			}
+
+			return new SimplePolygon(Arrays.copyOf(x, size), Arrays.copyOf(y, size), size);
+		} finally {
+			PooledArrayType.INT.release(x);
+			PooledArrayType.INT.release(y);
+		}
 	}
 }

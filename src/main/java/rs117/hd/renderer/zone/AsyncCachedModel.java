@@ -102,7 +102,6 @@ public final class AsyncCachedModel extends Job implements Model {
 	private final CachedArrayField<int[]> vertexNormalsY = addField(INT, VERTEX_TYPE);
 	private final CachedArrayField<int[]> vertexNormalsZ = addField(INT, VERTEX_TYPE);
 
-	private final AtomicBoolean isProcessing = new AtomicBoolean(false);
 	private final AtomicBoolean isCompleted = new AtomicBoolean(false);
 	private WorldViewContext ctx;
 	private Projection projection;
@@ -114,6 +113,7 @@ public final class AsyncCachedModel extends Job implements Model {
 	private AlphaModel alphaModel;
 	private boolean isModelPartiallyVisible;
 	private int drawIndex;
+	private float fade;
 	private int orientation;
 	private int x;
 	private int y;
@@ -218,6 +218,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		AlphaModel alphaModel,
 		boolean isModelPartiallyVisible,
 		int drawIndex,
+		float fade,
 		int orientation,
 		int x, int y, int z,
 		@Nonnull UploadModelFunc uploadFunc
@@ -231,6 +232,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		this.alphaModel = alphaModel;
 		this.isModelPartiallyVisible = isModelPartiallyVisible;
 		this.drawIndex = drawIndex;
+		this.fade = fade;
 		this.orientation = orientation;
 		this.x = x;
 		this.y = y;
@@ -267,7 +269,6 @@ public final class AsyncCachedModel extends Job implements Model {
 		if (alphaModel != null)
 			zone.pendingModelJobs.add(this);
 
-		isProcessing.set(false);
 		isCompleted.set(false);
 
 		INFLIGHT.add(this);
@@ -314,9 +315,6 @@ public final class AsyncCachedModel extends Job implements Model {
 
 	@Override
 	protected boolean canStart() {
-		if (isProcessing.get()) // Work has been stolen, so pop it off the queue
-			return true;
-
 		return
 			verticesX.isCached() && verticesY.isCached() && verticesZ.isCached() &&
 			faceIndices1.isCached() && faceIndices2.isCached() && faceIndices3.isCached() &&
@@ -325,13 +323,6 @@ public final class AsyncCachedModel extends Job implements Model {
 
 	@Override
 	protected void onRun() {
-		processModel();
-	}
-
-	public boolean processModel() {
-		if (!isProcessing.compareAndSet(false, true))
-			return false;
-
 		try {
 			uploadFunc.upload(
 				ctx,
@@ -344,6 +335,7 @@ public final class AsyncCachedModel extends Job implements Model {
 				alphaModel,
 				isModelPartiallyVisible,
 				drawIndex,
+				fade,
 				orientation,
 				x, y, z
 			);
@@ -373,8 +365,6 @@ public final class AsyncCachedModel extends Job implements Model {
 			INFLIGHT.remove(this);
 			POOL.recycle(this);
 		}
-
-		return true;
 	}
 
 	@Override
@@ -457,6 +447,7 @@ public final class AsyncCachedModel extends Job implements Model {
 			AlphaModel alphaModel,
 			boolean isModelPartiallyVisible,
 			int drawIndex,
+			float fade,
 			int orientation,
 			int x, int y, int z
 		);

@@ -4,6 +4,7 @@ import java.nio.IntBuffer;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryStack;
@@ -12,12 +13,15 @@ import rs117.hd.opengl.shader.ShaderProgram;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.utils.buffer.GLBuffer;
+import rs117.hd.utils.buffer.GLShaderStorage;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static org.lwjgl.opengl.GL40.glDrawArraysIndirect;
 import static org.lwjgl.opengl.GL40.glDrawElementsIndirect;
+import static org.lwjgl.opengl.GL43.GL_SHADER_STORAGE_BUFFER;
 import static org.lwjgl.opengl.GL43.glMultiDrawArraysIndirect;
+import static rs117.hd.HdPlugin.SUPPORTS_SHADER_STORAGE;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -41,6 +45,7 @@ public class CommandBuffer {
 	private static final int GL_FENCE_SYNC = 14;
 
 	private static final int GL_EXECUTE_SUB_COMMAND_BUFFER = 15;
+	private static final int GL_BIND_SHADER_STORAGE_TYPE = 16;
 
 	private static final long INT_MASK = 0xFFFF_FFFFL;
 	private static final int DRAW_MODE_MASK = 0xF;
@@ -110,6 +115,15 @@ public class CommandBuffer {
 		ensureCapacity(2);
 		cmd[writeHead++] = GL_BIND_TEXTURE_UNIT_TYPE & 0xFF | (long) type << 8;
 		cmd[writeHead++] = texId | (long) bindingIndex << 32;
+	}
+
+	public void bindShaderStorage(@Nullable GLShaderStorage buffer) {
+		if (buffer == null)
+			return;
+
+		// The object is resolved on execution, so the buffer is always bound with the id it has by then
+		ensureCapacity(1);
+		cmd[writeHead++] = GL_BIND_SHADER_STORAGE_TYPE & 0xFF | (long) writeObject(buffer) << 8;
 	}
 
 	public void SetShader(ShaderProgram program) {
@@ -323,6 +337,17 @@ public class CommandBuffer {
 
 						glActiveTexture(texUnit);
 						glBindTexture(texType, texId);
+						break;
+					}
+					case GL_BIND_SHADER_STORAGE_TYPE: {
+						GLShaderStorage buffer = (GLShaderStorage) objects[(int) (data >> 8)];
+
+						if (SUPPORTS_SHADER_STORAGE) {
+							glBindBufferBase(GL_SHADER_STORAGE_BUFFER, buffer.getBindingIndex(), buffer.id);
+						} else {
+							glActiveTexture(buffer.getTextureUnit());
+							glBindTexture(GL_TEXTURE_BUFFER, buffer.getTexId());
+						}
 						break;
 					}
 					case GL_USE_PROGRAM: {

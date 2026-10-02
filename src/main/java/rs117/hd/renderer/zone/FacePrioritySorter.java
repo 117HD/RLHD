@@ -31,7 +31,7 @@ import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.collections.PrimitiveCharArray;
 
-import static rs117.hd.renderer.zone.Zone.VERT_SIZE;
+import static rs117.hd.renderer.zone.Zone.ZONE_VERTEX_NUM_INTS;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -210,7 +210,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 		if (diameter >= MAX_DIAMETER)
 			return;
 
-		final int start = m.startpos / (VERT_SIZE >> 2);
+		final int start = m.startpos / ZONE_VERTEX_NUM_INTS;
 		final int maxFaceCount = m.packedFaces.length + m.doubleSidedCount;
 		ensureCapacity(diameter, maxFaceCount);
 
