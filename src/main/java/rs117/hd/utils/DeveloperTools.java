@@ -12,6 +12,7 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import rs117.hd.HdPlugin;
+import rs117.hd.overlays.DebugPrintOverlay;
 import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
@@ -65,6 +66,9 @@ public class DeveloperTools implements KeyListener {
 	@Inject
 	private TiledLightingOverlay tiledLightingOverlay;
 
+	@Inject
+	private DebugPrintOverlay debugPrintOverlay;
+
 	private boolean keyBindingsEnabled;
 	private boolean tileInfoOverlayEnabled;
 	@Getter
@@ -93,6 +97,7 @@ public class DeveloperTools implements KeyListener {
 			shadowMapOverlay.setActive(shadowMapOverlayEnabled);
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
 			tiledLightingOverlay.setActive(tiledLightingOverlayEnabled);
+			debugPrintOverlay.setActive(true);
 		});
 	}
 
@@ -104,6 +109,7 @@ public class DeveloperTools implements KeyListener {
 		shadowMapOverlay.setActive(false);
 		lightGizmoOverlay.setActive(false);
 		tiledLightingOverlay.setActive(false);
+		debugPrintOverlay.setActive(false);
 		hideUiEnabled = false;
 	}
 
