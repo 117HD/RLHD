@@ -28,27 +28,12 @@ import rs117.hd.utils.RenderState;
 
 import static org.lwjgl.opengl.GL33C.*;
 
-/**
- * Renders a top-down 3D view of the scene into the vanilla minimap widget's on-screen rect.
- * <p>
- * To preserve the player/NPC dots, destination flag and compass that vanilla draws on top of the minimap
- * raster, a {@link net.runelite.api.TileFunction} is installed (see {@link #drawPlaceholderTile}) which
- * replaces real terrain pixels with a magic placeholder color instead of disabling the vanilla minimap
- * entirely. The UI shader then turns pixels still matching that placeholder color transparent, revealing
- * this pass's output underneath, while leftover marker pixels (drawn by vanilla after the tile callback)
- * stay opaque on top.
- */
 @Slf4j
 @Singleton
 public class MinimapPass implements RenderPass {
-	// Matches the magic color historically used by this feature; also referenced by ui_frag.glsl.
 	public static final int PLACEHOLDER_COLOR = 12345678;
 
 	public static final int MINIMAP_CAMERA_ID = ZoneRenderer.CAMERA_COUNT++;
-
-	// World-space radius (in local scene units, 128 per tile) covered by the minimap camera.
-	// Tunable; a follow-up should tie this to the vanilla minimap zoom level instead.
-	private static final float MINIMAP_WORLD_RADIUS = 20 * Perspective.LOCAL_TILE_SIZE;
 
 	@Inject
 	private Client client;
@@ -81,7 +66,6 @@ public class MinimapPass implements RenderPass {
 
 	public final CommandBuffer minimapCmd = new CommandBuffer("Minimap");
 
-	// Device-pixel on-screen rect (x, y, width, height) the minimap is currently being drawn into
 	public final int[] viewportRect = new int[4];
 	public boolean active;
 
@@ -147,10 +131,6 @@ public class MinimapPass implements RenderPass {
 		client.getRasterizer().fillRectangle(px0, py0, px1 - px0, py1 - py0, PLACEHOLDER_COLOR);
 	}
 
-	// RuneLite exposes a different minimap draw-area widget depending on the active layout: classic fixed,
-	// classic resizable, and "modern" resizable (orbs stacked along the left edge instead of on the
-	// minimap itself). There's no single reliable way to tell which one is in play ahead of time, so just
-	// try all of them and use whichever is actually present and visible.
 	private static final int[] MINIMAP_DRAW_AREA_IDS = {
 		ComponentID.FIXED_VIEWPORT_MINIMAP_DRAW_AREA,
 		ComponentID.RESIZABLE_VIEWPORT_MINIMAP_DRAW_AREA,
@@ -182,8 +162,6 @@ public class MinimapPass implements RenderPass {
 		if (bounds == null || bounds.width <= 0 || bounds.height <= 0)
 			return;
 
-		// Convert the canvas-relative AWT pixel rect (top-left origin) into device-pixel GL coordinates
-		// (bottom-left origin), the same way HdPlugin#updateSceneFbo derives sceneViewport.
 		final float[] scale = plugin.sceneViewportScale;
 		final int glX = bounds.x;
 		final int glY = client.getCanvasHeight() - (bounds.y + bounds.height);
@@ -197,16 +175,24 @@ public class MinimapPass implements RenderPass {
 
 		updateFbo(viewportRect[2], viewportRect[3]);
 
-		final Player localPlayer = client.getLocalPlayer();
-		if (localPlayer == null)
+		final CameraFocusableEntity cameraFocus = client.getCameraFocusEntity();
+		if (cameraFocus == null)
 			return;
-		final LocalPoint lp = localPlayer.getLocalLocation();
+		final LocalPoint focus = cameraFocus.getCameraFocus();
+		if (focus == null)
+			return;
 
-		minimapCamera.setPosition(lp.getX(), plugin.cameraPosition[1], lp.getY());
-		minimapCamera.setYaw(0);
+		final double minimapScale = client.getMinimapZoom() / Perspective.LOCAL_TILE_SIZE;
+		if (minimapScale <= 0)
+			return;
+
+		final float yaw = (float) ((client.getCameraYawTarget() & 0x3fff) * Perspective.UNIT14);
+
+		minimapCamera.setPosition(focus.getX(), plugin.cameraPosition[1], focus.getY());
+		minimapCamera.setYaw(yaw);
 		minimapCamera.setPitch((float) (Math.PI / 2));
-		minimapCamera.setViewportWidth((int) (MINIMAP_WORLD_RADIUS * 2));
-		minimapCamera.setViewportHeight((int) (MINIMAP_WORLD_RADIUS * 2));
+		minimapCamera.setViewportWidth((int) Math.round(viewportRect[2] / minimapScale));
+		minimapCamera.setViewportHeight((int) Math.round(viewportRect[3] / minimapScale));
 		minimapCamera.setNearPlane(-20000);
 		minimapCamera.setFarPlane(20000);
 
@@ -270,9 +256,6 @@ public class MinimapPass implements RenderPass {
 		glClearDepth(0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// Temporarily point the shared scene-camera UBO slot at the minimap camera. This is safe because
-		// this pass runs last in the frame (after BlitScenePass), so nothing else reads sceneCamera again
-		// until next frame's preSceneDrawTopLevel overwrites it with the real camera before SCENE runs.
 		plugin.uboGlobal.sceneCamera.write(minimapCamera);
 		plugin.uboGlobal.upload();
 
@@ -285,7 +268,6 @@ public class MinimapPass implements RenderPass {
 		renderState.disable.set(GL_DEPTH_TEST);
 		renderState.apply();
 
-		// Blit the rendered minimap onto the default framebuffer at the widget's on-screen rect
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, fboMinimap);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
 		glBlitFramebuffer(
