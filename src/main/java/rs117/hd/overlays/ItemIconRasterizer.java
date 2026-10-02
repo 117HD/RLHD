@@ -89,6 +89,8 @@ public class ItemIconRasterizer {
 	private final Mesh mesh;
 	private final float[] x, y, z;
 	private float offsetX, offsetY, distance;
+	@Nullable
+	private int[] gameIcon;
 
 	public ItemIconRasterizer(Mesh mesh, int pitch, int yaw, int roll) {
 		this.mesh = mesh;
@@ -129,6 +131,7 @@ public class ItemIconRasterizer {
 
 	// Images with colors of their own, like those of RuneLite's Rune Pouch plugin, only have to match in shape
 	public boolean lineUpWith(int[] gameIcon, int[] palette, boolean matchColors) {
+		this.gameIcon = gameIcon;
 		float[] coverage = new float[gameIcon.length];
 		for (int i = 0; i < gameIcon.length; i++)
 			coverage[i] = gameIcon[i] == 0 ? 0 : 1;
@@ -280,8 +283,10 @@ public class ItemIconRasterizer {
 		int[] samples = new int[samplesWide * samplesHigh];
 		for (int face : drawOrder(sampleX, sampleY, depth))
 			drawFace(face, sampleX, sampleY, camera, toRay, samplesWide, samplesHigh, palette, samples);
-		if (border > 0)
+		if (border > 0) {
+			removeHiddenParts(samples, samplesWide, samplesHigh, scaleX, scaleY, left, top);
 			addOutline(samples, samplesWide, samplesHigh, scaleX, scaleY);
+		}
 
 		int[] pixels = new int[width * height];
 		int samplesPerPixel = SAMPLES * SAMPLES;
@@ -494,6 +499,43 @@ public class ItemIconRasterizer {
 						samples[sy * width + sx] = 1;
 				}
 			}
+		}
+	}
+
+	// Parts smaller than one of the game's pixels that the game doesn't draw, like sparkles, would be buried in outline
+	private void removeHiddenParts(int[] samples, int width, int height, float scaleX, float scaleY, float left, float top) {
+		if (gameIcon == null)
+			return;
+		float pixelSize = scaleX * scaleY * SAMPLES * SAMPLES;
+		boolean[] seen = new boolean[samples.length];
+		int[] part = new int[samples.length];
+		for (int start = 0; start < samples.length; start++) {
+			if (samples[start] == 0 || seen[start])
+				continue;
+			int count = 0;
+			part[count++] = start;
+			seen[start] = true;
+			boolean shown = false;
+			for (int p = 0; p < count; p++) {
+				int x = part[p] % width;
+				int y = part[p] / width;
+				int iconX = floor(left + (x + .5f) / (scaleX * SAMPLES));
+				int iconY = floor(top + (y + .5f) / (scaleY * SAMPLES));
+				shown |= iconX >= 0 && iconX < ICON_WIDTH && iconY >= 0 && iconY < ICON_HEIGHT &&
+					gameIcon[iconY * ICON_WIDTH + iconX] != 0;
+				for (int ny = max(0, y - 1); ny <= min(height - 1, y + 1); ny++) {
+					for (int nx = max(0, x - 1); nx <= min(width - 1, x + 1); nx++) {
+						int n = ny * width + nx;
+						if (samples[n] != 0 && !seen[n]) {
+							seen[n] = true;
+							part[count++] = n;
+						}
+					}
+				}
+			}
+			if (!shown && count < pixelSize)
+				for (int p = 0; p < count; p++)
+					samples[part[p]] = 0;
 		}
 	}
 
