@@ -337,6 +337,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private final FloatBuffer vertices = BufferUtils.createFloatBuffer(MAX_ITEMS * FLOATS_PER_ITEM);
 	private final boolean[] known = new boolean[GRID_SIZE];
 	private final boolean[] spread = new boolean[GRID_SIZE];
+	private final int[] shadeColors = new int[GRID_SIZE];
 	private final int[] overlays = new int[GRID_SIZE];
 	private final boolean[] captured = new boolean[GRID_SIZE];
 	private final boolean[] runePixels = new boolean[GRID_SIZE];
@@ -1034,21 +1035,25 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			}
 		}
 
-		// Every pixel the game shades has the same color
+		// Nearly every pixel the game shades has the same color
+		int shaded = 0;
+		for (int g = 0; g < GRID_SIZE; g++)
+			if (known[g] && gameIcon.shadow[g])
+				shadeColors[shaded++] = background[g];
 		int shadow = 0;
-		boolean first = true;
-		for (int g = 0; g < GRID_SIZE; g++) {
-			if (!known[g] || !gameIcon.shadow[g])
-				continue;
-			int color = background[g];
-			if (first) {
-				shadow = color;
-				first = false;
-			} else if (color != shadow) {
-				shadow = 0;
-				break;
+		int mostShaded = 0;
+		for (int i = 0; i < shaded && mostShaded <= shaded / 2; i++) {
+			int count = 0;
+			for (int j = i; j < shaded; j++)
+				if (shadeColors[j] == shadeColors[i])
+					count++;
+			if (count > mostShaded) {
+				mostShaded = count;
+				shadow = shadeColors[i];
 			}
 		}
+		if (mostShaded < shaded * .8f)
+			shadow = 0;
 		if (shadow != 0)
 			for (int g = 0; g < GRID_SIZE; g++)
 				if (gameIcon.shadow[g])
