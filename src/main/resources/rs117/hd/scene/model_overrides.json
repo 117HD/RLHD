@@ -103201,7 +103201,7 @@
     "description": "Wyrmscraig - Cathedral Candle Stand",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.4,
+    "uvScale": 0.7,
     "uvOrientationY": 512,
     "objectIds": [
       "WYRMSCRAIG_CATHEDRAL_CANDLE_TABLE"
@@ -103354,7 +103354,8 @@
     "uvOrientationY": 512,
     "uvOrientationZ": 560,
     "objectIds": [
-      "WYRMSCRAIG_CATHEDRAL_PEW_BROKEN_CLIMB"
+      "WYRMSCRAIG_CATHEDRAL_PEW_BROKEN_CLIMB",
+      "WYRMSCRAIG_CATHEDRAL_PEW_BROKEN_EXIT"
     ],
     "colorOverrides": [
       {
@@ -103393,7 +103394,6 @@
     "shiftLightness": 10,
     "undoVanillaShading": false,
     "uvType": "BOX",
-    "uvScale": 0.75,
     "objectIds": [
       "WYRMSCRAIG_CATHEDRAL_THRONE"
     ],
@@ -103426,6 +103426,34 @@
     ]
   },
   {
+    "description": "Wyrmscraig - Cathedral Bookcase",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      "FFG_CATHEDRAL_BOOKCASE",
+      "BRAIN_MON_BOOKCASE_OLD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Main wood body",
+        "colors": "h == 7 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "flatNormals": true,
+        "depthBias": 1
+      },
+      {
+        "description": "Light wood face",
+        "colors": "h == 7 && s == 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      }
+    ]
+  },
+  {
     "description": "Wyrmscraig - Cathedral Door",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -103443,6 +103471,44 @@
         "uvScale": 0.1
       }
     ]
+  },
+  {
+    "description": "Wyrmscraig - Mad Angel - Hide Vanilla Shadow",
+    "npcIds": [
+      "MAD_ANGEL",
+      "MAD_ANGEL_INITIAL",
+      "MAD_ANGEL_ANIM",
+      "MAD_ANGEL_DEAD",
+      "MAD_ANGEL_QUEST",
+      "MAD_ANGEL_INITIAL_QUEST",
+      "MAD_ANGEL_ANIM_QUEST",
+      "MAD_ANGEL_DEAD_QUEST",
+      "MAD_ANGEL_CATHEDRAL",
+      "MAD_ANGEL_CATHEDRAL_VIS",
+      "MAD_ANGEL_CATHEDRAL_VIS_QUEST"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Hide vanilla shadow",
+        "colors": "h == 0 && a < 255",
+        "baseMaterial": "NONE",
+        "hide": true
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Mad Angel - Darken Light Tennis Shadow Slightly",
+    "areas": [ "WYRMSCRAIG" ],
+    "baseMaterial": "GRAY_125",
+    "graphicsObjectIds": [
+      "GARGBOSS_DEBRIS_SHADOW_150"
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Mad Angel - Darken Light Tennis Shadow Slightly",
+    "areas": [ "WYRMSCRAIG" ],
+    "shiftLightness": 3,
+    "objectIds": [ "WYRMSCRAIG_CATHEDRAL_LIGHTRAY01" ]
   },
   {
     "description": "Forthos - Metallic - Couldron - DYNAMIC - ANIMATED",

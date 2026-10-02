@@ -49942,6 +49942,194 @@
     ]
   },
   {
+    "description": "Wyrmscraig Mad Angel Light Tennis Attack",
+    "offset": [ 0, 30, 0 ],
+    "radius": 220,
+    "strength": 7,
+    "color": [
+      255,
+      240,
+      240
+    ],
+    "type": "STATIC",
+    "projectileIds": [ "VFX_MAD_ANGEL_ATTACK_BOMB_THROW_PROJECTILE" ]
+  },
+  {
+    "description": "Wyrmscraig Mad Angel Light Tennis Volley Attack - Impact",
+    "offset": [ 0, 300, 0 ],
+    "radius": 450,
+    "strength": 7,
+    "spawnDelay": 50,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 150,
+    "despawnDelay": 500,
+    "fixedDespawnTime": true,
+    "waitForAnimation": true,
+    "color": [
+      255,
+      240,
+      240
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [ "VFX_MAD_ANGEL_ATTACK_BOMB_THROW_IMPACT_02" ]
+  },
+  {
+    "description": "Wyrmscraig Mad Angel Light Tennis Volley Attack - Impact - Failed Volley",
+    "offset": [ 0, 100, 0 ],
+    "radius": 200,
+    "strength": 7,
+    "fadeOutDuration": 150,
+    "despawnDelay": 400,
+    "fixedDespawnTime": true,
+    "waitForAnimation": true,
+    "color": [
+      255,
+      240,
+      240
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [ "VFX_MAD_ANGEL_ATTACK_BOMB_THROW_IMPACT_01" ]
+  },
+  {
+    "description": "Wyrmscraig Mad Angel Light Tennis Attack - Cast",
+    "offset": [ 0, 270, 100 ],
+    "radius": 350,
+    "strength": 9,
+    "spawnDelay": 350,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 450,
+    "despawnDelay": 900,
+    "fixedDespawnTime": true,
+    "waitForAnimation": true,
+    "color": [
+      255,
+      240,
+      240
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [ "VFX_MAD_ANGEL_ATTACK_BOMB_THROW" ]
+  },
+  {
+    "description": "Wyrmscraig Mad Angel Lightening Attack Normal - Charge",
+    "offset": [ 0, 150, 55 ],
+    "radius": 220,
+    "strength": 20,
+    "color": [
+      0,
+      160,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 20,
+    "spawnDelay": 700,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3500,
+    "fadeInDuration": 1500,
+    "fadeOutDuration": 500,
+    "despawnWithParent": true,
+    "graphicsObjectIds": [ "VFX_MAD_ANGEL_ATTACK_SMITE" ]
+  },
+  {
+    "description": "Wyrmscraig Mad Angel Lightening Attack Normal - Flash",
+    "offset": [ 0, 150, 35 ],
+    "radius": 350,
+    "strength": 30,
+    "color": [
+      0,
+      160,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 20,
+    "spawnDelay": 3550,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
+    "despawnWithParent": true,
+    "graphicsObjectIds": [ "VFX_MAD_ANGEL_ATTACK_SMITE" ]
+  },
+  {
+    "description": "Wyrmscraig Mad Angel Lightening Attack Enraged - Charge",
+    "offset": [ 0, 150, 55 ],
+    "radius": 220,
+    "strength": 20,
+    "color": [
+      0,
+      160,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 20,
+    "spawnDelay": 700,
+    "fixedDespawnTime": true,
+    "despawnDelay": 7300,
+    "fadeInDuration": 1500,
+    "fadeOutDuration": 500,
+    "despawnWithParent": true,
+    "graphicsObjectIds": [ "VFX_MAD_ANGEL_ATTACK_SMITE_ENRAGED" ]
+  },
+  {
+    "description": "Wyrmscraig Mad Angel Lightening Attack Enraged - Flash 1",
+    "offset": [ 0, 150, 35 ],
+    "radius": 350,
+    "strength": 30,
+    "color": [
+      0,
+      160,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 20,
+    "spawnDelay": 3550,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
+    "despawnWithParent": true,
+    "graphicsObjectIds": [ "VFX_MAD_ANGEL_ATTACK_SMITE_ENRAGED" ]
+  },
+  {
+    "description": "Wyrmscraig Mad Angel Lightening Attack Enraged - Flash 2",
+    "offset": [ 0, 150, 35 ],
+    "radius": 350,
+    "strength": 30,
+    "color": [
+      0,
+      160,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 20,
+    "spawnDelay": 6000,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
+    "despawnWithParent": true,
+    "graphicsObjectIds": [ "VFX_MAD_ANGEL_ATTACK_SMITE_ENRAGED" ]
+  },
+  {
+    "description": "Wyrmscraig Mad Angel Lightening Attack Enraged - Flash 3",
+    "offset": [ 0, 150, 25 ],
+    "radius": 350,
+    "strength": 30,
+    "color": [
+      0,
+      160,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 20,
+    "spawnDelay": 7200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
+    "despawnWithParent": true,
+    "graphicsObjectIds": [ "VFX_MAD_ANGEL_ATTACK_SMITE_ENRAGED" ]
+  },
+  {
     "description": "Wyrmscraig Cathedral Candles",
     "offset": [ -30, 210, 0 ],
     "radius": 175,
