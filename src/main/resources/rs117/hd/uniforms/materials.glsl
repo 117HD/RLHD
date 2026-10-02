@@ -4,8 +4,6 @@
 
 #include MATERIAL_COUNT
 
-#define SUBSURFACE_GLOW_MAX 4.0
-
 struct Material {
     int colorMap;
     int normalMap;
@@ -15,7 +13,7 @@ struct Material {
     int flowMap;
     int shadowAlphaMap;
     int flags; // overrideBaseColor << 2 | unlit << 1 | hasTransparency
-    uint subsurfaceAndGlow;
+    float subsurface;
     float brightness;
     float displacementScale;
     float specularStrength;
@@ -42,12 +40,4 @@ int getMaterialIsUnlit(const Material material) {
 
 bool getMaterialHasTransparency(const Material material) {
     return (material.flags & 1) == 1;
-}
-
-float getMaterialSubsurface(const Material material) {
-    return unpackHalfFloat(material.subsurfaceAndGlow & 0xFFFFu);
-}
-
-float getMaterialSubsurfaceGlow(const Material material) {
-    return unpackHalfFloat((material.subsurfaceAndGlow >> 16u) & 0xFFFFu);
 }

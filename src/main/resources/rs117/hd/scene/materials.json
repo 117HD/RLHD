@@ -1103,7 +1103,7 @@
   {
     "name": "GLASS_1",
     "parent": "NONE",
-    "subsurface": 1.0
+    "subsurface": 1
   },
   {
     "name": "WHITE",
@@ -2121,17 +2121,14 @@
     "name": "SAIL_CLOTH",
     "parent": "CARPET",
     "brightness": 1.22,
-    "subsurface": 0.25,
-    "subsurfaceGlow": 2.0,
+    "subsurface": 1,
     "normalMap": null
   },
   {
     "name": "SAIL_CLOTH_LIGHT",
-    "parent": "CARPET",
+    "parent": "SAIL_CLOTH",
     "brightness": 1.45,
-    "subsurface": 0.25,
-    "subsurfaceGlow": 2.0,
-    "normalMap": null
+    "subsurface": 1
   },
   {
     "name": "FUR_N"

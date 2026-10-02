@@ -5,10 +5,16 @@
 #include <utils/constants.glsl>
 #include <utils/specular.glsl>
 
+float thinSheetTransmission(float incidence, float viewTowardLight, float subsurface) {
+    if (subsurface <= 0.0 || incidence >= 0.0)
+        return 0.0;
+    return -incidence * subsurface * 1.5 * max(viewTowardLight, 0.0);
+}
+
 #if DYNAMIC_LIGHTS
 void calculateLight(
     int lightIdx, vec3 position, vec3 normals, vec3 viewDir,
-    vec3 texBlend, vec3 specularGloss, vec3 specularStrength,
+    vec3 texBlend, vec3 specularGloss, vec3 specularStrength, float subsurface,
     inout vec3 pointLightsOut, inout vec3 pointLightsSpecularOut
 ) {
     PointLight light = PointLightArray[lightIdx];
@@ -22,8 +28,11 @@ void calculateLight(
         vec3 pointLightColor = light.color.rgb * attenuation;
         vec3 pointLightDir = normalize(lightToFrag);
 
-        float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
-        pointLightsOut += pointLightColor * pointLightDotNormals;
+        float pointLightDotNormals = dot(normals, pointLightDir);
+        pointLightsOut += pointLightColor * max(pointLightDotNormals, 0.0);
+        if (subsurface > 0.0)
+            pointLightsOut += pointLightColor * thinSheetTransmission(
+                pointLightDotNormals, dot(-pointLightDir, viewDir), subsurface);
 
         vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
         pointLightsSpecularOut += pointLightColor * specular(texBlend, viewDir, pointLightReflectDir, specularGloss, specularStrength);
@@ -32,7 +41,7 @@ void calculateLight(
 
 void calculateLighting(
     vec3 position, vec3 normals, vec3 viewDir,
-    vec3 texBlend, vec3 specularGloss, vec3 specularStrength,
+    vec3 texBlend, vec3 specularGloss, vec3 specularStrength, float subsurface,
     inout vec3 pointLightsOut, inout vec3 pointLightsSpecularOut
 ) {
     #if TILED_LIGHTING
@@ -42,21 +51,21 @@ void calculateLighting(
             uvec4 tileLayerData = texelFetch(tiledLightingArray, ivec3(tileXY, tileLayer), 0);
             ivec2 unpackedData = ivec2(0);
 
-            #define PROCESS_TILED_LIGHT_COMPONENT(c)                 \
-                if (tileLayerData[c] <= 0u)                          \
-                    break;                                           \
-                unpackedData = decodePackedLight(tileLayerData[c]);  \
-                                                                     \
-                if (unpackedData[0] >= 0)                            \
-                    calculateLight(unpackedData[0],                  \
-                        position, normals, viewDir,                  \
-                        texBlend, specularGloss, specularStrength,   \
-                        pointLightsOut, pointLightsSpecularOut);     \
-                                                                     \
-                if (unpackedData[1] >= 0)                            \
-                    calculateLight(unpackedData[1],                  \
-                        position, normals, viewDir,                  \
-                        texBlend, specularGloss, specularStrength,   \
+            #define PROCESS_TILED_LIGHT_COMPONENT(c)                           \
+                if (tileLayerData[c] <= 0u)                                    \
+                    break;                                                     \
+                unpackedData = decodePackedLight(tileLayerData[c]);            \
+                                                                               \
+                if (unpackedData[0] >= 0)                                      \
+                    calculateLight(unpackedData[0],                            \
+                        position, normals, viewDir,                            \
+                        texBlend, specularGloss, specularStrength, subsurface, \
+                        pointLightsOut, pointLightsSpecularOut);               \
+                                                                               \
+                if (unpackedData[1] >= 0)                                      \
+                    calculateLight(unpackedData[1],                            \
+                        position, normals, viewDir,                            \
+                        texBlend, specularGloss, specularStrength, subsurface, \
                         pointLightsOut, pointLightsSpecularOut);
 
             PROCESS_TILED_LIGHT_COMPONENT(0);
@@ -67,10 +76,10 @@ void calculateLighting(
     #else
         for (int lightIdx = 0; lightIdx < pointLightsCount; lightIdx++)
             calculateLight(lightIdx, position, normals, viewDir,
-                texBlend, specularGloss, specularStrength,
+                texBlend, specularGloss, specularStrength, subsurface,
                 pointLightsOut, pointLightsSpecularOut);
     #endif
 }
 #else
-#define calculateLighting(position, normals, viewDir, texBlend, specularGloss, specularStrength, pointLightsOut,  pointLightsSpecularOut)
+#define calculateLighting(position, normals, viewDir, texBlend, specularGloss, specularStrength, subsurface, pointLightsOut, pointLightsSpecularOut)
 #endif

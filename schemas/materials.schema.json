@@ -72,11 +72,8 @@
       },
       "subsurface": {
         "type": "number",
-        "description": "Strength of fake subsurface scattering through thin geometry, such as leaves, sails and glass. Defaults to 0."
-      },
-      "subsurfaceGlow": {
-        "type": "number",
-        "description": "Strength of the 'sun through the material' hotspot when viewed toward the light source. Defaults to 0."
+        "minimum": 0,
+        "description": "Crude approximation of subsurface scattering, with a fixed exponent. Strength above 1 intentionally amplifies light."
       },
       "displacementScale": {
         "type": "number",
