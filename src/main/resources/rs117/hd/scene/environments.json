@@ -233,6 +233,14 @@
     "fogDepth": 40
   },
   {
+    "area": "DORGESHKAAN_AGILITY_AREA",
+    "sunAngles": [
+      80,
+      190
+    ],
+    "fogDepth": 25
+  },
+  {
     "area": "DORGESHKAAN",
     "directionalColor": "#a29b71",
     "directionalStrength": 1.5,
@@ -612,6 +620,14 @@
       190
     ],
     "fogDepth": 40
+  },
+  {
+    "area": "KILLERWATT_PLANE",
+    "fogColor": "#141414",
+    "fogDepth": 20,
+    "groundFogOpacity": 0.57,
+    "groundFogStart": -300,
+    "groundFogEnd": -600
   },
   {
     "area": "MISTHALIN_MYSTERY_MANOR_REGION",

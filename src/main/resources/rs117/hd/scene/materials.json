@@ -1724,16 +1724,18 @@
   },
   {
     "name": "SWAMP_WATER_FLAT_FLOW",
-    "parent": "SWAMP_WATER_FLAT",
+    "parent": "WATER_FOUNTAIN_FLAT",
     "flowMap": "UNDERWATER_FLOW_MAP",
-    "flowMapStrength": 0.2,
+    "flowMapStrength": 1,
+    "brightness": 0.5,
+    "textureScale": [ 1.5, 2, 1 ],
     "flowMapDuration": [
       7.0,
       -11.0
     ],
     "scrollSpeed": [
       -0.0,
-      -1.3
+      -1.35
     ]
   },
   {
