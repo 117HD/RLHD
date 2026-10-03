@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.config.SeasonalTheme;
+import rs117.hd.config.ShadingMode;
 import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.areas.AABB;
@@ -35,7 +36,7 @@ import static rs117.hd.utils.MathUtils.*;
 public class ModelOverride
 {
 	public static final ModelOverride NONE = new ModelOverride(true);
-	public static final ModelOverride UNLIT = new ModelOverride(true).baseMaterial(Material.UNLIT).undoVanillaShading(false);
+	public static final ModelOverride UNLIT = new ModelOverride(true).baseMaterial(Material.UNLIT).shadingMode(ShadingMode.UNLIT);
 
 	private static final Set<Integer> EMPTY = new HashSet<>();
 
@@ -76,13 +77,13 @@ public class ModelOverride
 	public boolean receiveShadows = true;
 	public boolean terrainVertexSnap = false;
 	public boolean doubleSidedFaces = false;
-	public boolean undoVanillaShading = true;
 	private boolean hideAsWaterEffect = false;
 	public float terrainVertexSnapThreshold = 0.125f;
 	public float shadowOpacityThreshold = 0;
 	public TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;
 	public InheritTileColorType inheritTileColorType = InheritTileColorType.NONE;
 	public WindDisplacement windDisplacementMode = WindDisplacement.DISABLED;
+	public ShadingMode shadingMode = ShadingMode.DEFAULT;
 	public int windDisplacementModifier = 0;
 	public boolean invertDisplacementStrength = false;
 	public int depthBias = -1;
@@ -163,6 +164,11 @@ public class ModelOverride
 			if (Props.DEVELOPMENT)
 				throw new IllegalStateException("Invalid windDisplacementMode");
 			windDisplacementMode = ModelOverride.NONE.windDisplacementMode;
+		}
+		if(shadingMode == null) {
+			if (Props.DEVELOPMENT)
+				throw new IllegalStateException("Invalid shadingMode");
+			shadingMode = ModelOverride.NONE.shadingMode;
 		}
 
 		if (windDisplacementModifier < -3 || windDisplacementModifier > 3) {
@@ -311,13 +317,13 @@ public class ModelOverride
 			receiveShadows,
 			terrainVertexSnap,
 			doubleSidedFaces,
-			undoVanillaShading,
 			hideAsWaterEffect,
 			terrainVertexSnapThreshold,
 			shadowOpacityThreshold,
 			tzHaarRecolorType,
 			inheritTileColorType,
 			windDisplacementMode,
+			shadingMode,
 			windDisplacementModifier,
 			invertDisplacementStrength,
 			depthBias,

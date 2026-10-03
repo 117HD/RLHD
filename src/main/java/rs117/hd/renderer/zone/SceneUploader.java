@@ -1520,7 +1520,7 @@ public class SceneUploader implements AutoCloseable {
 		final int[] indices2 = model.getFaceIndices2();
 		final int[] indices3 = model.getFaceIndices3();
 
-		final short[] unlitFaceColors = plugin.configUnlitFaceColors ? model.getUnlitFaceColors() : null;
+		final short[] unlitFaceColors = model.getUnlitFaceColors();
 		final int[] color1s = model.getFaceColors1();
 		final int[] color2s = model.getFaceColors2();
 		final int[] color3s = model.getFaceColors3();
@@ -1611,9 +1611,6 @@ public class SceneUploader implements AutoCloseable {
 				continue;
 			}
 
-			if (unlitFaceColors != null)
-				color1 = color2 = color3 = unlitFaceColors[face] & 0xFFFF;
-
 			UvType uvType = UvType.GEOMETRY;
 			Material material = baseMaterial;
 			ModelOverride faceOverride = modelOverride;
@@ -1649,6 +1646,9 @@ public class SceneUploader implements AutoCloseable {
 
 			if (faceOverride.hide)
 				continue;
+
+			if (unlitFaceColors != null && (faceOverride.shadingMode.unlitFaceColors || plugin.configUnlitFaceColors))
+				color1 = color2 = color3 = unlitFaceColors[face] & 0xFFFF;
 
 			final int triangleA = indices1[face];
 			final int triangleB = indices2[face];
@@ -1809,7 +1809,7 @@ public class SceneUploader implements AutoCloseable {
 				);
 			}
 
-			if (plugin.configUndoVanillaShading && faceOverride.undoVanillaShading && !keepShading) {
+			if (plugin.configUndoVanillaShading && faceOverride.shadingMode.undoVanillaShading && !keepShading) {
 				color1 = undoVanillaShading(color1, plugin.configLegacyGreyColors, modelNormals[0], modelNormals[1], modelNormals[2]);
 				color2 = undoVanillaShading(color2, plugin.configLegacyGreyColors, modelNormals[3], modelNormals[4], modelNormals[5]);
 				color3 = undoVanillaShading(color3, plugin.configLegacyGreyColors, modelNormals[6], modelNormals[7], modelNormals[8]);
@@ -2165,7 +2165,7 @@ public class SceneUploader implements AutoCloseable {
 		final int[] indices2 = model.getFaceIndices2();
 		final int[] indices3 = model.getFaceIndices3();
 
-		final short[] unlitFaceColors = plugin.configUnlitFaceColors ? model.getUnlitFaceColors() : null;
+		final short[] unlitFaceColors = model.getUnlitFaceColors();
 		final int[] color1s = model.getFaceColors1();
 		final int[] color2s = model.getFaceColors2();
 		final int[] color3s = model.getFaceColors3();
@@ -2208,21 +2208,27 @@ public class SceneUploader implements AutoCloseable {
 			if (face >= faceCount)
 				continue;
 
-			int color1 = color1s[face];
-			int color2 = color2s[face];
-			int color3 = color3s[face];
-
-			if (unlitFaceColors != null)
-				color1 = color2 = color3 = unlitFaceColors[face] & 0xFFFF;
-			else if (color3 == -1)
-				color2 = color3 = color1;
-
 			int transparency = readFaceTransparency(modelTransparency, transparencies, face);
 			final int textureFace = textureFaces != null ? textureFaces[face] : -1;
 			final int textureId = isVanillaTextured ? faceTextures[face] : -1;
 			final UvType uvType = faceUVTypes.get(face);
 			final Material material = faceMaterials.get(face);
 			final ModelOverride faceOverride = faceOverrides.get(face);
+
+			int color1;
+			int color2;
+			int color3;
+
+			if (unlitFaceColors != null && (faceOverride.shadingMode.unlitFaceColors || plugin.configUnlitFaceColors)) {
+				color1 = color2 = color3 = unlitFaceColors[face] & 0xFFFF;
+			} else {
+				color1 = color1s[face];
+				color2 = color2s[face];
+				color3 = color3s[face];
+			}
+
+			if (color3 == -1)
+				color2 = color3 = color1;
 
 			if (textureId != -1)
 				color1 = color2 = color3 = 90;
@@ -2281,7 +2287,7 @@ public class SceneUploader implements AutoCloseable {
 					);
 				}
 
-				if (plugin.configUndoVanillaShading && modelOverride.undoVanillaShading) {
+				if (plugin.configUndoVanillaShading && faceOverride.shadingMode.undoVanillaShading) {
 					color1 = undoVanillaShading(color1, plugin.configLegacyGreyColors, faceNormals[0], faceNormals[1], faceNormals[2]);
 					color2 = undoVanillaShading(color2, plugin.configLegacyGreyColors, faceNormals[3], faceNormals[4], faceNormals[5]);
 					color3 = undoVanillaShading(color3, plugin.configLegacyGreyColors, faceNormals[6], faceNormals[7], faceNormals[8]);
