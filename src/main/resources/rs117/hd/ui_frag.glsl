@@ -97,7 +97,13 @@ void main() {
         fragCoord.x >= minimapViewport.x && fragCoord.x < minimapViewport.x + minimapViewport.z &&
         fragCoord.y >= minimapViewport.y && fragCoord.y < minimapViewport.y + minimapViewport.w
     ) {
-        vec3 unpremultiplied = c.a > 0 ? c.rgb / c.a : c.rgb;
+        // Use an unfiltered sample of the source texel for the colorkey check. The scaling
+        // filters above blend neighbouring texels together when stretched mode is enabled,
+        // which shifts and discolors the thin 1px native line pixels (producing a pink tint)
+        // and breaks the exact-match check below if performed against the filtered color `c`.
+        ivec2 sourceTexel = clamp(ivec2(fUv * vec2(sourceDimensions)), ivec2(0), sourceDimensions - 1);
+        vec4 raw = texelFetch(uiTexture, sourceTexel, 0);
+        vec3 unpremultiplied = raw.a > 0 ? raw.rgb / raw.a : raw.rgb;
         ivec3 rgb255 = ivec3(round(unpremultiplied * 255.0));
         if (rgb255 == MINIMAP_PLACEHOLDER_COLOR || isMinimapLineColor(rgb255))
             c = vec4(0);

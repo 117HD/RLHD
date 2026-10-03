@@ -92,16 +92,27 @@ public class MinimapPass implements RenderPass {
 	public final Camera cacheCamera = new Camera().setOrthographic(true).setReverseZ(true);
 
 	private static final int SHADED_VERTEX_FLOATS_CAPACITY = 16384;
-	private static final int LINE_FRAME_VERTEX_FLOATS_CAPACITY = 131072;
+	private static final int LINE_FRAME_VERTEX_FLOATS_CAPACITY = 524288;
+	private static final int LINE_ZONE_VERTEX_FLOATS_CAPACITY = 16384;
+	private static final float[] EMPTY_LINE_VERTICES = new float[0];
 	private final CommandBuffer[] zoneCacheCmds = new CommandBuffer[MAX_ZONE_UPDATES_PER_FRAME];
 	private final FloatBuffer[] pendingShadedVertices = new FloatBuffer[MAX_ZONE_UPDATES_PER_FRAME];
 	private final int[] pendingShadedVertexCounts = new int[MAX_ZONE_UPDATES_PER_FRAME];
 	private MinimapType pendingMode;
 	private int glShadedVao, glShadedVbo;
 	private FloatBuffer frameLineVertices;
+	private FloatBuffer zoneLineScratch;
 	private int frameLineVertexCount;
 	private int glLineVao, glLineVbo;
 	private float lineFocusWorldX, lineFocusWorldZ;
+
+	// Wall/line geometry cached per zone, independently of the terrain's sliding cache window (cachedZoneRefs),
+	// so that once a zone has been visited its walls persist on the minimap - like the cached terrain does -
+	// instead of disappearing as soon as the live Tile array entries for that zone are evicted by the client's
+	// load distance, and so that zooming out (which needs a larger radius than the terrain's fixed-size cache
+	// texture can ever hold) doesn't lose lines that the terrain itself wouldn't have been able to show either.
+	private final float[][][] cachedLineZoneVertices = new float[SceneManager.NUM_ZONES][SceneManager.NUM_ZONES][];
+	private final Zone[][] cachedLineZoneRefs = new Zone[SceneManager.NUM_ZONES][SceneManager.NUM_ZONES];
 
 	public final int[] viewportRect = new int[4];
 	public boolean active;
@@ -149,6 +160,7 @@ public class MinimapPass implements RenderPass {
 		glBindVertexArray(0);
 
 		frameLineVertices = BufferUtils.createFloatBuffer(LINE_FRAME_VERTEX_FLOATS_CAPACITY);
+		zoneLineScratch = BufferUtils.createFloatBuffer(LINE_ZONE_VERTEX_FLOATS_CAPACITY);
 
 		glLineVao = glGenVertexArrays();
 		glLineVbo = glGenBuffers();
@@ -277,35 +289,95 @@ public class MinimapPass implements RenderPass {
 		return out.limit() / 6;
 	}
 
-	private void buildVisibleLineVertices(WorldViewContext ctx, LocalPoint focus, float radiusWorld) {
-		frameLineVertices.clear();
+	private void buildZoneLineVertices(int zx, int zz, WorldViewContext ctx) {
+		zoneLineScratch.clear();
 
 		final Tile[][][] tiles = ctx.sceneContext.scene.getExtendedTiles();
 		final Tile[][] planeTiles = tiles[lastPlane];
 		final int sceneOffset = ctx.sceneContext.sceneOffset;
 		final float tileSize = Perspective.LOCAL_TILE_SIZE;
 
-		final int maxTx = planeTiles.length;
-		final int maxTz = maxTx > 0 ? planeTiles[0].length : 0;
-		final int centerTx = (int) Math.floor(focus.getX() / tileSize) + sceneOffset;
-		final int centerTz = (int) Math.floor(focus.getY() / tileSize) + sceneOffset;
-		final int tileRadius = (int) Math.ceil(radiusWorld / tileSize) + 1;
-
-		final int txStart = Math.max(0, centerTx - tileRadius);
-		final int txEnd = Math.min(maxTx, centerTx + tileRadius + 1);
-		final int tzStart = Math.max(0, centerTz - tileRadius);
-		final int tzEnd = Math.min(maxTz, centerTz + tileRadius + 1);
-
-		for (int tx = txStart; tx < txEnd; tx++) {
-			for (int tz = tzStart; tz < tzEnd; tz++) {
+		for (int xoff = 0; xoff < Constants.CHUNK_SIZE; xoff++) {
+			final int tx = zx * Constants.CHUNK_SIZE + xoff;
+			for (int zoff = 0; zoff < Constants.CHUNK_SIZE; zoff++) {
+				final int tz = zz * Constants.CHUNK_SIZE + zoff;
 				final Tile tile = planeTiles[tx][tz];
 				if (tile == null)
 					continue;
 
 				final float x = (tx - sceneOffset) * tileSize;
 				final float z = (tz - sceneOffset) * tileSize;
-				emitWallLines(frameLineVertices, tile, x, z, tileSize);
+				emitWallLines(zoneLineScratch, tile, x, z, tileSize);
 			}
+		}
+
+		zoneLineScratch.flip();
+		final int count = zoneLineScratch.limit();
+		if (count == 0) {
+			cachedLineZoneVertices[zx][zz] = EMPTY_LINE_VERTICES;
+			return;
+		}
+
+		final float[] data = new float[count];
+		zoneLineScratch.get(data);
+		cachedLineZoneVertices[zx][zz] = data;
+	}
+
+	// Unlike queueDirtyZones (which only tracks the terrain's small fixed-size cache window), this scans
+	// whatever radius the current zoom level actually needs, so wall lines keep up when zooming out instead
+	// of being capped at the terrain cache window's radius.
+	private void queueDirtyLineZones(WorldViewContext ctx, int playerZx, int playerZz, int zoneRadius) {
+		final int zxStart = clampZone(playerZx - zoneRadius);
+		final int zxEnd = clampZone(playerZx + zoneRadius);
+		final int zzStart = clampZone(playerZz - zoneRadius);
+		final int zzEnd = clampZone(playerZz + zoneRadius);
+
+		// Unlike the terrain zone cache, building line geometry is cheap CPU-side tile scanning with no GPU
+		// draws, so every dirty zone in range is processed in the same frame rather than being throttled -
+		// throttling this made lines take many frames to catch up whenever the needed radius grew large (e.g.
+		// in stretched mode, where fboWidth/fboHeight - and therefore the computed radius - scale up with the
+		// UI scaling factor), which looked like lines disappearing while zooming out.
+		for (int zx = zxStart; zx <= zxEnd; zx++) {
+			for (int zz = zzStart; zz <= zzEnd; zz++) {
+				final Zone zone = ctx.zones[zx][zz];
+				if (zone == cachedLineZoneRefs[zx][zz] || !zone.initialized)
+					continue;
+
+				buildZoneLineVertices(zx, zz, ctx);
+				cachedLineZoneRefs[zx][zz] = zone;
+			}
+		}
+	}
+
+	private void invalidateLineCache() {
+		for (Zone[] row : cachedLineZoneRefs)
+			Arrays.fill(row, null);
+	}
+
+	private void assembleFrameLineVertices(int playerZx, int playerZz, int zoneRadius) {
+		frameLineVertices.clear();
+
+		final int zxStart = clampZone(playerZx - zoneRadius);
+		final int zxEnd = clampZone(playerZx + zoneRadius);
+		final int zzStart = clampZone(playerZz - zoneRadius);
+		final int zzEnd = clampZone(playerZz + zoneRadius);
+
+		// Gather zones nearest-to-farthest so that if the frame buffer's fixed capacity is ever exceeded
+		// (e.g. a very large zoomed-out radius over dense city areas), it's the distant edge of the circle
+		// that gets truncated rather than whatever happened to come first in raster (zx, zz) order - which
+		// could easily be far from the player and push out the zones directly around them.
+		List<int[]> zones = new ArrayList<>();
+		for (int zx = zxStart; zx <= zxEnd; zx++)
+			for (int zz = zzStart; zz <= zzEnd; zz++)
+				if (cachedLineZoneVertices[zx][zz] != null)
+					zones.add(new int[] { zx, zz, sq(zx - playerZx) + sq(zz - playerZz) });
+		zones.sort((a, b) -> Integer.compare(a[2], b[2]));
+
+		for (int[] entry : zones) {
+			final float[] data = cachedLineZoneVertices[entry[0]][entry[1]];
+			if (data.length == 0 || frameLineVertices.remaining() < data.length)
+				continue;
+			frameLineVertices.put(data);
 		}
 
 		frameLineVertices.flip();
@@ -641,13 +713,16 @@ public class MinimapPass implements RenderPass {
 			invalidateCache();
 		}
 
-		if (environmentChanged())
+		if (environmentChanged()) {
 			invalidateCache();
+			invalidateLineCache();
+		}
 
 		final int plane = Math.max(0, Math.min(3, client.getPlane()));
 		if (plane != lastPlane) {
 			lastPlane = plane;
 			invalidateCache();
+			invalidateLineCache();
 		}
 
 		final int cacheOriginWorldX = (windowOriginZx * Constants.CHUNK_SIZE - sceneOffset) * Perspective.LOCAL_TILE_SIZE;
@@ -662,7 +737,11 @@ public class MinimapPass implements RenderPass {
 			lineFocusWorldX = focus.getX();
 			lineFocusWorldZ = focus.getY();
 			final float halfDiagPx = 0.5f * (float) Math.sqrt((double) fboWidth * fboWidth + (double) fboHeight * fboHeight);
-			buildVisibleLineVertices(ctx, focus, halfDiagPx * displayPixelToWorld * 1.1f);
+			final float radiusWorld = halfDiagPx * displayPixelToWorld * 1.1f;
+			final int tileRadius = (int) Math.ceil(radiusWorld / Perspective.LOCAL_TILE_SIZE) + 1;
+			final int zoneRadius = tileRadius / Constants.CHUNK_SIZE + 1;
+			queueDirtyLineZones(ctx, playerZx, playerZz, zoneRadius);
+			assembleFrameLineVertices(playerZx, playerZz, zoneRadius);
 		} else {
 			frameLineVertexCount = 0;
 		}
