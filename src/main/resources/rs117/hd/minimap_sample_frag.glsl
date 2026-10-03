@@ -33,6 +33,6 @@ void main() {
         return;
     }
 
-    vec3 cacheColor = texture(cacheTexture, cacheUv).rgb;
-    FragColor = vec4(cacheColor, maskAlpha);
+    vec4 cacheColor = texture(cacheTexture, cacheUv);
+    FragColor = vec4(cacheColor.rgb, maskAlpha * cacheColor.a);
 }

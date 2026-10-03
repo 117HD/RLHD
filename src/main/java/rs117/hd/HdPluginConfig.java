@@ -1291,16 +1291,15 @@ public interface HdPluginConfig extends Config
 	String KEY_MINIMAP_SHOW_LINES = "minimapShowLines";
 	@ConfigItem(
 		keyName = KEY_MINIMAP_SHOW_LINES,
-		name = "Show map lines",
+		name = "Show map lines (Topdown only)",
 		description =
-			"Keeps vanilla's wall/door boundary lines visible on top of the HD topdown minimap.<br>" +
-			"When off, these lines are hidden so they don't clutter the 3D render.<br>" +
-			"Only applies when minimap mode is set to 'HD Topdown'.",
+			"Shows wall/door boundary lines on the HD Topdown minimap.<br>" +
+			"Has no effect in Vanilla or Shaded minimap mode, where these lines always show.",
 		position = 2,
 		section = minimapSettings
 	)
 	default boolean minimapShowLines() {
-		return false;
+		return true;
 	}
 
 	/*====== Internal settings ======*/

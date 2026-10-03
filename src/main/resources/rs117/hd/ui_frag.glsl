@@ -99,7 +99,7 @@ void main() {
     ) {
         vec3 unpremultiplied = c.a > 0 ? c.rgb / c.a : c.rgb;
         ivec3 rgb255 = ivec3(round(unpremultiplied * 255.0));
-        if (rgb255 == MINIMAP_PLACEHOLDER_COLOR || (!minimapShowLines && isMinimapLineColor(rgb255)))
+        if (rgb255 == MINIMAP_PLACEHOLDER_COLOR || isMinimapLineColor(rgb255))
             c = vec4(0);
     }
 

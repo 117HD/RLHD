@@ -21,6 +21,7 @@ import org.lwjgl.BufferUtils;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.MinimapType;
+import rs117.hd.opengl.shader.MinimapLineShaderProgram;
 import rs117.hd.opengl.shader.MinimapSampleShaderProgram;
 import rs117.hd.opengl.shader.MinimapShadedShaderProgram;
 import rs117.hd.opengl.shader.SceneShaderProgram;
@@ -32,6 +33,7 @@ import rs117.hd.renderer.zone.WorldViewContext;
 import rs117.hd.renderer.zone.Zone;
 import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.scene.EnvironmentManager;
+import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.CommandBuffer;
@@ -84,14 +86,22 @@ public class MinimapPass implements RenderPass {
 	@Inject
 	private MinimapShadedShaderProgram shadedProgram;
 
+	@Inject
+	private MinimapLineShaderProgram lineProgram;
+
 	public final Camera cacheCamera = new Camera().setOrthographic(true).setReverseZ(true);
 
 	private static final int SHADED_VERTEX_FLOATS_CAPACITY = 16384;
+	private static final int LINE_FRAME_VERTEX_FLOATS_CAPACITY = 131072;
 	private final CommandBuffer[] zoneCacheCmds = new CommandBuffer[MAX_ZONE_UPDATES_PER_FRAME];
 	private final FloatBuffer[] pendingShadedVertices = new FloatBuffer[MAX_ZONE_UPDATES_PER_FRAME];
 	private final int[] pendingShadedVertexCounts = new int[MAX_ZONE_UPDATES_PER_FRAME];
 	private MinimapType pendingMode;
 	private int glShadedVao, glShadedVbo;
+	private FloatBuffer frameLineVertices;
+	private int frameLineVertexCount;
+	private int glLineVao, glLineVbo;
+	private float lineFocusWorldX, lineFocusWorldZ;
 
 	public final int[] viewportRect = new int[4];
 	public boolean active;
@@ -137,6 +147,23 @@ public class MinimapPass implements RenderPass {
 		glVertexAttribPointer(1, 3, GL_FLOAT, false, 6 * Float.BYTES, 3L * Float.BYTES);
 		glEnableVertexAttribArray(1);
 		glBindVertexArray(0);
+
+		frameLineVertices = BufferUtils.createFloatBuffer(LINE_FRAME_VERTEX_FLOATS_CAPACITY);
+
+		glLineVao = glGenVertexArrays();
+		glLineVbo = glGenBuffers();
+		glBindVertexArray(glLineVao);
+		glBindBuffer(GL_ARRAY_BUFFER, glLineVbo);
+		glBufferData(GL_ARRAY_BUFFER, (long) LINE_FRAME_VERTEX_FLOATS_CAPACITY * Float.BYTES, GL_DYNAMIC_DRAW);
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 10 * Float.BYTES, 0);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, 3, GL_FLOAT, false, 10 * Float.BYTES, 3L * Float.BYTES);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(2, 2, GL_FLOAT, false, 10 * Float.BYTES, 6L * Float.BYTES);
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(3, 2, GL_FLOAT, false, 10 * Float.BYTES, 8L * Float.BYTES);
+		glEnableVertexAttribArray(3);
+		glBindVertexArray(0);
 	}
 
 	@Override
@@ -144,6 +171,7 @@ public class MinimapPass implements RenderPass {
 		minimapProgram.compile(includes);
 		sampleProgram.compile(includes);
 		shadedProgram.compile(includes);
+		lineProgram.compile(includes);
 	}
 
 	@Override
@@ -151,6 +179,7 @@ public class MinimapPass implements RenderPass {
 		minimapProgram.destroy();
 		sampleProgram.destroy();
 		shadedProgram.destroy();
+		lineProgram.destroy();
 	}
 
 	@Override
@@ -165,6 +194,14 @@ public class MinimapPass implements RenderPass {
 		if (glShadedVao != 0)
 			glDeleteVertexArrays(glShadedVao);
 		glShadedVao = 0;
+
+		if (glLineVbo != 0)
+			glDeleteBuffers(glLineVbo);
+		glLineVbo = 0;
+
+		if (glLineVao != 0)
+			glDeleteVertexArrays(glLineVao);
+		glLineVao = 0;
 
 		destroyCacheFbo();
 		destroyMask();
@@ -229,7 +266,7 @@ public class MinimapPass implements RenderPass {
 				final SceneTileModel model = tile.getSceneTileModel();
 				if (model != null) {
 					if (flat)
-						emitFlatModelTile(out, model);
+						emitFlatModelTile(out, tile, model);
 					else
 						emitShadedModelTile(out, model);
 				}
@@ -238,6 +275,162 @@ public class MinimapPass implements RenderPass {
 
 		out.flip();
 		return out.limit() / 6;
+	}
+
+	private void buildVisibleLineVertices(WorldViewContext ctx, LocalPoint focus, float radiusWorld) {
+		frameLineVertices.clear();
+
+		final Tile[][][] tiles = ctx.sceneContext.scene.getExtendedTiles();
+		final Tile[][] planeTiles = tiles[lastPlane];
+		final int sceneOffset = ctx.sceneContext.sceneOffset;
+		final float tileSize = Perspective.LOCAL_TILE_SIZE;
+
+		final int maxTx = planeTiles.length;
+		final int maxTz = maxTx > 0 ? planeTiles[0].length : 0;
+		final int centerTx = (int) Math.floor(focus.getX() / tileSize) + sceneOffset;
+		final int centerTz = (int) Math.floor(focus.getY() / tileSize) + sceneOffset;
+		final int tileRadius = (int) Math.ceil(radiusWorld / tileSize) + 1;
+
+		final int txStart = Math.max(0, centerTx - tileRadius);
+		final int txEnd = Math.min(maxTx, centerTx + tileRadius + 1);
+		final int tzStart = Math.max(0, centerTz - tileRadius);
+		final int tzEnd = Math.min(maxTz, centerTz + tileRadius + 1);
+
+		for (int tx = txStart; tx < txEnd; tx++) {
+			for (int tz = tzStart; tz < tzEnd; tz++) {
+				final Tile tile = planeTiles[tx][tz];
+				if (tile == null)
+					continue;
+
+				final float x = (tx - sceneOffset) * tileSize;
+				final float z = (tz - sceneOffset) * tileSize;
+				emitWallLines(frameLineVertices, tile, x, z, tileSize);
+			}
+		}
+
+		frameLineVertices.flip();
+		frameLineVertexCount = frameLineVertices.limit() / 10;
+	}
+
+	private static final float LINE_UNIT = Perspective.LOCAL_TILE_SIZE / 16f * 4f;
+	private static final float LINE_HALF = LINE_UNIT / 2f;
+	private static final float SEAM_OVERLAP = 2f;
+	private static final float MIN_LINE_HALF_THICKNESS_PX = 0.9f;
+	private static final float[] WALL_COLOR_RED = { 238 / 255f, 0f, 0f };
+	private static final float[] WALL_COLOR_WHITE = { 238 / 255f, 238 / 255f, 238 / 255f };
+
+	private void emitWallLines(FloatBuffer out, Tile tile, float x, float z, float span) {
+		final WallObject wall = tile.getWallObject();
+		if (wall != null) {
+			final int config = wall.getConfig();
+			final int shape = config & 31;
+			final int rotation = config >> 6 & 3;
+			final float[] color = (wall.getHash() >>> 19 & 1L) == 0L ? WALL_COLOR_RED : WALL_COLOR_WHITE;
+
+			if (shape == 0 || shape == 2)
+				emitWallEdge(out, rotation, x, z, span, color);
+			if (shape == 2)
+				emitWallEdge(out, (rotation + 1) % 4, x, z, span, color);
+			if (shape == 3)
+				emitWallCorner(out, rotation, x, z, span, color);
+		}
+
+		for (GameObject gameObject : tile.getGameObjects()) {
+			if (gameObject == null || !gameObject.getSceneMinLocation().equals(tile.getSceneLocation()))
+				continue;
+
+			final int config = gameObject.getConfig();
+			if ((config & 31) == 9) {
+				final int rotation = config >> 6 & 3;
+				final float[] color = (gameObject.getHash() >>> 19 & 1L) == 0L ? WALL_COLOR_RED : WALL_COLOR_WHITE;
+				emitDiagonal(out, rotation, x, z, span, color);
+			}
+		}
+
+		final DecorativeObject decor = tile.getDecorativeObject();
+		if (decor != null) {
+			final int config = decor.getConfig();
+			if ((config & 31) == 9) {
+				final int rotation = config >> 6 & 3;
+				final float[] color = (decor.getHash() >>> 19 & 1L) == 0L ? WALL_COLOR_RED : WALL_COLOR_WHITE;
+				emitDiagonal(out, rotation, x, z, span, color);
+			}
+		}
+	}
+
+	private void emitWallEdge(FloatBuffer out, int rotation, float x, float z, float span, float[] color) {
+		switch (rotation) {
+			case 0:
+				emitLine(out, x + LINE_HALF, z, x + LINE_HALF, z + span, LINE_UNIT, color);
+				break;
+			case 1:
+				emitLine(out, x, z + span - LINE_HALF, x + span, z + span - LINE_HALF, LINE_UNIT, color);
+				break;
+			case 2:
+				emitLine(out, x + span - LINE_HALF, z, x + span - LINE_HALF, z + span, LINE_UNIT, color);
+				break;
+			default:
+				emitLine(out, x, z + LINE_HALF, x + span, z + LINE_HALF, LINE_UNIT, color);
+				break;
+		}
+	}
+
+	private void emitWallCorner(FloatBuffer out, int rotation, float x, float z, float span, float[] color) {
+		final boolean west = rotation == 0 || rotation == 3;
+		final boolean north = rotation < 2;
+		final float cx = west ? x : x + span - LINE_UNIT;
+		final float cz = north ? z + span - LINE_UNIT : z;
+		emitRect(out, cx, cz, cx + LINE_UNIT, cz + LINE_UNIT, color);
+	}
+
+	private static void emitDiagonal(FloatBuffer out, int rotation, float x, float z, float span, float[] color) {
+		if (rotation == 1 || rotation == 3)
+			emitLine(out, x, z + span, x + span, z, LINE_UNIT, color);
+		else
+			emitLine(out, x, z, x + span, z + span, LINE_UNIT, color);
+	}
+
+	private static void emitLine(FloatBuffer out, float x0, float z0, float x1, float z1, float thickness, float[] color) {
+		final float dx = x1 - x0;
+		final float dz = z1 - z0;
+		final float len = (float) Math.sqrt(dx * dx + dz * dz);
+		if (len < 1e-4f)
+			return;
+
+		final float ux = dx / len, uz = dz / len;
+		final float ex0 = x0 - ux * SEAM_OVERLAP, ez0 = z0 - uz * SEAM_OVERLAP;
+		final float ex1 = x1 + ux * SEAM_OVERLAP, ez1 = z1 + uz * SEAM_OVERLAP;
+
+		final float nx = -dz / len * (thickness / 2f);
+		final float nz = dx / len * (thickness / 2f);
+
+		putLineVertex(out, ex0, ez0, color, 0.5f, 0f, nx, nz);
+		putLineVertex(out, ex0, ez0, color, 0.5f, 1f, -nx, -nz);
+		putLineVertex(out, ex1, ez1, color, 0.5f, 0f, nx, nz);
+
+		putLineVertex(out, ex0, ez0, color, 0.5f, 1f, -nx, -nz);
+		putLineVertex(out, ex1, ez1, color, 0.5f, 1f, -nx, -nz);
+		putLineVertex(out, ex1, ez1, color, 0.5f, 0f, nx, nz);
+	}
+
+	private static void emitRect(FloatBuffer out, float x0, float z0, float x1, float z1, float[] color) {
+		putLineVertex(out, x0, z0, color, 0, 0);
+		putLineVertex(out, x0, z1, color, 0, 1);
+		putLineVertex(out, x1, z1, color, 1, 1);
+
+		putLineVertex(out, x0, z0, color, 0, 0);
+		putLineVertex(out, x1, z1, color, 1, 1);
+		putLineVertex(out, x1, z0, color, 1, 0);
+	}
+
+	private static void putLineVertex(FloatBuffer out, float x, float z, float[] rgb, float u, float v) {
+		putLineVertex(out, x, z, rgb, u, v, 0, 0);
+	}
+
+	private static void putLineVertex(FloatBuffer out, float x, float z, float[] rgb, float u, float v, float ox, float oz) {
+		if (out.remaining() < 10)
+			return;
+		out.put(x).put(0).put(z).put(rgb[0]).put(rgb[1]).put(rgb[2]).put(u).put(v).put(ox).put(oz);
 	}
 
 	private void emitFlatPaintTile(FloatBuffer out, SceneTilePaint paint, float x, float z, float span) {
@@ -256,14 +449,9 @@ public class MinimapPass implements RenderPass {
 		putVertex(out, x + span, 0, z, rgb);
 	}
 
-	private void emitFlatModelTile(FloatBuffer out, SceneTileModel model) {
+	private void emitFlatModelTile(FloatBuffer out, Tile tile, SceneTileModel model) {
 		final int overlay = model.getModelOverlay();
-		final int color = overlay != 0 ? overlay : model.getModelUnderlay();
-		if (color == 0)
-			return;
-
-		final float[] rgb = ColorUtils.srgb(color);
-
+		final int underlay = model.getModelUnderlay();
 		final int[] vertexX = model.getVertexX();
 		final int[] vertexZ = model.getVertexZ();
 		final int[] faceA = model.getFaceX();
@@ -271,6 +459,11 @@ public class MinimapPass implements RenderPass {
 		final int[] faceC = model.getFaceZ();
 
 		for (int face = 0; face < faceA.length; face++) {
+			final int color = ProceduralGenerator.isOverlayFace(tile, face) ? overlay : underlay;
+			if (color == 0)
+				continue;
+
+			final float[] rgb = ColorUtils.srgb(color);
 			final int idx1 = faceA[face];
 			final int idx2 = faceB[face];
 			final int idx3 = faceC[face];
@@ -465,6 +658,15 @@ public class MinimapPass implements RenderPass {
 
 		queueDirtyZones(ctx, playerZx, playerZz);
 
+		if (type != MinimapType.HD || config.minimapShowLines()) {
+			lineFocusWorldX = focus.getX();
+			lineFocusWorldZ = focus.getY();
+			final float halfDiagPx = 0.5f * (float) Math.sqrt((double) fboWidth * fboWidth + (double) fboHeight * fboHeight);
+			buildVisibleLineVertices(ctx, focus, halfDiagPx * displayPixelToWorld * 1.1f);
+		} else {
+			frameLineVertexCount = 0;
+		}
+
 		active = true;
 	}
 
@@ -474,9 +676,6 @@ public class MinimapPass implements RenderPass {
 	}
 
 	private boolean environmentChanged() {
-		// Keep invalidating every frame while a lighting transition (e.g. seasonal/time-of-day change) is
-		// actively running, plus one guaranteed extra invalidation on the frame it completes, so the cache
-		// never settles on a mid-transition lighting/shadow state.
 		final boolean transitioning = !environmentManager.isTransitionComplete();
 		final boolean changed = transitioning || wasEnvironmentTransitioning;
 		wasEnvironmentTransitioning = transitioning;
@@ -571,6 +770,7 @@ public class MinimapPass implements RenderPass {
 
 		drawZoneCacheUpdates(renderState);
 		drawDisplay(renderState);
+		drawLines(renderState);
 	}
 
 	private void drawZoneCacheUpdates(RenderState renderState) {
@@ -612,6 +812,7 @@ public class MinimapPass implements RenderPass {
 			renderState.apply();
 			glScissor(cellX, cellY, ZONE_PX, ZONE_PX);
 
+			glDrawBuffer(GL_COLOR_ATTACHMENT0);
 			glClearColor(0, 0, 0, 1);
 			if (!shaded)
 				glClearDepth(0);
@@ -668,6 +869,41 @@ public class MinimapPass implements RenderPass {
 
 		glBindVertexArray(plugin.vaoTri);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		glBindVertexArray(0);
+
+		renderState.disable.set(GL_BLEND);
+		renderState.apply();
+	}
+
+	private void drawLines(RenderState renderState) {
+		if (!active || texMinimapMask == 0 || frameLineVertexCount == 0)
+			return;
+
+		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
+		renderState.disable.set(GL_SCISSOR_TEST);
+		renderState.disable.set(GL_MULTISAMPLE);
+		renderState.viewport.set(viewportRect[0], viewportRect[1], viewportRect[2], viewportRect[3]);
+		renderState.disable.set(GL_DEPTH_TEST);
+		renderState.enable.set(GL_BLEND);
+		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		renderState.apply();
+
+		lineProgram.use();
+		lineProgram.uniFocusWorld.set(lineFocusWorldX, lineFocusWorldZ);
+		lineProgram.uniCosYaw.set(displayCosYaw);
+		lineProgram.uniSinYaw.set(displaySinYaw);
+		lineProgram.uniPixelToWorld.set(displayPixelToWorld);
+		lineProgram.uniFboSize.set((float) fboWidth, (float) fboHeight);
+		lineProgram.uniMinHalfThicknessPx.set(MIN_LINE_HALF_THICKNESS_PX);
+
+		glActiveTexture(TEXTURE_UNIT_MINIMAP_MASK);
+		glBindTexture(GL_TEXTURE_2D, texMinimapMask);
+
+		glBindVertexArray(glLineVao);
+		glBindBuffer(GL_ARRAY_BUFFER, glLineVbo);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, frameLineVertices);
+		glDrawArrays(GL_TRIANGLES, 0, frameLineVertexCount);
 
 		glBindVertexArray(0);
 
