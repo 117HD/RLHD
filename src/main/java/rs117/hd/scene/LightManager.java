@@ -42,12 +42,9 @@ import net.runelite.api.*;
 import net.runelite.api.coords.*;
 import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
-import net.runelite.client.config.ConfigManager;
+import net.runelite.client.callback.RenderCallbackManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
-import net.runelite.client.plugins.PluginManager;
-import net.runelite.client.plugins.entityhider.EntityHiderConfig;
-import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import rs117.hd.HdPlugin;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.data.ObjectType;
@@ -84,10 +81,7 @@ public class LightManager {
 	private EventBus eventBus;
 
 	@Inject
-	private PluginManager pluginManager;
-
-	@Inject
-	private ConfigManager configManager;
+	private RenderCallbackManager renderCallbackManager;
 
 	@Inject
 	private HdPlugin plugin;
@@ -98,9 +92,6 @@ public class LightManager {
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
 
-	@Inject
-	private EntityHiderPlugin entityHiderPlugin;
-
 	private final ArrayList<Light> WORLD_LIGHTS = new ArrayList<>();
 	private final ListMultimap<Integer, LightDefinition> NPC_LIGHTS = ArrayListMultimap.create();
 	private final ListMultimap<Integer, LightDefinition> OBJECT_LIGHTS = ArrayListMultimap.create();
@@ -109,7 +100,6 @@ public class LightManager {
 
 	private final Renderable[] imposterRenderables = new Renderable[2];
 	private boolean reloadLights;
-	private EntityHiderConfig entityHiderConfig;
 	private int currentPlane;
 
 	public void loadConfig(Gson gson, ResourcePath path) {
@@ -155,7 +145,6 @@ public class LightManager {
 	}
 
 	public void startUp() {
-		entityHiderConfig = configManager.getConfig(EntityHiderConfig.class);
 		LIGHTS_PATH.watch(path -> loadConfig(plugin.getGson(), path));
 		eventBus.register(this);
 	}
@@ -251,7 +240,7 @@ public class LightManager {
 				light.origin[0] = (int) light.projectile.getX();
 				light.origin[1] = (int) light.projectile.getZ() - light.def.height;
 				light.origin[2] = (int) light.projectile.getY();
-				hiddenTemporarily = !shouldShowProjectileLights();
+				hiddenTemporarily = isRenderableHidden(light.projectile);
 				if (light.projectile.getRemainingCycles() <= 0) {
 					light.markedForRemoval = true;
 				} else {
@@ -319,7 +308,7 @@ public class LightManager {
 						tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE &&
 						(tile = tiles[plane][tileExX][tileExY]) != null
 					) {
-						hiddenTemporarily = !isActorLightVisible(light.actor);
+						hiddenTemporarily = isRenderableHidden(light.actor);
 
 						if (!light.def.ignoreActorHiding &&
 							!(light.actor instanceof NPC && ((NPC) light.actor).getComposition().getSize() > 1)
@@ -568,65 +557,26 @@ public class LightManager {
 		}
 	}
 
-	private boolean isActorLightVisible(@Nonnull Actor actor) {
+	private boolean isRenderableHidden(@Nonnull Renderable renderable) {
 		try {
 			// getModel may throw an exception from vanilla client code
-			if (actor.getModel() == null)
-				return false;
+			if (renderable.getModel() == null)
+				return true;
 		} catch (Exception ex) {
 			// Vanilla handles exceptions thrown in `DrawCallbacks#draw` gracefully, but here we have to handle them
-			return false;
+			return true;
 		}
 
-		boolean entityHiderEnabled = pluginManager.isPluginEnabled(entityHiderPlugin);
+		if (!renderCallbackManager.addEntity(renderable, false))
+			return true;
 
-		if (actor instanceof NPC) {
-			if (!plugin.configNpcLights)
-				return false;
+		if (renderable instanceof NPC)
+			return !plugin.configNpcLights;
 
-			if (entityHiderEnabled) {
-				var npc = (NPC) actor;
-				boolean isPet = npc.getComposition().isFollower();
+		if (renderable instanceof Projectile)
+			return !plugin.configProjectileLights;
 
-				if (client.getFollower() != null && client.getFollower().getIndex() == npc.getIndex())
-					return true;
-
-				if (entityHiderConfig.hideNPCs() && !isPet)
-					return false;
-
-				return !entityHiderConfig.hidePets() || !isPet;
-			}
-		} else if (actor instanceof Player) {
-			if (entityHiderEnabled) {
-				var player = (Player) actor;
-				Player local = client.getLocalPlayer();
-				if (local == null || player.getName() == null)
-					return true;
-
-				if (player == local)
-					return !entityHiderConfig.hideLocalPlayer();
-
-				if (entityHiderConfig.hideAttackers() && player.getInteracting() == local)
-					return false;
-
-				if (player.isFriend())
-					return !entityHiderConfig.hideFriends();
-				if (player.isFriendsChatMember())
-					return !entityHiderConfig.hideFriendsChatMembers();
-				if (player.isClanMember())
-					return !entityHiderConfig.hideClanChatMembers();
-				if (client.getIgnoreContainer().findByName(player.getName()) != null)
-					return !entityHiderConfig.hideIgnores();
-
-				return !entityHiderConfig.hideOthers();
-			}
-		}
-
-		return true;
-	}
-
-	private boolean shouldShowProjectileLights() {
-		return plugin.configProjectileLights && !(pluginManager.isPluginEnabled(entityHiderPlugin) && entityHiderConfig.hideProjectiles());
+		return false;
 	}
 
 	public void loadSceneLights(SceneContext sceneContext) {
