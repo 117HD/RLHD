@@ -50,7 +50,7 @@ public final class AstronomyUtils {
 	 * @param out     output altitude and azimuth angles in radians
 	 * @param millis  time in milliseconds since the Unix epoch
 	 * @param latLong latitude and longitude coordinates
-	 * @return {@code out}. Azimuth is clockwise from north.
+	 * @return {@code out}. Altitude includes atmospheric refraction. Azimuth is clockwise from north.
 	 * @see <a href="https://en.wikipedia.org/wiki/Horizontal_coordinate_system">Horizontal coordinate system</a>
 	 * @see <a href="https://github.com/mourner/suncalc#sun-position">suncalc npm documentation</a>
 	 */
@@ -65,11 +65,15 @@ public final class AstronomyUtils {
 			ra = rightAscension(L, 0),
 			H = siderealTime(d, lw) - ra;
 
-		out[0] = (float) altitude(H, phi, dec);
+		double h = altitude(H, phi, dec);
+		out[0] = (float) (h + astroRefraction(h));
 		out[1] = (float) (azimuth(H, phi, dec) + PI);
 		return out;
 	}
 
+	/**
+	 * Return the apparent solar altitude in radians.
+	 */
 	public static float getSunAltitude(long millis, float[] latLong) {
 		double
 			phi = rad * latLong[0],
@@ -80,7 +84,8 @@ public final class AstronomyUtils {
 			dec = declination(L, 0),
 			ra = rightAscension(L, 0),
 			H = siderealTime(d, lw) - ra;
-		return (float) altitude(H, phi, dec);
+		double h = altitude(H, phi, dec);
+		return (float) (h + astroRefraction(h));
 	}
 
 	/**
@@ -89,7 +94,7 @@ public final class AstronomyUtils {
 	 * @param out     output altitude, azimuth, and optionally distance and parallactic angle
 	 * @param millis  time in milliseconds since the Unix epoch
 	 * @param latLong latitude and longitude coordinates
-	 * @return {@code out}. Angles are in radians, and azimuth is clockwise from north.
+	 * @return {@code out}. Angles are in radians. Altitude includes atmospheric refraction. Azimuth is clockwise from north.
 	 * @see <a href="https://en.wikipedia.org/wiki/Horizontal_coordinate_system">Horizontal coordinate system</a>
 	 * @see <a href="https://github.com/mourner/suncalc#moon-position">suncalc npm documentation</a>
 	 */
@@ -195,8 +200,10 @@ public final class AstronomyUtils {
 	}
 
 	private static double astroRefraction(double h) {
-		if (h < 0) // the following formula works for positive altitudes only.
-			h = 0; // if h = -0.08901179 a div/0 would occur.
+		// Extend through the slightly negative geometric altitudes at which the
+		// refracted Sun/Moon can still be visible. Below -1 degree, hold the
+		// correction fixed: the disk has set and extrapolating approaches a pole.
+		h = Math.max(h, -rad);
 
 		// formula 16.4 of "Astronomical Algorithms" 2nd edition by Jean Meeus (Willmann-Bell, Richmond) 1998.
 		// 1.02 / tan(h + 10.26 / (h + 5.10)) h in degrees, result in arc minutes -> converted to rad:
