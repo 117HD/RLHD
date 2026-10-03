@@ -621,9 +621,9 @@ public class LegacyRenderer implements Renderer {
 			if (updateUniforms) {
 				float[] newCameraPosition = { (float) cameraX, (float) cameraY, (float) cameraZ };
 				float[] newCameraOrientation = { (float) cameraYaw, (float) cameraPitch };
-				int newZoom = plugin.configShadowsEnabled && plugin.configExpandShadowDraw ?
-					client.get3dZoom() / 2 :
-					client.get3dZoom();
+				int newZoom = client.get3dZoom();
+				if (plugin.configShadowsEnabled && plugin.configConservativeShadowCulling)
+					newZoom /= 2;
 				if (!Arrays.equals(plugin.cameraPosition, newCameraPosition) ||
 					!Arrays.equals(plugin.cameraOrientation, newCameraOrientation) ||
 					visibilityCheckZoom != newZoom ||

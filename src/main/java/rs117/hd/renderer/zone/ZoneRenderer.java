@@ -164,6 +164,7 @@ public class ZoneRenderer implements Renderer {
 	public final Camera sceneCamera = new Camera().setReverseZ(true);
 	public final Camera directionalCamera = new Camera().setOrthographic(true);
 	public final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
+	private int shadowDrawDistance;
 
 	public final RenderState renderState = new RenderState();
 	public final CommandBuffer sceneCmd = new CommandBuffer("Scene");
@@ -425,12 +426,13 @@ public class ZoneRenderer implements Renderer {
 			copyTo(plugin.cameraPosition, vec(cameraX, cameraY, cameraZ));
 			copyTo(plugin.cameraOrientation, vec(cameraYaw, cameraPitch));
 
+			boolean hasFocalPointChanged =
+				plugin.cameraFocalPoint[0] != (int) client.getCameraFocalPointX() ||
+				plugin.cameraFocalPoint[1] != (int) client.getCameraFocalPointZ();
 			copyTo(plugin.cameraFocalPoint, ivec((int) client.getCameraFocalPointX(), (int) client.getCameraFocalPointZ()));
 			Arrays.fill(plugin.cameraShift, 0);
 
 			float zoom = client.get3dZoom();
-			float drawDistance = (float) plugin.getDrawDistance();
-
 			if (plugin.orthographicProjection)
 				zoom *= ORTHOGRAPHIC_ZOOM;
 
@@ -478,71 +480,74 @@ public class ZoneRenderer implements Renderer {
 			skyManager.updateDirectionalCamera(directionalCamera, skyRenderer.usesMoonShadows);
 
 			boolean hasDirectionalCameraChanged = directionalCamera.isViewDirty() || directionalCamera.isProjDirty();
+			boolean hasCullingModeChanged = plugin.configConservativeShadowCulling != directionalShadowCasterVolume.isConservative;
+			// Cap coverage around the focal point, then include the camera offset. Applying
+			// the cap afterwards would let zooming out consume the available shadow range.
+			float focalDistance = sceneCamera.distanceTo(
+				client.getCameraFocalPointX(),
+				client.getCameraFocalPointY(),
+				client.getCameraFocalPointZ()
+			);
+			int desiredShadowDistance = ceil(min(90, plugin.getDrawDistance()) * LOCAL_TILE_SIZE + focalDistance);
+			boolean needsUpdate =
+				hasSceneCameraChanged ||
+				hasFocalPointChanged ||
+				hasDirectionalCameraChanged ||
+				hasCullingModeChanged ||
+				shadowDrawDistance != desiredShadowDistance;
 
-			if (plugin.configShadowsEnabled &&
-				(hasSceneCameraChanged || hasDirectionalCameraChanged) &&
-				!sceneCamera.isOrthographic()
-			) {
-				int shadowDrawDistance = 90 * LOCAL_TILE_SIZE;
+			if (plugin.configShadowsEnabled && !sceneCamera.isOrthographic() && needsUpdate) {
+				shadowDrawDistance = desiredShadowDistance;
+				plugin.uboGlobal.shadowDrawDistance.set((float) shadowDrawDistance);
+				directionalShadowCasterVolume.build(
+					sceneCamera,
+					shadowDrawDistance,
+					shadowDrawDistance,
+					plugin.configConservativeShadowCulling
+				);
 
-				final float[][] volumeCorners = directionalShadowCasterVolume
-					.build(sceneCamera, drawDistance * LOCAL_TILE_SIZE, shadowDrawDistance);
-
-				final float[] sceneCenter = new float[3];
-				for (int i = 0; i < volumeCorners.length; i++)
-					add(sceneCenter, sceneCenter, volumeCorners[i]);
-				divide(sceneCenter, sceneCenter, (float) volumeCorners.length);
-
-				// Reset position before transforming points
+				// Reset position before calculating bounds
 				directionalCamera.setPosition(0, 0, 0);
 
-				float minX = Float.POSITIVE_INFINITY, maxX = Float.NEGATIVE_INFINITY;
-				float minY = Float.POSITIVE_INFINITY, maxY = Float.NEGATIVE_INFINITY;
-				float minZ = Float.POSITIVE_INFINITY, maxZ = Float.NEGATIVE_INFINITY;
-				float radius = 0f;
-				for (int i = 0; i < volumeCorners.length; i++) {
-					final float[] corner = volumeCorners[i];
-					radius = max(radius, distance(sceneCenter, corner));
+				// Fit only receivers inside draw distance, not the empty sides of the zoomed-out
+				// frustum. Allow an extra chunk for zone culling and four tiles for model overhang.
+				float receiverRadius = (min(90, plugin.getDrawDistance()) + CHUNK_SIZE + 4) * LOCAL_TILE_SIZE;
+				float[] bounds = new float[6];
+				directionalShadowCasterVolume.getReceiverBounds(
+					bounds,
+					plugin.cameraFocalPoint[0] - receiverRadius, plugin.cameraFocalPoint[1] - receiverRadius,
+					plugin.cameraFocalPoint[0] + receiverRadius, plugin.cameraFocalPoint[1] + receiverRadius
+				);
+				float minX = bounds[0], maxX = bounds[3];
+				float minY = bounds[1], maxY = bounds[4];
+				float minZ = bounds[2], maxZ = bounds[5];
 
-					directionalCamera.transformPoint(corner, corner);
-
-					minX = min(minX, corner[0]);
-					maxX = max(maxX, corner[0]);
-
-					minY = min(minY, corner[1]);
-					maxY = max(maxY, corner[1]);
-
-					minZ = min(minZ, corner[2]);
-					maxZ = max(maxZ, corner[2]);
-				}
-
-				// Offset the Directional Camera by the radius of the scene
-				float[] directionalFwd = directionalCamera.getForwardDirection();
-				multiply(directionalFwd, directionalFwd, radius);
-				add(sceneCenter, sceneCenter, directionalFwd);
-
-				// Calculate directional size from the AABB of the scene frustum corners
-				// Then snap to the nearest multiple of `LOCAL_HALF_TILE_SIZE` to prevent shimmering
-				int directionalSize = (int) max(abs(maxY - minY), abs(maxX - minX), abs(maxZ - minZ));
-				directionalSize = round(directionalSize / (float) LOCAL_HALF_TILE_SIZE) * LOCAL_HALF_TILE_SIZE;
-				directionalSize = max(8000, directionalSize); // Clamp the size to prevent going too small at reduced draw distances
+				// Fit the receiver footprint with room for filtering and texel snapping.
+				int directionalSize =
+					ceil((max(maxX - minX, maxY - minY) + 8 * LOCAL_TILE_SIZE) / LOCAL_HALF_TILE_SIZE) * LOCAL_HALF_TILE_SIZE;
 
 				// Ignore directional size changes below the change threshold to avoid inducing shimmering
 				int previousDirectionalSize = directionalCamera.getViewportWidth();
-				float changeThreshold = previousDirectionalSize * 0.05f; // 10% of the previous directional size
-				if (abs(directionalSize - previousDirectionalSize) < changeThreshold)
+				float changeThreshold = previousDirectionalSize * 0.05f;
+				if (abs(directionalSize - previousDirectionalSize) < changeThreshold && directionalSize <= previousDirectionalSize)
 					directionalSize = previousDirectionalSize;
 
-				// Snap Position to Shadow Texel Grid to prevent shimmering
-				directionalCamera.transformPoint(sceneCenter, sceneCenter);
-
+				// Bounds above are already in light-view space; both modes use the same projection.
+				float[] lightSpaceCenter = {
+					(minX + maxX) * .5f,
+					(minY + maxY) * .5f,
+					minZ - shadowDrawDistance - 4 * LOCAL_TILE_SIZE - 2
+				};
+				// Snap in light-view XY, then transform back to world space for the camera position.
 				float texelSize = (float) directionalSize / plugin.shadowMapResolution;
-				sceneCenter[0] = (float) floor(sceneCenter[0] / texelSize + 0.5f) * texelSize;
-				sceneCenter[1] = (float) floor(sceneCenter[1] / texelSize + 0.5f) * texelSize;
+				lightSpaceCenter[0] = (float) floor(lightSpaceCenter[0] / texelSize + 0.5f) * texelSize;
+				lightSpaceCenter[1] = (float) floor(lightSpaceCenter[1] / texelSize + 0.5f) * texelSize;
+				float shadowDepth = maxZ + 4 * LOCAL_TILE_SIZE - lightSpaceCenter[2];
 
-				directionalCamera.setPosition(directionalCamera.inverseTransformPoint(sceneCenter, sceneCenter));
-				directionalCamera.setNearPlane(max(.1f, radius * .05f));
-				directionalCamera.setFarPlane(radius * 2);
+				directionalCamera.setPosition(directionalCamera.inverseTransformPoint(lightSpaceCenter, lightSpaceCenter));
+				// Mat4.orthographic maps view-space Z = 2 * near/far to the clip planes.
+				directionalCamera.setNearPlane(1);
+				directionalCamera.setFarPlane(shadowDepth * .5f);
 				directionalCamera.setZoom(1);
 				directionalCamera.setViewportWidth(directionalSize);
 				directionalCamera.setViewportHeight(directionalSize);
@@ -926,23 +931,22 @@ public class ZoneRenderer implements Renderer {
 				return zone.inShadowFrustum = true;
 			}
 
-			if (plugin.configShadowsEnabled && plugin.configExpandShadowDraw) {
-				zone.inShadowFrustum = directionalCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
-				if (zone.inShadowFrustum) {
-					int centerX = minX + (maxX - minX) / 2;
-					int centerY = minY + (maxY - minY) / 2;
-					int centerZ = minZ + (maxZ - minZ) / 2;
-					zone.inShadowFrustum = directionalShadowCasterVolume.intersectsPoint(centerX, centerY, centerZ);
-				}
-				if (plugin.enableDetailedTimers)
-					frameTimer.end(Timer.VISIBILITY_CHECK);
-				return zone.inShadowFrustum;
-			}
+			zone.inShadowFrustum =
+				plugin.configShadowsEnabled &&
+				directionalCamera.intersectsAABB(
+					minX - PADDING, minY - PADDING, minZ - PADDING,
+					maxX + PADDING, maxY + PADDING, maxZ + PADDING
+				) &&
+				directionalShadowCasterVolume.intersectsAABB(
+					minX - PADDING, minY - PADDING, minZ - PADDING,
+					maxX + PADDING, maxY + PADDING, maxZ + PADDING
+				);
 
 			if (plugin.enableDetailedTimers)
 				frameTimer.end(Timer.VISIBILITY_CHECK);
 			if (plugin.orthographicProjection)
 				return zone.inSceneFrustum = true;
+			return zone.inShadowFrustum;
 		} catch (Throwable ex) {
 			log.error("Error in zoneInFrustum({}, {}, {}, {}):", zx, zz, maxY, minY, ex);
 			plugin.requestPluginStop();
@@ -1345,6 +1349,7 @@ public class ZoneRenderer implements Renderer {
 	public void swapScene(Scene scene) {
 		try {
 			sceneManager.swapScene(scene);
+			directionalCamera.setDirty();
 		} catch (Throwable ex) {
 			log.error("Error during swapScene:", ex);
 			plugin.stopPlugin();

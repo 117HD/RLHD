@@ -463,30 +463,30 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String KEY_EXPAND_SHADOW_DRAW = "expandShadowDraw";
-	@ConfigItem(
-		keyName = KEY_EXPAND_SHADOW_DRAW,
-		name = "Expand shadow draw",
-		description =
-			"Reduces shadows popping in and out at the edge of the screen by rendering<br>" +
-			"shadows for a larger portion of the scene, at the cost of higher GPU usage.",
-		position = 6,
-		section = shadowSettings
-	)
-	default boolean expandShadowDraw() {
-		return false;
-	}
-
 	String KEY_TERRAIN_SHADOWS = "terrainShadows";
 	@ConfigItem(
 		keyName = KEY_TERRAIN_SHADOWS,
 		name = "Terrain Shadows",
 		description = "Allow terrain to cast shadows. May cause visual artifacts on slopes.",
-		position = 7,
+		position = 6,
 		section = shadowSettings
 	)
 	default boolean terrainShadows() {
 		return true;
+	}
+
+	String KEY_CONSERVATIVE_SHADOW_CULLING = "expandShadowDraw";
+	@ConfigItem(
+		keyName = KEY_CONSERVATIVE_SHADOW_CULLING,
+		name = "Remove shadow pop-in",
+		description =
+			"Render a potentially much larger part of the scene, to avoid shadows popping in and out<br>" +
+			"based on what the camera currently sees. May significantly impact performance.",
+		position = 7,
+		section = shadowSettings
+	)
+	default boolean conservativeShadowCulling() {
+		return false;
 	}
 
 

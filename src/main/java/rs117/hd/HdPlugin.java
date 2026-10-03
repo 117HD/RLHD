@@ -427,7 +427,7 @@ public class HdPlugin extends Plugin {
 	public boolean configShadowTransparency;
 	public boolean configRoofShadows;
 	public boolean configTerrainShadows;
-	public boolean configExpandShadowDraw;
+	public boolean configConservativeShadowCulling;
 	public boolean configUseFasterModelHashing;
 	public boolean configZoneStreaming;
 	public boolean configPowerSaving;
@@ -1773,7 +1773,7 @@ public class HdPlugin extends Plugin {
 		configTiledLightingImageLoadStore = config.tiledLightingImageLoadStore();
 		configOverrideSky = config.overrideSky();
 		configDetailDrawDistance = config.detailDrawDistance();
-		configExpandShadowDraw = config.expandShadowDraw();
+		configConservativeShadowCulling = config.conservativeShadowCulling();
 		configUseFasterModelHashing = config.fasterModelHashing();
 		configZoneStreaming = config.zoneStreaming();
 		configPowerSaving = config.powerSaving();
