@@ -3,6 +3,7 @@ package rs117.hd.renderer.zone.passes;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +22,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.MinimapType;
 import rs117.hd.opengl.shader.MinimapSampleShaderProgram;
+import rs117.hd.opengl.shader.MinimapShadedShaderProgram;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
@@ -31,6 +33,7 @@ import rs117.hd.renderer.zone.Zone;
 import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.utils.Camera;
+import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.RenderState;
 
@@ -78,14 +81,22 @@ public class MinimapPass implements RenderPass {
 	@Inject
 	private MinimapSampleShaderProgram sampleProgram;
 
+	@Inject
+	private MinimapShadedShaderProgram shadedProgram;
+
 	public final Camera cacheCamera = new Camera().setOrthographic(true).setReverseZ(true);
 
+	private static final int SHADED_VERTEX_FLOATS_CAPACITY = 16384;
 	private final CommandBuffer[] zoneCacheCmds = new CommandBuffer[MAX_ZONE_UPDATES_PER_FRAME];
+	private final FloatBuffer[] pendingShadedVertices = new FloatBuffer[MAX_ZONE_UPDATES_PER_FRAME];
+	private final int[] pendingShadedVertexCounts = new int[MAX_ZONE_UPDATES_PER_FRAME];
+	private MinimapType pendingMode;
+	private int glShadedVao, glShadedVbo;
 
 	public final int[] viewportRect = new int[4];
 	public boolean active;
 
-	private boolean tileDrawerRegistered;
+	private MinimapType tileDrawerMode;
 
 	private int fboWidth, fboHeight;
 
@@ -98,6 +109,7 @@ public class MinimapPass implements RenderPass {
 	private final Zone[][] cachedZoneRefs = new Zone[SceneManager.NUM_ZONES][SceneManager.NUM_ZONES];
 	private int windowOriginZx = -1, windowOriginZz = -1;
 	private int lastPlane = -1;
+	private MinimapType lastCachedMode;
 	private final int[] pendingZx = new int[MAX_ZONE_UPDATES_PER_FRAME];
 	private final int[] pendingZz = new int[MAX_ZONE_UPDATES_PER_FRAME];
 	private int pendingCount;
@@ -112,26 +124,46 @@ public class MinimapPass implements RenderPass {
 		for (int i = 0; i < MAX_ZONE_UPDATES_PER_FRAME; i++) {
 			zoneCacheCmds[i] = new CommandBuffer("MinimapCache" + i);
 			zoneCacheCmds[i].setFrameTimer(frameTimer);
+			pendingShadedVertices[i] = BufferUtils.createFloatBuffer(SHADED_VERTEX_FLOATS_CAPACITY);
 		}
+
+		glShadedVao = glGenVertexArrays();
+		glShadedVbo = glGenBuffers();
+		glBindVertexArray(glShadedVao);
+		glBindBuffer(GL_ARRAY_BUFFER, glShadedVbo);
+		glBufferData(GL_ARRAY_BUFFER, (long) SHADED_VERTEX_FLOATS_CAPACITY * Float.BYTES, GL_DYNAMIC_DRAW);
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 6 * Float.BYTES, 0);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, 3, GL_FLOAT, false, 6 * Float.BYTES, 3L * Float.BYTES);
+		glEnableVertexAttribArray(1);
+		glBindVertexArray(0);
 	}
 
 	@Override
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
 		minimapProgram.compile(includes);
 		sampleProgram.compile(includes);
+		shadedProgram.compile(includes);
 	}
 
 	@Override
 	public void destroyShaders() {
 		minimapProgram.destroy();
 		sampleProgram.destroy();
+		shadedProgram.destroy();
 	}
 
 	@Override
 	public void destroy() {
-		if (tileDrawerRegistered)
-			client.setMinimapTileDrawer(null);
-		tileDrawerRegistered = false;
+		registerTileDrawer(MinimapType.NORMAL);
+
+		if (glShadedVbo != 0)
+			glDeleteBuffers(glShadedVbo);
+		glShadedVbo = 0;
+
+		if (glShadedVao != 0)
+			glDeleteVertexArrays(glShadedVao);
+		glShadedVao = 0;
 
 		destroyCacheFbo();
 		destroyMask();
@@ -139,14 +171,11 @@ public class MinimapPass implements RenderPass {
 
 	@Override
 	public int preprocess() {
-		final boolean enabled = config.minimapType() == MinimapType.HD;
+		final MinimapType type = config.minimapType();
+		registerTileDrawer(type);
 
-		if (enabled != tileDrawerRegistered) {
-			client.setMinimapTileDrawer(enabled ? this::drawPlaceholderTile : null);
-			tileDrawerRegistered = enabled;
-		}
-
-		if (!enabled) {
+		final boolean gpuActive = type == MinimapType.HD || type == MinimapType.SHADED || type == MinimapType.FLAT;
+		if (!gpuActive) {
 			active = false;
 			return 0;
 		}
@@ -157,8 +186,179 @@ public class MinimapPass implements RenderPass {
 		return PASS_ENABLED;
 	}
 
+	private void registerTileDrawer(MinimapType type) {
+		if (type == tileDrawerMode)
+			return;
+
+		final boolean usesPlaceholder = type == MinimapType.HD || type == MinimapType.SHADED || type == MinimapType.FLAT;
+		client.setMinimapTileDrawer(usesPlaceholder ? this::drawPlaceholderTile : null);
+		tileDrawerMode = type;
+	}
+
 	private void drawPlaceholderTile(Tile tile, int tx, int ty, int px0, int py0, int px1, int py1) {
 		client.getRasterizer().fillRectangle(px0, py0, px1 - px0, py1 - py0, PLACEHOLDER_COLOR);
+	}
+
+	private static int blendShade(int hsl, int shade) {
+		shade = (hsl & 127) * shade >> 7;
+		shade = Math.max(2, shade);
+		shade = Math.min(126, shade);
+		return (hsl & 0xFF80) + shade;
+	}
+
+	private int buildZoneVertices(int zx, int zz, WorldViewContext ctx, FloatBuffer out, boolean flat) {
+		out.clear();
+
+		final Tile[][][] tiles = ctx.sceneContext.scene.getExtendedTiles();
+		final int sceneOffset = ctx.sceneContext.sceneOffset;
+		final float tileSize = Perspective.LOCAL_TILE_SIZE;
+
+		for (int xoff = 0; xoff < Constants.CHUNK_SIZE; xoff++) {
+			final int tx = zx * Constants.CHUNK_SIZE + xoff;
+			for (int zoff = 0; zoff < Constants.CHUNK_SIZE; zoff++) {
+				final int tz = zz * Constants.CHUNK_SIZE + zoff;
+				final Tile tile = tiles[lastPlane][tx][tz];
+				if (tile == null)
+					continue;
+
+				final SceneTilePaint paint = tile.getSceneTilePaint();
+				if (paint != null) {
+					final float x = (tx - sceneOffset) * tileSize;
+					final float z = (tz - sceneOffset) * tileSize;
+					if (flat)
+						emitFlatPaintTile(out, paint, x, z, tileSize);
+					else
+						emitShadedPaintTile(out, paint, x, z, tileSize);
+					continue;
+				}
+
+				final SceneTileModel model = tile.getSceneTileModel();
+				if (model != null) {
+					if (flat)
+						emitFlatModelTile(out, model);
+					else
+						emitShadedModelTile(out, model);
+				}
+			}
+		}
+
+		out.flip();
+		return out.limit() / 6;
+	}
+
+	private void emitFlatPaintTile(FloatBuffer out, SceneTilePaint paint, float x, float z, float span) {
+		final int color = paint.getRBG();
+		if (color == 0)
+			return;
+
+		final float[] rgb = ColorUtils.srgb(color);
+
+		putVertex(out, x, 0, z, rgb);
+		putVertex(out, x, 0, z + span, rgb);
+		putVertex(out, x + span, 0, z + span, rgb);
+
+		putVertex(out, x, 0, z, rgb);
+		putVertex(out, x + span, 0, z + span, rgb);
+		putVertex(out, x + span, 0, z, rgb);
+	}
+
+	private void emitFlatModelTile(FloatBuffer out, SceneTileModel model) {
+		final int overlay = model.getModelOverlay();
+		final int color = overlay != 0 ? overlay : model.getModelUnderlay();
+		if (color == 0)
+			return;
+
+		final float[] rgb = ColorUtils.srgb(color);
+
+		final int[] vertexX = model.getVertexX();
+		final int[] vertexZ = model.getVertexZ();
+		final int[] faceA = model.getFaceX();
+		final int[] faceB = model.getFaceY();
+		final int[] faceC = model.getFaceZ();
+
+		for (int face = 0; face < faceA.length; face++) {
+			final int idx1 = faceA[face];
+			final int idx2 = faceB[face];
+			final int idx3 = faceC[face];
+
+			putVertex(out, vertexX[idx1], 0, vertexZ[idx1], rgb);
+			putVertex(out, vertexX[idx2], 0, vertexZ[idx2], rgb);
+			putVertex(out, vertexX[idx3], 0, vertexZ[idx3], rgb);
+		}
+	}
+
+	private void emitShadedPaintTile(FloatBuffer out, SceneTilePaint paint, float x, float z, float span) {
+		final int tex = paint.getTexture();
+		final float[] nwRgb, neRgb, swRgb, seRgb;
+		if (tex == -1) {
+			final int nw = paint.getNwColor();
+			if (nw == PLACEHOLDER_COLOR) {
+				final float[] flat = ColorUtils.packedHslToSrgb(paint.getRBG());
+				nwRgb = flat;
+				neRgb = flat;
+				swRgb = flat;
+				seRgb = flat;
+			} else {
+				nwRgb = ColorUtils.packedHslToSrgb(nw);
+				neRgb = ColorUtils.packedHslToSrgb(paint.getNeColor());
+				swRgb = ColorUtils.packedHslToSrgb(paint.getSwColor());
+				seRgb = ColorUtils.packedHslToSrgb(paint.getSeColor());
+			}
+		} else {
+			final int hsl = client.getTextureProvider().getDefaultColor(tex);
+			nwRgb = ColorUtils.packedHslToSrgb(blendShade(hsl, paint.getNwColor()));
+			neRgb = ColorUtils.packedHslToSrgb(blendShade(hsl, paint.getNeColor()));
+			swRgb = ColorUtils.packedHslToSrgb(blendShade(hsl, paint.getSwColor()));
+			seRgb = ColorUtils.packedHslToSrgb(blendShade(hsl, paint.getSeColor()));
+		}
+
+		putVertex(out, x, 0, z, swRgb);
+		putVertex(out, x, 0, z + span, nwRgb);
+		putVertex(out, x + span, 0, z + span, neRgb);
+
+		putVertex(out, x, 0, z, swRgb);
+		putVertex(out, x + span, 0, z + span, neRgb);
+		putVertex(out, x + span, 0, z, seRgb);
+	}
+
+	private void emitShadedModelTile(FloatBuffer out, SceneTileModel model) {
+		final int[] vertexX = model.getVertexX();
+		final int[] vertexZ = model.getVertexZ();
+		final int[] faceA = model.getFaceX();
+		final int[] faceB = model.getFaceY();
+		final int[] faceC = model.getFaceZ();
+		final int[] colorA = model.getTriangleColorA();
+		final int[] colorB = model.getTriangleColorB();
+		final int[] colorC = model.getTriangleColorC();
+		final int[] textures = model.getTriangleTextureId();
+
+		for (int face = 0; face < faceA.length; face++) {
+			final int idx1 = faceA[face];
+			final int idx2 = faceB[face];
+			final int idx3 = faceC[face];
+			int c1 = colorA[face];
+			int c2 = colorB[face];
+			int c3 = colorC[face];
+
+			if (textures != null && textures[face] != -1) {
+				final int hsl = client.getTextureProvider().getDefaultColor(textures[face]);
+				c1 = blendShade(hsl, c1);
+				c2 = blendShade(hsl, c2);
+				c3 = blendShade(hsl, c3);
+			} else if (c1 == PLACEHOLDER_COLOR) {
+				continue;
+			}
+
+			putVertex(out, vertexX[idx1], 0, vertexZ[idx1], ColorUtils.packedHslToSrgb(c1));
+			putVertex(out, vertexX[idx2], 0, vertexZ[idx2], ColorUtils.packedHslToSrgb(c2));
+			putVertex(out, vertexX[idx3], 0, vertexZ[idx3], ColorUtils.packedHslToSrgb(c3));
+		}
+	}
+
+	private static void putVertex(FloatBuffer out, float x, float y, float z, float[] rgb) {
+		if (out.remaining() < 6)
+			return;
+		out.put(x).put(y).put(z).put(rgb[0]).put(rgb[1]).put(rgb[2]);
 	}
 
 	private static final int[] MINIMAP_DRAW_AREA_IDS = {
@@ -248,6 +448,12 @@ public class MinimapPass implements RenderPass {
 			invalidateCache();
 		}
 
+		final MinimapType type = config.minimapType();
+		if (type != lastCachedMode) {
+			lastCachedMode = type;
+			invalidateCache();
+		}
+
 		if (environmentChanged())
 			invalidateCache();
 
@@ -301,6 +507,8 @@ public class MinimapPass implements RenderPass {
 
 		dirty.sort((a, b) -> Integer.compare(a[2], b[2]));
 
+		pendingMode = config.minimapType();
+
 		for (int[] entry : dirty) {
 			if (pendingCount >= MAX_ZONE_UPDATES_PER_FRAME)
 				break;
@@ -311,16 +519,22 @@ public class MinimapPass implements RenderPass {
 			if (!zone.initialized)
 				continue;
 
-			final CommandBuffer cmd = zoneCacheCmds[pendingCount];
-			cmd.reset();
-
 			positionCacheCamera(zx, zz, ctx);
 
-			if (zone.sizeO != 0)
-				zone.renderFloorLevel(cmd, lastPlane);
-			if (!zone.visibleAlphaModels.isEmpty()) {
-				final int offset = ctx.sceneContext.sceneOffset >> 3;
-				zone.renderAlpha(cmd, zx - offset, zz - offset, lastPlane, ctx, null, false, false);
+			if (pendingMode == MinimapType.SHADED || pendingMode == MinimapType.FLAT) {
+				pendingShadedVertexCounts[pendingCount] = buildZoneVertices(
+					zx, zz, ctx, pendingShadedVertices[pendingCount], pendingMode == MinimapType.FLAT
+				);
+			} else {
+				final CommandBuffer cmd = zoneCacheCmds[pendingCount];
+				cmd.reset();
+
+				if (zone.sizeO != 0)
+					zone.renderFloorLevel(cmd, lastPlane);
+				if (!zone.visibleAlphaModels.isEmpty()) {
+					final int offset = ctx.sceneContext.sceneOffset >> 3;
+					zone.renderAlpha(cmd, zx - offset, zz - offset, lastPlane, ctx, null, false, false);
+				}
 			}
 
 			pendingZx[pendingCount] = zx;
@@ -369,18 +583,30 @@ public class MinimapPass implements RenderPass {
 		if (pendingCount == 0)
 			return;
 
-		minimapProgram.use();
+		final boolean shaded = pendingMode == MinimapType.SHADED || pendingMode == MinimapType.FLAT;
 
 		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, fboMinimapCache);
 		renderState.disable.set(GL_MULTISAMPLE);
 		renderState.enable.set(GL_SCISSOR_TEST);
-		renderState.enable.set(GL_DEPTH_TEST);
-		renderState.enable.set(GL_CULL_FACE);
-		renderState.enable.set(GL_BLEND);
-		renderState.depthFunc.set(GL_GEQUAL);
-		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
-		if (renderer.indirectDrawCmds != null)
-			renderState.ido.set(renderer.indirectDrawCmds.id);
+
+		if (shaded) {
+			shadedProgram.use();
+			renderState.disable.set(GL_DEPTH_TEST);
+			renderState.disable.set(GL_CULL_FACE);
+			renderState.disable.set(GL_BLEND);
+			renderState.apply();
+			glBindVertexArray(glShadedVao);
+			glBindBuffer(GL_ARRAY_BUFFER, glShadedVbo);
+		} else {
+			minimapProgram.use();
+			renderState.enable.set(GL_DEPTH_TEST);
+			renderState.enable.set(GL_CULL_FACE);
+			renderState.enable.set(GL_BLEND);
+			renderState.depthFunc.set(GL_GEQUAL);
+			renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+			if (renderer.indirectDrawCmds != null)
+				renderState.ido.set(renderer.indirectDrawCmds.id);
+		}
 
 		for (int i = 0; i < pendingCount; i++) {
 			final int zx = pendingZx[i];
@@ -393,14 +619,24 @@ public class MinimapPass implements RenderPass {
 			glScissor(cellX, cellY, ZONE_PX, ZONE_PX);
 
 			glClearColor(0, 0, 0, 1);
-			glClearDepth(0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			if (!shaded)
+				glClearDepth(0);
+			glClear(GL_COLOR_BUFFER_BIT | (shaded ? 0 : GL_DEPTH_BUFFER_BIT));
 
 			positionCacheCamera(zx, zz, rootCtx);
-			plugin.uboGlobal.sceneCamera.write(cacheCamera);
-			plugin.uboGlobal.upload();
 
-			zoneCacheCmds[i].execute(renderState);
+			if (shaded) {
+				final int vertexCount = pendingShadedVertexCounts[i];
+				if (vertexCount > 0) {
+					shadedProgram.uniViewProjMatrix.set(cacheCamera.getViewProjMatrix());
+					glBufferSubData(GL_ARRAY_BUFFER, 0, pendingShadedVertices[i]);
+					glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+				}
+			} else {
+				plugin.uboGlobal.sceneCamera.write(cacheCamera);
+				plugin.uboGlobal.upload();
+				zoneCacheCmds[i].execute(renderState);
+			}
 		}
 
 		glBindVertexArray(0);

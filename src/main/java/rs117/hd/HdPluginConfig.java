@@ -1279,7 +1279,9 @@ public interface HdPluginConfig extends Config
 		description =
 			"Changes how the minimap is rendered.<br>" +
 			"'Normal' keeps the default oldschool minimap.<br>" +
-			"'HD Topdown' renders a top-down 3D view of the scene into the minimap.",
+			"'HD Topdown' renders a top-down 3D view of the scene into the minimap.<br>" +
+			"'Shaded' GPU-recreates the minimap with 2008-style gouraud-shaded tile lighting.<br>" +
+			"'Flat' GPU-recreates the minimap matching today's flat-colored tile look, with no shading.",
 		position = 1,
 		section = minimapSettings
 	)
