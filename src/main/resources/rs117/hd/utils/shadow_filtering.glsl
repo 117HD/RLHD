@@ -22,6 +22,11 @@ float fetchShadowTexel(
     int i
 ) {
     pixelCoord += ivec2(getShadowDitherOffset(i));
+    #if SHADOW_FILTERING == SHADOW_FILTERING_PCSS
+        // texelFetch does not apply the texture's clamp-to-border setting.
+        if (any(lessThan(pixelCoord, ivec2(0))) || any(greaterThanEqual(pixelCoord, textureSize(tex, 0))))
+            return 0.0;
+    #endif
     float bias = dot(vec2(pixelCoord) + 0.5 - receiverPlane.xy, receiverPlane.zw);
     // The inverse projection's Z column spans half the camera's depth range.
     float correctionLimit = 64. / (2.0 * length(invLightProjectionMatrix[2].xyz));
@@ -42,7 +47,8 @@ float sampleShadowPCF1x1(
     bool hasTransparency,
     float fragDepth,
     vec4 shadowPos,
-    vec4 receiverPlane
+    vec4 receiverPlane,
+    vec3 receiverPosition
 ) {
     ivec2 pixelCoord = ivec2(shadowPos.xy * textureSize(tex, 0));
     return fetchShadowTexel(tex, hasTransparency, pixelCoord, fragDepth, receiverPlane, 0);
@@ -53,12 +59,13 @@ float sampleShadowPCF2x2(
     bool hasTransparency,
     float fragDepth,
     vec4 shadowPos,
-    vec4 receiverPlane
+    vec4 receiverPlane,
+    vec3 receiverPosition
 ) {
     shadowPos.xy *= textureSize(tex, 0);
     shadowPos.xy -= .5; // Shift so the 2x2 kernel straddles the sample point
 
-    ivec2 offset = ivec2(shadowPos.xy);
+    ivec2 offset = ivec2(floor(shadowPos.xy));
     float c00 = fetchShadowTexel(tex, hasTransparency, offset + ivec2(0, 0), fragDepth, receiverPlane, 0);
     float c10 = fetchShadowTexel(tex, hasTransparency, offset + ivec2(1, 0), fragDepth, receiverPlane, 1);
     float c01 = fetchShadowTexel(tex, hasTransparency, offset + ivec2(0, 1), fragDepth, receiverPlane, 2);
@@ -79,7 +86,14 @@ float sampleShadowPCF2x2(
     #endif
 }
 
-float sampleShadowPCF3x3(sampler2D tex, bool hasTransparency, float fragDepth, vec4 shadowPos, vec4 receiverPlane) {
+float sampleShadowPCF3x3(
+    sampler2D tex,
+    bool hasTransparency,
+    float fragDepth,
+    vec4 shadowPos,
+    vec4 receiverPlane,
+    vec3 receiverPosition
+) {
     shadowPos.xy *= textureSize(tex, 0);
 
     const int kernelSize = 3;

@@ -82,6 +82,7 @@ import rs117.hd.config.GroundBlending;
 import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
+import rs117.hd.config.ShadowFiltering;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.opengl.shader.ShaderException;
@@ -1506,7 +1507,11 @@ public class HdPlugin extends Plugin {
 			);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+			glTexParameteri(
+				GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE,
+				// PCSS needs raw depths for the blocker search
+				config.shadowFiltering() == ShadowFiltering.PCSS ? GL_NONE : GL_COMPARE_REF_TO_TEXTURE
+			);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_GREATER);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
@@ -1928,7 +1933,6 @@ public class HdPlugin extends Plugin {
 							case KEY_WIND_DISPLACEMENT:
 							case KEY_CHARACTER_DISPLACEMENT:
 							case KEY_WIREFRAME:
-							case KEY_SHADOW_FILTERING:
 							case KEY_WINDOWS_HDR_CORRECTION:
 							case KEY_STARS:
 							case KEY_NEBULAE:
@@ -1940,6 +1944,7 @@ public class HdPlugin extends Plugin {
 								break;
 							case KEY_SHADOW_MODE:
 							case KEY_SHADOW_RESOLUTION:
+							case KEY_SHADOW_FILTERING:
 							case KEY_SHADOW_TRANSPARENCY:
 							case KEY_TERRAIN_SHADOWS:
 								recompilePrograms = true;

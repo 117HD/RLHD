@@ -426,11 +426,12 @@ public interface HdPluginConfig extends Config
 		name = "Shadow filtering",
 		description =
 			"Filtering technique used when smoothing the edges of shadows.<br>" +
-			"'Smooth Low' smooths the shadow pixels evenly (PCF 2x2).<br>" +
-			"'Smooth High' smooths the shadow pixels evenly (PCF 3x3).<br>" +
-			"'Dithered Low' smooths out pixelation using dithering.<br>" +
-			"'Dithered High' smooths out pixelation using dithering (PCF 2x2).<br>" +
-			"'Pixelated' retains slightly pixelated shadow edges.",
+			"'Smooth low' smooths the shadow pixels evenly (PCF 2x2).<br>" +
+			"'Smooth high' smooths the shadow pixels evenly (PCF 3x3).<br>" +
+			"'Dithered low' smooths out pixelation using dithering.<br>" +
+			"'Dithered high' smooths out pixelation using dithering (PCF 2x2).<br>" +
+			"'Pixelated' retains slightly pixelated shadow edges.<br>" +
+			"'Soft shadows' produces realistically soft shadows, at the cost of performance.",
 		position = 3,
 		section = shadowSettings
 	)
