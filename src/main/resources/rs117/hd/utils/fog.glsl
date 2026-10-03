@@ -43,10 +43,10 @@ float calculateFogAmount(vec3 position) {
 
     // the client draws one less tile to the north and east than it does to the south
     // and west, so subtract a tile's width from the north and east edges.
-    float fogWest = max(FOG_SCENE_EDGE_MIN, cameraPos.x - drawDistance2);
-    float fogEast = min(FOG_SCENE_EDGE_MAX, cameraPos.x + drawDistance2 - TILE_SIZE);
-    float fogSouth = max(FOG_SCENE_EDGE_MIN, cameraPos.z - drawDistance2);
-    float fogNorth = min(FOG_SCENE_EDGE_MAX, cameraPos.z + drawDistance2 - TILE_SIZE);
+    float fogWest = max(FOG_SCENE_EDGE_MIN, sceneCamera.position.x - drawDistance2);
+    float fogEast = min(FOG_SCENE_EDGE_MAX, sceneCamera.position.x + drawDistance2 - TILE_SIZE);
+    float fogSouth = max(FOG_SCENE_EDGE_MIN, sceneCamera.position.z - drawDistance2);
+    float fogNorth = min(FOG_SCENE_EDGE_MAX, sceneCamera.position.z + drawDistance2 - TILE_SIZE);
 
     // Calculate distance from the scene edge
     float xDist = min(position.x - fogWest, fogEast - position.x);
@@ -67,7 +67,7 @@ float calculateFogAmount(vec3 position) {
     // appearance between equal fog depths at different draw distances.
 
     float fogStart1 = drawDistance2 * 0.85;
-    float distance1 = length(cameraPos.xz - position.xz);
+    float distance1 = length(sceneCamera.position.xz - position.xz);
     float distanceFogAmount1 = clamp((distance1 - fogStart1) / (drawDistance2 * .15), 0, 1);
 
     float minFogStart = 0.0;
@@ -75,7 +75,7 @@ float calculateFogAmount(vec3 position) {
     drawDistance2 = min(drawDistance, 90) * TILE_SIZE;
     float fogDepthMultiplier = clamp(fogDepth, 0, 1000) / 1000.0;
     float fogStart2 = (maxFogStart - (fogDepthMultiplier * (maxFogStart - minFogStart))) * drawDistance2;
-    float camToVertex = length(cameraPos - vec3(position.x, (position.y + cameraPos.y) / 2, position.z));
+    float camToVertex = length(sceneCamera.position - vec3(position.x, (position.y + sceneCamera.position.y) / 2, position.z));
     float distance2 = max(camToVertex - fogStart2, 0) / max(drawDistance2 - fogStart2, 1);
     float density = fogDepth / 100.0;
     float distanceFogAmount2 = 1 - clamp(exp(-distance2 * density), 0, 1);

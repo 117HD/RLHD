@@ -24,6 +24,7 @@
  */
 package rs117.hd.utils.buffer;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -353,6 +354,19 @@ public class GLBuffer implements Destructible {
 
 	public GLBuffer initialize() {
 		return initialize(0);
+	}
+
+	public GLBuffer initialize(Buffer data) {
+		initialize(data.limit());
+		if(data instanceof ByteBuffer)
+			upload((ByteBuffer) data);
+		else if(data instanceof IntBuffer)
+			upload((IntBuffer) data);
+		else if(data instanceof FloatBuffer)
+			upload((FloatBuffer) data);
+		else
+			throw new IllegalArgumentException("Unsupported buffer type: " + data.getClass());
+		return this;
 	}
 
 	public GLBuffer initialize(long initialCapacity) {

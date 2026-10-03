@@ -46,6 +46,26 @@ in vec2 fUv;
 
 out vec4 FragColor;
 
+#define MINIMAP_PLACEHOLDER_COLOR_PACKED 12345678
+#define UNPACK_RGB(packed) ivec3(packed >> 16 & 0xFF, packed >> 8 & 0xFF, packed & 0xFF)
+const ivec3 MINIMAP_PLACEHOLDER_COLOR = UNPACK_RGB(MINIMAP_PLACEHOLDER_COLOR_PACKED);
+
+const int MINIMAP_LINE_CHANNEL_MIN = 228;
+const int MINIMAP_LINE_CHANNEL_MAX = 248;
+const int MINIMAP_LINE_CHANNEL_ZERO_TOLERANCE = 4;
+
+bool isMinimapLineColor(ivec3 rgb255) {
+    bool nearWhite =
+        rgb255.r >= MINIMAP_LINE_CHANNEL_MIN && rgb255.r <= MINIMAP_LINE_CHANNEL_MAX &&
+        rgb255.g >= MINIMAP_LINE_CHANNEL_MIN && rgb255.g <= MINIMAP_LINE_CHANNEL_MAX &&
+        rgb255.b >= MINIMAP_LINE_CHANNEL_MIN && rgb255.b <= MINIMAP_LINE_CHANNEL_MAX;
+    bool nearRed =
+        rgb255.r >= MINIMAP_LINE_CHANNEL_MIN && rgb255.r <= MINIMAP_LINE_CHANNEL_MAX &&
+        rgb255.g <= MINIMAP_LINE_CHANNEL_ZERO_TOLERANCE &&
+        rgb255.b <= MINIMAP_LINE_CHANNEL_ZERO_TOLERANCE;
+    return nearWhite || nearRed;
+}
+
 vec4 alphaBlend(vec4 src, vec4 dst) {
     return vec4(
         src.rgb + dst.rgb * (1.0f - src.a),
@@ -71,6 +91,17 @@ void main() {
     #if WINDOWS_HDR_CORRECTION
         c.rgb = windowsHdrCorrection(c.rgb);
     #endif
+
+    ivec2 fragCoord = ivec2(gl_FragCoord.xy);
+    if (hdMinimapActive &&
+        fragCoord.x >= minimapViewport.x && fragCoord.x < minimapViewport.x + minimapViewport.z &&
+        fragCoord.y >= minimapViewport.y && fragCoord.y < minimapViewport.y + minimapViewport.w
+    ) {
+        vec3 unpremultiplied = c.a > 0 ? c.rgb / c.a : c.rgb;
+        ivec3 rgb255 = ivec3(round(unpremultiplied * 255.0));
+        if (rgb255 == MINIMAP_PLACEHOLDER_COLOR || isMinimapLineColor(rgb255))
+            c = vec4(0);
+    }
 
     FragColor = c;
 }
