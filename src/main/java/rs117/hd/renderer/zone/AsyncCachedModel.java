@@ -35,7 +35,7 @@ public final class AsyncCachedModel extends Job implements Model {
 
 	public static void initialize(Injector injector) {
 		if (AsyncCachedModel.POOL == null)
-			AsyncCachedModel.POOL = new ConcurrentPool<>(() -> injector.getInstance(AsyncCachedModel.class), 32);
+			AsyncCachedModel.POOL = new ConcurrentPool<>(() -> injector.getInstance(AsyncCachedModel.class));
 	}
 
 	public static void destroy() {
@@ -264,8 +264,8 @@ public final class AsyncCachedModel extends Job implements Model {
 		verticesCount = model.getVerticesCount();
 		faceCount = model.getFaceCount();
 
-		if (alphaModel != null)
-			zone.pendingModelJobs.add(this);
+		if(alphaModel != null)
+			alphaModel.asyncModel = this;
 
 		isProcessing.set(false);
 		isCompleted.set(false);
@@ -359,7 +359,7 @@ public final class AsyncCachedModel extends Job implements Model {
 			}
 
 			if (alphaModel != null)
-				zone.pendingModelJobs.remove(this);
+				alphaModel.asyncModel = null;
 
 			ctx = null;
 			projection = null;

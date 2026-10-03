@@ -1,8 +1,7 @@
 package rs117.hd.renderer.zone;
 
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicIntegerArray;
-import lombok.RequiredArgsConstructor;
+import javax.inject.Inject;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.zone.Zone.AlphaModel;
@@ -12,14 +11,17 @@ import rs117.hd.utils.jobs.Job;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.utils.MathUtils.*;
 
-@RequiredArgsConstructor
 public final class StaticAlphaSortingJob extends Job {
+
+	@Inject
 	private FrameTimer frameTimer;
 
 	private AlphaModel[] models = new AlphaModel[16];
-	private AtomicIntegerArray states = new AtomicIntegerArray(16);
+	private int[] sortedAlphaIndicies;
 	private int size = 0;
 
+	private int cx, cy, cz;
+	private int zx, zz;
 	private int yaw;
 	private int yawSin;
 	private int yawCos;
@@ -27,29 +29,39 @@ public final class StaticAlphaSortingJob extends Job {
 	private int pitchSin;
 	private int pitchCos;
 
+	public StaticAlphaSortingJob() { super(true); }
+
 	public void addAlphaModel(AlphaModel m) {
 		if (size == models.length) {
 			final int newCapacity = ceilPow2(models.length * 2);
 			models = Arrays.copyOf(models, newCapacity);
-			states = new AtomicIntegerArray(newCapacity);
 		}
 
 		m.asyncSortIdx = size;
-		states.set(size, 0);
 		models[size] = m;
 		size++;
 	}
 
-	public void queue(Camera camera) {
-		if (frameTimer == null)
-			frameTimer = getInjector().getInstance(FrameTimer.class);
+	public void setup(Camera camera, int zx, int zz){
+		this.zx = zx;
+		this.zz = zz;
+
+		cx = (int) camera.getPositionX();
+		cy = (int) camera.getPositionY();
+		cz = (int) camera.getPositionZ();
 		yaw = camera.getFixedYaw();
 		yawSin = SINE14[yaw];
 		yawCos = COSINE14[yaw];
 		pitch = camera.getFixedPitch();
 		pitchSin = SINE14[pitch];
 		pitchCos = COSINE14[pitch];
-		queue();
+	}
+
+	public void queue(int[] sortedAlphaIndicies) {
+		if(size == 0)
+			return;
+		this.sortedAlphaIndicies = sortedAlphaIndicies;
+		super.queue();
 	}
 
 	public void reset() {
@@ -61,28 +73,13 @@ public final class StaticAlphaSortingJob extends Job {
 		long start = System.nanoTime();
 		try (FacePrioritySorter sorter = FacePrioritySorter.POOL.acquire()) {
 			for (int i = 0; i < size; i++) {
-				if (!states.compareAndSet(i, 0, 1))
-					continue;
-				processModel(sorter, models[i]);
+				final AlphaModel m = models[i];
+				m.sortedIndiciesCount = 0;
+				sorter.sortStaticModelFacesByDistance(sortedAlphaIndicies, m, yawCos, yawSin, pitchCos, pitchSin);
+				m.calculateDist(cx, cy, cz, zx, zz);
+				m.setSorted();
 			}
 		}
 		frameTimer.add(Timer.STATIC_ALPHA_SORT, System.nanoTime() - start);
-	}
-
-	private void processModel(FacePrioritySorter sorter, AlphaModel m) {
-		m.sortedFacesLen = 0;
-		sorter.sortStaticModelFacesByDistance(m, yawCos, yawSin, pitchCos, pitchSin);
-		m.setSorted();
-	}
-
-	public boolean forceProcessModelClient(AlphaModel m) {
-		if (m.asyncSortIdx < 0 || m.asyncSortIdx >= size) return false;
-		if (states.compareAndSet(m.asyncSortIdx, 0, 1)) {
-			try (FacePrioritySorter sorter = FacePrioritySorter.POOL.acquire()) {
-				processModel(sorter, models[m.asyncSortIdx]);
-			}
-			return true;
-		}
-		return false;
 	}
 }
