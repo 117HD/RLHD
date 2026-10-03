@@ -70,6 +70,7 @@ import net.runelite.client.ui.ClientUI;
 import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
+import okhttp3.HttpUrl;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
 import org.lwjgl.opengl.*;
@@ -83,6 +84,7 @@ import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.VanillaShadowMode;
+import rs117.hd.gui.HdSidebar;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.TiledLightingShaderProgram;
@@ -100,6 +102,9 @@ import rs117.hd.renderer.Renderer;
 import rs117.hd.renderer.legacy.LegacyRenderer;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.ZoneRenderer;
+import rs117.hd.resourcepacks.PackEventType;
+import rs117.hd.resourcepacks.ResourcePackManager;
+import rs117.hd.resourcepacks.ResourcePackUpdate;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
@@ -155,6 +160,8 @@ public class HdPlugin extends Plugin {
 	public static final ResourcePath PLUGIN_DIR = Props
 		.getFolder("rlhd.plugin-dir", () -> path(RuneLite.RUNELITE_DIR, "117hd"));
 
+	public static final String REPOSITORY_URL = "https://github.com/117HD/RLHD";
+	public static final String RESOURCE_PACKS_MANIFEST_URL = "https://raw.githubusercontent.com/117HD/resource-packs/manifest/manifest.json";
 	public static final String DISCORD_URL = "https://discord.gg/U4p6ChjgSE";
 	public static final String RUNELITE_URL = "https://runelite.net";
 	public static final String AMD_DRIVER_URL = "https://www.amd.com/en/support";
@@ -282,6 +289,9 @@ public class HdPlugin extends Plugin {
 	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
+	private ResourcePackManager resourcePackManager;
+
+	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
 
 	@Inject
@@ -289,6 +299,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private DeveloperTools developerTools;
+
+	@Getter
+	private HdSidebar sidebar;
 
 	@Inject
 	private FrameTimer frameTimer;
@@ -685,6 +698,10 @@ public class HdPlugin extends Plugin {
 				initializeVaos();
 				initializeUbos();
 
+				resourcePackManager.startUp();
+				configLegacyTzHaarReskin = resourcePackManager.isEnabled("tzhaar_reskin");
+				initializeSidebar();
+
 				// Materials need to be initialized before compiling shader programs
 				textureManager.startUp();
 				materialManager.startUp();
@@ -798,6 +815,8 @@ public class HdPlugin extends Plugin {
 			waterTypeManager.shutDown();
 			materialManager.shutDown();
 			textureManager.shutDown();
+			destroySidebar();
+			resourcePackManager.shutDown();
 
 			ConcurrentPool.destroyAll();
 			PooledArrayType.shutdown();
@@ -874,7 +893,8 @@ public class HdPlugin extends Plugin {
 		if (length <= 1)
 			return array + "[" + from + "]";
 		int middle = from + length / 2;
-		return "i < " + middle +
+		return
+			"i < " + middle +
 			" ? " + generateFetchCases(array, from, middle) +
 			" : " + generateFetchCases(array, middle, to);
 	}
@@ -1640,6 +1660,17 @@ public class HdPlugin extends Plugin {
 		}
 	}
 
+	@Subscribe
+	public void onResourcePackUpdate(ResourcePackUpdate event) {
+		if (Objects.equals(event.getInternalName(), "tzhaar_reskin") && event.stateIs(PackEventType.ADDED, PackEventType.REMOVED)) {
+			configLegacyTzHaarReskin = resourcePackManager.isEnabled("tzhaar_reskin");
+			clientThread.invoke(() -> {
+				renderer.clearCaches();
+				renderer.reloadScene();
+			});
+		}
+	}
+
 	public boolean isLoadingScene() {
 		return renderer.isLoadingScene();
 	}
@@ -1655,7 +1686,6 @@ public class HdPlugin extends Plugin {
 		configGroundBlendingColors = groundBlending.colors;
 		configGroundBlendingTextures = groundBlending.textures;
 		configModelTextures = config.modelTextures();
-		configLegacyTzHaarReskin = config.legacyTzHaarReskin();
 		configProjectileLights = config.projectileLights();
 		configNpcLights = config.npcLights();
 		configVanillaShadowMode = config.vanillaShadowMode();
@@ -1844,6 +1874,16 @@ public class HdPlugin extends Plugin {
 							case KEY_LEGACY_TOB_ENVIRONMENT:
 								reloadEnvironments = true;
 								break;
+							case KEY_ENABLE_RESOURCE_PACKS:
+								destroySidebar();
+								resourcePackManager.shutDown();
+								resourcePackManager.startUp();
+								configLegacyTzHaarReskin = resourcePackManager.isEnabled("tzhaar_reskin");
+								initializeSidebar();
+								break;
+							case KEY_COMPACT_VIEW:
+								eventBus.post(new ResourcePackUpdate(PackEventType.UI_CHANGED));
+								break;
 							case KEY_SEASONAL_THEME:
 							case KEY_SEASONAL_HEMISPHERE:
 								reloadEnvironments = true;
@@ -1854,12 +1894,12 @@ public class HdPlugin extends Plugin {
 							case KEY_GROUND_TEXTURES:
 							case KEY_MODEL_TEXTURES:
 							case KEY_TEXTURE_RESOLUTION:
+							case KEY_GPU_TEXTURE_RESIZING:
 							case KEY_INFERNAL_CAPE:
 								reloadTexturesAndMaterials = true;
 								// fall-through
 							case KEY_GROUND_BLENDING:
 							case KEY_FILL_GAPS_IN_TERRAIN:
-							case KEY_LEGACY_TZHAAR_RESKIN:
 								reloadScene = true;
 								break;
 							case KEY_HIDE_VANILLA_WATER_EFFECTS:
@@ -2233,4 +2273,19 @@ public class HdPlugin extends Plugin {
 			}
 		);
 	}
+
+	private void initializeSidebar() {
+		if (!config.enableResourcePacks())
+			return;
+		SwingUtilities.invokeLater(() -> sidebar = injector.getInstance(HdSidebar.class));
+	}
+
+	private void destroySidebar() {
+		SwingUtilities.invokeLater(() -> {
+			if (sidebar != null)
+				sidebar.destroy();
+			sidebar = null;
+		});
+	}
+
 }

@@ -1,10 +1,13 @@
 package rs117.hd.utils;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Window;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -12,8 +15,10 @@ import java.util.function.Function;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import javax.swing.KeyStroke;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -30,6 +35,29 @@ import static rs117.hd.utils.ResourcePath.path;
 public class PopupUtils {
 	public static void displayPopupMessage(
 		Client client,
+		String title,
+		String message,
+		String[] buttonLabels,
+		Function<Integer, Boolean> buttonIndexConsumer
+	) {
+		displayPopupMessage(client, client.getCanvas(), true, title, message, buttonLabels, buttonIndexConsumer);
+	}
+
+	public static void displayPopupMessage(
+		Client client,
+		Component anchor,
+		String title,
+		String message,
+		String[] buttonLabels,
+		Function<Integer, Boolean> buttonIndexConsumer
+	) {
+		displayPopupMessage(client, anchor, false, title, message, buttonLabels, buttonIndexConsumer);
+	}
+
+	private static void displayPopupMessage(
+		Client client,
+		Component anchor,
+		boolean adjustForCanvas,
 		String title,
 		String message,
 		String[] buttonLabels,
@@ -92,18 +120,27 @@ public class PopupUtils {
             framePanel.add(mainPanel, BorderLayout.CENTER);
             framePanel.add(buttonPanel, BorderLayout.PAGE_END);
 
-            frame.setContentPane(framePanel);
-            frame.pack();
+			frame.setContentPane(framePanel);
+			frame.getRootPane().registerKeyboardAction(
+				event -> frame.setVisible(false),
+				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+				JComponent.WHEN_IN_FOCUSED_WINDOW
+			);
+			frame.pack();
             frame.setResizable(false);
 
-            frame.setLocationRelativeTo(client.getCanvas());
-            Point point = frame.getLocation();
-            frame.setLocation(point.x + 5, point.y + (Constants.GAME_FIXED_HEIGHT - client.getCanvasHeight()) / 2 - 3);
-            frame.setAutoRequestFocus(true);
+			frame.setLocationRelativeTo(anchor);
+			if (adjustForCanvas) {
+				Point point = frame.getLocation();
+				frame.setLocation(point.x + 5, point.y + (Constants.GAME_FIXED_HEIGHT - client.getCanvasHeight()) / 2 - 3);
+			}
+			frame.setAutoRequestFocus(true);
 
-            JFrame runeLiteWindow = (JFrame) SwingUtilities.getWindowAncestor(client.getCanvas());
-            if (runeLiteWindow.isAlwaysOnTop())
-                frame.setAlwaysOnTop(true);
+			Window runeLiteWindow = SwingUtilities.getWindowAncestor(anchor);
+			if (runeLiteWindow == null)
+				runeLiteWindow = SwingUtilities.getWindowAncestor(client.getCanvas());
+			if (runeLiteWindow != null && runeLiteWindow.isAlwaysOnTop())
+				frame.setAlwaysOnTop(true);
 
             frame.setVisible(true);
         });

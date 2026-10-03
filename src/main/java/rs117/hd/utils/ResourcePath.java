@@ -111,7 +111,7 @@ public class ResourcePath {
 		this.path = null;
 	}
 
-	private ResourcePath(@Nullable ResourcePath root, String... parts) {
+	protected ResourcePath(@Nullable ResourcePath root, String... parts) {
 		this.root = root;
 		this.path = normalize(parts);
 	}
@@ -412,11 +412,11 @@ public class ResourcePath {
 	}
 
 	public static String normalize(String... parts) {
-        return normalize(null, parts);
-    }
+		return normalize(null, parts);
+	}
 
 	public static String normalize(@Nullable String workingDirectory, String[] parts) {
-        Stack<String> resolvedParts = new Stack<>();
+		Stack<String> resolvedParts = new Stack<>();
 		if (workingDirectory != null && !workingDirectory.isEmpty() && !workingDirectory.equals("."))
 			resolvedParts.addAll(Arrays.asList(normalizeSlashes(workingDirectory).split("/")));
 
