@@ -13,6 +13,8 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Timer;
 import rs117.hd.renderer.zone.Zone.AlphaModel;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.collections.ConcurrentPool;
@@ -277,6 +279,10 @@ public final class AsyncCachedModel extends Job implements Model {
 	}
 
 	private boolean processCachedFields(Model model, boolean cache) {
+		final Profiler profiler = Profiler.getInstance();
+		final long timestamp = profiler != null ? profiler.getTimeStamp() : 0;
+		final long memory = profiler != null ? profiler.getUsedMemory() : 0;
+
 		// Caching is done in order of access
 		// Ideally this should be updated to reflect any changes
 		boolean success = true;
@@ -308,6 +314,9 @@ public final class AsyncCachedModel extends Job implements Model {
 		success &= texIndices1.cache(model, model.getTexIndices1(), cache);
 		success &= texIndices2.cache(model, model.getTexIndices2(), cache);
 		success &= texIndices3.cache(model, model.getTexIndices3(), cache);
+
+		if(profiler != null)
+			profiler.add(Timer.ASYNC_MODEL_CACHE, timestamp, memory);
 
 		return success;
 	}

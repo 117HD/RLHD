@@ -3,8 +3,8 @@ package rs117.hd.renderer.zone;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 import lombok.RequiredArgsConstructor;
-import rs117.hd.overlays.FrameTimer;
-import rs117.hd.overlays.Timer;
+import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Timer;
 import rs117.hd.renderer.zone.Zone.AlphaModel;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.jobs.Job;
@@ -14,7 +14,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 @RequiredArgsConstructor
 public final class StaticAlphaSortingJob extends Job {
-	private FrameTimer frameTimer;
+	private Profiler profiler;
 
 	private AlphaModel[] models = new AlphaModel[16];
 	private AtomicIntegerArray states = new AtomicIntegerArray(16);
@@ -41,8 +41,8 @@ public final class StaticAlphaSortingJob extends Job {
 	}
 
 	public void queue(Camera camera) {
-		if (frameTimer == null)
-			frameTimer = getInjector().getInstance(FrameTimer.class);
+		if (profiler == null)
+			profiler = getInjector().getInstance(Profiler.class);
 		yaw = camera.getFixedYaw();
 		yawSin = SINE14[yaw];
 		yawCos = COSINE14[yaw];
@@ -58,7 +58,7 @@ public final class StaticAlphaSortingJob extends Job {
 
 	@Override
 	protected void onRun() {
-		long start = System.nanoTime();
+		long timestamp = profiler.getTimeStamp();
 		try (FacePrioritySorter sorter = FacePrioritySorter.POOL.acquire()) {
 			for (int i = 0; i < size; i++) {
 				if (!states.compareAndSet(i, 0, 1))
@@ -66,7 +66,7 @@ public final class StaticAlphaSortingJob extends Job {
 				processModel(sorter, models[i]);
 			}
 		}
-		frameTimer.add(Timer.STATIC_ALPHA_SORT, System.nanoTime() - start);
+		profiler.add(Timer.STATIC_ALPHA_SORT, timestamp);
 	}
 
 	private void processModel(FacePrioritySorter sorter, AlphaModel m) {

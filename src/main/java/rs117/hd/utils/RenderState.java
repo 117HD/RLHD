@@ -27,6 +27,13 @@ public final class RenderState {
 	public final GLEnable enable = addState(GLEnable::new);
 	public final GLDisable disable = addState(GLDisable::new);
 
+	public boolean isDirty() {
+		for (GLState state : states)
+			if(state.isDirty())
+				return true;
+		return false;
+	}
+
 	public void apply() {
 		for (GLState state : states)
 			state.apply();
