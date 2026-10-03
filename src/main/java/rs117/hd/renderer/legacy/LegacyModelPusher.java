@@ -337,12 +337,10 @@ public class LegacyModelPusher {
 				} else if (modelOverride.colorOverrides != null && (cacheUvData || !needsCaching)) {
 					// Color overrides are heavy. Only apply them if the UVs will be cached or don't need caching
 					int ahsl = (faceTransparencies == null ? 0xFF : 0xFF - (faceTransparencies[face] & 0xFF)) << 16 | faceColors[face];
-					for (var override : modelOverride.colorOverrides) {
-						if (override.ahslCondition.test(ahsl)) {
-							faceOverride = override;
-							material = faceOverride.baseMaterial;
-							break;
-						}
+					final var override = modelOverride.testColorOverrides(ahsl);
+					if (override != null) {
+						faceOverride = override;
+						material = faceOverride.baseMaterial;
 					}
 				}
 
