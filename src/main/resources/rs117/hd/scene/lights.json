@@ -34318,23 +34318,9 @@
     "fadeInDuration": 750
   },
   {
-    "description": "Drake Maw Idle",
-    "height": 50,
-    "offset": [ -17, -3, 249 ],
-    "radius": 32,
-    "strength": 120,
-    "color": "#ff8c00",
-    "type": "FLICKER",
-    "duration": 10,
-    "range": 5,
-    "npcIds": [ "DRAKE" ],
-    "animationIds": [ -1 ],
-    "fadeInDuration": 300
-  },
-  {
     "description": "Drake Ranged Attack",
     "offset": [ 0, 0, 0 ],
-    "radius": 135,
+    "radius": 150,
     "strength": 12,
     "color": [
       255,
@@ -34345,21 +34331,19 @@
     "duration": 1,
     "range": 80,
     "projectileIds": [ "DRAKE_RANGE_PROJ" ],
-    "spawnDelay": 800,
     "fadeInDuration": 300,
-    "fadeOutDuration": 100
+    "fadeOutDuration": 250
   },
   {
     "description": "Drake Flame Attack",
     "offset": [ 0, 0, 0 ],
     "radius": 175,
-    "strength": 12,
+    "strength": 16,
     "color": "#ff8c00",
     "type": "FLICKER",
     "duration": 5,
     "range": 60,
     "projectileIds": [ "DRAKE_BURN_PROJ" ],
-    "spawnDelay": 255,
     "fadeInDuration": 150,
     "fadeOutDuration": 150
   },
@@ -36030,6 +36014,38 @@
     "range": 10
   },
   {
+    "description": "KARUULM_DUNGEON_EXIT_NEAR",
+    "offset": [ -10, 75, 0 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 60,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "BRIMSTONE_DUNGEON_EXIT"
+    ]
+  },
+  {
+    "description": "KARUULM_DUNGEON_EXIT_FAR",
+    "offset": [ -10, 100, 150 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 30,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "BRIMSTONE_DUNGEON_EXIT"
+    ]
+  },
+  {
     "description": "WINTERTODT_LIT_BRAZIER_MAIN",
     "height": 300,
     "alignment": "CENTER",
@@ -37047,11 +37063,11 @@
     "range": 10
   },
   {
-    "description": "ALCHEMICAL_HYDRA_BLUE_VAT",
-    "height": 200,
+    "description": "ALCHEMICAL_HYDRA_BLUE_VAT_TOP",
+    "height": 275,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 20,
+    "strength": 15,
     "color": [
       5,
       177,
@@ -37059,16 +37075,53 @@
     ],
     "type": "PULSE",
     "duration": 7000,
-    "range": 50,
+    "range": 10,
+    "visibleFromOtherPlanes": false,
     "objectIds": [
       "KARUULM_HYDRA_ROOM_FLOOR_VIAL_LARGE_BLUE"
     ]
   },
   {
-    "description": "ALCHEMICAL_HYDRA_GREEN_VAT",
-    "height": 200,
+    "description": "ALCHEMICAL_HYDRA_BLUE_VAT_BOTTOM",
+    "height": 50,
     "alignment": "CENTER",
-    "radius": 350,
+    "radius": 400,
+    "strength": 35,
+    "color": [
+      5,
+      177,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10,
+    "visibleFromOtherPlanes": false,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_VIAL_LARGE_BLUE"
+    ]
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_BLUE_VAT_ROOM_MIDDLE",
+    "offset": [ 75, 150, -75 ],
+    "worldX": 1358,
+    "worldY": 10276,
+    "radius": 600,
+    "strength": 20,
+    "color": [
+      5,
+      177,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10,
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_GREEN_VAT_BOTTOM",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 400,
     "strength": 20,
     "color": [
       59,
@@ -37077,16 +37130,53 @@
     ],
     "type": "PULSE",
     "duration": 7000,
-    "range": 50,
+    "range": 10,
+    "visibleFromOtherPlanes": false,
     "objectIds": [
       "KARUULM_HYDRA_ROOM_FLOOR_VIAL_LARGE_GREEN"
     ]
   },
   {
-    "description": "ALCHEMICAL_HYDRA_RED_VAT",
-    "height": 200,
+    "description": "ALCHEMICAL_HYDRA_GREEN_VAT_TOP",
+    "height": 275,
     "alignment": "CENTER",
-    "radius": 350,
+    "radius": 400,
+    "strength": 10,
+    "color": [
+      59,
+      255,
+      10
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10,
+    "visibleFromOtherPlanes": false,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_VIAL_LARGE_GREEN"
+    ]
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_GREEN_VAT_ROOM_MIDDLE",
+    "offset": [ -75, 150, -75 ],
+    "worldX": 1375,
+    "worldY": 10276,
+    "radius": 600,
+    "strength": 15,
+    "color": [
+      59,
+      255,
+      10
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10,
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_RED_VAT_BOTTOM",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 450,
     "strength": 20,
     "color": [
       175,
@@ -37095,53 +37185,19 @@
     ],
     "type": "PULSE",
     "duration": 7000,
-    "range": 50,
+    "range": 10,
+    "visibleFromOtherPlanes": false,
     "objectIds": [
       "KARUULM_HYDRA_ROOM_FLOOR_VIAL_LARGE_RED"
     ]
   },
   {
-    "description": "ALCHEMICAL_HYDRA_BLUE_TUBE",
-    "height": 50,
+    "description": "ALCHEMICAL_HYDRA_RED_VAT_TOP",
+    "height": 275,
     "alignment": "CENTER",
-    "radius": 800,
-    "strength": 25,
-    "color": [
-      5,
-      177,
-      252
-    ],
-    "type": "PULSE",
-    "duration": 7000,
-    "range": 50,
-    "objectIds": [
-      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_BLUE"
-    ]
-  },
-  {
-    "description": "ALCHEMICAL_HYDRA_GREEN_TUBE",
-    "height": 50,
-    "alignment": "CENTER",
-    "radius": 800,
-    "strength": 25,
-    "color": [
-      59,
-      255,
-      10
-    ],
-    "type": "PULSE",
-    "duration": 7000,
-    "range": 50,
-    "objectIds": [
-      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_GREEN"
-    ]
-  },
-  {
-    "description": "ALCHEMICAL_HYDRA_RED_TUBE",
-    "height": 50,
-    "alignment": "CENTER",
-    "radius": 800,
-    "strength": 25,
+    "radius": 400,
+    "strength": 20,
+    "visibleFromOtherPlanes": false,
     "color": [
       175,
       18,
@@ -37149,14 +37205,649 @@
     ],
     "type": "PULSE",
     "duration": 7000,
-    "range": 50,
+    "range": 10,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_VIAL_LARGE_RED"
+    ]
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_RED_VAT_ROOM_MIDDLE",
+    "offset": [ -75, 150, 75 ],
+    "worldX": 1375,
+    "worldY": 10259,
+    "radius": 600,
+    "strength": 40,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10,
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_BLUE_VENT",
+    "offset": [ 0, 10, 0 ],
+    "radius": 220,
+    "strength": 50,
+    "color": [
+      5,
+      177,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_VENT_MIDDLE_BLUE"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_GREEN_VENT",
+    "offset": [ 0, 10, 0 ],
+    "radius": 200,
+    "strength": 40,
+    "color": [
+      59,
+      255,
+      10
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_VENT_MIDDLE_GREEN"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_RED_VENT",
+    "offset": [ 0, 10, 0 ],
+    "radius": 200,
+    "strength": 75,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_VENT_MIDDLE_RED"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_1",
+    "offset": [ 55, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 15,
+    "color": [
+      5,
+      177,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 6000,
+    "range": 30,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_BLUE"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_2",
+    "offset": [ -50, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 15,
+    "color": [
+      5,
+      177,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 5500,
+    "range": 30,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_BLUE"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_3",
+    "offset": [ -145, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 15,
+    "color": [
+      5,
+      177,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 6500,
+    "range": 30,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_BLUE"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_4",
+    "offset": [ -245, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 15,
+    "color": [
+      5,
+      177,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 6000,
+    "range": 30,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_BLUE"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_5",
+    "offset": [ -345, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 15,
+    "color": [
+      5,
+      177,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 5000,
+    "range": 30,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_BLUE"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_6",
+    "offset": [ 345, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 15,
+    "color": [
+      5,
+      177,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 5500,
+    "range": 30,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_BLUE"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_7",
+    "offset": [ 245, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 15,
+    "color": [
+      5,
+      177,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 6500,
+    "range": 30,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_BLUE"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_8",
+    "offset": [ 145, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 15,
+    "color": [
+      5,
+      177,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 6000,
+    "range": 30,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_BLUE"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_END_LEFT",
+    "offset": [ 445, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 15,
+    "color": [
+      5,
+      177,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 6000,
+    "range": 10,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_BLUE"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_END_RIGHT",
+    "offset": [ -445, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 15,
+    "color": [
+      5,
+      177,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 6000,
+    "range": 10,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_BLUE"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_1",
+    "offset": [ 55, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      59,
+      255,
+      10
+    ],
+    "type": "PULSE",
+    "duration": 6500,
+    "range": 40,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_GREEN"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_2",
+    "offset": [ -50, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      59,
+      255,
+      10
+    ],
+    "type": "PULSE",
+    "duration": 5000,
+    "range": 40,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_GREEN"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_3",
+    "offset": [ -145, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      59,
+      255,
+      10
+    ],
+    "type": "PULSE",
+    "duration": 6000,
+    "range": 40,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_GREEN"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_4",
+    "offset": [ -245, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      59,
+      255,
+      10
+    ],
+    "type": "PULSE",
+    "duration": 6500,
+    "range": 40,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_GREEN"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_5",
+    "offset": [ -345, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      59,
+      255,
+      10
+    ],
+    "type": "PULSE",
+    "duration": 5500,
+    "range": 40,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_GREEN"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_6",
+    "offset": [ 345, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      59,
+      255,
+      10
+    ],
+    "type": "PULSE",
+    "duration": 6000,
+    "range": 40,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_GREEN"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_7",
+    "offset": [ 245, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      59,
+      255,
+      10
+    ],
+    "type": "PULSE",
+    "duration": 6500,
+    "range": 40,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_GREEN"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_8",
+    "offset": [ 145, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      59,
+      255,
+      10
+    ],
+    "type": "PULSE",
+    "duration": 5000,
+    "range": 40,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_GREEN"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_END_LEFT",
+    "offset": [ 445, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      59,
+      255,
+      10
+    ],
+    "type": "PULSE",
+    "duration": 6000,
+    "range": 10,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_GREEN"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_END_RIGHT",
+    "offset": [ -445, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      59,
+      255,
+      10
+    ],
+    "type": "PULSE",
+    "duration": 6000,
+    "range": 10,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_GREEN"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_RED_TUBE_1",
+    "offset": [ 55, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 25,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "PULSE",
+    "duration": 5000,
+    "range": 20,
     "objectIds": [
       "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_RED"
-    ]
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_RED_TUBE_2",
+    "offset": [ -50, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 25,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "PULSE",
+    "duration": 6500,
+    "range": 30,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_RED"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_RED_TUBE_3",
+    "offset": [ -145, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 25,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "PULSE",
+    "duration": 6500,
+    "range": 30,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_RED"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_RED_TUBE_4",
+    "offset": [ -245, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 25,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "PULSE",
+    "duration": 6000,
+    "range": 30,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_RED"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_RED_TUBE_5",
+    "offset": [ -345, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 25,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "PULSE",
+    "duration": 5000,
+    "range": 30,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_RED"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_RED_TUBE_6",
+    "offset": [ 345, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 25,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "PULSE",
+    "duration": 6000,
+    "range": 30,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_RED"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_RED_TUBE_7",
+    "offset": [ 245, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 25,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "PULSE",
+    "duration": 6500,
+    "range": 30,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_RED"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_RED_TUBE_8",
+    "offset": [ 145, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 25,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "PULSE",
+    "duration": 5500,
+    "range": 30,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_RED"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_RED_TUBE_END_LEFT",
+    "offset": [ 445, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 25,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "PULSE",
+    "duration": 6000,
+    "range": 10,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_RED"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_RED_TUBE_END_RIGHT",
+    "offset": [ -445, 50, 50 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 25,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "PULSE",
+    "duration": 5000,
+    "range": 10,
+    "objectIds": [
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_RED"
+    ],
+    "visibleFromOtherPlanes": false
   },
   {
     "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_FALL",
-    "height": 200,
+    "offset": [ -30, 150, 0 ],
     "alignment": "CENTER",
     "radius": 350,
     "strength": 15,
@@ -37167,14 +37858,15 @@
     ],
     "type": "PULSE",
     "duration": 7000,
-    "range": 50,
+    "range": 20,
     "objectIds": [
       "KARUULM_HYDRA_ROOM_WALL_PIPE_BLUE"
-    ]
+    ],
+    "visibleFromOtherPlanes": false
   },
   {
     "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_FALL",
-    "height": 200,
+    "offset": [ -30, 150, 0 ],
     "alignment": "CENTER",
     "radius": 350,
     "strength": 15,
@@ -37185,14 +37877,15 @@
     ],
     "type": "PULSE",
     "duration": 7000,
-    "range": 50,
+    "range": 20,
     "objectIds": [
       "KARUULM_HYDRA_ROOM_WALL_PIPE_GREEN"
-    ]
+    ],
+    "visibleFromOtherPlanes": false
   },
   {
     "description": "ALCHEMICAL_HYDRA_RED_TUBE_FALL",
-    "height": 200,
+    "offset": [ -30, 150, 0 ],
     "alignment": "CENTER",
     "radius": 350,
     "strength": 15,
@@ -37203,9 +37896,103 @@
     ],
     "type": "PULSE",
     "duration": 7000,
-    "range": 50,
+    "range": 20,
     "objectIds": [
       "KARUULM_HYDRA_ROOM_WALL_PIPE_RED"
+    ],
+    "visibleFromOtherPlanes": false
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_POISON_FORM",
+    "offset": [ 0, 75, 100 ],
+    "radius": 350,
+    "strength": 10,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "color": [
+      80,
+      255,
+      40
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "npcIds": [
+      "HYDRABOSS"
+    ]
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_EXTINGUISHED_FORM",
+    "offset": [ 0, 75, 100 ],
+    "radius": 250,
+    "strength": 10,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "color": [
+      50,
+      210,
+      252
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "npcIds": [
+      "HYDRABOSS_2"
+    ]
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_ELECTRIC_FORM",
+    "offset": [ 0, 75, 100 ],
+    "radius": 250,
+    "strength": 25,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "color": [
+      5,
+      230,
+      252
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "npcIds": [
+      "HYDRABOSS_4"
+    ]
+  },
+  {
+    "description": "ALCHEMICAL_HYDRA_FIRE_FORM",
+    "offset": [ 0, 75, 100 ],
+    "radius": 450,
+    "strength": 40,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "color": [
+      175,
+      50,
+      9
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "npcIds": [
+      "HYDRABOSS_3"
+    ]
+  },
+  {
+    "description": "HYDRA_FIRE",
+    "height": 60,
+    "alignment": "CENTER",
+    "radius": 160,
+    "strength": 12,
+    "waitForAnimation": true,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [
+      "HYDRABOSS_FIRE"
     ]
   },
   {
@@ -43980,7 +44767,7 @@
     "range": 10
   },
   {
-    "description": "FIRE",
+    "description": "Asgarnia Ice Dungeon - Royal Titans Branda",
     "height": 100,
     "radius": 200,
     "strength": 15.5,

@@ -5682,6 +5682,26 @@
     "blended": false
   },
   {
+    "name": "Mount Karuulm Dungeon Floor - Brightness Fixes",
+    "area": "KARUULM_SLAYER_DUNGEON_PLANE_0_BRIGHTNESS_FIXES",
+    "groundMaterial": "VARIED_DIRT",
+    "uvOrientation": 256,
+    "maxLightness": 9,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm Dungeon Floor",
+    "area": "KARUULM_SLAYER_DUNGEON_PLANE_0",
+    "groundMaterial": "VARIED_DIRT",
+    "uvOrientation": 256,
+    "minLightness": 4,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
     "name": "Mount Karuulm - Lava Pool Fix - 1",
     "area": "MOUNT_KARUULM_LAVA_POOL_FIX_1",
     "underlayIds": [
