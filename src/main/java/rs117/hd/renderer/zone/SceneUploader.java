@@ -75,15 +75,6 @@ public class SceneUploader implements AutoCloseable {
 		0, 1, 0, 0
 	};
 
-	// subtracts the X lowest lightness levels from the formula.
-	// helps keep darker colors appropriately dark
-	private static final int IGNORE_LOW_LIGHTNESS = 3;
-	// multiplier applied to vertex' lightness value.
-	// results in greater lightening of lighter colors
-	private static final float LIGHTNESS_MULTIPLIER = 3;
-	// the minimum amount by which each color will be lightened
-	private static final int BASE_LIGHTEN = 10;
-
 	static {
 		for (int i = 0; i < 8; i++) {
 			int brightness = (int) (127 - 72 * Math.pow(i / 7f, .05));
@@ -1810,9 +1801,27 @@ public class SceneUploader implements AutoCloseable {
 			}
 
 			if (plugin.configUndoVanillaShading && faceOverride.undoVanillaShading && !keepShading) {
-				color1 = undoVanillaShading(color1, plugin.configLegacyGreyColors, modelNormals[0], modelNormals[1], modelNormals[2]);
-				color2 = undoVanillaShading(color2, plugin.configLegacyGreyColors, modelNormals[3], modelNormals[4], modelNormals[5]);
-				color3 = undoVanillaShading(color3, plugin.configLegacyGreyColors, modelNormals[6], modelNormals[7], modelNormals[8]);
+				color1 = undoVanillaShading(
+					color1,
+					plugin.configLegacyGreyColors,
+					modelNormals[0],
+					modelNormals[1],
+					modelNormals[2]
+				);
+				color2 = undoVanillaShading(
+					color2,
+					plugin.configLegacyGreyColors,
+					modelNormals[3],
+					modelNormals[4],
+					modelNormals[5]
+				);
+				color3 = undoVanillaShading(
+					color3,
+					plugin.configLegacyGreyColors,
+					modelNormals[6],
+					modelNormals[7],
+					modelNormals[8]
+				);
 			}
 
 			if (shouldRotateNormals)
@@ -2197,10 +2206,12 @@ public class SceneUploader implements AutoCloseable {
 
 		int orientSin = 0;
 		int orientCos = 0;
+
 		if (orientation != 0) {
 			orientation = mod(orientation, 2048);
 			orientSin = SINE[orientation];
 			orientCos = COSINE[orientation];
+
 		}
 
 		for (int f = 0; f < faces.length; ++f) {
@@ -2282,9 +2293,21 @@ public class SceneUploader implements AutoCloseable {
 				}
 
 				if (plugin.configUndoVanillaShading && modelOverride.undoVanillaShading) {
-					color1 = undoVanillaShading(color1, plugin.configLegacyGreyColors, faceNormals[0], faceNormals[1], faceNormals[2]);
-					color2 = undoVanillaShading(color2, plugin.configLegacyGreyColors, faceNormals[3], faceNormals[4], faceNormals[5]);
-					color3 = undoVanillaShading(color3, plugin.configLegacyGreyColors, faceNormals[6], faceNormals[7], faceNormals[8]);
+					color1 = undoVanillaShading(
+						color1,
+						plugin.configLegacyGreyColors,
+						faceNormals[0], faceNormals[1], faceNormals[2]
+					);
+					color2 = undoVanillaShading(
+						color2,
+						plugin.configLegacyGreyColors,
+						faceNormals[3], faceNormals[4], faceNormals[5]
+					);
+					color3 = undoVanillaShading(
+						color3,
+						plugin.configLegacyGreyColors,
+						faceNormals[6], faceNormals[7], faceNormals[8]
+					);
 				}
 
 				if (shouldRotateNormals && !shouldCalculateFaceNormal)
@@ -2678,48 +2701,51 @@ public class SceneUploader implements AutoCloseable {
 		out[2] = out[6] = out[10] = 0f;
 	}
 
+	// 1. Integer Router (Handles scaled integers from dynamic models safely)
 	public static int undoVanillaShading(
 		int color, boolean legacyGreyColors,
 		int nx, int ny, int nz
 	) {
-		return undoVanillaShading(color, legacyGreyColors, nx * nx + ny * ny + nz * nz, nx + ny + nz);
+		return undoVanillaShading(color, legacyGreyColors, (float) nx, (float) ny, (float) nz);
 	}
 
+	// 2. The Core CPU-Optimized Engine
 	public static int undoVanillaShading(
 		int color, boolean legacyGreyColors,
 		float nx, float ny, float nz
 	) {
-		return undoVanillaShading(color, legacyGreyColors, nx * nx + ny * ny + nz * nz, nx + ny + nz);
-	}
-
-	private static int undoVanillaShading(
-		int color, boolean legacyGreyColors,
-		float len, float norm
-	) {
-		//int h = color >> 10 & 0x3F; Unused only S & L need unpacking
 		int s = (color >> 7) & 0x7;
-		int l = color & 0x7F;
+		float l = color & 0x7F;
 
-		// Approximately invert vanilla shading by brightening vertices that were likely darkened by vanilla based on
-		// vertex normals. This process is error-prone, as not all models are lit by vanilla with the same light
-		// direction, and some models even have baked lighting built into the model itself. In some cases, increasing
-		// brightness in this way leads to overly bright colors, so we are forced to cap brightness at a relatively
-		// low value for it to look acceptable in most cases.
-		final float colorAdjust = BASE_LIGHTEN - l + (l < IGNORE_LOW_LIGHTNESS ? 0f : (l - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
+		float len = nx * nx + ny * ny + nz * nz;
 
-		// Normals are currently unrotated, so we don't need to do any rotation for this
 		if (len > 0f) {
-			final float invLen = rcp(sqrt(len));
-			final float lightDotNormal = norm * 0.57735026f * invLen;
-			if (lightDotNormal > 0f)
-				l += (int) (lightDotNormal * colorAdjust);
+			// CPU OPTIMIZATION: 1 inverse sqrt, 1 multiplication for the dot product.
+			float invLen = 1.0f / (float) Math.sqrt(len);
+			float dotProduct = (nx + ny + nz) * 0.57735026f * invLen;
+
+			if (dotProduct > 0f) {
+				// THE BRANCHLESS TERMINATOR RAMP:
+				// Taking the minimum seamlessly traces the exact same smooth transition
+				// without utilizing a ternary operator, compiling to a fast hardware
+				// min instruction and completely eliminating branch prediction stalls.
+				float shadowMultiplier = Math.min(dotProduct * 5f, (float) Math.sqrt(dotProduct));
+
+				// THE UNIFIED 2F RAMP:
+				// l <= 2f mathematically locks to 0. Continously scales to 11.0f by l=5.
+				float dynamicFloor = Math.min(11.0f, Math.max(0f, (l - 2f) * 3.66f));
+
+				// THE SHADOW-BOOSTED ARCH:
+				float colorAdjust = Math.max(0f, dynamicFloor + (l * 1.24f) - (l * l * 0.031f));
+
+				l += (shadowMultiplier * colorAdjust);
+			}
 		}
 
-		// Clamp brightness as detailed above
-		l = min(l, legacyGreyColors ? 55 : getMaxBrightness(s));
+		int maxBrightness = legacyGreyColors ? 55 : getMaxBrightness(s);
+		int finalLightness = Math.max(0, Math.min((int) l, maxBrightness));
 
-		// Preserve H, replace S & L
-		return (color & 0xFC00) | (s << 7) | l;
+		return (color & 0xFC00) | (s << 7) | finalLightness;
 	}
 
 	private static int getMaxBrightness(int s) {
