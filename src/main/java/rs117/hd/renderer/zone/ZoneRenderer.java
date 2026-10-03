@@ -355,7 +355,7 @@ public class ZoneRenderer implements Renderer {
 			frameTimer.end(Timer.DRAW_PRESCENE);
 		} catch (Throwable ex) {
 			log.error("Error in preSceneDraw({}):", scene != null ? scene.getWorldViewId() : null, ex);
-			plugin.requestPluginStop();
+			plugin.requestPluginStop(ex);
 		}
 	}
 
@@ -430,7 +430,7 @@ public class ZoneRenderer implements Renderer {
 				frameTimer.end(Timer.UPDATE_SCENE);
 			} catch (Exception ex) {
 				log.error("Error while updating environment or lights:", ex);
-				plugin.requestPluginStop();
+				plugin.requestPluginStop(ex);
 				return;
 			}
 
@@ -680,7 +680,7 @@ public class ZoneRenderer implements Renderer {
 			frameTimer.end(Timer.DRAW_POSTSCENE);
 		} catch (Throwable ex) {
 			log.error("Error in postSceneDraw({}):", scene != null ? scene.getWorldViewId() : null, ex);
-			plugin.requestPluginStop();
+			plugin.requestPluginStop(ex);
 		}
 	}
 
@@ -907,7 +907,7 @@ public class ZoneRenderer implements Renderer {
 				return zone.inSceneFrustum = true;
 		} catch (Throwable ex) {
 			log.error("Error in zoneInFrustum({}, {}, {}, {}):", zx, zz, maxY, minY, ex);
-			plugin.requestPluginStop();
+			plugin.requestPluginStop(ex);
 		}
 		return false;
 	}
@@ -944,7 +944,7 @@ public class ZoneRenderer implements Renderer {
 			checkGLErrors();
 		} catch (Throwable ex) {
 			log.error("Error in drawZoneOpaque({}, {}, {}):", zx, zz, scene != null ? scene.getWorldViewId() : null, ex);
-			plugin.requestPluginStop();
+			plugin.requestPluginStop(ex);
 		}
 	}
 
@@ -1014,7 +1014,7 @@ public class ZoneRenderer implements Renderer {
 			checkGLErrors();
 		} catch (Throwable ex) {
 			log.error("Error in drawZoneAlpha({}, {}, {}, {}):", zx, zz, level, scene != null ? scene.getWorldViewId() : null, ex);
-			plugin.requestPluginStop();
+			plugin.requestPluginStop(ex);
 		}
 	}
 
@@ -1076,7 +1076,7 @@ public class ZoneRenderer implements Renderer {
 			checkGLErrors();
 		} catch (Throwable ex) {
 			log.error("Error in drawPass({}, {}, {}):", projection, scene != null ? scene.getWorldViewId() : null, pass, ex);
-			plugin.requestPluginStop();
+			plugin.requestPluginStop(ex);
 		}
 	}
 
@@ -1223,7 +1223,7 @@ public class ZoneRenderer implements Renderer {
 			shouldRenderScene = false;
 		} catch (Throwable ex) {
 			log.error("Error in draw({}):", overlayColor, ex);
-			plugin.requestPluginStop();
+			plugin.requestPluginStop(ex);
 		}
 	}
 
@@ -1284,7 +1284,7 @@ public class ZoneRenderer implements Renderer {
 			sceneManager.despawnWorldView(worldView);
 		} catch (Throwable ex) {
 			log.error("Error in despawnWorldView({}):", worldView.getId(), ex);
-			plugin.requestPluginStop();
+			plugin.requestPluginStop(ex);
 		}
 	}
 
