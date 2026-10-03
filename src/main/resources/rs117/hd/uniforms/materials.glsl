@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utils/misc.glsl>
+
 #include MATERIAL_COUNT
 
 struct Material {
@@ -11,6 +13,7 @@ struct Material {
     int flowMap;
     int shadowAlphaMap;
     int flags; // overrideBaseColor << 2 | unlit << 1 | hasTransparency
+    float subsurface;
     float brightness;
     float displacementScale;
     float specularStrength;

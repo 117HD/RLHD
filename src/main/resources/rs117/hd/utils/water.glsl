@@ -23,6 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <uniforms/global.glsl>
+#include <uniforms/sky.glsl>
 #include <uniforms/materials.glsl>
 #include <uniforms/water_types.glsl>
 
@@ -59,7 +60,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     float viewDotNormals = dot(viewDir, normals);
 
     vec2 distortion = uvFlow * .00075;
-    float shadow = sampleShadowMap(IN.position, distortion, lightDotNormals);
+    float shadow = sampleShadowMap(IN.position, distortion, vec3(0.0), false, false);
     float inverseShadow = 1 - shadow;
 
     vec3 vSpecularStrength = vec3(waterType.specularStrength);
@@ -81,16 +82,42 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     vec3 lightOut = max(lightDotNormals, 0.0) * lightColor;
 
     // directional light specular
-    vec3 lightReflectDir = reflect(-lightDir, normals);
-    vec3 lightSpecularOut = lightColor * specular(IN.texBlend, viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength);
+    vec3 lightSpecularOut;
+    if (uboSky.enabled) {
+        // Reflect both disks independently of the scene-lighting handoff.
+        vec3 sunDir = uboSky.sunDir * vec3(1, -1, 1);
+        vec3 moonDir = uboSky.moonDir * vec3(1, -1, 1);
+        bool moonOwnsShadowMap = dot(lightDir, moonDir) > dot(lightDir, sunDir);
+        float sunVisibility = smoothstep(0.0, 0.04, uboSky.sunDir.y);
+        float moonVisibility = smoothstep(0.0, 0.04, uboSky.moonDir.y) *
+            uboSky.moonVisibility * uboSky.moonIllumination;
+        moonVisibility *= uboSky.moonReflectionVisibility;
+        // The single shadow map can only occlude its active source.
+        sunVisibility *= moonOwnsShadowMap ? 1.0 : inverseShadow;
+        moonVisibility *= moonOwnsShadowMap ? inverseShadow : 1.0;
+        // Compress disk intensity before shaping the highlight; visibility and
+        // shadows remain outside the tone map so they can still fade it fully.
+        vec3 sunReflectionColor = 14 * uboSky.sunColor;
+        vec3 moonReflectionColor = 7.15 * uboSky.moonDiskColor;
+        vSpecularGloss *= 4;
+        lightSpecularOut =
+            sunReflectionColor * sunVisibility *
+                specular(IN.texBlend, viewDir, reflect(-sunDir, normals), vSpecularGloss, vSpecularStrength) +
+            moonReflectionColor * moonVisibility *
+                specular(IN.texBlend, viewDir, reflect(-moonDir, normals), vSpecularGloss, vSpecularStrength);
+        lightSpecularOut = linearToSrgb(lightSpecularOut);
+    } else {
+        lightSpecularOut = lightColor * specular(IN.texBlend, viewDir, reflect(-lightDir, normals), vSpecularGloss, vSpecularStrength);
+    }
 
     // point lights
     vec3 pointLightsOut = vec3(0);
     vec3 pointLightsSpecularOut = vec3(0);
-    calculateLighting(IN.position, normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength, pointLightsOut, pointLightsSpecularOut);
+    calculateLighting(IN.position, normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength,
+        0.0, pointLightsOut, pointLightsSpecularOut);
 
     // sky light
-    vec3 skyLightColor = fogColor.rgb;
+    vec3 skyLightColor = fogColor;
     float skyLightStrength = 0.5;
     float skyDotNormals = downDotNormals;
     vec3 skyLightOut = max(skyDotNormals, 0.0) * skyLightColor * skyLightStrength;
@@ -113,8 +140,18 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     float finalFresnel = clamp(mix(baseOpacity, 1.0, fresnel * 1.2), 0.0, 1.0);
     vec3 surfaceColor = vec3(0);
 
-    // add sky gradient
-    if (finalFresnel < 0.5) {
+    // Add the broad sky reflected by the water. Individual stars are omitted,
+    // but the directional gradient, night background, nebulae, and haze match
+    // the visible sky instead of inheriting a single horizon color.
+    if (uboSky.enabled) {
+        vec3 skyViewDir = reflect(-viewDir, normals);
+        vec3 skyColor = foggedSkyColor(skyViewDir);
+
+        float reflectionStrength = finalFresnel < 0.5 ?
+            mix(0.05, 0.45, finalFresnel * 2.0) :
+            mix(0.45, 0.8, (finalFresnel - 0.5) * 2.0);
+        surfaceColor = linearToSrgb(skyColor * reflectionStrength);
+    } else if (finalFresnel < 0.5) {
         surfaceColor = mix(waterColorDark, waterColorMid, finalFresnel * 2);
     } else {
         surfaceColor = mix(waterColorMid, waterColorLight, (finalFresnel - 0.5) * 2);
@@ -143,7 +180,6 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     vec3 specularComposite = mix(lightSpecularOut, vec3(0.0), foamAmount);
     float flatFresnel = (1.0 - dot(viewDir, vec3(0, -1, 0))) * 1.0;
     finalFresnel = max(finalFresnel, flatFresnel);
-    finalFresnel -= finalFresnel * shadow * 0.2;
     baseColor += pointLightsSpecularOut + lightSpecularOut / 3;
 
     float alpha = max(waterType.baseOpacity, max(foamAmount, max(finalFresnel, length(specularComposite / 3))));

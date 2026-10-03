@@ -453,13 +453,7 @@ public class SceneManager {
 			PooledArrayType.forceCleanup(false);
 
 			nextZones = new Zone[NUM_ZONES][NUM_ZONES];
-			nextSceneContext = new ZoneSceneContext(
-				client,
-				worldView,
-				scene,
-				plugin.getExpandedMapLoadingChunks(),
-				root.sceneContext
-			);
+			nextSceneContext = new ZoneSceneContext(client, worldView, scene, plugin.configExpandedMapLoadingChunks, root.sceneContext);
 
 			WorldViewContext ctx = root;
 			Scene prev = client.getTopLevelWorldView().getScene();
@@ -769,7 +763,7 @@ public class SceneManager {
 			clientThread.invoke(prevCtx::free);
 		}
 
-		var sceneContext = new ZoneSceneContext(client, worldView, scene, plugin.getExpandedMapLoadingChunks(), null);
+		var sceneContext = new ZoneSceneContext(client, worldView, scene, plugin.configExpandedMapLoadingChunks, null);
 		proceduralGenerator.generateSceneData(sceneContext, null);
 
 		final WorldViewContext ctx = new WorldViewContext(worldView, sceneContext, uboWorldViews);
