@@ -1278,15 +1278,14 @@ public interface HdPluginConfig extends Config
 		name = "Minimap mode",
 		description =
 			"Changes how the minimap is rendered.<br>" +
-			"'Normal' keeps the default oldschool minimap.<br>" +
-			"'HD Topdown' renders a top-down 3D view of the scene into the minimap.<br>" +
+			"'Vanilla' GPU-recreates today's flat-colored minimap look, with no shading.<br>" +
 			"'Shaded' GPU-recreates the minimap with 2008-style gouraud-shaded tile lighting.<br>" +
-			"'Flat' GPU-recreates the minimap matching today's flat-colored tile look, with no shading.",
+			"'Topdown' renders a top-down 3D view of the scene into the minimap.",
 		position = 1,
 		section = minimapSettings
 	)
 	default MinimapType minimapType() {
-		return MinimapType.NORMAL;
+		return MinimapType.SHADED;
 	}
 
 	String KEY_MINIMAP_SHOW_LINES = "minimapShowLines";

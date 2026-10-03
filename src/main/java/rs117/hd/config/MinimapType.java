@@ -6,10 +6,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum MinimapType {
-	NORMAL("Normal"),
-	HD("HD Topdown"),
+	VANILLA("Vanilla"),
 	SHADED("Shaded"),
-	FLAT("Flat");
+	HD("Topdown");
 
 	private final String name;
 

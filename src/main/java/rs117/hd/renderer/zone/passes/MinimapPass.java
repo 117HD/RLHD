@@ -155,7 +155,8 @@ public class MinimapPass implements RenderPass {
 
 	@Override
 	public void destroy() {
-		registerTileDrawer(MinimapType.NORMAL);
+		client.setMinimapTileDrawer(null);
+		tileDrawerMode = null;
 
 		if (glShadedVbo != 0)
 			glDeleteBuffers(glShadedVbo);
@@ -174,12 +175,6 @@ public class MinimapPass implements RenderPass {
 		final MinimapType type = config.minimapType();
 		registerTileDrawer(type);
 
-		final boolean gpuActive = type == MinimapType.HD || type == MinimapType.SHADED || type == MinimapType.FLAT;
-		if (!gpuActive) {
-			active = false;
-			return 0;
-		}
-
 		if (fboMinimapCache == 0)
 			initializeCacheFbo();
 
@@ -190,8 +185,7 @@ public class MinimapPass implements RenderPass {
 		if (type == tileDrawerMode)
 			return;
 
-		final boolean usesPlaceholder = type == MinimapType.HD || type == MinimapType.SHADED || type == MinimapType.FLAT;
-		client.setMinimapTileDrawer(usesPlaceholder ? this::drawPlaceholderTile : null);
+		client.setMinimapTileDrawer(this::drawPlaceholderTile);
 		tileDrawerMode = type;
 	}
 
@@ -521,9 +515,9 @@ public class MinimapPass implements RenderPass {
 
 			positionCacheCamera(zx, zz, ctx);
 
-			if (pendingMode == MinimapType.SHADED || pendingMode == MinimapType.FLAT) {
+			if (pendingMode == MinimapType.SHADED || pendingMode == MinimapType.VANILLA) {
 				pendingShadedVertexCounts[pendingCount] = buildZoneVertices(
-					zx, zz, ctx, pendingShadedVertices[pendingCount], pendingMode == MinimapType.FLAT
+					zx, zz, ctx, pendingShadedVertices[pendingCount], pendingMode == MinimapType.VANILLA
 				);
 			} else {
 				final CommandBuffer cmd = zoneCacheCmds[pendingCount];
@@ -583,7 +577,7 @@ public class MinimapPass implements RenderPass {
 		if (pendingCount == 0)
 			return;
 
-		final boolean shaded = pendingMode == MinimapType.SHADED || pendingMode == MinimapType.FLAT;
+		final boolean shaded = pendingMode == MinimapType.SHADED || pendingMode == MinimapType.VANILLA;
 
 		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, fboMinimapCache);
 		renderState.disable.set(GL_MULTISAMPLE);
