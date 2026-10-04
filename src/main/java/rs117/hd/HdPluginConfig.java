@@ -748,7 +748,7 @@ public interface HdPluginConfig extends Config
 		name = "Real-time latitude",
 		description =
 			"<b>Advanced setting</b>: Change the latitude coordinate for realistic sun and moon movement for a location on Earth.<br>" +
-			"Only applies to Real-Time and Custom Realistic cycle modes. Defaults to Jagex's offices in Cambridge, England.<br>" +
+			"Only applies to Real-Time and Custom Realistic cycle modes. Defaults to New York City.<br>" +
 			"For southern latitudes, use negative values. For higher precision than to within a few minutes, you can provide<br>" +
 			"coordinates including decimals in the in-game chat with: <b>::117hd latlon &lt;latitude&gt; &lt;longitude&gt;</b><br>" +
 			"To revert back to using the values specified in the config panel, type: <b>::117hd latlon reset</b>",
@@ -767,7 +767,7 @@ public interface HdPluginConfig extends Config
 		name = "Real-time longitude",
 		description =
 			"<b>Advanced setting</b>: Change the longitude coordinate for realistic sun and moon movement for a location on Earth.<br>" +
-			"Only applies to Real-Time and Custom Realistic cycle modes. Defaults to Jagex's offices in Cambridge, England.<br>" +
+			"Only applies to Real-Time and Custom Realistic cycle modes. Defaults to New York City.<br>" +
 			"For western longitudes, use negative values. For higher precision than to within a few minutes, you can provide<br>" +
 			"coordinates including decimals in the in-game chat with: <b>::117hd latlon &lt;latitude&gt; &lt;longitude&gt;</b><br>" +
 			"To revert back to using the values specified in the config panel, type: <b>::117hd latlon reset</b>",

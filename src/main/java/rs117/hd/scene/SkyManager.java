@@ -40,7 +40,7 @@ import static rs117.hd.utils.ResourcePath.path;
 @Singleton
 public class SkyManager {
 	public static Map<String, SkyConfiguration> PRESETS = Map.of();
-	public static final float[] DEFAULT_LATLON = { 52.2347902f, .1407562f }; // Jagex's offices, Cambridge
+	public static final float[] DEFAULT_LATLON = { 40.7128f, -74.0060f }; // New York City
 
 	private static final String DEFAULT_PRESET_NAME = "GIELINOR";
 	private static final ResourcePath SKY_PRESETS_PATH = Props
@@ -538,8 +538,9 @@ public class SkyManager {
 		isSunDescending =
 			AstronomyUtils.getSunAltitude(millis + 1000, state.latLon) <=
 			AstronomyUtils.getSunAltitude(millis - 1000, state.latLon);
-		// Change offsets at noon UTC, normally outside dusk-to-dawn schedules at the default coordinates.
-		scheduleNightIndex = Math.floorDiv(state.utcMillis - DAY_MS / 2, DAY_MS);
+		// Change offsets at local solar noon, outside dusk-to-dawn schedules.
+		long localSolarMillis = state.utcMillis + (long) (state.latLon[1] / 360 * DAY_MS);
+		scheduleNightIndex = Math.floorDiv(localSolarMillis - DAY_MS / 2, DAY_MS);
 		if (state.cycleActive)
 			nightFactor = smoothstep(5, -18, state.sunAltitudeDegrees);
 	}
