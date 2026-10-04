@@ -696,7 +696,7 @@ public interface HdPluginConfig extends Config
 		section = daylightCycleSettings
 	)
 	default MoonBehavior moonBehavior() {
-		return MoonBehavior.REALISTIC;
+		return MoonBehavior.MIRRORED;
 	}
 
 	String KEY_MOON_PHASE = "moonPhase";
