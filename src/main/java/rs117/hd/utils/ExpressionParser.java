@@ -7,38 +7,121 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.Function;
 import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.utils.ExpressionParserEvaluators.BooleanComparisons;
+import rs117.hd.utils.ExpressionParserEvaluators.BooleanConstant;
+import rs117.hd.utils.ExpressionParserEvaluators.BooleanEnumVariable;
+import rs117.hd.utils.ExpressionParserEvaluators.BooleanEvalPredicate;
+import rs117.hd.utils.ExpressionParserEvaluators.BooleanNot;
+import rs117.hd.utils.ExpressionParserEvaluators.BooleanStringVariable;
+import rs117.hd.utils.ExpressionParserEvaluators.BooleanTernary;
+import rs117.hd.utils.ExpressionParserEvaluators.BooleanToObjectFunction;
+import rs117.hd.utils.ExpressionParserEvaluators.ConstantFunction;
+import rs117.hd.utils.ExpressionParserEvaluators.FloatAdd;
+import rs117.hd.utils.ExpressionParserEvaluators.FloatComparisons;
+import rs117.hd.utils.ExpressionParserEvaluators.FloatConstant;
+import rs117.hd.utils.ExpressionParserEvaluators.FloatDiv;
+import rs117.hd.utils.ExpressionParserEvaluators.FloatEnumVariable;
+import rs117.hd.utils.ExpressionParserEvaluators.FloatMod;
+import rs117.hd.utils.ExpressionParserEvaluators.FloatMul;
+import rs117.hd.utils.ExpressionParserEvaluators.FloatStringVariable;
+import rs117.hd.utils.ExpressionParserEvaluators.FloatSub;
+import rs117.hd.utils.ExpressionParserEvaluators.FloatTernary;
+import rs117.hd.utils.ExpressionParserEvaluators.FloatToObjectFunction;
+import rs117.hd.utils.ExpressionParserEvaluators.IntAdd;
+import rs117.hd.utils.ExpressionParserEvaluators.IntComparisons;
+import rs117.hd.utils.ExpressionParserEvaluators.IntConstant;
+import rs117.hd.utils.ExpressionParserEvaluators.IntDiv;
+import rs117.hd.utils.ExpressionParserEvaluators.IntEnumVariable;
+import rs117.hd.utils.ExpressionParserEvaluators.IntMod;
+import rs117.hd.utils.ExpressionParserEvaluators.IntMul;
+import rs117.hd.utils.ExpressionParserEvaluators.IntStringVariable;
+import rs117.hd.utils.ExpressionParserEvaluators.IntSub;
+import rs117.hd.utils.ExpressionParserEvaluators.IntTernary;
+import rs117.hd.utils.ExpressionParserEvaluators.IntToObjectFunction;
+import rs117.hd.utils.ExpressionParserEvaluators.ObjectTernaryFunction;
+import rs117.hd.utils.ExpressionParserEvaluators.ObjectVariableFunction;
 
+import static rs117.hd.utils.ExpressionParser.Operator.NOT;
+import static rs117.hd.utils.ExpressionParser.Operator.TERNARY;
 import static rs117.hd.utils.MathUtils.*;
 
 public class ExpressionParser {
+	private static final LinkedHashMap<ExpressionKey, Expression> EXPRESSION_CACHE = new LinkedHashMap<>();
+	private static final LinkedHashMap<Object, IntEval> INT_VARIABLE_CACHE = new LinkedHashMap<>();
+	private static final LinkedHashMap<Object, FloatEval> FLOAT_VARIABLE_CACHE = new LinkedHashMap<>();
+	private static final LinkedHashMap<Object, BooleanEval> BOOLEAN_VARIABLE_CACHE = new LinkedHashMap<>();
+
 	public static ExpressionPredicate parsePredicate(String expression) {
-		return parsePredicate(expression, null);
+		return parsePredicate(expression, null, null);
 	}
 
 	public static ExpressionPredicate parsePredicate(String expression, @Nullable VariableSupplier constants) {
-		return asExpression(parseExpression(expression, constants)).toPredicate();
+		return parsePredicate(expression, constants, null);
+	}
+
+	public static ExpressionPredicate parsePredicateEnum(String expression, @Nullable VariableKeyResolver resolver) {
+		return parsePredicate(expression, null, resolver);
+	}
+
+	public static ExpressionPredicate parsePredicate(
+		String expression, @Nullable VariableSupplier constants, @Nullable VariableKeyResolver resolver
+	) {
+		return asExpression(parseExpression(expression, constants, resolver)).toPredicate();
 	}
 
 	public static Function<VariableSupplier, Object> parseFunction(String expression) {
-		return parseFunction(expression, null);
+		return parseFunction(expression, null, null);
 	}
 
 	public static Function<VariableSupplier, Object> parseFunction(String expression, @Nullable VariableSupplier constants) {
-		return asFunction(parseExpression(expression, constants));
+		return parseFunction(expression, constants, null);
+	}
+
+	public static Function<VariableSupplier, Object> parseFunctionEnum(String expression, @Nullable VariableKeyResolver resolver) {
+		return parseFunction(expression, null, resolver);
+	}
+
+	public static Function<VariableSupplier, Object> parseFunction(
+		String expression, @Nullable VariableSupplier constants, @Nullable VariableKeyResolver resolver
+	) {
+		return asFunction(parseExpression(expression, constants, resolver));
 	}
 
 	public static Object parseExpression(String expression) {
-		return parseExpression(expression, null);
+		return parseExpression(expression, null, null);
 	}
 
 	public static Object parseExpression(String expression, @Nullable VariableSupplier constants) {
-		return asExpression(parseExpression(expression, 0, expression.length())).simplify(constants);
+		return parseExpression(expression, constants, null);
+	}
+
+	public static Object parseExpressionEnum(String expression, @Nullable VariableKeyResolver resolver) {
+		return parseExpression(expression, null, resolver);
+	}
+
+	public static Object parseExpression(
+		String expression, @Nullable VariableSupplier constants, @Nullable VariableKeyResolver resolver
+	) {
+		final ExpressionKey key = new ExpressionKey(expression, constants, resolver);
+		final Expression cached = EXPRESSION_CACHE.get(key);
+		if(cached != null)
+			return cached;
+
+		final Object parsed = asExpression(parseExpression(expression, 0, expression.length(), constants, resolver)).simplify(constants);
+		if(parsed instanceof Expression)
+			EXPRESSION_CACHE.put(key, (Expression) parsed);
+
+		return parsed;
 	}
 
 	public static String mergeJsonExpressions(String delimiter, JsonElement jsonExpressions) {
@@ -81,11 +164,73 @@ public class ExpressionParser {
 	public static Function<VariableSupplier, Object> asFunction(Object object) {
 		if (object instanceof Expression)
 			return ((Expression) object).toFunction();
-		if (object instanceof String)
-			return vars -> vars.get((String) object);
-		return vars -> object;
+		if (object instanceof String || object instanceof Enum)
+			return new ObjectVariableFunction(object);
+		return new ConstantFunction(object);
 	}
 
+
+	private static IntEval toIntEval(Object operand) {
+		if (operand instanceof Expression)
+			return ((Expression) operand).compileInt();
+		if (operand instanceof Number)
+			return new IntConstant(((Number) operand).intValue());
+
+		IntEval evalVar = INT_VARIABLE_CACHE.get(operand);
+		if (evalVar == null) {
+			if (operand instanceof String)
+				evalVar = new IntStringVariable((String) operand);
+			else if (operand instanceof Enum)
+				evalVar = new IntEnumVariable((Enum<?>) operand);
+			else
+				throw new IllegalArgumentException("Cannot evaluate '" + operand + "' as a int");
+			INT_VARIABLE_CACHE.put(operand, evalVar);
+		}
+
+		return evalVar;
+	}
+
+	private static FloatEval toFloatEval(Object operand) {
+		if (operand instanceof Expression)
+			return  ((Expression) operand).compileFloat();
+		if (operand instanceof Number)
+			return new FloatConstant(((Number) operand).floatValue());
+
+		FloatEval evalVar = FLOAT_VARIABLE_CACHE.get(operand);
+		if (evalVar == null) {
+			if (operand instanceof String)
+				evalVar = new FloatStringVariable((String) operand);
+			else if (operand instanceof Enum)
+				evalVar = new FloatEnumVariable((Enum<?>) operand);
+			else
+				throw new IllegalArgumentException("Cannot evaluate '" + operand + "' as a float");
+			FLOAT_VARIABLE_CACHE.put(operand, evalVar);
+		}
+
+		return evalVar;
+	}
+
+	private static BooleanEval toBooleanEval(Object operand) {
+		if (operand instanceof Expression)
+			return  ((Expression) operand).compileBoolean();
+		if (operand instanceof Boolean)
+			return new BooleanConstant((Boolean) operand);
+
+		BooleanEval evalVar = BOOLEAN_VARIABLE_CACHE.get(operand);
+		if (evalVar == null) {
+			if (operand instanceof String)
+				evalVar = new BooleanStringVariable((String) operand);
+			else if (operand instanceof Enum)
+				evalVar = new BooleanEnumVariable((Enum<?>) operand);
+			else
+				throw new IllegalArgumentException("Cannot evaluate '" + operand + "' as a boolean");
+			BOOLEAN_VARIABLE_CACHE.put(operand, evalVar);
+		}
+
+		return evalVar;
+	}
+
+	@RequiredArgsConstructor
 	public static class SerializableExpressionPredicate implements ExpressionPredicate {
 		public final Expression expression;
 		public final ExpressionPredicate predicate;
@@ -169,7 +314,7 @@ public class ExpressionParser {
 	}
 
 	@RequiredArgsConstructor
-	private enum Operator {
+	public enum Operator {
 		MOD("%", 6, 2),
 		MUL("*", 6, 2),
 		DIV("/", 6, 2),
@@ -200,6 +345,9 @@ public class ExpressionParser {
 
 	@AllArgsConstructor
 	public static class ParserContext {
+		static final StringBuilder TRUE_SB = new StringBuilder("true");
+		static final StringBuilder FALSE_SB = new StringBuilder("false");
+		final StringBuilder sb = new StringBuilder();
 		final String expr;
 		int index, endIndex;
 		char c;
@@ -207,14 +355,23 @@ public class ExpressionParser {
 		Object[] operands = new Object[2];
 		boolean isInParentheses;
 		boolean isTopLevelParser;
+		boolean hasDecimal;
 		int minPrecedence;
+		@Nullable VariableSupplier constants;
+		@Nullable VariableKeyResolver keyResolver;
 
-		ParserContext(String expression, int startIndex, int endIndex, boolean isTopLevelParser, int minPrecedence) {
+		ParserContext(
+			String expression, int startIndex, int endIndex,
+			boolean isTopLevelParser, int minPrecedence,
+			@Nullable VariableSupplier constants, @Nullable VariableKeyResolver keyResolver
+		) {
 			this.expr = expression;
 			this.index = startIndex;
 			this.endIndex = endIndex;
 			this.isTopLevelParser = isTopLevelParser;
 			this.minPrecedence = minPrecedence;
+			this.constants = constants;
+			this.keyResolver = keyResolver;
 		}
 
 		boolean done() {
@@ -329,7 +486,7 @@ public class ExpressionParser {
 				// Always parse parentheses in a new parsing context
 				if (c == '(') {
 					int end = indexOfClosingParenthesis(index);
-					var exprInParentheses = parseExpression(expr, index, end + 1);
+					var exprInParentheses = parseExpression(expr, index, end + 1, constants, keyResolver);
 					index = end + 1;
 					readSafe();
 					return exprInParentheses;
@@ -337,7 +494,7 @@ public class ExpressionParser {
 
 				// Parse all following operations with higher precedence than the current, and return that as the operand
 				if (op != null) {
-					var higherPrecedenceParser = new ParserContext(expr, index, endIndex, false, op.precedence + 1);
+					var higherPrecedenceParser = new ParserContext(expr, index, endIndex, false, op.precedence + 1, constants, keyResolver);
 					var expr = parseExpression(higherPrecedenceParser);
 					if (expr != null) {
 						index = higherPrecedenceParser.index;
@@ -346,8 +503,14 @@ public class ExpressionParser {
 					}
 				}
 
-				if (c == '+' || c == '-' || c == '.' || ('0' <= c && c <= '9'))
-					return readNumber();
+				if (c == '+' || c == '-' || c == '.' || ('0' <= c && c <= '9')) {
+					final float floatVal = readNumber();
+					final int intVal = (int) floatVal;
+					hasDecimal = floatVal != intVal;
+					if(hasDecimal)
+						return floatVal;
+					return intVal;
+				}
 				if ('A' <= c && c <= 'Z' || 'a' <= c && c <= 'z' || c == '_')
 					return readIdentifier();
 			}
@@ -406,7 +569,7 @@ public class ExpressionParser {
 		}
 
 		Object readIdentifier() {
-			StringBuilder sb = new StringBuilder();
+			sb.setLength(0);
 			while (!done()) {
 				if ('A' <= c && c <= 'Z' ||
 					'a' <= c && c <= 'z' ||
@@ -422,28 +585,35 @@ public class ExpressionParser {
 			}
 
 			assert sb.length() > 0;
-			var str = sb.toString();
-
-			// Convert string constants
-			if (str.equalsIgnoreCase("true"))
+			if(sb.compareTo(TRUE_SB) == 0)
 				return true;
-			if (str.equalsIgnoreCase("false"))
+
+			if(sb.compareTo(FALSE_SB) == 0)
 				return false;
 
-			return str;
+			final String name = sb.toString().intern();
+			final boolean isKnownConstant = constants != null && constants.get(name) != null;
+
+			if (keyResolver != null && !isKnownConstant) {
+				var resolved = keyResolver.resolve(name);
+				if (resolved != null)
+					return resolved;
+			}
+
+			return name;
 		}
 
 		Expression createExpression(Object leftOperand, Operator op, Object rightOperand) {
 			if (!(leftOperand instanceof Expression)) {
 				// Simple combination of left & right operands
-				return new Expression(op, leftOperand, rightOperand, null, false);
+				return new Expression(op, leftOperand, rightOperand, null, false, false);
 			}
 
 			Expression left = (Expression) leftOperand;
 			// If the left expression is in parentheses, or has the same or higher operator precedence,
 			// it should be evaluated first, so use it as the left operand in a new expression
 			if (left.isInParentheses || left.op.precedence >= op.precedence)
-				return new Expression(op, left, rightOperand, null, false);
+				return new Expression(op, left, rightOperand, null, false, false);
 
 			// The new operator should act on the left expression's right-most operand,
 			// and should replace the right-most operand with the resulting expression
@@ -452,23 +622,54 @@ public class ExpressionParser {
 		}
 	}
 
-	public static class Expression {
+	@RequiredArgsConstructor
+	private static class ExpressionKey {
+		@NonNull final String expression;
+		@Nullable final VariableSupplier constants;
+		@Nullable final VariableKeyResolver keyResolver;
+
+		@Override
+		public int hashCode() {
+			int result = expression.hashCode();
+			result = 31 * result + System.identityHashCode(constants);
+			result = 31 * result + System.identityHashCode(keyResolver);
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object other) {
+			if (this == other)
+				return true;
+			if (!(other instanceof ExpressionKey))
+				return false;
+
+			ExpressionKey otherKey = (ExpressionKey) other;
+			return expression.equals(otherKey.expression)
+			       && constants == otherKey.constants
+			       && keyResolver == otherKey.keyResolver;
+		}
+	}
+
+	public static final class Expression {
 		Operator op;
 		Object left, right;
 		Object ternary;
 		boolean isInParentheses;
+		boolean hasDecimal;
+
 		public final HashSet<String> variables = new HashSet<>();
 
 		Expression(Object value) {
-			this(null, value, null, null, false);
+			this(null, value, null, null, false, false);
 		}
 
-		Expression(Operator op, Object left, Object right, Object ternary, boolean isInParentheses) {
+		Expression(Operator op, Object left, Object right, Object ternary, boolean isInParentheses, boolean hasDecimal) {
 			this.op = op;
 			this.left = left;
 			this.right = right;
 			this.ternary = ternary;
 			this.isInParentheses = isInParentheses;
+			this.hasDecimal = hasDecimal;
 			registerVariables(left);
 			registerVariables(right);
 			registerVariables(ternary);
@@ -482,38 +683,48 @@ public class ExpressionParser {
 				if (l instanceof String) {
 					var value = constants.get((String) l);
 					if (value != null)
-						l = sanitizeValue(value);
+						l = value;
+				} else if (l instanceof Enum) {
+					var value = constants.get((Enum<?>) l);
+					if (value != null)
+						l = value;
 				}
 				if (r instanceof String) {
 					var value = constants.get((String) r);
 					if (value != null)
-						r = sanitizeValue(value);
+						r = value;
+				} else if (r instanceof Enum) {
+					var value = constants.get((Enum<?>) r);
+					if (value != null)
+						r = value;
 				}
 			}
 
-			if (op == Operator.TERNARY) {
+			if (op == TERNARY) {
 				Object t = asExpression(ternary).simplify(constants);
 				if (t instanceof Boolean)
 					return (boolean) t ? l : r;
-				return new Expression(op, l, r, asExpression(t), isInParentheses);
+				return new Expression(op, l, r, asExpression(t), isInParentheses, hasDecimal);
 			}
 
 			var expr = this;
 			if (l != left || r != right)
-				expr = new Expression(op, l, r, null, isInParentheses);
+				expr = new Expression(op, l, r, null, isInParentheses, hasDecimal);
 
 			if (isPrimitive(l) && isPrimitive(r))
-				return expr.toFunctionInternal().apply(null);
+				return expr.toFunction().apply(null);
 
 			return expr;
 		}
 
 		private String formatOperand(Object operand) {
-			if (operand instanceof Number) {
+			if (operand instanceof Float) {
 				int nearest = round((float) operand);
 				if (abs((float) operand - nearest) < 1e-10)
 					operand = nearest;
 			}
+			if (operand instanceof Enum)
+				return ((Enum<?>) operand).name();
 			return operand.toString();
 		}
 
@@ -531,93 +742,102 @@ public class ExpressionParser {
 		}
 
 		public Function<VariableSupplier, Object> toFunction() {
-			var func = toFunctionInternal();
-			return vars -> func.apply(key -> sanitizeValue(vars.get(key)));
-		}
-
-		static Object sanitizeValue(Object value) {
-			// This is kind of stupid, but it's necessary to convert
-			// ints to floats here to avoid messy code later
-			if (value instanceof Integer)
-				return ((Integer) value).floatValue();
-			return value;
-		}
-
-		private Function<VariableSupplier, Object> toFunctionInternal() {
 			if (op == null)
 				return asFunction(left);
+			if (op == TERNARY)
+				return compileObjectTernary();
+			return isBoolean() ?
+				new BooleanToObjectFunction(compileBoolean()) :
+				hasDecimal ? new FloatToObjectFunction(compileFloat()) : new IntToObjectFunction(compileInt());
+		}
 
-			if (op == Operator.TERNARY) {
-				var condition = asExpression(ternary).toPredicate();
-				if (left instanceof Expression) {
-					var ifTrue = ((Expression) left).toFunction();
-					if (right instanceof Expression) {
-						var ifFalse = ((Expression) right).toFunction();
-						return vars -> condition.test(vars) ? ifTrue.apply(vars) : ifFalse.apply(vars);
-					}
-					return vars -> condition.test(vars) ? ifTrue.apply(vars) : right;
-				} else if (right instanceof Expression) {
-					var ifFalse = ((Expression) right).toFunction();
-					return vars -> condition.test(vars) ? left : ifFalse.apply(vars);
-				} else {
-					return vars -> condition.test(vars) ? left : right;
-				}
-			}
+		private Function<VariableSupplier, Object> compileObjectTernary() {
+			BooleanEval condition = toBooleanEval(ternary);
+			Function<VariableSupplier, Object> ifTrue = asFunction(left);
+			Function<VariableSupplier, Object> ifFalse = asFunction(right);
+			return new ObjectTernaryFunction(condition, ifTrue, ifFalse);
+		}
 
-			// Convert variables and constants into functions
-			var l = asFunction(left);
-			var r = asFunction(right);
+		private IntEval compileInt() {
+			if (op == null)
+				return toIntEval(left);
+
+			if(op == TERNARY)
+				return new IntTernary(toBooleanEval(ternary), toIntEval(left), toIntEval(right));
 
 			switch (op) {
-				case AND:
-					return vars -> (boolean) l.apply(vars) && (boolean) r.apply(vars);
-				case OR:
-					return vars -> (boolean) l.apply(vars) || (boolean) r.apply(vars);
-				case NOTEQUAL:
-				case EQUAL:
-					boolean isBoolean =
-						left instanceof Boolean || left instanceof Expression && ((Expression) left).isBoolean() ||
-						right instanceof Boolean || right instanceof Expression && ((Expression) right).isBoolean();
-					if (isBoolean) {
-						return op == Operator.EQUAL ?
-							vars -> (boolean) l.apply(vars) == (boolean) r.apply(vars) :
-							vars -> (boolean) l.apply(vars) != (boolean) r.apply(vars);
-					} else {
-						return op == Operator.EQUAL ?
-							vars -> (float) l.apply(vars) == (float) r.apply(vars) :
-							vars -> (float) l.apply(vars) != (float) r.apply(vars);
-					}
-				case GEQUAL:
-					return vars -> (float) l.apply(vars) >= (float) r.apply(vars);
-				case GREATER:
-					return vars -> (float) l.apply(vars) > (float) r.apply(vars);
-				case LEQUAL:
-					return vars -> (float) l.apply(vars) <= (float) r.apply(vars);
-				case LESS:
-					return vars -> (float) l.apply(vars) < (float) r.apply(vars);
 				case ADD:
-					return vars -> (float) l.apply(vars) + (float) r.apply(vars);
+					return new IntAdd(toIntEval(left), toIntEval(right));
 				case SUB:
-					return vars -> (float) l.apply(vars) - (float) r.apply(vars);
+					return new IntSub(toIntEval(left), toIntEval(right));
 				case MUL:
-					return vars -> (float) l.apply(vars) * (float) r.apply(vars);
+					return new IntMul(toIntEval(left), toIntEval(right));
 				case DIV:
-					return vars -> (float) l.apply(vars) / (float) r.apply(vars);
+					return new IntDiv(toIntEval(left), toIntEval(right));
 				case MOD:
-					return vars -> (float) l.apply(vars) % (float) r.apply(vars);
-				case NOT:
-					return vars -> !(boolean) r.apply(vars);
+					return new IntMod(toIntEval(left), toIntEval(right));
 			}
 
-			throw new UnsupportedOperationException("Unsupported operands: " + l + " " + op + " " + r);
+			throw new UnsupportedOperationException("Operator '" + op + "' is not a math operator");
+		}
+
+		private FloatEval compileFloat() {
+			if (op == null)
+				return toFloatEval(left);
+
+			if(op == TERNARY)
+				return new FloatTernary(toBooleanEval(ternary), toFloatEval(left), toFloatEval(right));
+
+			switch (op) {
+				case ADD:
+					return new FloatAdd(toFloatEval(left), toFloatEval(right));
+				case SUB:
+					return new FloatSub(toFloatEval(left), toFloatEval(right));
+				case MUL:
+					return new FloatMul(toFloatEval(left), toFloatEval(right));
+				case DIV:
+					return new FloatDiv(toFloatEval(left), toFloatEval(right));
+				case MOD:
+					return new FloatMod(toFloatEval(left), toFloatEval(right));
+			}
+
+			throw new UnsupportedOperationException("Operator '" + op + "' is not a math operator");
+		}
+
+		private BooleanEval compileBoolean() {
+			if (op == null)
+				return toBooleanEval(left);
+
+			if (op == NOT)
+				return new BooleanNot(toBooleanEval(right));
+
+			final boolean isFloatCompare =
+				left instanceof Float || left instanceof Expression && ((Expression) left).hasDecimal ||
+				right instanceof Float || right instanceof Expression && ((Expression)right).hasDecimal;
+
+			final boolean isBooleanCompare =
+				op == Operator.AND || op == Operator.OR ||
+				left instanceof Boolean || left instanceof Expression && ((Expression) left).isBoolean() ||
+				right instanceof Boolean || right instanceof Expression && ((Expression) right).isBoolean();
+
+			if(isBooleanCompare) {
+				if(op == TERNARY)
+					return new BooleanTernary(toBooleanEval(ternary), toBooleanEval(left), toBooleanEval(right));
+
+				return new BooleanComparisons(op, toBooleanEval(left), toBooleanEval(right));
+			}
+
+			if(isFloatCompare)
+				return new FloatComparisons(op, toFloatEval(left), toFloatEval(right));
+
+			return new IntComparisons(op, toIntEval(left), toIntEval(right));
 		}
 
 		public ExpressionPredicate toPredicate() {
 			if (!isBoolean())
 				throw new IllegalArgumentException("Expression does not result in a boolean");
 
-			var func = toFunction();
-			return vars -> (boolean) func.apply(vars);
+			return new BooleanEvalPredicate(compileBoolean());
 		}
 
 		boolean isBoolean() {
@@ -644,24 +864,30 @@ public class ExpressionParser {
 			return
 				obj instanceof Boolean ||
 				obj instanceof String ||
+				obj instanceof Enum ||
 				obj instanceof Expression && ((Expression) obj).isBoolean();
 		}
 
 		private boolean isPrimitive(Object obj) {
-			return obj == null || obj instanceof Float || obj instanceof Boolean;
+			return obj == null || obj instanceof Integer || obj instanceof Float || obj instanceof Boolean;
 		}
 
 		private void registerVariables(@Nullable Object dependency) {
 			if (dependency instanceof String) {
 				variables.add((String) dependency);
+			} else if (dependency instanceof Enum) {
+				variables.add(((Enum<?>) dependency).name());
 			} else if (dependency instanceof Expression) {
 				variables.addAll(((Expression) dependency).variables);
 			}
 		}
 	}
 
-	private static Object parseExpression(String expression, int startIndex, int endIndex) {
-		return parseExpression(new ParserContext(expression, startIndex, endIndex, true, 0));
+	private static Object parseExpression(
+		String expression, int startIndex, int endIndex,
+		@Nullable VariableSupplier constants, @Nullable VariableKeyResolver resolver
+	) {
+		return parseExpression(new ParserContext(expression, startIndex, endIndex, true, 0, constants, resolver));
 	}
 
 	private static Object parseExpression(ParserContext ctx) {
@@ -672,8 +898,10 @@ public class ExpressionParser {
 		ctx.trimParentheses();
 		boolean wasInParentheses = ctx.isInParentheses;
 		boolean wasTopLevelParser = ctx.isTopLevelParser;
+		boolean didHaveDecimal = ctx.hasDecimal;
 		// Since we'll be reusing the same parser context for parsing sub-expressions, mark it as not top-level
 		ctx.isTopLevelParser = false;
+		ctx.hasDecimal = false;
 
 		// The general gist:
 		// 1. Begin parsing from left to right until any operator is reached
@@ -691,7 +919,7 @@ public class ExpressionParser {
 			for (var op : Operator.OPERATORS) {
 				// Skip lower precedence operators
 				if (op.precedence >= ctx.minPrecedence && ctx.expr.startsWith(op.symbol, ctx.index)) {
-					if (op == Operator.TERNARY) {
+					if (op == TERNARY) {
 						// Parse the ternary into an expression to be the new left operand, and keep parsing
 						var condition = ctx.operands[0];
 						if (condition == null)
@@ -703,7 +931,7 @@ public class ExpressionParser {
 							throw new SyntaxError(ctx, "Expected ':' in ternary expression");
 						ctx.advance();
 						var ifFalse = parseExpression(ctx);
-						ctx.operands[0] = new Expression(op, ifTrue, ifFalse, condition, wasInParentheses);
+						ctx.operands[0] = new Expression(op, ifTrue, ifFalse, condition, wasInParentheses, didHaveDecimal);
 						continue parsing;
 					}
 
@@ -737,9 +965,43 @@ public class ExpressionParser {
 		if (wasTopLevelParser && !ctx.done())
 			throw new SyntaxError(ctx, "Unexpected character '" + ctx.c + "'");
 
-		if (ctx.operands[0] instanceof Expression)
-			((Expression) ctx.operands[0]).isInParentheses = wasInParentheses;
+		if (ctx.operands[0] instanceof Expression) {
+			Expression expression = (Expression) ctx.operands[0];
+			expression.isInParentheses = wasInParentheses;
+			expression.hasDecimal = didHaveDecimal;
+		}
 
 		return ctx.operands[0];
+	}
+
+	@FunctionalInterface
+	public interface IntEval {
+		int apply(VariableSupplier vars);
+	}
+
+	@FunctionalInterface
+	public interface FloatEval {
+		float apply(VariableSupplier vars);
+	}
+
+	@FunctionalInterface
+	public interface BooleanEval {
+		boolean apply(VariableSupplier vars);
+	}
+
+	@FunctionalInterface
+	public interface VariableKeyResolver {
+		Object resolve(String name);
+
+		static <E extends Enum<E>> VariableKeyResolver forEnum(Class<E> enumType) {
+			var values = enumType.getEnumConstants();
+			Map<String, E> lookup = new HashMap<>(values.length * 2);
+			for (var e : values)
+				lookup.put(e.name(), e);
+			return name -> {
+				E resolved = lookup.get(name);
+				return resolved != null ? resolved : name;
+			};
+		}
 	}
 }
