@@ -85,7 +85,7 @@ vec2 worldUvs(float scale) {
 void main() {
     vec3 downDir = vec3(0, -1, 0);
     // View & light directions are from the fragment to the camera/light
-    vec3 viewDir = normalize(cameraPos - IN.position);
+    vec3 viewDir = normalize(sceneCamera.position - IN.position);
 
     Material material1 = getMaterial(fMaterialData[0] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
     Material material2 = getMaterial(fMaterialData[1] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
@@ -474,7 +474,7 @@ void main() {
     }
 
     #if LEGACY_RENDERER
-        vec2 tiledist = abs(floor(IN.position.xz / 128) - floor(cameraPos.xz / 128));
+        vec2 tiledist = abs(floor(IN.position.xz / 128) - floor(sceneCamera.position.xz / 128));
         float maxDist = max(tiledist.x, tiledist.y);
         if (maxDist > drawDistance) {
             // Rapidly fade out any geometry that extends beyond the draw distance.
@@ -515,7 +515,7 @@ void main() {
     // apply fog
     if (!isUnderwater) {
         // ground fog
-        float distance = distance(IN.position, cameraPos);
+        float distance = distance(IN.position, sceneCamera.position);
         float closeFadeDistance = 1500;
         float groundFog = 1.0 - clamp((IN.position.y - groundFogStart) / (groundFogEnd - groundFogStart), 0.0, 1.0);
         groundFog = mix(0.0, groundFogOpacity, groundFog);

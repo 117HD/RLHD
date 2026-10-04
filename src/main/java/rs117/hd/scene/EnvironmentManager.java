@@ -72,6 +72,7 @@ public class EnvironmentManager {
 
 	// when the current transition began, relative to plugin startup
 	private boolean transitionComplete = true;
+	public boolean isTransitionComplete() { return transitionComplete; }
 	private double transitionStartTime = 0;
 	private int[] previousPosition = new int[3];
 

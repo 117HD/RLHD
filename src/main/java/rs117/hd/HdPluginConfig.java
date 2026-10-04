@@ -42,6 +42,7 @@ import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.GroundBlending;
 import rs117.hd.config.InfernalCape;
+import rs117.hd.config.MinimapType;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SceneScalingMode;
 import rs117.hd.config.SeasonalHemisphere;
@@ -373,7 +374,6 @@ public interface HdPluginConfig extends Config
 	default int brightness() {
 		return 100;
 	}
-
 
 	/*====== Shadow settings ======*/
 
@@ -1248,6 +1248,57 @@ public interface HdPluginConfig extends Config
 		section = experimentalSettings
 	)
 	default boolean multithreadedModelProcessing() {
+		return true;
+	}
+
+	String KEY_DEPTH_PRE_PASS = "depthPrePass";
+	@ConfigItem(
+		keyName = KEY_DEPTH_PRE_PASS,
+		name = "Use Depth PrePass",
+		description = "",
+		section = experimentalSettings
+	)
+	default boolean depthPrePass() {
+		return true;
+	}
+
+	/*====== Minimap settings ======*/
+
+	@ConfigSection(
+		name = "Minimap",
+		description = "Minimap settings",
+		position = 7,
+		closedByDefault = true
+	)
+	String minimapSettings = "minimapSettings";
+
+	String KEY_MINIMAP_TYPE = "minimapType";
+	@ConfigItem(
+		keyName = KEY_MINIMAP_TYPE,
+		name = "Minimap mode",
+		description =
+			"Changes how the minimap is rendered.<br>" +
+			"'Vanilla' GPU-recreates today's flat-colored minimap look, with no shading.<br>" +
+			"'Shaded' GPU-recreates the minimap with 2008-style gouraud-shaded tile lighting.<br>" +
+			"'Topdown' renders a top-down 3D view of the scene into the minimap.",
+		position = 1,
+		section = minimapSettings
+	)
+	default MinimapType minimapType() {
+		return MinimapType.SHADED;
+	}
+
+	String KEY_MINIMAP_SHOW_LINES = "minimapShowLines";
+	@ConfigItem(
+		keyName = KEY_MINIMAP_SHOW_LINES,
+		name = "Show map lines (Topdown only)",
+		description =
+			"Shows wall/door boundary lines on the HD Topdown minimap.<br>" +
+			"Has no effect in Vanilla or Shaded minimap mode, where these lines always show.",
+		position = 2,
+		section = minimapSettings
+	)
+	default boolean minimapShowLines() {
 		return true;
 	}
 

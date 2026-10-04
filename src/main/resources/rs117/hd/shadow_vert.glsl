@@ -52,9 +52,11 @@ layout (location = 0) in vec3 vPosition;
 
     void main() {
         int vertex = gl_VertexID % 3;
+        bool isProvoking = vertex == 2;
 
-        int faceIdx = vTextureFaceIdx & 0x7FFFFFFF;
+        int faceIdx = vTextureFaceIdx & 0x007FFFFF;
         bool windingReversed = vTextureFaceIdx < 0;
+
         if (windingReversed)
             vertex = 2 - vertex;
 

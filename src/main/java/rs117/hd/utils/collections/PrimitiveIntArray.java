@@ -25,6 +25,11 @@ public final class PrimitiveIntArray {
 			array[length++] = v;
 	}
 
+	public int pop() {
+		assert length > 0;
+		return array[--length];
+	}
+
 	public void putUnique(int v) {
 		if (length < array.length) {
 			for (int i = 0; i < length; i++)
