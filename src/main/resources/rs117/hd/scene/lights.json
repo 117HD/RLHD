@@ -20613,6 +20613,24 @@
     "offset": [ 3, 0, 40 ]
   },
   {
+    "description": "FLOOR_CANDLES_3",
+    "height": 45,
+    "radius": 115,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DRAYNOR_CANDLES_2"
+    ],
+    "offset": [ 3, 0, 40 ]
+  },
+  {
     "description": "Altar Candles - Lumbridge, Port Sarim, Glough's",
     "offset": [ 0, 140, -33 ],
     "radius": 180,
@@ -24143,7 +24161,8 @@
       "REGICIDE_CRYSTAL_LAMP",
       "REGICIDE_CRYSTAL_LAMP_BLOCKWALK_ONLY",
       "ELF_VILLAGE_RAIL_LAMP",
-      "PRIF_CRYSTAL_LAMP"
+      "PRIF_CRYSTAL_LAMP",
+      "GRANDWALL1_UPPER_LAMP"
     ]
   },
   {
