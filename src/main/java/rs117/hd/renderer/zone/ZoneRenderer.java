@@ -61,6 +61,7 @@ import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.CommandBuffer;
+import rs117.hd.utils.Debug;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.RenderState;
@@ -408,6 +409,10 @@ public class ZoneRenderer implements Renderer {
 			sceneCamera.setViewportHeight((int) (plugin.sceneViewport[3] / plugin.sceneViewportScale[1]));
 			sceneCamera.setNearPlane(plugin.orthographicProjection ? -40000 : NEAR_PLANE);
 			sceneCamera.setZoom(zoom);
+
+			Debug.Print("Frame: {}", plugin.frame);
+			Debug.PrintF("DeltaTime: %.2f", plugin.deltaTime);
+			Debug.Print("Camera: \n{}\n{}", sceneCamera.getPosition(), sceneCamera.getOrientation());
 
 			// Calculate view matrix, view proj & inv matrix
 			boolean hasSceneCameraChanged = sceneCamera.isViewDirty() || sceneCamera.isProjDirty();
