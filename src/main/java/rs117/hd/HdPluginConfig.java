@@ -757,7 +757,7 @@ public interface HdPluginConfig extends Config
 		section = daylightCycleSettings
 	)
 	default int latitudeDegrees() {
-		return (int) DEFAULT_LATLON[0];
+		return round(DEFAULT_LATLON[0]);
 	}
 
 	String KEY_LONGITUDE_DEGREES = "longitudeDegrees";
@@ -776,7 +776,7 @@ public interface HdPluginConfig extends Config
 		section = daylightCycleSettings
 	)
 	default int longitudeDegrees() {
-		return (int) DEFAULT_LATLON[1];
+		return round(DEFAULT_LATLON[1]);
 	}
 
 

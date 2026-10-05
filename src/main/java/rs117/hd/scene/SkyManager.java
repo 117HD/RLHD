@@ -223,11 +223,9 @@ public class SkyManager {
 		frameUtcMillis = System.currentTimeMillis();
 
 		if (isCycleDisabled()) {
+			state.cycleActive = false;
 			state.cycle = configCycle;
 			state.utcMillis = frameUtcMillis;
-			state.latLon[0] = DEFAULT_LATLON[0];
-			state.latLon[1] = DEFAULT_LATLON[1];
-			state.cycleActive = false;
 			copyTo(state.shadowAngles, environmentManager.getCurrentEnvironment().getShadowAngles());
 			state.auroraStrength = 0;
 			return;
