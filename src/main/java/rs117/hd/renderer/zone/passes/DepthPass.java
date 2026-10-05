@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import net.runelite.api.hooks.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.opengl.shader.SceneDepthResolveShaderProgram;
 import rs117.hd.opengl.shader.SceneDepthShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
@@ -18,18 +19,20 @@ import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.RenderState;
 
+import static org.lwjgl.opengl.GL11.GL_ALWAYS;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.GL_GREATER;
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL11C.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11C.glClear;
 import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
 import static org.lwjgl.opengl.GL30.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL30.GL_DRAW_FRAMEBUFFER;
-import static org.lwjgl.opengl.GL30.GL_READ_FRAMEBUFFER;
-import static org.lwjgl.opengl.GL30.glBindFramebuffer;
+import static org.lwjgl.opengl.GL32.GL_TEXTURE_2D_MULTISAMPLE;
 import static org.lwjgl.opengl.GL31C.glBlitFramebuffer;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_SCENE_OPAQUE_DEPTH;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
@@ -51,6 +54,9 @@ public class DepthPass implements RenderPass {
 	@Inject
 	private SceneDepthShaderProgram sceneDepthProgram;
 
+	@Inject
+	private SceneDepthResolveShaderProgram.ReverseZ reverseZSceneDepthResolveProgram;
+
 	private final ArrayList<Zone> alphaZoneDraws = new ArrayList<>();
 
 	private final CommandBuffer opaqueDepthCmd = new CommandBuffer("DepthPass::Opaque");
@@ -69,6 +75,7 @@ public class DepthPass implements RenderPass {
 	@Override
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
 		sceneDepthProgram.compile(includes);
+		reverseZSceneDepthResolveProgram.compile(includes);
 	}
 
 	@Override
@@ -79,6 +86,7 @@ public class DepthPass implements RenderPass {
 	@Override
 	public void destroyShaders() {
 		sceneDepthProgram.destroy();
+		reverseZSceneDepthResolveProgram.destroy();
 	}
 
 	@Override
@@ -158,10 +166,32 @@ public class DepthPass implements RenderPass {
 
 		alphaDepthCmd.execute(renderState);
 
-		// Resolve the opaque depth into a texture, so it can be sampled later on
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboSceneDepth);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboSceneDepthResolve);
-		glBlitFramebuffer(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1], 0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1], GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+		if (plugin.msaaSamples == 0) {
+			renderState.readFramebuffer.set(plugin.fboSceneDepth);
+			renderState.drawFramebuffer.set(plugin.fboSceneDepthResolve);
+			renderState.apply();
+			glBlitFramebuffer(
+				0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
+				0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
+				GL_DEPTH_BUFFER_BIT, GL_NEAREST
+			);
+		} else {
+			renderState.framebuffer.set(plugin.fboSceneDepthResolve);
+			renderState.program.set(reverseZSceneDepthResolveProgram);
+			renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
+			renderState.vao.setVao(plugin.vaoTri);
+			renderState.textureUnit.set(GL_TEXTURE_2D_MULTISAMPLE, TEXTURE_UNIT_SCENE_OPAQUE_DEPTH, plugin.texSceneDepthMultisample);
+			renderState.enable.set(GL_DEPTH_TEST);
+			renderState.depthFunc.set(GL_ALWAYS);
+			renderState.disable.set(GL_CULL_FACE);
+			renderState.disable.set(GL_BLEND);
+			renderState.disable.set(GL_MULTISAMPLE);
+			renderState.depthMask.set(true);
+			renderState.colorMask.set(false, false, false, false);
+			renderState.apply();
+			reverseZSceneDepthResolveProgram.uniSampleCount.set(plugin.msaaSamples);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+		}
 		checkGLErrors();
 	}
 

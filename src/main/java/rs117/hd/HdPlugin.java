@@ -376,7 +376,7 @@ public class HdPlugin extends Plugin {
 	public int fboSceneDepthResolve;
 	public int fboSceneAlphaDepth;
 	private int rboSceneColor;
-	private int rboSceneDepth;
+	public int texSceneDepthMultisample;
 	public int fboSceneResolve;
 	private int rboSceneResolveColor;
 	private int texSceneDepth;
@@ -546,7 +546,7 @@ public class HdPlugin extends Plugin {
 				fboSceneDepthResolve = 0;
 				fboSceneAlphaDepth = 0;
 				rboSceneColor = 0;
-				rboSceneDepth = 0;
+				texSceneDepthMultisample = 0;
 				fboSceneResolve = 0;
 				rboSceneResolveColor = 0;
 				texSceneDepth = 0;
@@ -1363,11 +1363,20 @@ public class HdPlugin extends Plugin {
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneColor);
 		checkGLErrors();
 
-		// Create depth render buffer
-		rboSceneDepth = glGenRenderbuffers();
-		glBindRenderbuffer(GL_RENDERBUFFER, rboSceneDepth);
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, GL_DEPTH_COMPONENT32F, sceneResolution[0], sceneResolution[1]);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboSceneDepth);
+		// Store depth in a texture so the resolve can choose the nearest multisample.
+		texSceneDepthMultisample = glGenTextures();
+		glActiveTexture(TEXTURE_UNIT_SCENE_OPAQUE_DEPTH);
+		int sceneDepthTextureTarget;
+		if (msaaSamples > 0) {
+			sceneDepthTextureTarget = GL_TEXTURE_2D_MULTISAMPLE;
+			glBindTexture(sceneDepthTextureTarget, texSceneDepthMultisample);
+			glTexImage2DMultisample(sceneDepthTextureTarget, msaaSamples, GL_DEPTH_COMPONENT32F, sceneResolution[0], sceneResolution[1], true);
+		} else {
+			sceneDepthTextureTarget = GL_TEXTURE_2D;
+			glBindTexture(sceneDepthTextureTarget, texSceneDepthMultisample);
+			glTexImage2D(sceneDepthTextureTarget, 0, GL_DEPTH_COMPONENT32F, sceneResolution[0], sceneResolution[1], 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+		}
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, sceneDepthTextureTarget, texSceneDepthMultisample, 0);
 		checkGLErrors();
 
 		// If necessary, create an FBO for resolving multisampling
@@ -1383,13 +1392,12 @@ public class HdPlugin extends Plugin {
 
 		fboSceneDepth = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, fboSceneDepth);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboSceneDepth);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, sceneDepthTextureTarget, texSceneDepthMultisample, 0);
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
 		checkGLErrors();
 
-		// Multisampled depth cannot be sampled directly, so it's resolved into a single-sample texture.
-		// The format has to match the render buffer, otherwise the blit is undefined.
+		// Resolve the multisampled depth into a single-sample texture.
 		int activeTexture = glGetInteger(GL_ACTIVE_TEXTURE);
 		texSceneDepth = glGenTextures();
 		glActiveTexture(TEXTURE_UNIT_SCENE_OPAQUE_DEPTH);
@@ -1457,9 +1465,9 @@ public class HdPlugin extends Plugin {
 			glDeleteRenderbuffers(rboSceneColor);
 		rboSceneColor = 0;
 
-		if (rboSceneDepth != 0)
-			glDeleteRenderbuffers(rboSceneDepth);
-		rboSceneDepth = 0;
+		if (texSceneDepthMultisample != 0)
+			glDeleteTextures(texSceneDepthMultisample);
+		texSceneDepthMultisample = 0;
 
 		if (fboSceneResolve != 0)
 			glDeleteFramebuffers(fboSceneResolve);
