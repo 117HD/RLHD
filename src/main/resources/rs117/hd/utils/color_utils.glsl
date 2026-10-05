@@ -46,6 +46,38 @@ vec3 RGBtoXYZ(vec3 RGB) {
     return RGB_TO_XYZ_MATRIX * RGB;
 }
 
+// Linear sRGB (D65) <-> Oklab's LMS basis.
+// https://bottosson.github.io/posts/oklab/#converting-from-linear-srgb-to-oklab
+const mat3 LINEAR_SRGB_TO_LMS = mat3(
+    0.4122214708, 0.2119034982, 0.0883024619,
+    0.5363325363, 0.6806995451, 0.2817188376,
+    0.0514459929, 0.1073969566, 0.6299787005
+);
+
+const mat3 LMS_TO_LINEAR_SRGB = mat3(
+    +4.0767416621, -1.2684380046, -0.0041960863,
+    -3.3077115913, +2.6097574011, -0.7034186147,
+    +0.2309699292, -0.3413193965, +1.7076147010
+);
+
+vec3 linearSrgbToLms(vec3 rgb) {
+    return LINEAR_SRGB_TO_LMS * rgb;
+}
+
+vec3 lmsToLinearSrgb(vec3 lms) {
+    return LMS_TO_LINEAR_SRGB * lms;
+}
+
+// Signed cube-root LMS used by Oklab. This is nonlinear LMS, not Oklab itself
+vec3 linearSrgbToLmsCbrt(vec3 rgb) {
+    vec3 lms = linearSrgbToLms(rgb);
+    return sign(lms) * pow(abs(lms), vec3(1.0 / 3.0));
+}
+
+vec3 lmsCbrtToLinearSrgb(vec3 lmsCbrt) {
+    return lmsToLinearSrgb(lmsCbrt * lmsCbrt * lmsCbrt);
+}
+
 /**
  * Approximate UV coordinates in the CIE 1960 UCS color space from a color temperature specified in degrees Kelvin.
  * @param kelvin temperature in degrees Kelvin. Valid from 1000 to 15000.

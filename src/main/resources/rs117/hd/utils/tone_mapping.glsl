@@ -20,16 +20,12 @@
  */
 #pragma once
 
+#include <utils/color_utils.glsl>
+
 const float TONEMAP_SOFTNESS_SCALE = 0.2; // controls softness of RGB clipping
 const float TONEMAP_OFFSET = 0.75; // controls how colors desaturate as they brighten. 0 results in that colors never fluoresce, 1 in very saturated colors
 const float TONEMAP_CHROMA_SCALE = 1.2; // overall scale of chroma
 const float TONEMAP_EPSILON = 1e-6;
-
-const mat3 TONEMAP_FROM_LMS = mat3(
-    +4.0767416621, -3.3077115913, +0.2309699292,
-    -1.2684380046, +2.6097574011, -0.3413193965,
-    -0.0041960863, -0.7034186147, +1.7076147010
-);
 
 // Origin: https://knarkowicz.wordpress.com/2016/01/06/aces-filmic-tone-mapping-curve/
 // Using this since it was easy to differentiate, same technique would work for any curve
@@ -82,24 +78,13 @@ vec2 findCenterAndPurity(vec3 x) {
     return vec2(c_smooth, s_smooth);
 }
 
-vec3 toLms(vec3 c) {
-    const mat3 rgbToLms = mat3(
-        0.4122214708, 0.5363325363, 0.0514459929,
-        0.2119034982, 0.6806995451, 0.1073969566,
-        0.0883024619, 0.2817188376, 0.6299787005
-    );
-
-    vec3 lms_ = c * rgbToLms;
-    return sign(lms_) * pow(abs(lms_), vec3(1.0 / 3.0));
-}
-
 float calculateC(vec3 lms) {
     // Most of this could be precomputed
     // Creating a transform that maps R,G,B in the target gamut to have same distance from grey axis
 
-    vec3 lmsR = toLms(vec3(1.0, 0.0, 0.0));
-    vec3 lmsG = toLms(vec3(0.0, 1.0, 0.0));
-    vec3 lmsB = toLms(vec3(0.0, 0.0, 1.0));
+    vec3 lmsR = linearSrgbToLmsCbrt(vec3(1.0, 0.0, 0.0));
+    vec3 lmsG = linearSrgbToLmsCbrt(vec3(0.0, 1.0, 0.0));
+    vec3 lmsB = linearSrgbToLmsCbrt(vec3(0.0, 0.0, 1.0));
 
     vec3 uDir = (lmsR - lmsG) / sqrt(2.0);
     vec3 vDir = (lmsR + lmsG - 2.0 * lmsB) / sqrt(6.0);
@@ -116,7 +101,7 @@ float calculateC(vec3 lms) {
 }
 
 vec2 calculateMC(vec3 c) {
-    vec3 lms = toLms(c);
+    vec3 lms = linearSrgbToLmsCbrt(c);
     float M = findCenterAndPurity(lms).x;
     return vec2(M, calculateC(lms));
 }
@@ -159,7 +144,7 @@ vec2 approximateShape() {
 }
 
 vec3 tonemap_hue_preserving(vec3 c) {
-    vec3 lms = toLms(c);
+    vec3 lms = linearSrgbToLmsCbrt(c);
 
     vec2 MP = findCenterAndPurity(lms);
 
@@ -186,8 +171,7 @@ vec3 tonemap_hue_preserving(vec3 c) {
         lms = (lms - M) / sqrt(C * C / (C_smooth_gamut * C_smooth_gamut) + 1.0) + M;
     }
 
-    vec3 rgb = lms * lms * lms * TONEMAP_FROM_LMS;
-    return rgb;
+    return lmsCbrtToLinearSrgb(lms);
 }
 
 // Best-effort inverse from display-linear RGB [0, 1] to scene-linear HDR.
@@ -195,7 +179,7 @@ vec3 tonemap_hue_preserving(vec3 c) {
 // Exact apart from numerical tolerances where the forward mapping is unclipped
 // and its reconstructed RGB is nonnegative. Unreachable colors are approximated.
 vec3 inverse_tonemap_hue_preserving(vec3 color) {
-    vec3 lms = toLms(clamp(color, 0.0, 1.0));
+    vec3 lms = linearSrgbToLmsCbrt(clamp(color, 0.0, 1.0));
     vec2 MP = findCenterAndPurity(lms);
     if (MP.x <= 0.0)
         return vec3(0.0);
@@ -245,7 +229,7 @@ vec3 inverse_tonemap_hue_preserving(vec3 color) {
         (TONEMAP_CHROMA_SCALE * d_s_curve(vec3(intensity)).x * root * root);
     lms = root + (lms - mappedRoot) * chromaScale;
     // Some assumed display colors have no nonnegative scene-linear preimage.
-    return max(lms * lms * lms * TONEMAP_FROM_LMS, vec3(0.0));
+    return max(lmsCbrtToLinearSrgb(lms), vec3(0.0));
 }
 
 vec3 softSaturate(vec3 x, vec3 a) {
