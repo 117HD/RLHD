@@ -204,10 +204,13 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
             // blending; this is an artistic approximation to the actual sRGB composite.
             float reflectionOpacity = reflectionLuminance / (reflectionLuminance + 0.18);
             alpha = mix(alpha, 1.0, reflectionOpacity);
-            // Blur, coverage, and shadows already affected HDR energy. Compress their
-            // combined reflection here, independently of the established water colors.
-            vec3 reflectionColor = softClipColor(tonemap_hue_preserving(celestialReflection));
-            baseColor = linearToSrgb(srgbToLinear(baseColor) + reflectionColor);
+            // Reconstruct approximate linear light, add the shadowed reflection, then tonemap them together.
+            vec3 light = inverse_tonemap_hue_preserving(srgbToLinear(baseColor));
+            light += celestialReflection;
+            light = tonemap_hue_preserving(light);
+            light = softClipColor(light);
+            light = linearToSrgb(light);
+            baseColor = light;
         }
     }
 

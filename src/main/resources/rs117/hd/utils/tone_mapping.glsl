@@ -25,6 +25,12 @@ const float TONEMAP_OFFSET = 0.75; // controls how colors desaturate as they bri
 const float TONEMAP_CHROMA_SCALE = 1.2; // overall scale of chroma
 const float TONEMAP_EPSILON = 1e-6;
 
+const mat3 TONEMAP_FROM_LMS = mat3(
+    +4.0767416621, -3.3077115913, +0.2309699292,
+    -1.2684380046, +2.6097574011, -0.3413193965,
+    -0.0041960863, -0.7034186147, +1.7076147010
+);
+
 // Origin: https://knarkowicz.wordpress.com/2016/01/06/aces-filmic-tone-mapping-curve/
 // Using this since it was easy to differentiate, same technique would work for any curve
 vec3 s_curve(vec3 x) {
@@ -153,20 +159,7 @@ vec2 approximateShape() {
 }
 
 vec3 tonemap_hue_preserving(vec3 c) {
-    const mat3 toLms = mat3(
-        0.4122214708, 0.5363325363, 0.0514459929,
-        0.2119034982, 0.6806995451, 0.1073969566,
-        0.0883024619, 0.2817188376, 0.6299787005
-    );
-
-    const mat3 fromLms = mat3(
-        +4.0767416621f , -3.3077115913, +0.2309699292,
-        -1.2684380046f , +2.6097574011, -0.3413193965,
-        -0.0041960863f , -0.7034186147, +1.7076147010
-    );
-
-    vec3 lms_ = c * toLms;
-    vec3 lms = sign(lms_) * pow(abs(lms_), vec3(1.0 / 3.0));
+    vec3 lms = toLms(c);
 
     vec2 MP = findCenterAndPurity(lms);
 
@@ -193,8 +186,66 @@ vec3 tonemap_hue_preserving(vec3 c) {
         lms = (lms - M) / sqrt(C * C / (C_smooth_gamut * C_smooth_gamut) + 1.0) + M;
     }
 
-    vec3 rgb = lms * lms * lms * fromLms;
+    vec3 rgb = lms * lms * lms * TONEMAP_FROM_LMS;
     return rgb;
+}
+
+// Best-effort inverse from display-linear RGB [0, 1] to scene-linear HDR.
+// Does not invert softClipColor, sRGB encoding, or any other output adjustments.
+// Exact apart from numerical tolerances where the forward mapping is unclipped
+// and its reconstructed RGB is nonnegative. Unreachable colors are approximated.
+vec3 inverse_tonemap_hue_preserving(vec3 color) {
+    vec3 lms = toLms(clamp(color, 0.0, 1.0));
+    vec2 MP = findCenterAndPurity(lms);
+    if (MP.x <= 0.0)
+        return vec3(0.0);
+
+    // Compression preserves the center and scales purity linearly. Invert
+    // C_out = C_in / sqrt(1 + (C_in / gamutRadius)^2).
+    float C = calculateC(lms);
+    if (C > TONEMAP_EPSILON) {
+        float M = clamp(MP.x, TONEMAP_EPSILON, 1.0 - TONEMAP_EPSILON);
+        vec2 ST = approximateShape();
+        float gamutRadius = 1.0 / (ST.x / M + ST.y / (1.0 - M));
+        float ratio = C / gamutRadius;
+        float expansion = inversesqrt(max(1.0 - ratio * ratio, TONEMAP_EPSILON));
+        // Arbitrary display colors may lie outside the compressed gamut. Limit
+        // expansion to an unclipped intensity instead of reconstructing unbounded HDR.
+        float purity = (1.0 - TONEMAP_OFFSET) * MP.y;
+        if (purity > 0.0)
+            expansion = min(expansion, max(0.0, 1.0 - M) / purity);
+        lms = M + (lms - M) * expansion;
+    }
+
+    // Center + weighted purity recovers the cube root of the mapped intensity:
+    // the forward chroma residual has zero center + weighted purity.
+    MP = findCenterAndPurity(lms);
+    float mappedRoot = clamp(MP.x + (1.0 - TONEMAP_OFFSET) * MP.y, 0.0, 1.0);
+    if (mappedRoot <= 0.0)
+        return vec3(0.0);
+    float mappedIntensity = mappedRoot * mappedRoot * mappedRoot;
+    if (mappedIntensity <= 0.0)
+        return vec3(0.0);
+
+    // Invert s_curve's rational quadratic on its increasing, unclipped branch.
+    // At white this chooses the first clipping point (about 7.24), not infinity.
+    float a = 2.51 - 2.43 * mappedIntensity;
+    float b = 0.03 - 0.59 * mappedIntensity;
+    float c = 0.14 * mappedIntensity;
+    float discriminant = sqrt(b * b + 4.0 * a * c);
+    float intensity;
+    if (b >= 0.0) {
+        intensity = 2.0 * c / (discriminant + b);
+    } else {
+        intensity = (discriminant - b) / (2.0 * a);
+    }
+
+    float root = pow(intensity, 1.0 / 3.0);
+    float chromaScale = mappedRoot * mappedRoot /
+        (TONEMAP_CHROMA_SCALE * d_s_curve(vec3(intensity)).x * root * root);
+    lms = root + (lms - mappedRoot) * chromaScale;
+    // Some assumed display colors have no nonnegative scene-linear preimage.
+    return max(lms * lms * lms * TONEMAP_FROM_LMS, vec3(0.0));
 }
 
 vec3 softSaturate(vec3 x, vec3 a) {
