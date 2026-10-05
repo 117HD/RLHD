@@ -673,7 +673,12 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				var cache = this.cache;
 				executor.execute(() -> cache.save(gameIcon.key, null, null));
 			} else {
-				drawIcon(icon, modelItemId, border, gameIcon.key);
+				try {
+					drawIcon(icon, modelItemId, border, gameIcon.key);
+				} catch (RuntimeException ex) {
+					log.warn("Unable to draw the icon of item {}:", modelItemId, ex);
+					icon.failed = true;
+				}
 			}
 		}
 		return icon.failed ? null : icon;
@@ -869,9 +874,14 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		find = item.getTextureToReplace();
 		replace = item.getTextureToReplaceWith();
 		if (find != null) {
-			data = data.cloneTextures();
-			for (int i = 0; i < find.length; i++)
-				data.retexture(find[i], replace[i]);
+			try {
+				var retextured = data.cloneTextures();
+				for (int i = 0; i < find.length; i++)
+					retextured.retexture(find[i], replace[i]);
+				data = retextured;
+			} catch (NullPointerException ex) {
+				// The client can't clone a model without textures, which has nothing to retexture anyway
+			}
 		}
 
 		// Lit like the game lights item models
