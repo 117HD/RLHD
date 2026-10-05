@@ -22,7 +22,8 @@ import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.RenderState;
 import rs117.hd.utils.buffer.GLBuffer;
-import rs117.hd.utils.jobs.GenericJob;
+import rs117.hd.utils.buffer.GLMappedBuffer;
+import rs117.hd.utils.jobs.Job;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
@@ -81,11 +82,11 @@ public class UiPass implements RenderPass {
 	@Inject
 	private TiledLightingOverlay tiledLightingOverlay;
 
+	private final AsyncUICopyJob uiCopyJob = new AsyncUICopyJob();
+
+	private GLBuffer pbo;
 	private UIScalingMode scalingMode;
 	private boolean scalingModeChanged;
-	private GLBuffer uiCopyPbo;
-	private int[] uiCopyPixels;
-	private int uiCopyPixelCount;
 
 	@Override
 	public void initialize() {
@@ -115,9 +116,7 @@ public class UiPass implements RenderPass {
 	@Override
 	public void preDraw(RenderState renderState) {
 		try {
-			if (plugin.uiCopyJob != null)
-				plugin.uiCopyJob.waitForCompletion(true);
-			plugin.uiCopyJob = null;
+			uiCopyJob.waitForCompletion(true);
 
 			int[] resolution = {
 				max(1, client.getCanvasWidth()),
@@ -153,43 +152,35 @@ public class UiPass implements RenderPass {
 			round(plugin.actualUiResolution, multiply(vec(plugin.actualUiResolution), plugin.getDpiScaling()));
 
 			final BufferProvider bufferProvider = client.getBufferProvider();
-			uiCopyPixels = bufferProvider.getPixels();
+			uiCopyJob.pixels = bufferProvider.getPixels();
 			final int uiWidth = bufferProvider.getWidth();
 			final int uiHeight = bufferProvider.getHeight();
-			uiCopyPixelCount = uiWidth * uiHeight;
+			uiCopyJob.pixelCount = uiWidth * uiHeight;
 			plugin.uiWidth = uiWidth;
 			plugin.uiHeight = uiHeight;
 
 			frameTimer.begin(Timer.MAP_UI_BUFFER);
-			uiCopyPbo = plugin.pboUi[plugin.frame % 3];
-			uiCopyPbo.map(MAP_WRITE, 0, uiCopyPixelCount * 4L);
+			pbo = plugin.pboUi[plugin.frame % 3];
+			pbo.map(MAP_WRITE, 0, uiCopyJob.pixelCount * 4L);
 			frameTimer.end(Timer.MAP_UI_BUFFER);
-			if (!uiCopyPbo.isMapped()) {
+			if (!pbo.isMapped()) {
 				log.error("Unable to map interface PBO. Skipping UI...");
 			} else if (uiWidth > plugin.getUiResolution()[0] || uiHeight > plugin.getUiResolution()[1]) {
 				log.error("UI texture resolution mismatch ({}x{} > {}). Skipping UI...", uiWidth, uiHeight, plugin.getUiResolution());
 			} else {
-				plugin.uiCopyJob = GenericJob
-					.build("AsyncUICopy", this::copyUiPixels)
-					.setExecuteAsync(!plugin.isPowerSaving)
-					.queue();
+				uiCopyJob.mappedPbo = pbo.mapped();
+				uiCopyJob.setExecuteAsync(!plugin.isPowerSaving).queue();
 			}
-			uiCopyPbo.unbind();
+			pbo.unbind();
 		} catch (Exception ex) {
 			log.warn("prepareInterfaceTexture exception", ex);
 		}
 	}
 
-	private void copyUiPixels(GenericJob task) {
-		long start = System.nanoTime();
-		uiCopyPbo.mapped().intView().put(uiCopyPixels, 0, uiCopyPixelCount);
-		frameTimer.add(Timer.COPY_UI_ASYNC, System.nanoTime() - start);
-	}
-
 	@Override
 	public void draw(RenderState renderState, int overlayColor) {
 		final int[] uiResolution = plugin.getUiResolution();
-		if (uiResolution == null || developerTools.isHideUiEnabled() && plugin.hasLoggedIn)
+		if (uiResolution == null || pbo == null || developerTools.isHideUiEnabled() && plugin.hasLoggedIn)
 			return;
 
 		renderState.framebuffer.set(plugin.awtContext.getFramebuffer(false));
@@ -218,27 +209,19 @@ public class UiPass implements RenderPass {
 		plugin.uboUI.alphaOverlay.set(ColorUtils.srgba(overlayColor));
 		plugin.uboUI.upload();
 
-		if (plugin.uiCopyJob != null) {
-			checkGLErrors();
+		frameTimer.begin(Timer.COPY_UI);
+		uiCopyJob.waitForCompletion(true);
+		frameTimer.end(Timer.COPY_UI);
 
-			frameTimer.begin(Timer.COPY_UI);
-			plugin.uiCopyJob.waitForCompletion(true);
-			plugin.uiCopyJob = null;
-			frameTimer.end(Timer.COPY_UI);
+		frameTimer.begin(Timer.UPLOAD_UI);
+		pbo.unmap();
+		pbo.bind();
 
-			frameTimer.begin(Timer.UPLOAD_UI);
-			final GLBuffer pbo = plugin.pboUi[plugin.frame % 3];
-			pbo.unmap();
-			pbo.bind();
-
-			glActiveTexture(TEXTURE_UNIT_UI);
-			glBindTexture(GL_TEXTURE_2D, plugin.texUi);
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, plugin.uiWidth, plugin.uiHeight, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
-			pbo.unbind();
-			frameTimer.end(Timer.UPLOAD_UI);
-
-			checkGLErrors();
-		}
+		glActiveTexture(TEXTURE_UNIT_UI);
+		glBindTexture(GL_TEXTURE_2D, plugin.texUi);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, plugin.uiWidth, plugin.uiHeight, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
+		pbo.unbind();
+		frameTimer.end(Timer.UPLOAD_UI);
 
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		checkGLErrors();
@@ -247,6 +230,19 @@ public class UiPass implements RenderPass {
 		gammaCalibrationOverlay.render();
 
 		frameTimer.end(Timer.RENDER_UI);
+	}
+
+	private class AsyncUICopyJob extends Job {
+		private GLMappedBuffer mappedPbo;
+		private int[] pixels;
+		private int pixelCount;
+
+		@Override
+		protected void onRun()  {
+			final long start = System.nanoTime();
+			mappedPbo.intView().put(pixels, 0, pixelCount);
+			frameTimer.add(Timer.COPY_UI_ASYNC, System.nanoTime() - start);
+		}
 	}
 
 	@Override
