@@ -118,18 +118,57 @@ public final class RenderState {
 		}
 	}
 
-	public final class GLFramebufferTextureLayer extends GLState.IntArray {
-		private GLFramebufferTextureLayer() { super(5); }
+	public final class GLFramebufferTextureLayer extends GLState {
+		private static final int VALUES_PER_ATTACHMENT = 5;
+		private int[] pendingAttachments = new int[VALUES_PER_ATTACHMENT * 4];
+		private int pendingAttachmentCount;
+
+		private GLFramebufferTextureLayer() {}
+
+		public void set(int target, int attachment, int texture, int level, int layer) {
+			for (int i = 0; i < pendingAttachmentCount; i++) {
+				int offset = i * VALUES_PER_ATTACHMENT;
+				if (pendingAttachments[offset] == target && pendingAttachments[offset + 1] == attachment) {
+					pendingAttachments[offset + 2] = texture;
+					pendingAttachments[offset + 3] = level;
+					pendingAttachments[offset + 4] = layer;
+					hasValue = true;
+					return;
+				}
+			}
+
+			int offset = pendingAttachmentCount * VALUES_PER_ATTACHMENT;
+			if (offset + VALUES_PER_ATTACHMENT > pendingAttachments.length)
+				pendingAttachments = Arrays.copyOf(pendingAttachments, pendingAttachments.length * 2);
+
+			pendingAttachments[offset] = target;
+			pendingAttachments[offset + 1] = attachment;
+			pendingAttachments[offset + 2] = texture;
+			pendingAttachments[offset + 3] = level;
+			pendingAttachments[offset + 4] = layer;
+			pendingAttachmentCount++;
+			hasValue = true;
+		}
 
 		@Override
 		public void reset() {
 			super.reset();
-			hasValue = false;
+			pendingAttachmentCount = 0;
 		}
 
 		@Override
-		protected void applyValues(int[] values) {
-			glFramebufferTextureLayer(values[0], values[1], values[2], values[3], values[4]);
+		protected void internalApply() {
+			for (int i = 0; i < pendingAttachmentCount; i++) {
+				int offset = i * VALUES_PER_ATTACHMENT;
+				glFramebufferTextureLayer(
+					pendingAttachments[offset],
+					pendingAttachments[offset + 1],
+					pendingAttachments[offset + 2],
+					pendingAttachments[offset + 3],
+					pendingAttachments[offset + 4]
+				);
+			}
+			pendingAttachmentCount = 0;
 		}
 
 		@Override
