@@ -33,6 +33,7 @@ public final class MathUtils {
 
 	public static final float EPSILON = 1.1920929e-7f; // Float epsilon from JOGL
 	public static final float MAX_FLOAT_WITH_128TH_PRECISION = 1 << 16;
+	public static final float MAX_FLOAT16 = 65504;
 
 	public static final float E = (float) Math.E;
 

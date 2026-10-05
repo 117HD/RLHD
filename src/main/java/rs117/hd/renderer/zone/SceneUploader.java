@@ -134,6 +134,7 @@ public class SceneUploader implements AutoCloseable {
 	private final short[][] tileNormals = new short[4][3];
 
 	private int[] modelVertices;
+	private float[] modelProjected;
 	public int tempModelAlphaFaces = 0;
 
 	private final PooledObjectArray<ModelOverride> faceOverrides = new PooledObjectArray<>();
@@ -171,6 +172,8 @@ public class SceneUploader implements AutoCloseable {
 
 		PooledArrayType.INT.release(modelVertices);
 		modelVertices = null;
+		PooledArrayType.FLOAT.release(modelProjected);
+		modelProjected = null;
 
 		faceOverrides.release();
 		faceMaterials.release();
@@ -1796,7 +1799,7 @@ public class SceneUploader implements AutoCloseable {
 
 			final float[] faceUVs;
 			if (uvType == UvType.VANILLA && textureId != -1) {
-				computeFaceUvsInline(faceUVs = modelUvs, model, textureFace, triangleA, triangleB, triangleC);
+				computeFaceUvsInline(faceUVs = modelUvs, model, textureFace, triangleA, triangleB, triangleC, null);
 			} else if (uvType != UvType.GEOMETRY) {
 				faceOverride.fillUvsForFace(faceUVs = modelUvs, model, preOrientation, uvType, face, workingSpace);
 			} else {
@@ -1927,7 +1930,7 @@ public class SceneUploader implements AutoCloseable {
 		final float[] verticesZ = model.getVerticesZ();
 
 		final boolean[] visibility = isModelPartiallyVisible ? PooledArrayType.BOOL.borrow(vertexCount) : null;
-		final float[] modelProjected = PooledArrayType.FLOAT.borrow(vertexCount * 3);
+		modelProjected = PooledArrayType.FLOAT.ensureCapacity(modelProjected, vertexCount * 3);
 
 		if (modelOverride.rotate != 0)
 			orientation = (int) (modelOverride.rotate * DEG_TO_JAU);
@@ -1948,7 +1951,7 @@ public class SceneUploader implements AutoCloseable {
 
 		boolean shouldSort = true;
 		boolean allVertsVisible = true;
-		for (int v = 0, vertexOffset = 0; v < vertexCount; ++v) {
+		for (int v = 0; v < vertexCount; ++v) {
 			float vertexX = verticesX[v];
 			float vertexY = verticesY[v];
 			float vertexZ = verticesZ[v];
@@ -1983,17 +1986,15 @@ public class SceneUploader implements AutoCloseable {
 					visibility[v] = allVertsVisible = false;
 			}
 
+			int vertexOffset = v * 3;
 			modelVertices[vertexOffset] = Float.floatToRawIntBits(vertexX);
 			modelProjected[vertexOffset] = pX / pZ;
-			vertexOffset++;
 
-			modelVertices[vertexOffset] = Float.floatToRawIntBits(vertexY);
-			modelProjected[vertexOffset] = pY / pZ;
-			vertexOffset++;
+			modelVertices[vertexOffset + 1] = Float.floatToRawIntBits(vertexY);
+			modelProjected[vertexOffset + 1] = pY / pZ;
 
-			modelVertices[vertexOffset] = Float.floatToRawIntBits(vertexZ);
-			modelProjected[vertexOffset] = pZ;
-			vertexOffset++;
+			modelVertices[vertexOffset + 2] = Float.floatToRawIntBits(vertexZ);
+			modelProjected[vertexOffset + 2] = pZ;
 
 			shouldSort &= pZ >= 50;
 		}
@@ -2157,7 +2158,6 @@ public class SceneUploader implements AutoCloseable {
 		}
 
 		PooledArrayType.BOOL.release(visibility);
-		PooledArrayType.FLOAT.release(modelProjected);
 
 		return shouldSort;
 	}
@@ -2267,7 +2267,7 @@ public class SceneUploader implements AutoCloseable {
 
 			final float[] faceUVs;
 			if (uvType == UvType.VANILLA && textureId != -1) {
-				computeFaceUvsInline(faceUVs = modelUvs, model, textureFace, triangleA, triangleB, triangleC);
+				computeFaceUvsInline(faceUVs = modelUvs, model, textureFace, triangleA, triangleB, triangleC, modelProjected);
 			} else if (uvType != UvType.GEOMETRY) {
 				faceOverride.fillUvsForFace(faceUVs = modelUvs, model, preOrientation, uvType, face, workingSpace);
 			} else {
@@ -2614,89 +2614,104 @@ public class SceneUploader implements AutoCloseable {
 		return (hue << 10 | sat << 7 | lum) & 65535;
 	}
 
-	public static void computeFaceUvsInline(
+	private static void computeFaceUvsInline(
 		float[] out,
 		Model model,
 		int textureFace,
-		int triangleA,
-		int triangleB,
-		int triangleC
+		int a,
+		int b,
+		int c,
+		@Nullable float[] projected
 	) {
-		final float[] vx = model.getVerticesX();
-		final float[] vy = model.getVerticesY();
-		final float[] vz = model.getVerticesZ();
+		int tf = textureFace & 0xFF;
+		int o = model.getTexIndices1()[tf];
+		int u = model.getTexIndices2()[tf];
+		int v = model.getTexIndices3()[tf];
+		// Only different triangles may actually require texture projection
+		if (a == o && b == u && c == v) {
+			copyTo(out, GEOMETRY_UVS);
+			return;
+		}
 
-		final int tf = textureFace & 0xFF;
+		float[] xs = model.getVerticesX(), ys = model.getVerticesY(), zs = model.getVerticesZ();
+		float ox = xs[o], oy = ys[o], oz = zs[o];
+		float ux = xs[u], uy = ys[u], uz = zs[u];
+		float vx = xs[v], vy = ys[v], vz = zs[v];
+		if (projected != null) {
+			// Reconstruct the texture plane prior to the perspective divide
+			oz = projected[o * 3 + 2];
+			ox = projected[o * 3] * oz;
+			oy = projected[o * 3 + 1] * oz;
+			uz = projected[u * 3 + 2];
+			ux = projected[u * 3] * uz;
+			uy = projected[u * 3 + 1] * uz;
+			vz = projected[v * 3 + 2];
+			vx = projected[v * 3] * vz;
+			vy = projected[v * 3 + 1] * vz;
+		}
+		ux -= ox;
+		uy -= oy;
+		uz -= oz;
+		vx -= ox;
+		vy -= oy;
+		vz -= oz;
+		float nx = uy * vz - uz * vy;
+		float ny = uz * vx - ux * vz;
+		float nz = ux * vy - uy * vx;
+		float normalSquared = nx * nx + ny * ny + nz * nz;
+		if (normalSquared == 0) {
+			copyTo(out, GEOMETRY_UVS);
+			return;
+		}
 
-		// v1
-		int idx = model.getTexIndices1()[tf];
-		final float v1x = vx[idx];
-		final float v1y = vy[idx];
-		final float v1z = vz[idx];
-
-		// v2
-		idx = model.getTexIndices2()[tf];
-		final float v2x = vx[idx] - v1x;
-		final float v2y = vy[idx] - v1y;
-		final float v2z = vz[idx] - v1z;
-
-		// v3
-		idx = model.getTexIndices3()[tf];
-		final float v3x = vx[idx] - v1x;
-		final float v3y = vy[idx] - v1y;
-		final float v3z = vz[idx] - v1z;
-
-		// n = v2 x v3
-		final float px = v2y * v3z - v2z * v3y;
-		final float py = v2z * v3x - v2x * v3z;
-		final float pz = v2x * v3y - v2y * v3x;
-
-		// ---------- U axis ----------
-		float tx = v3y * pz - v3z * py;
-		float ty = v3z * px - v3x * pz;
-		float tz = v3x * py - v3y * px;
-
-		float inv = rcp(tx * v2x + ty * v2y + tz * v2z);
-
-		float dx = vx[triangleA] - v1x;
-		float dy = vy[triangleA] - v1y;
-		float dz = vz[triangleA] - v1z;
-		out[0] = (tx * dx + ty * dy + tz * dz) * inv;
-
-		dx = vx[triangleB] - v1x;
-		dy = vy[triangleB] - v1y;
-		dz = vz[triangleB] - v1z;
-		out[4] = (tx * dx + ty * dy + tz * dz) * inv;
-
-		dx = vx[triangleC] - v1x;
-		dy = vy[triangleC] - v1y;
-		dz = vz[triangleC] - v1z;
-		out[8] = (tx * dx + ty * dy + tz * dz) * inv;
-
-		// ---------- V axis ----------
-		tx = v2y * pz - v2z * py;
-		ty = v2z * px - v2x * pz;
-		tz = v2x * py - v2y * px;
-
-		inv = rcp(tx * v3x + ty * v3y + tz * v3z);
-
-		dx = vx[triangleA] - v1x;
-		dy = vy[triangleA] - v1y;
-		dz = vz[triangleA] - v1z;
-		out[1] = (tx * dx + ty * dy + tz * dz) * inv;
-
-		dx = vx[triangleB] - v1x;
-		dy = vy[triangleB] - v1y;
-		dz = vz[triangleB] - v1z;
-		out[5] = (tx * dx + ty * dy + tz * dz) * inv;
-
-		dx = vx[triangleC] - v1x;
-		dy = vy[triangleC] - v1y;
-		dz = vz[triangleC] - v1z;
-		out[9] = (tx * dx + ty * dy + tz * dz) * inv;
-
-		// ---------- W axis Unused ----------
-		out[2] = out[6] = out[10] = 0f;
+		float uX, uY, uZ, vX, vY, vZ;
+		if (projected == null) {
+			uX = vy * nz - vz * ny;
+			uY = vz * nx - vx * nz;
+			uZ = vx * ny - vy * nx;
+			vX = ny * uz - nz * uy;
+			vY = nz * ux - nx * uz;
+			vZ = nx * uy - ny * ux;
+		} else {
+			// For texture vertices A, B, C and camera ray r:
+			// U = dot(C * A, r) / dot(normal, r)
+			// V = dot(A * B, r) / dot(normal, r)
+			uX = vy * oz - vz * oy;
+			uY = vz * ox - vx * oz;
+			uZ = vx * oy - vy * ox;
+			vX = oy * uz - oz * uy;
+			vY = oz * ux - ox * uz;
+			vZ = ox * uy - oy * ux;
+		}
+		for (int i = 0; i < 3; i++) {
+			int vertex = i == 0 ? a : i == 1 ? b : c;
+			float x, y, z, denominator;
+			if (projected == null) {
+				x = xs[vertex] - ox;
+				y = ys[vertex] - oy;
+				z = zs[vertex] - oz;
+				denominator = normalSquared;
+			} else {
+				x = projected[vertex * 3];
+				y = projected[vertex * 3 + 1];
+				z = 1;
+				denominator = nx * x + ny * y + nz;
+				// Nearly parallel rays have no stable texture projection
+				if (denominator * denominator <= 1e-12f * normalSquared * (x * x + y * y + 1)) {
+					copyTo(out, GEOMETRY_UVS);
+					return;
+				}
+			}
+			float uvU = (uX * x + uY * y + uZ * z) / denominator;
+			float uvV = (vX * x + vY * y + vZ * z) / denominator;
+			if (projected != null && (abs(uvU) > MAX_FLOAT16 || abs(uvV) > MAX_FLOAT16)) {
+				copyTo(out, GEOMETRY_UVS);
+				return;
+			}
+			out[i * 4] = uvU;
+			out[i * 4 + 1] = uvV;
+			out[i * 4 + 2] = 0;
+		}
 	}
 
 	public static int undoVanillaShading(
