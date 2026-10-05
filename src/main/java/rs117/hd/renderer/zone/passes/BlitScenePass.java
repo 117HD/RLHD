@@ -54,12 +54,6 @@ public class BlitScenePass implements RenderPass {
 
 	@Override
 	public void draw(RenderState renderState, int overlayColor) {
-		if (client.getGameState().getState() < GameState.LOADING.getState()) {
-			// this is to avoid scene fbo blit when going from <loading to >=loading,
-			// but keep it when doing >loading to loading
-			return;
-		}
-
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboScene);
 		if (plugin.fboSceneResolve != 0) {
 			// Blit from the scene FBO to the multisample resolve FBO

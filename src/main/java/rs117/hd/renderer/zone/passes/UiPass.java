@@ -24,6 +24,8 @@ import rs117.hd.utils.RenderState;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.jobs.GenericJob;
 
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11C.GL_BLEND;
 import static org.lwjgl.opengl.GL11C.GL_ONE;
 import static org.lwjgl.opengl.GL11C.GL_ONE_MINUS_SRC_ALPHA;
@@ -59,6 +61,9 @@ public class UiPass implements RenderPass {
 	private HdPluginConfig config;
 
 	@Inject
+	private RenderPipeline renderPipeline;
+
+	@Inject
 	private FrameTimer frameTimer;
 
 	@Inject
@@ -78,6 +83,9 @@ public class UiPass implements RenderPass {
 
 	private UIScalingMode scalingMode;
 	private boolean scalingModeChanged;
+	private GLBuffer uiCopyPbo;
+	private int[] uiCopyPixels;
+	private int uiCopyPixelCount;
 
 	@Override
 	public void initialize() {
@@ -93,6 +101,9 @@ public class UiPass implements RenderPass {
 	public void destroyShaders() {
 		uiProgram.destroy();
 	}
+
+	@Override
+	public int preprocess() { return RenderPass.PASS_ENABLED; }
 
 	@Override
 	public void processConfigChanges(Set<String> keys) {
@@ -112,8 +123,7 @@ public class UiPass implements RenderPass {
 				max(1, client.getCanvasWidth()),
 				max(1, client.getCanvasHeight())
 			};
-			boolean resize = !Arrays.equals(plugin.getUiResolution(), resolution);
-			if (resize) {
+			if (!Arrays.equals(plugin.getUiResolution(), resolution)) {
 				plugin.setUiResolution(resolution);
 				glActiveTexture(TEXTURE_UNIT_UI);
 				glBindTexture(GL_TEXTURE_2D, plugin.texUi);
@@ -122,19 +132,15 @@ public class UiPass implements RenderPass {
 				checkGLErrors();
 			}
 
-			if(scalingModeChanged) {
+			if (scalingModeChanged) {
 				scalingModeChanged = false;
 
-				// Set the sampling function used when stretching the UI.
-				// This is probably better done with sampler objects instead of texture parameters, but this is easier and likely more portable.
-				// See https://www.khronos.org/opengl/wiki/Sampler_Object for details.
-				// GL_NEAREST makes sampling for bicubic/xBR simpler, so it should be used whenever linear/pixel isn't
+				// GL_NEAREST makes sampling for bicubic/xBR simpler, so it should be used whenever linear/pixel isn't.
 				glActiveTexture(TEXTURE_UNIT_UI);
 				glBindTexture(GL_TEXTURE_2D, plugin.texUi);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, scalingMode.glSamplingFunction);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, scalingMode.glSamplingFunction);
 				glBindTexture(GL_TEXTURE_2D, 0);
-				checkGLErrors();
 			}
 
 			if (client.isStretchedEnabled()) {
@@ -147,35 +153,37 @@ public class UiPass implements RenderPass {
 			round(plugin.actualUiResolution, multiply(vec(plugin.actualUiResolution), plugin.getDpiScaling()));
 
 			final BufferProvider bufferProvider = client.getBufferProvider();
-			final int[] pixels = bufferProvider.getPixels();
-			plugin.uiWidth = bufferProvider.getWidth();
-			plugin.uiHeight = bufferProvider.getHeight();
+			uiCopyPixels = bufferProvider.getPixels();
+			final int uiWidth = bufferProvider.getWidth();
+			final int uiHeight = bufferProvider.getHeight();
+			uiCopyPixelCount = uiWidth * uiHeight;
+			plugin.uiWidth = uiWidth;
+			plugin.uiHeight = uiHeight;
 
 			frameTimer.begin(Timer.MAP_UI_BUFFER);
-			final GLBuffer pbo = plugin.pboUi[plugin.frame % 3];
-			pbo.map(MAP_WRITE, 0, plugin.uiWidth * plugin.uiHeight * 4L);
+			uiCopyPbo = plugin.pboUi[plugin.frame % 3];
+			uiCopyPbo.map(MAP_WRITE, 0, uiCopyPixelCount * 4L);
 			frameTimer.end(Timer.MAP_UI_BUFFER);
-			if (!pbo.isMapped()) {
+			if (!uiCopyPbo.isMapped()) {
 				log.error("Unable to map interface PBO. Skipping UI...");
-			} else if (plugin.uiWidth > plugin.getUiResolution()[0] || plugin.uiHeight > plugin.getUiResolution()[1]) {
-				log.error("UI texture resolution mismatch ({}x{} > {}). Skipping UI...", plugin.uiWidth, plugin.uiHeight, plugin.getUiResolution());
+			} else if (uiWidth > plugin.getUiResolution()[0] || uiHeight > plugin.getUiResolution()[1]) {
+				log.error("UI texture resolution mismatch ({}x{} > {}). Skipping UI...", uiWidth, uiHeight, plugin.getUiResolution());
 			} else {
 				plugin.uiCopyJob = GenericJob
-					.build(
-						"AsyncUICopy",
-						t -> {
-							long start = System.nanoTime();
-							pbo.mapped().intView().put(pixels, 0, plugin.uiWidth * plugin.uiHeight);
-							frameTimer.add(Timer.COPY_UI_ASYNC, System.nanoTime() - start);
-						}
-					)
+					.build("AsyncUICopy", this::copyUiPixels)
 					.setExecuteAsync(!plugin.isPowerSaving)
 					.queue();
 			}
-			pbo.unbind();
+			uiCopyPbo.unbind();
 		} catch (Exception ex) {
 			log.warn("prepareInterfaceTexture exception", ex);
 		}
+	}
+
+	private void copyUiPixels(GenericJob task) {
+		long start = System.nanoTime();
+		uiCopyPbo.mapped().intView().put(uiCopyPixels, 0, uiCopyPixelCount);
+		frameTimer.add(Timer.COPY_UI_ASYNC, System.nanoTime() - start);
 	}
 
 	@Override
@@ -184,14 +192,17 @@ public class UiPass implements RenderPass {
 		if (uiResolution == null || developerTools.isHideUiEnabled() && plugin.hasLoggedIn)
 			return;
 
-		// Fix vanilla bug causing the overlay to remain on the login screen in areas like Fossil Island underwater
-		if (client.getGameState().getState() < GameState.LOADING.getState())
-			overlayColor = 0;
-
 		renderState.framebuffer.set(plugin.awtContext.getFramebuffer(false));
 		renderState.viewport.set(0, 0, plugin.actualUiResolution[0], plugin.actualUiResolution[1]);
 		renderState.colorMask.set(true, true, true, false);
-		renderState.apply();
+
+		if(!renderPipeline.isSceneRendering()){
+			renderState.clearColor.set(0, 0, 0, 1);
+			renderState.apply();
+			glClear(GL_COLOR_BUFFER_BIT);
+		} else {
+			renderState.apply();
+		}
 
 		tiledLightingOverlay.render();
 

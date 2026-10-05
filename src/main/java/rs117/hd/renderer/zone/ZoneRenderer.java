@@ -748,6 +748,10 @@ public class ZoneRenderer implements Renderer {
 
 			renderPipeline.preDraw.execute(renderState);
 
+			// Fix vanilla bug causing the overlay to remain on the login screen in areas like Fossil Island underwater
+			if (client.getGameState().getState() < GameState.LOADING.getState())
+				overlayColor = 0;
+
 			frameTimer.begin(Timer.DRAW_SUBMIT);
 			renderPipeline.draw.execute(renderState, overlayColor);
 			frameTimer.end(Timer.DRAW_SUBMIT);

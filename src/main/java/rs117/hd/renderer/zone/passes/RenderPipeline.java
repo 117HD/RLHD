@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -29,6 +30,9 @@ public final class RenderPipeline {
 	private static final int GENERIC_FUNCTION_TYPE = 0;
 	private static final int ZONE_FUNCTION_TYPE = 1;
 	private static final int DRAW_FUNCTION_TYPE = 2;
+
+	@Inject
+	private Client client;
 
 	@Inject
 	private Injector injector;
@@ -64,6 +68,8 @@ public final class RenderPipeline {
 	private final int[] zonePasses = new int[passCount];
 	private int enabledCount = 0;
 	private int zoneCount = 0;
+	@Getter
+	private int sceneRenderingFrame = 0;
 
 	public void initialize() {
 		for(int i = 0; i < passCount; i++)
@@ -84,11 +90,19 @@ public final class RenderPipeline {
 	@SuppressWarnings("unchecked")
 	public <T extends RenderPass> T getPass(RenderPassType type) { return (T) passes[type.ordinal()]; }
 
+	public boolean isSceneRendering() {
+		return sceneRenderingFrame == plugin.frame &&
+			   plugin.sceneResolution != null &&
+			   plugin.sceneViewport != null &&
+			   client.getGameState().getState() > GameState.LOADING.getState();
+	}
+
 	public void preprocess() {
 		frameTimer.begin(Timer.RENDER_PIPELINE);
 		enabledCount = 0;
 		zoneCount = 0;
 
+		final boolean isSceneRendering = this.isSceneRendering();
 		for(int i = 0; i < passCount; i++) {
 			final RenderPass renderPass = passes[i];
 			final RenderPassType type = types[i];
@@ -100,7 +114,7 @@ public final class RenderPipeline {
 			if(flags == 0)
 				continue;
 
-			if((flags & RenderPass.PASS_SCENE_RENDERING) != 0 && (plugin.sceneResolution == null || plugin.sceneViewport == null))
+			if((flags & RenderPass.PASS_SCENE_RENDERING) != 0 && !isSceneRendering)
 				continue;
 
 			enabledPasses[enabledCount++] = i;
@@ -268,6 +282,7 @@ public final class RenderPipeline {
 		public void execute(WorldViewContext ctx, boolean isTopLevel) {
 			this.ctx        = ctx;
 			this.isTopLevel = isTopLevel;
+			sceneRenderingFrame = plugin.frame;
 			execute();
 		}
 

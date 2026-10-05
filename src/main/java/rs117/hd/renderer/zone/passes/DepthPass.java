@@ -129,8 +129,7 @@ public class DepthPass implements RenderPass {
 
 	@Override
 	public void draw(RenderState renderState, int overlayColor) {
-		sceneDepthProgram.use();
-
+		renderState.program.set(sceneDepthProgram);
 		renderState.drawFramebuffer.set(plugin.fboSceneDepth);
 		renderState.toggle(GL_MULTISAMPLE, plugin.msaaSamples > 1);
 		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
