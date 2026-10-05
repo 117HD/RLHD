@@ -27,15 +27,21 @@
 #include <uniforms/materials.glsl>
 #include <uniforms/water_types.glsl>
 
+#include <utils/constants.glsl>
 #include <utils/lights.glsl>
 #include <utils/misc.glsl>
+#include <utils/sky_sampling.glsl>
 
 vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     WaterType waterType = getWaterType(waterTypeIndex);
 
-    vec2 uv1 = worldUvs(3).yx - animationFrame(28 * waterType.duration);
-    vec2 uv2 = worldUvs(3) + animationFrame(24 * waterType.duration);
-    vec2 uv3 = IN.uv;
+    vec2 anchorUv1 = worldUvs(3).yx;
+    vec2 anchorUv2 = worldUvs(5);
+    vec2 anchorUv3 = worldUvs(7);
+    vec2 uv1 = anchorUv1 - animationFrame(28 * waterType.duration);
+    vec2 uv2 = anchorUv2 + animationFrame(24 * waterType.duration);
+    vec2 uv3 = anchorUv3 + animationFrame(21 * waterType.duration);
+    vec2 uvFoam = IN.uv;
 
     vec2 flowMapUv = worldUvs(15) + animationFrame(50 * waterType.duration);
     float flowMapStrength = 0.025;
@@ -44,16 +50,19 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     uv1 += uvFlow * flowMapStrength;
     uv2 += uvFlow * flowMapStrength;
     uv3 += uvFlow * flowMapStrength;
+    uvFoam += uvFlow * flowMapStrength;
 
     // get diffuse textures
     vec3 n1 = linearToSrgb(texture(textureArray, vec3(uv1, waterType.normalMap)).xyz);
     vec3 n2 = linearToSrgb(texture(textureArray, vec3(uv2, waterType.normalMap)).xyz);
-    float foamMask = texture(textureArray, vec3(uv3, MAT_WATER_FOAM.colorMap)).r;
+    vec3 n3 = linearToSrgb(texture(textureArray, vec3(uv3, waterType.normalMap)).xyz);
+    float foamMask = texture(textureArray, vec3(uvFoam, MAT_WATER_FOAM.colorMap)).r;
 
     // normals
     n1 = -vec3((n1.x * 2 - 1) * waterType.normalStrength, n1.z, (n1.y * 2 - 1) * waterType.normalStrength);
     n2 = -vec3((n2.x * 2 - 1) * waterType.normalStrength, n2.z, (n2.y * 2 - 1) * waterType.normalStrength);
-    vec3 normals = normalize(n1 + n2);
+    n3 = -vec3((n3.x * 2 - 1) * waterType.normalStrength, n3.z, (n3.y * 2 - 1) * waterType.normalStrength);
+    vec3 normals = normalize(n1 + n2 + n3);
 
     float lightDotNormals = dot(normals, lightDir);
     float downDotNormals = -normals.y;
@@ -82,33 +91,9 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     vec3 lightOut = max(lightDotNormals, 0.0) * lightColor;
 
     // directional light specular
-    vec3 lightSpecularOut;
-    if (uboSky.enabled) {
-        // Reflect both disks independently of the scene-lighting handoff.
-        vec3 sunDir = uboSky.sunDir * vec3(1, -1, 1);
-        vec3 moonDir = uboSky.moonDir * vec3(1, -1, 1);
-        bool moonOwnsShadowMap = dot(lightDir, moonDir) > dot(lightDir, sunDir);
-        float sunVisibility = smoothstep(0.0, 0.04, uboSky.sunDir.y);
-        float moonVisibility = smoothstep(0.0, 0.04, uboSky.moonDir.y) *
-            uboSky.moonVisibility * uboSky.moonIllumination;
-        moonVisibility *= uboSky.moonReflectionVisibility;
-        // The single shadow map can only occlude its active source.
-        sunVisibility *= moonOwnsShadowMap ? 1.0 : inverseShadow;
-        moonVisibility *= moonOwnsShadowMap ? inverseShadow : 1.0;
-        // Compress disk intensity before shaping the highlight; visibility and
-        // shadows remain outside the tone map so they can still fade it fully.
-        vec3 sunReflectionColor = 14 * uboSky.sunColor;
-        vec3 moonReflectionColor = 7.15 * uboSky.moonDiskColor;
-        vSpecularGloss *= 4;
-        lightSpecularOut =
-            sunReflectionColor * sunVisibility *
-                specular(IN.texBlend, viewDir, reflect(-sunDir, normals), vSpecularGloss, vSpecularStrength) +
-            moonReflectionColor * moonVisibility *
-                specular(IN.texBlend, viewDir, reflect(-moonDir, normals), vSpecularGloss, vSpecularStrength);
-        lightSpecularOut = linearToSrgb(lightSpecularOut);
-    } else {
+    vec3 lightSpecularOut = vec3(0.0);
+    if (!uboSky.enabled)
         lightSpecularOut = lightColor * specular(IN.texBlend, viewDir, reflect(-lightDir, normals), vSpecularGloss, vSpecularStrength);
-    }
 
     // point lights
     vec3 pointLightsOut = vec3(0);
@@ -139,18 +124,39 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     float fresnel = 1.0 - clamp(viewDotNormals, 0.0, 1.0);
     float finalFresnel = clamp(mix(baseOpacity, 1.0, fresnel * 1.2), 0.0, 1.0);
     vec3 surfaceColor = vec3(0);
+    vec3 celestialReflection = vec3(0);
 
-    // Add the broad sky reflected by the water. Individual stars are omitted,
-    // but the directional gradient, night background, nebulae, and haze match
-    // the visible sky instead of inheriting a single horizon color.
     if (uboSky.enabled) {
-        vec3 skyViewDir = reflect(-viewDir, normals);
-        vec3 skyColor = foggedSkyColor(skyViewDir);
-
-        float reflectionStrength = finalFresnel < 0.5 ?
-            mix(0.05, 0.45, finalFresnel * 2.0) :
-            mix(0.45, 0.8, (finalFresnel - 0.5) * 2.0);
-        surfaceColor = linearToSrgb(skyColor * reflectionStrength);
+        vec3 n = normals;
+        n.y *= 0.16;
+        // Compress exaggerated slopes before they reflect below the water plane.
+        // For slope p = n.xz / -n.y, the reflected ray points upward when
+        // v * (1 - dot(p, p)) + 2 * dot(p, viewDir.xz) > 0, where v is view elevation.
+        // Resolve that slope limit, then approach it smoothly instead of pinning rays
+        // to the horizon. This also keeps the normal facing an above-water camera.
+        float viewElevation = -viewDir.y;
+        if (viewElevation > 0.0) {
+            float towardCamera = dot(n.xz, viewDir.xz);
+            float slopeLimitRatio = sqrt(towardCamera * towardCamera + viewElevation * viewElevation * dot(n.xz, n.xz)) - towardCamera;
+            slopeLimitRatio /= viewElevation * -n.y;
+            n.xz *= inversesqrt(1.0 + slopeLimitRatio * slopeLimitRatio);
+        } else {
+            n = vec3(0, -1, 0);
+        }
+        n = normalize(n);
+        vec3 skyNormal = normalize(normals * vec3(0.2, 1, 0.2));
+        vec3 skyViewDir = reflect(-viewDir, skyNormal);
+        vec3 diskViewDir = reflect(-viewDir, n);
+        SkySample sky = sampleSky(skyViewDir, diskViewDir, false, false, n, 0.07);
+        surfaceColor = linearToSrgb(sky.background * finalFresnel);
+        // Only the active source has a shadow map. Do not shadow the other disk
+        // with unrelated geometry projected along the active light's direction.
+        vec3 sunDir = uboSky.sunDir * vec3(1, -1, 1);
+        vec3 moonDir = uboSky.moonDir * vec3(1, -1, 1);
+        bool moonOwnsShadowMap = dot(lightDir, moonDir) > dot(lightDir, sunDir);
+        celestialReflection =
+            sky.sun * (moonOwnsShadowMap ? 1.0 : inverseShadow) +
+            sky.moon * (moonOwnsShadowMap ? inverseShadow : 1.0);
     } else if (finalFresnel < 0.5) {
         surfaceColor = mix(waterColorDark, waterColorMid, finalFresnel * 2);
     } else {
@@ -187,6 +193,22 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     if (waterType.isFlat) {
         baseColor = mix(waterType.depthColor, baseColor, alpha);
         alpha = 1;
+    }
+
+    if (uboSky.enabled) {
+        float reflectionLuminance = linearSrgbLuminance(celestialReflection);
+        if (reflectionLuminance > 0.0) {
+            celestialReflection *= 4.4; // looks about right
+            // Approximate the reflection's dominance over at most 18% linear-gray
+            // underwater light. Bright HDR highlights approach opaque before source-alpha
+            // blending; this is an artistic approximation to the actual sRGB composite.
+            float reflectionOpacity = reflectionLuminance / (reflectionLuminance + 0.18);
+            alpha = mix(alpha, 1.0, reflectionOpacity);
+            // Blur, coverage, and shadows already affected HDR energy. Compress their
+            // combined reflection here, independently of the established water colors.
+            vec3 reflectionColor = softClipColor(tonemap_hue_preserving(celestialReflection));
+            baseColor = linearToSrgb(srgbToLinear(baseColor) + reflectionColor);
+        }
     }
 
     return vec4(baseColor, alpha);
