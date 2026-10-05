@@ -380,7 +380,7 @@ public class CommandBuffer {
 						final int texUnit = (int) (data >> 32);
 						final int texId = (int) data;
 
-						renderState.texture.set(texType, texUnit, texId);
+						renderState.textureUnit.set(texType, texUnit, texId);
 						break;
 					}
 					case USE_PROGRAM: {

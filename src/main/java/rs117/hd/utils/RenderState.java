@@ -48,7 +48,7 @@ public final class RenderState {
 	public final GLClearColor clearColor = addState(GLClearColor::new);
 	public final GLDisable disable = addState(GLDisable::new);
 	public final GLEnable enable = addState(GLEnable::new);
-	public final GLTexture texture = addState(GLTexture::new);
+	public final GLTextureUnit textureUnit = addState(GLTextureUnit::new);
 
 	public void apply() {
 		for (GLState state : states) {
@@ -118,18 +118,57 @@ public final class RenderState {
 		}
 	}
 
-	public final class GLFramebufferTextureLayer extends GLState.IntArray {
-		private GLFramebufferTextureLayer() { super(5); }
+	public final class GLFramebufferTextureLayer extends GLState {
+		private static final int MAX_ATTACHMENTS = 34; // GL_COLOR_ATTACHMENTs + GL_DEPTH_ATTACHMENT + GL_STENCIL_ATTACHMENT
+		private static final int VALUES_PER_ATTACHMENT = 5;
+		private final int[] attachments = new int[VALUES_PER_ATTACHMENT * MAX_ATTACHMENTS];
+		private int pending;
+
+		private GLFramebufferTextureLayer() {}
+
+		public void set(int target, int attachment, int texture, int level, int layer) {
+			for (int i = 0; i < pending; i++) {
+				int offset = i * VALUES_PER_ATTACHMENT;
+				if (attachments[offset] == target && attachments[offset + 1] == attachment) {
+					attachments[offset + 2] = texture;
+					attachments[offset + 3] = level;
+					attachments[offset + 4] = layer;
+					hasValue = true;
+					return;
+				}
+			}
+
+			int offset = pending * VALUES_PER_ATTACHMENT;
+			attachments[offset] = target;
+			attachments[offset + 1] = attachment;
+			attachments[offset + 2] = texture;
+			attachments[offset + 3] = level;
+			attachments[offset + 4] = layer;
+			pending++;
+			hasValue = true;
+
+			assert pending <= MAX_ATTACHMENTS;
+		}
 
 		@Override
 		public void reset() {
 			super.reset();
-			hasValue = false;
+			pending = 0;
 		}
 
 		@Override
-		protected void applyValues(int[] values) {
-			glFramebufferTextureLayer(values[0], values[1], values[2], values[3], values[4]);
+		protected void internalApply() {
+			for (int i = 0; i < pending; i++) {
+				int offset = i * VALUES_PER_ATTACHMENT;
+				glFramebufferTextureLayer(
+					attachments[offset],
+					attachments[offset + 1],
+					attachments[offset + 2],
+					attachments[offset + 3],
+					attachments[offset + 4]
+				);
+			}
+			pending = 0;
 		}
 
 		@Override
@@ -199,7 +238,7 @@ public final class RenderState {
 		}
 	}
 
-	public static final class GLTexture extends GLState {
+	public static final class GLTextureUnit extends GLState {
 		private static final int MAX_UNITS = 32;
 		private static final int MAX_TARGETS = 8;
 		private static final int UNKNOWN = -1;
@@ -213,7 +252,7 @@ public final class RenderState {
 		private int dirtyUnits; // bit per unit with a possibly pending bind
 		private int activeUnit = UNKNOWN;
 
-		public GLTexture() {
+		public GLTextureUnit() {
 			Arrays.fill(desired, UNKNOWN);
 			clearCache();
 		}

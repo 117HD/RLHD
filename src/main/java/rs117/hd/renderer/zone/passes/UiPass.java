@@ -198,7 +198,7 @@ public class UiPass implements RenderPass {
 		tiledLightingOverlay.render();
 
 		renderState.program.set(uiProgram);
-		renderState.texture.set(GL_TEXTURE_2D, TEXTURE_UNIT_UI, plugin.texUi);
+		renderState.textureUnit.set(GL_TEXTURE_2D, TEXTURE_UNIT_UI, plugin.texUi);
 		renderState.enable.set(GL_BLEND);
 		renderState.blendFunc.set(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 		renderState.vao.setVao(plugin.vaoTri);
