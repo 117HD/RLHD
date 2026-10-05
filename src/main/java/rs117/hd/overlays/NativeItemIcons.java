@@ -887,6 +887,10 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		return palette;
 	}
 
+	public boolean hasItems() {
+		return active && itemCount > 0;
+	}
+
 	public void render(int[] uiResolution, int[] actualUiResolution) {
 		if (!active)
 			return;

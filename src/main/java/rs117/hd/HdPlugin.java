@@ -369,6 +369,7 @@ public class HdPlugin extends Plugin {
 	private final int[] actualUiResolution = { 0, 0 }; // Includes stretched mode and DPI scaling
 	private final GLBuffer[] pboUi = new GLBuffer[3];
 	private int texUi;
+	private int texNoUi;
 	private int uiWidth;
 	private int uiHeight;
 	private GenericJob uiCopyJob;
@@ -1195,6 +1196,12 @@ public class HdPlugin extends Plugin {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+		texNoUi = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, texNoUi);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_BGRA, GL_UNSIGNED_BYTE, new int[1]);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
 		checkGLErrors();
 	}
 
@@ -1210,6 +1217,10 @@ public class HdPlugin extends Plugin {
 		if (texUi != 0)
 			glDeleteTextures(texUi);
 		texUi = 0;
+
+		if (texNoUi != 0)
+			glDeleteTextures(texNoUi);
+		texNoUi = 0;
 	}
 
 	public void updateTiledLightingFbo() {
@@ -1593,6 +1604,20 @@ public class HdPlugin extends Plugin {
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, function);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, function);
+
+		uiProgram.use();
+		glEnable(GL_BLEND);
+		glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+		glBindVertexArray(vaoTri);
+
+		// Native item icons are drawn beneath the UI, so the overlay goes beneath them too, instead of over their holes in the UI
+		if (overlayColor >>> 24 != 0 && nativeItemIcons.hasItems()) {
+			glBindTexture(GL_TEXTURE_2D, texNoUi);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+			glBindTexture(GL_TEXTURE_2D, texUi);
+			uboUI.alphaOverlay.set(0f, 0f, 0f, 0f);
+			uboUI.upload();
+		}
 
 		nativeItemIcons.render(uiResolution, actualUiResolution);
 
