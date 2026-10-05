@@ -307,11 +307,9 @@ public class SkyRenderer {
 			// Hide the camera switch even if strong night lighting already dominates
 			// at sunset. Lunar atmospheric attenuation handles the moon's own horizon.
 			float visibility = smoothstep(.5f, .8f, handoff) * (1 - smoothstep(-.5f, 0, state.sunAltitudeDegrees));
-			visibility *= getShadowVisibility(state.moonAltitudeDegrees, .517f);
 			multiply(directionalLight, currentFrame.moonDirectionalLight, visibility);
 		} else {
-			float visibility = (1 - smoothstep(.2f, .5f, handoff)) * getShadowVisibility(state.sunAltitudeDegrees, .533f);
-			multiply(directionalLight, currentFrame.sunDirectionalLight, visibility);
+			multiply(directionalLight, currentFrame.sunDirectionalLight, 1 - smoothstep(.2f, .5f, handoff));
 		}
 		// Redistribute both sources' suppressed directional light into ambient.
 		// max(dot(normal, lightDir), 0) averages to 1/4 over the sphere of normals;
@@ -412,16 +410,6 @@ public class SkyRenderer {
 		ubo.nebulaVisibility.set(configuration.nebulaVisibility);
 		ubo.auroraVisibility.set(state.auroraStrength * configuration.auroraVisibility);
 		ubo.upload();
-	}
-
-	private static float getShadowVisibility(float altitudeDegrees, float diameterDegrees) {
-		if (altitudeDegrees <= 0)
-			return 0;
-		// A 1 m caster projects a disk-shaped penumbra. Approximate its long-axis
-		// variance with a Gaussian and retain its contrast at a 1 m feature wavelength.
-		float elevation = sin(altitudeDegrees * DEG_TO_RAD);
-		float sigma = 1 * diameterDegrees * DEG_TO_RAD / (4 * elevation * elevation);
-		return exp(-2 * PI * PI * sigma * sigma);
 	}
 
 	private float getNightExposure(float luminance, float target) {
