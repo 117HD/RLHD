@@ -10,6 +10,7 @@ import java.nio.FloatBuffer;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.annotation.Nullable;
@@ -37,6 +39,7 @@ import net.runelite.api.widgets.WidgetUtil;
 import net.runelite.client.RuneLite;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ClientShutdown;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayManager;
@@ -67,6 +70,9 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	// Slots are kept for the items of this frame and the last
 	private static final int MAX_SLOTS = 2 * MAX_ITEMS;
 	private static final int MAX_NEW_ITEMS_PER_FRAME = 16;
+	private static final int REMEMBERED_ICONS_PER_FRAME = 32;
+	private static final long REMEMBER_INTERVAL_MS = 30_000;
+	private static final long SCALE_SETTLE_MS = 1000;
 	private static final int[] KEPT_CONTAINERS = { InventoryID.INV, InventoryID.WORN };
 	// Native icons can reach a little past the game's icons
 	private static final int MARGIN = 2;
@@ -300,9 +306,18 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 	private float scaleX;
 	private float scaleY;
+	private float newScaleX;
+	private float newScaleY;
+	private long newScaleSince;
 	private double brightness;
 	private Filepath cacheFolder;
 	private ItemIconCache cache;
+	@Nullable
+	private CompletableFuture<long[]> remembered;
+	private int rememberedLoaded;
+	private long account = -1;
+	private boolean iconsChanged;
+	private long lastRemembered;
 
 	private final Map<Long, Icon> icons = new HashMap<>();
 	private final ArrayDeque<Integer> freeLayers = new ArrayDeque<>();
@@ -439,7 +454,9 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		containers.clear();
 		newItemLayers.clear();
 		visibleAreas.clear();
-		scaleX = scaleY = 0;
+		remembered = null;
+		account = -1;
+		scaleX = scaleY = newScaleX = newScaleY = 0;
 	}
 
 	@Subscribe
@@ -475,6 +492,19 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		uncaptured.clear();
 		draggedItems.clear();
 		draggedCuts.clear();
+	}
+
+	@Subscribe
+	public void onClientShutdown(ClientShutdown event) {
+		if (!iconsChanged)
+			return;
+		// Not on the client thread, which may still be drawing
+		try {
+			var written = remember();
+			if (written != null)
+				event.waitFor(written);
+		} catch (ConcurrentModificationException ignored) {
+		}
 	}
 
 	@Subscribe
@@ -663,6 +693,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 			icon = loadIcon(gameIcon.key);
 			icons.put(gameIcon.key, icon);
+			iconsChanged = true;
 		} else if (icon.uncached) {
 			int modelItemId = findModelItem(itemId, quantity, border, gameIcon);
 			if (modelItemId == -1)
@@ -947,18 +978,31 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		}
 
 		// Rounded, so small window resizes don't invalidate the icons kept on disk
-		float newScaleX = round(8f * actualUiResolution[0] / uiResolution[0]) / 8f;
-		float newScaleY = round(8f * actualUiResolution[1] / uiResolution[1]) / 8f;
-		double newBrightness = client.getTextureProvider().getBrightness();
-		if (newScaleX != scaleX || newScaleY != scaleY || newBrightness != brightness) {
+		float roundedScaleX = round(8f * actualUiResolution[0] / uiResolution[0]) / 8f;
+		float roundedScaleY = round(8f * actualUiResolution[1] / uiResolution[1]) / 8f;
+		if (roundedScaleX != newScaleX || roundedScaleY != newScaleY) {
+			newScaleX = roundedScaleX;
+			newScaleY = roundedScaleY;
+			newScaleSince = System.currentTimeMillis();
+		}
+		// Only once a new scale is kept for a moment, so passing sizes don't each fill a cache,
+		// and not on the login screen, which is scaled differently and has no items
+		boolean scaleSettled = cache == null || System.currentTimeMillis() - newScaleSince >= SCALE_SETTLE_MS;
+		boolean loggedIn = client.getGameState().getState() >= GameState.LOADING.getState();
+		// The same brightness reads as 0.8 before logging in and as a float after
+		double newBrightness = (float) client.getTextureProvider().getBrightness();
+		if (loggedIn && (scaleSettled && (newScaleX != scaleX || newScaleY != scaleY) || newBrightness != brightness)) {
 			// The game's icons depend on the brightness too
 			if (newBrightness != brightness)
 				gameIcons.clear();
 			scaleX = newScaleX;
 			scaleY = newScaleY;
 			brightness = newBrightness;
+			remember();
 			cache = new ItemIconCache(cacheFolder, scaleX, scaleY, brightness, iconWidth(), iconHeight());
 			executor.execute(cache::markUsed);
+			account = client.getAccountHash();
+			startRemembered();
 			clearIcons();
 			glActiveTexture(TEXTURE_UNIT_ITEM_ICONS);
 			glBindTexture(GL_TEXTURE_2D_ARRAY, texIcons);
@@ -971,8 +1015,60 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			return;
 		}
 
-		if (scaleX * scaleY > 1)
+		// Not on the login screen, so a logout keeps the icons until another account logs in
+		long newAccount = client.getAccountHash();
+		if (newAccount != -1 && newAccount != account && cache != null) {
+			remember();
+			account = newAccount;
+			startRemembered();
+			clearIcons();
+		}
+
+		if (scaleX * scaleY > 1) {
+			loadRemembered();
 			prepareIcons();
+		}
+		if (iconsChanged && System.currentTimeMillis() - lastRemembered > REMEMBER_INTERVAL_MS)
+			remember();
+	}
+
+	private void startRemembered() {
+		long account = this.account;
+		var cache = this.cache;
+		remembered = account == -1 ? null : CompletableFuture.supplyAsync(() -> cache.loadRemembered(account), executor);
+		rememberedLoaded = 0;
+	}
+
+	// Icons shown last time are loaded from the start, so they don't pop in the first time they're shown
+	private void loadRemembered() {
+		if (remembered == null || !remembered.isDone())
+			return;
+		long[] keys = remembered.join();
+		for (int i = 0; i < REMEMBERED_ICONS_PER_FRAME && rememberedLoaded < keys.length; i++) {
+			if (icons.size() >= MAX_ICONS - MAX_ITEMS)
+				rememberedLoaded = keys.length;
+			else
+				icons.computeIfAbsent(keys[rememberedLoaded++], this::loadIcon);
+		}
+		if (rememberedLoaded == keys.length)
+			remembered = null;
+	}
+
+	@Nullable
+	private CompletableFuture<Void> remember() {
+		lastRemembered = System.currentTimeMillis();
+		// Not while still loading what was remembered, which would be forgotten
+		if (cache == null || account == -1 || remembered != null)
+			return null;
+		iconsChanged = false;
+		long[] keys = icons.entrySet().stream()
+			.filter(entry -> !entry.getValue().uncached)
+			.sorted((a, b) -> Integer.compare(b.getValue().frame, a.getValue().frame))
+			.mapToLong(Map.Entry::getKey)
+			.toArray();
+		var cache = this.cache;
+		long account = this.account;
+		return CompletableFuture.runAsync(() -> cache.remember(account, keys), executor);
 	}
 
 	private void clearIcons() {

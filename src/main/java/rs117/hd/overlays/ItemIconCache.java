@@ -25,6 +25,7 @@ class ItemIconCache {
 	// Bump when icons are drawn differently
 	private static final int VERSION = 3;
 	private static final int MAX_FOLDERS = 3;
+	private static final String REMEMBERED = "remembered";
 
 	private final Filepath folder;
 	private final int width;
@@ -109,6 +110,38 @@ class ItemIconCache {
 		} catch (IOException ex) {
 			log.debug("Unable to keep item icon {}:", fileName(key), ex);
 		}
+	}
+
+	long[] loadRemembered(long account) {
+		try (var in = folder.joinSegment(rememberedName(account)).openInputStream()) {
+			var buffer = ByteBuffer.wrap(in.readAllBytes());
+			long[] keys = new long[buffer.remaining() / Long.BYTES];
+			buffer.asLongBuffer().get(keys);
+			return keys;
+		} catch (NoSuchFileException ex) {
+			return new long[0];
+		} catch (IOException ex) {
+			log.debug("Unable to load the remembered item icons:", ex);
+			return new long[0];
+		}
+	}
+
+	void remember(long account, long[] keys) {
+		try {
+			var buffer = ByteBuffer.allocate(keys.length * Long.BYTES);
+			buffer.asLongBuffer().put(keys);
+			folder.createDirectories();
+			var temporary = folder.createTempFile(rememberedName(account), ".tmp");
+			temporary.write(buffer.array());
+			temporary.moveTo(folder.joinSegment(rememberedName(account)), REPLACE_EXISTING, ATOMIC_MOVE);
+		} catch (IOException ex) {
+			log.debug("Unable to remember the item icons:", ex);
+		}
+	}
+
+	// Per account, since each has its own bank
+	private static String rememberedName(long account) {
+		return REMEMBERED + "-" + Long.toHexString(account);
 	}
 
 	static void removeUnused(Filepath root) {
