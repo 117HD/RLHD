@@ -592,6 +592,9 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		boolean dragged = isDragged(widgetItem);
 		var bounds = widgetItem.getDraggingCanvasBounds() != null ? widgetItem.getDraggingCanvasBounds() : widgetItem.getCanvasBounds();
 		var visible = bounds.intersection(dragged ? widget.getParent().getBounds() : visibleArea(widget));
+		// The game only reports items inside its clip, so the parents are still where they were before they were shown
+		if (visible.isEmpty() && !dragged)
+			visible = bounds;
 		// Some interfaces report their items twice
 		if (visible.isEmpty() || !cutThisFrame.add(bounds))
 			return;
