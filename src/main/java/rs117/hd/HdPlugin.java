@@ -31,7 +31,6 @@ import com.google.inject.Binder;
 import com.google.inject.Provider;
 import com.google.inject.Provides;
 import java.awt.Canvas;
-import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
@@ -53,6 +52,7 @@ import javax.inject.Singleton;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.*;
@@ -95,7 +95,6 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.GammaCalibrationOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TiledLightingOverlay;
-import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.renderer.legacy.LegacyRenderer;
 import rs117.hd.renderer.zone.SceneManager;
@@ -113,7 +112,6 @@ import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.WaterTypeManager;
-import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
@@ -138,7 +136,6 @@ import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 import static rs117.hd.utils.buffer.GLBuffer.DEBUG_MAC_OS;
-import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_IMMUTABLE;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_PERSISTENT;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
@@ -168,6 +165,8 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_SCENE_OPAQUE_DEPTH = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_SCENE_ALPHA_DEPTH = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -356,14 +355,15 @@ public class HdPlugin extends Plugin {
 	private int vboTri;
 
 	@Getter
+	@Setter
 	@Nullable
 	private int[] uiResolution;
-	private final int[] actualUiResolution = { 0, 0 }; // Includes stretched mode and DPI scaling
-	private final GLBuffer[] pboUi = new GLBuffer[3];
-	private int texUi;
-	private int uiWidth;
-	private int uiHeight;
-	private GenericJob uiCopyJob;
+	public final int[] actualUiResolution = { 0, 0 }; // Includes stretched mode and DPI scaling
+	public final GLBuffer[] pboUi = new GLBuffer[3];
+	public int texUi;
+	public int uiWidth;
+	public int uiHeight;
+	public GenericJob uiCopyJob;
 
 	@Nullable
 	public int[] sceneViewport;
@@ -372,10 +372,15 @@ public class HdPlugin extends Plugin {
 
 	public int[] sceneResolution;
 	public int fboScene;
+	public int fboSceneDepth;
+	public int fboSceneDepthResolve;
+	public int fboSceneAlphaDepth;
 	private int rboSceneColor;
 	private int rboSceneDepth;
 	public int fboSceneResolve;
 	private int rboSceneResolveColor;
+	private int texSceneDepth;
+	private int texSceneAlphaDepth;
 
 	public int shadowMapResolution;
 	public int fboShadowMap;
@@ -435,6 +440,7 @@ public class HdPlugin extends Plugin {
 	public boolean enableFreezeFrame;
 	public boolean orthographicProjection;
 	public boolean freezeCulling;
+	public boolean showCulling;
 
 	@Getter
 	private boolean isPluginStopPending;
@@ -536,10 +542,15 @@ public class HdPlugin extends Plugin {
 				startupCount++;
 
 				fboScene = 0;
+				fboSceneDepth = 0;
+				fboSceneDepthResolve = 0;
+				fboSceneAlphaDepth = 0;
 				rboSceneColor = 0;
 				rboSceneDepth = 0;
 				fboSceneResolve = 0;
 				rboSceneResolveColor = 0;
+				texSceneDepth = 0;
+				texSceneAlphaDepth = 0;
 				fboShadowMap = 0;
 				frame = 0;
 				elapsedTime = 0;
@@ -918,6 +929,7 @@ public class HdPlugin extends Plugin {
 			.define("TILED_LIGHTING", configTiledLighting)
 			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getTiledLightingLayers())
 			.define("TILED_LIGHTING_TILE_SIZE", TILED_LIGHTING_TILE_SIZE)
+			.define("TILE_MIN_MAX", config.depthPrePass() && renderer instanceof ZoneRenderer)
 			.define("MAX_LIGHT_COUNT", configTiledLighting ? UBOLights.MAX_LIGHTS : configDynamicLights.getMaxSceneLights())
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
@@ -1369,7 +1381,55 @@ public class HdPlugin extends Plugin {
 			checkGLErrors();
 		}
 
+		fboSceneDepth = glGenFramebuffers();
+		glBindFramebuffer(GL_FRAMEBUFFER, fboSceneDepth);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboSceneDepth);
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
+		checkGLErrors();
+
+		// Multisampled depth cannot be sampled directly, so it's resolved into a single-sample texture.
+		// The format has to match the render buffer, otherwise the blit is undefined.
+		int activeTexture = glGetInteger(GL_ACTIVE_TEXTURE);
+		texSceneDepth = glGenTextures();
+		glActiveTexture(TEXTURE_UNIT_SCENE_OPAQUE_DEPTH);
+		glBindTexture(GL_TEXTURE_2D, texSceneDepth);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, sceneResolution[0], sceneResolution[1], 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+		checkGLErrors();
+
+		fboSceneDepthResolve = glGenFramebuffers();
+		glBindFramebuffer(GL_FRAMEBUFFER, fboSceneDepthResolve);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texSceneDepth, 0);
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
+		checkGLErrors();
+
+		// Alpha geometry is drawn back to front, so it can't share a depth buffer with opaque geometry.
+		// This buffer is never sampled while being rendered to, and only ever used for lookups afterwards,
+		// so half precision is plenty and single sampling is enough.
+		texSceneAlphaDepth = glGenTextures();
+		glActiveTexture(TEXTURE_UNIT_SCENE_ALPHA_DEPTH);
+		glBindTexture(GL_TEXTURE_2D, texSceneAlphaDepth);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, sceneResolution[0], sceneResolution[1], 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+		checkGLErrors();
+
+		fboSceneAlphaDepth = glGenFramebuffers();
+		glBindFramebuffer(GL_FRAMEBUFFER, fboSceneAlphaDepth);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texSceneAlphaDepth, 0);
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
+		checkGLErrors();
+
 		// Reset
+		glActiveTexture(activeTexture);
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
@@ -1380,6 +1440,18 @@ public class HdPlugin extends Plugin {
 		if (fboScene != 0)
 			glDeleteFramebuffers(fboScene);
 		fboScene = 0;
+
+		if(fboSceneDepth != 0)
+			glDeleteFramebuffers(fboSceneDepth);
+		fboSceneDepth = 0;
+
+		if (fboSceneDepthResolve != 0)
+			glDeleteFramebuffers(fboSceneDepthResolve);
+		fboSceneDepthResolve = 0;
+
+		if (fboSceneAlphaDepth != 0)
+			glDeleteFramebuffers(fboSceneAlphaDepth);
+		fboSceneAlphaDepth = 0;
 
 		if (rboSceneColor != 0)
 			glDeleteRenderbuffers(rboSceneColor);
@@ -1396,6 +1468,14 @@ public class HdPlugin extends Plugin {
 		if (rboSceneResolveColor != 0)
 			glDeleteRenderbuffers(rboSceneResolveColor);
 		rboSceneResolveColor = 0;
+
+		if (texSceneDepth != 0)
+			glDeleteTextures(texSceneDepth);
+		texSceneDepth = 0;
+
+		if (texSceneAlphaDepth != 0)
+			glDeleteTextures(texSceneAlphaDepth);
+		texSceneAlphaDepth = 0;
 	}
 
 	private void initializeShadowMapFbo() {
@@ -1446,6 +1526,9 @@ public class HdPlugin extends Plugin {
 
 		// Reset FBO
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
+
+		glActiveTexture(TEXTURE_UNIT_UI);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	private void initializeDummyShadowMap() {
@@ -1475,129 +1558,6 @@ public class HdPlugin extends Plugin {
 			log.info("Recompiling shaders: {}", path);
 			recompilePrograms();
 		});
-	}
-
-	public void prepareInterfaceTexture() {
-		if (uiCopyJob != null)
-			uiCopyJob.waitForCompletion(true);
-		uiCopyJob = null;
-
-		int[] resolution = {
-			max(1, client.getCanvasWidth()),
-			max(1, client.getCanvasHeight())
-		};
-		boolean resize = !Arrays.equals(uiResolution, resolution);
-		if (resize) {
-			uiResolution = resolution;
-
-			glActiveTexture(TEXTURE_UNIT_UI);
-			glBindTexture(GL_TEXTURE_2D, texUi);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, uiResolution[0], uiResolution[1], 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
-		}
-
-		if (client.isStretchedEnabled()) {
-			Dimension dim = client.getStretchedDimensions();
-			actualUiResolution[0] = dim.width;
-			actualUiResolution[1] = dim.height;
-		} else {
-			copyTo(actualUiResolution, uiResolution);
-		}
-		round(actualUiResolution, multiply(vec(actualUiResolution), getDpiScaling()));
-
-		final BufferProvider bufferProvider = client.getBufferProvider();
-		final int[] pixels = bufferProvider.getPixels();
-		uiWidth = bufferProvider.getWidth();
-		uiHeight = bufferProvider.getHeight();
-
-		frameTimer.begin(Timer.MAP_UI_BUFFER);
-		final GLBuffer pbo = pboUi[frame % 3];
-		pbo.map(MAP_WRITE, 0, uiWidth * uiHeight * 4L);
-		frameTimer.end(Timer.MAP_UI_BUFFER);
-		if (!pbo.isMapped()) {
-			log.error("Unable to map interface PBO. Skipping UI...");
-		} else if (uiWidth > uiResolution[0] || uiHeight > uiResolution[1]) {
-			log.error("UI texture resolution mismatch ({}x{} > {}). Skipping UI...", uiWidth, uiHeight, uiResolution);
-		} else {
-			uiCopyJob = GenericJob
-				.build(
-					"AsyncUICopy",
-					t -> {
-						long start = System.nanoTime();
-						pbo.mapped().intView().put(pixels, 0, uiWidth * uiHeight);
-						frameTimer.add(Timer.COPY_UI_ASYNC, System.nanoTime() - start);
-					}
-				)
-				.setExecuteAsync(!isPowerSaving)
-				.queue();
-		}
-		pbo.unbind();
-	}
-
-	public void drawUi(int overlayColor) {
-		if (uiResolution == null || developerTools.isHideUiEnabled() && hasLoggedIn)
-			return;
-
-		// Fix vanilla bug causing the overlay to remain on the login screen in areas like Fossil Island underwater
-		if (client.getGameState().getState() < GameState.LOADING.getState())
-			overlayColor = 0;
-
-		frameTimer.begin(Timer.RENDER_UI);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
-		// Disable alpha writes, just in case the default FBO has an alpha channel
-		glColorMask(true, true, true, false);
-
-		glViewport(0, 0, actualUiResolution[0], actualUiResolution[1]);
-
-		tiledLightingOverlay.render();
-
-		uiProgram.use();
-		uboUI.sourceDimensions.set(uiResolution);
-		uboUI.targetDimensions.set(actualUiResolution);
-		uboUI.alphaOverlay.set(ColorUtils.srgba(overlayColor));
-		uboUI.upload();
-
-		// Set the sampling function used when stretching the UI.
-		// This is probably better done with sampler objects instead of texture parameters, but this is easier and likely more portable.
-		// See https://www.khronos.org/opengl/wiki/Sampler_Object for details.
-		// GL_NEAREST makes sampling for bicubic/xBR simpler, so it should be used whenever linear/pixel isn't
-		final int function = config.uiScalingMode().glSamplingFunction;
-		glActiveTexture(TEXTURE_UNIT_UI);
-		glBindTexture(GL_TEXTURE_2D, texUi);
-
-		if (uiCopyJob != null) {
-			frameTimer.begin(Timer.COPY_UI);
-			uiCopyJob.waitForCompletion(true);
-			uiCopyJob = null;
-			frameTimer.end(Timer.COPY_UI);
-
-			frameTimer.begin(Timer.UPLOAD_UI);
-			final GLBuffer pbo = pboUi[frame % 3];
-			pbo.unmap();
-			pbo.bind();
-
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, uiWidth, uiHeight, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
-			pbo.unbind();
-			frameTimer.end(Timer.UPLOAD_UI);
-		}
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, function);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, function);
-
-		glEnable(GL_BLEND);
-		glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
-		glBindVertexArray(vaoTri);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		shadowMapOverlay.render();
-		gammaCalibrationOverlay.render();
-
-		// Reset
-		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
-		glDisable(GL_BLEND);
-		glColorMask(true, true, true, true);
-
-		frameTimer.end(Timer.RENDER_UI);
 	}
 
 	/**
@@ -1818,6 +1778,7 @@ public class HdPlugin extends Plugin {
 							case KEY_DYNAMIC_LIGHTS:
 							case KEY_TILED_LIGHTING:
 							case KEY_TILED_LIGHTING_IMAGE_STORE:
+							case KEY_DEPTH_PRE_PASS:
 							case KEY_NORMAL_MAPPING:
 							case KEY_PARALLAX_OCCLUSION_MAPPING:
 							case KEY_UI_SCALING_MODE:
@@ -1963,7 +1924,7 @@ public class HdPlugin extends Plugin {
 		checkGLErrors();
 	}
 
-	private float[] getDpiScaling() {
+	public float[] getDpiScaling() {
 		final GraphicsConfiguration graphicsConfiguration = clientUI.getGraphicsConfiguration();
 		if (graphicsConfiguration == null)
 			return new float[] { 1, 1 };

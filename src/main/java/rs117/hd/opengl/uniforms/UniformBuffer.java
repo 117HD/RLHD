@@ -21,7 +21,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 	@RequiredArgsConstructor
-	protected enum PropertyType {
+	public enum PropertyType {
 		Int(4, 4, 1),
 		IVec2(8, 8, 2),
 		IVec3(12, 16, 3),
@@ -313,6 +313,16 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 	private void markWaterLine(int position, int size) {
 		dirtyLowTide = min(dirtyLowTide, position);
 		dirtyHighTide = max(dirtyHighTide, position + size);
+	}
+
+	protected void setSize(int size) {
+		assert properties.isEmpty() : "Uniform buffer size can only be set, if your not using addStruct() or addProperty()!";
+		this.size = size;
+	}
+
+	public void write(int position, int x) {
+		dataInt.put(x);
+		markWaterLine(position, 4);
 	}
 
 	public void initialize() {

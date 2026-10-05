@@ -1251,6 +1251,17 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_DEPTH_PRE_PASS = "depthPrePass";
+	@ConfigItem(
+		keyName = KEY_DEPTH_PRE_PASS,
+		name = "Use Depth PrePass",
+		description = "",
+		section = experimentalSettings
+	)
+	default boolean depthPrePass() {
+		return true;
+	}
+
 	/*====== Internal settings ======*/
 
 	@ConfigItem(keyName = "pluginUpdateMessage", hidden = true, name = "", description = "")

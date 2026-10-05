@@ -1,5 +1,6 @@
 package rs117.hd.renderer.legacy;
 
+import java.awt.Dimension;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -36,9 +37,13 @@ import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
+import rs117.hd.opengl.shader.UIShaderProgram;
 import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.overlays.FrameTimer;
+import rs117.hd.overlays.GammaCalibrationOverlay;
+import rs117.hd.overlays.ShadowMapOverlay;
+import rs117.hd.overlays.TiledLightingOverlay;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.scene.AreaManager;
@@ -50,7 +55,9 @@ import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.utils.Camera.CameraStruct;
 import rs117.hd.utils.ColorUtils;
+import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
@@ -58,6 +65,7 @@ import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
+import rs117.hd.utils.jobs.GenericJob;
 import rs117.hd.utils.jobs.JobSystem;
 
 import static org.lwjgl.opencl.CL10.*;
@@ -67,9 +75,11 @@ import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILE_HEIGHT_MAP;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_UI;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.MathUtils.*;
+import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
 
 @Slf4j
 @Singleton
@@ -129,6 +139,21 @@ public class LegacyRenderer implements Renderer {
 
 	@Inject
 	private SceneShaderProgram.Legacy sceneProgram;
+
+	@Inject
+	private UIShaderProgram uiProgram;
+
+	@Inject
+	private DeveloperTools developerTools;
+
+	@Inject
+	private GammaCalibrationOverlay gammaCalibrationOverlay;
+
+	@Inject
+	private ShadowMapOverlay shadowMapOverlay;
+
+	@Inject
+	private TiledLightingOverlay tiledLightingOverlay;
 
 	@Inject
 	private ModelPassthroughComputeProgram modelPassthroughComputeProgram;
@@ -281,6 +306,7 @@ public class LegacyRenderer implements Renderer {
 	@Override
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
 		sceneProgram.compile(includes);
+		uiProgram.compile(includes);
 
 		shadowProgram.setMode(plugin.configShadowMode);
 		shadowProgram.compile(includes);
@@ -304,6 +330,7 @@ public class LegacyRenderer implements Renderer {
 	@Override
 	public void destroyShaders() {
 		sceneProgram.destroy();
+		uiProgram.destroy();
 		shadowProgram.destroy();
 
 		if (computeMode == ComputeMode.OPENGL) {
@@ -698,10 +725,16 @@ public class LegacyRenderer implements Renderer {
 					}
 				}
 
-				plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
-				plugin.uboGlobal.viewMatrix.set(plugin.viewMatrix);
-				plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);
-				plugin.uboGlobal.invProjectionMatrix.set(plugin.invViewProjMatrix);
+				plugin.uboGlobal.sceneCamera.nearPlane.set(NEAR_PLANE);
+				plugin.uboGlobal.sceneCamera.farPlane.set(0.0f);
+				plugin.uboGlobal.sceneCamera.flags.set(CameraStruct.REVERSE_Z | CameraStruct.INFINITE_FAR);
+				plugin.uboGlobal.sceneCamera.viewport.set(viewportWidth, viewportHeight);
+				plugin.uboGlobal.sceneCamera.position.set(plugin.cameraPosition);
+				plugin.uboGlobal.sceneCamera.viewMatrix.set(plugin.viewMatrix);
+				plugin.uboGlobal.sceneCamera.projMatrix.set(projectionMatrix);
+				plugin.uboGlobal.sceneCamera.viewProjMatrix.set(plugin.viewProjMatrix);
+				plugin.uboGlobal.sceneCamera.invViewProjMatrix.set(plugin.invViewProjMatrix);
+
 				plugin.uboGlobal.pointLightsCount.set(sceneContext.numVisibleLights);
 				plugin.uboGlobal.upload();
 			}
@@ -957,6 +990,130 @@ public class LegacyRenderer implements Renderer {
 		plugin.drawnTileCount++;
 	}
 
+	public void prepareInterfaceTexture() {
+		if (plugin.uiCopyJob != null)
+			plugin.uiCopyJob.waitForCompletion(true);
+		plugin.uiCopyJob = null;
+
+		int[] resolution = {
+			max(1, client.getCanvasWidth()),
+			max(1, client.getCanvasHeight())
+		};
+		boolean resize = !Arrays.equals(plugin.getUiResolution(), resolution);
+		if (resize) {
+			plugin.setUiResolution(resolution);
+
+			glActiveTexture(TEXTURE_UNIT_UI);
+			glBindTexture(GL_TEXTURE_2D, plugin.texUi);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, resolution[0], resolution[1], 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
+		}
+
+		if (client.isStretchedEnabled()) {
+			Dimension dim = client.getStretchedDimensions();
+			plugin.actualUiResolution[0] = dim.width;
+			plugin.actualUiResolution[1] = dim.height;
+		} else {
+			copyTo(plugin.actualUiResolution, plugin.getUiResolution());
+		}
+		round(plugin.actualUiResolution, multiply(vec(plugin.actualUiResolution), plugin.getDpiScaling()));
+
+		final BufferProvider bufferProvider = client.getBufferProvider();
+		final int[] pixels = bufferProvider.getPixels();
+		plugin.uiWidth = bufferProvider.getWidth();
+		plugin.uiHeight = bufferProvider.getHeight();
+
+		frameTimer.begin(Timer.MAP_UI_BUFFER);
+		final GLBuffer pbo = plugin.pboUi[plugin.frame % 3];
+		pbo.map(MAP_WRITE, 0, plugin.uiWidth * plugin.uiHeight * 4L);
+		frameTimer.end(Timer.MAP_UI_BUFFER);
+		if (!pbo.isMapped()) {
+			log.error("Unable to map interface PBO. Skipping UI...");
+		} else if (plugin.uiWidth > plugin.getUiResolution()[0] || plugin.uiHeight > plugin.getUiResolution()[1]) {
+			log.error("UI texture resolution mismatch ({}x{} > {}). Skipping UI...", plugin.uiWidth, plugin.uiHeight, plugin.getUiResolution());
+		} else {
+			plugin.uiCopyJob = GenericJob
+				.build(
+					"AsyncUICopy",
+					t -> {
+						long start = System.nanoTime();
+						pbo.mapped().intView().put(pixels, 0, plugin.uiWidth * plugin.uiHeight);
+						frameTimer.add(Timer.COPY_UI_ASYNC, System.nanoTime() - start);
+					}
+				)
+				.setExecuteAsync(!plugin.isPowerSaving)
+				.queue();
+		}
+		pbo.unbind();
+	}
+
+	public void drawUi(int overlayColor) {
+		int[] uiResolution = plugin.getUiResolution();
+		if (uiResolution == null || developerTools.isHideUiEnabled() && plugin.hasLoggedIn)
+			return;
+
+		// Fix vanilla bug causing the overlay to remain on the login screen in areas like Fossil Island underwater
+		if (client.getGameState().getState() < GameState.LOADING.getState())
+			overlayColor = 0;
+
+		frameTimer.begin(Timer.RENDER_UI);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
+		// Disable alpha writes, just in case the default FBO has an alpha channel
+		glColorMask(true, true, true, false);
+
+		glViewport(0, 0, plugin.actualUiResolution[0], plugin.actualUiResolution[1]);
+
+		tiledLightingOverlay.render();
+
+		uiProgram.use();
+		plugin.uboUI.sourceDimensions.set(uiResolution);
+		plugin.uboUI.targetDimensions.set(plugin.actualUiResolution);
+		plugin.uboUI.alphaOverlay.set(ColorUtils.srgba(overlayColor));
+		plugin.uboUI.upload();
+
+		// Set the sampling function used when stretching the UI.
+		// This is probably better done with sampler objects instead of texture parameters, but this is easier and likely more portable.
+		// See https://www.khronos.org/opengl/wiki/Sampler_Object for details.
+		// GL_NEAREST makes sampling for bicubic/xBR simpler, so it should be used whenever linear/pixel isn't
+		final int function = config.uiScalingMode().glSamplingFunction;
+		glActiveTexture(TEXTURE_UNIT_UI);
+		glBindTexture(GL_TEXTURE_2D, plugin.texUi);
+
+		if (plugin.uiCopyJob != null) {
+			frameTimer.begin(Timer.COPY_UI);
+			plugin.uiCopyJob.waitForCompletion(true);
+			plugin.uiCopyJob = null;
+			frameTimer.end(Timer.COPY_UI);
+
+			frameTimer.begin(Timer.UPLOAD_UI);
+			final GLBuffer pbo = plugin.pboUi[plugin.frame % 3];
+			pbo.unmap();
+			pbo.bind();
+
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, plugin.uiWidth, plugin.uiHeight, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
+			pbo.unbind();
+			frameTimer.end(Timer.UPLOAD_UI);
+		}
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, function);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, function);
+
+		glEnable(GL_BLEND);
+		glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+		glBindVertexArray(plugin.vaoTri);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		shadowMapOverlay.render();
+		gammaCalibrationOverlay.render();
+
+		// Reset
+		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+		glDisable(GL_BLEND);
+		glColorMask(true, true, true, true);
+
+		frameTimer.end(Timer.RENDER_UI);
+	}
+
 	@Override
 	public void draw(int overlayColor) {
 		final GameState gameState = client.getGameState();
@@ -966,7 +1123,7 @@ public class LegacyRenderer implements Renderer {
 		}
 
 		try {
-			plugin.prepareInterfaceTexture();
+			prepareInterfaceTexture();
 		} catch (Exception ex) {
 			// Fixes: https://github.com/runelite/runelite/issues/12930
 			// Gracefully Handle loss of opengl buffers and context
@@ -1247,7 +1404,7 @@ public class LegacyRenderer implements Renderer {
 			glClear(GL_COLOR_BUFFER_BIT);
 		}
 
-		plugin.drawUi(overlayColor);
+		drawUi(overlayColor);
 
 		frameTimer.end(Timer.DRAW_FRAME);
 		frameTimer.end(Timer.RENDER_FRAME);
