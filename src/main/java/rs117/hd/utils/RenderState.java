@@ -213,7 +213,10 @@ public final class RenderState {
 		private int dirtyUnits; // bit per unit with a possibly pending bind
 		private int activeUnit = UNKNOWN;
 
-		public GLTexture() { clearCache(); }
+		public GLTexture() {
+			Arrays.fill(desired, UNKNOWN);
+			clearCache();
+		}
 
 		public void set(int target, int texUnit, int texId) {
 			int unit = texUnit - GL_TEXTURE0;

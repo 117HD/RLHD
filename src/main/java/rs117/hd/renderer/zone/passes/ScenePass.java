@@ -66,6 +66,11 @@ public class ScenePass implements RenderPass {
 	private Camera sceneCamera;
 
 	@Override
+	public int preprocess() {
+		return PASS_DEFAULT | PASS_SCENE_RENDERING;
+	}
+
+	@Override
 	public void initialize() {
 		sceneCamera = renderer.sceneCamera;
 
@@ -92,13 +97,13 @@ public class ScenePass implements RenderPass {
 
 	@Override
 	public void preSceneDraw(WorldViewContext ctx, boolean isTopLevel) {
-		final Scene scene = ctx.sceneContext.scene;
-		if(scene.getWorldViewId() != WorldView.TOPLEVEL)
+		if(!isTopLevel)
 			return;
 
 		gapFillerCmd.reset();
 		sceneCmd.reset();
 
+		final Scene scene = ctx.sceneContext.scene;
 		Model skybox = scene.getSkybox();
 		if (skybox != null) {
 			skybox.calculateBoundsCylinder();
@@ -195,7 +200,7 @@ public class ScenePass implements RenderPass {
 	}
 
 	@Override
-	public void draw(RenderState renderState) {
+	public void draw(RenderState renderState, int overlayColor) {
 		renderState.drawFramebuffer.set(plugin.fboScene);
 		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
 		if(renderer.indirectDrawCmds != null)

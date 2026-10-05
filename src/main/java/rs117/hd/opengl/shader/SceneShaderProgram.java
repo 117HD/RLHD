@@ -8,7 +8,7 @@ import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 
 public class SceneShaderProgram extends ShaderProgram {
 	protected final UniformTexture uniTextureArray = addUniformTexture("textureArray");
-	protected final UniformTexture uniShadowMap = addUniformTexture("shadowMap");
+	public final UniformTexture uniShadowMap = addUniformTexture("shadowMap");
 	protected final UniformTexture uniTiledLightingTextureArray = addUniformTexture("tiledLightingArray");
 	protected final UniformTexture uniTextureFaces = addUniformTexture("textureFaces");
 

@@ -86,7 +86,7 @@ public class DepthPass implements RenderPass {
 		opaqueDepthCmd.reset();
 		alphaDepthCmd.reset();
 		alphaZoneDraws.clear();
-		return depthPassEnabled ? PASS_DEFAULT : 0;
+		return depthPassEnabled ? PASS_DEFAULT | PASS_SCENE_RENDERING : 0;
 	}
 
 	@Override
@@ -128,7 +128,7 @@ public class DepthPass implements RenderPass {
 	}
 
 	@Override
-	public void draw(RenderState renderState) {
+	public void draw(RenderState renderState, int overlayColor) {
 		sceneDepthProgram.use();
 
 		renderState.drawFramebuffer.set(plugin.fboSceneDepth);

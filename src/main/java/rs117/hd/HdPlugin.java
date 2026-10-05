@@ -31,7 +31,6 @@ import com.google.inject.Binder;
 import com.google.inject.Provider;
 import com.google.inject.Provides;
 import java.awt.Canvas;
-import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
@@ -53,6 +52,7 @@ import javax.inject.Singleton;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.*;
@@ -95,7 +95,6 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.GammaCalibrationOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TiledLightingOverlay;
-import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.renderer.legacy.LegacyRenderer;
 import rs117.hd.renderer.zone.SceneManager;
@@ -113,7 +112,6 @@ import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.WaterTypeManager;
-import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
@@ -138,7 +136,6 @@ import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 import static rs117.hd.utils.buffer.GLBuffer.DEBUG_MAC_OS;
-import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_IMMUTABLE;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_PERSISTENT;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
@@ -358,14 +355,15 @@ public class HdPlugin extends Plugin {
 	private int vboTri;
 
 	@Getter
+	@Setter
 	@Nullable
 	private int[] uiResolution;
-	private final int[] actualUiResolution = { 0, 0 }; // Includes stretched mode and DPI scaling
-	private final GLBuffer[] pboUi = new GLBuffer[3];
-	private int texUi;
-	private int uiWidth;
-	private int uiHeight;
-	private GenericJob uiCopyJob;
+	public final int[] actualUiResolution = { 0, 0 }; // Includes stretched mode and DPI scaling
+	public final GLBuffer[] pboUi = new GLBuffer[3];
+	public int texUi;
+	public int uiWidth;
+	public int uiHeight;
+	public GenericJob uiCopyJob;
 
 	@Nullable
 	public int[] sceneViewport;
@@ -1528,6 +1526,9 @@ public class HdPlugin extends Plugin {
 
 		// Reset FBO
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
+
+		glActiveTexture(TEXTURE_UNIT_UI);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	private void initializeDummyShadowMap() {
@@ -1557,129 +1558,6 @@ public class HdPlugin extends Plugin {
 			log.info("Recompiling shaders: {}", path);
 			recompilePrograms();
 		});
-	}
-
-	public void prepareInterfaceTexture() {
-		if (uiCopyJob != null)
-			uiCopyJob.waitForCompletion(true);
-		uiCopyJob = null;
-
-		int[] resolution = {
-			max(1, client.getCanvasWidth()),
-			max(1, client.getCanvasHeight())
-		};
-		boolean resize = !Arrays.equals(uiResolution, resolution);
-		if (resize) {
-			uiResolution = resolution;
-
-			glActiveTexture(TEXTURE_UNIT_UI);
-			glBindTexture(GL_TEXTURE_2D, texUi);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, uiResolution[0], uiResolution[1], 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
-		}
-
-		if (client.isStretchedEnabled()) {
-			Dimension dim = client.getStretchedDimensions();
-			actualUiResolution[0] = dim.width;
-			actualUiResolution[1] = dim.height;
-		} else {
-			copyTo(actualUiResolution, uiResolution);
-		}
-		round(actualUiResolution, multiply(vec(actualUiResolution), getDpiScaling()));
-
-		final BufferProvider bufferProvider = client.getBufferProvider();
-		final int[] pixels = bufferProvider.getPixels();
-		uiWidth = bufferProvider.getWidth();
-		uiHeight = bufferProvider.getHeight();
-
-		frameTimer.begin(Timer.MAP_UI_BUFFER);
-		final GLBuffer pbo = pboUi[frame % 3];
-		pbo.map(MAP_WRITE, 0, uiWidth * uiHeight * 4L);
-		frameTimer.end(Timer.MAP_UI_BUFFER);
-		if (!pbo.isMapped()) {
-			log.error("Unable to map interface PBO. Skipping UI...");
-		} else if (uiWidth > uiResolution[0] || uiHeight > uiResolution[1]) {
-			log.error("UI texture resolution mismatch ({}x{} > {}). Skipping UI...", uiWidth, uiHeight, uiResolution);
-		} else {
-			uiCopyJob = GenericJob
-				.build(
-					"AsyncUICopy",
-					t -> {
-						long start = System.nanoTime();
-						pbo.mapped().intView().put(pixels, 0, uiWidth * uiHeight);
-						frameTimer.add(Timer.COPY_UI_ASYNC, System.nanoTime() - start);
-					}
-				)
-				.setExecuteAsync(!isPowerSaving)
-				.queue();
-		}
-		pbo.unbind();
-	}
-
-	public void drawUi(int overlayColor) {
-		if (uiResolution == null || developerTools.isHideUiEnabled() && hasLoggedIn)
-			return;
-
-		// Fix vanilla bug causing the overlay to remain on the login screen in areas like Fossil Island underwater
-		if (client.getGameState().getState() < GameState.LOADING.getState())
-			overlayColor = 0;
-
-		frameTimer.begin(Timer.RENDER_UI);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
-		// Disable alpha writes, just in case the default FBO has an alpha channel
-		glColorMask(true, true, true, false);
-
-		glViewport(0, 0, actualUiResolution[0], actualUiResolution[1]);
-
-		tiledLightingOverlay.render();
-
-		uiProgram.use();
-		uboUI.sourceDimensions.set(uiResolution);
-		uboUI.targetDimensions.set(actualUiResolution);
-		uboUI.alphaOverlay.set(ColorUtils.srgba(overlayColor));
-		uboUI.upload();
-
-		// Set the sampling function used when stretching the UI.
-		// This is probably better done with sampler objects instead of texture parameters, but this is easier and likely more portable.
-		// See https://www.khronos.org/opengl/wiki/Sampler_Object for details.
-		// GL_NEAREST makes sampling for bicubic/xBR simpler, so it should be used whenever linear/pixel isn't
-		final int function = config.uiScalingMode().glSamplingFunction;
-		glActiveTexture(TEXTURE_UNIT_UI);
-		glBindTexture(GL_TEXTURE_2D, texUi);
-
-		if (uiCopyJob != null) {
-			frameTimer.begin(Timer.COPY_UI);
-			uiCopyJob.waitForCompletion(true);
-			uiCopyJob = null;
-			frameTimer.end(Timer.COPY_UI);
-
-			frameTimer.begin(Timer.UPLOAD_UI);
-			final GLBuffer pbo = pboUi[frame % 3];
-			pbo.unmap();
-			pbo.bind();
-
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, uiWidth, uiHeight, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
-			pbo.unbind();
-			frameTimer.end(Timer.UPLOAD_UI);
-		}
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, function);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, function);
-
-		glEnable(GL_BLEND);
-		glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
-		glBindVertexArray(vaoTri);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		shadowMapOverlay.render();
-		gammaCalibrationOverlay.render();
-
-		// Reset
-		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
-		glDisable(GL_BLEND);
-		glColorMask(true, true, true, true);
-
-		frameTimer.end(Timer.RENDER_UI);
 	}
 
 	/**
@@ -2046,7 +1924,7 @@ public class HdPlugin extends Plugin {
 		checkGLErrors();
 	}
 
-	private float[] getDpiScaling() {
+	public float[] getDpiScaling() {
 		final GraphicsConfiguration graphicsConfiguration = clientUI.getGraphicsConfiguration();
 		if (graphicsConfiguration == null)
 			return new float[] { 1, 1 };

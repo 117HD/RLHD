@@ -21,10 +21,10 @@ public class ClearScenePass implements RenderPass {
 	private EnvironmentManager environmentManager;
 
 	@Override
-	public int preprocess() { return PASS_ENABLED; }
+	public int preprocess() { return PASS_ENABLED | PASS_SCENE_RENDERING; }
 
 	@Override
-	public void draw(RenderState renderState) {
+	public void draw(RenderState renderState, int overlayColor) {
 		renderState.drawFramebuffer.set(plugin.fboScene);
 		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
 		renderState.toggle(GL_MULTISAMPLE, plugin.msaaSamples > 1);

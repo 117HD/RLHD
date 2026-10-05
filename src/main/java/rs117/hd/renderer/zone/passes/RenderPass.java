@@ -13,6 +13,7 @@ import rs117.hd.utils.RenderState;
 public interface RenderPass {
 	int PASS_ENABLED = 1;
 	int PASS_ZONE_DRAWS = 1 << 1;
+	int PASS_SCENE_RENDERING = 1 << 2;
 	int PASS_DEFAULT = PASS_ENABLED | PASS_ZONE_DRAWS;
 
 	RenderPassType[] TYPES = RenderPassType.values();
@@ -51,7 +52,9 @@ public interface RenderPass {
 
 	default void postSceneDraw(WorldViewContext ctx) {}
 
-	default void draw(RenderState renderState) {}
+	default void preDraw(RenderState renderState) {}
+
+	default void draw(RenderState renderState, int overlayColor) {}
 
 	default void postDraw(RenderState renderState) {}
 }

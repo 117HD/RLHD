@@ -52,6 +52,7 @@ public final class RenderPipeline {
 	public final DrawZoneOpaqueFunction       drawZoneOpaque       = new DrawZoneOpaqueFunction();
 	public final DrawZoneAlphaFunction        drawZoneAlpha        = new DrawZoneAlphaFunction();
 	public final DrawPassFunction             drawPass             = new DrawPassFunction();
+	public final PreDrawFunction              preDraw              = new PreDrawFunction();
 	public final DrawFunction                 draw                 = new DrawFunction();
 	public final PostDrawFunction             postDraw             = new PostDrawFunction();
 
@@ -80,6 +81,9 @@ public final class RenderPipeline {
 		Arrays.fill(passes, null);
 	}
 
+	@SuppressWarnings("unchecked")
+	public <T extends RenderPass> T getPass(RenderPassType type) { return (T) passes[type.ordinal()]; }
+
 	public void preprocess() {
 		frameTimer.begin(Timer.RENDER_PIPELINE);
 		enabledCount = 0;
@@ -94,6 +98,9 @@ public final class RenderPipeline {
 
 			int flags = renderPass.preprocess();
 			if(flags == 0)
+				continue;
+
+			if((flags & RenderPass.PASS_SCENE_RENDERING) != 0 && (plugin.sceneResolution == null || plugin.sceneViewport == null))
 				continue;
 
 			enabledPasses[enabledCount++] = i;
@@ -416,15 +423,35 @@ public final class RenderPipeline {
 		}
 	}
 
+	public final class PreDrawFunction extends BaseRenderPassFunction {
+		private RenderState renderState;
+
+		private PreDrawFunction() {
+			super("preDraw", DRAW_FUNCTION_TYPE, true, false);
+		}
+
+		public void execute(RenderState renderState) {
+			this.renderState = renderState;
+			execute();
+		}
+
+		protected boolean accept(RenderPass renderPass) {
+			renderPass.preDraw(renderState);
+			return true;
+		}
+	}
+
 	public final class DrawFunction extends BaseRenderPassFunction {
 		private RenderState renderState;
+		private int overlayColor;
 
 		private DrawFunction() {
 			super("draw", DRAW_FUNCTION_TYPE, true, false);
 		}
 
-		public void execute(RenderState renderState) {
+		public void execute(RenderState renderState, int overlayColor) {
 			this.renderState = renderState;
+			this.overlayColor = overlayColor;
 			execute();
 		}
 
@@ -434,7 +461,7 @@ public final class RenderPipeline {
 				frameTimer.begin(gpuTimer);
 			try {
 				renderState.reset();
-				renderPass.draw(renderState);
+				renderPass.draw(renderState, overlayColor);
 			} finally {
 				renderState.reset();
 				if(gpuTimer != null)

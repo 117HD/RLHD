@@ -265,10 +265,10 @@ public class DebugDrawPass implements RenderPass {
 	}
 
 	@Override
-	public int preprocess() { return PASS_ENABLED; }
+	public int preprocess() { return PASS_ENABLED | PASS_SCENE_RENDERING; }
 
 	@Override
-	public void draw(RenderState renderState) {
+	public void draw(RenderState renderState, int overlayColor) {
 		if (lineQueue.isEmpty() && aabbQueue.isEmpty() && sphereQueue.isEmpty() && textQueue.isEmpty())
 			return;
 

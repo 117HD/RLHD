@@ -107,7 +107,7 @@ public class DirectionalShadowPass implements RenderPass {
 			sceneCullingManager.addCamera(directionalCamera);
 		isCameraAddedToCulling = true;
 
-		return PASS_DEFAULT;
+		return PASS_DEFAULT | PASS_SCENE_RENDERING;
 	}
 
 	@Override
@@ -258,7 +258,8 @@ public class DirectionalShadowPass implements RenderPass {
 		}
 	}
 
-	public void draw(RenderState renderState) {
+	@Override
+	public void draw(RenderState renderState, int overlayColor) {
 		if(plugin.fboShadowMap == 0 || plugin.shadowMapResolution == 0)
 			return;
 
@@ -283,6 +284,7 @@ public class DirectionalShadowPass implements RenderPass {
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.depthFunc.set(GL_LEQUAL);
+
 		if(renderer.indirectDrawCmds != null)
 			renderState.ido.set(renderer.indirectDrawCmds.id);
 
