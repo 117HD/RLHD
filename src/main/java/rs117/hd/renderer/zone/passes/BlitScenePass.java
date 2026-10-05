@@ -14,7 +14,6 @@ import rs117.hd.utils.RenderState;
 import static org.lwjgl.opengl.GL11C.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11C.GL_NEAREST;
 import static org.lwjgl.opengl.GL11C.glClear;
-import static org.lwjgl.opengl.GL11C.glClearColor;
 import static org.lwjgl.opengl.GL30C.GL_DRAW_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30C.GL_READ_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30C.glBindFramebuffer;
@@ -77,7 +76,8 @@ public class BlitScenePass implements RenderPass {
 			// On macOS, we need to ensure that the alpha channel is opaque to prevent whatever
 			// is beneath from leaking through. In fixed mode, the MSAA resolve alone is not
 			// sufficient, since the viewport only covers part of the screen.
-			glClearColor(0, 0, 0, 1);
+			renderState.clearColor.set(0, 0, 0, 1);
+			renderState.clearColor.apply();
 			glClear(GL_COLOR_BUFFER_BIT);
 		}
 

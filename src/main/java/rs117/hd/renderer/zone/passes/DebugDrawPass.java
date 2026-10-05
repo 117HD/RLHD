@@ -36,10 +36,8 @@ import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
-import static org.lwjgl.opengl.GL11.glPolygonMode;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
-import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
@@ -47,7 +45,6 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import static org.lwjgl.opengl.GL30.glVertexAttribIPointer;
-import static org.lwjgl.opengl.GL30C.GL_DRAW_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL31.glDrawElementsInstanced;
 import static org.lwjgl.opengl.GL33.glVertexAttribDivisor;
 
@@ -275,7 +272,7 @@ public class DebugDrawPass implements RenderPass {
 		if (lineQueue.isEmpty() && aabbQueue.isEmpty() && sphereQueue.isEmpty() && textQueue.isEmpty())
 			return;
 
-		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
+		renderState.drawFramebuffer.set(plugin.fboScene);
 		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.depthFunc.set(GL_GEQUAL);
@@ -312,27 +309,23 @@ public class DebugDrawPass implements RenderPass {
 		renderState.enable.set(GL_CULL_FACE);
 		renderState.apply();
 
-		cubeDraw.uploadAndDraw(aabbBufSolid);
-		sphereDraw.uploadAndDraw(sphereBufSolid);
-		textDraw.uploadAndDraw(textBuf);
+		cubeDraw.uploadAndDraw(aabbBufSolid, renderState);
+		sphereDraw.uploadAndDraw(sphereBufSolid, renderState);
+		textDraw.uploadAndDraw(textBuf, renderState);
 
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.apply();
 
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-		cubeDraw.uploadAndDraw(aabbBufWire);
-		sphereDraw.uploadAndDraw(sphereBufWire);
-
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-		lineDraw.uploadAndDraw(lineBuf);
-
-		renderState.disable.set(GL_DEPTH_TEST);
-		renderState.disable.set(GL_BLEND);
-		renderState.disable.set(GL_CULL_FACE);
-		renderState.depthMask.set(true);
+		renderState.polygonMode.set(GL_FRONT_AND_BACK, GL_LINE);
 		renderState.apply();
+
+		cubeDraw.uploadAndDraw(aabbBufWire, renderState);
+		sphereDraw.uploadAndDraw(sphereBufWire, renderState);
+
+		renderState.polygonMode.set(GL_FRONT_AND_BACK, GL_FILL);
+		renderState.apply();
+
+		lineDraw.uploadAndDraw(lineBuf, renderState);
 
 		expireQueue(lineQueue);
 		expireQueue(aabbQueue);
@@ -457,7 +450,7 @@ public class DebugDrawPass implements RenderPass {
 			this.vao = glGenVertexArrays();
 		}
 
-		void uploadAndDraw(IntBuffer data) {
+		void uploadAndDraw(IntBuffer data, RenderState renderState) {
 			if(data.position() == 0)
 				return;
 			data.flip();
@@ -467,13 +460,11 @@ public class DebugDrawPass implements RenderPass {
 			if(count == 0)
 				return;
 
-			shader.use();
 			instanceVbo.upload(data);
-			glBindVertexArray(vao);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.getEbo().id);
+			renderState.program.set(shader);
+			renderState.vao.setVaoAndEbo(vao, mesh.getEbo().id);
+			renderState.apply();
 			glDrawElementsInstanced(GL_TRIANGLES, mesh.getIndexCount(), GL_UNSIGNED_INT, 0, count);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-			glBindVertexArray(0);
 		}
 
 		void destroy() {

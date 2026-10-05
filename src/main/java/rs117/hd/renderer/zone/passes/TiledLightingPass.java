@@ -30,7 +30,7 @@ public class TiledLightingPass implements RenderPass {
 		plugin.updateTiledLightingFbo(); // TODO: Once Legacy is deprecated, move this into here
 		assert plugin.fboTiledLighting != 0;
 
-		renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTiledLighting);
+		renderState.framebuffer.set(plugin.fboTiledLighting);
 		renderState.viewport.set(0, 0, plugin.tiledLightingResolution[0], plugin.tiledLightingResolution[1]);
 		renderState.vao.setVao(plugin.vaoTri);
 

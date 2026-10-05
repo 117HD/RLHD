@@ -771,7 +771,8 @@ public class ZoneRenderer implements Renderer {
 				renderPipeline.draw.execute(renderState);
 			} else {
 				glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
-				glClearColor(0, 0, 0, 1);
+				renderState.clearColor.set(0, 0, 0, 1);
+				renderState.clearColor.apply();
 				glClear(GL_COLOR_BUFFER_BIT);
 			}
 

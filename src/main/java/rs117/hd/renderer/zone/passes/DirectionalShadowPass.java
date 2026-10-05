@@ -30,9 +30,6 @@ import static org.lwjgl.opengl.GL11C.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11C.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11C.GL_LEQUAL;
 import static org.lwjgl.opengl.GL11C.glClear;
-import static org.lwjgl.opengl.GL11C.glClearDepth;
-import static org.lwjgl.opengl.GL30C.GL_FRAMEBUFFER;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
@@ -271,11 +268,11 @@ public class DirectionalShadowPass implements RenderPass {
 
 		if (shouldRenderShadows || shouldClearShadowFbo) {
 			// Render to the shadow depth map
-			renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboShadowMap);
+			renderState.drawFramebuffer.set(plugin.fboShadowMap);
 			renderState.viewport.set(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
+			renderState.clearDepth.set(1);
 			renderState.apply();
 
-			glClearDepth(1);
 			glClear(GL_DEPTH_BUFFER_BIT);
 			shouldClearShadowFbo = false;
 		}
@@ -290,11 +287,6 @@ public class DirectionalShadowPass implements RenderPass {
 			renderState.ido.set(renderer.indirectDrawCmds.id);
 
 		directionalCmd.execute(renderState);
-
-		glBindVertexArray(0);
-
-		renderState.disable.set(GL_DEPTH_TEST);
-
 		shouldClearShadowFbo = true;
 	}
 

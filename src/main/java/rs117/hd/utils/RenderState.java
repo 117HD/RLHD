@@ -7,16 +7,30 @@ import java.util.function.Supplier;
 import rs117.hd.opengl.GLState;
 import rs117.hd.opengl.shader.ShaderProgram;
 import rs117.hd.utils.collections.Int2IntHashMap;
+import rs117.hd.utils.collections.IntHashSet;
 
 import static org.lwjgl.opengl.ARBDirectStateAccess.glBindTextureUnit;
 import static org.lwjgl.opengl.GL33C.*;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 import static rs117.hd.HdPlugin.GL_CAPS;
+import static rs117.hd.HdPlugin.checkGLErrors;
 
 public final class RenderState {
-	private final List<GLState> states = new ArrayList<>();
+	private static final IntHashSet DEFAULT_ENABLED_CAPABILITIES = new IntHashSet();
 
-	public final GLFramebuffer framebuffer = addState(GLFramebuffer::new);
+	static {
+		// SEE: https://registry.khronos.org/OpenGL-Refpages/gl4/html/glEnable.xhtml
+		// These two Capabilities are the only ones enabled by default
+		DEFAULT_ENABLED_CAPABILITIES.add(GL_DITHER);
+		DEFAULT_ENABLED_CAPABILITIES.add(GL_MULTISAMPLE);
+	}
+
+	private final List<GLState> states = new ArrayList<>();
+	private final IntHashSet trackedCapabilities = new IntHashSet();
+
+	public final GLFramebuffer framebuffer = addState(() -> new GLFramebuffer(GL_FRAMEBUFFER));
+	public final GLFramebuffer drawFramebuffer = addState(() -> new GLFramebuffer(GL_DRAW_FRAMEBUFFER));
+	public final GLFramebuffer readFramebuffer = addState(() -> new GLFramebuffer(GL_READ_FRAMEBUFFER));
 	public final GLFramebufferTextureLayer framebufferTextureLayer = addState(GLFramebufferTextureLayer::new);
 	public final GLDrawBuffer drawBuffer = addState(GLDrawBuffer::new);
 	public final GLShaderProgram program = addState(GLShaderProgram::new);
@@ -29,18 +43,37 @@ public final class RenderState {
 	public final GLColorMask colorMask = addState(GLColorMask::new);
 	public final GLBlendFunc blendFunc = addState(GLBlendFunc::new);
 	public final GLCullFace cullFace = addState(GLCullFace::new);
-	public final GLEnable enable = addState(GLEnable::new);
+	public final GLPolygonMode polygonMode = addState(GLPolygonMode::new);
+	public final GLClearDepth clearDepth = addState(GLClearDepth::new);
+	public final GLClearColor clearColor = addState(GLClearColor::new);
 	public final GLDisable disable = addState(GLDisable::new);
+	public final GLEnable enable = addState(GLEnable::new);
 	public final GLTexture texture = addState(GLTexture::new);
 
 	public void apply() {
-		for (GLState state : states)
+		for (GLState state : states) {
 			state.apply();
+			checkGLErrors(() -> "Failed to apply state: " + state.getClass().getName());
+		}
 	}
 
 	public void reset() {
 		for (GLState state : states)
 			state.reset();
+
+		for (int capability : trackedCapabilities) {
+			if (DEFAULT_ENABLED_CAPABILITIES.contains(capability))
+				enable.set(capability);
+			else
+				disable.set(capability);
+		}
+	}
+
+	public void toggle(int target, boolean enabled) {
+		if (enabled)
+			enable.set(target);
+		else
+			disable.set(target);
 	}
 
 	private <T extends GLState> T addState(Supplier<T> supplier) {
@@ -49,27 +82,88 @@ public final class RenderState {
 		return state;
 	}
 
-	public static final class GLFramebuffer extends GLState.IntArray {
-		private GLFramebuffer() {
-			super(2);
+	public final class GLFramebuffer extends GLState.Int {
+		private final int target;
+
+		private GLFramebuffer(int target) {
+			super(0);
+			this.target = target;
+		}
+
+		private boolean hasAppliedNonDefaultValue() {
+			return hasApplied && getValue() != 0;
+		}
+
+		private boolean hasAppliedValue() {
+			return hasApplied;
 		}
 
 		@Override
-		protected void applyValues(int[] values) { glBindFramebuffer(values[0], values[1]); }
+		public void set(int framebuffer) {
+			super.set(framebuffer);
+			if (target == GL_FRAMEBUFFER) {
+				drawFramebuffer.set(framebuffer);
+				readFramebuffer.set(framebuffer);
+			}
+		}
+
+		@Override
+		protected void internalApply() {
+			applyValue(getValue());
+		}
+
+		@Override
+		protected void applyValue(int framebuffer) {
+			glBindFramebuffer(target, framebuffer);
+		}
 	}
 
-	public static final class GLFramebufferTextureLayer extends GLState.IntArray {
+	public final class GLFramebufferTextureLayer extends GLState.IntArray {
 		private GLFramebufferTextureLayer() { super(5); }
+
+		@Override
+		public void reset() {
+			super.reset();
+			hasValue = false;
+		}
 
 		@Override
 		protected void applyValues(int[] values) {
 			glFramebufferTextureLayer(values[0], values[1], values[2], values[3], values[4]);
 		}
+
+		@Override
+		protected boolean canApply() {
+			return drawFramebuffer.hasAppliedNonDefaultValue();
+		}
 	}
 
 	public static final class GLViewport extends GLState.IntArray {
+		private boolean hasCapturedDefaultValue;
+
 		private GLViewport() {
 			super(4);
+		}
+
+		@Override
+		public void set(int... values) {
+			captureDefaultValue();
+			super.set(values);
+		}
+
+		private void captureDefaultValue() {
+			if (hasCapturedDefaultValue)
+				return;
+			int[] defaultValue = new int[4];
+			glGetIntegerv(GL_VIEWPORT, defaultValue);
+			setDefaultValue(defaultValue);
+			hasCapturedDefaultValue = true;
+		}
+
+		@Override
+		public void reset() {
+			captureDefaultValue();
+			super.reset();
 		}
 
 		@Override
@@ -78,12 +172,31 @@ public final class RenderState {
 
 	public static final class GLShaderProgram extends GLState.Object<ShaderProgram> {
 		@Override
-		protected void applyValue(ShaderProgram program) { program.use(); }
+		protected void applyValue(ShaderProgram program) {
+			if (program == null)
+				glUseProgram(0);
+			else
+				program.use();
+		}
 	}
 
-	public static final class GLDrawBuffer extends GLState.Int {
+	public final class GLDrawBuffer extends GLState {
+		private int value;
+
+		public void set(int value) {
+			this.value = value;
+			hasValue = true;
+		}
+
 		@Override
-		protected void applyValue(int buf) { glDrawBuffer(buf); }
+		protected void internalApply() {
+			glDrawBuffer(value);
+		}
+
+		@Override
+		protected boolean canApply() {
+			return drawFramebuffer.hasAppliedValue();
+		}
 	}
 
 	public static final class GLTexture extends GLState {
@@ -151,6 +264,10 @@ public final class RenderState {
 					bound[base + t] = texId;
 				}
 			}
+			if (activeUnit != UNKNOWN && activeUnit != 0) {
+				glActiveTexture(GL_TEXTURE0);
+				activeUnit = 0;
+			}
 		}
 
 		private void clearCache() {
@@ -167,10 +284,19 @@ public final class RenderState {
 
 		@Override
 		public void reset() {
-			super.reset();
+			int dirtyUnits = 0;
+			for (int unit = 0; unit < MAX_UNITS; unit++) {
+				final int base = unit * MAX_TARGETS;
+				for (int target = 0; target < targetCount; target++) {
+					if (desired[base + target] != UNKNOWN) {
+						desired[base + target] = 0;
+						dirtyUnits |= 1 << unit;
+					}
+				}
+			}
+			this.dirtyUnits = dirtyUnits;
 			clearCache();
-			Arrays.fill(desired, UNKNOWN);
-			dirtyUnits = 0;
+			hasValue = dirtyUnits != 0;
 		}
 	}
 
@@ -227,36 +353,74 @@ public final class RenderState {
 			slotCount = 0;
 			boundSlot = -1;
 		}
+
+		@Override
+		public void reset() {
+			super.reset();
+			invalidate();
+			setVaoAndEbo(0, 0);
+		}
 	}
 
 	public static final class GLIdo extends GLState.Int {
+		private GLIdo() { super(0); }
+
 		@Override
 		protected void applyValue(int ebo) { glBindBuffer(GL_DRAW_INDIRECT_BUFFER, ebo); }
 	}
 
 	public static final class GLUbo extends GLState.Int {
+		private GLUbo() { super(0); }
+
 		@Override
 		protected void applyValue(int ubo) { glBindBuffer(GL_UNIFORM_BUFFER, ubo); }
 	}
 
 	public static final class GLDepthMask extends GLState.Bool {
+		private GLDepthMask() { super(true); }
+
 		@Override
 		protected void applyValue(boolean enabled) { glDepthMask(enabled); }
 	}
 
 	public static final class GLDepthFunc extends GLState.Int {
+		private GLDepthFunc() { super(GL_LESS); }
+
 		@Override
 		protected void applyValue(int func) { glDepthFunc(func); }
 	}
 
 	public static final class GLCullFace extends GLState.Int {
+		private GLCullFace() { super(GL_BACK); }
+
 		@Override
 		protected void applyValue(int mode) { glCullFace(mode); }
 	}
 
+	public static final class GLPolygonMode extends GLState.IntArray {
+		private GLPolygonMode() { super(2, GL_FRONT_AND_BACK, GL_FILL); }
+
+		@Override
+		protected void applyValues(int[] values) { glPolygonMode(values[0], values[1]); }
+	}
+
+	public static final class GLClearDepth extends GLState.Float {
+		private GLClearDepth() { super(1); }
+
+		@Override
+		protected void applyValue(float depth) { glClearDepth(depth); }
+	}
+
+	public static final class GLClearColor extends GLState.FloatArray {
+		private GLClearColor() { super(4, 0, 0, 0, 0); }
+
+		@Override
+		protected void applyValues(float[] color) { glClearColor(color[0], color[1], color[2], color[3]); }
+	}
+
 	public static final class GLBlendFunc extends GLState.IntArray {
 		private GLBlendFunc() {
-			super(4);
+			super(4, GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
 		}
 
 		@Override
@@ -265,7 +429,7 @@ public final class RenderState {
 
 	public static final class GLColorMask extends GLState.BoolArray {
 		private GLColorMask() {
-			super(4);
+			super(4, true, true, true, true);
 		}
 
 		@Override
@@ -279,6 +443,7 @@ public final class RenderState {
 		public void set(int target) {
 			add(target);
 			disable.remove(target);
+			trackedCapabilities.add(target);
 		}
 	}
 
@@ -289,6 +454,7 @@ public final class RenderState {
 		public void set(int target) {
 			add(target);
 			enable.remove(target);
+			trackedCapabilities.add(target);
 		}
 	}
 }

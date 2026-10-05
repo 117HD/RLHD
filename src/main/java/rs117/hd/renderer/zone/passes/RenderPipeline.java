@@ -433,8 +433,10 @@ public final class RenderPipeline {
 			if(gpuTimer != null)
 				frameTimer.begin(gpuTimer);
 			try {
+				renderState.reset();
 				renderPass.draw(renderState);
 			} finally {
+				renderState.reset();
 				if(gpuTimer != null)
 					frameTimer.end(gpuTimer);
 			}

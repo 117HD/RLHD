@@ -24,13 +24,11 @@ import static org.lwjgl.opengl.GL11.GL_GREATER;
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11C.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11C.glClear;
-import static org.lwjgl.opengl.GL11C.glClearDepth;
 import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
 import static org.lwjgl.opengl.GL30.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL30.GL_DRAW_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30.GL_READ_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30.glBindFramebuffer;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL31C.glBlitFramebuffer;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
@@ -133,12 +131,8 @@ public class DepthPass implements RenderPass {
 	public void draw(RenderState renderState) {
 		sceneDepthProgram.use();
 
-		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboSceneDepth);
-		if (plugin.msaaSamples > 1) {
-			renderState.enable.set(GL_MULTISAMPLE);
-		} else {
-			renderState.disable.set(GL_MULTISAMPLE);
-		}
+		renderState.drawFramebuffer.set(plugin.fboSceneDepth);
+		renderState.toggle(GL_MULTISAMPLE, plugin.msaaSamples > 1);
 		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
 		if(renderer.indirectDrawCmds != null)
 			renderState.ido.set(renderer.indirectDrawCmds.id);
@@ -156,11 +150,11 @@ public class DepthPass implements RenderPass {
 		// Alpha geometry is sorted back to front, so it would destroy the opaque depth ordering if it
 		// shared the same buffer. It gets its own single-sampled buffer, which has to be cleared every
 		// frame, even when nothing was drawn, so we never sample depth from a previous frame.
-		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboSceneAlphaDepth);
+		renderState.drawFramebuffer.set(plugin.fboSceneAlphaDepth);
 		renderState.disable.set(GL_MULTISAMPLE);
+		renderState.clearDepth.set(0);
 		renderState.apply();
 
-		glClearDepth(0);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
 		alphaDepthCmd.execute(renderState);
@@ -170,13 +164,6 @@ public class DepthPass implements RenderPass {
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboSceneDepthResolve);
 		glBlitFramebuffer(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1], 0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1], GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 		checkGLErrors();
-
-		glBindVertexArray(0);
-
-		renderState.colorMask.set(true, true, true, true);
-		renderState.disable.set(GL_CULL_FACE);
-		renderState.disable.set(GL_DEPTH_TEST);
-		renderState.apply();
 	}
 
 	@Override

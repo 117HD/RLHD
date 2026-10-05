@@ -31,8 +31,6 @@ import static org.lwjgl.opengl.GL11C.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11C.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11C.GL_ZERO;
 import static org.lwjgl.opengl.GL13C.GL_MULTISAMPLE;
-import static org.lwjgl.opengl.GL30C.GL_DRAW_FRAMEBUFFER;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PRESCENE;
@@ -198,18 +196,13 @@ public class ScenePass implements RenderPass {
 
 	@Override
 	public void draw(RenderState renderState) {
-		sceneProgram.use();
-
-		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
-		if (plugin.msaaSamples > 1) {
-			renderState.enable.set(GL_MULTISAMPLE);
-		} else {
-			renderState.disable.set(GL_MULTISAMPLE);
-		}
+		renderState.drawFramebuffer.set(plugin.fboScene);
 		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
 		if(renderer.indirectDrawCmds != null)
 			renderState.ido.set(renderer.indirectDrawCmds.id);
 
+		renderState.program.set(sceneProgram);
+		renderState.toggle(GL_MULTISAMPLE, plugin.msaaSamples > 1);
 		renderState.enable.set(GL_BLEND);
 		renderState.enable.set(GL_CULL_FACE);
 		renderState.enable.set(GL_DEPTH_TEST);
@@ -219,18 +212,10 @@ public class ScenePass implements RenderPass {
 		if (!gapFillerCmd.isEmpty()) {
 			renderState.depthMask.set(false);
 			gapFillerCmd.execute(renderState);
-			renderState.depthMask.set(true);
 		}
 
+		renderState.depthMask.set(true);
 		sceneCmd.execute(renderState);
-
-		glBindVertexArray(0);
-
-		// Done rendering the scene
-		renderState.disable.set(GL_BLEND);
-		renderState.disable.set(GL_CULL_FACE);
-		renderState.disable.set(GL_DEPTH_TEST);
-		renderState.apply();
 	}
 
 	@Override
