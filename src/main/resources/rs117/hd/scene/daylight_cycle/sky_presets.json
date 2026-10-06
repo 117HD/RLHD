@@ -228,6 +228,8 @@
       89.75
     ],
     "forceMoonPhase": "FULL_MOON",
+    "nightAmbientColor": "#E59F9F",
+    "nightAmbientStrength": 0.0035,
     "moonDiskColor": "#FF3D25",
     "moonDiskStrength": 0.6,
     "moonSizeMult": 3.05,
