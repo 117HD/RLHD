@@ -228,6 +228,8 @@
       89.75
     ],
     "forceMoonPhase": "FULL_MOON",
+    "nightHorizonColor": "#FF0000",
+    "nightHorizonStrength": 0.01,
     "nightAmbientColor": "#E59F9F",
     "nightAmbientStrength": 0.0035,
     "moonDiskColor": "#FF3D25",
@@ -237,8 +239,6 @@
     "skyFogDensity": 0.1,
     "skyVisibility": 0.85,
     "starVisibility": 0.71,
-    "auroraVisibility": 0,
-    "nightHorizonColor": "#FF699D",
-    "nightHorizonStrength": 0.01558
+    "auroraVisibility": 0
   }
 ]
