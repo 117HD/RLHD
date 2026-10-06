@@ -481,14 +481,14 @@ public class ZoneRenderer implements Renderer {
 
 			boolean hasDirectionalCameraChanged = directionalCamera.isViewDirty() || directionalCamera.isProjDirty();
 			boolean hasCullingModeChanged = plugin.configConservativeShadowCulling != directionalShadowCasterVolume.isConservative;
-			// Cap coverage around the focal point, then include the camera offset. Applying
-			// the cap afterwards would let zooming out consume the available shadow range.
+
 			float focalDistance = sceneCamera.distanceTo(
 				client.getCameraFocalPointX(),
 				client.getCameraFocalPointY(),
 				client.getCameraFocalPointZ()
 			);
 			int desiredShadowDistance = ceil(min(90, plugin.getDrawDistance()) * LOCAL_TILE_SIZE + focalDistance);
+
 			boolean needsUpdate =
 				hasSceneCameraChanged ||
 				hasFocalPointChanged ||
@@ -506,7 +506,7 @@ public class ZoneRenderer implements Renderer {
 					plugin.configConservativeShadowCulling
 				);
 
-				// Reset position before calculating bounds
+				// Reset position before recalculating shadow volume bounds
 				directionalCamera.setPosition(0, 0, 0);
 
 				// Fit only receivers inside draw distance, not the empty sides of the zoomed-out

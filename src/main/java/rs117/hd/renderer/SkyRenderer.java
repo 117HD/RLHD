@@ -66,30 +66,34 @@ public class SkyRenderer {
 
 	private final CommandBuffer commandBuffer = new CommandBuffer("Sky");
 	private final RenderState localRenderState = new RenderState();
+
 	private final float[] directionalLight = new float[3];
 	private final float[] ambientLight = new float[3];
 	private final float[] waterColor = new float[3];
-	private final float[] endpointFogColor = new float[3];
+	private final float[] fogColor = new float[3];
+
 	private final SkyState.LightingSample endpointSample = new SkyState.LightingSample();
+
 	private final LightingFrame fromFrame = new LightingFrame();
 	private final LightingFrame toFrame = new LightingFrame();
 	private final LightingFrame currentFrame = new LightingFrame();
+
 	private long transitionId;
 	private float previousTransition = 1;
 	private boolean interruptedTransition;
-	private final float[] fogColor = new float[3];
+
 	private boolean skyEnabled;
 	public boolean castsShadows;
 	public boolean usesMoonShadows;
 
 	private static final class LightingFrame extends GradientSample {
+		private final SkyConfiguration configuration = new SkyConfiguration();
 		private final float[] ambientLight = new float[3];
 		private final float[] sunDirectionalLight = new float[3];
 		private final float[] moonDirectionalLight = new float[3];
 		private final float[] fog = new float[3];
 		private final float[] groundFogLight = new float[3];
 		private final float[] moonDisk = new float[3];
-		private final SkyConfiguration configuration = new SkyConfiguration();
 		private float fogDensity;
 		private float fogHorizonAltitude;
 		private float visibility;
@@ -99,6 +103,7 @@ public class SkyRenderer {
 		private float moonReflectionVisibility;
 
 		private void interpolate(LightingFrame from, LightingFrame to, float t) {
+			configuration.interpolateLightingParameters(from.configuration, to.configuration, t);
 			mix(sunDirectionalLight, from.sunDirectionalLight, to.sunDirectionalLight, t);
 			mix(moonDirectionalLight, from.moonDirectionalLight, to.moonDirectionalLight, t);
 			mix(ambientLight, from.ambientLight, to.ambientLight, t);
@@ -115,7 +120,6 @@ public class SkyRenderer {
 			dayLuminance = mix(from.dayLuminance, to.dayLuminance, t);
 			nightLuminance = mix(from.nightLuminance, to.nightLuminance, t);
 			moonReflectionVisibility = mix(from.moonReflectionVisibility, to.moonReflectionVisibility, t);
-			configuration.interpolateLightingParameters(from.configuration, to.configuration, t);
 		}
 	}
 
@@ -332,9 +336,9 @@ public class SkyRenderer {
 
 	private void evaluateLighting(LightingFrame out, Environment env) {
 		SkyConfiguration sky = env.getSky();
-		copyTo(endpointFogColor, env.getFogColor());
-		environmentManager.applyLightning(endpointFogColor);
-		skyManager.sampleLighting(endpointSample, env, endpointFogColor);
+		copyTo(endpointSample.referenceFogColorLinear, env.getFogColor());
+		environmentManager.applyLightning(endpointSample.referenceFogColorLinear);
+		skyManager.sampleLighting(endpointSample, env, endpointSample.referenceFogColorLinear);
 		SkyState state = endpointSample.sky;
 		float sunAltDeg = state.sunAltitudeDegrees;
 		multiply(out.sunDirectionalLight, env.getDirectionalColor(), env.directionalStrength);
@@ -427,7 +431,7 @@ public class SkyRenderer {
 	 * Attenuate overhead-calibrated linear lighting through a shared reference atmosphere, in place.
 	 * Authored ambient/direct ratios do not determine atmospheric density.
 	 */
-	public static void applyAtmosphere(float[] directional, float[] ambient, float altitudeDegrees) {
+	private static void applyAtmosphere(float[] directional, float[] ambient, float altitudeDegrees) {
 		float elevation = sin(max(0, altitudeDegrees) * DEG_TO_RAD);
 		float curvature = 1 / 38.f;
 		float airMass = sqrt(1 + curvature * curvature) / sqrt(elevation * elevation + curvature * curvature);
