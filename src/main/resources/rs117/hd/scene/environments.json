@@ -746,10 +746,10 @@
     }
   },
   {
-    "description": "Environment for the cutscene at the end of the The Blood Moon Rises",
-    "area": "BMR_MORYTANIA_DAWN_POST_QUEST",
+    "description": "Hide the sun reveal if the player leaves the final cutscene of The Blood Moon Rises",
+    "area": "ICYENE_GRAVEYARD",
     "instantTransition": true,
-    "varbitCondition": "MYQ6 >= 174",
+    "varbitCondition": "!CUTSCENE_STATUS && 174 <= MYQ6 && MYQ6 < 178",
     "hideVanillaSkyboxes": true,
     "ambientColor": "#FFFFFF",
     "fogDepth": 30,
@@ -772,16 +772,16 @@
         107
       ],
       "auroraVisibility": 0,
-      "sunStrength": 0.75,
+      "sunStrength": 0,
       "skyFogDensity": 0,
       "skyVisibility": 1
     }
   },
   {
-    "description": "Environment for post quest Icyene Graveyard",
+    "description": "Environment for Icyene Graveyard after Blood Moon Rises and during final cutscene",
     "area": "ICYENE_GRAVEYARD",
     "instantTransition": true,
-    "varbitCondition": "MYQ6 == 178",
+    "varbitCondition": "MYQ6 >= 174",
     "hideVanillaSkyboxes": true,
     "ambientColor": "#FFFFFF",
     "fogDepth": 30,
