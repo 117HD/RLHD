@@ -44,7 +44,7 @@ public class SkyManager {
 
 	private static final String DEFAULT_PRESET_NAME = "GIELINOR";
 	private static final ResourcePath SKY_PRESETS_PATH = Props
-		.getFile("rlhd.sky-presets-path", () -> path(SkyConfiguration.class, "sky_presets.json"));
+		.getFile("rlhd.sky-presets-path", () -> path(SkyManager.class, "sky_presets.json"));
 
 	private static final long SECOND_MS = 1000;
 	private static final long MINUTE_MS = 60 * SECOND_MS;
