@@ -156,6 +156,10 @@ vec3 tonemap_hue_preserving(vec3 c) {
     float Icurve = s_curve(vec3(I)).x;
     if (Icurve <= 0.0)
         return vec3(0.0);
+    // s_curve is flat after clipping, so there is no remaining chroma response.
+    // Using the unclipped derivative here retained tinted highlights above white.
+    if (Icurve >= 1.0)
+        return vec3(1.0);
     lms = 1.0f + TONEMAP_CHROMA_SCALE * dLms * d_s_curve(vec3(I)) / Icurve;
     I = pow(Icurve, 1.0 / 3.0);
 
@@ -223,6 +227,10 @@ vec3 inverse_tonemap_hue_preserving(vec3 color) {
     } else {
         intensity = (discriminant - b) / (2.0 * a);
     }
+
+    // Clipped white has no recoverable chroma; choose its lowest neutral HDR preimage.
+    if (mappedIntensity >= 1.0)
+        return vec3(intensity);
 
     float root = pow(intensity, 1.0 / 3.0);
     float chromaScale = mappedRoot * mappedRoot /
