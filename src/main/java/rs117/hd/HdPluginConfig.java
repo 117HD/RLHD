@@ -124,7 +124,7 @@ public interface HdPluginConfig extends Config
 		name = "Extended map loading",
 		description =
 			"How much further the map should be loaded. The maximum is 5 extra chunks.<br>" +
-			"Note, extending the map can have a very high impact on performance.",
+			"Note: extending the map can have a very high impact on performance.",
 		position = 3,
 		section = generalSettings
 	)
@@ -165,7 +165,7 @@ public interface HdPluginConfig extends Config
 		name = "Game resolution",
 		description =
 			"Render the game at a different resolution and stretch it to fit the screen.<br>" +
-			"Reducing this can improve performance, particularly on very high resolution displays.",
+			"Reducing this can improve performance, particularly on very high-resolution displays.",
 		position = 6,
 		section = generalSettings
 	)
@@ -214,7 +214,7 @@ public interface HdPluginConfig extends Config
 			"Configures whether mipmapping and anisotropic filtering should be used.<br>" +
 			"At zero, mipmapping is disabled and textures look the most pixelated.<br>" +
 			"At 1 through 16, mipmapping is enabled, and textures look more blurry and smoothed out.<br>" +
-			"The higher you go beyond 1, the less blurry textures will look, up to a certain extent.",
+			"The higher you go beyond 1, the less blurry textures will look, to a certain extent.",
 		position = 9,
 		section = generalSettings
 	)
@@ -249,11 +249,11 @@ public interface HdPluginConfig extends Config
 		name = "VSync mode",
 		description =
 			"Controls whether the frame rate should be synchronized with your monitor's refresh rate.<br>" +
-			"If set to 'off', the FPS Target option will be used instead.<br>" +
+			"If set to 'off', the FPS target option will be used instead.<br>" +
 			"If set to 'adaptive', FPS will be limited to your monitor's refresh rate, which saves power.<br>" +
 			"If set to 'on', the game will attempt to match your monitor's refresh rate <b>exactly</b>,<br>" +
 			"but if it can't keep up, FPS will be <u>halved until it catches up</u>. This option is rarely desired.<br>" +
-			"Note, GPUs that don't support Adaptive VSync will silently fall back to 'on'.",
+			"Note: GPUs that don't support Adaptive VSync will silently fall back to 'on'.",
 		position = 11,
 		section = generalSettings
 	)
@@ -268,7 +268,7 @@ public interface HdPluginConfig extends Config
 		name = "FPS target",
 		description =
 			"Controls the maximum number of frames per second.<br>" +
-			"This setting only applies if Unlock FPS is enabled, and VSync Mode is set to 'off'.",
+			"This setting only applies if Unlock FPS is enabled and VSync mode is set to 'off'.",
 		position = 12,
 		section = generalSettings
 	)
@@ -370,7 +370,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_BRIGHTNESS,
 		name = "Brightness",
 		description =
-			"Controls the brightness of the game, excluding UI.<br>" +
+			"Controls the brightness of the game, excluding the UI.<br>" +
 			"Adjust until the circle on the left is barely visible.",
 		position = 18,
 		section = generalSettings
@@ -466,7 +466,7 @@ public interface HdPluginConfig extends Config
 	String KEY_TERRAIN_SHADOWS = "terrainShadows";
 	@ConfigItem(
 		keyName = KEY_TERRAIN_SHADOWS,
-		name = "Terrain Shadows",
+		name = "Terrain shadows",
 		description = "Allow terrain to cast shadows. May cause visual artifacts on slopes.",
 		position = 6,
 		section = shadowSettings
@@ -621,9 +621,9 @@ public interface HdPluginConfig extends Config
 		description =
 			"Controls the day & night cycle behavior.<br>" +
 			"'Off' disables the day & night cycle entirely.<br>" +
-			"'Default' everyone sees the same sky, with a full day passing per hour.<br>" +
-			"'Real-Time' follows your local time, roughly matching the real sun in your hemisphere.<br>" +
-			"'Custom' follows the sun and moon at the configured location, respecting the Custom duration.<br>" +
+			"'Default' shows everyone the same sky, with one complete day passing per hour.<br>" +
+			"'Real-time' follows your local time, roughly matching the real sun in your hemisphere.<br>" +
+			"'Custom' follows the sun and moon at the configured location, respecting the Custom cycle duration.<br>" +
 			"'Dawn' shows the sky just before sunrise.<br>" +
 			"'Sunrise' shows a constant sunrise.<br>" +
 			"'Day' shows constant daytime.<br>" +
@@ -675,7 +675,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_NEBULAE,
 		name = "Nebulae",
-		description = "Show nebulae in the night sky",
+		description = "Show clouds of cosmic dust and gas in the night sky.",
 		position = 3,
 		section = daylightCycleSettings
 	)
@@ -691,7 +691,7 @@ public interface HdPluginConfig extends Config
 			"Controls how the moon moves across the sky.<br>" +
 			"'Disabled' hides the moon, keeping half-moon illumination for scene lighting.<br>" +
 			"'Realistic orbit' makes the moon orbit naturally, independent of the sun.<br>" +
-			"'Mirror the sun' keeps the moon at the opposite side of the sun.<br>" +
+			"'Mirror the sun' keeps the moon opposite the sun.<br>" +
 			"'Static' keeps the moon at a fixed point in the sky.",
 		position = 4,
 		section = daylightCycleSettings
@@ -749,10 +749,10 @@ public interface HdPluginConfig extends Config
 		name = "Real-time latitude",
 		description =
 			"<b>Advanced setting</b>: Change the latitude coordinate for realistic sun and moon movement for a location on Earth.<br>" +
-			"Only applies to Real-Time and Custom Realistic cycle modes. Defaults to New York City.<br>" +
-			"For southern latitudes, use negative values. For higher precision than to within a few minutes, you can provide<br>" +
+			"Only applies to Real-time and Custom cycle modes. Defaults to New York City.<br>" +
+			"For southern latitudes, use negative values. For more precise timing, you can provide<br>" +
 			"coordinates including decimals in the in-game chat with: <b>::117hd latlon &lt;latitude&gt; &lt;longitude&gt;</b><br>" +
-			"To revert back to using the values specified in the config panel, type: <b>::117hd latlon reset</b>",
+			"To return to using the values specified in the config panel, type: <b>::117hd latlon reset</b>",
 		position = 9,
 		section = daylightCycleSettings
 	)
@@ -768,10 +768,10 @@ public interface HdPluginConfig extends Config
 		name = "Real-time longitude",
 		description =
 			"<b>Advanced setting</b>: Change the longitude coordinate for realistic sun and moon movement for a location on Earth.<br>" +
-			"Only applies to Real-Time and Custom Realistic cycle modes. Defaults to New York City.<br>" +
-			"For western longitudes, use negative values. For higher precision than to within a few minutes, you can provide<br>" +
+			"Only applies to Real-time and Custom cycle modes. Defaults to New York City.<br>" +
+			"For western longitudes, use negative values. For more precise timing, you can provide<br>" +
 			"coordinates including decimals in the in-game chat with: <b>::117hd latlon &lt;latitude&gt; &lt;longitude&gt;</b><br>" +
-			"To revert back to using the values specified in the config panel, type: <b>::117hd latlon reset</b>",
+			"To return to using the values specified in the config panel, type: <b>::117hd latlon reset</b>",
 		position = 10,
 		section = daylightCycleSettings
 	)
@@ -806,7 +806,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_SEASONAL_HEMISPHERE,
 		name = "Seasonal hemisphere",
-		description = "Determines which hemisphere the 'Automatic' Seasonal Theme should consider.",
+		description = "Determines which hemisphere the 'Automatic' seasonal theme should consider.",
 		position = 1,
 		section = environmentSettings
 	)
@@ -850,7 +850,7 @@ public interface HdPluginConfig extends Config
 		name = "Static fog depth",
 		description =
 			"Specify how far from the edge fog should reach.<br>" +
-			"This applies only when 'Fog Depth Mode' is set to 'Static'.",
+			"This applies only when 'Fog depth mode' is set to 'Static'.",
 		position = 4,
 		section = environmentSettings
 	)
@@ -1071,7 +1071,7 @@ public interface HdPluginConfig extends Config
 		name = "Infernal cape",
 		description =
 			"Replace the infernal cape texture with a more detailed version.<br>" +
-			"Note, with Anisotropic Filtering above zero, the cape may look blurry when zoomed out.",
+			"Note: with Anisotropic filtering above zero, the cape may look blurry when zoomed out.",
 		section = miscellaneousSettings
 	)
 	default InfernalCape infernalCape() {
@@ -1157,8 +1157,8 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_WINDOWS_HDR_CORRECTION,
 		name = "Windows HDR correction",
 		description =
-			"Correctly simulates SDR gamma 2.2 when Windows is in HDR mode. Note, this does not<br>" +
-			"enable HDR, it only works around an issue within Windows' HDR implementation.",
+			"Correctly simulates SDR gamma 2.2 when Windows is in HDR mode.<br>" +
+			"Note: this does not enable HDR. It only works around an issue within Windows' HDR implementation.",
 		section = miscellaneousSettings
 	)
 	default boolean windowsHdrCorrection() {
@@ -1180,7 +1180,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_LEGACY_RENDERER,
 		name = "Use legacy renderer",
-		description = "The new renderer is required for sailing content, but it is not 100% feature complete yet.",
+		description = "The new renderer is required for sailing content, and generally performs better than the legacy renderer.",
 		section = legacySettings,
 		position = -100
 	)
@@ -1286,8 +1286,8 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_LEGACY_GREY_COLORS,
 		name = "Legacy gray colors",
 		description =
-			"Previously, HD attempted to reduce over-exposure by capping the maximum color brightness,<br>" +
-			"which changed white colors into dull shades of grey. This option brings back that old behaviour.",
+			"Previously, HD attempted to reduce overexposure by capping the maximum color brightness,<br>" +
+			"which changed white colors into dull shades of gray. This option brings back that old behavior.",
 		section = legacySettings
 	)
 	default boolean legacyGreyColors() {
@@ -1323,7 +1323,7 @@ public interface HdPluginConfig extends Config
 
 	@ConfigSection(
 		name = "Experimental",
-		description = "Experimental features - if you're experiencing issues you should consider disabling these.",
+		description = "Experimental features - if you're experiencing issues, you should consider disabling these.",
 		position = 7,
 		closedByDefault = true
 	)
