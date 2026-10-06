@@ -29,6 +29,7 @@ public class UBOSky extends UniformBuffer<GLBuffer> {
 
 	public Property fogColor = addProperty(PropertyType.FVec3, "fogColor");
 	public Property fogDensity = addProperty(PropertyType.Float, "fogDensity");
+	public Property fogHorizonHeight = addProperty(PropertyType.Float, "fogHorizonHeight");
 	public Property groundFogLight = addProperty(PropertyType.FVec3, "groundFogLight");
 	public Property visibility = addProperty(PropertyType.Float, "visibility");
 	public Property moonVisibility = addProperty(PropertyType.Float, "moonVisibility");

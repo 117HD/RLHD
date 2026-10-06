@@ -91,6 +91,7 @@ public class SkyRenderer {
 		private final float[] moonDisk = new float[3];
 		private final SkyConfiguration configuration = new SkyConfiguration();
 		private float fogDensity;
+		private float fogHorizonAltitude;
 		private float visibility;
 		private float customGradient;
 		private float dayLuminance;
@@ -108,6 +109,7 @@ public class SkyRenderer {
 			mix(horizon, from.horizon, to.horizon, t);
 			mix(sunGlow, from.sunGlow, to.sunGlow, t);
 			fogDensity = mix(from.fogDensity, to.fogDensity, t);
+			fogHorizonAltitude = mix(from.fogHorizonAltitude, to.fogHorizonAltitude, t);
 			visibility = mix(from.visibility, to.visibility, t);
 			customGradient = mix(from.customGradient, to.customGradient, t);
 			dayLuminance = mix(from.dayLuminance, to.dayLuminance, t);
@@ -318,6 +320,7 @@ public class SkyRenderer {
 			ambientLight[i] += .25f * (currentFrame.sunDirectionalLight[i] + currentFrame.moonDirectionalLight[i] - directionalLight[i]);
 		copyTo(fogColor, currentFrame.horizon);
 		plugin.uboSky.fogDensity.set(currentFrame.fogDensity);
+		plugin.uboSky.fogHorizonHeight.set(sin(currentFrame.fogHorizonAltitude * DEG_TO_RAD));
 		plugin.uboSky.visibility.set(currentFrame.visibility);
 		plugin.uboSky.fogColor.set(currentFrame.fog);
 		plugin.uboSky.groundFogLight.set(currentFrame.groundFogLight);
@@ -342,6 +345,7 @@ public class SkyRenderer {
 		// fogDepth is an artistic density control, not a physical extinction coefficient.
 		float defaultDensity = max(0, env.fogDepth) / 100;
 		out.fogDensity = max(0, sky.skyFogDensity < 0 ? defaultDensity : sky.skyFogDensity);
+		out.fogHorizonAltitude = clamp(sky.skyFogHorizonAltitude, -90, 90);
 		out.visibility = saturate(sky.skyVisibility);
 		copyTo(out.fog, endpointSample.horizon);
 		if (sky.skyFogColor != null)

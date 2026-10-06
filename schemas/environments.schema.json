@@ -426,6 +426,12 @@
                 "description": "Horizon optical depth: 0 disables horizon fog; 0.69 halves transmission at the horizon. Fades upward. Defaults to 0.16 + environment fogDepth / 100; ground fog is independent.",
                 "minimum": 0
               },
+              "skyFogHorizonAltitude": {
+                "type": "number",
+                "description": "Viewing altitude in degrees where horizon fog reaches full density. Defaults to 0. Negative values lower the fog band without moving the sky or celestial bodies.",
+                "minimum": -90,
+                "maximum": 90
+              },
               "skyVisibility": {
                 "type": "number",
                 "description": "Transmission through uniform sky haze: 1 is clear; 0.25 lets 25% of linear light through; 0 is opaque. Multiplies the transmission through horizon fog. Affects the sky and all celestial objects.",

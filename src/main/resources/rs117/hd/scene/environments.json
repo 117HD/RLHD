@@ -2823,6 +2823,7 @@
       "skyFogColor": "#000000",
       "skyFogColorMix": 1,
       "skyFogDensity": 3,
+      "skyFogHorizonAltitude": -10,
       "skyVisibility": 1
     },
     "fogDepth": 65,
@@ -2846,6 +2847,7 @@
       "skyFogColor": "#000000",
       "skyFogColorMix": 1,
       "skyFogDensity": 3,
+      "skyFogHorizonAltitude": -10,
       "skyVisibility": 1
     },
     "fogDepth": 40,

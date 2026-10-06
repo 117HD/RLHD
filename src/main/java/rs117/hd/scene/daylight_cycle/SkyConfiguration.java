@@ -66,6 +66,7 @@ public class SkyConfiguration {
 	public float[] skyFogColor;
 	public float skyFogColorMix = 1;
 	public float skyFogDensity = -1;
+	public float skyFogHorizonAltitude;
 	public float skyVisibility = 1;
 	/** Negative means automatic; an explicit value can retain moonlight with hideMoon. */
 	public float moonLightVisibility = -1;
