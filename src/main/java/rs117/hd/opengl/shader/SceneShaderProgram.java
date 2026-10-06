@@ -1,7 +1,5 @@
 package rs117.hd.opengl.shader;
 
-import java.io.IOException;
-
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_NEBULA_MAP;
@@ -17,8 +15,6 @@ public class SceneShaderProgram extends ShaderProgram {
 	protected final UniformTexture uniTiledLightingTextureArray = addUniformTexture("tiledLightingArray");
 	protected final UniformTexture uniTextureFaces = addUniformTexture("textureFaces");
 	protected final UniformTexture uniNebulaMap = addUniformTexture("nebulaMap");
-
-	protected boolean isGapFiller;
 
 	public SceneShaderProgram() {
 		super(t -> t
@@ -39,14 +35,9 @@ public class SceneShaderProgram extends ShaderProgram {
 		uniNebulaMap.set(TEXTURE_UNIT_NEBULA_MAP);
 	}
 
-	@Override
-	public void compile(ShaderIncludes includes) throws ShaderException, IOException {
-		super.compile(includes.copy().define("GAP_FILLER", isGapFiller));
-	}
-
 	public static class GapFiller extends SceneShaderProgram {
 		GapFiller() {
-			isGapFiller = true;
+			shaderTemplate.add(GL_FRAGMENT_SHADER, "gap_filler_frag.glsl");
 			uniTextureFaces.ignoreMissing = true;
 			uniTextureArray.ignoreMissing = true;
 			uniShadowMap.ignoreMissing = true;
