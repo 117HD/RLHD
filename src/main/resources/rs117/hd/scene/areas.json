@@ -12847,7 +12847,8 @@
     "name": "MAINLAND",
     "regionBoxes": [
       [ 3872, 15937 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "MAINLAND_EXTENSIONS",
