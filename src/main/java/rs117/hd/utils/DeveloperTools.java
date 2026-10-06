@@ -31,7 +31,8 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class DeveloperTools implements KeyListener {
-	public static final float[] COLOR_PICKER = new float[4]; // linear sRGB, non-linear alpha
+	public static final float[] COLOR_PICKER = new float[4]; // non-linear sRGB & alpha
+	public static final float[] COLOR_PICKER_LINEAR = new float[4]; // linear sRGB, non-linear alpha
 
 	// This could be part of the config if we had developer mode config sections
 	private static final Keybind KEY_TOGGLE_TILE_INFO = new Keybind(KeyEvent.VK_F3, CTRL_DOWN_MASK);
@@ -316,9 +317,12 @@ public class DeveloperTools implements KeyListener {
 			);
 			colorPicker.setLocationRelativeTo(client.getCanvas());
 			colorPicker.setOnColorChange(c -> clientThread.invoke(() -> {
-				copyTo(COLOR_PICKER, ColorUtils.rgb(c)); // linear
-				COLOR_PICKER[3] = c.getAlpha() / 255.f;
-				plugin.uboGlobal.colorPicker.set(COLOR_PICKER);
+				float[] srgb = ColorUtils.srgb(c);
+				float alpha = c.getAlpha() / 255.f;
+				copyTo(COLOR_PICKER, srgb);
+				copyTo(COLOR_PICKER_LINEAR, ColorUtils.linearToSrgb(srgb));
+				COLOR_PICKER_LINEAR[3] = COLOR_PICKER[3] = alpha;
+				plugin.uboGlobal.colorPicker.set(COLOR_PICKER_LINEAR);
 			}));
 			colorPicker.setOnClose(e -> colorPicker = null);
 			colorPicker.setVisible(true);
