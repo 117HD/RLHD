@@ -812,7 +812,7 @@
   {
     "description": "With blood moon and Night, for the portion of the quest immediately after returning from Vampyrium to the overworld. Must remain above the default Morytania environment",
     "area": "MORYTANIA",
-    "nightExposure": 2,
+    "nightExposure": 1.5,
     "instantTransition": true,
     "varbitCondition": "MYQ6 >=128 && MYQ6 < 178",
     "ambientColor": "#FFFFFF",
