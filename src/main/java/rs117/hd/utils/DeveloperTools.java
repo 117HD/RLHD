@@ -320,7 +320,7 @@ public class DeveloperTools implements KeyListener {
 				float[] srgb = ColorUtils.srgb(c);
 				float alpha = c.getAlpha() / 255.f;
 				copyTo(COLOR_PICKER, srgb);
-				copyTo(COLOR_PICKER_LINEAR, ColorUtils.linearToSrgb(srgb));
+				copyTo(COLOR_PICKER_LINEAR, ColorUtils.srgbToLinear(srgb));
 				COLOR_PICKER_LINEAR[3] = COLOR_PICKER[3] = alpha;
 				plugin.uboGlobal.colorPicker.set(COLOR_PICKER_LINEAR);
 			}));
