@@ -24,6 +24,13 @@ struct SkySample {
     vec3 moon;
 };
 
+// Fade across the perceived horizon, then hide the body fully below -4°.
+// bodyUpAmount uses the unshifted celestial direction (positive Y up).
+float celestialHorizonFade(float viewUpAmount, float bodyUpAmount) {
+    return smoothstep(-0.09, 0.04, viewUpAmount + HORIZON_OFFSET) *
+        smoothstep(sin(radians(-4.0)), sin(radians(-0.5)), bodyUpAmount);
+}
+
 // Fragment-stage sky sampling. viewDir is a unit world direction, with negative Y up.
 // Returns separate linear sRGB contributions before the output transform. toneMap enables the
 // disks' selective tone map; false preserves linear HDR for reflection/composition.
@@ -82,9 +89,7 @@ SkySample sampleSky(vec3 viewDir, vec3 diskViewDir, bool correctProjection, bool
             1.0, sunRadius, diskBlur, blurAxis);
         sunDisk = mix(sunDisk, coverage.x, sunBlurBlend);
     }
-    // Fade the sun gradually into the horizon
-    float sunHorizon = smoothstep(-0.09, 0.04, diskUpAmount + HORIZON_OFFSET);
-    sunHorizon *= smoothstep(sin(radians(-4.0)), sin(radians(-0.5)), uboSky.sunDir.y);
+    float sunHorizon = celestialHorizonFade(diskUpAmount, uboSky.sunDir.y);
     float sunMu = sqrt(clamp((sunDot - sunEdge) / (1.0 - sunEdge), 0.0, 1.0));
     // Separate disk intensity from the authored atmospheric glow. Artistic scale,
     // not a physical solar radiance calibration; kept here for shader hot reload.
@@ -104,6 +109,7 @@ SkySample sampleSky(vec3 viewDir, vec3 diskViewDir, bool correctProjection, bool
 
     // Render the moon disk
     if (uboSky.moonVisibility > 0.001) {
+        float moonHorizonFade = celestialHorizonFade(diskUpAmount, uboSky.moonDir.y);
         vec3 moonIlluminationDir = normalize(vec3(uboSky.moonSurfaceLightDirection.x, -uboSky.moonSurfaceLightDirection.y + HORIZON_OFFSET, uboSky.moonSurfaceLightDirection.z));
 
         vec3 moonViewDir = correctProjection ? celestialViewDirection(diskViewDir, moonDir) : diskViewDir;
@@ -338,8 +344,6 @@ SkySample sampleSky(vec3 viewDir, vec3 diskViewDir, bool correctProjection, bool
                 moonCompositeColor = background;
                 moonDiskLight = moonContribution * moonDayVisibility;
 
-                // Fade moon near the horizon to match the star/nebula horizon fade
-                float moonHorizonFade = nightSkyHorizonFade(diskUpAmount, horizonShift);
                 moonCompositeAlpha = moonDisk * uboSky.moonVisibility * moonHorizonFade;
             }
 
@@ -360,7 +364,7 @@ SkySample sampleSky(vec3 viewDir, vec3 diskViewDir, bool correctProjection, bool
             halo *= (1.0 - sharpMoonDisk) * uboSky.moonIllumination * phaseWeight * moonDayVisibility * uboSky.moonVisibility;
             halo *= 6; // looks about right
             halo *= uboSky.moonSizeMult * uboSky.moonSizeMult;
-            moonHalo = uboSky.moonDiskColor * halo * nightSkyHorizonFade(diskUpAmount, horizonShift);
+            moonHalo = uboSky.moonDiskColor * halo * moonHorizonFade;
         }
     }
 
