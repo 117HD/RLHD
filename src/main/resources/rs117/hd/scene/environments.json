@@ -2880,7 +2880,7 @@
   {
     "description": "Environment for the final battle during The Blood Moon Rises",
     "area": "VAMPYRIUM_CASTLE_DRAKAN_ROOF",
-    "nightExposure": 1.5,
+    "nightExposure": 2,
     "hideVanillaSkyboxes": true,
     "ambientColor": "#FFFFFF",
     "ambientStrength": 1,
