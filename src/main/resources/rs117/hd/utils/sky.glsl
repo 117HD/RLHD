@@ -93,18 +93,18 @@ float nightSkyHorizonFade(float upAmount, float horizonShift) {
 }
 
 // Broad visible sky color, excluding celestial disks, aurorae, and individual stars.
-vec3 visibleSkyColor(SkyGradient sky, vec3 viewDir, float elapsedSeconds) {
+vec3 visibleSkyColor(SkyGradient sky, vec3 viewDir, float elapsedSeconds, float nebulaStrength) {
     float horizonShift = nightHorizonOffset(uboSky.starHorizonHeight);
     float amount = nightSkyBlend(sky) * nightSkyHorizonFade(sky.upAmount, horizonShift);
     if (amount <= 0.001)
         return sky.color;
-    return blendSkyBackground(sky.color, nightSkyBackground(viewDir, elapsedSeconds), amount);
+    return blendSkyBackground(sky.color, nightSkyBackground(viewDir, elapsedSeconds, nebulaStrength), amount);
 }
 
 // Linear sky radiance for scene fog and broad water reflections, without disks or stars.
 vec3 foggedSkyColor(vec3 viewDir) {
     SkyGradient sky = computeSkyGradient(viewDir);
-    vec3 color = visibleSkyColor(sky, viewDir, elapsedTime);
+    vec3 color = visibleSkyColor(sky, viewDir, elapsedTime, 1.0);
     vec3 moonDir = normalize(vec3(uboSky.moonDir.x, -uboSky.moonDir.y + HORIZON_OFFSET, uboSky.moonDir.z));
     float transmittance = skyFogTransmittance(sky.upAmount);
     return applySkyFog(color, transmittance) + skyFogGlow(viewDir, sky.sunDir, moonDir, transmittance);

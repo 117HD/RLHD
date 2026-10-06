@@ -38,7 +38,7 @@ float celestialHorizonFade(float viewUpAmount, float bodyUpAmount) {
 // Camera projection correction is for direct viewing only, never reflected rays.
 // diskViewDir can follow stronger waves than viewDir for artistic water reflections.
 // roughness is the RMS slope of unresolved waves; normal is their mean normal.
-SkySample sampleSky(vec3 viewDir, vec3 diskViewDir, bool correctProjection, bool toneMap, vec3 normal, float roughness) {
+SkySample sampleSky(vec3 viewDir, vec3 diskViewDir, bool correctProjection, bool toneMap, vec3 normal, float roughness, float nebulaStrength) {
     if (!uboSky.enabled)
         return SkySample(fogColor, vec3(0.0), vec3(0.0));
 
@@ -69,7 +69,7 @@ SkySample sampleSky(vec3 viewDir, vec3 diskViewDir, bool correctProjection, bool
     #endif
     vec3 shootingStarColor = vec3(0.0);
     // Individual stars are drawn separately as point sprites.
-    skyColor = visibleSkyColor(sky, viewDir, elapsedTime);
+    skyColor = visibleSkyColor(sky, viewDir, elapsedTime, nebulaStrength);
     // Shooting stars are atmospheric and render in front of the moon.
     #if STAR_MODE != STAR_MODE_OFF
         if (starBlend > 0.001 && -viewDir.y > 0.05 + horizonShift)
@@ -389,6 +389,6 @@ SkySample sampleSky(vec3 viewDir, vec3 diskViewDir, bool correctProjection, bool
 }
 
 vec3 sampleSky(vec3 viewDir, bool correctProjection, bool toneMap) {
-    SkySample sky = sampleSky(viewDir, viewDir, correctProjection, toneMap, vec3(0, -1, 0), 0.0);
+    SkySample sky = sampleSky(viewDir, viewDir, correctProjection, toneMap, vec3(0, -1, 0), 0.0, 1.0);
     return sky.background + sky.sun + sky.moon;
 }

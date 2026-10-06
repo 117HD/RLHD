@@ -147,7 +147,9 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         vec3 skyNormal = normalize(normals * vec3(0.2, 1, 0.2));
         vec3 skyViewDir = reflect(-viewDir, skyNormal);
         vec3 diskViewDir = reflect(-viewDir, n);
-        SkySample sky = sampleSky(skyViewDir, diskViewDir, false, false, n, 0.07);
+        // Reduce only nebula emission to suit the deliberately strong legacy reflection.
+        const float nebulaReflectionStrength = .25f;
+        SkySample sky = sampleSky(skyViewDir, diskViewDir, false, false, n, 0.07, nebulaReflectionStrength);
         surfaceColor = linearToSrgb(sky.background * finalFresnel);
         // Only the active source has a shadow map. Do not shadow the other disk
         // with unrelated geometry projected along the active light's direction.
@@ -167,8 +169,9 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
 
 
     // apply lighting
-    vec3 compositeLight = ambientLightOut + lightOut + lightSpecularOut + skyLightOut + lightningOut +
-    underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut;
+    vec3 compositeLight =
+        ambientLightOut + lightOut + lightSpecularOut + skyLightOut + lightningOut +
+        underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut;
 
     vec3 baseColor = waterType.surfaceColor * compositeLight;
     baseColor = mix(baseColor, surfaceColor, waterType.fresnelAmount);

@@ -263,21 +263,21 @@ vec3 proceduralNebula(vec3 dir) {
     // Returns only the background sky color + nebula (no individual stars).
     // Used for fog blending so the fog matches the sky darkness without
     // showing star points through terrain.
-    vec3 proceduralStarfieldBackground(vec3 dir) {
+    vec3 proceduralStarfieldBackground(vec3 dir, float nebulaStrength) {
         vec3 color = STARFIELD_BACKGROUND_COLOR;
         if (uboSky.nebulaVisibility > 0.0)
-            color += sampleNebula(dir) * uboSky.nebulaVisibility;
+            color += sampleNebula(dir) * uboSky.nebulaVisibility * nebulaStrength;
         return color;
     }
 
     // The static background needs neither a celestial rotation nor a nebula lookup.
-    vec3 nightSkyBackground(vec3 viewDir, float elapsedSeconds) {
+    vec3 nightSkyBackground(vec3 viewDir, float elapsedSeconds, float nebulaStrength) {
         return uboSky.nebulaVisibility == 0.0 ?
             STARFIELD_BACKGROUND_COLOR :
-            proceduralStarfieldBackground(rotateStarfield(viewDir, elapsedSeconds, 1.0));
+            proceduralStarfieldBackground(rotateStarfield(viewDir, elapsedSeconds, 1.0), nebulaStrength);
     }
 #else
-    vec3 nightSkyBackground(vec3 viewDir, float elapsedSeconds) {
+    vec3 nightSkyBackground(vec3 viewDir, float elapsedSeconds, float nebulaStrength) {
         return STARFIELD_BACKGROUND_COLOR;
     }
 #endif
