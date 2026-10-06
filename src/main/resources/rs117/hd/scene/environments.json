@@ -2897,11 +2897,11 @@
       ],
       "moonSizeMult": 2.8,
       "sunStrength": 0.2,
-      "skyVisibility": 0.94,
-      "skyFogDensity": 0.05,
-      "nightHorizonColor": "#5F040A",
-      "starVisibility": 0.642,
-      "auroraVisibility": 0
+      "skyVisibility": 0.96,
+      "skyFogDensity": 0,
+      "nightHorizonColor": "#FF0000",
+      "nightHorizonStrength": 0.1,
+      "starVisibility": 0.642
     }
   },
   {
