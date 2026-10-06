@@ -9,11 +9,11 @@ import java.awt.event.MouseWheelEvent;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.input.MouseManager;
 import net.runelite.client.input.MouseWheelListener;
+import rs117.hd.utils.HDUtils;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TERRAIN_SHADOW_MAP;
-import static rs117.hd.utils.HDUtils.drawStringCentered;
 
 @Slf4j
 @Singleton
@@ -51,6 +51,17 @@ public class ShadowMapOverlay extends ShaderOverlay<ShadowMapOverlay.Shader> imp
 	}
 
 	@Override
+	public MouseWheelEvent mouseWheelMoved(MouseWheelEvent e) {
+		var b = getBounds();
+		if (b != null && b.contains(e.getPoint())) {
+			e.consume();
+			showTerrainShadowMap = !showTerrainShadowMap;
+		}
+
+		return e;
+	}
+
+	@Override
 	protected void updateUniforms() {
 		shader.uniShowTerrainShadowMap.set(showTerrainShadowMap);
 	}
@@ -60,7 +71,7 @@ public class ShadowMapOverlay extends ShaderOverlay<ShadowMapOverlay.Shader> imp
 		Dimension dim = super.render(g);
 		if (!isHidden()) {
 			g.setColor(Color.YELLOW);
-			drawStringCentered(
+			HDUtils.drawStringCentered(
 				g,
 				showTerrainShadowMap ?
 					"Terrain shadow map" :
@@ -70,16 +81,5 @@ public class ShadowMapOverlay extends ShaderOverlay<ShadowMapOverlay.Shader> imp
 			);
 		}
 		return dim;
-	}
-
-	@Override
-	public MouseWheelEvent mouseWheelMoved(MouseWheelEvent e) {
-		var b = getBounds();
-		if (b != null && b.contains(e.getPoint())) {
-			e.consume();
-			showTerrainShadowMap = !showTerrainShadowMap;
-		}
-
-		return e;
 	}
 }
