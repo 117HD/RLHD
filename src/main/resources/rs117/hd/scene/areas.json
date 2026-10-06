@@ -12755,7 +12755,7 @@
     ]
   },
   {
-    "name": "BMR_MORYTANIA_DAWN_CUTSCENE",
+    "name": "BMR_MORYTANIA_DAWN_POST_QUEST",
     "aabbs": [
       [ 3687, 3191, 3692, 3200 ],
       [ 3693, 3195, 3701, 3209 ],

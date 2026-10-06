@@ -747,9 +747,9 @@
   },
   {
     "description": "Environment for the cutscene at the end of the The Blood Moon Rises",
-    "area": "BMR_MORYTANIA_DAWN_CUTSCENE",
+    "area": "BMR_MORYTANIA_DAWN_POST_QUEST",
     "instantTransition": true,
-    "varbitCondition": "CUTSCENE_STATUS && MYQ6 !=0 && MYQ6 < 178 || MYQ6 == 178",
+    "varbitCondition": "MYQ6 >= 174",
     "hideVanillaSkyboxes": true,
     "ambientColor": "#FFFFFF",
     "fogDepth": 30,
