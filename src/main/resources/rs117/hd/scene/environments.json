@@ -400,7 +400,8 @@
     "groundFogStart": -150,
     "groundFogEnd": -350,
     "groundFogOpacity": 0.7,
-    "sky": "BLOOD_MOON"
+    "sky": "BLOOD_MOON",
+    "nightExposure": 2
   },
   {
     "area": "VER_SINHAZA_TRANSITION",
@@ -445,7 +446,8 @@
     "groundFogStart": -150,
     "groundFogEnd": -350,
     "groundFogOpacity": 0.7,
-    "sky": "BLOOD_MOON"
+    "sky": "BLOOD_MOON",
+    "nightExposure": 2
   },
   {
     "area": "VER_SINHAZA",
