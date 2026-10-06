@@ -1,5 +1,6 @@
 #pragma once
 
+#include <uniforms/global.glsl>
 #include <uniforms/lights.glsl>
 
 #include <utils/constants.glsl>
@@ -17,7 +18,7 @@ void calculateLight(
     vec3 texBlend, vec3 specularGloss, vec3 specularStrength, float subsurface,
     inout vec3 pointLightsOut, inout vec3 pointLightsSpecularOut
 ) {
-    PointLight light = PointLightArray[lightIdx];
+    PointLight light = uboLights.PointLightArray[lightIdx];
     vec3 lightToFrag = light.position.xyz - position;
     float distanceSquared = dot(lightToFrag, lightToFrag);
     float radiusSquared = light.position.w;
@@ -45,7 +46,7 @@ void calculateLighting(
     inout vec3 pointLightsOut, inout vec3 pointLightsSpecularOut
 ) {
     #if TILED_LIGHTING
-        ivec2 tileXY = ivec2(gl_FragCoord.xy / sceneResolution * tiledLightingResolution);
+        ivec2 tileXY = ivec2(gl_FragCoord.xy / uboGlobal.sceneResolution * uboGlobal.tiledLightingResolution);
 
         for (int tileLayer = 0; tileLayer < TILED_LIGHTING_LAYER_COUNT; tileLayer++) {
             uvec4 tileLayerData = texelFetch(tiledLightingArray, ivec3(tileXY, tileLayer), 0);
@@ -74,7 +75,7 @@ void calculateLighting(
             PROCESS_TILED_LIGHT_COMPONENT(3);
         }
     #else
-        for (int lightIdx = 0; lightIdx < pointLightsCount; lightIdx++)
+        for (int lightIdx = 0; lightIdx < uboGlobal.pointLightsCount; lightIdx++)
             calculateLight(lightIdx, position, normals, viewDir,
                 texBlend, specularGloss, specularStrength, subsurface,
                 pointLightsOut, pointLightsSpecularOut);

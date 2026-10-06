@@ -251,7 +251,10 @@ public class ZoneRenderer implements Renderer {
 	public void addShaderIncludes(ShaderIncludes includes) {
 		includes
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS)
-			.addInclude("WORLD_VIEW_GETTER", () -> plugin.generateGetter("WorldView", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS))
+			.addInclude(
+				"WORLD_VIEW_GETTER",
+				() -> plugin.generateGetter("WorldView", "uboWorldViews.Array", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS)
+			)
 			.addUniformBuffer(uboWorldViews);
 	}
 

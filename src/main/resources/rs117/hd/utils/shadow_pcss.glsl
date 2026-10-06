@@ -1,6 +1,8 @@
 // Based on: https://developer.download.nvidia.com/shaderlibrary/docs/shadow_PCSS.pdf
 #pragma once
 
+#include <uniforms/global.glsl>
+
 #include <utils/constants.glsl>
 #include <utils/hash.glsl>
 
@@ -40,10 +42,10 @@ float sampleShadowPCSS(
     vec3 receiverPosition
 ) {
     vec2 mapSize = vec2(textureSize(tex, 0));
-    float depthRange = 2.0 * length(invLightProjectionMatrix[2].xyz);
+    float depthRange = 2.0 * length(uboGlobal.invLightProjectionMatrix[2].xyz);
     vec2 mapExtent = 2.0 * vec2(
-        length(invLightProjectionMatrix[0].xyz),
-        length(invLightProjectionMatrix[1].xyz)
+        length(uboGlobal.invLightProjectionMatrix[0].xyz),
+        length(uboGlobal.invLightProjectionMatrix[1].xyz)
     );
     vec2 radiusPerDepth = depthRange * tan(SUN_SHADOW_RADIUS) / mapExtent;
     // The light's near plane bounds the possible blocker distance. This is a

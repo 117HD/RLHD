@@ -46,13 +46,13 @@ void main() {
         vUv = vec2(0.0);
     #endif
 
-    if (orthographicProjection) {
+    if (uboGlobal.orthographicProjection) {
         gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
         gl_PointSize = 0.0;
         return;
     }
 
-    vec3 dir = inverseRotateStarfield(aStarDir, elapsedTime, aStarRotationSpeed);
+    vec3 dir = inverseRotateStarfield(aStarDir, uboGlobal.elapsedTime, aStarRotationSpeed);
 
     // Softly occlude additively blended stars behind the opaque moon disk.
     float moonOcclusion = 1.0;
@@ -66,7 +66,7 @@ void main() {
     }
 
     // Project a far point from the camera; depth testing is disabled for this pass.
-    vec4 clip = projectionMatrix * vec4(cameraPos + dir * 1.0e6, 1.0);
+    vec4 clip = uboGlobal.projectionMatrix * vec4(uboGlobal.cameraPos + dir * 1.0e6, 1.0);
     if (clip.w <= 0.0) {
         // Push stars behind the camera off-screen.
         gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
@@ -116,7 +116,7 @@ void main() {
     vec2 starHash = hash23(aStarDir);
     float rate = mix(3.0, 16.0, tuning.g) * mix(0.8, 1.2, starHash.y);
     float seed = starHash.x * 4096.0;
-    float time = elapsedTime * rate + starHash.y;
+    float time = uboGlobal.elapsedTime * rate + starHash.y;
     // Two independent turbulence scales give irregular flickers within slower swells.
     // Squared weights sum to one, preserving the unit Gaussian distribution.
     vec3 noise = 0.8 * starNoise(time, seed) + 0.6 * starNoise(time * 0.19, seed + 8192.0);
@@ -125,7 +125,7 @@ void main() {
     float sigma = 0.9 * tuning.r * altitudeScale;
     // A slowly drifting continuous field makes strong dispersion sparse without
     // assigning abruptly different behavior to neighboring or moving stars.
-    vec3 chromaFieldPosition = dir * 12.0 + elapsedTime * vec3(0.017, -0.013, 0.011);
+    vec3 chromaFieldPosition = dir * 12.0 + uboGlobal.elapsedTime * vec3(0.017, -0.013, 0.011);
     float chromaHotspot = smoothstep(0.78, 0.95, sf_noise(chromaFieldPosition + vec3(73.0)));
     float chroma = 0.65 * tuning.b * 2 * altitudeScale * mix(0.2, 1.35, chromaHotspot);
     // Dispersion mostly shifts the visible spectrum between its red and blue extremes.
@@ -148,9 +148,9 @@ void main() {
     vBrightness = min(aStarBright, .4) * visibility;
 
     // Size in screen pixels, then enforce the same anti-flicker floor in FBO pixels.
-    float viewportHeight = max(float(viewportSize.y), 1.0);
+    float viewportHeight = max(float(uboGlobal.viewportSize.y), 1.0);
     float screenSize = clamp(aStarSize * viewportHeight * 0.003 * (0.9 + 0.15 * vBrightness), 2.0, 3.5);
-    float renderScale = float(sceneResolution.y) / viewportHeight;
+    float renderScale = float(uboGlobal.sceneResolution.y) / viewportHeight;
     float sizePixels = max(screenSize * renderScale, 2.0);
     float actualScreenSize = sizePixels / max(renderScale, 1e-6);
     vBrightness *= min(1.0, (screenSize / actualScreenSize) * (screenSize / actualScreenSize));

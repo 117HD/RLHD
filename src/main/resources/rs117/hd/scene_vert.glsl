@@ -104,9 +104,9 @@ layout (location = 0) in vec3 vPosition;
         int waterDepth = fTerrainData[vertex] >> 11 & 0xFFF;
         if (waterDepth > 1) {
             const int CHUNK_SIZE = TILE_SIZE * 8;
-            ivec2 cam = ivec2(cameraPos.xz / CHUNK_SIZE) * CHUNK_SIZE + CHUNK_SIZE / 2;
+            ivec2 cam = ivec2(uboGlobal.cameraPos.xz / CHUNK_SIZE) * CHUNK_SIZE + CHUNK_SIZE / 2;
             ivec2 d = ivec2(abs(worldPosition.xz - cam) / TILE_SIZE);
-            if (max(d.x, d.y) > int(drawDistance / 8) * 8 + 3)
+            if (max(d.x, d.y) > int(uboGlobal.drawDistance / 8) * 8 + 3)
                 worldPosition.y -= waterDepth;
         }
 
@@ -116,9 +116,9 @@ layout (location = 0) in vec3 vPosition;
         OUT.texBlend = vec3(0);
         OUT.texBlend[vertex] = 1.0;
 
-        vec4 clipPosition = projectionMatrix * vec4(worldPosition, 1.0);
+        vec4 clipPosition = uboGlobal.projectionMatrix * vec4(worldPosition, 1.0);
         int depthBias = (alphaBiasHsl >> 16) & 0xff;
-        if (!orthographicProjection)
+        if (!uboGlobal.orthographicProjection)
             clipPosition.z += depthBias / 128.0;
 
         gl_Position = clipPosition;

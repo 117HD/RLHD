@@ -25,8 +25,8 @@ struct Material {
 };
 
 layout(std140) uniform UBOMaterials {
-    Material MaterialArray[MATERIAL_COUNT];
-};
+    Material Array[MATERIAL_COUNT];
+} uboMaterials;
 
 #include MATERIAL_GETTER
 

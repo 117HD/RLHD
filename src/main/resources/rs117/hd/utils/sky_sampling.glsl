@@ -40,7 +40,7 @@ float celestialHorizonFade(float viewUpAmount, float bodyUpAmount) {
 // roughness is the RMS slope of unresolved waves; normal is their mean normal.
 SkySample sampleSky(vec3 viewDir, vec3 diskViewDir, bool correctProjection, bool toneMap, vec3 normal, float roughness, float nebulaStrength) {
     if (!uboSky.enabled)
-        return SkySample(fogColor, vec3(0.0), vec3(0.0));
+        return SkySample(uboGlobal.fogColor, vec3(0.0), vec3(0.0));
 
     SkyGradient sky = computeSkyGradient(viewDir);
     // A slope perturbation rotates the reflected ray by 2*slope in the
@@ -69,11 +69,11 @@ SkySample sampleSky(vec3 viewDir, vec3 diskViewDir, bool correctProjection, bool
     #endif
     vec3 shootingStarColor = vec3(0.0);
     // Individual stars are drawn separately as point sprites.
-    skyColor = visibleSkyColor(sky, viewDir, elapsedTime, nebulaStrength);
+    skyColor = visibleSkyColor(sky, viewDir, uboGlobal.elapsedTime, nebulaStrength);
     // Shooting stars are atmospheric and render in front of the moon.
     #if STAR_MODE != STAR_MODE_OFF
         if (starBlend > 0.001 && -viewDir.y > 0.05 + horizonShift)
-            shootingStarColor = shootingStars(viewDir, elapsedTime) * starBlend;
+            shootingStarColor = shootingStars(viewDir, uboGlobal.elapsedTime) * starBlend;
     #endif
 
     float sunDot = dot(correctProjection ? celestialViewDirection(diskViewDir, sky.sunDir) : diskViewDir, sky.sunDir);
@@ -374,7 +374,7 @@ SkySample sampleSky(vec3 viewDir, vec3 diskViewDir, bool correctProjection, bool
     float auroraContrast = 1.0 / (1.0 + linearSrgbLuminance(skyColorPreStars) * 1200.0);
     float auroraStrength = nightFactor * uboSky.auroraVisibility * auroraContrast;
     if (auroraStrength > 0.001)
-        atmosphericForeground += proceduralAurora(viewDir, elapsedTime) * auroraStrength;
+        atmosphericForeground += proceduralAurora(viewDir, uboGlobal.elapsedTime) * auroraStrength;
 
     skyColor = applySkyFog(skyColor, fogTransmittance);
     skyColor += moonHalo * diskFogTransmittance;

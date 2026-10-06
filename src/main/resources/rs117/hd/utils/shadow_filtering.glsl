@@ -1,5 +1,7 @@
 #pragma once
 
+#include <uniforms/global.glsl>
+
 #include <utils/hash.glsl>
 #include <utils/misc.glsl>
 
@@ -29,7 +31,7 @@ float fetchShadowTexel(
     #endif
     float bias = dot(vec2(pixelCoord) + 0.5 - receiverPlane.xy, receiverPlane.zw);
     // The inverse projection's Z column spans half the camera's depth range.
-    float correctionLimit = 64. / (2.0 * length(invLightProjectionMatrix[2].xyz));
+    float correctionLimit = 64. / (2.0 * length(uboGlobal.invLightProjectionMatrix[2].xyz));
     fragDepth += clamp(bias, -correctionLimit, correctionLimit);
 
     if (hasTransparency) {

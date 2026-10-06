@@ -406,7 +406,7 @@ public class HdPlugin extends Plugin {
 
 	public UBOGlobal uboGlobal;
 	public UBOSky uboSky;
-	public UBOUI uboUI;
+	public UBOUI uboUi;
 	public UBOLights uboLights;
 	public UBOLights uboLightsCulling;
 
@@ -906,7 +906,7 @@ public class HdPlugin extends Plugin {
 			" : " + generateFetchCases(array, middle, to);
 	}
 
-	public String generateGetter(String type, int arrayLength) {
+	public String generateGetter(String type, String array, int arrayLength) {
 		StringBuilder include = new StringBuilder();
 
 		if (config.macosIntelWorkaround() && !APPLE_ARM) {
@@ -918,15 +918,15 @@ public class HdPlugin extends Plugin {
 				.append("get")
 				.append(type)
 				.append("(int i) { return ")
-				.append(generateFetchCases(type + "Array", 0, arrayLength))
+				.append(generateFetchCases(array, 0, arrayLength))
 				.append("; }\n");
 		} else {
 			include
 				.append("#define get")
 				.append(type)
 				.append("(i) ")
-				.append(type)
-				.append("Array[i]\n");
+				.append(array)
+				.append("[i]\n");
 		}
 
 		return include.toString();
@@ -987,13 +987,19 @@ public class HdPlugin extends Plugin {
 					return include.toString();
 				}
 			)
-			.addInclude("MATERIAL_GETTER", () -> generateGetter("Material", MaterialManager.MATERIALS.length))
-			.addInclude("WATER_TYPE_GETTER", () -> generateGetter("WaterType", waterTypeManager.uboWaterTypes.getCount()))
+			.addInclude(
+				"MATERIAL_GETTER",
+				() -> generateGetter("Material", "uboMaterials.Array", MaterialManager.MATERIALS.length)
+			)
+			.addInclude(
+				"WATER_TYPE_GETTER",
+				() -> generateGetter("WaterType", "uboWaterTypes.Array", waterTypeManager.uboWaterTypes.getCount())
+			)
 			.addUniformBuffer(uboGlobal)
 			.addUniformBuffer(uboSky)
 			.addUniformBuffer(uboLights)
 			.addUniformBuffer(uboLightsCulling)
-			.addUniformBuffer(uboUI)
+			.addUniformBuffer(uboUi)
 			.addUniformBuffer(materialManager.uboMaterials)
 			.addUniformBuffer(waterTypeManager.uboWaterTypes);
 		renderer.addShaderIncludes(includes);
@@ -1174,8 +1180,8 @@ public class HdPlugin extends Plugin {
 		uboSky = new UBOSky();
 		uboSky.initialize(UNIFORM_BLOCK_SKY);
 
-		uboUI = new UBOUI();
-		uboUI.initialize(UNIFORM_BLOCK_UI);
+		uboUi = new UBOUI();
+		uboUi.initialize(UNIFORM_BLOCK_UI);
 
 		uboLights = new UBOLights(false);
 		uboLights.initialize(UNIFORM_BLOCK_LIGHTS);
@@ -1193,9 +1199,9 @@ public class HdPlugin extends Plugin {
 			uboSky.destroy();
 		uboSky = null;
 
-		if (uboUI != null)
-			uboUI.destroy();
-		uboUI = null;
+		if (uboUi != null)
+			uboUi.destroy();
+		uboUi = null;
 
 		if (uboLights != null)
 			uboLights.destroy();
@@ -1654,10 +1660,10 @@ public class HdPlugin extends Plugin {
 		tiledLightingOverlay.render();
 
 		uiProgram.use();
-		uboUI.sourceDimensions.set(uiResolution);
-		uboUI.targetDimensions.set(actualUiResolution);
-		uboUI.alphaOverlay.set(ColorUtils.srgba(overlayColor));
-		uboUI.upload();
+		uboUi.sourceDimensions.set(uiResolution);
+		uboUi.targetDimensions.set(actualUiResolution);
+		uboUi.alphaOverlay.set(ColorUtils.srgba(overlayColor));
+		uboUi.upload();
 
 		// Set the sampling function used when stretching the UI.
 		// This is probably better done with sampler objects instead of texture parameters, but this is easier and likely more portable.

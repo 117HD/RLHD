@@ -1,5 +1,7 @@
 #pragma once
 
+#include <uniforms/global.glsl>
+
 #include <utils/hash.glsl>
 
 // Volumetric aurora curtains, raymarched through an elevated slab of sky.
@@ -127,7 +129,7 @@ vec3 proceduralAurora(vec3 viewDir, float time) {
     float detail = 1.0 - smoothstep(0.03, 0.10, stepU);
 
     // Offset the march per pixel so a short march does not band.
-    float jitter = hash12(gl_FragCoord.xy + elapsedTime);
+    float jitter = hash12(gl_FragCoord.xy + uboGlobal.elapsedTime);
 
     vec3 aurora = vec3(0.0);
     for (int i = 0; i < AURORA_STEPS; i++) {

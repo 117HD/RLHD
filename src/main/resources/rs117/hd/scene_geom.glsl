@@ -96,7 +96,7 @@ void main() {
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
 
-        pos = projectionMatrix * pos;
+        pos = uboGlobal.projectionMatrix * pos;
         gl_Position = pos;
         EmitVertex();
     }

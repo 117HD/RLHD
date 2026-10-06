@@ -56,12 +56,12 @@ vec3 applySingleColorFilter(int filterIndex, vec3 srgb) {
 
 vec3 applyColorFilter(vec3 srgb) {
     srgb = clamp(srgb, 0.0, 1.0);
-    vec3 previous = applySingleColorFilter(colorFilterPrevious, srgb);
-    vec3 current = applySingleColorFilter(colorFilter, srgb);
+    vec3 previous = applySingleColorFilter(uboGlobal.colorFilterPrevious, srgb);
+    vec3 current = applySingleColorFilter(uboGlobal.colorFilter, srgb);
     return linearToSrgb(mix(
         srgbToLinear(previous),
         srgbToLinear(current),
-        smoothstep(0, 1, colorFilterFade)
+        smoothstep(0, 1, uboGlobal.colorFilterFade)
     ));
 }
 #endif

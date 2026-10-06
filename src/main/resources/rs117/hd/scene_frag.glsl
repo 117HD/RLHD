@@ -71,7 +71,7 @@ in FragmentData {
 out vec4 FragColor;
 
 vec2 worldUvs(float scale) {
-    return -(sceneBase + IN.position.xz) / (128 * scale);
+    return -(uboGlobal.sceneBase + IN.position.xz) / (128 * scale);
 }
 
 #include <utils/constants.glsl>
@@ -92,7 +92,7 @@ vec2 worldUvs(float scale) {
 void main() {
     vec3 downDir = vec3(0, -1, 0);
     // View & light directions are from the fragment to the camera/light
-    vec3 viewDir = normalize(cameraPos - IN.position);
+    vec3 viewDir = normalize(uboGlobal.cameraPos - IN.position);
     vec3 flatNormal = normalize(cross(dFdx(IN.position), dFdy(IN.position)));
 
     Material material1 = getMaterial(fMaterialData[0] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
@@ -141,9 +141,9 @@ void main() {
         vec2 uv3 = blendedUv;
 
         // Scroll UVs
-        uv1 += material1.scrollDuration * elapsedTime;
-        uv2 += material2.scrollDuration * elapsedTime;
-        uv3 += material3.scrollDuration * elapsedTime;
+        uv1 += material1.scrollDuration * uboGlobal.elapsedTime;
+        uv2 += material2.scrollDuration * uboGlobal.elapsedTime;
+        uv3 += material3.scrollDuration * uboGlobal.elapsedTime;
 
         // Scale from the center
         uv1 = (uv1 - .5) * material1.textureScale.xy + .5;
@@ -198,7 +198,7 @@ void main() {
         #if PARALLAX_OCCLUSION_MAPPING
             mat3 invTBN = inverse(TBN);
             vec3 tsViewDir = invTBN * viewDir;
-            vec3 tsLightDir = invTBN * -lightDir;
+            vec3 tsLightDir = invTBN * -uboGlobal.lightDir;
 
             vec3 fragDelta = vec3(0);
 
@@ -335,7 +335,7 @@ void main() {
             normals = normalize(n1 * IN.texBlend.x + n2 * IN.texBlend.y + n3 * IN.texBlend.z);
         }
 
-        float lightDotNormals = dot(normals, lightDir);
+        float lightDotNormals = dot(normals, uboGlobal.lightDir);
         float downDotNormals = dot(downDir, normals);
         float viewDotNormals = dot(viewDir, normals);
 
@@ -383,7 +383,7 @@ void main() {
         // calculate lighting
 
         // ambient light
-        vec3 ambientLightOut = ambientColor * ambientStrength;
+        vec3 ambientLightOut = uboGlobal.ambientColor * uboGlobal.ambientStrength;
 
         float aoFactor =
             IN.texBlend.x * (material1.ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(uv1, material1.ambientOcclusionMap)).r) +
@@ -392,10 +392,10 @@ void main() {
         ambientLightOut *= aoFactor;
 
         // directional light
-        vec3 dirLightColor = lightColor * lightStrength;
+        vec3 dirLightColor = uboGlobal.lightColor * uboGlobal.lightStrength;
 
         // underwater caustics based on directional light
-        if (underwaterCaustics && underwaterEnvironment) {
+        if (uboGlobal.underwaterCaustics && uboGlobal.underwaterEnvironment) {
             float scale = 12.8;
             vec2 causticsUv = worldUvs(scale);
 
@@ -407,8 +407,8 @@ void main() {
 
             vec3 caustics = sampleCaustics(flow1, flow2) * 2;
 
-            vec3 causticsColor = underwaterCausticsColor * underwaterCausticsStrength;
-            dirLightColor += caustics * causticsColor * lightDotNormals * pow(lightStrength, 1.5);
+            vec3 causticsColor = uboGlobal.underwaterCausticsColor * uboGlobal.underwaterCausticsStrength;
+            dirLightColor += caustics * causticsColor * lightDotNormals * pow(uboGlobal.lightStrength, 1.5);
         }
 
         // apply shadows
@@ -418,7 +418,7 @@ void main() {
         vec3 lightOut = max(lightDotNormals, 0.0) * lightColor;
 
         // directional light specular
-        vec3 lightReflectDir = reflect(-lightDir, normals);
+        vec3 lightReflectDir = reflect(-uboGlobal.lightDir, normals);
         vec3 lightSpecularOut = lightColor * specular(IN.texBlend, viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength);
 
         // point lights
@@ -429,7 +429,7 @@ void main() {
             subsurface, pointLightsOut, pointLightsSpecularOut);
 
         // sky light
-        vec3 skyLightColor = fogColor;
+        vec3 skyLightColor = uboGlobal.fogColor;
         float skyLightStrength = 0.5;
         float skyDotNormals = downDotNormals;
         vec3 skyLightOut = max(skyDotNormals, 0.0) * skyLightColor * skyLightStrength;
@@ -437,7 +437,7 @@ void main() {
 
         // lightning
         vec3 lightningColor = vec3(.25, .25, .25);
-        float lightningStrength = lightningBrightness;
+        float lightningStrength = uboGlobal.lightningBrightness;
         float lightningDotNormals = downDotNormals;
         vec3 lightningOut = max(lightningDotNormals, 0.0) * lightningColor * lightningStrength;
 
@@ -445,10 +445,10 @@ void main() {
         vec3 transmissionOut = vec3(0.0);
         if (subsurface > 0.0)
             transmissionOut = dirLightColor * thinSheetTransmission(
-                dot(normals, lightDir), dot(-lightDir, viewDir), subsurface);
+                dot(normals, uboGlobal.lightDir), dot(-uboGlobal.lightDir, viewDir), subsurface);
 
         // underglow
-        vec3 underglowOut = underglowColor * max(normals.y, 0) * underglowStrength;
+        vec3 underglowOut = uboGlobal.underglowColor * max(normals.y, 0) * uboGlobal.underglowStrength;
 
 
         // fresnel reflection
@@ -496,9 +496,9 @@ void main() {
     }
 
     #if LEGACY_RENDERER
-        vec2 tiledist = abs(floor(IN.position.xz / 128) - floor(cameraPos.xz / 128));
+        vec2 tiledist = abs(floor(IN.position.xz / 128) - floor(uboGlobal.cameraPos.xz / 128));
         float maxDist = max(tiledist.x, tiledist.y);
-        if (maxDist > drawDistance) {
+        if (maxDist > uboGlobal.drawDistance) {
             // Rapidly fade out any geometry that extends beyond the draw distance.
             // This is required if we always draw all underwater terrain.
             outputColor.a *= -256;
@@ -512,10 +512,10 @@ void main() {
     // apply fog
     if (!isUnderwater) {
         // ground fog
-        float distance = distance(IN.position, cameraPos);
+        float distance = distance(IN.position, uboGlobal.cameraPos);
         float closeFadeDistance = 1500;
-        float groundFog = 1.0 - clamp((IN.position.y - groundFogStart) / (groundFogEnd - groundFogStart), 0.0, 1.0);
-        groundFog = mix(0.0, groundFogOpacity, groundFog);
+        float groundFog = 1.0 - clamp((IN.position.y - uboGlobal.groundFogStart) / (uboGlobal.groundFogEnd - uboGlobal.groundFogStart), 0.0, 1.0);
+        groundFog = mix(0.0, uboGlobal.groundFogOpacity, groundFog);
         groundFog *= clamp(distance / closeFadeDistance, 0.0, 1.0);
         float nightFogBlend = 0.0;
 
@@ -535,7 +535,7 @@ void main() {
 
         if (uboSky.enabled) {
             if (combinedFog > 1e-4) {
-                vec3 fogViewDir = normalize(IN.position - cameraPos);
+                vec3 fogViewDir = normalize(IN.position - uboGlobal.cameraPos);
                 vec3 distanceFogColor = foggedSkyColor(fogViewDir);
                 if (groundFog > 1e-4 && fogAmount < 1.0) {
                     // Approximate reduced nighttime color sensitivity without changing luminance.
@@ -552,15 +552,12 @@ void main() {
                     outputColor.rgb = mix(outputColor.rgb, linearToSrgb(distanceFogColor), fogAmount);
             }
         } else {
-            outputColor.rgb = mix(outputColor.rgb, linearToSrgb(fogColor), combinedFog);
+            outputColor.rgb = mix(outputColor.rgb, linearToSrgb(uboGlobal.fogColor), combinedFog);
         }
     }
 
     outputColor.rgb = applyColorAdjustments(outputColor.rgb);
     outputColor.rgb = applyOutputCorrection(outputColor.rgb);
-
-    // Reduce color banding
-    outputColor.rgb += (hash12(gl_FragCoord.xy + elapsedTime) - 0.5) / 255.0;
 
     FragColor = outputColor;
 }

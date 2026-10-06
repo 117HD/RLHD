@@ -64,7 +64,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     n3 = -vec3((n3.x * 2 - 1) * waterType.normalStrength, n3.z, (n3.y * 2 - 1) * waterType.normalStrength);
     vec3 normals = normalize(n1 + n2 + n3);
 
-    float lightDotNormals = dot(normals, lightDir);
+    float lightDotNormals = dot(normals, uboGlobal.lightDir);
     float downDotNormals = -normals.y;
     float viewDotNormals = dot(viewDir, normals);
 
@@ -79,10 +79,10 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     // calculate lighting
 
     // ambient light
-    vec3 ambientLightOut = ambientColor * ambientStrength;
+    vec3 ambientLightOut = uboGlobal.ambientColor * uboGlobal.ambientStrength;
 
     // directional light
-    vec3 dirLightColor = lightColor * lightStrength;
+    vec3 dirLightColor = uboGlobal.lightColor * uboGlobal.lightStrength;
 
     // apply shadows
     dirLightColor *= inverseShadow;
@@ -93,7 +93,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     // directional light specular
     vec3 lightSpecularOut = vec3(0.0);
     if (!uboSky.enabled)
-        lightSpecularOut = lightColor * specular(IN.texBlend, viewDir, reflect(-lightDir, normals), vSpecularGloss, vSpecularStrength);
+        lightSpecularOut = lightColor * specular(IN.texBlend, viewDir, reflect(-uboGlobal.lightDir, normals), vSpecularGloss, vSpecularStrength);
 
     // point lights
     vec3 pointLightsOut = vec3(0);
@@ -102,7 +102,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         0.0, pointLightsOut, pointLightsSpecularOut);
 
     // sky light
-    vec3 skyLightColor = fogColor;
+    vec3 skyLightColor = uboGlobal.fogColor;
     float skyLightStrength = 0.5;
     float skyDotNormals = downDotNormals;
     vec3 skyLightOut = max(skyDotNormals, 0.0) * skyLightColor * skyLightStrength;
@@ -110,13 +110,13 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
 
     // lightning
     vec3 lightningColor = vec3(1.0, 1.0, 1.0);
-    float lightningStrength = lightningBrightness;
+    float lightningStrength = uboGlobal.lightningBrightness;
     float lightningDotNormals = downDotNormals;
     vec3 lightningOut = max(lightningDotNormals, 0.0) * lightningColor * lightningStrength;
 
 
     // underglow
-    vec3 underglowOut = underglowColor * max(normals.y, 0) * underglowStrength;
+    vec3 underglowOut = uboGlobal.underglowColor * max(normals.y, 0) * uboGlobal.underglowStrength;
 
 
     // fresnel reflection
@@ -155,14 +155,14 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         // with unrelated geometry projected along the active light's direction.
         vec3 sunDir = uboSky.sunDir * vec3(1, -1, 1);
         vec3 moonDir = uboSky.moonDir * vec3(1, -1, 1);
-        bool moonOwnsShadowMap = dot(lightDir, moonDir) > dot(lightDir, sunDir);
+        bool moonOwnsShadowMap = dot(uboGlobal.lightDir, moonDir) > dot(uboGlobal.lightDir, sunDir);
         celestialReflection =
             sky.sun * (moonOwnsShadowMap ? 1.0 : inverseShadow) +
             sky.moon * (moonOwnsShadowMap ? inverseShadow : 1.0);
     } else if (finalFresnel < 0.5) {
-        surfaceColor = mix(waterColorDark, waterColorMid, finalFresnel * 2);
+        surfaceColor = mix(uboGlobal.waterColorDark, uboGlobal.waterColorMid, finalFresnel * 2);
     } else {
-        surfaceColor = mix(waterColorMid, waterColorLight, (finalFresnel - 0.5) * 2);
+        surfaceColor = mix(uboGlobal.waterColorMid, uboGlobal.waterColorLight, (finalFresnel - 0.5) * 2);
     }
 
     vec3 surfaceColorOut = surfaceColor * max(combinedSpecularStrength, 0.2);
@@ -234,7 +234,7 @@ void sampleUnderwater(inout vec3 outputColor, WaterType waterType, float depth, 
         outputColor = vec3(0);
     }
 
-    if (underwaterCaustics) {
+    if (uboGlobal.underwaterCaustics) {
         const float scale = 1.75;
         const float maxCausticsDepth = 128 * 4;
 
@@ -250,7 +250,7 @@ void sampleUnderwater(inout vec3 outputColor, WaterType waterType, float depth, 
         vec2 flow2 = causticsUv * 1.5 + animationFrame(23) * -direction;
         vec3 caustics = sampleCaustics(flow1, flow2, .005);
 
-        vec3 causticsColor = underwaterCausticsColor * underwaterCausticsStrength;
-        outputColor.rgb *= 1 + caustics * causticsColor * depthMultiplier * lightDotNormals * lightStrength;
+        vec3 causticsColor = uboGlobal.underwaterCausticsColor * uboGlobal.underwaterCausticsStrength;
+        outputColor.rgb *= 1 + caustics * causticsColor * depthMultiplier * lightDotNormals * uboGlobal.lightStrength;
     }
 }

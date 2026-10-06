@@ -61,10 +61,10 @@ uint packLightIndices(in SortedLight bin[SORTING_BIN_SIZE], in int binSize, inou
 }
 
 void main() {
-    ivec2 pixelCoord = ivec2(fUv * tiledLightingResolution);
+    ivec2 pixelCoord = ivec2(fUv * uboGlobal.tiledLightingResolution);
 
 #if USE_LIGHTS_MASK
-    int LightMaskSize = int(ceil(pointLightsCount / 32.0));
+    int LightMaskSize = int(ceil(uboGlobal.pointLightsCount / 32.0));
     uint LightsMask[32]; // 32 Words = 1024 Lights
     for (int i = 0; i < LightMaskSize; i++)
         LightsMask[i] = 0u;
@@ -93,7 +93,7 @@ void main() {
 #endif
 
     const vec2 tileSize = vec2(TILED_LIGHTING_TILE_SIZE);
-    vec2 screenUV = fUv * sceneResolution;
+    vec2 screenUV = fUv * uboGlobal.sceneResolution;
     vec2 tileOrigin = floor(screenUV / tileSize) * tileSize;
 
     vec2 tl = tileOrigin + vec2(0.0, tileSize.y); // top-left
@@ -101,22 +101,22 @@ void main() {
     vec2 bl = tileOrigin;                         // bottom-left
     vec2 br = tileOrigin + vec2(tileSize.x, 0.0); // bottom-right
 
-    vec2 ndcTL = (tl / sceneResolution) * 2.0 - 1.0;
-    vec2 ndcTR = (tr / sceneResolution) * 2.0 - 1.0;
-    vec2 ndcBL = (bl / sceneResolution) * 2.0 - 1.0;
-    vec2 ndcBR = (br / sceneResolution) * 2.0 - 1.0;
+    vec2 ndcTL = (tl / uboGlobal.sceneResolution) * 2.0 - 1.0;
+    vec2 ndcTR = (tr / uboGlobal.sceneResolution) * 2.0 - 1.0;
+    vec2 ndcBL = (bl / uboGlobal.sceneResolution) * 2.0 - 1.0;
+    vec2 ndcBR = (br / uboGlobal.sceneResolution) * 2.0 - 1.0;
 
     const float eps = 1e-10;
 
-    vec4 pTL = invProjectionMatrix * vec4(ndcTL, eps, 1.0);
-    vec4 pTR = invProjectionMatrix * vec4(ndcTR, eps, 1.0);
-    vec4 pBL = invProjectionMatrix * vec4(ndcBL, eps, 1.0);
-    vec4 pBR = invProjectionMatrix * vec4(ndcBR, eps, 1.0);
+    vec4 pTL = uboGlobal.invProjectionMatrix * vec4(ndcTL, eps, 1.0);
+    vec4 pTR = uboGlobal.invProjectionMatrix * vec4(ndcTR, eps, 1.0);
+    vec4 pBL = uboGlobal.invProjectionMatrix * vec4(ndcBL, eps, 1.0);
+    vec4 pBR = uboGlobal.invProjectionMatrix * vec4(ndcBR, eps, 1.0);
 
-    vec3 rTL = normalize((viewMatrix * vec4((pTL.xyz / pTL.w) - cameraPos, 1.0)).xyz);
-    vec3 rTR = normalize((viewMatrix * vec4((pTR.xyz / pTR.w) - cameraPos, 1.0)).xyz);
-    vec3 rBL = normalize((viewMatrix * vec4((pBL.xyz / pBL.w) - cameraPos, 1.0)).xyz);
-    vec3 rBR = normalize((viewMatrix * vec4((pBR.xyz / pBR.w) - cameraPos, 1.0)).xyz);
+    vec3 rTL = normalize((uboGlobal.viewMatrix * vec4((pTL.xyz / pTL.w) - uboGlobal.cameraPos, 1.0)).xyz);
+    vec3 rTR = normalize((uboGlobal.viewMatrix * vec4((pTR.xyz / pTR.w) - uboGlobal.cameraPos, 1.0)).xyz);
+    vec3 rBL = normalize((uboGlobal.viewMatrix * vec4((pBL.xyz / pBL.w) - uboGlobal.cameraPos, 1.0)).xyz);
+    vec3 rBR = normalize((uboGlobal.viewMatrix * vec4((pBR.xyz / pBR.w) - uboGlobal.cameraPos, 1.0)).xyz);
 
     vec3 tileCenterVec = normalize(rTL + rTR + rBL + rBR);
     float tileCos = min(min(dot(tileCenterVec, rTL), dot(tileCenterVec, rTR)), min(dot(tileCenterVec, rBL), dot(tileCenterVec, rBR)));
@@ -125,8 +125,8 @@ void main() {
     mat4 viewToClip;
     vec2 tileNDCMin;
     vec2 tileNDCMax;
-    if (orthographicProjection) {
-        viewToClip = projectionMatrix * inverse(viewMatrix);
+    if (uboGlobal.orthographicProjection) {
+        viewToClip = uboGlobal.projectionMatrix * inverse(uboGlobal.viewMatrix);
         tileNDCMin = min(min(ndcTL, ndcTR), min(ndcBL, ndcBR));
         tileNDCMax = max(max(ndcTL, ndcTR), max(ndcBL, ndcBR));
     }
@@ -134,8 +134,8 @@ void main() {
     SortedLight sortingBin[SORTING_BIN_SIZE];
     int sortingBinSize = 0;
 
-    for (int lightIdx = 0; lightIdx < pointLightsCount; lightIdx++) {
-        vec4 lightData = PointLightPositionsArray[lightIdx];
+    for (int lightIdx = 0; lightIdx < uboGlobal.pointLightsCount; lightIdx++) {
+        vec4 lightData = uboLightsCulling.PointLightPositionsArray[lightIdx];
         vec3 lightViewPos = lightData.xyz;
         float lightRadiusSqr = lightData.w;
 
@@ -154,7 +154,7 @@ void main() {
         const float PROXIMITY_WEIGHT = 0.75;
         float distanceScore = clamp(1.0 - sqrt(lightDistSqr) / (sqrt(lightRadiusSqr) + 1e-6), 0.0, 1.0);
 
-        if (orthographicProjection) {
+        if (uboGlobal.orthographicProjection) {
             vec4 lightClip = viewToClip * vec4(lightViewPos, 1.0);
             vec2 lightNDC = lightClip.xy / max(abs(lightClip.w), 1e-5);
 

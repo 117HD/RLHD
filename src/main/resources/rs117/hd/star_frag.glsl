@@ -14,7 +14,7 @@ in float vBrightness;
 out vec4 FragColor;
 
 void main() {
-    if (!uboSky.enabled || orthographicProjection || vBrightness <= 0.0)
+    if (!uboSky.enabled || uboGlobal.orthographicProjection || vBrightness <= 0.0)
         discard;
 
     #if POINT_SPRITES

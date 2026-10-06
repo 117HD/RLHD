@@ -41,13 +41,13 @@ float translateRange(float rangeStart, float rangeEnd, float value) {
 float animationFrame(float animationDuration) {
     if (animationDuration == 0)
         return 0.0;
-    return mod(elapsedTime, animationDuration) / animationDuration;
+    return mod(uboGlobal.elapsedTime, animationDuration) / animationDuration;
 }
 
 vec2 animationFrame(vec2 animationDuration) {
     if (animationDuration == vec2(0))
         return vec2(0);
-    return mod(vec2(elapsedTime), vec2(animationDuration)) / animationDuration;
+    return mod(vec2(uboGlobal.elapsedTime), vec2(animationDuration)) / animationDuration;
 }
 
 vec3 windowsHdrCorrection(vec3 c) {

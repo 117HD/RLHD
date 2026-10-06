@@ -80,7 +80,7 @@ layout (location = 0) in vec3 vPosition;
                 if (!isShadowDisabled) {
                     fUvw = vec4(vUv.xy, material.colorMap, material.shadowAlphaMap);
                     // Scroll UVs
-                    fUvw.xy += material.scrollDuration * elapsedTime;
+                    fUvw.xy += material.scrollDuration * uboGlobal.elapsedTime;
                     // Scale from the center
                     fUvw.xy = .5 + (fUvw.xy - .5) * material.textureScale.xy;
                 } else {
@@ -114,7 +114,7 @@ layout (location = 0) in vec3 vPosition;
                 worldPosition += vNormal.xyz * 0.0002 * (windingReversed ? 1 : -1);
         #endif
 
-        vec4 clipPosition = lightProjectionMatrix * vec4(worldPosition, shouldCastShadow);
+        vec4 clipPosition = uboGlobal.lightProjectionMatrix * vec4(worldPosition, shouldCastShadow);
         #if !TERRAIN_ONLY_PASS
             if (getMaterialHasTransparency(material)) // bias face if it has transparency to avoid self-shadowing
                 clipPosition.z += SHADOW_TRANSPARENCY_BIAS;
@@ -179,7 +179,7 @@ layout (location = 0) in vec3 vPosition;
                 gOpacity = opacity;
             #endif
         #else
-            gl_Position = lightProjectionMatrix * vec4(vPosition, shouldCastShadow);
+            gl_Position = uboGlobal.lightProjectionMatrix * vec4(vPosition, shouldCastShadow);
             #if SHADOW_TRANSPARENCY && !TERRAIN_ONLY_PASS
                 fOpacity = opacity;
             #endif
