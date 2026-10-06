@@ -1,7 +1,5 @@
 #version 330
 
-// Point-sprite stars: per-star work scales with star count, not screen pixels.
-
 #include <uniforms/global.glsl>
 #include <uniforms/sky.glsl>
 
@@ -19,6 +17,9 @@ layout(location = 4) in float aStarRotationSpeed;
 
 out vec3 vColor;
 out float vBrightness;
+#if !POINT_SPRITES
+    out vec2 vUv;
+#endif
 
 const float SKY_HORIZON_OFFSET = 0.087;
 
@@ -39,11 +40,15 @@ vec3 starNoise(float time, float seed) {
 }
 
 void main() {
+    vColor = vec3(0.0);
+    vBrightness = 0.0;
+    #if !POINT_SPRITES
+        vUv = vec2(0.0);
+    #endif
+
     if (orthographicProjection) {
         gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
         gl_PointSize = 0.0;
-        vColor = vec3(0.0);
-        vBrightness = 0.0;
         return;
     }
 
@@ -68,7 +73,16 @@ void main() {
         gl_PointSize = 0.0;
         return;
     }
-    gl_Position = clip;
+    #if POINT_SPRITES
+        gl_Position = clip;
+    #else
+        // Two triangles covering the star's sprite. The instance attributes stay
+        // constant while gl_VertexID supplies the quad corner.
+        const vec2 corners[6] = vec2[6](
+            vec2(-1, -1), vec2(1, -1), vec2(1, 1),
+            vec2(-1, -1), vec2(1, 1), vec2(-1, 1));
+        vUv = corners[gl_VertexID] * 0.5 + 0.5;
+    #endif
 
     // Match sky_frag's night-sky visibility.
     float upAmount = -dir.y;
@@ -141,5 +155,11 @@ void main() {
     float actualScreenSize = sizePixels / max(renderScale, 1e-6);
     vBrightness *= min(1.0, (screenSize / actualScreenSize) * (screenSize / actualScreenSize));
     vBrightness *= skyFogTransmittance(upAmount);
-    gl_PointSize = visibility > 0.001 ? sizePixels : 0.0;
+
+    #if POINT_SPRITES
+        gl_PointSize = visibility > 0.001 ? sizePixels : 0.0;
+    #else
+        clip.xy += corners[gl_VertexID] * sizePixels / vec2(sceneResolution) * clip.w;
+        gl_Position = visibility > 0.001 ? clip : vec4(2.0, 2.0, 2.0, 1.0);
+    #endif
 }

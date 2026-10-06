@@ -1447,6 +1447,18 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_POINT_SPRITES = "experimentalPointSprites";
+	@ConfigItem(
+		keyName = KEY_POINT_SPRITES,
+		name = "Point sprites",
+		description = "Controls whether GL_POINT_SPRITE should be used. The fallback uses instanced triangles.",
+		section = experimentalSettings
+	)
+	default DefaultBoolean pointSprites() {
+		return DefaultBoolean.DEFAULT;
+	}
+
+
 	/*====== Internal settings ======*/
 
 	@ConfigItem(keyName = "pluginUpdateMessage", hidden = true, name = "", description = "")

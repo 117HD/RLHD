@@ -7,6 +7,9 @@
 
 in vec3 vColor;
 in float vBrightness;
+#if !POINT_SPRITES
+    in vec2 vUv;
+#endif
 
 out vec4 FragColor;
 
@@ -14,7 +17,13 @@ void main() {
     if (!uboSky.enabled || orthographicProjection || vBrightness <= 0.0)
         discard;
 
-    float d = length(gl_PointCoord - vec2(0.5)) * 2.0;
+    #if POINT_SPRITES
+        vec2 pointCoord = gl_PointCoord;
+    #else
+        vec2 pointCoord = vUv;
+    #endif
+
+    float d = length(pointCoord - vec2(0.5)) * 2.0;
     if (d >= 1.0)
         discard;
 

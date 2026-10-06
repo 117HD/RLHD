@@ -77,6 +77,8 @@ public final class StarField {
 
 	@Getter
 	private int vaoStars;
+	@Getter
+	private int vaoStarTriangles;
 
 	public int starCount;
 
@@ -89,25 +91,27 @@ public final class StarField {
 		resetStarfield();
 
 		vaoStars = glGenVertexArrays();
-		glBindVertexArray(vaoStars);
+		vaoStarTriangles = glGenVertexArrays();
 
 		vboStars = new GLBuffer("Stars::VBO", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 		vboStars.initialize(FLOATS_PER_STAR * MAX_STAR_COUNT);
 		vboStars.bind();
 
 		int stride = FLOATS_PER_STAR * Float.BYTES;
-		// direction.xyz, size, brightness, color.rgb, artistic rotation speed
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0L);
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 1, GL_FLOAT, false, stride, 3L * Float.BYTES);
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 1, GL_FLOAT, false, stride, 4L * Float.BYTES);
-		glEnableVertexAttribArray(3);
-		glVertexAttribPointer(3, 3, GL_FLOAT, false, stride, 5L * Float.BYTES);
-		glEnableVertexAttribArray(4);
-		glVertexAttribPointer(4, 1, GL_FLOAT, false, stride, 8L * Float.BYTES);
-
+		for (int divisor = 0; divisor <= 1; divisor++) {
+			glBindVertexArray(divisor == 0 ? vaoStars : vaoStarTriangles);
+			// Each VAO owns its attribute layout; only the underlying buffer is shared.
+			// direction.xyz, size, brightness, color.rgb, artistic rotation speed
+			glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0L);
+			glVertexAttribPointer(1, 1, GL_FLOAT, false, stride, 3L * Float.BYTES);
+			glVertexAttribPointer(2, 1, GL_FLOAT, false, stride, 4L * Float.BYTES);
+			glVertexAttribPointer(3, 3, GL_FLOAT, false, stride, 5L * Float.BYTES);
+			glVertexAttribPointer(4, 1, GL_FLOAT, false, stride, 8L * Float.BYTES);
+			for (int i = 0; i < 5; i++) {
+				glEnableVertexAttribArray(i);
+				glVertexAttribDivisor(i, divisor);
+			}
+		}
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -149,6 +153,10 @@ public final class StarField {
 		if (vaoStars != 0)
 			glDeleteVertexArrays(vaoStars);
 		vaoStars = 0;
+
+		if (vaoStarTriangles != 0)
+			glDeleteVertexArrays(vaoStarTriangles);
+		vaoStarTriangles = 0;
 
 		if (fboNebulaBake != 0)
 			glDeleteFramebuffers(fboNebulaBake);

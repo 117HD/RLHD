@@ -242,18 +242,27 @@ public class SkyRenderer {
 
 		if (skyEnabled && config.starMode() != StarMode.OFF && starProgram.isValid() && starField.getVaoStars() != 0) {
 			commandBuffer.SetShader(starProgram);
-			commandBuffer.Enable(GL_PROGRAM_POINT_SIZE);
-			if (!GL_CAPS.forwardCompatible)
-				commandBuffer.Enable(GL20.GL_POINT_SPRITE);
+			boolean pointSprites = config.pointSprites().get(true);
+			if (pointSprites) {
+				commandBuffer.Enable(GL_PROGRAM_POINT_SIZE);
+				if (!GL_CAPS.forwardCompatible)
+					commandBuffer.Enable(GL20.GL_POINT_SPRITE);
+			}
 			commandBuffer.Enable(GL_BLEND);
 			commandBuffer.BlendFunc(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
-			commandBuffer.BindVertexArray(starField.getVaoStars());
-			commandBuffer.DrawArrays(GL_POINTS, 0, starField.starCount);
+			commandBuffer.BindVertexArray(pointSprites ? starField.getVaoStars() : starField.getVaoStarTriangles());
+			if (pointSprites) {
+				commandBuffer.DrawArrays(GL_POINTS, 0, starField.starCount);
+			} else {
+				commandBuffer.DrawArraysInstanced(GL_TRIANGLES, 0, 6, starField.starCount);
+			}
 			commandBuffer.BlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 			commandBuffer.Disable(GL_BLEND);
-			if (!GL_CAPS.forwardCompatible)
-				commandBuffer.Disable(GL20.GL_POINT_SPRITE);
-			commandBuffer.Disable(GL_PROGRAM_POINT_SIZE);
+			if (pointSprites) {
+				if (!GL_CAPS.forwardCompatible)
+					commandBuffer.Disable(GL20.GL_POINT_SPRITE);
+				commandBuffer.Disable(GL_PROGRAM_POINT_SIZE);
+			}
 		}
 
 		commandBuffer.DepthMask(true);

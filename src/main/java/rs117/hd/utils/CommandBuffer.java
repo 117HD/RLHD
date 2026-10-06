@@ -28,21 +28,22 @@ public class CommandBuffer {
 	private static final int GL_DRAW_ARRAYS_INDIRECT_TYPE = 3;
 	private static final int GL_DRAW_ELEMENTS_TYPE = 4;
 	private static final int GL_DRAW_ELEMENTS_INDIRECT_TYPE = 5;
-	private static final int GL_DRAW_CALL_TYPE_COUNT = 6;
+	private static final int GL_DRAW_ARRAYS_INSTANCED_TYPE = 6;
+	private static final int GL_DRAW_CALL_TYPE_COUNT = 7;
 
-	private static final int GL_BIND_VERTEX_ARRAY_TYPE = 6;
-	private static final int GL_BIND_INDIRECT_ARRAY_TYPE = 7;
-	private static final int GL_BIND_TEXTURE_UNIT_TYPE = 8;
-	private static final int GL_DEPTH_MASK_TYPE = 9;
-	private static final int GL_COLOR_MASK_TYPE = 10;
-	private static final int GL_BLEND_FUNC_TYPE = 11;
-	private static final int GL_USE_PROGRAM = 12;
-	private static final int GL_TIMER = 13;
+	private static final int GL_BIND_VERTEX_ARRAY_TYPE = 7;
+	private static final int GL_BIND_INDIRECT_ARRAY_TYPE = 8;
+	private static final int GL_BIND_TEXTURE_UNIT_TYPE = 9;
+	private static final int GL_DEPTH_MASK_TYPE = 10;
+	private static final int GL_COLOR_MASK_TYPE = 11;
+	private static final int GL_BLEND_FUNC_TYPE = 12;
+	private static final int GL_USE_PROGRAM = 13;
+	private static final int GL_TIMER = 14;
 
-	private static final int GL_TOGGLE_TYPE = 14; // Combined glEnable & glDisable
-	private static final int GL_FENCE_SYNC = 15;
+	private static final int GL_TOGGLE_TYPE = 15; // Combined glEnable & glDisable
+	private static final int GL_FENCE_SYNC = 16;
 
-	private static final int GL_EXECUTE_SUB_COMMAND_BUFFER = 16;
+	private static final int GL_EXECUTE_SUB_COMMAND_BUFFER = 17;
 
 	private static final long INT_MASK = 0xFFFF_FFFFL;
 	private static final int DRAW_MODE_MASK = 0xF;
@@ -187,6 +188,13 @@ public class CommandBuffer {
 		ensureCapacity(2);
 		cmd[writeHead++] = GL_DRAW_ARRAYS_TYPE & 0xFF | (mode & DRAW_MODE_MASK) << 8;
 		cmd[writeHead++] = (long) offset << 32 | vertexCount & INT_MASK;
+	}
+
+	public void DrawArraysInstanced(int mode, int offset, int vertexCount, int instanceCount) {
+		ensureCapacity(3);
+		cmd[writeHead++] = GL_DRAW_ARRAYS_INSTANCED_TYPE & 0xFF | (mode & DRAW_MODE_MASK) << 8;
+		cmd[writeHead++] = offset;
+		cmd[writeHead++] = (long) vertexCount << 32 | (instanceCount & INT_MASK);
 	}
 
 	public void DrawArraysIndirect(int mode, int vertexOffset, int vertexCount, GpuIntBuffer indirectBuffer) {
@@ -397,6 +405,13 @@ public class CommandBuffer {
 						int count = (int) packed;
 
 						glDrawArrays(mode, offset, count);
+						break;
+					}
+					case GL_DRAW_ARRAYS_INSTANCED_TYPE: {
+						int mode = (int) data >> 8;
+						int offset = (int) cmd[readHead++];
+						long packed = cmd[readHead++];
+						glDrawArraysInstanced(mode, offset, (int) (packed >> 32), (int) packed);
 						break;
 					}
 					case GL_DRAW_ELEMENTS_TYPE: {
