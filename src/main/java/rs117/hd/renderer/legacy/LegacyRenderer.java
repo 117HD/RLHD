@@ -63,6 +63,7 @@ import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 import rs117.hd.utils.jobs.JobSystem;
 
+import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
@@ -1026,6 +1027,11 @@ public class LegacyRenderer implements Renderer {
 			fogDepth *= min(plugin.getDrawDistance(), 90) / 10.f;
 			plugin.uboGlobal.useFog.set(fogDepth > 0 ? 1 : 0);
 			plugin.uboGlobal.fogDepth.set(fogDepth);
+
+			plugin.uboGlobal.sceneBase.set(
+				sceneContext.scene.getBaseX() * LOCAL_TILE_SIZE,
+				sceneContext.scene.getBaseY() * LOCAL_TILE_SIZE
+			);
 
 			plugin.uboGlobal.drawDistance.set((float) plugin.getDrawDistance());
 			plugin.uboGlobal.expandedMapLoadingChunks.set(sceneContext.expandedMapLoadingChunks);

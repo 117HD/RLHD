@@ -46,6 +46,8 @@ layout(std140) uniform UBOGlobal {
     vec3 waterColorMid;
     vec3 waterColorDark;
 
+    ivec2 sceneBase;
+
     bool underwaterEnvironment;
     bool underwaterCaustics;
     vec3 underwaterCausticsColor;
