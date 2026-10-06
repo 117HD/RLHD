@@ -60,6 +60,7 @@ public class Material {
 	private boolean unlit;
 	@JsonAdapter(ColorUtils.LinearAdapter.class)
 	public float brightness = 1;
+	private float subsurface;
 	private float displacementScale = .1f;
 	private float flowMapStrength;
 	private float[] flowMapDuration = { 0, 0 };
@@ -186,6 +187,7 @@ public class Material {
 			   | ((modelOverride.windDisplacementModifier + 3) & 0x7) << 12
 			   | (modelOverride.windDisplacementMode.ordinal() & 0x7) << 9
 			   | (modelOverride.invertDisplacementStrength ? 1 : 0) << 8
+			   | (modelOverride.shadowNormalBias ? 1 : 0) << 7
 			   | (modelOverride.terrainVertexSnap ? 1 : 0) << 6
 			   | (!modelOverride.receiveShadows ? 1 : 0) << 5
 			   | (modelOverride.upwardsNormals ? 1 : 0) << 4
@@ -216,6 +218,7 @@ public class Material {
 			(hasTransparency ? 1 : 0)
 		);
 		struct.brightness.set(brightness);
+		struct.subsurface.set(subsurface);
 		struct.displacementScale.set(displacementScale);
 		struct.specularStrength.set(specularStrength);
 		struct.specularGloss.set(specularGloss);

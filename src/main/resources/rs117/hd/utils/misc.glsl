@@ -24,6 +24,8 @@
  */
 #pragma once
 
+#include <utils/hash.glsl>
+
 #include <uniforms/global.glsl>
 
 #include <utils/constants.glsl>
@@ -112,21 +114,6 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
     }
 #endif
 
-// 2D Random
-float hash(in vec2 st) {
-    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
-}
-
-// 3D Random
-float hash(in vec3 st) {
-	return fract(sin(dot(st, vec3(12.9898, 78.233, 45.164))) * 43758.5453123);
-}
-
-// 4D Random
-float hash(in vec4 st) {
-	return fract(sin(dot(st, vec4(12.9898, 78.233, 45.164, 94.673))) * 43758.5453123);
-}
-
 // 2D Noise based on Morgan McGuire @morgan3d, under the BSD license
 // https://www.shadertoy.com/view/4dS3Wd
 float noise(in vec2 st) {
@@ -134,10 +121,10 @@ float noise(in vec2 st) {
     vec2 f = fract(st);
 
     // Four corners in 2D of a tile
-    float a = hash(i);
-    float b = hash(i + vec2(1.0, 0.0));
-    float c = hash(i + vec2(0.0, 1.0));
-    float d = hash(i + vec2(1.0, 1.0));
+    float a = hash12(i);
+    float b = hash12(i + vec2(1.0, 0.0));
+    float c = hash12(i + vec2(0.0, 1.0));
+    float d = hash12(i + vec2(1.0, 1.0));
 
     // Smooth interpolation
     vec2 u = smoothstep(0., 1., f);
@@ -207,6 +194,41 @@ vec2 getPoissonDisk(int idx) {
         case 12: return vec2(-0.24188840,   0.99706507);
         case 13: return vec2(-0.81409955,   0.91437590);
         case 14: return vec2( 0.19984126,   0.78641367);
-        default: return vec2( 0.14383161,  -0.14100790);
+        case 15: return vec2( 0.14383161,  -0.14100790);
     }
+    return vec2(0);
+}
+
+float unpackHalfFloat(uint h) {
+    uint sign = (h >> 15u) & 0x1u;
+    uint exponent = (h >> 10u) & 0x1Fu;
+    uint mantissa = h & 0x3FFu;
+
+    uint f32sign = sign << 31u;
+    uint f32;
+
+    if (exponent == 0u) {
+        if (mantissa == 0u) {
+            // Signed zero
+            f32 = f32sign;
+        } else {
+            // Subnormal half -> normalize into float32
+            exponent = 127u - 15u + 1u;
+            while ((mantissa & 0x400u) == 0u) {
+                mantissa <<= 1u;
+                exponent -= 1u;
+            }
+            mantissa &= 0x3FFu; // clear the leading 1 we just normalized out
+            f32 = f32sign | (exponent << 23u) | (mantissa << 13u);
+        }
+    } else if (exponent == 0x1Fu) {
+        // Inf / NaN
+        f32 = f32sign | 0x7F800000u | (mantissa << 13u);
+    } else {
+        // Normalized
+        uint newExponent = exponent - 15u + 127u;
+        f32 = f32sign | (newExponent << 23u) | (mantissa << 13u);
+    }
+
+    return uintBitsToFloat(f32);
 }

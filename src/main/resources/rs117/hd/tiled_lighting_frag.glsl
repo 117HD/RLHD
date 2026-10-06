@@ -122,6 +122,15 @@ void main() {
     float tileCos = min(min(dot(tileCenterVec, rTL), dot(tileCenterVec, rTR)), min(dot(tileCenterVec, rBL), dot(tileCenterVec, rBR)));
     float tileSin = sqrt(max(0.0, 1.0 - tileCos * tileCos));
 
+    mat4 viewToClip;
+    vec2 tileNDCMin;
+    vec2 tileNDCMax;
+    if (orthographicProjection) {
+        viewToClip = projectionMatrix * inverse(viewMatrix);
+        tileNDCMin = min(min(ndcTL, ndcTR), min(ndcBL, ndcBR));
+        tileNDCMax = max(max(ndcTL, ndcTR), max(ndcBL, ndcBR));
+    }
+
     SortedLight sortingBin[SORTING_BIN_SIZE];
     int sortingBinSize = 0;
 
@@ -135,11 +144,47 @@ void main() {
         vec3 lightCenterVec = (lightDistSqr > 0.0) ? lightViewPos / sqrt(lightDistSqr) : vec3(0.0);
 
         float lightSinSqr = clamp(lightRadiusSqr / max(lightDistSqr, 1e-6), 0.0, 1.0);
-        float lightCos = sqrt(0.999 - lightSinSqr);
+        // Guard the sqrt: lightSinSqr reaches 1 as the camera approaches the light's radius, and
+        // sqrt of a negative yields NaN, which then propagates through sumCos below.
+        float lightCos = sqrt(max(0.0, 0.999 - lightSinSqr));
         float lightTileCos = dot(lightCenterVec, tileCenterVec);
 
-        float sumCos = (lightRadiusSqr > lightDistSqr) ? -1.0 : (tileCos * lightCos - tileSin * sqrt(lightSinSqr));
-        if (lightTileCos < sumCos)
+        bool lightAffectsTile;
+        float combinedScore;
+        const float PROXIMITY_WEIGHT = 0.75;
+        float distanceScore = clamp(1.0 - sqrt(lightDistSqr) / (sqrt(lightRadiusSqr) + 1e-6), 0.0, 1.0);
+
+        if (orthographicProjection) {
+            vec4 lightClip = viewToClip * vec4(lightViewPos, 1.0);
+            vec2 lightNDC = lightClip.xy / max(abs(lightClip.w), 1e-5);
+
+            vec4 radiusClip = viewToClip * vec4(lightViewPos + vec3(sqrt(lightRadiusSqr), 0.0, 0.0), 1.0);
+            vec2 radiusNDC = radiusClip.xy / max(abs(radiusClip.w), 1e-5);
+            float lightNDCRadius = length(radiusNDC - lightNDC);
+
+            vec2 closest = clamp(lightNDC, tileNDCMin, tileNDCMax);
+            lightAffectsTile = length(lightNDC - closest) <= lightNDCRadius;
+            combinedScore = distanceScore;
+        } else {
+            // Once lightSinSqr passes 0.999 the camera is effectively inside the light's sphere of
+            // influence, so the light can reach any tile - the same conclusion the old
+            // lightRadiusSqr > lightDistSqr test drew, widened to cover the whole range where the
+            // angular math degenerates. Testing lightSinSqr subsumes that case, since a ratio of 1
+            // or more clamps to exactly 1.
+            //
+            // This matters because a PULSE light's radius sweeps +/-10% every cycle: at a camera
+            // distance inside that sweep, the light crossed this window for a single frame twice
+            // per cycle. sumCos was NaN there, every comparison against NaN is false, so
+            // 'lightTileCos >= sumCos' rejected the light from EVERY tile at once - the light
+            // vanished entirely for a frame, on the pulse's period. (master used the inverted form
+            // 'if (lightTileCos < sumCos) continue', which fails open on NaN and keeps the light,
+            // which is why master never showed this.)
+            float sumCos = (lightSinSqr > 0.999) ? -1.0 : (tileCos * lightCos - tileSin * sqrt(lightSinSqr));
+            lightAffectsTile = lightTileCos >= sumCos;
+            combinedScore = (lightTileCos * PROXIMITY_WEIGHT) + distanceScore * (1.0 - PROXIMITY_WEIGHT);
+        }
+
+        if (!lightAffectsTile)
             continue;
 
         #if USE_LIGHTS_MASK
@@ -148,10 +193,6 @@ void main() {
             if ((LightsMask[word] & mask) != 0u)
                 continue;
         #endif
-
-        const float PROXIMITY_WEIGHT = 0.75;
-        float distanceScore = clamp(1.0 - sqrt(lightDistSqr) / (sqrt(lightRadiusSqr) + 1e-6), 0.0, 1.0);
-        float combinedScore = (lightTileCos * PROXIMITY_WEIGHT) + distanceScore * (1.0 - PROXIMITY_WEIGHT);
 
         int idx = 0;
         for (; idx < sortingBinSize; idx++) {
