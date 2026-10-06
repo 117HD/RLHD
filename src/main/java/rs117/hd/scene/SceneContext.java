@@ -3,6 +3,7 @@ package rs117.hd.scene;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
@@ -48,6 +49,7 @@ public class SceneContext {
 
 	@Nullable
 	public final int[] sceneBase;
+	@Nonnull
 	public final AABB sceneBounds;
 	public final ArrayList<Environment> environments = new ArrayList<>();
 	public final ArrayList<Light> lights = new ArrayList<>();
