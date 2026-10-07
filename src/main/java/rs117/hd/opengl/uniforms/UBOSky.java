@@ -24,6 +24,7 @@ public class UBOSky extends UniformBuffer<GLBuffer> {
 	public Property moonDiskColor = addProperty(PropertyType.FVec3, "moonDiskColor");
 	public Property moonIllumination = addProperty(PropertyType.Float, "moonIllumination");
 	public Property moonReflectionVisibility = addProperty(PropertyType.Float, "moonReflectionVisibility");
+	public Property moonShadowVisibility = addProperty(PropertyType.Float, "moonShadowVisibility");
 	public Property moonSurfaceLightDirection = addProperty(PropertyType.FVec3, "moonSurfaceLightDirection");
 	public Property moonLibration = addProperty(PropertyType.FVec2, "moonLibration");
 

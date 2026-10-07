@@ -65,6 +65,7 @@ layout(std140) uniform UBOGlobal {
     mat4 invLightProjectionMatrix;
     float shadowBiasScale;
     float shadowDrawDistance;
+    bool castsShadows;
 
     float lightningBrightness;
     float elapsedTime;

@@ -45,7 +45,7 @@
 
 #if SHADOW_MODE != SHADOW_MODE_OFF
 float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal, bool applyBias, bool applyNormalBias) {
-    if (uboGlobal.lightStrength <= 0)
+    if (!uboGlobal.castsShadows)
         return 0.f;
 
     vec4 shadowPos = uboGlobal.lightProjectionMatrix * vec4(fragPos, 1);
