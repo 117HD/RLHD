@@ -107,20 +107,21 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal, bool ap
 
     #if TERRAIN_SHADOWS
         if (shadow < 1.0) {
-            float terrainBias = bias * 3.15;
             vec2 terrainMapSize = vec2(textureSize(terrainShadowMap, 0));
+            vec2 texelScale = shadowMapSize / terrainMapSize;
+            float terrainBias = bias * texelScale.x + depthPrecisionBias;
             vec4 terrainReceiverPlane = vec4(
                 shadowPos.xy * terrainMapSize,
-                receiverDepthPerTexel * shadowMapSize / terrainMapSize
+                receiverDepthPerTexel * texelScale
             );
             #if SHADOW_FILTERING == SHADOW_FILTERING_PCSS
                 float terrainShadow = sampleShadowPCSS(
-                    terrainShadowMap, false, shadowPos.z + terrainBias, shadowPos, terrainReceiverPlane, fragPos);
+                    terrainShadowMap, false, shadowPos.z - terrainBias, shadowPos, terrainReceiverPlane, fragPos);
             #else
                 // Hardware PCF shares one reference depth across its bilinear footprint
-                terrainBias -= dot(abs(terrainReceiverPlane.zw), vec2(1.0));
+                terrainBias += dot(abs(terrainReceiverPlane.zw), vec2(1.0));
                 float terrainShadow = sampleHardwareShadow(
-                    terrainShadowMap, shadowPos.z + terrainBias, shadowPos, terrainReceiverPlane);
+                    terrainShadowMap, shadowPos.z - terrainBias, shadowPos, terrainReceiverPlane);
             #endif
             shadow = max(shadow, terrainShadow);
         }
