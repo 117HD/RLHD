@@ -610,7 +610,7 @@ public interface HdPluginConfig extends Config
 		name = "Day & night",
 		description = "Daylight cycle settings",
 		position = 3,
-		closedByDefault = true
+		closedByDefault = false
 	)
 	String daylightCycleSettings = "daylightCycleSettings";
 
