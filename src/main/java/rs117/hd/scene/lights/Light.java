@@ -1,13 +1,12 @@
 package rs117.hd.scene.lights;
 
 import net.runelite.api.*;
-import net.runelite.api.coords.*;
 
 import static rs117.hd.utils.MathUtils.*;
 
 public class Light
 {
-	public static final float VISIBILITY_FADE = 0.1f;
+	public static final float VISIBILITY_FADE = 0.064f;
 
 	public final float randomOffset = RAND.nextFloat();
 	public final LightDefinition def;
@@ -17,7 +16,7 @@ public class Light
 	/**
 	 * Linear color space RGBA in the range [0, 1]
 	 */
-	public float[] color;
+	public final float[] color = new float[3];
 	public float animation = 0.5f;
 	public float duration;
 	public float fadeInDuration;
@@ -29,6 +28,7 @@ public class Light
 	public boolean parentExists;
 	public boolean withinViewingDistance = true;
 	public boolean hiddenTemporarily;
+	public boolean hiddenByPlane;
 	public boolean markedForRemoval;
 	public boolean persistent;
 	public boolean replayable;
@@ -40,17 +40,20 @@ public class Light
 	public float changedVisibilityAt = -1;
 	public float lifetime = -1;
 
-	public WorldPoint worldPoint;
+	public boolean worldLight;
+	public final int[] worldPos = new int[3];
 	public boolean belowFloor;
 	public boolean aboveFloor;
 	public int plane;
 	public int prevPlane = -1;
 	public Alignment alignment;
-	public float[] origin = new float[3];
-	public float[] offset = new float[3];
-	public float[] pos = new float[3];
+	public final float[] origin = new float[3];
+	public final float[] offset = new float[3];
+	public final float[] pos = new float[3];
 	public int orientation;
 	public float distanceSquared;
+	public float daylightCycleStrengthScale = 1;
+	public float daylightCycleRadiusScale = 1;
 
 	public Actor actor;
 	public Projectile projectile;
@@ -66,12 +69,12 @@ public class Light
 	public Light(LightDefinition def) {
 		this.def = def;
 		copyTo(offset, def.offset);
+		copyTo(color, def.color);
 		duration = max(0, def.duration) / 1000f;
 		fadeInDuration = max(0, def.fadeInDuration) / 1000f;
 		fadeOutDuration = max(0, def.fadeOutDuration) / 1000f;
 		spawnDelay = max(0, def.spawnDelay) / 1000f;
 		despawnDelay = max(0, def.despawnDelay) / 1000f;
-		color = def.color;
 		radius = def.radius;
 		strength = def.strength;
 		alignment = def.alignment;
@@ -105,8 +108,8 @@ public class Light
 
 	public void toggleTemporaryVisibility(boolean changedPlanes) {
 		hiddenTemporarily = !hiddenTemporarily;
-		// If visibility changes due to something other than changing planes, fade in or out
-		if (!changedPlanes) {
+		// If visibility changes due to something other than changing planes, and the light didn't spawn this frame, fade in or out
+		if (!changedPlanes && elapsedTime > 0) {
 			// Begin fading in or out, while accounting for time already spent fading out or in respectively
 			float beginFadeAt = elapsedTime;
 			if (changedVisibilityAt != -1)

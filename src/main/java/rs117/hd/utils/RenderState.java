@@ -12,19 +12,20 @@ import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 public final class RenderState {
 	private final List<GLState> states = new ArrayList<>();
 
-	public final GLBindFramebuffer framebuffer = addState(GLBindFramebuffer::new);
+	public final GLFramebuffer framebuffer = addState(GLFramebuffer::new);
 	public final GLFramebufferTextureLayer framebufferTextureLayer = addState(GLFramebufferTextureLayer::new);
 	public final GLDrawBuffer drawBuffer = addState(GLDrawBuffer::new);
 	public final GLShaderProgram program = addState(GLShaderProgram::new);
 	public final GLViewport viewport = addState(GLViewport::new);
-	public final GLBindVAO vao = addState(GLBindVAO::new);
-	public final GLBindEBO ebo = addState(GLBindEBO::new);
-	public final GLBindIDO ido = addState(GLBindIDO::new);
-	public final GLBindUBO ubo = addState(GLBindUBO::new);
+	public final GLVao vao = addState(GLVao::new);
+	public final GLIdo ido = addState(GLIdo::new);
+	public final GLUbo ubo = addState(GLUbo::new);
 	public final GLDepthMask depthMask = addState(GLDepthMask::new);
 	public final GLDepthFunc depthFunc = addState(GLDepthFunc::new);
 	public final GLColorMask colorMask = addState(GLColorMask::new);
 	public final GLBlendFunc blendFunc = addState(GLBlendFunc::new);
+	public final GLPolygonOffset polygonOffset = addState(GLPolygonOffset::new);
+	public final GLCullFace cullFace = addState(GLCullFace::new);
 	public final GLEnable enable = addState(GLEnable::new);
 	public final GLDisable disable = addState(GLDisable::new);
 
@@ -44,8 +45,8 @@ public final class RenderState {
 		return state;
 	}
 
-	public static final class GLBindFramebuffer extends GLState.IntArray {
-		private GLBindFramebuffer() {
+	public static final class GLFramebuffer extends GLState.IntArray {
+		private GLFramebuffer() {
 			super(2);
 		}
 
@@ -81,22 +82,35 @@ public final class RenderState {
 		protected void applyValue(int buf) { glDrawBuffer(buf); }
 	}
 
-	public static final class GLBindVAO extends GLState.Int {
+	public static final class GLVao extends GLState {
+		int vao, ebo;
+		int appliedVao, appliedEbo;
+
+		public void setVao(int vao) {
+			setVaoAndEbo(vao, 0);
+		}
+
+		public void setVaoAndEbo(int vao, int ebo) {
+			this.vao = vao;
+			this.ebo = ebo;
+			hasValue = true;
+		}
+
 		@Override
-		protected void applyValue(int vao) { glBindVertexArray(vao); }
+		protected void internalApply() {
+			if (!hasApplied || vao != appliedVao)
+				glBindVertexArray(vao);
+			if (ebo != 0 && (!hasApplied || ebo != appliedEbo))
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+		}
 	}
 
-	public static final class GLBindEBO extends GLState.Int {
-		@Override
-		protected void applyValue(int ebo) { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo); }
-	}
-
-	public static final class GLBindIDO extends GLState.Int {
+	public static final class GLIdo extends GLState.Int {
 		@Override
 		protected void applyValue(int ebo) { glBindBuffer(GL_DRAW_INDIRECT_BUFFER, ebo); }
 	}
 
-	public static final class GLBindUBO extends GLState.Int {
+	public static final class GLUbo extends GLState.Int {
 		@Override
 		protected void applyValue(int ubo) { glBindBuffer(GL_UNIFORM_BUFFER, ubo); }
 	}
@@ -111,6 +125,11 @@ public final class RenderState {
 		protected void applyValue(int func) { glDepthFunc(func); }
 	}
 
+	public static final class GLCullFace extends GLState.Int {
+		@Override
+		protected void applyValue(int mode) { glCullFace(mode); }
+	}
+
 	public static final class GLBlendFunc extends GLState.IntArray {
 		private GLBlendFunc() {
 			super(4);
@@ -118,6 +137,15 @@ public final class RenderState {
 
 		@Override
 		protected void applyValues(int[] values) { glBlendFuncSeparate(values[0], values[1], values[2], values[3]); }
+	}
+
+	public static final class GLPolygonOffset extends GLState.FloatArray {
+		public GLPolygonOffset() {
+			super(2);
+		}
+
+		@Override
+		protected void applyValues(float[] values) { glPolygonOffset(values[0], values[1]); }
 	}
 
 	public static final class GLColorMask extends GLState.BoolArray {

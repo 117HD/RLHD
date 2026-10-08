@@ -1,8 +1,18 @@
 #pragma once
 
 #include <utils/constants.glsl>
+#include <utils/color_utils.glsl>
+
+#define RED linearToSrgb(uboGlobal.colorPicker.r)
+#define GREEN linearToSrgb(uboGlobal.colorPicker.g)
+#define BLUE linearToSrgb(uboGlobal.colorPicker.b)
+#define OPACITY uboGlobal.colorPicker.a
 
 layout(std140) uniform UBOGlobal {
+    vec4 colorPicker;
+
+    bool orthographicProjection;
+
     int expandedMapLoadingChunks;
     float drawDistance;
 
@@ -15,7 +25,9 @@ layout(std140) uniform UBOGlobal {
     float colorFilterFade;
 
     vec3 highContrastColors[8];
-
+    ivec2 viewportSize;
+    ivec2 sceneResolution;
+    ivec2 tiledLightingResolution;
     ivec2 sceneResolution;
     ivec2 tiledLightingResolution;
 
@@ -37,6 +49,8 @@ layout(std140) uniform UBOGlobal {
     vec3 waterColorMid;
     vec3 waterColorDark;
 
+    ivec2 sceneBase;
+
     bool underwaterEnvironment;
     bool underwaterCaustics;
     vec3 underwaterCausticsColor;
@@ -51,7 +65,10 @@ layout(std140) uniform UBOGlobal {
     mat4 projectionMatrix;
     mat4 invProjectionMatrix;
     mat4 lightProjectionMatrix;
+    mat4 invLightProjectionMatrix;
+    float shadowBiasScale;
+    float shadowDrawDistance;
 
     float lightningBrightness;
     float elapsedTime;
-};
+} uboGlobal;

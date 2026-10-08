@@ -52,11 +52,15 @@ public class Material {
 	private Material ambientOcclusionMap;
 	@JsonAdapter(Reference.Adapter.class)
 	private Material flowMap;
+	@JsonAdapter(Reference.Adapter.class)
+	private Material shadowAlphaMap;
 	public boolean hasTransparency;
+	public boolean doubleSidedFaces;
 	private boolean overrideBaseColor;
 	private boolean unlit;
 	@JsonAdapter(ColorUtils.LinearAdapter.class)
 	public float brightness = 1;
+	private float subsurface;
 	private float displacementScale = .1f;
 	private float flowMapStrength;
 	private float[] flowMapDuration = { 0, 0 };
@@ -76,7 +80,8 @@ public class Material {
 
 	public static final int MAX_MATERIAL_INDEX = (1 << 12) - 1;
 	public static final Material NONE = new Material().name("NONE");
-	public static final Material[] REQUIRED_MATERIALS = { NONE };
+	public static final Material UNLIT = new Material().name("UNLIT").parent(NONE).unlit(true);
+	public static final Material[] REQUIRED_MATERIALS = { NONE, UNLIT };
 
 	public static int getTextureLayer(@Nullable Material material) {
 		return material == null ? -1 : material.textureLayer;
@@ -101,6 +106,7 @@ public class Material {
 		roughnessMap = resolveReference(roughnessMap, materials);
 		ambientOcclusionMap = resolveReference(ambientOcclusionMap, materials);
 		flowMap = resolveReference(flowMap, materials);
+		shadowAlphaMap = resolveReference(shadowAlphaMap, materials);
 
 		if (displacementScale == 0)
 			displacementMap = NONE.displacementMap;
@@ -125,7 +131,8 @@ public class Material {
 			displacementMap != null ||
 			roughnessMap != null ||
 			ambientOcclusionMap != null ||
-			flowMap != null;
+			flowMap != null ||
+			shadowAlphaMap != null;
 	}
 
 	@Override
@@ -185,6 +192,7 @@ public class Material {
 			   | ((modelOverride.windDisplacementModifier + 3) & 0x7) << 12
 			   | (modelOverride.windDisplacementMode.ordinal() & 0x7) << 9
 			   | (modelOverride.invertDisplacementStrength ? 1 : 0) << 8
+			   | (modelOverride.shadowNormalBias ? 1 : 0) << 7
 			   | (modelOverride.terrainVertexSnap ? 1 : 0) << 6
 			   | (!modelOverride.receiveShadows ? 1 : 0) << 5
 			   | (modelOverride.upwardsNormals ? 1 : 0) << 4
@@ -208,12 +216,14 @@ public class Material {
 		struct.roughnessMap.set(getTextureLayer(roughnessMap));
 		struct.ambientOcclusionMap.set(getTextureLayer(ambientOcclusionMap));
 		struct.flowMap.set(getTextureLayer(flowMap));
+		struct.shadowAlphaMap.set(getTextureLayer(shadowAlphaMap));
 		struct.flags.set(
 			(overrideBaseColor ? 1 : 0) << 2 |
 			(unlit ? 1 : 0) << 1 |
 			(hasTransparency ? 1 : 0)
 		);
 		struct.brightness.set(brightness);
+		struct.subsurface.set(subsurface);
 		struct.displacementScale.set(displacementScale);
 		struct.specularStrength.set(specularStrength);
 		struct.specularGloss.set(specularGloss);

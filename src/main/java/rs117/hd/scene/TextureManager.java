@@ -83,14 +83,18 @@ public class TextureManager {
 
 		TEXTURE_PATH.watch((path, first) -> {
 			if (first) return;
-			log.debug("Texture changed: {}", path);
 
 			// Mark texture layers that need to be reloaded
-			String filename = path.getFilename();
-			if (!filename.isEmpty())
-				for (var layer : materialManager.textureLayers)
-					if (filename.equals(layer.material.getTextureName()))
+			String textureName = path.setExtension(null).getFilename();
+			if (!textureName.isEmpty()) {
+				for (var layer : materialManager.textureLayers) {
+					if (textureName.equals(layer.material.getTextureName())) {
+						log.debug("Texture changed: {}", path);
 						layer.needsUpload = true;
+						break;
+					}
+				}
+			}
 
 			// Debounce texture loading in case the same file change is triggered multiple times
 			if (debounce == null || debounce.cancel(false) || debounce.isDone())
@@ -206,7 +210,7 @@ public class TextureManager {
 		scaleOp.filter(image, scaledImage);
 
 		int[] pixels = ((DataBufferInt) scaledImage.getRaster().getDataBuffer()).getData();
-		pixelBuffer.put(pixels).flip();
+		pixelBuffer.clear().put(pixels).flip();
 
 		// Go from TYPE_4BYTE_ABGR in the BufferedImage to RGBA
 		glTexSubImage3D(

@@ -37,18 +37,25 @@ import rs117.hd.config.ColorBlindMode;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
 import rs117.hd.config.CpuUsageLimit;
+import rs117.hd.config.DaylightCycle;
+import rs117.hd.config.DefaultBoolean;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FogDepthMode;
+import rs117.hd.config.GroundBlending;
 import rs117.hd.config.InfernalCape;
+import rs117.hd.config.MoonBehavior;
+import rs117.hd.config.MoonPhase;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SceneScalingMode;
 import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowDistance;
+import rs117.hd.config.ShadowFiltering;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.ShadowResolution;
+import rs117.hd.config.StarMode;
 import rs117.hd.config.TextureResolution;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
@@ -56,6 +63,7 @@ import rs117.hd.config.VanillaShadowMode;
 import static rs117.hd.HdPlugin.MAX_DISTANCE;
 import static rs117.hd.HdPlugin.MAX_FOG_DEPTH;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.scene.SkyManager.DEFAULT_LATLON;
 import static rs117.hd.utils.MathUtils.*;
 
 @ConfigGroup(CONFIG_GROUP)
@@ -78,7 +86,7 @@ public interface HdPluginConfig extends Config
 	@Units(" tiles")
 	@ConfigItem(
 		keyName = "drawDistance",
-		name = "Draw Distance",
+		name = "Draw distance",
 		description =
 			"The number of tiles to draw in either direction from the camera, up to a maximum of 184.<br>" +
 			"Depending on where the scene is centered, you might only see 16 tiles in one direction, unless you extend map loading.",
@@ -96,7 +104,7 @@ public interface HdPluginConfig extends Config
 	@Units(" tiles")
 	@ConfigItem(
 		keyName = "detailDistance",
-		name = "Detail Distance",
+		name = "Detail distance",
 		description =
 			"The number of tiles to draw animated models in either direction from the camera, up to a maximum of 184.<br>" +
 			"Reducing this can help with performance, particularly in crowded sailing areas.",
@@ -117,7 +125,7 @@ public interface HdPluginConfig extends Config
 		name = "Extended map loading",
 		description =
 			"How much further the map should be loaded. The maximum is 5 extra chunks.<br>" +
-			"Note, extending the map can have a very high impact on performance.",
+			"Note: extending the map can have a very high impact on performance.",
 		position = 3,
 		section = generalSettings
 	)
@@ -140,7 +148,7 @@ public interface HdPluginConfig extends Config
 	String KEY_ANTI_ALIASING_MODE = "antiAliasingMode";
 	@ConfigItem(
 		keyName = KEY_ANTI_ALIASING_MODE,
-		name = "Anti-Aliasing",
+		name = "Anti-aliasing",
 		description =
 			"Improves pixelated edges at the cost of significantly higher GPU usage.<br>" +
 			"MSAA x16 is very expensive, so x8 is recommended if anti-aliasing is desired.",
@@ -149,16 +157,16 @@ public interface HdPluginConfig extends Config
 	)
 	default AntiAliasingMode antiAliasingMode()
 	{
-		return AntiAliasingMode.DISABLED;
+		return AntiAliasingMode.MSAA_8;
 	}
 
 	String KEY_SCENE_RESOLUTION_SCALE = "sceneResolutionScale";
 	@ConfigItem(
 		keyName = KEY_SCENE_RESOLUTION_SCALE,
-		name = "Game Resolution",
+		name = "Game resolution",
 		description =
 			"Render the game at a different resolution and stretch it to fit the screen.<br>" +
-			"Reducing this can improve performance, particularly on very high resolution displays.",
+			"Reducing this can improve performance, particularly on very high-resolution displays.",
 		position = 6,
 		section = generalSettings
 	)
@@ -170,7 +178,7 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "sceneScalingMode",
-		name = "Game Scaling Mode",
+		name = "Game scaling mode",
 		description = "The sampling function to use when upscaling the above reduced game resolution.",
 		position = 7,
 		section = generalSettings
@@ -183,7 +191,7 @@ public interface HdPluginConfig extends Config
 	String KEY_UI_SCALING_MODE = "uiScalingMode";
 	@ConfigItem(
 		keyName = KEY_UI_SCALING_MODE,
-		name = "UI Scaling Mode",
+		name = "UI scaling mode",
 		description =
 			"The sampling function to use when the Stretched Mode plugin is enabled.<br>" +
 			"Affects how the UI looks with non-integer scaling.",
@@ -202,12 +210,12 @@ public interface HdPluginConfig extends Config
 	@Units("x")
 	@ConfigItem(
 		keyName = KEY_ANISOTROPIC_FILTERING_LEVEL,
-		name = "Anisotropic Filtering",
+		name = "Anisotropic filtering",
 		description =
 			"Configures whether mipmapping and anisotropic filtering should be used.<br>" +
 			"At zero, mipmapping is disabled and textures look the most pixelated.<br>" +
 			"At 1 through 16, mipmapping is enabled, and textures look more blurry and smoothed out.<br>" +
-			"The higher you go beyond 1, the less blurry textures will look, up to a certain extent.",
+			"The higher you go beyond 1, the less blurry textures will look, to a certain extent.",
 		position = 9,
 		section = generalSettings
 	)
@@ -239,14 +247,14 @@ public interface HdPluginConfig extends Config
 	String KEY_VSYNC_MODE = "vsyncMode";
 	@ConfigItem(
 		keyName = KEY_VSYNC_MODE,
-		name = "VSync Mode",
+		name = "VSync mode",
 		description =
 			"Controls whether the frame rate should be synchronized with your monitor's refresh rate.<br>" +
-			"If set to 'off', the FPS Target option will be used instead.<br>" +
+			"If set to 'off', the FPS target option will be used instead.<br>" +
 			"If set to 'adaptive', FPS will be limited to your monitor's refresh rate, which saves power.<br>" +
 			"If set to 'on', the game will attempt to match your monitor's refresh rate <b>exactly</b>,<br>" +
 			"but if it can't keep up, FPS will be <u>halved until it catches up</u>. This option is rarely desired.<br>" +
-			"Note, GPUs that don't support Adaptive VSync will silently fall back to 'on'.",
+			"Note: GPUs that don't support Adaptive VSync will silently fall back to 'on'.",
 		position = 11,
 		section = generalSettings
 	)
@@ -258,10 +266,10 @@ public interface HdPluginConfig extends Config
 	String KEY_FPS_TARGET = "fpsTarget";
 	@ConfigItem(
 		keyName = KEY_FPS_TARGET,
-		name = "FPS Target",
+		name = "FPS target",
 		description =
 			"Controls the maximum number of frames per second.<br>" +
-			"This setting only applies if Unlock FPS is enabled, and VSync Mode is set to 'off'.",
+			"This setting only applies if Unlock FPS is enabled and VSync mode is set to 'off'.",
 		position = 12,
 		section = generalSettings
 	)
@@ -277,7 +285,7 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "flashingEffects",
-		name = "Flashing Effects",
+		name = "Flashing effects",
 		description = "Whether to show rapid flashing effects, such as lightning, in certain areas.",
 		position = 15,
 		section = generalSettings
@@ -337,7 +345,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_BRIGHTNESS,
 		name = "Brightness",
 		description =
-			"Controls the brightness of the game, excluding UI.<br>" +
+			"Controls the brightness of the game, excluding the UI.<br>" +
 			"Adjust until the circle on the left is barely visible.",
 		position = 18,
 		section = generalSettings
@@ -347,12 +355,122 @@ public interface HdPluginConfig extends Config
 	}
 
 
+	/*====== Shadow settings ======*/
+
+	@ConfigSection(
+		name = "Shadows",
+		description = "Shadow settings",
+		position = 1,
+		closedByDefault = true
+	)
+	String shadowSettings = "shadowSettings";
+
+	String KEY_SHADOW_MODE = "shadowMode";
+	@ConfigItem(
+		keyName = KEY_SHADOW_MODE,
+		name = "Shadow mode",
+		description =
+			"Render fully dynamic shadows.<br>" +
+			"'Off' completely disables shadows.<br>" +
+			"'Fast' enables fast shadows without any texture detail.<br>" +
+			"'Detailed' enables shadows with support for texture detail.",
+		position = 1,
+		section = shadowSettings
+	)
+	default ShadowMode shadowMode() {
+		return ShadowMode.DETAILED;
+	}
+
+	String KEY_SHADOW_RESOLUTION = "shadowResolution";
+	@ConfigItem(
+		keyName = KEY_SHADOW_RESOLUTION,
+		name = "Shadow quality",
+		description =
+			"The resolution of the shadow map.<br>" +
+			"Higher resolutions result in higher quality shadows, at the cost of higher GPU usage.",
+		position = 2,
+		section = shadowSettings
+	)
+	default ShadowResolution shadowResolution() {
+		return ShadowResolution.RES_8192;
+	}
+
+	String KEY_SHADOW_FILTERING = "shadowFiltering";
+	@ConfigItem(
+		keyName = KEY_SHADOW_FILTERING,
+		name = "Shadow filtering",
+		description =
+			"Filtering technique used when smoothing the edges of shadows.<br>" +
+			"'Smooth low' smooths the shadow pixels evenly (PCF 2x2).<br>" +
+			"'Smooth high' smooths the shadow pixels evenly (PCF 3x3).<br>" +
+			"'Dithered low' smooths out pixelation using dithering.<br>" +
+			"'Dithered high' smooths out pixelation using dithering (PCF 2x2).<br>" +
+			"'Pixelated' retains slightly pixelated shadow edges.<br>" +
+			"'Soft shadows' produces realistically soft shadows, at the cost of performance.",
+		position = 3,
+		section = shadowSettings
+	)
+	default ShadowFiltering shadowFiltering() {
+		return ShadowFiltering.SMOOTH_HIGH;
+	}
+
+	String KEY_SHADOW_TRANSPARENCY = "enableShadowTransparency";
+	@ConfigItem(
+		keyName = KEY_SHADOW_TRANSPARENCY,
+		name = "Shadow transparency",
+		description = "Enable partial support for taking model transparency into account.",
+		position = 4,
+		section = shadowSettings
+	)
+	default boolean shadowTransparency() {
+		return true;
+	}
+
+	String KEY_ROOF_SHADOWS = "experimentalRoofShadows";
+	@ConfigItem(
+		keyName = KEY_ROOF_SHADOWS,
+		name = "Roof shadows",
+		description = "Always cast shadows from roofs, even when they are hidden.",
+		position = 5,
+		section = shadowSettings
+	)
+	default boolean roofShadows() {
+		return false;
+	}
+
+	String KEY_TERRAIN_SHADOWS = "terrainShadows";
+	@ConfigItem(
+		keyName = KEY_TERRAIN_SHADOWS,
+		name = "Terrain shadows",
+		description = "Allow terrain to cast shadows. May cause visual artifacts on slopes.",
+		position = 6,
+		section = shadowSettings
+	)
+	default boolean terrainShadows() {
+		return true;
+	}
+
+	String KEY_CONSERVATIVE_SHADOW_CULLING = "expandShadowDraw";
+	@ConfigItem(
+		keyName = KEY_CONSERVATIVE_SHADOW_CULLING,
+		name = "Remove shadow pop-in",
+		description =
+			"Render a potentially much larger part of the scene, to avoid shadows popping in and out<br>" +
+			"based on what the camera currently sees. May significantly impact performance.",
+		position = 7,
+		section = shadowSettings
+	)
+	default boolean conservativeShadowCulling() {
+		return false;
+	}
+
+
 	/*====== Lighting settings ======*/
 
 	@ConfigSection(
 		name = "Lighting",
 		description = "Lighting settings",
-		position = 1,
+		position = 2,
 		closedByDefault = true
 	)
 	String lightingSettings = "lightingSettings";
@@ -360,22 +478,21 @@ public interface HdPluginConfig extends Config
 	String KEY_DYNAMIC_LIGHTS = "dynamicLights";
 	@ConfigItem(
 		keyName = KEY_DYNAMIC_LIGHTS,
-		name = "Dynamic Lights",
+		name = "Dynamic lights",
 		description =
 			"The maximum number of dynamic lights visible at once.<br>" +
 			"Reducing this may improve performance.",
 		position = 0,
 		section = lightingSettings
 	)
-	default DynamicLights dynamicLights()
-	{
+	default DynamicLights dynamicLights() {
 		return DynamicLights.SOME;
 	}
 
 	String KEY_TILED_LIGHTING = "tiledLighting";
 	@ConfigItem(
 		keyName = KEY_TILED_LIGHTING,
-		name = "Tiled Lighting",
+		name = "Tiled lighting",
 		description = "Allows rendering <b>a lot</b> more lights simultaneously.",
 		section = lightingSettings,
 		position = 1
@@ -389,7 +506,7 @@ public interface HdPluginConfig extends Config
 	String KEY_PROJECTILE_LIGHTS = "projectileLights";
 	@ConfigItem(
 		keyName = KEY_PROJECTILE_LIGHTS,
-		name = "Projectile Lights",
+		name = "Projectile lights",
 		description = "Adds dynamic lights to some projectiles.",
 		position = 2,
 		section = lightingSettings
@@ -401,7 +518,7 @@ public interface HdPluginConfig extends Config
 	String KEY_NPC_LIGHTS = "npcLights";
 	@ConfigItem(
 		keyName = KEY_NPC_LIGHTS,
-		name = "NPC Lights",
+		name = "NPC lights",
 		description = "Adds dynamic lights to some NPCs.",
 		position = 3,
 		section = lightingSettings
@@ -413,7 +530,7 @@ public interface HdPluginConfig extends Config
 	String KEY_ATMOSPHERIC_LIGHTING = "environmentalLighting";
 	@ConfigItem(
 		keyName = KEY_ATMOSPHERIC_LIGHTING,
-		name = "Atmospheric Lighting",
+		name = "Atmospheric lighting",
 		description = "Change environmental lighting based on the current area.",
 		position = 4,
 		section = lightingSettings
@@ -422,97 +539,10 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	String KEY_SHADOW_MODE = "shadowMode";
-	@ConfigItem(
-		keyName = KEY_SHADOW_MODE,
-		name = "Shadows",
-		description =
-			"Render fully dynamic shadows.<br>" +
-			"'Off' completely disables shadows.<br>" +
-			"'Fast' enables fast shadows without any texture detail.<br>" +
-			"'Detailed' enables slower shadows with support for texture detail.",
-		position = 5,
-		section = lightingSettings
-	)
-	default ShadowMode shadowMode()
-	{
-		return ShadowMode.DETAILED;
-	}
-
-	String KEY_SHADOW_TRANSPARENCY = "enableShadowTransparency";
-	@ConfigItem(
-		keyName = KEY_SHADOW_TRANSPARENCY,
-		name = "Shadow Transparency",
-		description = "Enables partial support for shadows that take transparency into account.",
-		position = 6,
-		section = lightingSettings
-	)
-	default boolean enableShadowTransparency()
-	{
-		return true;
-	}
-
-	String KEY_PIXELATED_SHADOWS = "pixelatedShadows";
-	@ConfigItem(
-		keyName = KEY_PIXELATED_SHADOWS,
-		name = "Pixelated Shadows",
-		description = "Give shadows a slightly pixelated look.",
-		position = 7,
-		section = lightingSettings
-	)
-	default boolean pixelatedShadows() {
-		return false;
-	}
-
-	String KEY_SHADOW_RESOLUTION = "shadowResolution";
-	@ConfigItem(
-		keyName = KEY_SHADOW_RESOLUTION,
-		name = "Shadow Quality",
-		description =
-			"The resolution of the shadow map.<br>" +
-			"Higher resolutions result in higher quality shadows, at the cost of higher GPU usage.",
-		position = 8,
-		section = lightingSettings
-	)
-	default ShadowResolution shadowResolution()
-	{
-		return ShadowResolution.RES_4096;
-	}
-
-	@ConfigItem(
-		keyName = "shadowDistance",
-		name = "Shadow Distance",
-		description =
-			"The maximum draw distance for shadows.<br>" +
-			"Shorter distances result in higher quality shadows.",
-		position = 9,
-		section = lightingSettings
-	)
-	@Units(" tiles")
-	default ShadowDistance shadowDistance()
-	{
-		return ShadowDistance.DISTANCE_50;
-	}
-
-	String KEY_EXPAND_SHADOW_DRAW = "expandShadowDraw";
-	@ConfigItem(
-		keyName = KEY_EXPAND_SHADOW_DRAW,
-		name = "Expand Shadow Draw",
-		description =
-			"Reduces shadows popping in and out at the edge of the screen by rendering<br>" +
-			"shadows for a larger portion of the scene, at the cost of higher GPU usage.",
-		position = 10,
-		section = lightingSettings
-	)
-	default boolean expandShadowDraw()
-	{
-		return false;
-	}
-
 	String KEY_VANILLA_SHADOW_MODE = "vanillaShadowMode";
 	@ConfigItem(
 		keyName = KEY_VANILLA_SHADOW_MODE,
-		name = "Vanilla Shadows",
+		name = "Vanilla shadows",
 		description =
 			"Choose whether shadows built into models by Jagex should be hidden. This does not affect clickboxes.<br>" +
 			"'Show in PvM' will retain shadows for falling crystals during the Olm fight and other useful cases.<br>" +
@@ -527,7 +557,7 @@ public interface HdPluginConfig extends Config
 	String KEY_NORMAL_MAPPING = "normalMapping";
 	@ConfigItem(
 		keyName = KEY_NORMAL_MAPPING,
-		name = "Normal Mapping",
+		name = "Normal mapping",
 		description = "Affects how light interacts with certain materials. Barely impacts performance.",
 		position = 12,
 		section = lightingSettings
@@ -539,7 +569,7 @@ public interface HdPluginConfig extends Config
 	String KEY_PARALLAX_OCCLUSION_MAPPING = "parallaxOcclusionMappingToggle";
 	@ConfigItem(
 		keyName = KEY_PARALLAX_OCCLUSION_MAPPING,
-		name = "Parallax Occlusion Mapping",
+		name = "Parallax occlusion mapping",
 		description = "Adds more depth to some materials, at the cost of higher GPU usage.",
 		position = 13,
 		section = lightingSettings
@@ -549,12 +579,188 @@ public interface HdPluginConfig extends Config
 	}
 
 
+	/*====== Day & night settings ======*/
+
+	@ConfigSection(
+		name = "Day & night",
+		description = "Daylight cycle settings",
+		position = 3,
+		closedByDefault = true
+	)
+	String daylightCycleSettings = "daylightCycleSettings";
+
+	String KEY_DAYLIGHT_CYCLE = "daylightCycle";
+	@ConfigItem(
+		keyName = KEY_DAYLIGHT_CYCLE,
+		name = "Cycle mode",
+		description =
+			"Controls the day & night cycle behavior.<br>" +
+			"'Off' disables the day & night cycle entirely.<br>" +
+			"'Default' shows everyone the same sky, with one complete day passing per hour.<br>" +
+			"'Real-time' follows your local time, roughly matching the real sun in your hemisphere.<br>" +
+			"'Custom' follows the sun and moon at the configured location, respecting the Custom cycle duration.<br>" +
+			"'Dawn' shows the sky just before sunrise.<br>" +
+			"'Sunrise' shows a constant sunrise.<br>" +
+			"'Day' shows constant daytime.<br>" +
+			"'Sunset' shows a constant sunset.<br>" +
+			"'Dusk' shows the sky just after sunset.<br>" +
+			"'Night' shows constant night-time.",
+		position = 0,
+		section = daylightCycleSettings
+	)
+	default DaylightCycle daylightCycle() {
+		return DaylightCycle.DEFAULT;
+	}
+
+	String KEY_NIGHT_BRIGHTNESS = "nightBrightness";
+	@Range(min = 0, max = 300)
+	@Units(Units.PERCENT)
+	@ConfigItem(
+		keyName = KEY_NIGHT_BRIGHTNESS,
+		name = "Night brightness",
+		description =
+			"Simulates your eyes adapting to darkness by brightening night-time lighting.<br>" +
+			"'0%' disables night brightness adaptation entirely.<br>" +
+			"'100%' yields good visibility at night.<br>" +
+			"Values above 100% amplify the adjustment further, if needed.",
+		position = 1,
+		section = daylightCycleSettings
+	)
+	default int nightBrightness() {
+		return 100;
+	}
+
+	String KEY_STARS = "stars";
+	@ConfigItem(
+		keyName = KEY_STARS,
+		name = "Stars",
+		description =
+			"'Off' hides stars.<br>" +
+			"'Realistic' follows the sky's celestial rotation.<br>" +
+			"'Artistic' rotates horizontally with slight parallax.<br>" +
+			"'Static' keeps the realistic star field fixed in place.",
+		position = 2,
+		section = daylightCycleSettings
+	)
+	default StarMode starMode() {
+		return StarMode.REALISTIC;
+	}
+
+	String KEY_NEBULAE = "nebulae";
+	@ConfigItem(
+		keyName = KEY_NEBULAE,
+		name = "Nebulae",
+		description = "Show clouds of cosmic dust and gas in the night sky.",
+		position = 3,
+		section = daylightCycleSettings
+	)
+	default boolean enableNebulae() {
+		return true;
+	}
+
+	String KEY_MOON_BEHAVIOR = "moonBehavior";
+	@ConfigItem(
+		keyName = KEY_MOON_BEHAVIOR,
+		name = "Moon behavior",
+		description =
+			"Controls how the moon moves across the sky.<br>" +
+			"'Disabled' hides the moon, keeping half-moon illumination for scene lighting.<br>" +
+			"'Realistic orbit' makes the moon orbit naturally, independent of the sun.<br>" +
+			"'Mirror the sun' keeps the moon opposite the sun.<br>" +
+			"'Static' keeps the moon at a fixed point in the sky.",
+		position = 4,
+		section = daylightCycleSettings
+	)
+	default MoonBehavior moonBehavior() {
+		return MoonBehavior.REALISTIC;
+	}
+
+	String KEY_MOON_PHASE = "moonPhase";
+	@ConfigItem(
+		keyName = KEY_MOON_PHASE,
+		name = "Moon phase",
+		description =
+			"Controls the portion of the moon which is lit by the sun.<br>" +
+			"'Dynamic' lights up the moon based on its position relative to the sun.<br>" +
+			"All other options lock the moon in a particular lunar phase.",
+		position = 5,
+		section = daylightCycleSettings
+	)
+	default MoonPhase moonPhase() {
+		return MoonPhase.DYNAMIC;
+	}
+
+	String KEY_REPLACE_VANILLA_SKYBOXES = "replaceVanillaSkyboxes";
+	@ConfigItem(
+		keyName = KEY_REPLACE_VANILLA_SKYBOXES,
+		name = "Replace vanilla skyboxes",
+		description = "Replace the game's built-in skybox models with 117 HD's own implementation.",
+		position = 6,
+		section = daylightCycleSettings
+	)
+	default boolean replaceVanillaSkyboxes() {
+		return true;
+	}
+
+	String KEY_CUSTOM_CYCLE_DURATION = "customCycleDurationMinutes";
+	@Range(min = 1)
+	@Units(Units.MINUTES)
+	@ConfigItem(
+		keyName = KEY_CUSTOM_CYCLE_DURATION,
+		name = "Custom cycle duration",
+		description = "Configures how long each Custom day & night cycle lasts.",
+		position = 7,
+		section = daylightCycleSettings
+	)
+	default int customCycleDurationMinutes() {
+		return 60;
+	}
+
+	String KEY_LATITUDE_DEGREES = "latitudeDegrees";
+	@Range(min = -90, max = 90)
+	@Units("°")
+	@ConfigItem(
+		keyName = KEY_LATITUDE_DEGREES,
+		name = "Real-time latitude",
+		description =
+			"<b>Advanced setting</b>: Change the latitude coordinate for realistic sun and moon movement for a location on Earth.<br>" +
+			"Only applies to Real-time and Custom cycle modes. Defaults to New York City.<br>" +
+			"For southern latitudes, use negative values. For more precise timing, you can provide<br>" +
+			"coordinates including decimals in the in-game chat with: <b>::117hd latlon &lt;latitude&gt; &lt;longitude&gt;</b><br>" +
+			"To return to using the values specified in the config panel, type: <b>::117hd latlon reset</b>",
+		position = 9,
+		section = daylightCycleSettings
+	)
+	default int latitudeDegrees() {
+		return round(DEFAULT_LATLON[0]);
+	}
+
+	String KEY_LONGITUDE_DEGREES = "longitudeDegrees";
+	@Range(min = -180, max = 180)
+	@Units("°")
+	@ConfigItem(
+		keyName = KEY_LONGITUDE_DEGREES,
+		name = "Real-time longitude",
+		description =
+			"<b>Advanced setting</b>: Change the longitude coordinate for realistic sun and moon movement for a location on Earth.<br>" +
+			"Only applies to Real-time and Custom cycle modes. Defaults to New York City.<br>" +
+			"For western longitudes, use negative values. For more precise timing, you can provide<br>" +
+			"coordinates including decimals in the in-game chat with: <b>::117hd latlon &lt;latitude&gt; &lt;longitude&gt;</b><br>" +
+			"To return to using the values specified in the config panel, type: <b>::117hd latlon reset</b>",
+		position = 10,
+		section = daylightCycleSettings
+	)
+	default int longitudeDegrees() {
+		return round(DEFAULT_LATLON[1]);
+	}
+
+
 	/*====== Environment settings ======*/
 
 	@ConfigSection(
 		name = "Environment",
 		description = "Environment settings",
-		position = 2,
+		position = 4,
 		closedByDefault = true
 	)
 	String environmentSettings = "environmentSettings";
@@ -562,7 +768,7 @@ public interface HdPluginConfig extends Config
 	String KEY_SEASONAL_THEME = "seasonalTheme";
 	@ConfigItem(
 		keyName = KEY_SEASONAL_THEME,
-		name = "Seasonal Theme",
+		name = "Seasonal theme",
 		description = "Festive themes for Gielinor.",
 		position = 0,
 		section = environmentSettings
@@ -574,8 +780,8 @@ public interface HdPluginConfig extends Config
 	String KEY_SEASONAL_HEMISPHERE = "seasonalHemisphere";
 	@ConfigItem(
 		keyName = KEY_SEASONAL_HEMISPHERE,
-		name = "Seasonal Hemisphere",
-		description = "Determines which hemisphere the 'Automatic' Seasonal Theme should consider.",
+		name = "Seasonal hemisphere",
+		description = "Determines which hemisphere the 'Automatic' seasonal theme should consider.",
 		position = 1,
 		section = environmentSettings
 	)
@@ -583,14 +789,26 @@ public interface HdPluginConfig extends Config
 		return SeasonalHemisphere.NORTHERN;
 	}
 
+	String KEY_SEASONAL_FOLIAGE = "seasonalFoliage";
+	@ConfigItem(
+		keyName = KEY_SEASONAL_FOLIAGE,
+		name = "Seasonal foliage",
+		description = "Allow seasonal themes to change the color of tree leaves.",
+		position = 2,
+		section = environmentSettings
+	)
+	default boolean seasonalFoliage() {
+		return true;
+	}
+
 	@ConfigItem(
 		keyName = "fogDepthMode",
-		name = "Fog Depth Mode",
+		name = "Fog depth mode",
 		description =
 			"Determines how the fog amount is controlled.<br>" +
 			"'Dynamic' changes fog depth based on the area, while<br>" +
 			"'Static' respects the manually defined fog depth.",
-		position = 2,
+		position = 3,
 		section = environmentSettings
 	)
 	default FogDepthMode fogDepthMode()
@@ -604,11 +822,11 @@ public interface HdPluginConfig extends Config
 	@Units(" tiles")
 	@ConfigItem(
 		keyName = "fogDepth",
-		name = "Static Fog Depth",
+		name = "Static fog depth",
 		description =
 			"Specify how far from the edge fog should reach.<br>" +
-			"This applies only when 'Fog Depth Mode' is set to 'Static'.",
-		position = 3,
+			"This applies only when 'Fog depth mode' is set to 'Static'.",
+		position = 4,
 		section = environmentSettings
 	)
 	default int fogDepth()
@@ -618,9 +836,9 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "groundFog",
-		name = "Ground Fog",
+		name = "Ground fog",
 		description = "Enables a height-based fog effect that covers the ground in certain areas.",
-		position = 4,
+		position = 5,
 		section = environmentSettings
 	)
 	default boolean groundFog() {
@@ -629,14 +847,14 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "defaultSkyColor",
-		name = "Default Sky",
+		name = "Default sky",
 		description =
 			"Specify a sky color to use when the current area doesn't have a sky color defined.<br>" +
 			"This only applies when the default summer seasonal theme is active.<br>" +
 			"If set to 'RuneLite Skybox', the sky color from RuneLite's Skybox plugin will be used.<br>" +
 			"If set to 'Old School Black', the sky will be black and water will remain blue, but for any<br>" +
 			"other option, the water color will be influenced by the sky color.",
-		position = 5,
+		position = 6,
 		section = environmentSettings
 	)
 	default DefaultSkyColor defaultSkyColor()
@@ -646,9 +864,9 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "overrideSky",
-		name = "Override Sky Color",
+		name = "Override sky color",
 		description = "Forces the default sky color to be used in all environments.",
-		position = 6,
+		position = 7,
 		section = environmentSettings
 	)
 	default boolean overrideSky() {
@@ -658,9 +876,9 @@ public interface HdPluginConfig extends Config
 	String KEY_MODEL_TEXTURES = "objectTextures";
 	@ConfigItem(
 		keyName = KEY_MODEL_TEXTURES,
-		name = "Model Textures",
+		name = "Model textures",
 		description = "Adds new textures to most models. If disabled, the standard game textures will be used instead.",
-		position = 7,
+		position = 8,
 		section = environmentSettings
 	)
 	default boolean modelTextures() {
@@ -670,9 +888,9 @@ public interface HdPluginConfig extends Config
 	String KEY_GROUND_TEXTURES = "groundTextures";
 	@ConfigItem(
 		keyName = KEY_GROUND_TEXTURES,
-		name = "Ground Textures",
+		name = "Ground textures",
 		description = "Adds new textures to most ground tiles.",
-		position = 8,
+		position = 9,
 		section = environmentSettings
 	)
 	default boolean groundTextures()
@@ -683,9 +901,9 @@ public interface HdPluginConfig extends Config
 	String KEY_TEXTURE_RESOLUTION = "textureResolution";
 	@ConfigItem(
 		keyName = KEY_TEXTURE_RESOLUTION,
-		name = "Texture Resolution",
+		name = "Texture resolution",
 		description = "Controls the resolution used for all in-game textures.",
-		position = 9,
+		position = 10,
 		section = environmentSettings
 	)
 	default TextureResolution textureResolution()
@@ -693,24 +911,30 @@ public interface HdPluginConfig extends Config
 		return TextureResolution.RES_256;
 	}
 
-	String KEY_GROUND_BLENDING = "groundBlending";
+	String KEY_GROUND_BLENDING = "groundBlendingv2";
 	@ConfigItem(
 		keyName = KEY_GROUND_BLENDING,
-		name = "Ground Blending",
-		description = "Controls whether ground tiles should blend into each other, or have distinct edges.",
-		position = 10,
+		name = "Ground blending",
+		description =
+			"Controls whether ground tiles should blend into each other, or have distinct edges.<br>" +
+			"When set to 'Textures only', textures may blend between tiles, but not their colors.",
+		position = 11,
 		section = environmentSettings
 	)
-	default boolean groundBlending()
+	default GroundBlending groundBlending()
 	{
+		return groundBlendingv1() ? GroundBlending.ON : GroundBlending.TEXTURES_ONLY;
+	}
+	@ConfigItem(keyName = "groundBlending", hidden = true, name = "", description = "")
+	default boolean groundBlendingv1() {
 		return true;
 	}
 
 	@ConfigItem(
 		keyName = "underwaterCaustics",
-		name = "Underwater Caustics",
+		name = "Underwater caustics",
 		description = "Apply underwater lighting effects to imitate sunlight passing through waves on the surface.",
-		position = 11,
+		position = 12,
 		section = environmentSettings
 	)
 	default boolean underwaterCaustics()
@@ -721,7 +945,7 @@ public interface HdPluginConfig extends Config
 	String KEY_WIND_DISPLACEMENT = "windDisplacement";
 	@ConfigItem(
 		keyName = KEY_WIND_DISPLACEMENT,
-		name = "Wind Displacement",
+		name = "Wind displacement",
 		description = "Controls whether things like grass and leaves should be affected by wind.",
 		position = 13,
 		section = environmentSettings
@@ -733,7 +957,7 @@ public interface HdPluginConfig extends Config
 	String KEY_CHARACTER_DISPLACEMENT = "characterDisplacement";
 	@ConfigItem(
 		keyName = KEY_CHARACTER_DISPLACEMENT,
-		name = "Character Displacement",
+		name = "Character displacement",
 		description = "Let players & NPCs affect things like grass whilst walking around.",
 		position = 14,
 		section = environmentSettings
@@ -881,12 +1105,33 @@ public interface HdPluginConfig extends Config
 		return new Color(255, 13, 22);
 	}
 
+	String KEY_HIDE_VANILLA_WATER_EFFECTS = "hideVanillaWaterEffects";
+	@ConfigItem(
+		keyName = KEY_HIDE_VANILLA_WATER_EFFECTS,
+		name = "Hide vanilla water ripples",
+		description = "Hide vanilla ripples found around objects floating in the water.",
+		position = 15,
+		section = environmentSettings
+	)
+	default boolean hideVanillaWaterEffects() { return true; }
+
+	String KEY_POH_THEME_ENVIRONMENTS = "pohThemeEnvironments";
+	@ConfigItem(
+		keyName = KEY_POH_THEME_ENVIRONMENTS,
+		name = "Player-owned house themes",
+		description = "Change the environmental lighting based on the POH style.",
+		position = 16,
+		section = environmentSettings
+	)
+	default boolean pohThemeEnvironments() { return true; }
+
+
 	/*====== Miscellaneous settings ======*/
 
 	@ConfigSection(
 		name = "Miscellaneous",
 		description = "Miscellaneous settings",
-		position = 4,
+		position = 5,
 		closedByDefault = true
 	)
 	String miscellaneousSettings = "miscellaneousSettings";
@@ -937,10 +1182,10 @@ public interface HdPluginConfig extends Config
 	String KEY_INFERNAL_CAPE = "infernalCape";
 	@ConfigItem(
 		keyName = KEY_INFERNAL_CAPE,
-		name = "Infernal Cape",
+		name = "Infernal cape",
 		description =
 			"Replace the infernal cape texture with a more detailed version.<br>" +
-			"Note, with Anisotropic Filtering above zero, the cape may look blurry when zoomed out.",
+			"Note: with Anisotropic filtering above zero, the cape may look blurry when zoomed out.",
 		section = miscellaneousSettings
 	)
 	default InfernalCape infernalCape() {
@@ -950,7 +1195,7 @@ public interface HdPluginConfig extends Config
 	String KEY_VANILLA_COLOR_BANDING = "vanillaColorBanding";
 	@ConfigItem(
 		keyName = KEY_VANILLA_COLOR_BANDING,
-		name = "Vanilla Color Banding",
+		name = "Vanilla color banding",
 		description =
 			"Blend between colors similarly to how it works in vanilla, with clearly defined bands of color.<br>" +
 			"This isn't really noticeable on textured surfaces, and is intended to be used without ground textures.",
@@ -963,7 +1208,7 @@ public interface HdPluginConfig extends Config
 	String KEY_LOW_MEMORY_MODE = "lowMemoryMode";
 	@ConfigItem(
 		keyName = KEY_LOW_MEMORY_MODE,
-		name = "Low Memory Mode",
+		name = "Low memory mode",
 		description = "Turns off features which require extra memory, such as model caching, faster scene loading & extended scene loading.",
 		warning =
 			"<html>This <b>will not</b> result in better performance. It is recommended only if you are unable to install<br>" +
@@ -977,7 +1222,7 @@ public interface HdPluginConfig extends Config
 	String KEY_COLOR_FILTER = "colorFilter";
 	@ConfigItem(
 		keyName = KEY_COLOR_FILTER,
-		name = "Color Filter",
+		name = "Color filter",
 		description = "Apply a color filter to the game as a post-processing effect.",
 		section = miscellaneousSettings
 	)
@@ -1026,8 +1271,8 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_WINDOWS_HDR_CORRECTION,
 		name = "Windows HDR correction",
 		description =
-			"Correctly simulates SDR gamma 2.2 when Windows is in HDR mode. Note, this does not<br>" +
-			"enable HDR, it only works around an issue within Windows' HDR implementation.",
+			"Correctly simulates SDR gamma 2.2 when Windows is in HDR mode.<br>" +
+			"Note: this does not enable HDR. It only works around an issue within Windows' HDR implementation.",
 		section = miscellaneousSettings
 	)
 	default boolean windowsHdrCorrection() {
@@ -1040,16 +1285,16 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Legacy",
 		description = "Legacy options. If you dislike a change, you might find an option to change it back here.",
-		position = 5,
+		position = 6,
 		closedByDefault = true
 	)
 	String legacySettings = "legacySettings";
 
-	String KEY_LEGACY_RENDERER = "legacyRenderer";
+	String KEY_LEGACY_RENDERER = "legacyRenderer2";
 	@ConfigItem(
 		keyName = KEY_LEGACY_RENDERER,
 		name = "Use legacy renderer",
-		description = "The new renderer is required for sailing content, but it is not 100% feature complete yet.",
+		description = "The new renderer is required for sailing content, and generally performs better than the legacy renderer.",
 		section = legacySettings,
 		position = -100
 	)
@@ -1087,6 +1332,21 @@ public interface HdPluginConfig extends Config
 		return 20;
 	}
 
+	@ConfigItem(
+		keyName = "shadowDistance",
+		name = "Legacy shadow distance",
+		description =
+			"The maximum draw distance for shadows.<br>" +
+			"Shorter distances result in higher quality shadows.",
+		position = -97,
+		section = legacySettings
+	)
+	@Units(" tiles")
+	default ShadowDistance shadowDistance()
+	{
+		return ShadowDistance.DISTANCE_50;
+	}
+
 	String KEY_MODEL_BATCHING = "useModelBatching";
 	@ConfigItem(
 		keyName = KEY_MODEL_BATCHING,
@@ -1094,7 +1354,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"With the legacy renderer, model batching improves performance by reusing identical models within the same frame.<br>" +
 			"May cause instability and graphical bugs, particularly if Jagex makes engine changes.",
-		position = -97,
+		position = -95,
 		section = legacySettings
 	)
 	default boolean modelBatching() { return true; }
@@ -1106,7 +1366,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"With the legacy renderer, model caching improves performance by saving and reusing model data from previous frames.<br>" +
 			"May cause instability or graphical bugs, particularly if Jagex makes engine changes.",
-		position = -96,
+		position = -94,
 		section = legacySettings
 	)
 	default boolean modelCaching() { return true; }
@@ -1124,7 +1384,7 @@ public interface HdPluginConfig extends Config
 			"Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
 			"Generally, 512 MiB is plenty, with diminishing returns the higher you go.<br>" +
 			"Minimum=64 MiB, maximum=16384 MiB",
-		position = -95,
+		position = -93,
 		section = legacySettings
 	)
 	default int modelCacheSizeMiB() {
@@ -1140,8 +1400,8 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_LEGACY_GREY_COLORS,
 		name = "Legacy gray colors",
 		description =
-			"Previously, HD attempted to reduce over-exposure by capping the maximum color brightness,<br>" +
-			"which changed white colors into dull shades of grey. This option brings back that old behaviour.",
+			"Previously, HD attempted to reduce overexposure by capping the maximum color brightness,<br>" +
+			"which changed white colors into dull shades of gray. This option brings back that old behavior.",
 		section = legacySettings
 	)
 	default boolean legacyGreyColors() {
@@ -1177,8 +1437,8 @@ public interface HdPluginConfig extends Config
 
 	@ConfigSection(
 		name = "Experimental",
-		description = "Experimental features - if you're experiencing issues you should consider disabling these.",
-		position = 6,
+		description = "Experimental features - if you're experiencing issues, you should consider disabling these.",
+		position = 7,
 		closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";
@@ -1264,47 +1524,30 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	String KEY_ROOF_SHADOWS = "experimentalRoofShadows";
+	String KEY_INDIRECT_DRAW = "experimentalIndirectDraw";
 	@ConfigItem(
-		keyName = KEY_ROOF_SHADOWS,
-		name = "Roof Shadows",
-		description = "Always cast shadows from roofs, even when they are hidden.",
-		section = experimentalSettings
-	)
-	default boolean roofShadows() {
-		return false;
-	}
-
-	String KEY_FORCE_INDIRECT_DRAW = "experimentalForceIndirectDraw";
-	@ConfigItem(
-		keyName = KEY_FORCE_INDIRECT_DRAW,
-		name = "Force indirect draw",
+		keyName = KEY_INDIRECT_DRAW,
+		name = "Indirect draw",
 		description =
 			"Indirect draw is currently only enabled automatically for Nvidia GPUs.<br>" +
 			"Enabling this <i>might</i> improve performance, if it is supported by your system.",
 		section = experimentalSettings
 	)
-	default boolean forceIndirectDraw() {
-		return false;
+	default DefaultBoolean indirectDraw() {
+		return DefaultBoolean.DEFAULT;
 	}
 
-	String KEY_ASYNC_MODEL_CACHE_SIZE = "asyncModelCacheSizeMiB";
-	@Range(
-		min = 16,
-		max = 64
-	)
-	@Units(" MiB")
+	String KEY_STORAGE_BUFFERS = "experimentalStorageBuffers";
 	@ConfigItem(
-		keyName = KEY_ASYNC_MODEL_CACHE_SIZE,
-		name = "Model cache size",
+		keyName = KEY_STORAGE_BUFFERS,
+		name = "Storage buffers",
 		description =
-			"Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
-			"Generally, 32 MiB is plenty, with diminishing returns the higher you go.<br>" +
-			"Minimum=16 MiB, maximum=64 MiB",
+			"Storage buffers may improve performance, but may also cause graphical artifacts on some hardware.<br>" +
+			"By default, we disable this automatically for Intel GPUs, since older ones can be problematic.",
 		section = experimentalSettings
 	)
-	default int asyncModelCacheSizeMiB() {
-		return 32;
+	default DefaultBoolean storageBuffers() {
+		return DefaultBoolean.DEFAULT;
 	}
 
 	String KEY_ASYNC_MODEL_PROCESSING = "asyncModelProcessing";
@@ -1318,6 +1561,18 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_POINT_SPRITES = "experimentalPointSprites";
+	@ConfigItem(
+		keyName = KEY_POINT_SPRITES,
+		name = "Point sprites",
+		description = "Controls whether GL_POINT_SPRITE should be used. The fallback uses instanced triangles.",
+		section = experimentalSettings
+	)
+	default DefaultBoolean pointSprites() {
+		return DefaultBoolean.DEFAULT;
+	}
+
+
 	/*====== Internal settings ======*/
 
 	@ConfigItem(keyName = "pluginUpdateMessage", hidden = true, name = "", description = "")
@@ -1326,4 +1581,12 @@ public interface HdPluginConfig extends Config
 	default int getPluginUpdateMessage() {
 		return 0;
 	}
+
+	String KEY_PRECISE_LATITUDE_LONGITUDE = "preciseLatitudeLongitude";
+	@ConfigItem(keyName = KEY_PRECISE_LATITUDE_LONGITUDE, hidden = true, name = "", description = "")
+	default String preciseLatLon() {
+		return "";
+	}
+	@ConfigItem(keyName = KEY_PRECISE_LATITUDE_LONGITUDE, hidden = true, name = "", description = "")
+	void setPreciseLatLon(String coordinates);
 }

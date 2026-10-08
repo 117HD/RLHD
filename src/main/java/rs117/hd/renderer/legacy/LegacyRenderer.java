@@ -41,16 +41,19 @@ import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
+import rs117.hd.renderer.SkyRenderer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
+import rs117.hd.scene.SkyManager;
 import rs117.hd.scene.areas.Area;
+import rs117.hd.scene.daylight_cycle.SkyState;
+import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
-import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
@@ -60,6 +63,7 @@ import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 import rs117.hd.utils.jobs.JobSystem;
 
+import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
@@ -104,6 +108,9 @@ public class LegacyRenderer implements Renderer {
 	private LightManager lightManager;
 
 	@Inject
+	private SkyManager skyManager;
+
+	@Inject
 	private EnvironmentManager environmentManager;
 
 	@Inject
@@ -126,6 +133,9 @@ public class LegacyRenderer implements Renderer {
 
 	@Inject
 	private FrameTimer frameTimer;
+
+	@Inject
+	private SkyRenderer skyRenderer;
 
 	@Inject
 	private SceneShaderProgram.Legacy sceneProgram;
@@ -194,6 +204,7 @@ public class LegacyRenderer implements Renderer {
 	@Override
 	public void initialize() {
 		modelPusher.startUp();
+		skyRenderer.initialize();
 
 		jobSystem.startUp(config.cpuUsageLimit());
 
@@ -219,6 +230,7 @@ public class LegacyRenderer implements Renderer {
 	@Override
 	public synchronized void destroy() {
 		modelPusher.shutDown();
+		skyRenderer.destroy();
 
 		if (vaoScene != 0)
 			glDeleteVertexArrays(vaoScene);
@@ -262,6 +274,8 @@ public class LegacyRenderer implements Renderer {
 
 	@Override
 	public void processConfigChanges(Set<String> keys) {
+		skyRenderer.processConfigChanges(keys);
+
 		if (keys.contains(KEY_MODEL_CACHING) || keys.contains(KEY_MODEL_CACHE_SIZE)) {
 			modelPusher.shutDown();
 			modelPusher.startUp();
@@ -285,6 +299,8 @@ public class LegacyRenderer implements Renderer {
 		shadowProgram.setMode(plugin.configShadowMode);
 		shadowProgram.compile(includes);
 
+		skyRenderer.initializeShaders(includes);
+
 		if (computeMode == ComputeMode.OPENCL) {
 			clManager.initializePrograms();
 		} else {
@@ -305,6 +321,7 @@ public class LegacyRenderer implements Renderer {
 	public void destroyShaders() {
 		sceneProgram.destroy();
 		shadowProgram.destroy();
+		skyRenderer.destroyShaders();
 
 		if (computeMode == ComputeMode.OPENGL) {
 			modelPassthroughComputeProgram.destroy();
@@ -534,8 +551,8 @@ public class LegacyRenderer implements Renderer {
 		boolean updateUniforms = true;
 
 		Player localPlayer = client.getLocalPlayer();
-		var lp = localPlayer.getLocalLocation();
-		if (sceneContext.enableAreaHiding) {
+		if (sceneContext.enableAreaHiding && localPlayer != null) {
+			var lp = localPlayer.getLocalLocation();
 			assert sceneContext.sceneBase != null;
 			int[] worldPos = {
 				sceneContext.sceneBase[0] + lp.getSceneX(),
@@ -605,9 +622,9 @@ public class LegacyRenderer implements Renderer {
 			if (updateUniforms) {
 				float[] newCameraPosition = { (float) cameraX, (float) cameraY, (float) cameraZ };
 				float[] newCameraOrientation = { (float) cameraYaw, (float) cameraPitch };
-				int newZoom = plugin.configShadowsEnabled && plugin.configExpandShadowDraw ?
-					client.get3dZoom() / 2 :
-					client.get3dZoom();
+				int newZoom = client.get3dZoom();
+				if (plugin.configShadowsEnabled && plugin.configConservativeShadowCulling)
+					newZoom /= 2;
 				if (!Arrays.equals(plugin.cameraPosition, newCameraPosition) ||
 					!Arrays.equals(plugin.cameraOrientation, newCameraOrientation) ||
 					visibilityCheckZoom != newZoom ||
@@ -639,14 +656,16 @@ public class LegacyRenderer implements Renderer {
 				uboCompute.cameraY.set(plugin.cameraPosition[1]);
 				uboCompute.cameraZ.set(plugin.cameraPosition[2]);
 
-				uboCompute.windDirectionX.set(cos(environmentManager.currentWindAngle));
-				uboCompute.windDirectionZ.set(sin(environmentManager.currentWindAngle));
-				uboCompute.windStrength.set(environmentManager.currentWindStrength);
-				uboCompute.windCeiling.set(environmentManager.currentWindCeiling);
+				Environment env = environmentManager.getCurrentEnvironment();
+				uboCompute.windDirectionX.set(cos(env.windAngle));
+				uboCompute.windDirectionZ.set(sin(env.windAngle));
+				uboCompute.windStrength.set(env.windStrength);
+				uboCompute.windCeiling.set(env.windCeiling);
 				uboCompute.windOffset.set(plugin.windOffset);
 
-				if (plugin.configCharacterDisplacement) {
+				if (plugin.configCharacterDisplacement && localPlayer != null) {
 					// The local player needs to be added first for distance culling
+					var lp = localPlayer.getLocalLocation();
 					Model playerModel = localPlayer.getModel();
 					if (playerModel != null)
 						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
@@ -662,7 +681,7 @@ public class LegacyRenderer implements Renderer {
 					Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
 					Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
 				} else {
-					Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
+					Mat4.mul(projectionMatrix, Mat4.perspectiveInfiniteReverseZ(viewportWidth, viewportHeight, NEAR_PLANE));
 				}
 
 
@@ -687,6 +706,10 @@ public class LegacyRenderer implements Renderer {
 						environmentManager.update(sceneContext);
 						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
 
+						frameTimer.begin(Timer.UPDATE_SKY);
+						skyManager.update();
+						frameTimer.end(Timer.UPDATE_SKY);
+
 						frameTimer.begin(Timer.UPDATE_LIGHTS);
 						lightManager.update(sceneContext, plugin.cameraShift, plugin.cameraFrustum);
 						frameTimer.end(Timer.UPDATE_LIGHTS);
@@ -697,10 +720,12 @@ public class LegacyRenderer implements Renderer {
 					}
 				}
 
+				plugin.uboGlobal.viewportSize.set(slice(plugin.sceneViewport, 2));
 				plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
 				plugin.uboGlobal.viewMatrix.set(plugin.viewMatrix);
 				plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);
 				plugin.uboGlobal.invProjectionMatrix.set(plugin.invViewProjMatrix);
+				plugin.uboGlobal.orthographicProjection.set(plugin.orthographicProjection ? 1 : 0);
 				plugin.uboGlobal.pointLightsCount.set(sceneContext.numVisibleLights);
 				plugin.uboGlobal.upload();
 			}
@@ -987,69 +1012,39 @@ public class LegacyRenderer implements Renderer {
 				GL43C.glMemoryBarrier(GL43C.GL_SHADER_STORAGE_BARRIER_BIT);
 			}
 
-			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+			skyRenderer.prepareFrame(plugin.uboGlobal);
+			Environment env = environmentManager.getCurrentEnvironment();
+
 			float fogDepth = 0;
 			switch (config.fogDepthMode()) {
 				case USER_DEFINED:
 					fogDepth = config.fogDepth();
 					break;
 				case DYNAMIC:
-					fogDepth = environmentManager.currentFogDepth;
+					fogDepth = env.fogDepth;
 					break;
 			}
 			fogDepth *= min(plugin.getDrawDistance(), 90) / 10.f;
 			plugin.uboGlobal.useFog.set(fogDepth > 0 ? 1 : 0);
 			plugin.uboGlobal.fogDepth.set(fogDepth);
-			plugin.uboGlobal.fogColor.set(fogColor);
+
+			plugin.uboGlobal.sceneBase.set(
+				sceneContext.scene.getBaseX() * LOCAL_TILE_SIZE,
+				sceneContext.scene.getBaseY() * LOCAL_TILE_SIZE
+			);
 
 			plugin.uboGlobal.drawDistance.set((float) plugin.getDrawDistance());
 			plugin.uboGlobal.expandedMapLoadingChunks.set(sceneContext.expandedMapLoadingChunks);
 			plugin.uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
 
-			float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor);
-			float lightBrightnessMultiplier = 0.8f;
-			float midBrightnessMultiplier = 0.45f;
-			float darkBrightnessMultiplier = 0.05f;
-			float[] waterColorLight = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
-				waterColorHsv[0],
-				waterColorHsv[1],
-				waterColorHsv[2] * lightBrightnessMultiplier
-			}));
-			float[] waterColorMid = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
-				waterColorHsv[0],
-				waterColorHsv[1],
-				waterColorHsv[2] * midBrightnessMultiplier
-			}));
-			float[] waterColorDark = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
-				waterColorHsv[0],
-				waterColorHsv[1],
-				waterColorHsv[2] * darkBrightnessMultiplier
-			}));
-			plugin.uboGlobal.waterColorLight.set(waterColorLight);
-			plugin.uboGlobal.waterColorMid.set(waterColorMid);
-			plugin.uboGlobal.waterColorDark.set(waterColorDark);
-
 			plugin.uboGlobal.gammaCorrection.set(plugin.getGammaCorrection());
-			float ambientStrength = environmentManager.currentAmbientStrength;
-			float directionalStrength = environmentManager.currentDirectionalStrength;
-			if (config.useLegacyBrightness()) {
-				float factor = config.legacyBrightness() / 20f;
-				ambientStrength *= factor;
-				directionalStrength *= factor;
-			}
-			plugin.uboGlobal.ambientStrength.set(ambientStrength);
-			plugin.uboGlobal.ambientColor.set(environmentManager.currentAmbientColor);
-			plugin.uboGlobal.lightStrength.set(directionalStrength);
-			plugin.uboGlobal.lightColor.set(environmentManager.currentDirectionalColor);
 
-			plugin.uboGlobal.underglowStrength.set(environmentManager.currentUnderglowStrength);
-			plugin.uboGlobal.underglowColor.set(environmentManager.currentUnderglowColor);
+			plugin.uboGlobal.underglowStrength.set(env.underglowStrength);
+			plugin.uboGlobal.underglowColor.set(env.getUnderglowColor());
 
-			plugin.uboGlobal.groundFogStart.set(environmentManager.currentGroundFogStart);
-			plugin.uboGlobal.groundFogEnd.set(environmentManager.currentGroundFogEnd);
-			plugin.uboGlobal.groundFogOpacity.set(config.groundFog() ?
-				environmentManager.currentGroundFogOpacity :
-				0);
+			plugin.uboGlobal.groundFogStart.set(env.groundFogStart);
+			plugin.uboGlobal.groundFogEnd.set(env.groundFogEnd);
+			plugin.uboGlobal.groundFogOpacity.set(config.groundFog() ? env.groundFogOpacity : 0);
 
 			// Lights & lightning
 			plugin.uboGlobal.pointLightsCount.set(sceneContext.numVisibleLights);
@@ -1057,14 +1052,16 @@ public class LegacyRenderer implements Renderer {
 
 			plugin.uboGlobal.saturation.set(config.saturation() / 100f);
 			plugin.uboGlobal.contrast.set(config.contrast() / 100f);
-			plugin.uboGlobal.underwaterEnvironment.set(environmentManager.isUnderwater() ? 1 : 0);
+			plugin.uboGlobal.underwaterEnvironment.set(environmentManager.getTargetEnvironment().isUnderwater ? 1 : 0);
 			plugin.uboGlobal.underwaterCaustics.set(config.underwaterCaustics() ? 1 : 0);
-			plugin.uboGlobal.underwaterCausticsColor.set(environmentManager.currentUnderwaterCausticsColor);
-			plugin.uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
+			plugin.uboGlobal.underwaterCausticsColor.set(env.getWaterCausticsColor());
+			plugin.uboGlobal.underwaterCausticsStrength.set(env.waterCausticsStrength);
 			plugin.uboGlobal.elapsedTime.set((float) (plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
 
-			float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
-			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - environmentManager.currentSunAngles[1]));
+			SkyState sky = skyManager.getState();
+			float[] shadowAngles = skyRenderer.usesMoonShadows ? sky.moonAngles : sky.shadowAngles;
+			float[] lightViewMatrix = Mat4.rotateX(shadowAngles[0]);
+			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - shadowAngles[1]));
 			// Extract the 3rd column from the light view matrix (the float array is column-major).
 			// This produces the light's direction vector in world space, which we negate in order to
 			// get the light's direction vector pointing away from each fragment
@@ -1094,8 +1091,7 @@ public class LegacyRenderer implements Renderer {
 				}
 			}
 
-			if (plugin.configShadowsEnabled && plugin.fboShadowMap != 0
-				&& environmentManager.currentDirectionalStrength > 0) {
+			if (plugin.configShadowsEnabled && plugin.fboShadowMap != 0 && skyRenderer.castsShadows) {
 				frameTimer.begin(Timer.RENDER_SHADOWS);
 
 				// Render to the shadow depth map
@@ -1119,7 +1115,7 @@ public class LegacyRenderer implements Renderer {
 				final int south = max(camY - drawDistanceSceneUnits, 0);
 				final int width = east - west;
 				final int height = north - south;
-				final int depthScale = 10000;
+				final int depthRange = 10000;
 
 				final int maxDrawDistance = 90;
 				final float maxScale = 0.7f;
@@ -1128,11 +1124,14 @@ public class LegacyRenderer implements Renderer {
 				float scale = mix(maxScale, minScale, scaleMultiplier);
 				float[] lightProjectionMatrix = Mat4.identity();
 				Mat4.mul(lightProjectionMatrix, Mat4.scale(scale, scale, scale));
-				Mat4.mul(lightProjectionMatrix, Mat4.orthographic(width, height, depthScale));
+				Mat4.mul(lightProjectionMatrix, Mat4.orthographic(width, height, depthRange));
 				Mat4.mul(lightProjectionMatrix, lightViewMatrix);
 				Mat4.mul(lightProjectionMatrix, Mat4.translate(-(width / 2f + west), 0, -(height / 2f + south)));
 
 				plugin.uboGlobal.lightProjectionMatrix.set(lightProjectionMatrix);
+				plugin.uboGlobal.invLightProjectionMatrix.set(Mat4.inverse(lightProjectionMatrix));
+				float texelSize = (float) max(width, height) / plugin.shadowMapResolution;
+				plugin.uboGlobal.shadowBiasScale.set(texelSize / depthRange);
 				plugin.uboGlobal.upload();
 
 				glEnable(GL_CULL_FACE);
@@ -1147,8 +1146,8 @@ public class LegacyRenderer implements Renderer {
 				frameTimer.end(Timer.RENDER_SHADOWS);
 			}
 
+			plugin.uboGlobal.orthographicProjection.set(plugin.orthographicProjection ? 1 : 0);
 			plugin.uboGlobal.upload();
-			sceneProgram.use();
 
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
 			if (plugin.msaaSamples > 1) {
@@ -1158,21 +1157,11 @@ public class LegacyRenderer implements Renderer {
 			}
 			glViewport(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
 
-			// Clear scene
-			frameTimer.begin(Timer.CLEAR_SCENE);
+			frameTimer.begin(Timer.RENDER_SCENE_AND_SKY);
 
-			float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
-			glClearColor(
-				gammaCorrectedFogColor[0],
-				gammaCorrectedFogColor[1],
-				gammaCorrectedFogColor[2],
-				1f
-			);
-			glClearDepth(0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			frameTimer.end(Timer.CLEAR_SCENE);
+			skyRenderer.renderImmediately();
 
-			frameTimer.begin(Timer.RENDER_SCENE);
+			sceneProgram.use();
 
 			// We just allow the GL to do face culling. Note this requires the priority renderer
 			// to have logic to disregard culled faces in the priority depth testing.
@@ -1223,7 +1212,7 @@ public class LegacyRenderer implements Renderer {
 				glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
 			}
 
-			frameTimer.end(Timer.RENDER_SCENE);
+			frameTimer.end(Timer.RENDER_SCENE_AND_SKY);
 
 			glDisable(GL_BLEND);
 			glDisable(GL_CULL_FACE);
@@ -1308,7 +1297,7 @@ public class LegacyRenderer implements Renderer {
 		if (!plugin.isActive())
 			return;
 
-		int expandedChunks = plugin.getExpandedMapLoadingChunks();
+		int expandedChunks = plugin.configExpandedMapLoadingChunks;
 		if (HDUtils.sceneIntersects(scene, expandedChunks, areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
 			// Reload once the POH is done loading, upon first entering the POH
 			if (sceneContext == null || !sceneContext.isInHouse)
@@ -1342,12 +1331,7 @@ public class LegacyRenderer implements Renderer {
 		nextSceneContext = null;
 
 		try {
-			nextSceneContext = new LegacySceneContext(
-				client,
-				scene,
-				plugin.getExpandedMapLoadingChunks(),
-				sceneContext
-			);
+			nextSceneContext = new LegacySceneContext(client, scene, plugin.configExpandedMapLoadingChunks, sceneContext);
 			// If area hiding was determined to be incorrect previously, keep it disabled
 			nextSceneContext.forceDisableAreaHiding = sceneContext != null && sceneContext.forceDisableAreaHiding;
 
@@ -1387,7 +1371,8 @@ public class LegacyRenderer implements Renderer {
 		}
 
 		tileVisibilityCached = false;
-		lightManager.loadSceneLights(nextSceneContext, sceneContext);
+		lightManager.loadSceneLights(nextSceneContext);
+		lightManager.swapSceneLights(nextSceneContext, sceneContext);
 		fishingSpotReplacer.despawnRuneLiteObjects();
 		npcDisplacementCache.clear();
 
@@ -1673,6 +1658,14 @@ public class LegacyRenderer implements Renderer {
 			plugin.drawnStaticRenderableCount = plugin.drawnStaticRenderableCount + 1;
 		} else {
 			int uuid = ModelHash.generateUuid(client, hash, renderable);
+			if (renderable instanceof DynamicObject) {
+				var def = client.getObjectDefinition(ModelHash.getUuidId(uuid));
+				if (def != null && def.getImpostorIds() != null) {
+					var impostor = def.getImpostor();
+					if (impostor != null)
+						uuid = ModelHash.packUuid(ModelHash.getUuidType(uuid), impostor.getId());
+				}
+			}
 			int[] worldPos = sceneContext.localToWorld(x, z, plane);
 			ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 			if (modelOverride.hide)

@@ -27,14 +27,16 @@ package rs117.hd.utils;
 
 import static rs117.hd.utils.MathUtils.*;
 
-public class Mat4
-{
+public class Mat4 {
 	/**
 	 * Utility class for working with column-major 4 x 4 matrices.
 	 */
 
-	public static float[] identity()
-	{
+	public static float[] zero() {
+		return new float[16];
+	}
+
+	public static float[] identity() {
 		return new float[] {
 			1, 0, 0, 0,
 			0, 1, 0, 0,
@@ -43,8 +45,7 @@ public class Mat4
 		};
 	}
 
-	public static float[] scale(float sx, float sy, float sz)
-	{
+	public static float[] scale(float sx, float sy, float sz) {
 		return new float[] {
 			sx, 0, 0, 0,
 			0, sy, 0, 0,
@@ -53,8 +54,7 @@ public class Mat4
 		};
 	}
 
-	public static float[] translate(float tx, float ty, float tz)
-	{
+	public static float[] translate(float tx, float ty, float tz) {
 		return new float[] {
 			1, 0, 0, 0,
 			0, 1, 0, 0,
@@ -63,8 +63,7 @@ public class Mat4
 		};
 	}
 
-	public static float[] rotateX(float rx)
-	{
+	public static float[] rotateX(float rx) {
 		float s = sin(rx);
 		float c = cos(rx);
 
@@ -76,8 +75,7 @@ public class Mat4
 		};
 	}
 
-	public static float[] rotateY(float ry)
-	{
+	public static float[] rotateY(float ry) {
 		float s = sin(ry);
 		float c = cos(ry);
 
@@ -89,14 +87,53 @@ public class Mat4
 		};
 	}
 
-	public static float[] perspective(float w, float h, float n) {
-		// Flip Y so positive is up, and reverse depth from 1 at the near plane to 0 infinitely far away
+	/**
+	 * Infinite far plane, Reverse-Z perspective matrix.
+	 * Depth = 1 at near plane, 0 infinitely far away.
+	 */
+	public static float[] perspectiveInfiniteReverseZ(float w, float h, float n) {
+		// @formatter:off
 		return new float[] {
-			2 / w, 0, 0, 0,
-			0, -2 / h, 0, 0,
-			0, 0, 0, 1,
-			0, 0, 2 * n, 0
+			2 / w,      0,     0, 0,
+			    0, -2 / h,     0, 0,
+			    0,      0,     0, 1,
+			    0,      0, 2 * n, 0
 		};
+		// @formatter:on
+	}
+
+	/**
+	 * Infinite far plane, normal-Z perspective matrix.
+	 * Depth = 0 at near plane, 1 infinitely far away.
+	 */
+	public static float[] perspectiveInfinite(float w, float h, float n) {
+		// @formatter:off
+		return new float[] {
+			2 / w,      0,      0,  0,
+			    0, -2 / h,      0,  0,
+			    0,      0,     -1, -1,
+			    0,      0, -2 * n,  0
+		};
+		// @formatter:on
+	}
+
+	/**
+	 * Finite far plane, Reverse-Z perspective matrix.
+	 * Depth = 1 at near plane, 0 at far plane.
+	 */
+	public static float[] perspectiveReverseZ(float w, float h, float n, float f) {
+		float nf = n / f;
+		float a = (1 + nf) / (nf - 1);
+		float b = a * n - n;
+		float c = 1; // reversed depth (positive)
+		// @formatter:off
+		return new float[] {
+			2 / w, 0,     0, 0,
+			0,    -2 / h, 0, 0,
+			0,     0,     a, c,
+			0,     0,     b, 0
+		};
+		// @formatter:on
 	}
 
 	/**
@@ -115,23 +152,45 @@ public class Mat4
 		float a = (1 + n / f) / (n / f - 1);
 		float b = a * n - n;
 		float c = -1; // perspective divide by -z
-		return new float[]
-			{
-				w, 0, 0, 0,
-				0, h, 0, 0,
-				0, 0, a, c,
-				0, 0, b, 0
-			};
+		return new float[] {
+			w, 0, 0, 0,
+			0, h, 0, 0,
+			0, 0, a, c,
+			0, 0, b, 0
+		};
 	}
 
-	public static float[] orthographic(float w, float h, float n)
-	{
+	public static float[] orthographic(float w, float h, float n) {
+		// @formatter:off
 		return new float[] {
-			2 / w, 0, 0, 0,
-			0, -2 / h, 0, 0,
-			0, 0, 2 / n, 0,
-			0, 0, 0, 1
+			2 / w,      0,     0, 0,
+			    0, -2 / h,     0, 0,
+			    0,      0, 2 / n, 0,
+			    0,      0,     0, 1
 		};
+		// @formatter:on
+	}
+
+	public static float[] orthographic(float w, float h, float n, float f) {
+		// @formatter:off
+		return new float[] {
+			2 / w,      0,                  0, 0,
+			    0, -2 / h,                  0, 0,
+			    0,      0,        1 / (f - n), 0,
+			    0,      0, -(f + n) / (f - n), 1
+		};
+		// @formatter:on
+	}
+
+	public static float[] orthographicReverseZ(float w, float h, float n, float f) {
+		// @formatter:off
+		return new float[] {
+			2 / w,      0,           0, 0,
+			    0, -2 / h,           0, 0,
+			    0,      0, 1 / (n - f), 0,
+			    0,      0, f / (f - n), 1
+		};
+		// @formatter:on
 	}
 
 	/**
@@ -141,8 +200,7 @@ public class Mat4
 	 * @param b column-major 4x4 matrix
 	 */
 	@SuppressWarnings("PointlessArithmeticExpression")
-	public static void mul(float[] a, float[] b)
-	{
+	public static void mul(float[] a, float[] b) {
 		final float b00 = b[0 + 0 * 4];
 		final float b10 = b[1 + 0 * 4];
 		final float b20 = b[2 + 0 * 4];

@@ -1,0 +1,310 @@
+package rs117.hd.utils.collections;
+
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.function.UnaryOperator;
+import lombok.Getter;
+import lombok.NonNull;
+
+import static rs117.hd.utils.MathUtils.*;
+import static rs117.hd.utils.collections.Util.DEFAULT_CAPACITY;
+import static rs117.hd.utils.collections.Util.DEFAULT_GROWTH;
+import static rs117.hd.utils.collections.Util.EMPTY;
+import static rs117.hd.utils.collections.Util.LOAD_FACTOR;
+import static rs117.hd.utils.collections.Util.findIndex;
+import static rs117.hd.utils.collections.Util.murmurHash3;
+
+public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.Entry<T>> {
+	public interface Supplier<T> { T[] get(int capacity); }
+
+	private final Supplier<T> defaultValueSupplier;
+	private final float growthFactor;
+
+	private int[] keys;
+	private T[] values;
+	private int[] distances;
+
+	private int lowTide = Integer.MAX_VALUE;
+	private int highTide;
+	private int size;
+	private int mask;
+
+	public Int2ObjectHashMap() {
+		this(DEFAULT_CAPACITY, DEFAULT_GROWTH, null);
+	}
+
+	public Int2ObjectHashMap(Supplier<T> defaultValueSupplier) {
+		this(DEFAULT_CAPACITY, DEFAULT_GROWTH, defaultValueSupplier);
+	}
+
+	public Int2ObjectHashMap(int initialCapacity) {
+		this(initialCapacity, DEFAULT_GROWTH, null);
+	}
+
+	public Int2ObjectHashMap(int initialCapacity, Supplier<T> defaultValueSupplier) {
+		this(initialCapacity, DEFAULT_GROWTH, defaultValueSupplier);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Int2ObjectHashMap(int initialCapacity, float growthFactor, Supplier<T> defaultValueSupplier) {
+		assert growthFactor > 1;
+		this.defaultValueSupplier =
+			defaultValueSupplier != null
+				? defaultValueSupplier
+				: (capacity) -> (T[]) new Object[capacity];
+
+		this.growthFactor = growthFactor;
+
+		int cap = max(ceilPow2(initialCapacity), DEFAULT_CAPACITY);
+
+		keys = new int[cap];
+		values = this.defaultValueSupplier.get(cap);
+		distances = new int[cap];
+
+		Arrays.fill(keys, EMPTY);
+
+		this.size = 0;
+		this.mask = cap - 1;
+	}
+
+	public void trimToSize() {
+		resizeTo(max(size, DEFAULT_CAPACITY));
+	}
+
+	private void grow() {
+		resizeTo((int) (keys.length * growthFactor));
+	}
+
+	private void resizeTo(int newCapacity) {
+		assert size <= newCapacity;
+		newCapacity = ceilPow2(newCapacity);
+		if (newCapacity == keys.length)
+			return;
+
+		int[] oldKeys = keys;
+		T[] oldValues = values;
+
+		keys = new int[newCapacity];
+		values = defaultValueSupplier.get(newCapacity);
+		distances = new int[newCapacity];
+
+		Arrays.fill(keys, EMPTY);
+
+		mask = newCapacity - 1;
+		lowTide = Integer.MAX_VALUE;
+		highTide = 0;
+
+		// The size will remain the same after, but we make
+		// it negative to avoid growth while repopulating
+		int newSize = size;
+		size = -newSize;
+
+		for (int i = 0; i < oldKeys.length; i++)
+			if (oldKeys[i] != EMPTY)
+				put(oldKeys[i], oldValues[i]);
+
+		size = newSize;
+	}
+
+	public boolean put(int key, T value) {
+		return put(key, value, true);
+	}
+
+	public boolean putIfAbsent(int key, T value) {
+		return put(key, value, false);
+	}
+
+	public T compute(int key, UnaryOperator<T> op, T defaultValue) {
+		int idx = findIndex(key, mask, keys, distances);
+		if (idx >= 0)
+			return values[idx] = op.apply(values[idx]);
+		T newVal = op.apply(defaultValue);
+		put(key, newVal);
+		return newVal;
+	}
+
+	private boolean put(int key, T value, boolean overwrite) {
+		if (size >= (int) (keys.length * LOAD_FACTOR))
+			grow();
+
+		final int[] keys = this.keys;
+		final int[] distances = this.distances;
+
+		int idx = murmurHash3(key) & mask;
+		int dist = 0;
+		while (true) {
+			final int k = keys[idx];
+
+			if (k == EMPTY) {
+				keys[idx] = key;
+				values[idx] = value;
+				distances[idx] = dist;
+				size++;
+				lowTide = min(idx, lowTide);
+				highTide = max(idx, highTide);
+				return true;
+			}
+
+			if (k == key) {
+				if (overwrite)
+					values[idx] = value;
+				return false;
+			}
+
+			// Robin Hood swap: steal slot if we probed farther
+			if (distances[idx] < dist) {
+				int tmpKey = keys[idx];
+				T tmpVal = values[idx];
+				int tmpDist = distances[idx];
+
+				keys[idx] = key;
+				values[idx] = value;
+				distances[idx] = dist;
+
+				key = tmpKey;
+				value = tmpVal;
+				dist = tmpDist;
+			}
+
+			idx = (idx + 1) & mask;
+			dist++;
+		}
+	}
+
+	public T getOrDefault(int key, T defaultValue) {
+		int idx = findIndex(key, mask, keys, distances);
+		return idx >= 0 ? values[idx] : defaultValue;
+	}
+
+	public T get(int key) {
+		int idx = findIndex(key, mask, keys, distances);
+		return idx >= 0 ? values[idx] : null;
+	}
+
+	public boolean containsKey(int key) {
+		return findIndex(key, mask, keys, distances) >= 0;
+	}
+
+	public T getValue(int idx) {
+		return values[idx];
+	}
+
+	public void setValue(int idx, T value) {
+		values[idx] = value;
+	}
+
+	public boolean remove(int key) {
+		int idx = findIndex(key, mask, keys, distances);
+		if (idx < 0)
+			return false;
+
+		removeIndex(idx);
+		return true;
+	}
+
+	public void removeIndex(int idx) {
+		keys[idx] = EMPTY;
+		values[idx] = null;
+		distances[idx] = 0;
+		size--;
+
+		int last = idx;
+
+		// Shift backward while probe distance allows
+		while (true) {
+			int next = (last + 1) & mask;
+			if (keys[next] == EMPTY || distances[next] == 0)
+				break;
+
+			keys[last] = keys[next];
+			values[last] = values[next];
+			distances[last] = distances[next] - 1;
+
+			keys[next] = EMPTY;
+			values[next] = null;
+			distances[next] = 0;
+
+			last = next;
+		}
+	}
+
+	public void clear() {
+		if (size == 0)
+			return;
+		Arrays.fill(keys, lowTide, highTide + 1, EMPTY);
+		Arrays.fill(values, lowTide, highTide + 1, null);
+		Arrays.fill(distances, lowTide, highTide + 1, 0);
+		lowTide = keys.length;
+		highTide = 0;
+		size = 0;
+	}
+
+	public boolean isEmpty() {
+		return size == 0;
+	}
+
+	public int size() {
+		return size;
+	}
+
+	public int capacity() { return keys.length; }
+
+	@Override
+	@NonNull
+	public Iterator<Entry<T>> iterator() {
+		return new Iter();
+	}
+
+	public static class Entry<T> {
+		@Getter
+		private int key;
+		@Getter
+		private T value;
+	}
+
+	private class Iter implements Iterator<Entry<T>> {
+		private int index = -1;
+		private int nextIndex = -1;
+
+		private final Entry<T> entry = new Entry<>();
+
+		Iter() {
+			advance();
+		}
+
+		private void advance() {
+			do {
+				nextIndex++;
+			} while (nextIndex < keys.length && keys[nextIndex] == EMPTY);
+		}
+
+		@Override
+		public boolean hasNext() {
+			return nextIndex < keys.length;
+		}
+
+		@Override
+		public Entry<T> next() {
+			if (!hasNext())
+				throw new NoSuchElementException();
+
+			index = nextIndex;
+			advance();
+
+			entry.key = keys[index];
+			entry.value = values[index];
+			return entry;
+		}
+
+		@Override
+		public void remove() {
+			if (index == -1)
+				throw new IllegalStateException();
+
+			removeIndex(index);
+			nextIndex = index;
+			index = -1;
+		}
+	}
+}

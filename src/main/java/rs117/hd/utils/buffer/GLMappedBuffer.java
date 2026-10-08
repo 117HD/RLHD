@@ -6,18 +6,8 @@ import java.nio.IntBuffer;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
-import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
-import static org.lwjgl.opengl.GL15.glBindBuffer;
-import static org.lwjgl.opengl.GL15.glMapBuffer;
-import static org.lwjgl.opengl.GL15.glUnmapBuffer;
-import static org.lwjgl.opengl.GL30.GL_MAP_FLUSH_EXPLICIT_BIT;
-import static org.lwjgl.opengl.GL30.GL_MAP_INVALIDATE_BUFFER_BIT;
-import static org.lwjgl.opengl.GL30.GL_MAP_INVALIDATE_RANGE_BIT;
-import static org.lwjgl.opengl.GL30.GL_MAP_READ_BIT;
-import static org.lwjgl.opengl.GL30.GL_MAP_UNSYNCHRONIZED_BIT;
-import static org.lwjgl.opengl.GL30.GL_MAP_WRITE_BIT;
-import static org.lwjgl.opengl.GL30.glFlushMappedBufferRange;
-import static org.lwjgl.opengl.GL30.glMapBufferRange;
+import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_INVALIDATE;
@@ -62,12 +52,6 @@ public final class GLMappedBuffer {
 		this.mapped = true;
 	}
 
-	public GLMappedBuffer remap() {
-		if (mapped)
-			return this;
-		return map(mappedFlags);
-	}
-
 	public GLMappedBuffer map(int flags) {
 		return map(flags, 0, owner.size);
 	}
@@ -82,19 +66,18 @@ public final class GLMappedBuffer {
 		if (mapped || owner.isStorageBuffer())
 			return this;
 
-		glBindBuffer(owner.target, owner.id);
-
-		int glFlags = 0;
-		if ((flags & MAP_WRITE) != 0) glFlags |= GL_MAP_WRITE_BIT;
-		if ((flags & MAP_READ) != 0) glFlags |= GL_MAP_READ_BIT;
-		if ((flags & MAP_UNSYNCHRONIZED) != 0) glFlags |= GL_MAP_UNSYNCHRONIZED_BIT;
+		owner.bind();
 
 		final ByteBuffer buf;
-		if (owner.target != GL_STATIC_DRAW) {
-			long mapSize = max(0, min(owner.size - offsetBytes, sizeBytes));
-			if (mapSize <= 0) {
+		if (owner.target != GL_STATIC_DRAW && GL_CAPS.GL_ARB_map_buffer_range && !GLBuffer.DEBUG_MAC_OS) {
+			int glFlags = 0;
+			if ((flags & MAP_WRITE) != 0) glFlags |= GL_MAP_WRITE_BIT;
+			if ((flags & MAP_READ) != 0) glFlags |= GL_MAP_READ_BIT;
+			if ((flags & MAP_UNSYNCHRONIZED) != 0) glFlags |= GL_MAP_UNSYNCHRONIZED_BIT;
+
+			long mapSize = clamp(owner.size - offsetBytes, 0, sizeBytes);
+			if (mapSize <= 0)
 				return this;
-			}
 
 			if ((flags & MAP_INVALIDATE) != 0) {
 				if (mapSize == owner.size) glFlags |= GL_MAP_INVALIDATE_BUFFER_BIT;
@@ -109,7 +92,16 @@ public final class GLMappedBuffer {
 			);
 			this.mappedOffset = offsetBytes;
 		} else {
-			buf = glMapBuffer(owner.target, glFlags, byteView);
+			int glAccess;
+			if ((flags & (MAP_WRITE | MAP_READ)) == (MAP_WRITE | MAP_READ)) {
+				glAccess = GL_READ_WRITE;
+			} else if ((flags & MAP_WRITE) != 0) {
+				glAccess = GL_WRITE_ONLY;
+			} else {
+				glAccess = GL_READ_ONLY;
+			}
+
+			buf = glMapBuffer(owner.target, glAccess, byteView);
 			this.mappedOffset = 0;
 		}
 
@@ -120,15 +112,16 @@ public final class GLMappedBuffer {
 			byteView = buf;
 			intView = buf.asIntBuffer();
 			floatView = buf.asFloatBuffer();
-		} else {
-			byteView.position(0);
-			intView.position(0);
-			floatView.position(0);
 		}
+
+		byteView.clear();
+		intView.clear();
+		floatView.clear();
+
 		this.mappedFlags = flags;
 		mapped = true;
 
-		glBindBuffer(owner.target, 0);
+		owner.unbind();
 		checkGLErrors(() -> "Mapping Buffer: " + owner.name + " Size: " + owner.size);
 		return this;
 	}
@@ -163,15 +156,23 @@ public final class GLMappedBuffer {
 
 		syncViews();
 
-		glBindBuffer(owner.target, owner.id);
-		if (owner.target != GL_STATIC_DRAW) {
+		owner.bind();
+		if (owner.target != GL_STATIC_DRAW && GL_CAPS.GL_ARB_map_buffer_range && !GLBuffer.DEBUG_MAC_OS) {
 			byteView.flip();
 			glFlushMappedBufferRange(owner.target, byteView.position(), byteView.remaining());
 			byteView.clear();
 		}
 		glUnmapBuffer(owner.target);
-		glBindBuffer(owner.target, 0);
+		owner.unbind();
 
 		mapped = false;
+	}
+
+	void destroy() {
+		unmap();
+
+		byteView = null;
+		intView = null;
+		floatView = null;
 	}
 }

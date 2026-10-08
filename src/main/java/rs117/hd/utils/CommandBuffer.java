@@ -11,6 +11,7 @@ import rs117.hd.opengl.GLFence;
 import rs117.hd.opengl.shader.ShaderProgram;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -21,28 +22,28 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class CommandBuffer {
-	public static boolean SKIP_DEPTH_MASKING;
-
 	private static final int GL_MULTI_DRAW_ARRAYS_TYPE = 0;
 	private static final int GL_MULTI_DRAW_ARRAYS_INDIRECT_TYPE = 1;
 	private static final int GL_DRAW_ARRAYS_TYPE = 2;
 	private static final int GL_DRAW_ARRAYS_INDIRECT_TYPE = 3;
 	private static final int GL_DRAW_ELEMENTS_TYPE = 4;
 	private static final int GL_DRAW_ELEMENTS_INDIRECT_TYPE = 5;
-	private static final int GL_DRAW_CALL_TYPE_COUNT = 6;
+	private static final int GL_DRAW_ARRAYS_INSTANCED_TYPE = 6;
+	private static final int GL_DRAW_CALL_TYPE_COUNT = 7;
 
-	private static final int GL_BIND_VERTEX_ARRAY_TYPE = 6;
-	private static final int GL_BIND_ELEMENTS_ARRAY_TYPE = 7;
+	private static final int GL_BIND_VERTEX_ARRAY_TYPE = 7;
 	private static final int GL_BIND_INDIRECT_ARRAY_TYPE = 8;
 	private static final int GL_BIND_TEXTURE_UNIT_TYPE = 9;
 	private static final int GL_DEPTH_MASK_TYPE = 10;
 	private static final int GL_COLOR_MASK_TYPE = 11;
-	private static final int GL_USE_PROGRAM = 12;
+	private static final int GL_BLEND_FUNC_TYPE = 12;
+	private static final int GL_USE_PROGRAM = 13;
+	private static final int GL_TIMER = 14;
 
-	private static final int GL_TOGGLE_TYPE = 13; // Combined glEnable & glDisable
-	private static final int GL_FENCE_SYNC = 14;
+	private static final int GL_TOGGLE_TYPE = 15; // Combined glEnable & glDisable
+	private static final int GL_FENCE_SYNC = 16;
 
-	private static final int GL_EXECUTE_SUB_COMMAND_BUFFER = 15;
+	private static final int GL_EXECUTE_SUB_COMMAND_BUFFER = 17;
 
 	private static final long INT_MASK = 0xFFFF_FFFFL;
 	private static final int DRAW_MODE_MASK = 0xF;
@@ -53,7 +54,6 @@ public class CommandBuffer {
 	private int objectCount = 0;
 
 	public final String name;
-	private final RenderState renderState;
 
 	@Setter
 	private FrameTimer frameTimer;
@@ -61,9 +61,8 @@ public class CommandBuffer {
 	private long[] cmd = new long[(int) KiB];
 	private int writeHead = 0;
 
-	public CommandBuffer(String name, RenderState renderState) {
+	public CommandBuffer(String name) {
 		this.name = name;
-		this.renderState = renderState;
 	}
 
 	private void ensureCapacity(int numLongs) {
@@ -89,20 +88,20 @@ public class CommandBuffer {
 		return writeHead == 0;
 	}
 
+	public void BindVertexArray(int vao, GLBuffer ebo) {
+		ensureCapacity(2);
+		cmd[writeHead++] = GL_BIND_VERTEX_ARRAY_TYPE & 0xFF;
+		cmd[writeHead++] = (long) writeObject(ebo) << 32 | vao & INT_MASK;
+	}
+
 	public void BindVertexArray(int vao) {
-		ensureCapacity(1);
-		cmd[writeHead++] = GL_BIND_VERTEX_ARRAY_TYPE & 0xFF | (long) vao << 8;
+		BindVertexArray(vao, null);
 	}
 
 	public void FenceSync(GLFence fence, int condition) {
 		ensureCapacity(2);
 		cmd[writeHead++] = GL_FENCE_SYNC & 0xFF | (long) condition << 8;
 		cmd[writeHead++] = writeObject(fence);
-	}
-
-	public void BindElementsArray(int ebo) {
-		ensureCapacity(1);
-		cmd[writeHead++] = GL_BIND_ELEMENTS_ARRAY_TYPE & 0xFF | (long) ebo << 8;
 	}
 
 	public void BindIndirectArray(int ido) {
@@ -120,6 +119,16 @@ public class CommandBuffer {
 		ensureCapacity(1);
 		int objectIdx = writeObject(program);
 		cmd[writeHead++] = GL_USE_PROGRAM & 0xFF | (long) objectIdx << 8;
+	}
+
+	public void PushTimer(Timer timer) {
+		ensureCapacity(1);
+		cmd[writeHead++] = GL_TIMER & 0xFF | 1 << 8 | (long) timer.ordinal() << 9;
+	}
+
+	public void PopTimer(Timer timer) {
+		ensureCapacity(1);
+		cmd[writeHead++] = GL_TIMER & 0xFF | (long) timer.ordinal() << 9;
 	}
 
 	public void ExecuteSubCommandBuffer(CommandBuffer subCommandBuffer) {
@@ -142,6 +151,14 @@ public class CommandBuffer {
 			(writeGreen ? 1 : 0) << 9 |
 			(writeBlue ? 1 : 0) << 10 |
 			(writeAlpha ? 1 : 0) << 11;
+	}
+
+	public void BlendFunc(int sfactorRGB, int dfactorRGB, int sfactorAlpha, int dfactorAlpha) {
+		ensureCapacity(3);
+
+		cmd[writeHead++] = GL_BLEND_FUNC_TYPE & 0xFF;
+		cmd[writeHead++] = ((long) sfactorRGB & INT_MASK) | ((long) dfactorRGB & INT_MASK) << 32;
+		cmd[writeHead++] = ((long) sfactorAlpha & INT_MASK) | ((long) dfactorAlpha & INT_MASK) << 32;
 	}
 
 	public void MultiDrawArrays(int mode, int[] offsets, int[] counts) {
@@ -171,6 +188,13 @@ public class CommandBuffer {
 		ensureCapacity(2);
 		cmd[writeHead++] = GL_DRAW_ARRAYS_TYPE & 0xFF | (mode & DRAW_MODE_MASK) << 8;
 		cmd[writeHead++] = (long) offset << 32 | vertexCount & INT_MASK;
+	}
+
+	public void DrawArraysInstanced(int mode, int offset, int vertexCount, int instanceCount) {
+		ensureCapacity(3);
+		cmd[writeHead++] = GL_DRAW_ARRAYS_INSTANCED_TYPE & 0xFF | (mode & DRAW_MODE_MASK) << 8;
+		cmd[writeHead++] = offset;
+		cmd[writeHead++] = (long) vertexCount << 32 | (instanceCount & INT_MASK);
 	}
 
 	public void DrawArraysIndirect(int mode, int vertexOffset, int vertexCount, GpuIntBuffer indirectBuffer) {
@@ -277,16 +301,10 @@ public class CommandBuffer {
 		cmd[writeHead++] = (enabled ? 1L : 0) << 32 | capability & INT_MASK;
 	}
 
-	public void append(CommandBuffer other) {
-		if (other.isEmpty())
-			return;
+	public void execute(RenderState renderState) {
+		// Force VAO state to reapply to ensure it is in sync with the render state
+		renderState.vao.invalidate();
 
-		ensureCapacity(other.writeHead);
-		System.arraycopy(other.cmd, 0, cmd, writeHead, other.writeHead);
-		writeHead += other.writeHead;
-	}
-
-	public void execute() {
 		if (frameTimer != null)
 			frameTimer.begin(Timer.EXECUTE_COMMAND_BUFFER);
 		try (MemoryStack stack = MemoryStack.stackPush()) {
@@ -302,8 +320,6 @@ public class CommandBuffer {
 				switch (type) {
 					case GL_DEPTH_MASK_TYPE: {
 						int state = (int) (data >> 8) & 1;
-						if (SKIP_DEPTH_MASKING)
-							continue;
 						renderState.depthMask.set(state == 1);
 						break;
 					}
@@ -315,12 +331,23 @@ public class CommandBuffer {
 						renderState.colorMask.set(red, green, blue, alpha);
 						break;
 					}
-					case GL_BIND_VERTEX_ARRAY_TYPE: {
-						renderState.vao.set((int) (data >> 8));
+					case GL_BLEND_FUNC_TYPE: {
+						long packed = cmd[readHead++];
+						int sfactorRGB = (int) packed;
+						int dfactorRGB = (int) (packed >>> 32);
+
+						packed = cmd[readHead++];
+						int sfactorAlpha = (int) packed;
+						int dfactorAlpha = (int) (packed >>> 32);
+						renderState.blendFunc.set(sfactorRGB, dfactorRGB, sfactorAlpha, dfactorAlpha);
 						break;
 					}
-					case GL_BIND_ELEMENTS_ARRAY_TYPE: {
-						renderState.ebo.set((int) (data >> 8));
+					case GL_BIND_VERTEX_ARRAY_TYPE: {
+						long packed = cmd[readHead++];
+						int eboIdx = (int) (packed >> 32);
+						int vao = (int) packed;
+						int ebo = eboIdx >= 0 ? ((GLBuffer) objects[eboIdx]).id : 0;
+						renderState.vao.setVaoAndEbo(vao, ebo);
 						break;
 					}
 					case GL_BIND_INDIRECT_ARRAY_TYPE: {
@@ -340,6 +367,19 @@ public class CommandBuffer {
 					case GL_USE_PROGRAM: {
 						int objectIdx = (int) (data >> 8);
 						renderState.program.set((ShaderProgram) objects[objectIdx]);
+						break;
+					}
+					case GL_TIMER: {
+						if (frameTimer != null) {
+							int timerOrdinal = (int) (data >> 9);
+							assert timerOrdinal >= 0 && timerOrdinal < Timer.TIMERS.length;
+							var timer = Timer.TIMERS[timerOrdinal];
+							if (((data >> 8) & 1) == 1) {
+								frameTimer.begin(timer);
+							} else {
+								frameTimer.end(timer);
+							}
+						}
 						break;
 					}
 					case GL_TOGGLE_TYPE: {
@@ -365,6 +405,13 @@ public class CommandBuffer {
 						int count = (int) packed;
 
 						glDrawArrays(mode, offset, count);
+						break;
+					}
+					case GL_DRAW_ARRAYS_INSTANCED_TYPE: {
+						int mode = (int) data >> 8;
+						int offset = (int) cmd[readHead++];
+						long packed = cmd[readHead++];
+						glDrawArraysInstanced(mode, offset, (int) (packed >> 32), (int) packed);
 						break;
 					}
 					case GL_DRAW_ELEMENTS_TYPE: {
@@ -430,7 +477,7 @@ public class CommandBuffer {
 							));
 						callStack.push(this);
 						try {
-							subCmd.execute();
+							subCmd.execute(renderState);
 						} finally {
 							callStack.pop();
 						}
@@ -447,6 +494,9 @@ public class CommandBuffer {
 	}
 
 	private int writeObject(Object obj) {
+		if (obj == null)
+			return -1;
+
 		for (int i = 0; i < objectCount; i++)
 			if (objects[i] == obj)
 				return i;
@@ -459,7 +509,6 @@ public class CommandBuffer {
 
 	public void reset() {
 		Arrays.fill(objects, 0, objectCount, null);
-		renderState.reset();
 
 		writeHead = 0;
 		objectCount = 0;

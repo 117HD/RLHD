@@ -1,9 +1,10 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="HdPluginTest" type="Application" factoryName="Application" singleton="false">
+    <log_file alias="117 HD" path="$PROJECT_DIR$/117hd.log" />
     <option name="MAIN_CLASS_NAME" value="rs117.hd.HdPluginTest" />
     <module name="hd.test" />
     <option name="PROGRAM_PARAMETERS" value="--developer-mode --debug --disable-telemetry" />
-    <option name="VM_PARAMETERS" value="-ea -Xmx768M" />
+    <option name="VM_PARAMETERS" value="-ea -Xmx768M --add-opens=java.desktop/com.apple.eawt=ALL-UNNAMED" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="rs117.hd.*" />
