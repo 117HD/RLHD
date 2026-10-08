@@ -38,8 +38,9 @@ import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.opengl.uniforms.UBOLights;
-import rs117.hd.overlays.FrameTimer;
-import rs117.hd.overlays.Timer;
+import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Stat;
+import rs117.hd.profiling.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.renderer.SkyRenderer;
 import rs117.hd.scene.AreaManager;
@@ -132,7 +133,7 @@ public class LegacyRenderer implements Renderer {
 	private NpcDisplacementCache npcDisplacementCache;
 
 	@Inject
-	private FrameTimer frameTimer;
+	private Profiler profiler;
 
 	@Inject
 	private SkyRenderer skyRenderer;
@@ -537,8 +538,8 @@ public class LegacyRenderer implements Renderer {
 		if (sceneContext == null || plugin.sceneViewport == null)
 			return;
 
-		frameTimer.begin(Timer.DRAW_FRAME);
-		frameTimer.begin(Timer.DRAW_SCENE);
+		profiler.begin(Timer.DRAW_FRAME);
+		profiler.begin(Timer.DRAW_SCENE);
 
 		final Scene scene = client.getTopLevelWorldView().getScene();
 		int drawDistance = plugin.getDrawDistance();
@@ -603,10 +604,6 @@ public class LegacyRenderer implements Renderer {
 				// still redraw the previous frame's scene to emulate the client behavior of not painting over the
 				// viewport buffer.
 				renderBufferOffset = sceneContext.staticVertexCount;
-
-				plugin.drawnTileCount = 0;
-				plugin.drawnStaticRenderableCount = 0;
-				plugin.drawnDynamicRenderableCount = 0;
 
 				// TODO: this could be done only once during scene swap, but is a bit of a pain to do
 				// Push unordered models that should always be drawn at the start of each frame.
@@ -702,17 +699,17 @@ public class LegacyRenderer implements Renderer {
 
 				if (sceneContext.scene == scene) {
 					try {
-						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
+						profiler.begin(Timer.UPDATE_ENVIRONMENT);
 						environmentManager.update(sceneContext);
-						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
+						profiler.end(Timer.UPDATE_ENVIRONMENT);
 
-						frameTimer.begin(Timer.UPDATE_SKY);
+						profiler.begin(Timer.UPDATE_SKY);
 						skyManager.update();
-						frameTimer.end(Timer.UPDATE_SKY);
+						profiler.end(Timer.UPDATE_SKY);
 
-						frameTimer.begin(Timer.UPDATE_LIGHTS);
+						profiler.begin(Timer.UPDATE_LIGHTS);
 						lightManager.update(sceneContext, plugin.cameraShift, plugin.cameraFrustum);
-						frameTimer.end(Timer.UPDATE_LIGHTS);
+						profiler.end(Timer.UPDATE_LIGHTS);
 					} catch (Exception ex) {
 						log.error("Error while updating environment or lights:", ex);
 						plugin.stopPlugin();
@@ -735,7 +732,7 @@ public class LegacyRenderer implements Renderer {
 			// Update lights UBO
 			assert sceneContext.numVisibleLights <= UBOLights.MAX_LIGHTS;
 
-			frameTimer.begin(Timer.UPDATE_LIGHTS);
+			profiler.begin(Timer.UPDATE_LIGHTS);
 			final float[] lightPosition = new float[4];
 			final float[] lightColor = new float[4];
 			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
@@ -764,15 +761,15 @@ public class LegacyRenderer implements Renderer {
 
 			plugin.uboLights.upload();
 			plugin.uboLightsCulling.upload();
-			frameTimer.end(Timer.UPDATE_LIGHTS);
+			profiler.end(Timer.UPDATE_LIGHTS);
 
 			// Perform tiled lighting culling before the compute memory barrier, so it's performed asynchronously
 			if (plugin.configTiledLighting) {
 				plugin.updateTiledLightingFbo();
 				assert plugin.fboTiledLighting != 0;
 
-				frameTimer.begin(Timer.DRAW_TILED_LIGHTING);
-				frameTimer.begin(Timer.RENDER_TILED_LIGHTING);
+				profiler.begin(Timer.DRAW_TILED_LIGHTING);
+				profiler.begin(Timer.RENDER_TILED_LIGHTING);
 
 				glViewport(0, 0, plugin.tiledLightingResolution[0], plugin.tiledLightingResolution[1]);
 				glBindFramebuffer(GL_FRAMEBUFFER, plugin.fboTiledLighting);
@@ -793,8 +790,8 @@ public class LegacyRenderer implements Renderer {
 					}
 				}
 
-				frameTimer.end(Timer.RENDER_TILED_LIGHTING);
-				frameTimer.end(Timer.DRAW_TILED_LIGHTING);
+				profiler.end(Timer.RENDER_TILED_LIGHTING);
+				profiler.end(Timer.DRAW_TILED_LIGHTING);
 			}
 		}
 	}
@@ -806,9 +803,9 @@ public class LegacyRenderer implements Renderer {
 
 		tileVisibilityCached = true;
 
-		frameTimer.end(Timer.DRAW_SCENE);
-		frameTimer.begin(Timer.RENDER_FRAME);
-		frameTimer.begin(Timer.UPLOAD_GEOMETRY);
+		profiler.end(Timer.DRAW_SCENE);
+		profiler.begin(Timer.RENDER_FRAME);
+		profiler.begin(Timer.UPLOAD_GEOMETRY);
 
 		// The client only updates animations once per client tick, so we can skip updating geometry buffers,
 		// but the compute shaders should still be executed in case the camera angle has changed.
@@ -848,8 +845,8 @@ public class LegacyRenderer implements Renderer {
 			updateSceneVao(hRenderBufferVertices, hRenderBufferUvs, hRenderBufferNormals);
 		}
 
-		frameTimer.end(Timer.UPLOAD_GEOMETRY);
-		frameTimer.begin(Timer.COMPUTE);
+		profiler.end(Timer.UPLOAD_GEOMETRY);
+		profiler.begin(Timer.COMPUTE);
 
 		uboCompute.upload();
 
@@ -893,7 +890,7 @@ public class LegacyRenderer implements Renderer {
 			}
 		}
 
-		frameTimer.end(Timer.COMPUTE);
+		profiler.end(Timer.COMPUTE);
 
 		checkGLErrors();
 
@@ -924,7 +921,6 @@ public class LegacyRenderer implements Renderer {
 			.put(tileY * Perspective.LOCAL_TILE_SIZE);
 
 		renderBufferOffset += vertexCount;
-		plugin.drawnTileCount++;
 	}
 
 	@Override
@@ -965,7 +961,6 @@ public class LegacyRenderer implements Renderer {
 			buffer.put(localX).put(localY).put(localZ);
 
 			renderBufferOffset += bufferLength;
-			plugin.drawnTileCount++;
 		}
 
 		++numPassthroughModels;
@@ -978,14 +973,13 @@ public class LegacyRenderer implements Renderer {
 		buffer.put(localX).put(localY).put(localZ);
 
 		renderBufferOffset += bufferLength;
-		plugin.drawnTileCount++;
 	}
 
 	@Override
 	public void draw(int overlayColor) {
 		final GameState gameState = client.getGameState();
 		if (gameState == GameState.STARTING) {
-			frameTimer.end(Timer.DRAW_FRAME);
+			profiler.end(Timer.DRAW_FRAME);
 			return;
 		}
 
@@ -1075,7 +1069,7 @@ public class LegacyRenderer implements Renderer {
 			}
 
 			if (plugin.configShadowsEnabled && plugin.fboShadowMap != 0 && skyRenderer.castsShadows) {
-				frameTimer.begin(Timer.RENDER_SHADOWS);
+				profiler.begin(Timer.RENDER_SHADOWS);
 
 				// Render to the shadow depth map
 				glViewport(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
@@ -1126,7 +1120,7 @@ public class LegacyRenderer implements Renderer {
 				glDisable(GL_CULL_FACE);
 				glDisable(GL_DEPTH_TEST);
 
-				frameTimer.end(Timer.RENDER_SHADOWS);
+				profiler.end(Timer.RENDER_SHADOWS);
 			}
 
 			plugin.uboGlobal.orthographicProjection.set(plugin.orthographicProjection ? 1 : 0);
@@ -1140,11 +1134,12 @@ public class LegacyRenderer implements Renderer {
 			}
 			glViewport(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
 
-			frameTimer.begin(Timer.RENDER_SCENE_AND_SKY);
+			profiler.begin(Timer.CLEAR_SCENE);
 
 			skyRenderer.renderImmediately();
+			profiler.end(Timer.CLEAR_SCENE);
 
-			sceneProgram.use();
+			profiler.begin(Timer.RENDER_SCENE_AND_SKY);
 
 			// We just allow the GL to do face culling. Note this requires the priority renderer
 			// to have logic to disregard culled faces in the priority depth testing.
@@ -1195,7 +1190,7 @@ public class LegacyRenderer implements Renderer {
 				glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
 			}
 
-			frameTimer.end(Timer.RENDER_SCENE_AND_SKY);
+			profiler.end(Timer.RENDER_SCENE_AND_SKY);
 
 			glDisable(GL_BLEND);
 			glDisable(GL_CULL_FACE);
@@ -1237,13 +1232,13 @@ public class LegacyRenderer implements Renderer {
 
 		plugin.drawUi(overlayColor);
 
-		frameTimer.end(Timer.DRAW_FRAME);
-		frameTimer.end(Timer.RENDER_FRAME);
+		profiler.end(Timer.DRAW_FRAME);
+		profiler.end(Timer.RENDER_FRAME);
 
 		try {
-			frameTimer.begin(Timer.SWAP_BUFFERS);
+			profiler.begin(Timer.SWAP_BUFFERS);
 			plugin.awtContext.swapBuffers();
-			frameTimer.end(Timer.SWAP_BUFFERS);
+			profiler.end(Timer.SWAP_BUFFERS);
 			drawManager.processDrawComplete(plugin::screenshot);
 		} catch (RuntimeException ex) {
 			// this is always fatal
@@ -1257,7 +1252,7 @@ public class LegacyRenderer implements Renderer {
 
 		glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
 
-		frameTimer.endFrameAndReset();
+		profiler.endFrameAndReset();
 		frameModelInfoMap.clear();
 		checkGLErrors();
 	}
@@ -1553,11 +1548,8 @@ public class LegacyRenderer implements Renderer {
 				return;
 		}
 
-		if (plugin.enableDetailedTimers)
-			frameTimer.begin(Timer.GET_MODEL);
-
 		Model model, offsetModel;
-		try {
+		try (var ignored = profiler.begin(Timer.GET_MODEL)) {
 			// getModel may throw an exception from vanilla client code
 			if (renderable instanceof Model) {
 				model = (Model) renderable;
@@ -1576,9 +1568,6 @@ public class LegacyRenderer implements Renderer {
 		} catch (Exception ex) {
 			// Vanilla happens to handle exceptions thrown here gracefully, but we handle them explicitly anyway
 			return;
-		} finally {
-			if (plugin.enableDetailedTimers)
-				frameTimer.end(Timer.GET_MODEL);
 		}
 
 		// Apply height to renderable from the model
@@ -1611,8 +1600,7 @@ public class LegacyRenderer implements Renderer {
 		if (plugin.redrawPreviousFrame)
 			return;
 
-		if (plugin.enableDetailedTimers)
-			frameTimer.begin(Timer.DRAW_RENDERABLE);
+		profiler.begin(Timer.DRAW_RENDERABLE);
 
 		eightIntWrite[3] = renderBufferOffset;
 		eightIntWrite[4] = orientation;
@@ -1637,8 +1625,6 @@ public class LegacyRenderer implements Renderer {
 			eightIntWrite[1] = uvOffset;
 			eightIntWrite[2] = faceCount;
 			eightIntWrite[4] |= (hillskew ? 1 : 0) << 26 | plane << 24;
-
-			plugin.drawnStaticRenderableCount = plugin.drawnStaticRenderableCount + 1;
 		} else {
 			int uuid = ModelHash.generateUuid(client, hash, renderable);
 			if (renderable instanceof DynamicObject) {
@@ -1678,8 +1664,7 @@ public class LegacyRenderer implements Renderer {
 			}
 
 			// Temporary model (animated or otherwise not a static Model already in the scene buffer)
-			if (plugin.enableDetailedTimers)
-				frameTimer.begin(Timer.MODEL_BATCHING);
+			profiler.begin(Timer.MODEL_BATCHING);
 			ModelOffsets modelOffsets = null;
 			if (plugin.configModelBatching || plugin.configModelCaching) {
 				modelHasher.setModel(model, modelOverride, preOrientation);
@@ -1691,8 +1676,7 @@ public class LegacyRenderer implements Renderer {
 						modelOffsets = null; // Assume there's been a hash collision
 				}
 			}
-			if (plugin.enableDetailedTimers)
-				frameTimer.end(Timer.MODEL_BATCHING);
+			profiler.end(Timer.MODEL_BATCHING);
 
 			if (modelOffsets != null && modelOffsets.faceCount == model.getFaceCount()) {
 				faceCount = modelOffsets.faceCount;
@@ -1700,8 +1684,7 @@ public class LegacyRenderer implements Renderer {
 				eightIntWrite[1] = modelOffsets.uvOffset;
 				eightIntWrite[2] = modelOffsets.faceCount;
 			} else {
-				if (plugin.enableDetailedTimers)
-					frameTimer.begin(Timer.MODEL_PUSHING);
+				profiler.begin(Timer.MODEL_PUSHING);
 
 				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
 				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
@@ -1712,8 +1695,7 @@ public class LegacyRenderer implements Renderer {
 				if (sceneContext.modelPusherResults[1] == 0)
 					uvOffset = -1;
 
-				if (plugin.enableDetailedTimers)
-					frameTimer.end(Timer.MODEL_PUSHING);
+				profiler.end(Timer.MODEL_PUSHING);
 
 				eightIntWrite[0] = vertexOffset;
 				eightIntWrite[1] = uvOffset;
@@ -1725,11 +1707,10 @@ public class LegacyRenderer implements Renderer {
 			}
 
 			if (eightIntWrite[0] != -1)
-				plugin.drawnDynamicRenderableCount = plugin.drawnDynamicRenderableCount + 1;
+				profiler.incrementStat(Stat.VISIBLE_DYNAMIC_RENDERABLES);
 
 			if (plugin.configCharacterDisplacement && renderable instanceof Actor) {
-				if (plugin.enableDetailedTimers)
-					frameTimer.begin(Timer.CHARACTER_DISPLACEMENT);
+				profiler.begin(Timer.CHARACTER_DISPLACEMENT);
 				if (renderable instanceof NPC) {
 					var npc = (NPC) renderable;
 					var entry = npcDisplacementCache.get(npc);
@@ -1747,13 +1728,11 @@ public class LegacyRenderer implements Renderer {
 				} else if (renderable instanceof Player && renderable != client.getLocalPlayer()) {
 					uboCompute.addCharacterPosition(x, z, (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
 				}
-				if (plugin.enableDetailedTimers)
-					frameTimer.end(Timer.CHARACTER_DISPLACEMENT);
+				profiler.end(Timer.CHARACTER_DISPLACEMENT);
 			}
 		}
 
-		if (plugin.enableDetailedTimers)
-			frameTimer.end(Timer.DRAW_RENDERABLE);
+		profiler.end(Timer.DRAW_RENDERABLE);
 
 		if (eightIntWrite[0] == -1)
 			return; // Hidden model
