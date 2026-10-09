@@ -11871,7 +11871,8 @@
       "II_FENCING",
       "II_FENCEGATE_L",
       "II_FENCEGATE_LC",
-      "II_FENCEGATE_R"
+      "II_FENCEGATE_R",
+      "II_FENCEGATE_RC"
     ],
     "flatNormals": true,
     "uvType": "BOX",
@@ -12393,6 +12394,10 @@
   {
     "description": "Worn Carpet",
     "baseMaterial": "CARPET",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
+    "flatNormals": true,
+    "shiftLightness": 2,
     "objectIds": [
       "FAI_VARROCK_POOR_RUGMIDDLE",
       "RIMMINGTON_RUG_SIDE",
@@ -12407,16 +12412,7 @@
       "FAI_FALADOR_RUG_RUGMIDDLE",
       "DADDYSHOME_CARPET_MIDDLE_BROKEN_0OP",
       "DADDYSHOME_CARPET_MIDDLE_BROKEN_1OP",
-      "DADDYSHOME_CARPET_MIDDLE_FIXED"
-    ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.7,
-    "flatNormals": true
-  },
-  {
-    "description": "Worn Carpet - Edges",
-    "baseMaterial": "CARPET",
-    "objectIds": [
+      "DADDYSHOME_CARPET_MIDDLE_FIXED",
       "FAI_VARROCK_POOR_RUGSIDE",
       "RIMMINGTON_RUG_MIDDLE",
       "RIMMINGTON_RUG_CORNER",
@@ -12425,15 +12421,17 @@
       "FAI_FALADOR_RUG_RUGSIDE",
       "DADDYSHOME_CARPET_SIDE_BROKEN_0OP",
       "DADDYSHOME_CARPET_SIDE_FIXED",
-      "DT2_GHORROCK_RUGSIDE"
-    ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.7,
-    "flatNormals": true
+      "DT2_GHORROCK_RUGSIDE",
+      "DOGQ_DEN_BED"
+    ]
   },
   {
     "description": "Worn Carpet - Coners",
     "baseMaterial": "CARPET",
+    "uvType": "MODEL_XZ_MIRROR_A",
+    "uvScale": 0.7,
+    "flatNormals": true,
+    "shiftLightness": 2,
     "objectIds": [
       "FAI_VARROCK_POOR_RUGCORNER",
       "DRAYNOR_POORRUG_CORNER",
@@ -12442,10 +12440,7 @@
       "DADDYSHOME_CARPET_CORNER_BROKEN_0OP",
       "DADDYSHOME_CARPET_CORNER_FIXED",
       "DT2_GHORROCK_RUGCORNER"
-    ],
-    "uvType": "MODEL_XZ_MIRROR_A",
-    "uvScale": 0.7,
-    "flatNormals": true
+    ]
   },
   {
     "description": "Fine Carpet",
@@ -18059,7 +18054,8 @@
       "CRATE_WOODEN01_REINFORCED01_IMCANDO01",
       "CRATE_WOODEN01_REINFORCED01_OPEN01_IMCANDO01",
       "SLUG2_LIGHTHOUSE_CRATE_STACK",
-      "BANANACRATE"
+      "BANANACRATE",
+      "DOGQ_DEN_BOX"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -27173,6 +27169,10 @@
   {
     "description": "Sacks Pile",
     "baseMaterial": "BURLAP",
+    "shiftLightness": 2,
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.6,
     "objectIds": [
       "FAI_VARROCK_SACK_PILE",
       "VC_SACKS2",
@@ -27184,11 +27184,10 @@
       "MOURNING_SACKS",
       "WILDY_HUB_SACK",
       "FORTIS_SACKS",
-      "FAIRY_SACKS"
-    ],
-    "uvType": "BOX",
-    "uvOrientation": 256,
-    "uvScale": 0.6
+      "FAIRY_SACKS",
+      "PIRATE_SACKS_2",
+      "PIRATE_SACKS"
+    ]
   },
   {
     "description": "Sacks with Sword",
@@ -27236,6 +27235,9 @@
   {
     "description": "Object - Sack with Hey or Grain",
     "baseMaterial": "BURLAP",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "retainVanillaUvs": false,
     "objectIds": [
       "LUNAR_PIRATE_GRAIN_SACK",
       "MOURNING_SACK_FULL",
@@ -27244,11 +27246,9 @@
       "SOTE_LLETYA_SACK_FULL",
       "VC_SACK_FULL_DWARF",
       "MOURNING_SACK_FULL_BURNT",
-      "TOA_SACK_FULL"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.75,
-    "retainVanillaUvs": false
+      "TOA_SACK_FULL",
+      "BRAIN_SACK_FULL"
+    ]
   },
   {
     "description": "Culinaromancers Floor",
@@ -38004,6 +38004,9 @@
   {
     "description": "Ground Objects - Bones",
     "baseMaterial": "BONE",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "shiftLightness": 2,
     "objectIds": [
       "ARENA_DESERT01_BONES01",
       "ARENA_DESERT01_BONES02",
@@ -38011,9 +38014,7 @@
       "ARENA_DESERT01_BONES04",
       "FRISD_FISHMONGER_FISHBONES",
       "BCS_TOMB_DUGUPSOIL04"
-    ],
-    "uvType": "BOX",
-    "uvOrientation": 256
+    ]
   },
   {
     "description": "Bone Objects",
@@ -104355,6 +104356,212 @@
     ],
     "objectIds": [
       "HOSDUN_TEMPLE_SYMBOL"
+    ]
+  },
+  {
+    "description": "Ruff Situation - enclosed doghouse",
+    "baseMaterial": "GRUNGE_3",
+    "uvOrientation": 286,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 6 || h == 7 && s > 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1",
+        "shiftLightness": 14,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Rug",
+        "colors": "h > 20 && h < 24",
+        "baseMaterial": "CARPET",
+        "shiftLightness": 6,
+        "uvType": "MODEL_XZ"
+      },
+      {
+        "description": "Water",
+        "colors": "h == 39",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ"
+      }
+    ],
+    "objectIds": [
+      "DOGQ_DOGHOUSE01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Ruff Situation - open doghouse",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.8,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1",
+        "shiftLightness": 14,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Rug",
+        "colors": "h == 40",
+        "baseMaterial": "CARPET",
+        "shiftLightness": 6,
+        "uvType": "MODEL_XZ"
+      },
+      {
+        "description": "Water",
+        "colors": "h == 39",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ"
+      }
+    ],
+    "objectIds": [
+      "DOGQ_DOGHOUSE01_KENNEL01"
+    ]
+  },
+  {
+    "description": "Ruff Situation - open doghouse with dog - ANIMATED - DYNAMIC",
+    "baseMaterial": "GRUNGE_3",
+    "uvOrientation": 286,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 6 || h == 7 && s > 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Rug",
+        "colors": "h == 51",
+        "baseMaterial": "CARPET",
+        "shiftLightness": 6,
+        "uvType": "MODEL_XZ"
+      }
+    ],
+    "objectIds": [
+      "DOGQ_SHELTER01_HUMAN01"
+    ]
+  },
+  {
+    "description": "Ruff Situation - Dog bowl with food",
+    "baseMaterial": "GRUNGE_2",
+    "uvOrientation": 187,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1",
+        "shiftLightness": 14,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "DOGQ_BOWL01_FOOD01"
+    ]
+  },
+  {
+    "description": "Ruff Situation - Dog bowl with water",
+    "baseMaterial": "METALLIC_1",
+    "shiftLightness": 14,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Water",
+        "colors": "h == 39",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ"
+      }
+    ],
+    "objectIds": [
+      "DOGQ_BOWL01_WATER01"
+    ]
+  },
+  {
+    "description": "Ruff Situation - Dog ball",
+    "baseMaterial": "GRUNGE_3",
+    "uvOrientation": -303,
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "DOGQ_DOGHOUSE01_BALLL01",
+      "DOGQ_DOGHOUSE01_BALLL02"
+    ]
+  },
+  {
+    "description": "Ruff Situation - News paper",
+    "baseMaterial": "GRUNGE_3",
+    "uvOrientation": 187,
+    "uvScale": 0.45,
+    "shiftLightness": 2,
+    "uvType": "BOX",
+    "objectIds": [
+      "DOGQ_DEN_SCRAPS"
+    ]
+  },
+  {
+    "description": "Ruff Situation - Fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.8,
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "objectIds": [
+      "DOGQ_FENCE_WOODEN01_PLANK01",
+      "DOGQ_FENCE_WOODEN01_PLANK01_BROKEN01"
+    ]
+  },
+  {
+    "description": "Ruff Situation - Wooden - WheelBarrow with dirt",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ "DOGQ_WHEEL01_BARROW01" ],
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "colors": "h == 5",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Ruff Situation - Wooden bucket on its side spilling grime",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": -128,
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XZ"
+      },
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ],
+    "objectIds": [
+      "PRISON_BUCKET_SPILT"
     ]
   }
 ]
