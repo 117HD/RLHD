@@ -528,11 +528,19 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	}
 
 	private boolean showOnInterface(int groupId) {
-		if (groupId == -1 || getDrawHooks().contains(groupId << 16 | 0xFFFF))
+		if (groupId == -1 || getDrawHooks().contains(groupId << 16 | 0xFFFF) || isInsideStandardHook(groupId))
 			return false;
 		drawAfterInterface(groupId);
 		overlayCapture.showOnInterface(groupId);
 		return true;
+	}
+
+	// Interfaces inside one with a standard hook, like the deposit box's slot locks, would be handed its items after drawing over them
+	private boolean isInsideStandardHook(int groupId) {
+		for (var node : client.getComponentTable())
+			if (node.getId() == groupId)
+				return standardHooks.contains(WidgetUtil.componentToInterface((int) node.getHash()) << 16 | 0xFFFF);
+		return false;
 	}
 
 	@Override
