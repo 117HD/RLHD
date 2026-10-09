@@ -1,13 +1,12 @@
 package rs117.hd.utils;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.*;
 import rs117.hd.scene.GamevalManager;
+import rs117.hd.utils.collections.Int2ObjectHashMap;
+import rs117.hd.utils.collections.IntHashSet;
 
 @Singleton
 public class NpcDisplacementCache {
@@ -34,22 +33,22 @@ public class NpcDisplacementCache {
 		}
 	}
 
-	private final HashMap<Integer, Entry> cache = new HashMap<>(MAX_SIZE);
-	private Set<Integer> ANIM_ID_IGNORE_LIST = Collections.emptySet();
+	private final Int2ObjectHashMap<Entry> cache = new Int2ObjectHashMap<>(MAX_SIZE);
+	private final IntHashSet ANIM_ID_IGNORE_LIST = new IntHashSet();
 
 	public void initialize() {
 		try (var gamevals = gamevalManager.obtainHandle()) {
-			HashSet<Integer> idsToIgnore = new HashSet<>();
 			for (var substringToIgnore : ANIM_IGNORE_LIST)
 				for (var entry : gamevals.getAnims().entrySet())
 					if (entry.getKey().contains(substringToIgnore))
-						idsToIgnore.add(entry.getValue());
-			ANIM_ID_IGNORE_LIST = Set.copyOf(idsToIgnore);
+						ANIM_ID_IGNORE_LIST.add(entry.getValue());
+			ANIM_ID_IGNORE_LIST.trimToSize();
 		}
 	}
 
 	public void destroy() {
-		ANIM_ID_IGNORE_LIST = Collections.emptySet();
+		ANIM_ID_IGNORE_LIST.clear();
+		ANIM_ID_IGNORE_LIST.trimToSize();
 		cache.clear();
 	}
 
@@ -69,13 +68,21 @@ public class NpcDisplacementCache {
 			if (cache.size() >= NpcDisplacementCache.MAX_SIZE) {
 				long oldestMs = Long.MAX_VALUE;
 				int oldestNpcId = -1;
-				for (var e : cache.entrySet())
-					if (e.getValue().lastAccessMs < oldestMs)
+				for (var e : cache) {
+					if (e.getValue().lastAccessMs < oldestMs) {
 						oldestNpcId = e.getKey();
-				entry = cache.remove(oldestNpcId).reset();
-			} else {
-				entry = new NpcDisplacementCache.Entry();
+						entry = e.getValue();
+					}
+				}
+
+				if(entry != null) {
+					cache.remove(oldestNpcId);
+					entry.reset();
+				}
 			}
+
+			if(entry == null)
+				entry = new NpcDisplacementCache.Entry();
 			cache.put(npcId, entry);
 
 			// Check if NPC is allowed to displace
