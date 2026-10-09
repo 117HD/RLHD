@@ -62,6 +62,7 @@ import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
@@ -262,6 +263,7 @@ public class HdPlugin extends Plugin {
 	@Inject
 	private PluginManager pluginManager;
 
+	@Getter
 	@Inject
 	private HdPluginConfig config;
 
@@ -534,7 +536,8 @@ public class HdPlugin extends Plugin {
 				if (parent.getExistingBinding(key) != null)
 					continue;
 
-				if (!key.getTypeLiteral().getRawType().getName().startsWith("rs117.hd."))
+				var rawType = key.getTypeLiteral().getRawType();
+				if (!rawType.getName().startsWith("rs117.hd.") || Config.class.isAssignableFrom(rawType))
 					continue;
 				expose(binder, key, binding.getProvider());
 			}
