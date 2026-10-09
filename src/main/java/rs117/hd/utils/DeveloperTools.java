@@ -2,10 +2,17 @@ package rs117.hd.utils;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.*;
@@ -36,7 +43,7 @@ import static rs117.hd.utils.MathUtils.*;
 public class DeveloperTools implements KeyListener {
 	public static final float[] COLOR_PICKER = new float[4]; // non-linear sRGB & alpha
 	public static final float[] COLOR_PICKER_LINEAR = new float[4]; // linear sRGB, non-linear alpha
-
+	private static final Keybind KEY_COLOR_PICKER = new Keybind(KeyEvent.VK_P, CTRL_DOWN_MASK | SHIFT_DOWN_MASK);
 	public static Keybind KEY_TOGGLE_TILE_INFO = new Keybind(KeyEvent.VK_F3, CTRL_DOWN_MASK);
 	public static Keybind KEY_TOGGLE_HIGHLIGHT = new Keybind(KeyEvent.VK_H, CTRL_DOWN_MASK | SHIFT_DOWN_MASK);
 	public static Keybind KEY_TOGGLE_FRAME_TIMINGS = new Keybind(KeyEvent.VK_F4, CTRL_DOWN_MASK);
@@ -48,7 +55,6 @@ public class DeveloperTools implements KeyListener {
 	public static Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, SHIFT_DOWN_MASK);
 	public static Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, CTRL_DOWN_MASK);
 	public static Keybind KEY_RELOAD_SCENE = new Keybind(KeyEvent.VK_R, CTRL_DOWN_MASK);
-	private static final Keybind KEY_COLOR_PICKER = new Keybind(KeyEvent.VK_P, CTRL_DOWN_MASK | SHIFT_DOWN_MASK);
 
 	@Inject
 	@Named("developerMode")
@@ -99,67 +105,164 @@ public class DeveloperTools implements KeyListener {
 	@Inject
 	private Profiler profiler;
 
-	private boolean keyBindingsEnabled;
-	private boolean tileInfoOverlayEnabled;
-	@Getter
-	private boolean highlightModelOverridesEnabled;
-	private boolean frameTimingsOverlayEnabled;
-	private boolean shadowMapOverlayEnabled;
-	private boolean lightGizmoOverlayEnabled;
-	@Getter
-	private boolean hideUiEnabled;
-	private boolean tiledLightingOverlayEnabled;
 	@Getter
 	private boolean developerPluginActive;
-
 	private RuneliteColorPicker colorPicker;
+	@Setter
+	private Runnable togglesChangedListener = () -> {};
+	@Setter
+	private Consumer<Boolean> profilerOnChange = on -> {};
+
+	@Getter
+	private final List<Toggle> toggles = new ArrayList<>();
+	@Getter
+	private final List<Action> actions = new ArrayList<>();
+	@Getter
+	private final List<Choice> choices = new ArrayList<>();
+
+	private final Toggle tileInfo = addToggle(
+		"Tile info",
+		() -> KEY_TOGGLE_TILE_INFO, on -> tileInfoOverlay.setActive(on),
+		"tileinfo"
+	);
+	private final Toggle highlightModelOverrides = addToggle(
+		"Highlight model overrides", () -> KEY_TOGGLE_HIGHLIGHT,
+		on -> {
+			postMessage((on ? "Enabled" : "Disabled") + " Model Override Highlighter");
+			plugin.recompilePrograms();
+		},
+		"highlight"
+	);
+
+	private final Toggle frameTimings = addToggle(
+		"Frame timings (managed by profiler)",
+		() -> KEY_TOGGLE_FRAME_TIMINGS,
+		on -> frameTimerOverlay.setActive(on && !developerPluginActive),
+		"timers", "timings"
+	).availableWhen(() -> !developerPluginActive);
+
+	private final Toggle showProfiler = addToggle(
+		"Show profiler",
+		null,
+		on -> profilerOnChange.accept(on)
+	).availableWhen(() -> developerPluginActive);
+
+	private final Toggle shadowMap = addToggle(
+		"Shadow map overlay",
+		() -> KEY_TOGGLE_SHADOW_MAP_OVERLAY,
+		on -> shadowMapOverlay.setActive(on),
+		"shadowmap"
+	);
+
+	private final Toggle lightGizmo = addToggle(
+		"Light gizmo overlay",
+		() -> KEY_TOGGLE_LIGHT_GIZMO_OVERLAY,
+		on -> lightGizmoOverlay.setActive(on),
+		"lights"
+	);
+
+	private final Toggle tiledLighting = addToggle(
+		"Tiled lighting overlay",
+		() -> KEY_TOGGLE_TILED_LIGHTING_OVERLAY,
+		on -> tiledLightingOverlay.setActive(on),
+		"tiledlights", "tiledlighting"
+	);
+
+	private final Toggle freezeCulling = addToggle(
+		"Freeze culling",
+		null,
+		on -> plugin.freezeCulling = on,
+		"culling"
+	);
+
+	private final Toggle orthographic = addToggle(
+		"Orthographic projection",
+		() -> KEY_TOGGLE_ORTHOGRAPHIC,
+		on -> plugin.orthographicProjection = on
+	);
+
+	private final Toggle hideUi = addToggle("Hide UI", () -> KEY_TOGGLE_HIDE_UI, on -> {});
+
+	private final Toggle keyBindings = addToggle(
+		"Keybindings", null,
+		on -> {
+			if (on)
+				keyManager.registerKeyListener(this);
+			else
+				keyManager.unregisterKeyListener(this);
+		},
+		"keybinds", "keybindings"
+	);
+
+	{
+		addAction("Reload scene", () -> clientThread.invoke(() -> plugin.renderer.reloadScene()));
+		addAction("Toggle color picker", this::toggleColorPicker);
+	}
+
+	public Toggle addToggle(
+		String name,
+		@Nullable Supplier<Keybind> keybind,
+		Consumer<Boolean> onChange,
+		String... commands
+	) {
+		Toggle toggle = new Toggle(name, keybind, onChange, commands);
+		toggles.add(toggle);
+		return toggle;
+	}
+
+	public Action addAction(String name, Runnable runnable) {
+		Action action = new Action(name, runnable);
+		actions.add(action);
+		return action;
+	}
+
+	public Choice addChoice(String name, List<String> options, Supplier<String> value, Consumer<String> onChange) {
+		Choice choice = new Choice(name, options, value, onChange);
+		choices.add(choice);
+		return choice;
+	}
+
+	public boolean isHighlightModelOverridesEnabled() {
+		return highlightModelOverrides.isEnabled();
+	}
+
+	public boolean isHideUiEnabled() {
+		return hideUi.isEnabled();
+	}
+
+	public void setKeyBindingsEnabled(boolean enabled) {
+		keyBindings.setEnabled(enabled);
+	}
+
+	public boolean isProfilerEnabled() {
+		return showProfiler.isEnabled();
+	}
+
+	public void setProfilerEnabled(boolean enabled) {
+		showProfiler.setEnabled(enabled);
+	}
 
 	public void setDeveloperPluginActive(boolean active) {
 		developerPluginActive = active;
 		profiler.setEnableDetailedTimers(active);
-		frameTimerOverlay.setActive(!active && frameTimingsOverlayEnabled);
+		frameTimings.refresh();
+		togglesChangedListener.run();
 	}
 
 	public void activate() {
-		// Listen for commands
 		eventBus.register(this);
 
-		// Don't do anything else unless we're in the development environment
-		if (!Props.DEVELOPMENT)
-			return;
-
 		// Enable 117 HD's keybindings by default during development
-		keyBindingsEnabled = true;
-		keyManager.registerKeyListener(this);
-		clientThread.invokeLater(() -> {
-			tileInfoOverlay.setActive(tileInfoOverlayEnabled);
-			frameTimerOverlay.setActive(frameTimingsOverlayEnabled);
-			shadowMapOverlay.setActive(shadowMapOverlayEnabled);
-			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
-			tiledLightingOverlay.setActive(tiledLightingOverlayEnabled);
-		});
+		if (Props.DEVELOPMENT)
+			keyBindings.setEnabled(true);
 	}
 
 	public void deactivate() {
 		eventBus.unregister(this);
-		keyManager.unregisterKeyListener(this);
-		tileInfoOverlay.setActive(false);
-		frameTimerOverlay.setActive(false);
-		shadowMapOverlay.setActive(false);
-		lightGizmoOverlay.setActive(false);
-		tiledLightingOverlay.setActive(false);
-		hideUiEnabled = false;
-	}
 
-	private void toggleModelOverrideHighlighter() {
-		highlightModelOverridesEnabled = !highlightModelOverridesEnabled;
-		clientThread.invoke(() -> client.addChatMessage(
-			ChatMessageType.GAMEMESSAGE,
-			"117 HD",
-			"<col=006600>[117 HD] " + (highlightModelOverridesEnabled ? "Enabled" : "Disabled") + " Model Override Highlighter",
-			"117 HD"
-		));
-		plugin.recompilePrograms();
+		for (Toggle toggle : toggles)
+			if (toggle != highlightModelOverrides && toggle != showProfiler)
+				toggle.setEnabled(false);
 	}
 
 	@Subscribe
@@ -172,45 +275,20 @@ public class DeveloperTools implements KeyListener {
 			return;
 
 		String action = args[0].toLowerCase();
+
+		for (Toggle toggle : toggles) {
+			if (toggle.getCommands().contains(action)) {
+				toggle.toggle();
+				return;
+			}
+		}
+
 		switch (action) {
-			case "highlight":
-				toggleModelOverrideHighlighter();
-				break;
-			case "timers":
-			case "timings":
-				if (developerPluginActive)
-					break;
-				frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
-				break;
 			case "snapshot":
 				frameTimingsRecorder.recordSnapshot();
 				break;
-			case "tileinfo":
-				tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
-				break;
-			case "shadowmap":
-				shadowMapOverlay.setActive(shadowMapOverlayEnabled = !shadowMapOverlayEnabled);
-				break;
-			case "lights":
-				lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = !lightGizmoOverlayEnabled);
-				break;
-			case "tiledlights":
-			case "tiledlighting":
-				tiledLightingOverlay.setActive(tiledLightingOverlayEnabled = !tiledLightingOverlayEnabled);
-				break;
-			case "keybinds":
-			case "keybindings":
-				keyBindingsEnabled = !keyBindingsEnabled;
-				if (keyBindingsEnabled)
-					keyManager.registerKeyListener(this);
-				else
-					keyManager.unregisterKeyListener(this);
-				break;
 			case "reload":
 				plugin.renderer.reloadScene();
-				break;
-			case "culling":
-				plugin.freezeCulling = !plugin.freezeCulling;
 				break;
 			case "colorpicker":
 				toggleColorPicker();
@@ -218,16 +296,11 @@ public class DeveloperTools implements KeyListener {
 			case "latlon":
 				handleLatLonCommand(args);
 				break;
-		}
-
-		// Other commands are gated behind RuneLite's --developer-mode
-		if (!developerMode)
-			return;
-
-		switch (action) {
 			case "varbit":
 			case "varp":
-				handleVarCommand(action, args);
+				// Gated behind RuneLite's --developer-mode
+				if (developerMode)
+					handleVarCommand(action, args);
 				break;
 		}
 	}
@@ -238,10 +311,7 @@ public class DeveloperTools implements KeyListener {
 			if (current.isEmpty())
 				current = config.latitudeDegrees() + "," + config.longitudeDegrees() + " (from config panel)";
 			postMessage("Current latitude & longitude: " + current);
-		} else if (
-			args.length == 2 &&
-			(args[1].equalsIgnoreCase("reset") || args[1].equalsIgnoreCase("clear"))
-		) {
+		} else if (args.length == 2 && (args[1].equalsIgnoreCase("reset") || args[1].equalsIgnoreCase("clear"))) {
 			config.setPreciseLatLon("");
 			postMessage("Reset latitude & longitude coordinates");
 		} else if (args.length == 3) {
@@ -260,29 +330,19 @@ public class DeveloperTools implements KeyListener {
 	}
 
 	private void handleVarCommand(String type, String[] args) {
-		assert client.isClientThread();
-		String usage = "Usage: ::117hd " + type + " <name|id> [value]";
 		if (args.length != 2 && args.length != 3) {
-			postMessage(usage);
+			postMessage("Usage: ::117hd " + type + " <name|id> [value]");
 			return;
 		}
 
+		boolean varbit = type.equals("varbit");
 		String nameOrId = args[1].toUpperCase();
 		Integer id;
 		try {
 			id = Integer.parseInt(nameOrId);
 		} catch (NumberFormatException ignored) {
 			try (var gamevals = gamevalManager.obtainHandle()) {
-				switch (type) {
-					case "varbit":
-						id = gamevals.getVarbits().get(nameOrId);
-						break;
-					case "varp":
-						id = gamevals.getVarps().get(nameOrId);
-						break;
-					default:
-						throw new IllegalStateException("Unhandled variable kind: " + type);
-				}
+				id = varbit ? gamevals.getVarbits().get(nameOrId) : gamevals.getVarps().get(nameOrId);
 			}
 		}
 		if (id == null) {
@@ -292,22 +352,12 @@ public class DeveloperTools implements KeyListener {
 
 		int[] varps = client.getVarps();
 		if (args.length == 2) {
-			int value;
-			switch (type) {
-				case "varbit":
-					value = client.getVarbitValue(varps, id);
-					break;
-				case "varp":
-					value = varps[id];
-					break;
-				default:
-					throw new IllegalStateException("Unhandled variable kind: " + type);
-			}
+			int value = varbit ? client.getVarbitValue(varps, id) : varps[id];
 			postMessage(type + " " + nameOrId + " (" + id + ") = " + value);
 			return;
 		}
 
-		final int value;
+		int value;
 		try {
 			value = Integer.parseInt(args[2]);
 		} catch (NumberFormatException e) {
@@ -317,48 +367,40 @@ public class DeveloperTools implements KeyListener {
 
 		VarbitChanged changed = new VarbitChanged();
 		changed.setValue(value);
-		switch (type) {
-			case "varbit":
-				client.setVarbitValue(varps, id, value);
-				client.queueChangedVarp(client.getVarbit(id).getIndex());
-				changed.setVarbitId(id);
-				break;
-			case "varp":
-				varps[id] = value;
-				client.queueChangedVarp(id);
-				changed.setVarpId(id);
-				break;
-			default:
-				throw new IllegalStateException("Unhandled variable kind: " + type);
+		if (varbit) {
+			client.setVarbitValue(varps, id, value);
+			client.queueChangedVarp(client.getVarbit(id).getIndex());
+			changed.setVarbitId(id);
+		} else {
+			varps[id] = value;
+			client.queueChangedVarp(id);
+			changed.setVarpId(id);
 		}
 		eventBus.post(changed);
 		postMessage("Set " + type + " " + nameOrId + " (" + id + ") = " + value);
 	}
 
-	private void toggleColorPicker() {
+	public void toggleColorPicker() {
 		plugin.uboGlobal.colorPicker.set(1, 1, 1, 1);
-		if (colorPicker == null) {
-			colorPicker = colorPickerManager.create(
-				client,
-				Color.WHITE,
-				"Shader Color Picker",
-				false
-			);
-			colorPicker.setLocationRelativeTo(client.getCanvas());
-			colorPicker.setOnColorChange(c -> clientThread.invoke(() -> {
-				float[] srgb = ColorUtils.srgb(c);
-				float alpha = c.getAlpha() / 255.f;
-				copyTo(COLOR_PICKER, srgb);
-				copyTo(COLOR_PICKER_LINEAR, ColorUtils.srgbToLinear(srgb));
-				COLOR_PICKER_LINEAR[3] = COLOR_PICKER[3] = alpha;
-				plugin.uboGlobal.colorPicker.set(COLOR_PICKER_LINEAR);
-			}));
-			colorPicker.setOnClose(e -> colorPicker = null);
-			colorPicker.setVisible(true);
-		} else {
+		if (colorPicker != null) {
 			colorPicker.setVisible(false);
 			colorPicker = null;
+			return;
 		}
+
+		colorPicker = colorPickerManager.create(client, Color.WHITE, "Shader Color Picker", false);
+		colorPicker.setLocationRelativeTo(client.getCanvas());
+		colorPicker.setOnColorChange(c -> clientThread.invoke(() -> {
+			float[] srgb = ColorUtils.srgb(c);
+			float alpha = c.getAlpha() / 255.f;
+			copyTo(COLOR_PICKER, srgb);
+			copyTo(COLOR_PICKER_LINEAR, ColorUtils.srgbToLinear(srgb));
+			COLOR_PICKER_LINEAR[3] = COLOR_PICKER[3] = alpha;
+			plugin.uboGlobal.colorPicker.set(COLOR_PICKER_LINEAR);
+			togglesChangedListener.run(); // let the panel update its swatch
+		}));
+		colorPicker.setOnClose(e -> colorPicker = null);
+		colorPicker.setVisible(true);
 	}
 
 	private void postMessage(String message) {
@@ -371,28 +413,23 @@ public class DeveloperTools implements KeyListener {
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e)
-	{
-		if (KEY_TOGGLE_HIGHLIGHT.matches(e)) {
-			toggleModelOverrideHighlighter();
-		} else if (!developerPluginActive && KEY_TOGGLE_FRAME_TIMINGS.matches(e)) {
-			frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
-		} else if (KEY_RECORD_TIMINGS_SNAPSHOT.matches(e)) {
+	public void keyTyped(KeyEvent e) {}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		for (Toggle toggle : toggles) {
+			Keybind keybind = toggle.getKeybind() == null ? null : toggle.getKeybind().get();
+			if (keybind != null && toggle.isAvailable() && keybind.matches(e)) {
+				toggle.toggle();
+				e.consume();
+				return;
+			}
+		}
+
+		if (KEY_RECORD_TIMINGS_SNAPSHOT.matches(e)) {
 			frameTimingsRecorder.recordSnapshot();
-		} else if (KEY_TOGGLE_TILE_INFO.matches(e)) {
-			tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
-		} else if (KEY_TOGGLE_SHADOW_MAP_OVERLAY.matches(e)) {
-			shadowMapOverlay.setActive(shadowMapOverlayEnabled = !shadowMapOverlayEnabled);
-		} else if (KEY_TOGGLE_LIGHT_GIZMO_OVERLAY.matches(e)) {
-			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = !lightGizmoOverlayEnabled);
-		} else if (KEY_TOGGLE_TILED_LIGHTING_OVERLAY.matches(e)) {
-			tiledLightingOverlay.setActive(tiledLightingOverlayEnabled = !tiledLightingOverlayEnabled);
 		} else if (KEY_TOGGLE_FREEZE_FRAME.matches(e)) {
 			plugin.toggleFreezeFrame();
-		} else if (KEY_TOGGLE_ORTHOGRAPHIC.matches(e)) {
-			plugin.orthographicProjection = !plugin.orthographicProjection;
-		} else if (KEY_TOGGLE_HIDE_UI.matches(e)) {
-			hideUiEnabled = !hideUiEnabled;
 		} else if (KEY_RELOAD_SCENE.matches(e)) {
 			plugin.renderer.reloadScene();
 		} else if (KEY_COLOR_PICKER.matches(e)) {
@@ -406,6 +443,84 @@ public class DeveloperTools implements KeyListener {
 	@Override
 	public void keyReleased(KeyEvent e) {}
 
-	@Override
-	public void keyTyped(KeyEvent e) {}
+	@Getter
+	public class Toggle {
+		private final String name;
+		@Nullable
+		private final Supplier<Keybind> keybind;
+		private final List<String> commands;
+		private final Consumer<Boolean> onChange;
+		private boolean enabled;
+		@Nullable
+		private BooleanSupplier available;
+
+		private Toggle(String name, @Nullable Supplier<Keybind> keybind, Consumer<Boolean> onChange, String... commands) {
+			this.name = name;
+			this.keybind = keybind;
+			this.onChange = onChange;
+			this.commands = List.of(commands);
+		}
+
+		private Toggle availableWhen(BooleanSupplier available) {
+			this.available = available;
+			return this;
+		}
+
+		public boolean isAvailable() {
+			return available == null || available.getAsBoolean();
+		}
+
+		public void setEnabled(boolean enabled) {
+			if (this.enabled == enabled)
+				return;
+			this.enabled = enabled;
+			refresh();
+			togglesChangedListener.run();
+		}
+
+		private void refresh() { onChange.accept(enabled); }
+
+		public void toggle() {
+			if (isAvailable())
+				setEnabled(!enabled);
+		}
+	}
+
+	@Getter
+	public class Action {
+		private final String name;
+		private final Runnable runnable;
+
+		private Action(String name, Runnable runnable) {
+			this.name = name;
+			this.runnable = runnable;
+		}
+
+		public void run() {
+			runnable.run();
+		}
+	}
+
+	@Getter
+	public class Choice {
+		private final String name;
+		private final List<String> options;
+		private final Supplier<String> valueSupplier;
+		private final Consumer<String> onChange;
+
+		private Choice(String name, List<String> options, Supplier<String> valueSupplier, Consumer<String> onChange) {
+			this.name = name;
+			this.options = options;
+			this.valueSupplier = valueSupplier;
+			this.onChange = onChange;
+		}
+
+		public String getValue() {
+			return valueSupplier.get();
+		}
+
+		public void setValue(String value) {
+			onChange.accept(value);
+		}
+	}
 }
