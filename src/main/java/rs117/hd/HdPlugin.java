@@ -28,6 +28,9 @@ package rs117.hd;
 
 import com.google.gson.Gson;
 import com.google.inject.Binder;
+import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.Module;
 import com.google.inject.Provider;
 import com.google.inject.Provides;
 import java.awt.Canvas;
@@ -518,6 +521,28 @@ public class HdPlugin extends Plugin {
 			}
 		}
 	}
+
+	@Override
+	protected Module getPublicModule() {
+		if (!Props.DEVELOPMENT)
+			return null;
+
+		Injector parent = injector.getParent();
+		return binder -> {
+			for (var binding : injector.getAllBindings().values()) {
+				var key = binding.getKey();
+				if (parent.getExistingBinding(key) != null)
+					continue;
+
+				if (!key.getTypeLiteral().getRawType().getName().startsWith("rs117.hd."))
+					continue;
+				expose(binder, key, binding.getProvider());
+			}
+		};
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private static void expose(Binder binder, Key key, Provider provider) { binder.bind(key).toProvider(provider); }
 
 	@Override
 	protected void startUp() {
