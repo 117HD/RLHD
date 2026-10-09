@@ -1447,6 +1447,19 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_NATIVE_ITEM_ICONS = "experimentalNativeItemIcons";
+	@ConfigItem(
+		keyName = KEY_NATIVE_ITEM_ICONS,
+		name = "Native item icons",
+		description =
+			"Draw item icons in interfaces from their models at your screen's resolution, instead of<br>" +
+			"stretching the game's small icons, when the interface is enlarged with Stretched Mode.",
+		section = experimentalSettings
+	)
+	default boolean nativeItemIcons() {
+		return false;
+	}
+
 	String KEY_POINT_SPRITES = "experimentalPointSprites";
 	@ConfigItem(
 		keyName = KEY_POINT_SPRITES,
