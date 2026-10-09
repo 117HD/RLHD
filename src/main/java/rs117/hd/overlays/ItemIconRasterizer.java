@@ -166,7 +166,8 @@ public class ItemIconRasterizer {
 			float ourCenterX = ourShape[1];
 			float ourCenterY = ourShape[2];
 
-			float scale = ourShape[3] / spread;
+			// A start far too far away leaves a dot too small to measure its spread
+			float scale = ourShape[3] >= .5f ? ourShape[3] / spread : sqrt(ourShape[0] / area);
 			distance *= scale;
 			offsetX += (centerX - ourCenterX) * distance / FOCAL_LENGTH;
 			offsetY += (centerY - ourCenterY) * distance / FOCAL_LENGTH;
@@ -263,6 +264,12 @@ public class ItemIconRasterizer {
 		return pixels;
 	}
 
+	// The game rounds projected positions toward the center, which pulls parts away from it in by half a pixel on average,
+	// like the seeds of a stack. Followed smoothly, and the center is left as it is.
+	private static float towardCenter(float pixels) {
+		return pixels - .5f * Math.signum(pixels) * clamp(abs(pixels) - 1, 0, 1);
+	}
+
 	private int[] drawPixels(float distance, float scaleX, float scaleY, float left, float top, int width, int height, int border, int[] palette) {
 		int count = x.length;
 		var camera = new float[3][count];
@@ -273,8 +280,8 @@ public class ItemIconRasterizer {
 			camera[0][i] = x[i] + offsetX;
 			camera[1][i] = y[i] + offsetY;
 			depth[i] = z[i] + distance;
-			sampleX[i] = (CENTER + FOCAL_LENGTH * camera[0][i] / depth[i] - left) * scaleX * SAMPLES;
-			sampleY[i] = (CENTER + FOCAL_LENGTH * camera[1][i] / depth[i] - top) * scaleY * SAMPLES;
+			sampleX[i] = (CENTER + towardCenter(FOCAL_LENGTH * camera[0][i] / depth[i]) - left) * scaleX * SAMPLES;
+			sampleY[i] = (CENTER + towardCenter(FOCAL_LENGTH * camera[1][i] / depth[i]) - top) * scaleY * SAMPLES;
 		}
 		float[] toRay = { 1 / (scaleX * SAMPLES), left - CENTER, 1 / (scaleY * SAMPLES), top - CENTER };
 

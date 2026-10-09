@@ -23,7 +23,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 class ItemIconCache {
 	// Bump when icons are drawn differently
-	private static final int VERSION = 3;
+	private static final int VERSION = 4;
 	private static final int MAX_FOLDERS = 3;
 	private static final String REMEMBERED = "remembered";
 
