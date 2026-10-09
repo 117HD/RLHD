@@ -52,7 +52,7 @@ vec4 otherOverlays(vec2 gridUv, float item, float shadow) {
 }
 
 void main() {
-    vec2 uiUv = vec2(gl_FragCoord.x / targetDimensions.x, 1 - gl_FragCoord.y / targetDimensions.y);
+    vec2 uiUv = vec2(gl_FragCoord.x / uboUi.targetDimensions.x, 1 - gl_FragCoord.y / uboUi.targetDimensions.y);
     #if UI_SCALING_MODE == UI_SCALING_MODE_HYBRID
         float ui = textureHybrid(uiTexture, uiUv).a;
     #else
@@ -72,7 +72,7 @@ void main() {
     // since items next to it fill in their own cut out backgrounds
     float covered = background.a;
     if (any(lessThan(gridUv, vec2(0))) || any(greaterThanEqual(gridUv, vec2(1))))
-        covered = min(covered, texelFetch(uiTexture, ivec2(uiUv * vec2(sourceDimensions)), 0).a);
+        covered = min(covered, texelFetch(uiTexture, ivec2(uiUv * vec2(uboUi.sourceDimensions)), 0).a);
     background *= covered > ui ? (covered - ui) / (background.a * (1 - ui)) : 0;
 
     float shadow = iconShadow * fShadow.a;

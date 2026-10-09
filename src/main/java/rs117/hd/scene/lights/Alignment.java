@@ -3,8 +3,6 @@ package rs117.hd.scene.lights;
 public enum Alignment
 {
 	CUSTOM(0, false, true),
-	@Deprecated
-	CENTER(0, false, false),
 
 	NORTH(0, true, false),
 	NORTHEAST(256, true, false),

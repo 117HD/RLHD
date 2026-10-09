@@ -543,6 +543,14 @@ public class ExpressionParser {
 			return value;
 		}
 
+		private static boolean asBoolean(Object value) {
+			if (value instanceof Boolean)
+				return (boolean) value;
+			if (value instanceof Number)
+				return ((Number) value).floatValue() != 0;
+			throw new ClassCastException("Cannot convert " + value + " to boolean");
+		}
+
 		private Function<VariableSupplier, Object> toFunctionInternal() {
 			if (op == null)
 				return asFunction(left);
@@ -570,9 +578,9 @@ public class ExpressionParser {
 
 			switch (op) {
 				case AND:
-					return vars -> (boolean) l.apply(vars) && (boolean) r.apply(vars);
+					return vars -> asBoolean(l.apply(vars)) && asBoolean(r.apply(vars));
 				case OR:
-					return vars -> (boolean) l.apply(vars) || (boolean) r.apply(vars);
+					return vars -> asBoolean(l.apply(vars)) || asBoolean(r.apply(vars));
 				case NOTEQUAL:
 				case EQUAL:
 					boolean isBoolean =
@@ -580,8 +588,8 @@ public class ExpressionParser {
 						right instanceof Boolean || right instanceof Expression && ((Expression) right).isBoolean();
 					if (isBoolean) {
 						return op == Operator.EQUAL ?
-							vars -> (boolean) l.apply(vars) == (boolean) r.apply(vars) :
-							vars -> (boolean) l.apply(vars) != (boolean) r.apply(vars);
+							vars -> asBoolean(l.apply(vars)) == asBoolean(r.apply(vars)) :
+							vars -> asBoolean(l.apply(vars)) != asBoolean(r.apply(vars));
 					} else {
 						return op == Operator.EQUAL ?
 							vars -> (float) l.apply(vars) == (float) r.apply(vars) :
@@ -606,7 +614,7 @@ public class ExpressionParser {
 				case MOD:
 					return vars -> (float) l.apply(vars) % (float) r.apply(vars);
 				case NOT:
-					return vars -> !(boolean) r.apply(vars);
+					return vars -> !asBoolean(r.apply(vars));
 			}
 
 			throw new UnsupportedOperationException("Unsupported operands: " + l + " " + op + " " + r);
@@ -617,7 +625,7 @@ public class ExpressionParser {
 				throw new IllegalArgumentException("Expression does not result in a boolean");
 
 			var func = toFunction();
-			return vars -> (boolean) func.apply(vars);
+			return vars -> asBoolean(func.apply(vars));
 		}
 
 		boolean isBoolean() {

@@ -4,7 +4,7 @@ layout(std140) uniform UBOUI {
     ivec2 sourceDimensions;
     ivec2 targetDimensions;
     vec4 alphaOverlay;
-};
+} uboUi;
 
 #include UI_SCALING_MODE
 #define UI_SCALING_MODE_NEAREST 0

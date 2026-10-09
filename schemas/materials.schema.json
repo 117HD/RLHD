@@ -70,6 +70,11 @@
         "type": "number",
         "description": "A brightness multiplier for the material's color."
       },
+      "subsurface": {
+        "type": "number",
+        "minimum": 0,
+        "description": "Crude approximation of subsurface scattering, with a fixed exponent. Strength above 1 intentionally amplifies light."
+      },
       "displacementScale": {
         "type": "number",
         "description": "Specifies the maximum displacement height of the displacement map. Defaults to 0.1, i.e. one tenth of a tile."
