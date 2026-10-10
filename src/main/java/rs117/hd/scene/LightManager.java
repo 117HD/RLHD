@@ -208,9 +208,7 @@ public class LightManager {
 
 		if (reloadLights) {
 			reloadLights = false;
-			for (Light light : lights)
-				triggerCallbacks(light, false);
-			lights.clear();
+			removeAllLights();
 			sceneContext.knownProjectiles.clear();
 			loadSceneLights(sceneContext);
 			swapSceneLights(sceneContext);
@@ -225,7 +223,7 @@ public class LightManager {
 		}
 		if (lights.size() > 10000) {
 			log.warn("Too many lights: {}. Clearing...", lights.size());
-			lights.clear();
+			removeAllLights();
 		}
 
 		// Remove orphaned worldview lights, just in case despawn events are unreliable
@@ -785,6 +783,8 @@ public class LightManager {
 		numVisibleLights = 0;
 	}
 
+	private void removeAllLights() { removeLightsIf(light -> true); }
+
 	private void removeLightIf(Predicate<Light> predicate) {
 		for (var light : lights)
 			if (predicate.test(light))
@@ -1146,7 +1146,7 @@ public class LightManager {
 			copy.origin[1] = tileHeights[scenePoint[2]][tileExX][tileExY] - copy.def.height - 1;
 			copy.origin[2] = scenePoint[1] * LOCAL_TILE_SIZE + LOCAL_HALF_TILE_SIZE;
 			ctx.pendingLights.add(copy);
-			triggerCallbacks(light, true);
+			triggerCallbacks(copy, true);
 		}
 	}
 

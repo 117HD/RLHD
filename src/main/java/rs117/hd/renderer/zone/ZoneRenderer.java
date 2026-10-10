@@ -978,9 +978,11 @@ public class ZoneRenderer implements Renderer {
 
 			if (plugin.enableDetailedTimers)
 				frameTimer.end(Timer.VISIBILITY_CHECK);
+
 			if (plugin.orthographicProjection)
 				return zone.inSceneFrustum = true;
-			return zone.inShadowFrustum;
+
+			return zone.inShadowFrustum || isShadowVisible;
 		} catch (Throwable ex) {
 			plugin.requestPluginStop(
 				String.format("Error in zoneInFrustum(%d, %d, %d, %d)", zx, zz, maxY, minY),

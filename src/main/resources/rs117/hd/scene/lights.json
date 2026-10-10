@@ -32100,6 +32100,17 @@
     ]
   },
   {
+    "description": "Sailing eternal brazier medium sloop 3x10",
+    "objectIds": [ "SAILING_BOAT_SLOOP_ETERNAL_BRAZIER" ],
+    "offset": [ -61, 218, 53 ],
+    "radius": 1250,
+    "strength": 13.5,
+    "color": "#FFA50C",
+    "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "range": 5.8
+  },
+  {
     "description": "CERBERUS_LAIR_RIVER_LIGHT_1",
     "offset": [ 0, 350, -400 ],
     "radius": 1050,
