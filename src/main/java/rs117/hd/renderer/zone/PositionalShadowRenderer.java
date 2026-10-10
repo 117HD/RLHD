@@ -318,7 +318,8 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 		if(!plugin.configPositionalShadows)
 			return;
 
-		final WorldViewContext ctx = sceneManager.getRoot();
+		final WorldViewContext root = sceneManager.getRoot();
+		final WorldViewContext[] subs = sceneManager.getSubContexts();
 
 		for (int i = 0; i < visibleIndices.length; i++) {
 			final int lightIndex = visibleIndices.array[i];
@@ -329,51 +330,78 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 			if (shadowData.atlasRect == null)
 				continue;
 
-			if(light.shadowMode != PositionalShadowMode.MOVEABLE) {
-				for (int z = 0; z < shadowData.overlappingZones.length; z++) {
-					final int zx = shadowData.overlappingZones.array[z] / ctx.sizeX;
-					final int zz = shadowData.overlappingZones.array[z] % ctx.sizeX;
+			if(light.shadowMode != PositionalShadowMode.MOVEABLE && anyOverlappingZoneUnbaked(shadowData, root))
+				shadowData.dirty = true;
 
-					final Zone zone = ctx.zones[zx][zz];
-					if(!zone.initialized || zone.sizeO == 0)
-						continue;
+			if(light.shadowMode == PositionalShadowMode.DYNAMIC || shadowData.dirty) {
+				appendOverlappingZones(light, shadowData, root);
 
-					if(!shadowData.bakedZoneHashes.contains(zone.hashCode())) {
-						shadowData.dirty = true;
-						break;
+				// TODO: use izZoneVisible for subScenes, to ensure we don't draw zones that are not visible
+				if (light.sceneContext != null) {
+					for (WorldViewContext sub : subs) {
+						if (sub == null || sub.sceneContext == null)
+							continue;
+						appendAllZones(light, shadowData, sub);
 					}
 				}
 			}
-
-			if(light.shadowMode == PositionalShadowMode.DYNAMIC || shadowData.dirty) {
-				for (int z = 0; z < shadowData.overlappingZones.length; z++) {
-					final int zx = shadowData.overlappingZones.array[z] / ctx.sizeX;
-					final int zz = shadowData.overlappingZones.array[z] % ctx.sizeX;
-
-					final Zone zone = ctx.zones[zx][zz];
-					if (!zone.initialized || zone.sizeO == 0)
-						continue;
-
-					zone.renderOpaque(shadowData.drawBuffer, 0, 0, 3, Collections.EMPTY_SET);
-
-					if (light.shadowMode != PositionalShadowMode.MOVEABLE)
-						shadowData.bakedZoneHashes.add(zone.hashCode());
-				}
-			}
-
-			/*
-			if (light.shadowMode != PositionalShadowMode.STATIC) {
-				// TODO: This is too expensive at the moment, we need to append specific model draws which is tech that the ModelData branch has
-				shadowData.drawBuffer.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
-				shadowData.drawBuffer.ExecuteSubCommandBuffer(ctx.vaoDirectionalCmd);
-			}*/
 		}
+	}
+
+	private boolean anyOverlappingZoneUnbaked(ShadowData shadowData, WorldViewContext ctx) {
+		for (int z = 0; z < shadowData.overlappingZones.length; z++) {
+			final Zone zone = shadowZone(shadowData, ctx, z);
+			if (zone == null || !zone.initialized || zone.sizeO == 0)
+				continue;
+
+			if (!shadowData.bakedZoneHashes.contains(zone.hashCode()))
+				return true;
+		}
+		return false;
+	}
+
+	private void appendOverlappingZones(Light light, ShadowData shadowData, WorldViewContext ctx) {
+		for (int z = 0; z < shadowData.overlappingZones.length; z++) {
+			final Zone zone = shadowZone(shadowData, ctx, z);
+			if (zone == null || !zone.initialized || zone.sizeO == 0)
+				continue;
+
+			zone.renderOpaque(shadowData.drawBuffer, 0, 0, 3, Collections.EMPTY_SET);
+
+			if (light.shadowMode != PositionalShadowMode.MOVEABLE)
+				shadowData.bakedZoneHashes.add(zone.hashCode());
+		}
+	}
+
+	private void appendAllZones(Light light, ShadowData shadowData, WorldViewContext ctx) {
+		for (int zx = 0; zx < ctx.sizeX; zx++) {
+			for (int zz = 0; zz < ctx.sizeZ; zz++) {
+				final Zone zone = ctx.zones[zx][zz];
+				if (zone == null || !zone.initialized || zone.sizeO == 0)
+					continue;
+
+				zone.renderOpaque(shadowData.drawBuffer, 0, 0, 3, Collections.EMPTY_SET);
+
+				if (light.shadowMode != PositionalShadowMode.MOVEABLE)
+					shadowData.bakedZoneHashes.add(zone.hashCode());
+			}
+		}
+	}
+
+	private Zone shadowZone(ShadowData shadowData, WorldViewContext ctx, int z) {
+		final int packed = shadowData.overlappingZones.array[z];
+		final int zx = packed / ctx.sizeX;
+		final int zz = packed % ctx.sizeX;
+		if (zx >= ctx.sizeX || zz >= ctx.sizeZ)
+			return null;
+		return ctx.zones[zx][zz];
 	}
 
 	public boolean izZoneVisible(WorldViewContext context, Zone zone, int zx, int zz, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
 		if(!plugin.configPositionalShadows)
 			return false;
 
+		// TODO: Support Projection of Zone min/max bounds to improve sub scene light drawing
 		boolean isVisible = false;
 		for(int i = 0; i < visibleIndices.length; i++) {
 			final Light light = shadowLights.get(visibleIndices.array[i]);
@@ -579,6 +607,10 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 	public void onLightAdded(Light light) {
 		if(light.shadowMode == PositionalShadowMode.DISABLED)
 			return;
+
+		// Sub world views can move around within the root scene, so their lights can only be MOVEABLE
+		if (light.sceneContext != null)
+			light.shadowMode = PositionalShadowMode.MOVEABLE;
 
 		pendingAdd.add(light);
 	}
