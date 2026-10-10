@@ -239,11 +239,9 @@ public final class Camera implements Projection {
 	}
 
 	public Camera translate(float[] translation) {
-		if (translation[0] != 0.0f || translation[1] != 0.0f || translation[2] != 0.0f) {
+		if (translation[0] != 0 || translation[1] != 0 || translation[2] != 0) {
 			synchronized (this) {
-				position[0] += translation[0];
-				position[1] += translation[1];
-				position[2] += translation[2];
+				add(position, position, translation);
 				dirtyFlags |= VIEW_CHANGED;
 			}
 		}

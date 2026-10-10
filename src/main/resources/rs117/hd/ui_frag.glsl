@@ -58,14 +58,14 @@ void main() {
     #if UI_SCALING_MODE == UI_SCALING_MODE_MITCHELL || UI_SCALING_MODE == UI_SCALING_MODE_CATROM
         c = textureCubic(uiTexture, fUv);
     #elif UI_SCALING_MODE == UI_SCALING_MODE_XBR
-        c = textureXBR(uiTexture, fUv, xbrTable, ceil(1.0 * targetDimensions.x / sourceDimensions.x));
+        c = textureXBR(uiTexture, fUv, xbrTable, ceil(1.0 * uboUi.targetDimensions.x / uboUi.sourceDimensions.x));
     #elif UI_SCALING_MODE == UI_SCALING_MODE_HYBRID
         c = textureHybrid(uiTexture, fUv);
     #else // NEAREST or LINEAR, which uses GL_TEXTURE_MIN_FILTER/GL_TEXTURE_MAG_FILTER to affect sampling
         c = texture(uiTexture, fUv);
     #endif
 
-    c = alphaBlend(c, alphaOverlay);
+    c = alphaBlend(c, uboUi.alphaOverlay);
     c.rgb = colorBlindnessCompensation(c.rgb);
 
     #if WINDOWS_HDR_CORRECTION

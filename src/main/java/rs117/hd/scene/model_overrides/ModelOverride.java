@@ -80,6 +80,7 @@ public class ModelOverride
 	private boolean hideAsWaterEffect = false;
 	public float terrainVertexSnapThreshold = 0.125f;
 	public float shadowOpacityThreshold = 0;
+	public boolean shadowNormalBias = false;
 	public TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;
 	public InheritTileColorType inheritTileColorType = InheritTileColorType.NONE;
 	public WindDisplacement windDisplacementMode = WindDisplacement.DISABLED;
@@ -87,6 +88,7 @@ public class ModelOverride
 	public boolean invertDisplacementStrength = false;
 	public int depthBias = -1;
 	public boolean disablePrioritySorting = false;
+	public int heightOffset = 0;
 
 	private int setHue = -1;
 	private int shiftHue;
@@ -314,6 +316,7 @@ public class ModelOverride
 			hideAsWaterEffect,
 			terrainVertexSnapThreshold,
 			shadowOpacityThreshold,
+			shadowNormalBias,
 			tzHaarRecolorType,
 			inheritTileColorType,
 			windDisplacementMode,
@@ -321,6 +324,7 @@ public class ModelOverride
 			invertDisplacementStrength,
 			depthBias,
 			disablePrioritySorting,
+			heightOffset,
 			setHue,
 			shiftHue,
 			minHue,

@@ -1,5 +1,7 @@
 package rs117.hd.renderer.zone;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.utils.DestructibleHandler;
@@ -18,7 +20,8 @@ public final class ZoneUploadJob extends Job {
 	private WorldViewContext viewContext;
 	private ZoneSceneContext sceneContext;
 
-	Zone zone;
+	Zone zoneToBeReplaced;
+	Zone zoneBeingUploaded;
 	int x, z;
 	long revealAfterTimestampMs;
 	boolean shouldUnmap;
@@ -30,21 +33,21 @@ public final class ZoneUploadJob extends Job {
 
 			sceneUploader.onBeforeProcessTile = this::onBeforeProcessTile;
 			sceneUploader.setScene(sceneContext.scene);
-			sceneUploader.estimateZoneSize(sceneContext, zone, x, z);
+			sceneUploader.estimateZoneSize(sceneContext, zoneBeingUploaded, x, z);
 
-			if (zone.sizeO > 0 || zone.sizeA > 0) {
+			if (zoneBeingUploaded.sizeO > 0 || zoneBeingUploaded.sizeA > 0) {
 				workerHandleCancel();
 
 				invokeClientCallback(this::mapZoneVertexBuffers);
 				workerHandleCancel();
 
-				sceneUploader.uploadZone(sceneContext, zone, x, z);
+				sceneUploader.uploadZone(sceneContext, zoneBeingUploaded, x, z);
 				workerHandleCancel();
 
 				if (shouldUnmap)
-					invokeClientCallback(zone::unmap);
+					invokeClientCallback(zoneBeingUploaded::unmap);
 			}
-			zone.initialized = true;
+			zoneBeingUploaded.initialized = true;
 		}
 	}
 
@@ -55,14 +58,14 @@ public final class ZoneUploadJob extends Job {
 	private void mapZoneVertexBuffers() {
 		try {
 			GLBuffer o = null, a = null;
-			int sz = zone.sizeO * Zone.VERT_SIZE * 3;
+			int sz = zoneBeingUploaded.sizeO * Zone.VERT_SIZE * 3;
 			if (sz > 0) {
 				o = new GLBuffer("Zone::VBO::Opaque", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 				o.initialize(sz);
 				o.map(MAP_WRITE);
 			}
 
-			sz = zone.sizeA * Zone.VERT_SIZE * 3;
+			sz = zoneBeingUploaded.sizeA * Zone.VERT_SIZE * 3;
 			if (sz > 0) {
 				a = new GLBuffer("Zone::VBO::Alpha", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 				a.initialize(sz);
@@ -70,15 +73,15 @@ public final class ZoneUploadJob extends Job {
 			}
 
 			GLTextureBuffer f = null;
-			sz = zone.sizeF * Zone.TEXTURE_SIZE;
+			sz = zoneBeingUploaded.sizeF * Zone.TEXTURE_SIZE;
 			if (sz > 0) {
 				f = new GLTextureBuffer("Zone::TBO", GL_STATIC_DRAW);
 				f.initialize(sz);
 				f.map(MAP_WRITE);
 			}
 
-			zone.initialize(o, a, f);
-			zone.setMetadata(viewContext, sceneContext, x, z);
+			zoneBeingUploaded.initialize(o, a, f);
+			zoneBeingUploaded.setMetadata(viewContext, sceneContext, x, z);
 		} catch (Throwable ex) {
 			log.warn(
 				"Caught exception whilst processing zone [{}, {}] worldId [{}] group priority [{}] cancelling...\n",
@@ -94,8 +97,8 @@ public final class ZoneUploadJob extends Job {
 
 	@Override
 	protected void onCancel() {
-		if (viewContext.zones[x][z] != zone)
-			DestructibleHandler.queueDestruction(zone);
+		if (viewContext.zones[x][z] != zoneBeingUploaded)
+			DestructibleHandler.queueDestruction(zoneBeingUploaded);
 
 		// Avoid holding a reference to the context after the job is done
 		viewContext = null;
@@ -106,8 +109,12 @@ public final class ZoneUploadJob extends Job {
 	protected void onReleased() {
 		viewContext = null;
 		sceneContext = null;
-		zone.uploadJob = null;
-		zone = null;
+		if (zoneToBeReplaced != null && zoneToBeReplaced.uploadJob == this)
+			zoneToBeReplaced.uploadJob = null;
+		zoneToBeReplaced = null;
+		if (zoneBeingUploaded != null && zoneBeingUploaded.uploadJob == this)
+			zoneBeingUploaded.uploadJob = null;
+		zoneBeingUploaded = null;
 		revealAfterTimestampMs = 0;
 		POOL.recycle(this);
 	}
@@ -115,24 +122,25 @@ public final class ZoneUploadJob extends Job {
 	public static ZoneUploadJob build(
 		WorldViewContext viewContext,
 		ZoneSceneContext sceneContext,
-		Zone zone,
+		Zone uploadZone,
 		boolean shouldUnmap,
 		int x,
 		int z
 	) {
 		assert viewContext != null : "WorldViewContext cant be null";
 		assert sceneContext != null : "ZoneSceneContext cant be null";
-		assert zone != null : "Zone cant be null";
-		assert !zone.initialized : "Zone is already initialized";
+		assert uploadZone != null : "Zone cant be null";
+		assert !uploadZone.initialized : "Zone is already initialized";
 
 		ZoneUploadJob newTask = POOL.acquire();
 		newTask.viewContext = viewContext;
 		newTask.sceneContext = sceneContext;
-		newTask.zone = zone;
+		newTask.zoneBeingUploaded = uploadZone;
 		newTask.shouldUnmap = shouldUnmap;
 		newTask.x = x;
 		newTask.z = z;
-		newTask.isReleased = false;
+		newTask.zoneToBeReplaced = null;
+		newTask.resetReleased();
 
 		return newTask;
 	}

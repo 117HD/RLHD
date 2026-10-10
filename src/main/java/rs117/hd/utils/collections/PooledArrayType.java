@@ -7,7 +7,6 @@ import java.util.concurrent.locks.StampedLock;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import rs117.hd.utils.Props;
 
 import static java.lang.Integer.numberOfLeadingZeros;
 import static rs117.hd.utils.MathUtils.*;
@@ -21,6 +20,8 @@ public enum PooledArrayType {
 	INT(int[]::new, 4),
 	FLOAT(float[]::new, 4),
 	OBJECT(Object[]::new, 4);
+
+	public static final boolean CHECK_FOR_DUPLICATES_IN_POOL = false;
 
 	public static final PooledArrayType[] VALUES = values();
 
@@ -315,7 +316,7 @@ public enum PooledArrayType {
 		private volatile boolean isEmpty = true;
 
 		public void add(Object array, long bytes) {
-			if (Props.DEVELOPMENT && !isEmpty && stack.contains(array))
+			if (CHECK_FOR_DUPLICATES_IN_POOL && !isEmpty && stack.contains(array))
 				throw new IllegalStateException("Duplicate array: " + array);
 			stack.add(array);
 			CURRENT_POOL_BYTES.addAndGet(bytes);

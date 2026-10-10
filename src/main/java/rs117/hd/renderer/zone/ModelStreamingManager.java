@@ -188,9 +188,9 @@ public class ModelStreamingManager {
 			return;
 
 		final StreamingContext streamingContext = context(renderThreadId);
-		final float[] objectWorldPos = vec4(streamingContext.objectWorldPos, x, y, z, 1.0f);
+		final float[] worldPos = vec4(streamingContext.objectWorldPos, x, y, z, 1.0f);
 		if (ctx.uboWorldViewStruct != null)
-			ctx.uboWorldViewStruct.project(objectWorldPos);
+			ctx.uboWorldViewStruct.project(worldPos);
 
 		final int uuid;
 		if (r instanceof DynamicObject) {
@@ -199,7 +199,7 @@ public class ModelStreamingManager {
 			uuid = ModelHash.packUuid(ModelHash.getType(tileObject.getHash()), impostorId);
 
 			// Cull dynamic models based on detail draw distance
-			float squaredDistance = renderer.sceneCamera.squaredDistanceTo(objectWorldPos[0], objectWorldPos[1], objectWorldPos[2]);
+			float squaredDistance = renderer.sceneCamera.squaredDistanceTo(worldPos[0], worldPos[1], worldPos[2]);
 			int detailDrawDistanceTiles = plugin.configDetailDrawDistance * LOCAL_TILE_SIZE;
 			if (squaredDistance > detailDrawDistanceTiles * detailDrawDistanceTiles && modelOverrideManager.allowDetailCulling(uuid))
 				return;
@@ -212,9 +212,9 @@ public class ModelStreamingManager {
 			var base = ctx.sceneContext.sceneBase;
 			assert base != null;
 			boolean inArea = ctx.sceneContext.currentArea.containsPoint(
-				base[0] + ((int) objectWorldPos[0] >> Perspective.LOCAL_COORD_BITS),
-				base[1] + ((int) objectWorldPos[2] >> Perspective.LOCAL_COORD_BITS),
-				base[2] + client.getTopLevelWorldView().getPlane()
+				base[0] + ((int) worldPos[0] >> Perspective.LOCAL_COORD_BITS),
+				base[1] + ((int) worldPos[2] >> Perspective.LOCAL_COORD_BITS),
+				base[2] + tileObject.getPlane()
 			);
 			if (!inArea)
 				return;
@@ -227,17 +227,13 @@ public class ModelStreamingManager {
 
 		m.calculateBoundsCylinder();
 
-		final int modelClassification = renderer.sceneCamera.classifySphere(
-			objectWorldPos[0], objectWorldPos[1], objectWorldPos[2], m.getRadius());
+		final int modelClassification = renderer.sceneCamera.classifySphere(worldPos[0], worldPos[1], worldPos[2], m.getRadius());
 		boolean isOffScreen = modelClassification == -1;
-		// Additional Culling checks to help reduce dynamic object perf impact when off-screen
+		// Additional culling checks to help reduce dynamic object perf impact when off-screen
 		if (isOffScreen && (
 			!modelOverride.castShadows ||
-			!renderer.directionalShadowCasterVolume.intersectsPoint(
-				(int) objectWorldPos[0],
-				(int) objectWorldPos[1],
-				(int) objectWorldPos[2]
-			)
+			!renderer.directionalCamera.intersectsSphere(worldPos[0], worldPos[1], worldPos[2], m.getRadius()) ||
+			!renderer.directionalShadowCasterVolume.intersectsSphere(worldPos[0], worldPos[1], worldPos[2], m.getRadius())
 		)) {
 			return;
 		}

@@ -53,7 +53,7 @@ void main() {
     dotUv.x = fract(dotUv.x + .5) - .5;
     float dot = smoothstep(dotRadius, dotRadius - lineFeather, length(dotUv));
     dot *= mix(minBrightness, 1, (dotIndex - 1) / (numDots - 1));
-    dot = pow(dot, gammaCorrection);
+    dot = pow(dot, uboGlobal.gammaCorrection);
     src.rgb += vec3(dot);
 
     vec2 cornerDotUv = uv + vec2(-numDots / 2., .5) + timerMargin * vec2(1, -1);
