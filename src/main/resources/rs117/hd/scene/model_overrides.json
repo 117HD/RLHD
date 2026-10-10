@@ -83366,11 +83366,16 @@
         "colors": "a < 255",
         "baseMaterial": "NONE",
         "upwardsNormals": true,
-        "receiveShadows": false
+        "receiveShadows": false,
+        "minLightness": 60
       },
       {
         "colors": "h == 32",
-        "baseMaterial": "NONE"
+        "baseMaterial": "NONE",
+        "upwardsNormals": true,
+        "shiftLightness": -35,
+        "minLightness": 10,
+        "receiveShadows": false
       },
       {
         "colors": "s == 4",
