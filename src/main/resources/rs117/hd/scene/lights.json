@@ -20166,6 +20166,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 80,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -21905,6 +21907,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 15,
     "duration": 0,
     "range": 30,
     "objectIds": [
@@ -21923,6 +21927,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 15,
     "duration": 0,
     "range": 30,
     "objectIds": [
