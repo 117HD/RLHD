@@ -458,6 +458,9 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 
 		zoneRenderer.depthProgram.use();
 
+		final WorldViewContext root = sceneManager.getRoot();
+		final WorldViewContext[] subs = sceneManager.getSubContexts();
+
 		// Keep the baked cubemap FBO bound for reads while RenderState updates only
 		// the atlas draw target.
 		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, fboShadow);
@@ -590,6 +593,16 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 
 				if(light.shadowMode != PositionalShadowMode.STATIC)
 					shadowData.drawBuffer.execute(renderState);
+
+				if (light.shadowMode != PositionalShadowMode.STATIC) {
+					shadowData.drawBuffer.ExecuteSubCommandBuffer(root.vaoSceneCmd);
+					shadowData.drawBuffer.ExecuteSubCommandBuffer(root.vaoDirectionalCmd);
+
+					if(light.sceneContext != null && light.sceneContext.worldViewContext != null) {
+						shadowData.drawBuffer.ExecuteSubCommandBuffer(light.sceneContext.worldViewContext.vaoSceneCmd);
+						shadowData.drawBuffer.ExecuteSubCommandBuffer(light.sceneContext.worldViewContext.vaoDirectionalCmd);
+					}
+				}
 			}
 		}
 
