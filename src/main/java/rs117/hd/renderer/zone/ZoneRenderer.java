@@ -1012,7 +1012,7 @@ public class ZoneRenderer implements Renderer {
 
 		try {
 			final WorldViewContext ctx = sceneManager.getContext(scene);
-			if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
+			if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading || ctx.isSquashed)
 				return;
 
 			final Zone z = ctx.zones[zx][zz];
@@ -1114,11 +1114,15 @@ public class ZoneRenderer implements Renderer {
 
 					// Draw opaque
 					ctx.drawAll(VAO_OPAQUE, ctx.vaoSceneCmd);
-					ctx.drawAll(VAO_OPAQUE, ctx.vaoDirectionalCmd);
-					ctx.drawAll(VAO_PLAYER, ctx.vaoDirectionalCmd);
 
-					// Draw shadow-only models
-					ctx.drawAll(VAO_SHADOW, ctx.vaoDirectionalCmd);
+					// Draw to shadow map
+					if (skyRenderer.castsShadows && !ctx.isSquashed) {
+						ctx.drawAll(VAO_OPAQUE, ctx.vaoDirectionalCmd);
+						ctx.drawAll(VAO_PLAYER, ctx.vaoDirectionalCmd);
+
+						// Draw shadow-only models
+						ctx.drawAll(VAO_SHADOW, ctx.vaoDirectionalCmd);
+					}
 
 					// Draw players with sorted alpha, without writing depth
 					ctx.vaoSceneCmd.DepthMask(false);

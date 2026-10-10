@@ -1318,6 +1318,17 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_LEGACY_BOAT_SILHOUETTES = "legacyBoatSilhouettes";
+	@ConfigItem(
+		keyName = KEY_LEGACY_BOAT_SILHOUETTES,
+		name = "Legacy boat silhouettes",
+		description = "Renders boat silhouettes with textures like before.",
+		section = legacySettings
+	)
+	default boolean legacyBoatSilhouettes() {
+		return false;
+	}
+
 
 	/*====== Experimental settings ======*/
 
@@ -1456,6 +1467,17 @@ public interface HdPluginConfig extends Config
 	)
 	default DefaultBoolean pointSprites() {
 		return DefaultBoolean.DEFAULT;
+	}
+
+	String KEY_SIMPLE_BOAT_SILHOUETTES = "experimentalSimpleBoatSilhouettes";
+	@ConfigItem(
+		keyName = KEY_SIMPLE_BOAT_SILHOUETTES,
+		name = "Simple boat silhouettes",
+		description = "Skip rendering animated objects when boats are flattened beneath other boats.",
+		section = experimentalSettings
+	)
+	default boolean simpleBoatSilhouettes() {
+		return true;
 	}
 
 

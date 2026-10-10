@@ -177,6 +177,7 @@ public class ModelStreamingManager {
 		WorldViewContext ctx = sceneManager.getContext(scene);
 		if (root == null || ctx == null ||
 			!sceneManager.isRoot(ctx) && ctx.isLoading ||
+			plugin.configSimpleBoatSilhouettes && ctx.isSquashed ||
 			!renderCallbackManager.drawObject(scene, tileObject))
 			return;
 

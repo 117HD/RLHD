@@ -90,17 +90,28 @@ vec2 worldUvs(float scale) {
 #include <utils/water.glsl>
 
 void main() {
+    bool isTerrain = (fTerrainData[0] & 1) != 0;
+    bool isSquashed = isWorldViewSquashed(fWorldViewId);
+    #if LEGACY_BOAT_SILHOUETTES
+        isSquashed = false;
+    #endif
+
     vec3 downDir = vec3(0, -1, 0);
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(uboGlobal.cameraPos - IN.position);
     vec3 flatNormal = normalize(cross(dFdx(IN.position), dFdy(IN.position)));
 
-    bool isTerrain = (fTerrainData[0] & 1) != 0;
     bool identicalMaterials = !isTerrain || (
         ((fMaterialData[0] ^ fMaterialData[1] | (fMaterialData[0] ^ fMaterialData[2]))
         >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK) == 0
     );
-    Material material1 = getMaterial(fMaterialData[0] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
+    Material material1;
+    if (isSquashed) {
+        material1 = MAT_NONE;
+        identicalMaterials = true;
+    } else {
+        material1 = getMaterial(fMaterialData[0] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
+    }
     Material material2 = identicalMaterials ? material1 :
         getMaterial(fMaterialData[1] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
     Material material3 = identicalMaterials ? material1 :
@@ -178,6 +189,8 @@ void main() {
         #else
             N = normalize(IN.normal);
         #endif
+        if (isSquashed)
+            N = vec3(0, -1, 0);
 
         #if DISPLAY_UV
             FragColor = vec4(fract(uv1 * IN.texBlend.x + uv2 * IN.texBlend.y + uv3 * IN.texBlend.z), 0.0, 1.0);
@@ -232,6 +245,9 @@ void main() {
         baseColor1.rgb = srgbToLinear(hslToSrgb(baseColor1.xyz));
         baseColor2.rgb = srgbToLinear(hslToSrgb(baseColor2.xyz));
         baseColor3.rgb = srgbToLinear(hslToSrgb(baseColor3.xyz));
+
+        if (isSquashed)
+            baseColor1 = baseColor2 = baseColor3 = baseColor1 * .4;
 
         #if DISPLAY_BASE_COLOR
         if (DISPLAY_BASE_COLOR == 1) { // Redundant, used for syntax highlighting in IntelliJ
@@ -491,11 +507,7 @@ void main() {
             outputColor.rgb = srgbToLinear(outputColor.rgb);
         #endif
 
-        if (tint.w > 0) {
-            outputColor.rgb *= 1.0 + skyLightOut;
-        } else {
-            outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
-        }
+        outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
         outputColor.rgb = linearToSrgb(outputColor.rgb);
 
         if (isUnderwater) {
