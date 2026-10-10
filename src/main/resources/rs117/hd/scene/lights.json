@@ -42428,6 +42428,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20
   },
@@ -42445,6 +42446,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20
   },
