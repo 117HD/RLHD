@@ -117,7 +117,8 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 	@Inject
 	private FrameTimer frameTimer;
 
-	private final ArrayList<Light> pendingLights = new ArrayList<>();
+	private final ArrayList<Light> pendingAdd = new ArrayList<>();
+	private final ArrayList<Light> pendingRemove = new ArrayList<>();
 	private final ArrayList<Light> shadowLights = new ArrayList<>();
 	private final PrimitiveIntArray visibleIndices = new PrimitiveIntArray();
 
@@ -208,8 +209,8 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 		if(!plugin.configPositionalShadows)
 			return;
 
-		for(int i = 0; i < pendingLights.size(); i++) {
-			final Light light = pendingLights.get(i);
+		for(int i = 0; i < pendingAdd.size(); i++) {
+			final Light light = pendingAdd.get(i);
 			light.shadowData = new ShadowData();
 			light.shadowData.dirty = true;
 
@@ -227,7 +228,16 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 
 			shadowLights.add(light);
 		}
-		pendingLights.clear();
+		pendingAdd.clear();
+
+		for(int i = 0; i < pendingRemove.size(); i++) {
+			final Light light = pendingRemove.get(i);
+			if(light.shadowData != null)
+				light.shadowData.destroy();
+			light.shadowData = null;
+			shadowLights.remove(light);
+		}
+		pendingRemove.clear();
 
 		visibleIndices.reset();
 		visibleIndices.ensureCapacity(shadowLights.size());
@@ -570,7 +580,7 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 		if(light.shadowMode == PositionalShadowMode.DISABLED)
 			return;
 
-		pendingLights.add(light);
+		pendingAdd.add(light);
 	}
 
 	@Override
@@ -578,9 +588,7 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 		if(light.shadowData == null)
 			return;
 
-		light.shadowData.destroy();
-		light.shadowData = null;
-		shadowLights.remove(light);
+		pendingRemove.add(light);
 	}
 
 	public static final class ShadowData {
@@ -593,10 +601,6 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 		private int packedNearPlane;
 
 		private Rect atlasRect;
-
-		public void init() {
-
-		}
 
 		public void destroy() {
 			if(texBakedCubemap != 0)

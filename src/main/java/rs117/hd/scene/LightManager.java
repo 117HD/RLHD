@@ -208,6 +208,8 @@ public class LightManager {
 
 		if (reloadLights) {
 			reloadLights = false;
+			for (Light light : lights)
+				triggerCallbacks(light, false);
 			lights.clear();
 			sceneContext.knownProjectiles.clear();
 			loadSceneLights(sceneContext);
