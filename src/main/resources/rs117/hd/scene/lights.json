@@ -20937,6 +20937,57 @@
     ]
   },
   {
+    "description": "KOUREND_MAIN_TABLE_CANDLES_1",
+    "offset": [ -83, 200, 141 ],
+    "radius": 280,
+    "strength": 14,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "KOUREND_MAIN_TABLE"
+    ]
+  },
+  {
+    "description": "KOUREND_MAIN_TABLE_CANDLES_2",
+    "offset": [ -228, 150, -29 ],
+    "radius": 130,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "KOUREND_MAIN_TABLE"
+    ]
+  },
+  {
+    "description": "KOUREND_MAIN_TABLE_CANDLES_3",
+    "offset": [ 380, 150, 49 ],
+    "radius": 130,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "KOUREND_MAIN_TABLE"
+    ]
+  },
+  {
     "description": "GAMES_ROOM_FIREPLACE",
     "height": 185,
     "radius": 1500,
@@ -46181,7 +46232,8 @@
     "range": 5,
     "objectIds": [
       "FAI_VARROCK_RANGE",
-      "KR_SIN_RANGE"
+      "KR_SIN_RANGE",
+      "_100_DAVE_STOVE"
     ]
   },
   {
@@ -46200,7 +46252,8 @@
     "range": 5,
     "objectIds": [
       "FAI_VARROCK_RANGE",
-      "KR_SIN_RANGE"
+      "KR_SIN_RANGE",
+      "_100_DAVE_STOVE"
     ]
   },
   {
@@ -46219,7 +46272,8 @@
     "range": 5,
     "objectIds": [
       "FAI_VARROCK_RANGE",
-      "KR_SIN_RANGE"
+      "KR_SIN_RANGE",
+      "_100_DAVE_STOVE"
     ]
   },
   {

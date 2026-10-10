@@ -18480,7 +18480,8 @@
     "objectIds": [
       "FAI_VARROCK_RANGE",
       "FAI_VARROCK_RANGE_WITH_PIPE",
-      "RIMMINGTON_POOR_RANGE"
+      "RIMMINGTON_POOR_RANGE",
+      "_100_DAVE_STOVE"
     ]
   },
   {
@@ -67976,9 +67977,14 @@
       },
       {
         "colors": [ "h >= 8 && h <= 10" ],
-        "baseMaterial": "GRUNGE_3",
+        "baseMaterial": "GRUNGE_3_SMOOTH",
         "uvType": "BOX",
-        "uvScale": 0.66
+        "uvScale": 0.4
+      },
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "NONE",
+        "upwardsNormals": true
       }
     ]
   },
