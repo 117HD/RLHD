@@ -16813,6 +16813,8 @@
       33.847893
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 180,
     "duration": 1000,
     "range": 20
   },
@@ -16830,6 +16832,8 @@
       33.847893
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 180,
     "duration": 1000,
     "range": 20
   },
@@ -20418,6 +20422,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 80,
     "duration": 0,
     "range": 20,
     "schedule": "NIGHT",
@@ -20503,13 +20509,14 @@
     "offset": [ 0, 155, 0 ],
     "radius": 220,
     "strength": 8.5,
-    "shadowMode": "STATIC",
     "color": [
       252,
       148,
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 45,
     "duration": 0,
     "range": 20,
     "schedule": "NIGHT",
@@ -20529,6 +20536,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 20,
     "duration": 0,
     "range": 20,
     "schedule": "NIGHT",
@@ -20549,6 +20558,7 @@
     ],
     "type": "FLICKER",
     "shadowMode": "STATIC",
+    "shadowNearPlane": 80,
     "duration": 0,
     "range": 20,
     "schedule": "NIGHT",
@@ -20733,6 +20743,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -21218,7 +21229,8 @@
       3
     ],
     "type": "FLICKER",
-    "shadowMode": "STATIC",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 50,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -21494,6 +21506,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 200,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -21634,6 +21648,8 @@
       237
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 80,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -21652,6 +21668,8 @@
       22
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 80,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -22258,9 +22276,10 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 85,
     "duration": 0,
     "range": 20,
-    "shadowMode": "STATIC",
     "objectIds": [
       "FAI_VARROCK_SMITHY_HEARTH"
     ]
@@ -41895,6 +41914,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 50,
     "duration": 0,
     "range": 20,
     "schedule": {
