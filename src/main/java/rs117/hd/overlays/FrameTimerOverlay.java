@@ -20,6 +20,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.WorldViewContext;
 import rs117.hd.renderer.zone.ZoneRenderer;
+import rs117.hd.scene.LightManager;
 import rs117.hd.utils.FrameTimingsRecorder;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.collections.PooledArrayType;
@@ -50,6 +51,9 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 	@Inject
 	private SceneManager sceneManager;
+
+	@Inject
+	private LightManager lightManager;
 
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
 	private final long[] timings = new long[Timer.TIMERS.length];
@@ -172,13 +176,10 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				.left("Scene stats:")
 				.build());
 
-			if (plugin.getSceneContext() != null) {
-				var sceneContext = plugin.getSceneContext();
-				children.add(LineComponent.builder()
-					.left("Lights:")
-					.right(format("%d/%d", sceneContext.numVisibleLights, sceneContext.lights.size()))
-					.build());
-			}
+			children.add(LineComponent.builder()
+				.left("Lights:")
+				.right(format("%d/%d", lightManager.getNumVisibleLights(), lightManager.getLights().size()))
+				.build());
 
 			if (plugin.renderer instanceof ZoneRenderer) {
 				children.add(LineComponent.builder()

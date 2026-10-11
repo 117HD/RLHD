@@ -346,11 +346,11 @@ public class ZoneRenderer implements Renderer {
 			ctx.vaoSceneCmd.reset();
 			ctx.vaoDirectionalCmd.reset();
 
-			if (ctx.uboWorldViewStruct != null)
-				ctx.uboWorldViewStruct.update();
-
-			if (isTopLevel)
+			if (isTopLevel) {
 				preSceneDrawTopLevel(scene, cameraX, cameraY, cameraZ, cameraPitch, cameraYaw);
+			} else {
+				ctx.updateProjection(client.getTopLevelWorldView());
+			}
 
 			ctx.completeInvalidation();
 
@@ -466,15 +466,11 @@ public class ZoneRenderer implements Renderer {
 				skyManager.update();
 				frameTimer.end(Timer.UPDATE_SKY);
 
-				frameTimer.begin(Timer.UPDATE_LIGHTS);
-				lightManager.update(ctx.sceneContext, plugin.cameraShift, plugin.cameraFrustum);
-				frameTimer.end(Timer.UPDATE_LIGHTS);
-
 				frameTimer.begin(Timer.UPDATE_SCENE);
 				sceneManager.update();
 				frameTimer.end(Timer.UPDATE_SCENE);
 			} catch (Exception ex) {
-				log.error("Error while updating environment or lights:", ex);
+				log.error("Error while updating environment, sky or scene:", ex);
 				plugin.requestPluginStop();
 				return;
 			}
@@ -574,43 +570,6 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);
 			plugin.uboGlobal.invProjectionMatrix.set(plugin.invViewProjMatrix);
 			plugin.uboGlobal.orthographicProjection.set(plugin.orthographicProjection ? 1 : 0);
-
-			if (plugin.configDynamicLights != DynamicLights.NONE) {
-				// Update lights UBO
-				assert ctx.sceneContext.numVisibleLights <= UBOLights.MAX_LIGHTS;
-
-				frameTimer.begin(Timer.UPDATE_LIGHTS);
-				final float[] lightPosition = new float[4];
-				final float[] lightColor = new float[4];
-				for (int i = 0; i < ctx.sceneContext.numVisibleLights; i++) {
-					final Light light = ctx.sceneContext.lights.get(i);
-					final float lightRadiusSq = light.radius * light.radius;
-					lightPosition[0] = light.pos[0] + plugin.cameraShift[0];
-					lightPosition[1] = light.pos[1];
-					lightPosition[2] = light.pos[2] + plugin.cameraShift[1];
-					lightPosition[3] = lightRadiusSq;
-
-					lightColor[0] = light.color[0] * light.strength;
-					lightColor[1] = light.color[1] * light.strength;
-					lightColor[2] = light.color[2] * light.strength;
-					lightColor[3] = 0.0f;
-
-					plugin.uboLights.setLight(i, lightPosition, lightColor);
-
-					if (plugin.configTiledLighting) {
-						// Pre-calculate the view space position of the light, to save having to do the multiplication in the culling shader
-						lightPosition[3] = 1.0f;
-						Mat4.mulVec(lightPosition, plugin.viewMatrix, lightPosition);
-						lightPosition[3] = lightRadiusSq; // Restore lightRadiusSq
-						plugin.uboLightsCulling.setLight(i, lightPosition, lightColor);
-					}
-				}
-
-				plugin.uboLights.upload();
-				plugin.uboLightsCulling.upload();
-				plugin.uboGlobal.pointLightsCount.set(ctx.sceneContext.numVisibleLights);
-				frameTimer.end(Timer.UPDATE_LIGHTS);
-			}
 		}
 
 		// Upon logging in, the client will draw some frames with zero geometry before it hides the login screen
@@ -713,12 +672,14 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void postDrawTopLevel() {
-		if (!sceneManager.isTopLevelValid() || plugin.sceneViewport == null)
+		var ctx = sceneManager.getSceneContext();
+		if (ctx == null || plugin.sceneViewport == null)
 			return;
 
 		sceneFboValid = true;
 
 		// Upload world views before rendering
+		sceneManager.updateWorldViewProjections();
 		uboWorldViews.upload();
 
 		if (eboAlphaWriter != null)
@@ -732,6 +693,50 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		frameTimer.end(Timer.DRAW_SCENE);
+
+		if (plugin.configDynamicLights != DynamicLights.NONE) {
+			frameTimer.begin(Timer.UPDATE_LIGHTS);
+			try {
+				lightManager.update(ctx, plugin.cameraShift, plugin.cameraFrustum);
+				assert lightManager.getNumVisibleLights() <= UBOLights.MAX_LIGHTS;
+
+				final float[] lightPosition = new float[4];
+				final float[] lightColor = new float[4];
+				for (int i = 0; i < lightManager.getNumVisibleLights(); i++) {
+					final Light light = lightManager.getLights().get(i);
+					final float lightRadiusSq = light.radius * light.radius;
+					lightPosition[0] = light.pos[0] + plugin.cameraShift[0];
+					lightPosition[1] = light.pos[1];
+					lightPosition[2] = light.pos[2] + plugin.cameraShift[1];
+					lightPosition[3] = lightRadiusSq;
+
+					lightColor[0] = light.color[0] * light.strength;
+					lightColor[1] = light.color[1] * light.strength;
+					lightColor[2] = light.color[2] * light.strength;
+					lightColor[3] = 0.0f;
+
+					plugin.uboLights.setLight(i, lightPosition, lightColor);
+
+					if (plugin.configTiledLighting) {
+						// Pre-calculate the view space position of the light, to save having to do the multiplication in the culling shader
+						lightPosition[3] = 1.0f;
+						Mat4.mulVec(lightPosition, plugin.viewMatrix, lightPosition);
+						lightPosition[3] = lightRadiusSq; // Restore lightRadiusSq
+						plugin.uboLightsCulling.setLight(i, lightPosition, lightColor);
+					}
+				}
+
+				plugin.uboGlobal.pointLightsCount.set(lightManager.getNumVisibleLights());
+
+				plugin.uboLights.upload();
+				plugin.uboLightsCulling.upload();
+				plugin.uboGlobal.upload();
+			} catch (Exception ex) {
+				log.error("Error while updating lights:", ex);
+			}
+			frameTimer.end(Timer.UPDATE_LIGHTS);
+		}
+
 		frameTimer.begin(Timer.RENDER_FRAME);
 		shouldRenderScene = true;
 
@@ -982,8 +987,7 @@ public class ZoneRenderer implements Renderer {
 					z.renderOpaqueLevel(gapFillerCmd, Zone.LEVEL_GAP_FILLER);
 			}
 
-			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
-			if (skyRenderer.castsShadows && !isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
+			if (skyRenderer.castsShadows && !ctx.isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 				if (!z.onlyWater || z.modelCount > 0) {
 					directionalCmd.SetShader(fastShadowProgram);
 					z.renderOpaque(directionalCmd, ctx, shouldDrawRoofShadows);
@@ -1031,8 +1035,7 @@ public class ZoneRenderer implements Renderer {
 				if (level == 0 && (!sceneManager.isRoot(ctx) || z.inSceneFrustum))
 					z.alphaSort(zx - offset, zz - offset, sceneCamera);
 
-				final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
-				if (skyRenderer.castsShadows && !isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
+				if (skyRenderer.castsShadows && !ctx.isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 					directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
 					z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, shouldDrawRoofShadows);
 				}

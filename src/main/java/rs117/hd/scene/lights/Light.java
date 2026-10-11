@@ -1,6 +1,8 @@
 package rs117.hd.scene.lights;
 
+import javax.annotation.Nullable;
 import net.runelite.api.*;
+import rs117.hd.scene.SceneContext;
 
 import static rs117.hd.utils.MathUtils.*;
 
@@ -26,7 +28,6 @@ public class Light
 
 	public boolean visible;
 	public boolean parentExists;
-	public boolean withinViewingDistance = true;
 	public boolean hiddenTemporarily;
 	public boolean hiddenByPlane;
 	public boolean markedForRemoval;
@@ -50,11 +51,14 @@ public class Light
 	public final float[] origin = new float[3];
 	public final float[] offset = new float[3];
 	public final float[] pos = new float[3];
+	public final float[] sceneLocalPos = new float[3];
 	public int orientation;
 	public float distanceSquared;
 	public float daylightCycleStrengthScale = 1;
 	public float daylightCycleRadiusScale = 1;
 
+	@Nullable
+	public SceneContext sceneContext;
 	public Actor actor;
 	public Projectile projectile;
 	public TileObject tileObject;

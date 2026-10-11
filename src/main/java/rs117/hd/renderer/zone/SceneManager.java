@@ -300,10 +300,12 @@ public class SceneManager {
 		int worldViewId = worldView.getId();
 		if (worldViewId != WorldView.TOPLEVEL) {
 			log.debug("WorldView despawn: {}", worldViewId);
-			if (subs[worldViewId] == null) {
+			var sub = subs[worldViewId];
+			if (sub == null) {
 				log.debug("Attempted to despawn unloaded worldview: {}", worldView);
 			} else {
-				subs[worldViewId].free();
+				lightManager.unloadWorldViewLights(sub.sceneContext);
+				sub.free();
 				subs[worldViewId] = null;
 			}
 		}
@@ -671,7 +673,7 @@ public class SceneManager {
 			lightManager.handleObjectSpawn(nextSceneContext, tileObject);
 		nextSceneContext.lightSpawnsToHandleOnClientThread.clear();
 		nextSceneContext.lightSpawnsToHandleOnClientThread.trimToSize();
-		lightManager.swapSceneLights(nextSceneContext, root.sceneContext);
+		lightManager.swapSceneLights(nextSceneContext);
 
 		long lightsTime = sw.elapsed(TimeUnit.MILLISECONDS);
 		log.debug("swapScene - Lights: {} ms", lightsTime - roofsTime);
@@ -720,7 +722,10 @@ public class SceneManager {
 		}
 
 		ctx.zones = nextZones;
+		if (root.sceneContext != null)
+			root.sceneContext.worldViewContext = null;
 		root.sceneContext = nextSceneContext;
+		nextSceneContext.worldViewContext = root;
 		root.isLoading = false;
 
 		nextZones = null;
@@ -760,7 +765,10 @@ public class SceneManager {
 			log.error("Reload of an already loaded sub scene?");
 			prevCtx.sceneLoadGroup.cancel();
 			prevCtx.streamingGroup.cancel();
-			clientThread.invoke(prevCtx::free);
+			clientThread.invoke(() -> {
+				lightManager.unloadWorldViewLights(prevCtx.sceneContext);
+				prevCtx.free();
+			});
 		}
 
 		var sceneContext = new ZoneSceneContext(client, worldView, scene, plugin.configExpandedMapLoadingChunks, null);
@@ -790,7 +798,21 @@ public class SceneManager {
 		ctx.uploadTime = sw.elapsed(TimeUnit.NANOSECONDS);
 		ctx.sceneSwapTime = sw.elapsed(TimeUnit.NANOSECONDS);
 		ctx.isLoading = false;
+		lightManager.loadWorldViewLights(ctx.sceneContext);
 		log.debug("swapSubScene time {} WorldView ready: {}", ctx.sceneSwapTime, scene.getWorldViewId());
+	}
+
+	public void reloadWorldViewLights() {
+		for (WorldViewContext ctx : subs)
+			if (ctx != null && !ctx.isLoading)
+				lightManager.loadWorldViewLights(ctx.sceneContext);
+	}
+
+	public void updateWorldViewProjections() {
+		var topLevel = client.getTopLevelWorldView();
+		for (WorldViewContext ctx : subs)
+			if (ctx != null && !ctx.isLoading)
+				ctx.updateProjection(topLevel);
 	}
 
 	static class SortedZone implements Comparable<SortedZone> {
