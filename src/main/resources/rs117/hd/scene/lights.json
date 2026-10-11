@@ -32501,7 +32501,9 @@
       191.49066,
       255
     ],
-    "type": "STATIC"
+    "type": "STATIC",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 50
   },
   {
     "description": "GOTR_REWARDS_GUARDIAN",
@@ -32514,6 +32516,8 @@
       140
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 100,
     "duration": 0,
     "range": 0,
     "objectIds": [
@@ -32540,7 +32544,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_FIRE",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       255,
@@ -32548,6 +32552,8 @@
       0
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32559,7 +32565,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_NATURE",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       0,
@@ -32567,6 +32573,8 @@
       0
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32578,7 +32586,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_EARTH",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       200.19334,
@@ -32586,6 +32594,8 @@
       0
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32597,7 +32607,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_WATER",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       0,
@@ -32605,6 +32615,8 @@
       255
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32617,7 +32629,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_COSMIC",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       255,
@@ -32625,6 +32637,8 @@
       140
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32655,7 +32669,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_MIND",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       255,
@@ -32663,6 +32677,8 @@
       0
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32675,7 +32691,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_BODY",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       158.46326,
@@ -32683,6 +32699,8 @@
       255
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32694,7 +32712,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_CHAOS",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       255,
@@ -32702,6 +32720,8 @@
       182.86261
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32713,7 +32733,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_DEATH",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       236.88396,
@@ -32721,6 +32741,8 @@
       236.88396
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32732,7 +32754,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_LAW",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       182.86261,
@@ -32740,6 +32762,8 @@
       255
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32751,7 +32775,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_BLOOD",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       255,
@@ -32759,6 +32783,8 @@
       0
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32817,6 +32843,8 @@
       255
     ],
     "type": "PULSE",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 30,
     "duration": 2000,
     "range": 10,
     "objectIds": [
@@ -32945,6 +32973,8 @@
       140
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 50,
     "duration": 0,
     "range": 10,
     "objectIds": [
