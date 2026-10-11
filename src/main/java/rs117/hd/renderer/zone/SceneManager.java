@@ -300,10 +300,12 @@ public class SceneManager {
 		int worldViewId = worldView.getId();
 		if (worldViewId != WorldView.TOPLEVEL) {
 			log.debug("WorldView despawn: {}", worldViewId);
-			if (subs[worldViewId] == null) {
+			var sub = subs[worldViewId];
+			if (sub == null) {
 				log.debug("Attempted to despawn unloaded worldview: {}", worldView);
 			} else {
-				subs[worldViewId].free();
+				lightManager.unloadWorldViewLights(sub.sceneContext);
+				sub.free();
 				subs[worldViewId] = null;
 			}
 		}
@@ -453,13 +455,7 @@ public class SceneManager {
 			PooledArrayType.forceCleanup(false);
 
 			nextZones = new Zone[NUM_ZONES][NUM_ZONES];
-			nextSceneContext = new ZoneSceneContext(
-				client,
-				worldView,
-				scene,
-				plugin.getExpandedMapLoadingChunks(),
-				root.sceneContext
-			);
+			nextSceneContext = new ZoneSceneContext(client, worldView, scene, plugin.configExpandedMapLoadingChunks, root.sceneContext);
 
 			WorldViewContext ctx = root;
 			Scene prev = client.getTopLevelWorldView().getScene();
@@ -605,10 +601,13 @@ public class SceneManager {
 				if (staggerLoad) {
 					// Reuse the old zone while uploading a correct one
 					sorted.zone.cull = false;
-					sorted.zone.uploadJob = ZoneUploadJob
-						.build(ctx, nextSceneContext, newZone, false, sorted.x, sorted.z);
-					sorted.zone.uploadJob.revealAfterTimestampMs =
-						timeMs + ceil(clamp(sorted.dist / 15.0f, 0.25f, 1.5f) * 1000.0f);
+					// Synchronize creation of delayed upload jobs with zone swaps and invalidation
+					synchronized (ctx) {
+						ZoneUploadJob upload = ZoneUploadJob.build(ctx, nextSceneContext, newZone, false, sorted.x, sorted.z);
+						upload.revealAfterTimestampMs =
+							timeMs + ceil(clamp(sorted.dist / 15.0f, 0.25f, 1.5f) * 1000.0f);
+						sorted.zone.setUploadJob(upload);
+					}
 				} else {
 					nextZones[sorted.x][sorted.z] = newZone;
 					ZoneUploadJob
@@ -674,7 +673,7 @@ public class SceneManager {
 			lightManager.handleObjectSpawn(nextSceneContext, tileObject);
 		nextSceneContext.lightSpawnsToHandleOnClientThread.clear();
 		nextSceneContext.lightSpawnsToHandleOnClientThread.trimToSize();
-		lightManager.swapSceneLights(nextSceneContext, root.sceneContext);
+		lightManager.swapSceneLights(nextSceneContext);
 
 		long lightsTime = sw.elapsed(TimeUnit.MILLISECONDS);
 		log.debug("swapScene - Lights: {} ms", lightsTime - roofsTime);
@@ -723,7 +722,10 @@ public class SceneManager {
 		}
 
 		ctx.zones = nextZones;
+		if (root.sceneContext != null)
+			root.sceneContext.worldViewContext = null;
 		root.sceneContext = nextSceneContext;
+		nextSceneContext.worldViewContext = root;
 		root.isLoading = false;
 
 		nextZones = null;
@@ -763,10 +765,13 @@ public class SceneManager {
 			log.error("Reload of an already loaded sub scene?");
 			prevCtx.sceneLoadGroup.cancel();
 			prevCtx.streamingGroup.cancel();
-			clientThread.invoke(prevCtx::free);
+			clientThread.invoke(() -> {
+				lightManager.unloadWorldViewLights(prevCtx.sceneContext);
+				prevCtx.free();
+			});
 		}
 
-		var sceneContext = new ZoneSceneContext(client, worldView, scene, plugin.getExpandedMapLoadingChunks(), null);
+		var sceneContext = new ZoneSceneContext(client, worldView, scene, plugin.configExpandedMapLoadingChunks, null);
 		proceduralGenerator.generateSceneData(sceneContext, null);
 
 		final WorldViewContext ctx = new WorldViewContext(worldView, sceneContext, uboWorldViews);
@@ -793,7 +798,21 @@ public class SceneManager {
 		ctx.uploadTime = sw.elapsed(TimeUnit.NANOSECONDS);
 		ctx.sceneSwapTime = sw.elapsed(TimeUnit.NANOSECONDS);
 		ctx.isLoading = false;
+		lightManager.loadWorldViewLights(ctx.sceneContext);
 		log.debug("swapSubScene time {} WorldView ready: {}", ctx.sceneSwapTime, scene.getWorldViewId());
+	}
+
+	public void reloadWorldViewLights() {
+		for (WorldViewContext ctx : subs)
+			if (ctx != null && !ctx.isLoading)
+				lightManager.loadWorldViewLights(ctx.sceneContext);
+	}
+
+	public void updateWorldViewProjections() {
+		var topLevel = client.getTopLevelWorldView();
+		for (WorldViewContext ctx : subs)
+			if (ctx != null && !ctx.isLoading)
+				ctx.updateProjection(topLevel);
 	}
 
 	static class SortedZone implements Comparable<SortedZone> {

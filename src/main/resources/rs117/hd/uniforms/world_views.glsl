@@ -11,8 +11,8 @@
     };
 
     layout(std140) uniform UBOWorldViews {
-        WorldView WorldViewArray[MAX_SIMULTANEOUS_WORLD_VIEWS];
-    };
+        WorldView Array[MAX_SIMULTANEOUS_WORLD_VIEWS];
+    } uboWorldViews;
 
     #include WORLD_VIEW_GETTER
 

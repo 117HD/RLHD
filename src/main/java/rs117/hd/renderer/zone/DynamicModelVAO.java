@@ -13,9 +13,9 @@ import rs117.hd.utils.buffer.GLMappedBufferIntWriter.ReservedView;
 import rs117.hd.utils.buffer.GLTextureBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.NVIDIA_GPU;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
+import static rs117.hd.HdPlugin.SUPPORTS_MULTI_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.SUPPORTS_STORAGE_BUFFERS;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.utils.MathUtils.*;
@@ -283,13 +283,13 @@ public class DynamicModelVAO implements Destructible {
 		cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tbo.getTexId(), TEXTURE_UNIT_TEXTURED_FACES);
 
 		if (drawRangeCount == 1) {
-			if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
+			if (SUPPORTS_INDIRECT_DRAW) {
 				cmd.DrawArraysIndirect(GL_TRIANGLES, drawOffsets[0], drawCounts[0], ZoneRenderer.indirectDrawCmdsStaging);
 			} else {
 				cmd.DrawArrays(GL_TRIANGLES, drawOffsets[0], drawCounts[0]);
 			}
 		} else {
-			if (GL_CAPS.OpenGL43 && SUPPORTS_INDIRECT_DRAW) {
+			if (SUPPORTS_MULTI_INDIRECT_DRAW) {
 				cmd.MultiDrawArraysIndirect(GL_TRIANGLES, drawOffsets, drawCounts, drawRangeCount, ZoneRenderer.indirectDrawCmdsStaging);
 			} else {
 				cmd.MultiDrawArrays(GL_TRIANGLES, drawOffsets, drawCounts, drawRangeCount);

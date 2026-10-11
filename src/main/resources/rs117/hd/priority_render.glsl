@@ -252,9 +252,9 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
     if (windDisplacementMode >= WIND_DISPLACEMENT_VERTEX) {
         const float VertexSnapping = 150.0; // Snap so vertices which are almost overlapping will obtain the same noise value
         const float VertexDisplacementMod = 0.2; // Avoid over stretching which can cause issues in ComputeUVs
-        float windNoiseA = mix(-0.5, 0.5, noise((snap(vertA, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
-        float windNoiseB = mix(-0.5, 0.5, noise((snap(vertB, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
-        float windNoiseC = mix(-0.5, 0.5, noise((snap(vertC, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+        float windNoiseA = mix(-0.5, 0.5, noise((snap(vertA, VertexSnapping).xz + vec2(uboCompute.windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+        float windNoiseB = mix(-0.5, 0.5, noise((snap(vertB, VertexSnapping).xz + vec2(uboCompute.windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+        float windNoiseC = mix(-0.5, 0.5, noise((snap(vertC, VertexSnapping).xz + vec2(uboCompute.windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
 
         if (windDisplacementMode == WIND_DISPLACEMENT_VERTEX_WITH_HEMISPHERE_BLEND) {
             const float minDist = 50;
@@ -319,10 +319,10 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
         vec2 worldVertC = (worldPos + vertC).xz;
 
         float fractAccum = 0.0;
-        for (int i = 0; i < characterPositionCount; i++) {
-            displacementA += applyCharacterDisplacement(characterPositions[i], worldVertA, modelHeight, strengthA, fractAccum);
-            displacementB += applyCharacterDisplacement(characterPositions[i], worldVertB, modelHeight, strengthB, fractAccum);
-            displacementC += applyCharacterDisplacement(characterPositions[i], worldVertC, modelHeight, strengthC, fractAccum);
+        for (int i = 0; i < uboCompute.characterPositionCount; i++) {
+            displacementA += applyCharacterDisplacement(uboCompute.characterPositions[i], worldVertA, modelHeight, strengthA, fractAccum);
+            displacementB += applyCharacterDisplacement(uboCompute.characterPositions[i], worldVertB, modelHeight, strengthB, fractAccum);
+            displacementC += applyCharacterDisplacement(uboCompute.characterPositions[i], worldVertC, modelHeight, strengthC, fractAccum);
             if (fractAccum >= 2.0)
                 break;
         }

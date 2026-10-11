@@ -1,7 +1,8 @@
 package rs117.hd.scene.lights;
 
+import javax.annotation.Nullable;
 import net.runelite.api.*;
-import net.runelite.api.coords.*;
+import rs117.hd.scene.SceneContext;
 
 import static rs117.hd.utils.MathUtils.*;
 
@@ -17,7 +18,7 @@ public class Light
 	/**
 	 * Linear color space RGBA in the range [0, 1]
 	 */
-	public float[] color;
+	public final float[] color = new float[3];
 	public float animation = 0.5f;
 	public float duration;
 	public float fadeInDuration;
@@ -27,8 +28,8 @@ public class Light
 
 	public boolean visible;
 	public boolean parentExists;
-	public boolean withinViewingDistance = true;
 	public boolean hiddenTemporarily;
+	public boolean hiddenByPlane;
 	public boolean markedForRemoval;
 	public boolean persistent;
 	public boolean replayable;
@@ -40,18 +41,24 @@ public class Light
 	public float changedVisibilityAt = -1;
 	public float lifetime = -1;
 
-	public WorldPoint worldPoint;
+	public boolean worldLight;
+	public final int[] worldPos = new int[3];
 	public boolean belowFloor;
 	public boolean aboveFloor;
 	public int plane;
 	public int prevPlane = -1;
 	public Alignment alignment;
-	public float[] origin = new float[3];
-	public float[] offset = new float[3];
-	public float[] pos = new float[3];
+	public final float[] origin = new float[3];
+	public final float[] offset = new float[3];
+	public final float[] pos = new float[3];
+	public final float[] sceneLocalPos = new float[3];
 	public int orientation;
 	public float distanceSquared;
+	public float daylightCycleStrengthScale = 1;
+	public float daylightCycleRadiusScale = 1;
 
+	@Nullable
+	public SceneContext sceneContext;
 	public Actor actor;
 	public Projectile projectile;
 	public TileObject tileObject;
@@ -66,12 +73,12 @@ public class Light
 	public Light(LightDefinition def) {
 		this.def = def;
 		copyTo(offset, def.offset);
+		copyTo(color, def.color);
 		duration = max(0, def.duration) / 1000f;
 		fadeInDuration = max(0, def.fadeInDuration) / 1000f;
 		fadeOutDuration = max(0, def.fadeOutDuration) / 1000f;
 		spawnDelay = max(0, def.spawnDelay) / 1000f;
 		despawnDelay = max(0, def.despawnDelay) / 1000f;
-		color = def.color;
 		radius = def.radius;
 		strength = def.strength;
 		alignment = def.alignment;
