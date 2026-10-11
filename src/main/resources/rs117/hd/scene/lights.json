@@ -20578,6 +20578,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 50,
     "duration": 0,
     "range": 20,
     "schedule": "NIGHT",
@@ -20723,7 +20725,7 @@
       3
     ],
     "type": "FLICKER",
-    "shadowMode": "STATIC",
+    "shadowMode": "DYNAMIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
