@@ -22,6 +22,7 @@ import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PooledArrayType;
@@ -179,6 +180,7 @@ public class ModelStreamingManager {
 		WorldViewContext ctx = sceneManager.getContext(scene);
 		if (root == null || ctx == null ||
 			!sceneManager.isRoot(ctx) && ctx.isLoading ||
+			plugin.configSimpleBoatSilhouettes && ctx.isSquashed ||
 			!renderCallbackManager.drawObject(scene, tileObject))
 			return;
 
@@ -192,8 +194,8 @@ public class ModelStreamingManager {
 
 		final StreamingContext streamingContext = context(renderThreadId);
 		final float[] worldPos = vec4(streamingContext.objectWorldPos, x, y, z, 1.0f);
-		if (ctx.uboWorldViewStruct != null)
-			ctx.uboWorldViewStruct.project(worldPos);
+		if (ctx.projection != null)
+			Mat4.mulVec(worldPos, ctx.projection, worldPos);
 
 		final int uuid;
 		if (r instanceof DynamicObject) {
@@ -261,49 +263,6 @@ public class ModelStreamingManager {
 		if (asyncModelCache != null) {
 			// Fast path, buffer the model into the job queue to unblock rl internals
 			asyncModelCache.queue(
-		if (asyncModelCache != null) {
-			// Fast path, buffer the model into the job queue to unblock rl internals
-			asyncModelCache.queue(
-				m, hasAlpha ? zone : null,
-				(sceneUploader, facePrioritySorter, visibleFaces, culledFaces, cachedModel) -> {
-					final long asyncStart = System.nanoTime();
-					uploadDynamicModel(
-						sceneUploader,
-						facePrioritySorter,
-						visibleFaces,
-						culledFaces,
-						ctx,
-						projection,
-						tileObject,
-						modelOverride,
-						cachedModel,
-						zone,
-						isModelPartiallyVisible,
-						hasAlpha,
-						preOrientation, orient,
-						x, y, z,category
-					);
-					frameTimer.add(Timer.DRAW_DYNAMIC_ASYNC, System.nanoTime() - asyncStart);
-				}
-			);
-			return;
-		}
-
-		if (renderThreadId >= 0)
-			return;
-
-		try (
-			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
-			FacePrioritySorter facePrioritySorter = FacePrioritySorter.POOL.acquire()
-		) {
-			uploadDynamicModel(
-				sceneUploader,
-				facePrioritySorter,
-				clientVisibleFaces,
-				clientCulledFaces,
-				ctx,
-				projection,
-				tileObject,
 				ctx,
 				projection,
 				tileObject,
@@ -313,9 +272,10 @@ public class ModelStreamingManager {
 				zone,
 				alphaModel,
 				isModelPartiallyVisible,
-				hasAlpha,
-				preOrientation, orient,
-				x, y, z,category
+				drawIndex,
+				orient,
+				x, y, z,
+				this::uploadTempModelAsync
 			);
 			return;
 		}
@@ -383,10 +343,7 @@ public class ModelStreamingManager {
 		int vaoType,
 		int drawIndex,
 		int orient,
-		int x,
-		int y,
-		int z,
-		int category
+		float x, float y, float z
 	) {
 		final PrimitiveCharArray visibleFaces = FACE_INDICES.acquire();
 		final PrimitiveCharArray culledFaces = FACE_INDICES.acquire();
@@ -425,8 +382,7 @@ public class ModelStreamingManager {
 			);
 
 			final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
-			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
-			if (shouldSort && !isSquashed)
+			if (shouldSort && !ctx.isSquashed)
 				facePrioritySorter.sortModelFaces(visibleFaces, m, faceDistances, !isActor);
 
 			if (facePrioritySorter != null)
@@ -446,8 +402,7 @@ public class ModelStreamingManager {
 					orient,
 					true,
 					shadowView,
-					shadowView,
-					category
+					shadowView
 				);
 				shadowView.end();
 			}
@@ -471,10 +426,9 @@ public class ModelStreamingManager {
 					modelOverride,
 					preOrientation,
 					orient,
-					isSquashed,
+					ctx.isSquashed,
 					opaqueView,
-					alphaView,
-					category
+					alphaView
 				);
 
 				if (opaqueView != alphaView && alphaView.getEndOffset() > alphaView.getStartOffset()) {

@@ -40,6 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.util.OSType;
 import rs117.hd.data.ObjectType;
+import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.water_types.WaterType;
@@ -612,5 +613,35 @@ public final class HDUtils {
 		} catch (NumberFormatException ignored) {
 		}
 		return null;
+	}
+
+	public static boolean containsObject(SceneContext source, TileObject object) {
+		int x, y;
+		if (object instanceof GameObject) {
+			var point = ((GameObject) object).getSceneMinLocation();
+			x = point.getX();
+			y = point.getY();
+		} else {
+			x = object.getX() >> LOCAL_COORD_BITS;
+			y = object.getY() >> LOCAL_COORD_BITS;
+		}
+		x += source.sceneOffset;
+		y += source.sceneOffset;
+		var tiles = source.scene.getExtendedTiles();
+		int plane = object.getPlane();
+		if (plane < 0 || plane >= tiles.length ||
+			x < 0 || x >= tiles[plane].length ||
+			y < 0 || y >= tiles[plane][x].length)
+			return false;
+		for (Tile tile = tiles[plane][x][y]; tile != null; tile = tile.getBridge()) {
+			if (tile.getWallObject() == object ||
+				tile.getDecorativeObject() == object ||
+				tile.getGroundObject() == object)
+				return true;
+			for (GameObject candidate : tile.getGameObjects())
+				if (candidate == object)
+					return true;
+		}
+		return false;
 	}
 }

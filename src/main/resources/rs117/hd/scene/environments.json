@@ -268,6 +268,14 @@
     "fogDepth": 40
   },
   {
+    "area": "DORGESHKAAN_AGILITY_AREA",
+    "shadowAngles": [
+      80,
+      190
+    ],
+    "fogDepth": 25
+  },
+  {
     "area": "DORGESHKAAN",
     "directionalColor": "#a29b71",
     "directionalStrength": 1.5,
@@ -934,6 +942,14 @@
       190
     ],
     "fogDepth": 40
+  },
+  {
+    "area": "KILLERWATT_PLANE",
+    "fogColor": "#141414",
+    "fogDepth": 20,
+    "groundFogOpacity": 0.57,
+    "groundFogStart": -300,
+    "groundFogEnd": -600
   },
   {
     "area": "MISTHALIN_MYSTERY_MANOR_REGION",
@@ -1644,8 +1660,8 @@
       80,
       190
     ],
-    "fogColor": "#051e22",
-    "fogDepth": 40
+    "fogColor": "#052126",
+    "fogDepth": 30
   },
   {
     "area": "KOUREND_CATACOMBS",

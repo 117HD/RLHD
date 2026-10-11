@@ -92,6 +92,9 @@ public class SceneUploader implements AutoCloseable {
 	}
 
 	@Inject
+	private Client client;
+
+	@Inject
 	private RenderCallbackManager renderCallbackManager;
 
 	@Inject
@@ -805,14 +808,15 @@ public class SceneUploader implements AutoCloseable {
 					sceneManager.interactiveObjects.add(composition.getId());
 				}
 			}
-		}
-	} else {
+		} else {
 			return;
 		}
 
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 		if (modelOverride.hide)
 			return;
+
+		int category = ModelHash.getCategoryForUuid(client, r, uuid, plugin.configRs3HighContrast);
 
 		int alphaStart = alphaBuffer != null ? alphaBuffer.position() : 0;
 		try {
@@ -2180,9 +2184,8 @@ public class SceneUploader implements AutoCloseable {
 		int preOrientation,
 		int orientation,
 		boolean isShadow,
-		VAO.VAOView opaqueView,
-		VAO.VAOView alphaView,
-		int category
+		DynamicModelVAO.View opaqueView,
+		DynamicModelVAO.View alphaView
 	) {
 		if (writeCache == null)
 			writeCache = new VertexWriteCache.Collection();
@@ -2265,7 +2268,7 @@ public class SceneUploader implements AutoCloseable {
 				color3 = faceOverride.modifyColor(color3);
 			}
 
-			final int materialData = material.packMaterialData(faceOverride, uvType, false, category);
+			final int materialData = material.packMaterialData(faceOverride, uvType, false);
 
 			final int triangleA = indices1[face];
 			final int vertexOffsetA = triangleA * 3;

@@ -430,6 +430,7 @@ public class HdPlugin extends Plugin {
 	public boolean configConservativeShadowCulling;
 	public boolean configUseFasterModelHashing;
 	public boolean configZoneStreaming;
+	public boolean configSimpleBoatSilhouettes;
 	public boolean configPowerSaving;
 	public boolean configUnlitFaceColors;
 	public boolean configUndoVanillaShading;
@@ -970,6 +971,7 @@ public class HdPlugin extends Plugin {
 			.define("MAX_CHARACTER_POSITION_COUNT", max(1, UBOCompute.MAX_CHARACTER_POSITION_COUNT))
 			.define("WIREFRAME", config.wireframe())
 			.define("WINDOWS_HDR_CORRECTION", config.windowsHdrCorrection())
+			.define("LEGACY_BOAT_SILHOUETTES", config.legacyBoatSilhouettes())
 			.define("LEGACY_RENDERER", renderer instanceof LegacyRenderer)
 			.define("ZONE_RENDERER", renderer instanceof ZoneRenderer)
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", 0)
@@ -1785,6 +1787,7 @@ public class HdPlugin extends Plugin {
 		configConservativeShadowCulling = config.conservativeShadowCulling();
 		configUseFasterModelHashing = config.fasterModelHashing();
 		configZoneStreaming = config.zoneStreaming();
+		configSimpleBoatSilhouettes = config.simpleBoatSilhouettes();
 		configPowerSaving = config.powerSaving();
 		configShadingMode = config.shadingMode();
 		configUnlitFaceColors = configShadingMode.unlitFaceColors;
@@ -1847,7 +1850,8 @@ public class HdPlugin extends Plugin {
 			}
 		}
 
-		skyManager.updateConfig(config);
+		skyManager.updateConfig();
+		developerTools.updateConfig();
 	}
 
 	@Subscribe
@@ -1952,6 +1956,7 @@ public class HdPlugin extends Plugin {
 							case KEY_STARS:
 							case KEY_POINT_SPRITES:
 							case KEY_NEBULAE:
+							case KEY_LEGACY_BOAT_SILHOUETTES:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:

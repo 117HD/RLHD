@@ -70,6 +70,9 @@ public class SkyManager {
 	private HdPlugin plugin;
 
 	@Inject
+	private HdPluginConfig config;
+
+	@Inject
 	private EnvironmentManager environmentManager;
 
 	private final Random random = new Random(SEED);
@@ -199,7 +202,7 @@ public class SkyManager {
 		SkyConfiguration.DEFAULT_PRESET = preset;
 	}
 
-	public void updateConfig(HdPluginConfig config) {
+	public void updateConfig() {
 		configCycle = config.daylightCycle();
 		configMoonBehavior = config.moonBehavior();
 		configMoonPhase = configMoonBehavior == MoonBehavior.DISABLED ? MoonPhase.FIRST_QUARTER : config.moonPhase();

@@ -22,9 +22,6 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 
 	public final Property orthographicProjection = addProperty(PropertyType.Int, "orthographicProjection");
 
-	public Property sceneResolution = addProperty(PropertyType.IVec2, "sceneResolution");
-	public Property tiledLightingResolution = addProperty(PropertyType.IVec2, "tiledLightingResolution");
-
 	public final Property expandedMapLoadingChunks = addProperty(PropertyType.Int, "expandedMapLoadingChunks");
 	public final Property drawDistance = addProperty(PropertyType.Float, "drawDistance");
 
@@ -77,6 +74,7 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public final Property invLightProjectionMatrix = addProperty(PropertyType.Mat4, "invLightProjectionMatrix");
 	public final Property shadowBiasScale = addProperty(PropertyType.Float, "shadowBiasScale");
 	public final Property shadowDrawDistance = addProperty(PropertyType.Float, "shadowDrawDistance");
+	public final Property castsShadows = addProperty(PropertyType.Int, "castsShadows");
 
 	public final Property lightningBrightness = addProperty(PropertyType.Float, "lightningBrightness");
 	public final Property elapsedTime = addProperty(PropertyType.Float, "elapsedTime");
