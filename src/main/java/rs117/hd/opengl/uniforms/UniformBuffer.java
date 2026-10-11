@@ -39,6 +39,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 		private final int alignment;
 		private final int elementCount;
 		private final boolean isInt = name().startsWith("I");
+		private final boolean isFloat = name().startsWith("F");
 	}
 
 	@AllArgsConstructor
@@ -54,6 +55,11 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 			log.warn("{}.{} - {}", owner.glBuffer.name, name, message);
 		}
 
+		private void logTypeMismatch(String message) {
+			log(message);
+			assert false : owner.glBuffer.name + "." + name + " - " + message;
+		}
+
 		private boolean isUninitialized() {
 			if (offset >= 0)
 				return false;
@@ -66,17 +72,17 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 
 			if (!type.isInt) {
-				log("Int setter was used with a non-int property type");
+				logTypeMismatch("Int setter was used with a non-int property type");
 				return;
 			}
 
 			if (values == null) {
-				log("Int setter was provided with null value");
+				logTypeMismatch("Int setter was provided with null value");
 				return;
 			}
 
 			if (values.length != type.elementCount) {
-				log(String.format("Int setter was provided with incorrect number of elements: %d != %d", values.length, type.elementCount));
+				logTypeMismatch(String.format("Int setter was provided with incorrect number of elements: %d != %d", values.length, type.elementCount));
 				return;
 			}
 
@@ -84,25 +90,35 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 			owner.markWaterLine(position, type.size);
 		}
 
-		public final void set(int x) {
+		public final void set(int v) {
+			if (type.isFloat) {
+				set((float) v);
+				return;
+			}
+
 			if (isUninitialized())
 				return;
 
 			if (type != PropertyType.Int) {
-				log("Int setter was used with the wrong property type: " + type);
+				logTypeMismatch("Int setter was used with the wrong property type: " + type);
 				return;
 			}
 
-			owner.dataInt.position(offset).put(x);
+			owner.dataInt.position(offset).put(v);
 			owner.markWaterLine(position, type.size);
 		}
 
 		public final void set(int x, int y) {
+			if (type.isFloat) {
+				set((float) x, (float) y);
+				return;
+			}
+
 			if (isUninitialized())
 				return;
 
 			if (type != PropertyType.IVec2) {
-				log("Int setter was used with the wrong property type: " + type);
+				logTypeMismatch("Int setter was used with the wrong property type: " + type);
 				return;
 			}
 
@@ -111,11 +127,16 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 		}
 
 		public final void set(int x, int y, int z) {
+			if (type.isFloat) {
+				set((float) x, (float) y, (float) z);
+				return;
+			}
+
 			if (isUninitialized())
 				return;
 
 			if (type != PropertyType.IVec3) {
-				log("Int setter was used with the wrong property type: " + type);
+				logTypeMismatch("Int setter was used with the wrong property type: " + type);
 				return;
 			}
 
@@ -124,11 +145,16 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 		}
 
 		public final void set(int x, int y, int z, int w) {
+			if (type.isFloat) {
+				set((float) x, (float) y, (float) z, (float) w);
+				return;
+			}
+
 			if (isUninitialized())
 				return;
 
 			if (type != PropertyType.IVec4) {
-				log("Int setter was used with the wrong property type: " + type);
+				logTypeMismatch("Int setter was used with the wrong property type: " + type);
 				return;
 			}
 
@@ -141,17 +167,17 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 
 			if (type.isInt) {
-				log("Float setter was used with an int property type");
+				logTypeMismatch("Float setter was used with an int property type");
 				return;
 			}
 
 			if (values == null) {
-				log("Float setter was provided with null value");
+				logTypeMismatch("Float setter was provided with null value");
 				return;
 			}
 
 			if (values.length != type.elementCount) {
-				log(String.format(
+				logTypeMismatch(String.format(
 					"Float setter was provided with incorrect number of elements: %d != %d",
 					values.length,
 					type.elementCount
@@ -170,16 +196,16 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 			owner.markWaterLine(position, type.size);
 		}
 
-		public final void set(float x) {
+		public final void set(float v) {
 			if (isUninitialized())
 				return;
 
 			if (type != PropertyType.Float) {
-				log("Float setter was used with the wrong property type: " + type);
+				logTypeMismatch("Float setter was used with the wrong property type: " + type);
 				return;
 			}
 
-			owner.dataFloat.position(offset).put(x);
+			owner.dataFloat.position(offset).put(v);
 			owner.markWaterLine(position, type.size);
 		}
 
@@ -188,7 +214,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 
 			if (type != PropertyType.FVec2) {
-				log("Float setter was used with the wrong property type: " + type);
+				logTypeMismatch("Float setter was used with the wrong property type: " + type);
 				return;
 			}
 
@@ -201,7 +227,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 
 			if (type != PropertyType.FVec3) {
-				log("Float setter was used with the wrong property type: " + type);
+				logTypeMismatch("Float setter was used with the wrong property type: " + type);
 				return;
 			}
 
@@ -214,7 +240,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 
 			if (type != PropertyType.FVec4) {
-				log("Float setter was used with the wrong property type: " + type);
+				logTypeMismatch("Float setter was used with the wrong property type: " + type);
 				return;
 			}
 
