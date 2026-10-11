@@ -61,6 +61,9 @@ import static org.lwjgl.opengl.GL30.glGenFramebuffers;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 import static org.lwjgl.opengl.GL30C.glBlitFramebuffer;
 import static org.lwjgl.opengl.GL43.glCopyImageSubData;
+import static org.lwjgl.opengl.GL43C.GL_DEBUG_SOURCE_APPLICATION;
+import static org.lwjgl.opengl.GL43C.glPopDebugGroup;
+import static org.lwjgl.opengl.GL43C.glPushDebugGroup;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_POSITIONAL_SHADOW_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_UI;
 import static rs117.hd.HdPlugin.checkGLErrors;
@@ -454,9 +457,9 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 		if(!plugin.configPositionalShadows)
 			return;
 
-		frameTimer.begin(Timer.RENDER_POSITIONAL_SHADOWS);
-
 		zoneRenderer.depthProgram.use();
+
+		frameTimer.begin(Timer.RENDER_STATIC_POSITIONAL_SHADOWS);
 
 		final WorldViewContext root = sceneManager.getRoot();
 		final WorldViewContext[] subs = sceneManager.getSubContexts();
@@ -544,16 +547,23 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 			}
 		}
 
+		frameTimer.end(Timer.RENDER_STATIC_POSITIONAL_SHADOWS);
+		frameTimer.begin(Timer.RENDER_DYNAMIC_POSITIONAL_SHADOWS);
+
+		final boolean pushDebugGroups = log.isDebugEnabled() && HdPlugin.GL_CAPS.OpenGL43;
 		for(int face = 0; face < NUM_FACES; face++) {
 			renderState.framebufferTextureLayer.set(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texShadowCubemapArray, 0, face);
 			renderState.apply();
+
+			if (pushDebugGroups)
+				glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, face, "Shadow Face " + face);
 
 			for (int i = 0; i < visibleIndices.length; i++) {
 				final int lightIndex = visibleIndices.array[i];
 				final Light light = shadowLights.get(lightIndex);
 				final ShadowData shadowData = light.shadowData;
 
-				if (shadowData.atlasRect == null)
+				if (shadowData.atlasRect == null || (supportsLayeredImageCopy && light.shadowMode == PositionalShadowMode.STATIC))
 					continue;
 
 				if(light.shadowMode != PositionalShadowMode.STATIC && !shadowData.drawBuffer.isEmpty()) {
@@ -588,23 +598,24 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 					);
 				}
 
-				if(shadowData.drawBuffer.isEmpty())
-					continue;
+				if(light.shadowMode != PositionalShadowMode.STATIC) {
+					if (!shadowData.drawBuffer.isEmpty())
+						shadowData.drawBuffer.execute(renderState);
 
-				if(light.shadowMode != PositionalShadowMode.STATIC)
-					shadowData.drawBuffer.execute(renderState);
+					root.vaoSceneCmd.execute(renderState);
+					root.vaoDirectionalCmd.execute(renderState);
 
-				if (light.shadowMode != PositionalShadowMode.STATIC) {
-					shadowData.drawBuffer.ExecuteSubCommandBuffer(root.vaoSceneCmd);
-					shadowData.drawBuffer.ExecuteSubCommandBuffer(root.vaoDirectionalCmd);
-
-					if(light.sceneContext != null && light.sceneContext.worldViewContext != null) {
-						shadowData.drawBuffer.ExecuteSubCommandBuffer(light.sceneContext.worldViewContext.vaoSceneCmd);
-						shadowData.drawBuffer.ExecuteSubCommandBuffer(light.sceneContext.worldViewContext.vaoDirectionalCmd);
+					if (light.sceneContext != null && light.sceneContext.worldViewContext != null) {
+						light.sceneContext.worldViewContext.vaoSceneCmd.execute(renderState);
+						light.sceneContext.worldViewContext.vaoDirectionalCmd.execute(renderState);
 					}
 				}
 			}
+
+			if (pushDebugGroups)
+				glPopDebugGroup();
 		}
+		frameTimer.end(Timer.RENDER_DYNAMIC_POSITIONAL_SHADOWS);
 
 		checkGLErrors();
 
@@ -612,8 +623,6 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
 		renderState.disable.set(GL_DEPTH_TEST);
-
-		frameTimer.end(Timer.RENDER_POSITIONAL_SHADOWS);
 	}
 
 	@Override
