@@ -23,18 +23,25 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <uniforms/global.glsl>
+#include <uniforms/sky.glsl>
 #include <uniforms/materials.glsl>
 #include <uniforms/water_types.glsl>
 
+#include <utils/constants.glsl>
 #include <utils/lights.glsl>
 #include <utils/misc.glsl>
+#include <utils/sky_sampling.glsl>
 
 vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     WaterType waterType = getWaterType(waterTypeIndex);
 
-    vec2 uv1 = worldUvs(3).yx - animationFrame(28 * waterType.duration);
-    vec2 uv2 = worldUvs(3) + animationFrame(24 * waterType.duration);
-    vec2 uv3 = IN.uv;
+    vec2 anchorUv1 = worldUvs(3).yx;
+    vec2 anchorUv2 = worldUvs(5);
+    vec2 anchorUv3 = worldUvs(7);
+    vec2 uv1 = anchorUv1 - animationFrame(28 * waterType.duration);
+    vec2 uv2 = anchorUv2 + animationFrame(24 * waterType.duration);
+    vec2 uv3 = anchorUv3 + animationFrame(21 * waterType.duration);
+    vec2 uvFoam = IN.uv;
 
     vec2 flowMapUv = worldUvs(15) + animationFrame(50 * waterType.duration);
     float flowMapStrength = 0.025;
@@ -43,23 +50,26 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     uv1 += uvFlow * flowMapStrength;
     uv2 += uvFlow * flowMapStrength;
     uv3 += uvFlow * flowMapStrength;
+    uvFoam += uvFlow * flowMapStrength;
 
     // get diffuse textures
     vec3 n1 = linearToSrgb(texture(textureArray, vec3(uv1, waterType.normalMap)).xyz);
     vec3 n2 = linearToSrgb(texture(textureArray, vec3(uv2, waterType.normalMap)).xyz);
-    float foamMask = texture(textureArray, vec3(uv3, MAT_WATER_FOAM.colorMap)).r;
+    vec3 n3 = linearToSrgb(texture(textureArray, vec3(uv3, waterType.normalMap)).xyz);
+    float foamMask = texture(textureArray, vec3(uvFoam, MAT_WATER_FOAM.colorMap)).r;
 
     // normals
     n1 = -vec3((n1.x * 2 - 1) * waterType.normalStrength, n1.z, (n1.y * 2 - 1) * waterType.normalStrength);
     n2 = -vec3((n2.x * 2 - 1) * waterType.normalStrength, n2.z, (n2.y * 2 - 1) * waterType.normalStrength);
-    vec3 normals = normalize(n1 + n2);
+    n3 = -vec3((n3.x * 2 - 1) * waterType.normalStrength, n3.z, (n3.y * 2 - 1) * waterType.normalStrength);
+    vec3 normals = normalize(n1 + n2 + n3);
 
-    float lightDotNormals = dot(normals, lightDir);
+    float lightDotNormals = dot(normals, uboGlobal.lightDir);
     float downDotNormals = -normals.y;
     float viewDotNormals = dot(viewDir, normals);
 
     vec2 distortion = uvFlow * .00075;
-    float shadow = sampleShadowMap(IN.position, distortion, lightDotNormals);
+    float shadow = sampleShadowMap(IN.position, distortion, vec3(0.0), false, false);
     float inverseShadow = 1 - shadow;
 
     vec3 vSpecularStrength = vec3(waterType.specularStrength);
@@ -69,10 +79,10 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     // calculate lighting
 
     // ambient light
-    vec3 ambientLightOut = ambientColor * ambientStrength;
+    vec3 ambientLightOut = uboGlobal.ambientColor * uboGlobal.ambientStrength;
 
     // directional light
-    vec3 dirLightColor = lightColor * lightStrength;
+    vec3 dirLightColor = uboGlobal.lightColor * uboGlobal.lightStrength;
 
     // apply shadows
     dirLightColor *= inverseShadow;
@@ -81,16 +91,18 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     vec3 lightOut = max(lightDotNormals, 0.0) * lightColor;
 
     // directional light specular
-    vec3 lightReflectDir = reflect(-lightDir, normals);
-    vec3 lightSpecularOut = lightColor * specular(IN.texBlend, viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength);
+    vec3 lightSpecularOut = vec3(0.0);
+    if (!uboSky.enabled)
+        lightSpecularOut = lightColor * specular(IN.texBlend, viewDir, reflect(-uboGlobal.lightDir, normals), vSpecularGloss, vSpecularStrength);
 
     // point lights
     vec3 pointLightsOut = vec3(0);
     vec3 pointLightsSpecularOut = vec3(0);
-    calculateLighting(IN.position, normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength, pointLightsOut, pointLightsSpecularOut);
+    calculateLighting(IN.position, normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength,
+        0.0, pointLightsOut, pointLightsSpecularOut);
 
     // sky light
-    vec3 skyLightColor = fogColor.rgb;
+    vec3 skyLightColor = uboGlobal.fogColor;
     float skyLightStrength = 0.5;
     float skyDotNormals = downDotNormals;
     vec3 skyLightOut = max(skyDotNormals, 0.0) * skyLightColor * skyLightStrength;
@@ -98,13 +110,13 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
 
     // lightning
     vec3 lightningColor = vec3(1.0, 1.0, 1.0);
-    float lightningStrength = lightningBrightness;
+    float lightningStrength = uboGlobal.lightningBrightness;
     float lightningDotNormals = downDotNormals;
     vec3 lightningOut = max(lightningDotNormals, 0.0) * lightningColor * lightningStrength;
 
 
     // underglow
-    vec3 underglowOut = underglowColor * max(normals.y, 0) * underglowStrength;
+    vec3 underglowOut = uboGlobal.underglowColor * max(normals.y, 0) * uboGlobal.underglowStrength;
 
 
     // fresnel reflection
@@ -112,20 +124,55 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     float fresnel = 1.0 - clamp(viewDotNormals, 0.0, 1.0);
     float finalFresnel = clamp(mix(baseOpacity, 1.0, fresnel * 1.2), 0.0, 1.0);
     vec3 surfaceColor = vec3(0);
+    vec3 celestialReflection = vec3(0);
 
-    // add sky gradient
-    if (finalFresnel < 0.5) {
-        surfaceColor = mix(waterColorDark, waterColorMid, finalFresnel * 2);
+    if (uboSky.enabled) {
+        vec3 n = normals;
+        n.y *= 0.16;
+        // Compress exaggerated slopes before they reflect below the water plane.
+        // For slope p = n.xz / -n.y, the reflected ray points upward when
+        // v * (1 - dot(p, p)) + 2 * dot(p, viewDir.xz) > 0, where v is view elevation.
+        // Resolve that slope limit, then approach it smoothly instead of pinning rays
+        // to the horizon. This also keeps the normal facing an above-water camera.
+        float viewElevation = -viewDir.y;
+        if (viewElevation > 0.0) {
+            float towardCamera = dot(n.xz, viewDir.xz);
+            float slopeLimitRatio = sqrt(towardCamera * towardCamera + viewElevation * viewElevation * dot(n.xz, n.xz)) - towardCamera;
+            slopeLimitRatio /= viewElevation * -n.y;
+            n.xz *= inversesqrt(1.0 + slopeLimitRatio * slopeLimitRatio);
+        } else {
+            n = vec3(0, -1, 0);
+        }
+        n = normalize(n);
+        vec3 skyNormal = normalize(normals * vec3(0.2, 1, 0.2));
+        vec3 skyViewDir = reflect(-viewDir, skyNormal);
+        vec3 diskViewDir = reflect(-viewDir, n);
+        // Reduce only nebula emission to suit the deliberately strong legacy reflection.
+        const float nebulaReflectionStrength = .25f;
+        SkySample sky = sampleSky(skyViewDir, diskViewDir, false, false, n, 0.07, nebulaReflectionStrength);
+        surfaceColor = linearToSrgb(sky.background * finalFresnel);
+        // Only the active source has a shadow map. Do not shadow the other disk
+        // with unrelated geometry projected along the active light's direction.
+        vec3 sunDir = uboSky.sunDir * vec3(1, -1, 1);
+        vec3 moonDir = uboSky.moonDir * vec3(1, -1, 1);
+        bool moonOwnsShadowMap = dot(uboGlobal.lightDir, moonDir) > dot(uboGlobal.lightDir, sunDir);
+        celestialReflection =
+            sky.sun * (moonOwnsShadowMap ? 1.0 : inverseShadow) +
+            sky.moon * uboSky.moonReflectionVisibility *
+                (moonOwnsShadowMap ? 1.0 - shadow * uboSky.moonShadowVisibility : 1.0);
+    } else if (finalFresnel < 0.5) {
+        surfaceColor = mix(uboGlobal.waterColorDark, uboGlobal.waterColorMid, finalFresnel * 2);
     } else {
-        surfaceColor = mix(waterColorMid, waterColorLight, (finalFresnel - 0.5) * 2);
+        surfaceColor = mix(uboGlobal.waterColorMid, uboGlobal.waterColorLight, (finalFresnel - 0.5) * 2);
     }
 
     vec3 surfaceColorOut = surfaceColor * max(combinedSpecularStrength, 0.2);
 
 
     // apply lighting
-    vec3 compositeLight = ambientLightOut + lightOut + lightSpecularOut + skyLightOut + lightningOut +
-    underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut;
+    vec3 compositeLight =
+        ambientLightOut + lightOut + lightSpecularOut + skyLightOut + lightningOut +
+        underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut;
 
     vec3 baseColor = waterType.surfaceColor * compositeLight;
     baseColor = mix(baseColor, surfaceColor, waterType.fresnelAmount);
@@ -143,7 +190,6 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     vec3 specularComposite = mix(lightSpecularOut, vec3(0.0), foamAmount);
     float flatFresnel = (1.0 - dot(viewDir, vec3(0, -1, 0))) * 1.0;
     finalFresnel = max(finalFresnel, flatFresnel);
-    finalFresnel -= finalFresnel * shadow * 0.2;
     baseColor += pointLightsSpecularOut + lightSpecularOut / 3;
 
     float alpha = max(waterType.baseOpacity, max(foamAmount, max(finalFresnel, length(specularComposite / 3))));
@@ -151,6 +197,25 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     if (waterType.isFlat) {
         baseColor = mix(waterType.depthColor, baseColor, alpha);
         alpha = 1;
+    }
+
+    if (uboSky.enabled) {
+        float reflectionLuminance = linearSrgbLuminance(celestialReflection);
+        if (reflectionLuminance > 0.0) {
+            celestialReflection *= 4.4; // looks about right
+            // Approximate the reflection's dominance over at most 18% linear-gray
+            // underwater light. Bright HDR highlights approach opaque before source-alpha
+            // blending; this is an artistic approximation to the actual sRGB composite.
+            float reflectionOpacity = reflectionLuminance / (reflectionLuminance + 0.18);
+            alpha = mix(alpha, 1.0, reflectionOpacity);
+            // Reconstruct approximate linear light, add the shadowed reflection, then tonemap them together.
+            vec3 light = inverse_tonemap_hue_preserving(srgbToLinear(baseColor));
+            light += celestialReflection;
+            light = tonemap_hue_preserving(light);
+            light = softClipColor(light);
+            light = linearToSrgb(light);
+            baseColor = light;
+        }
     }
 
     return vec4(baseColor, alpha);
@@ -170,7 +235,7 @@ void sampleUnderwater(inout vec3 outputColor, WaterType waterType, float depth, 
         outputColor = vec3(0);
     }
 
-    if (underwaterCaustics) {
+    if (uboGlobal.underwaterCaustics) {
         const float scale = 1.75;
         const float maxCausticsDepth = 128 * 4;
 
@@ -186,7 +251,7 @@ void sampleUnderwater(inout vec3 outputColor, WaterType waterType, float depth, 
         vec2 flow2 = causticsUv * 1.5 + animationFrame(23) * -direction;
         vec3 caustics = sampleCaustics(flow1, flow2, .005);
 
-        vec3 causticsColor = underwaterCausticsColor * underwaterCausticsStrength;
-        outputColor.rgb *= 1 + caustics * causticsColor * depthMultiplier * lightDotNormals * lightStrength;
+        vec3 causticsColor = uboGlobal.underwaterCausticsColor * uboGlobal.underwaterCausticsStrength;
+        outputColor.rgb *= 1 + caustics * causticsColor * depthMultiplier * lightDotNormals * uboGlobal.lightStrength;
     }
 }

@@ -1101,6 +1101,11 @@
     "doubleSidedFaces": true
   },
   {
+    "name": "GLASS_1",
+    "parent": "NONE",
+    "subsurface": 1
+  },
+  {
     "name": "WHITE",
     "parent": "NONE"
   },
@@ -1724,16 +1729,18 @@
   },
   {
     "name": "SWAMP_WATER_FLAT_FLOW",
-    "parent": "SWAMP_WATER_FLAT",
+    "parent": "WATER_FOUNTAIN_FLAT",
     "flowMap": "UNDERWATER_FLOW_MAP",
-    "flowMapStrength": 0.2,
+    "flowMapStrength": 1,
+    "brightness": 0.5,
+    "textureScale": [ 1.5, 2, 1 ],
     "flowMapDuration": [
       7.0,
       -11.0
     ],
     "scrollSpeed": [
       -0.0,
-      -1.3
+      -1.35
     ]
   },
   {
@@ -1825,6 +1832,11 @@
     "name": "ROCK_3_DARK",
     "parent": "ROCK_3",
     "brightness": 0.827
+  },
+  {
+    "name": "ROCK_3_VERY_DARK",
+    "parent": "ROCK_3",
+    "brightness": 0.73
   },
   {
     "name": "ROCK_3_LIGHT",
@@ -2106,6 +2118,19 @@
     "name": "BURLAP_LIGHT",
     "parent": "BURLAP",
     "brightness": 1.1
+  },
+  {
+    "name": "SAIL_CLOTH",
+    "parent": "CARPET",
+    "brightness": 1.22,
+    "subsurface": 1,
+    "normalMap": null
+  },
+  {
+    "name": "SAIL_CLOTH_LIGHT",
+    "parent": "SAIL_CLOTH",
+    "brightness": 1.45,
+    "subsurface": 1
   },
   {
     "name": "FUR_N"
@@ -3222,6 +3247,11 @@
     "parent": "GRUNGE_2",
     "specularStrength": 0.2,
     "specularGloss": 20.0
+  },
+  {
+    "name": "PLANT_GRUNGE_2_DARK",
+    "parent": "PLANT_GRUNGE_2",
+    "brightness": 0.8
   },
   {
     "name": "HD_CONCRETE_D"
