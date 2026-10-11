@@ -21584,7 +21584,6 @@
   {
     "description": "CRASH_ISLAND_ROPE",
     "height": 450,
-    "alignment": "CENTER",
     "outdoorLighting": true,
     "radius": 700,
     "strength": 25,
@@ -34558,7 +34557,6 @@
   {
     "description": "KARUULM_DUNGEON_EXIT_NEAR",
     "offset": [ -10, 75, 0 ],
-    "alignment": "CENTER",
     "radius": 300,
     "strength": 60,
     "color": [
@@ -34574,7 +34572,6 @@
   {
     "description": "KARUULM_DUNGEON_EXIT_FAR",
     "offset": [ -10, 100, 150 ],
-    "alignment": "CENTER",
     "radius": 400,
     "strength": 30,
     "color": [
@@ -35416,7 +35413,6 @@
   {
     "description": "MM2_CRASH_SITE_CAVE_SKYLIGHT_TOP",
     "offset": [ 40, 800, 0 ],
-    "alignment": "CENTER",
     "outdoorLighting": true,
     "radius": 1200,
     "strength": 20,
@@ -35433,7 +35429,6 @@
   {
     "description": "MM2_CRASH_SITE_CAVE_SKYLIGHT_MIDDLE_1",
     "offset": [ 45, 500, 0 ],
-    "alignment": "CENTER",
     "outdoorLighting": true,
     "radius": 300,
     "strength": 20,
@@ -35653,7 +35648,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_GREEN_VAT_TOP",
     "height": 275,
-    "alignment": "CENTER",
     "radius": 400,
     "strength": 10,
     "color": [
@@ -35689,7 +35683,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_RED_VAT_BOTTOM",
     "height": 50,
-    "alignment": "CENTER",
     "radius": 450,
     "strength": 20,
     "color": [
@@ -35708,7 +35701,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_RED_VAT_TOP",
     "height": 275,
-    "alignment": "CENTER",
     "radius": 400,
     "strength": 20,
     "visibleFromOtherPlanes": false,
@@ -35751,7 +35743,6 @@
       177,
       252
     ],
-    "type": "STATIC",
     "objectIds": [
       "KARUULM_HYDRA_ROOM_FLOOR_VENT_MIDDLE_BLUE"
     ],
@@ -35767,7 +35758,6 @@
       255,
       10
     ],
-    "type": "STATIC",
     "objectIds": [
       "KARUULM_HYDRA_ROOM_FLOOR_VENT_MIDDLE_GREEN"
     ],
@@ -35783,7 +35773,6 @@
       18,
       9
     ],
-    "type": "STATIC",
     "objectIds": [
       "KARUULM_HYDRA_ROOM_FLOOR_VENT_MIDDLE_RED"
     ],
@@ -35792,7 +35781,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_1",
     "offset": [ 55, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 400,
     "strength": 15,
     "color": [
@@ -35811,7 +35799,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_2",
     "offset": [ -50, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 400,
     "strength": 15,
     "color": [
@@ -35830,7 +35817,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_3",
     "offset": [ -145, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 400,
     "strength": 15,
     "color": [
@@ -35849,7 +35835,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_4",
     "offset": [ -245, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 400,
     "strength": 15,
     "color": [
@@ -35868,7 +35853,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_5",
     "offset": [ -345, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 400,
     "strength": 15,
     "color": [
@@ -35887,7 +35871,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_6",
     "offset": [ 345, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 400,
     "strength": 15,
     "color": [
@@ -35906,7 +35889,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_7",
     "offset": [ 245, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 400,
     "strength": 15,
     "color": [
@@ -35925,7 +35907,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_8",
     "offset": [ 145, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 400,
     "strength": 15,
     "color": [
@@ -35944,7 +35925,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_END_LEFT",
     "offset": [ 445, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 400,
     "strength": 15,
     "color": [
@@ -35963,7 +35943,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_END_RIGHT",
     "offset": [ -445, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 400,
     "strength": 15,
     "color": [
@@ -35982,7 +35961,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_1",
     "offset": [ 55, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
     "color": [
@@ -36001,7 +35979,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_2",
     "offset": [ -50, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
     "color": [
@@ -36020,7 +35997,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_3",
     "offset": [ -145, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
     "color": [
@@ -36039,7 +36015,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_4",
     "offset": [ -245, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
     "color": [
@@ -36058,7 +36033,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_5",
     "offset": [ -345, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
     "color": [
@@ -36077,7 +36051,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_6",
     "offset": [ 345, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
     "color": [
@@ -36096,7 +36069,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_7",
     "offset": [ 245, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
     "color": [
@@ -36115,7 +36087,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_8",
     "offset": [ 145, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
     "color": [
@@ -36134,7 +36105,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_END_LEFT",
     "offset": [ 445, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
     "color": [
@@ -36153,7 +36123,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_END_RIGHT",
     "offset": [ -445, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
     "color": [
@@ -36172,7 +36141,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_RED_TUBE_1",
     "offset": [ 55, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 500,
     "strength": 25,
     "color": [
@@ -36191,7 +36159,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_RED_TUBE_2",
     "offset": [ -50, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 400,
     "strength": 25,
     "color": [
@@ -36210,7 +36177,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_RED_TUBE_3",
     "offset": [ -145, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 400,
     "strength": 25,
     "color": [
@@ -36229,7 +36195,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_RED_TUBE_4",
     "offset": [ -245, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 400,
     "strength": 25,
     "color": [
@@ -36248,7 +36213,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_RED_TUBE_5",
     "offset": [ -345, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 400,
     "strength": 25,
     "color": [
@@ -36267,7 +36231,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_RED_TUBE_6",
     "offset": [ 345, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 400,
     "strength": 25,
     "color": [
@@ -36286,7 +36249,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_RED_TUBE_7",
     "offset": [ 245, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 400,
     "strength": 25,
     "color": [
@@ -36305,7 +36267,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_RED_TUBE_8",
     "offset": [ 145, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 400,
     "strength": 25,
     "color": [
@@ -36324,7 +36285,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_RED_TUBE_END_LEFT",
     "offset": [ 445, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 200,
     "strength": 25,
     "color": [
@@ -36343,7 +36303,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_RED_TUBE_END_RIGHT",
     "offset": [ -445, 50, 50 ],
-    "alignment": "CENTER",
     "radius": 200,
     "strength": 25,
     "color": [
@@ -36362,7 +36321,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_BLUE_TUBE_FALL",
     "offset": [ -30, 150, 0 ],
-    "alignment": "CENTER",
     "radius": 350,
     "strength": 15,
     "color": [
@@ -36381,7 +36339,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_GREEN_TUBE_FALL",
     "offset": [ -30, 150, 0 ],
-    "alignment": "CENTER",
     "radius": 350,
     "strength": 15,
     "color": [
@@ -36400,7 +36357,6 @@
   {
     "description": "ALCHEMICAL_HYDRA_RED_TUBE_FALL",
     "offset": [ -30, 150, 0 ],
-    "alignment": "CENTER",
     "radius": 350,
     "strength": 15,
     "color": [
@@ -36491,7 +36447,6 @@
   {
     "description": "HYDRA_FIRE",
     "height": 60,
-    "alignment": "CENTER",
     "radius": 160,
     "strength": 12,
     "waitForAnimation": true,
@@ -49890,7 +49845,6 @@
       240,
       240
     ],
-    "type": "STATIC",
     "projectileIds": [ "VFX_MAD_ANGEL_ATTACK_BOMB_THROW_PROJECTILE" ]
   },
   {
@@ -49909,7 +49863,6 @@
       240,
       240
     ],
-    "type": "STATIC",
     "graphicsObjectIds": [ "VFX_MAD_ANGEL_ATTACK_BOMB_THROW_IMPACT_02" ]
   },
   {
@@ -49926,7 +49879,6 @@
       240,
       240
     ],
-    "type": "STATIC",
     "graphicsObjectIds": [ "VFX_MAD_ANGEL_ATTACK_BOMB_THROW_IMPACT_01" ]
   },
   {
@@ -49945,7 +49897,6 @@
       240,
       240
     ],
-    "type": "STATIC",
     "graphicsObjectIds": [ "VFX_MAD_ANGEL_ATTACK_BOMB_THROW" ]
   },
   {
