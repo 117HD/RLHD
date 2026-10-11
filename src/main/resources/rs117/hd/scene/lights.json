@@ -26999,6 +26999,8 @@
       100
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 100,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -27016,6 +27018,7 @@
       85
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -27083,6 +27086,7 @@
     "height": 40,
     "radius": 250,
     "strength": 10,
+    "shadowMode": "STATIC",
     "color": [
       252,
       148,
@@ -27147,6 +27151,7 @@
       0
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
     "duration": 1000,
     "range": 20
   },
@@ -27164,6 +27169,7 @@
       0
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
     "duration": 1000,
     "range": 20
   },
