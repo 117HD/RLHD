@@ -158,7 +158,8 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         bool moonOwnsShadowMap = dot(uboGlobal.lightDir, moonDir) > dot(uboGlobal.lightDir, sunDir);
         celestialReflection =
             sky.sun * (moonOwnsShadowMap ? 1.0 : inverseShadow) +
-            sky.moon * (moonOwnsShadowMap ? inverseShadow : 1.0);
+            sky.moon * uboSky.moonReflectionVisibility *
+                (moonOwnsShadowMap ? 1.0 - shadow * uboSky.moonShadowVisibility : 1.0);
     } else if (finalFresnel < 0.5) {
         surfaceColor = mix(uboGlobal.waterColorDark, uboGlobal.waterColorMid, finalFresnel * 2);
     } else {

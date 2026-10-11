@@ -726,20 +726,20 @@ public class LegacyRenderer implements Renderer {
 				plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);
 				plugin.uboGlobal.invProjectionMatrix.set(plugin.invViewProjMatrix);
 				plugin.uboGlobal.orthographicProjection.set(plugin.orthographicProjection ? 1 : 0);
-				plugin.uboGlobal.pointLightsCount.set(sceneContext.numVisibleLights);
+				plugin.uboGlobal.pointLightsCount.set(lightManager.getNumVisibleLights());
 				plugin.uboGlobal.upload();
 			}
 		}
 
 		if (plugin.configDynamicLights != DynamicLights.NONE && sceneContext.scene == scene && updateUniforms) {
 			// Update lights UBO
-			assert sceneContext.numVisibleLights <= UBOLights.MAX_LIGHTS;
+			assert lightManager.getNumVisibleLights() <= UBOLights.MAX_LIGHTS;
 
 			frameTimer.begin(Timer.UPDATE_LIGHTS);
 			final float[] lightPosition = new float[4];
 			final float[] lightColor = new float[4];
-			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
-				final Light light = sceneContext.lights.get(i);
+			for (int i = 0; i < lightManager.getNumVisibleLights(); i++) {
+				final Light light = lightManager.getLights().get(i);
 				final float lightRadiusSq = light.radius * light.radius;
 				lightPosition[0] = light.pos[0] + plugin.cameraShift[0];
 				lightPosition[1] = light.pos[1];
@@ -1047,7 +1047,7 @@ public class LegacyRenderer implements Renderer {
 			plugin.uboGlobal.groundFogOpacity.set(config.groundFog() ? env.groundFogOpacity : 0);
 
 			// Lights & lightning
-			plugin.uboGlobal.pointLightsCount.set(sceneContext.numVisibleLights);
+			plugin.uboGlobal.pointLightsCount.set(lightManager.getNumVisibleLights());
 			plugin.uboGlobal.lightningBrightness.set(environmentManager.getLightningBrightness());
 
 			plugin.uboGlobal.saturation.set(config.saturation() / 100f);
@@ -1355,7 +1355,7 @@ public class LegacyRenderer implements Renderer {
 
 		tileVisibilityCached = false;
 		lightManager.loadSceneLights(nextSceneContext);
-		lightManager.swapSceneLights(nextSceneContext, sceneContext);
+		lightManager.swapSceneLights(nextSceneContext);
 		fishingSpotReplacer.despawnRuneLiteObjects();
 		npcDisplacementCache.clear();
 

@@ -229,6 +229,78 @@
     ]
   },
   {
+    "name": "LUMBRIDGE_ROOF_OFFSET_FIX_FRED",
+    "aabbs": [
+      [ 3183, 3269, 3183, 3276 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_ROOF_OFFSET_FIX_WINDMILL_1",
+    "aabbs": [
+      [ 3171, 3308 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_ROOF_OFFSET_FIX_WINDMILL_2",
+    "aabbs": [
+      [ 3171, 3307 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_ROOF_OFFSET_FIX_WINDMILL_3",
+    "aabbs": [
+      [ 3171, 3306 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_ROOF_OFFSET_FIX_WINDMILL_4",
+    "aabbs": [
+      [ 3171, 3305 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_ROOF_OFFSET_FIX_FARMYARD_1",
+    "aabbs": [
+      [ 3151, 3307, 3153, 3307 ],
+      [ 3137, 3307 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_ROOF_OFFSET_FIX_FARMYARD_2",
+    "aabbs": [
+      [ 3150, 3307 ],
+      [ 3138, 3307 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_ROOF_OFFSET_FIX_FARMYARD_3",
+    "aabbs": [
+      [ 3149, 3307 ],
+      [ 3139, 3307 ],
+      [ 3137, 3300 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_ROOF_OFFSET_FIX_FARMYARD_4",
+    "aabbs": [
+      [ 3148, 3307 ],
+      [ 3140, 3307 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_ROOF_OFFSET_FIX_FARMYARD_5",
+    "aabbs": [
+      [ 3137, 3301 ],
+      [ 3137, 3298, 3137, 3299 ]
+    ]
+  },
+  {
+    "name": "LUMBRIDGE_FARMYARD",
+    "aabbs": [
+      [ 3137, 3298, 3153, 3307 ]
+    ]
+  },
+  {
     "name": "LUMBRIDGE_RIVER_DIRT_FIX",
     "aabbs": [
       [ 3231, 3268, 3231, 3271 ],
@@ -344,7 +416,18 @@
     "hideOtherAreas": true
   },
   {
+    "name": "DORGESHKAAN_AGILITY_AREA",
+    "regions": [ 10833 ]
+  },
+  {
     "name": "DORGESHKAAN",
+    "regionBoxes": [
+      [ 10835, 10833 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "DORGESHKAAN_FLOOR",
     "aabbs": [
       [ 2687, 5247, 2752, 5376 ]
     ]
@@ -661,6 +744,30 @@
     "name": "DEFENDER_OF_VARROCK_CASTLE_UNDER_ATTACK",
     "regionBoxes": [
       [ 15436, 15950 ]
+    ]
+  },
+  {
+    "name": "VARROCK_ROOF_OFFSET_FIX_1",
+    "aabbs": [
+      [ 3204, 3438 ]
+    ]
+  },
+  {
+    "name": "VARROCK_ROOF_OFFSET_FIX_2",
+    "aabbs": [
+      [ 3205, 3438 ]
+    ]
+  },
+  {
+    "name": "VARROCK_ROOF_OFFSET_FIX_3",
+    "aabbs": [
+      [ 3235, 3451, 3235, 3453 ]
+    ]
+  },
+  {
+    "name": "VARROCK_ROOF_OFFSET_FIX_4",
+    "aabbs": [
+      [ 3236, 3455 ]
     ]
   },
   {
@@ -1024,6 +1131,11 @@
     "aabbs": [
       [ 3074, 9767, 3081, 9779 ]
     ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "KILLERWATT_PLANE",
+    "regions": [ 10577 ],
     "hideOtherAreas": true
   },
   {
@@ -1929,6 +2041,12 @@
     ]
   },
   {
+    "name": "RIMMINGTON_ROOF_OFFSET_FIX_1",
+    "aabbs": [
+      [ 2950, 3218, 2951, 3219 ]
+    ]
+  },
+  {
     "name": "PORT_SARIM_BETTYS_HOUSE",
     "aabbs": [
       [ 3011, 3256, 3016, 3261 ]
@@ -2376,6 +2494,48 @@
     "name": "EAST_ARDOUGNE_BANK_NORTH",
     "aabbs": [
       [ 2612, 3330, 2621, 3335 ]
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_OFFSET_FIX_SHEEP_HERDER_1",
+    "aabbs": [
+      [ 2605, 3356 ]
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_OFFSET_FIX_SHEEP_HERDER_2",
+    "aabbs": [
+      [ 2606, 3356 ]
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_OFFSET_FIX_SHEEP_HERDER_3",
+    "aabbs": [
+      [ 2607, 3356 ]
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_OFFSET_FIX_SHEEP_HERDER_4",
+    "aabbs": [
+      [ 2608, 3356 ]
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_OFFSET_FIX_SMITHING_FURNACE_HUT",
+    "aabbs": [
+      [ 2599, 3314, 2600, 3314 ]
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_OFFSET_FIX_POTTERY_HUT",
+    "aabbs": [
+      [ 2596, 3326 ]
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_OFFSET_FIX_PUB",
+    "aabbs": [
+      [ 2564, 3325 ]
     ]
   },
   {
@@ -4778,6 +4938,20 @@
     ]
   },
   {
+    "name": "TREE_GNOME_STRONGHOLD_BRANCH_OFFSET_FIX",
+    "aabbs": [
+      [ 2459, 3485, 2462, 3490 ]
+    ]
+  },
+  {
+    "name": "TREE_GNOME_VILLAGE_HIDE_FLOATING_BRANCHES",
+    "aabbs": [
+      [ 2536, 3172, 2537, 3172 ],
+      [ 2535, 3170, 2535, 3171 ],
+      [ 2533, 3172, 2534, 3172 ]
+    ]
+  },
+  {
     "name": "EYES_OF_GLOUPHRIE_GNOME_AND_GOBLIN_BATTLE_CUTSCENE",
     "aabbs": [
       [ 2112, 4928, 2165, 4991 ]
@@ -7004,13 +7178,22 @@
     "hideOtherAreas": true
   },
   {
+    "name": "KARUULM_SLAYER_DUNGEON_PLANE_0_BRIGHTNESS_FIXES",
+    "aabbs": [
+      [ 1322, 10205, 1324, 10206, 0 ],
+      [ 1293, 10205, 1300, 10206, 0 ],
+      [ 1311, 10215, 1312, 10228, 0 ],
+      [ 1311, 10192, 1312, 10194, 0 ]
+    ]
+  },
+  {
     "name": "KARUULM_SLAYER_DUNGEON_PLANE_1",
     "regionBoxes": [
       [ 5022, 5535, 1 ],
       [ 5280, 5536, 1 ]
     ],
     "unhideAreas": [
-      [ 1280, 10176, 1343, 10239 ]
+      [ 1280, 10176, 1343, 10239, 0 ]
     ],
     "hideOtherAreas": true
   },
@@ -7020,7 +7203,7 @@
       [ 5022, 5535, 2 ]
     ],
     "unhideAreas": [
-      [ 1280, 10176, 1343, 10239 ]
+      [ 1280, 10176, 0, 1343, 102390, 1 ]
     ],
     "hideOtherAreas": true
   },
@@ -12366,6 +12549,11 @@
     "aabbs": [
       [ 2529, 2215, 2541, 2216 ]
     ]
+  },
+  {
+    "name": "YNYSDAIL_CAVERN",
+    "regionBoxes": [ [ 9113, 9114 ] ],
+    "hideOtherAreas": true
   },
   {
     "name": "SEWER_ENTRANCE_FIXES",

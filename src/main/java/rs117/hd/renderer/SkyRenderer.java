@@ -285,7 +285,9 @@ public class SkyRenderer {
 		float effectiveDirectionalStrength = linearSrgbLuminance(directionalLight);
 		divide(ambientLight, ambientLight, effectiveAmbientStrength);
 		divide(directionalLight, directionalLight, effectiveDirectionalStrength);
-		castsShadows = effectiveDirectionalStrength > 0;
+		// The sun disk can need reflection occlusion even without diffuse lighting
+		castsShadows = effectiveDirectionalStrength > 0 || skyEnabled && skyManager.getState().sunAltitudeDegrees >= -4;
+		ubo.castsShadows.set(castsShadows ? 1 : 0);
 		ubo.ambientStrength.set(effectiveAmbientStrength);
 		ubo.ambientColor.set(ambientLight);
 		ubo.lightStrength.set(effectiveDirectionalStrength);
@@ -311,18 +313,17 @@ public class SkyRenderer {
 		previousTransition = transition;
 		// Blend complete HDR light contributions before encoding the global UBO.
 		copyTo(ambientLight, currentFrame.ambientLight);
-		// Sunlight owns shadows above the horizon; atmospheric attenuation already
-		// fades it to zero at sunset. Below it, use adapted contrast for the handoff.
 		float totalLuminance = currentFrame.dayLuminance + currentFrame.nightLuminance;
 		float handoff = totalLuminance > 0 ? currentFrame.nightLuminance / totalLuminance : 0;
-		if (state.sunAltitudeDegrees >= 0)
-			handoff = 0;
-		usesMoonShadows = state.sunAltitudeDegrees < 0 && state.moonAltitudeDegrees > 0 && handoff >= .5f;
+		// Limit the luminosity-driven handoff smoothly: its midpoint must coincide
+		// with the disk disappearing at -4 degrees (celestialHorizonFade in the shader).
+		// This leaves room below that altitude for moon shadows to gain contrast.
+		handoff = min(handoff, 1 - smoothstep(-8, 0, state.sunAltitudeDegrees));
+		usesMoonShadows = state.sunAltitudeDegrees < -4 && state.moonAltitudeDegrees > 0 && handoff >= .5f;
+		float moonShadowVisibility = 0;
 		if (usesMoonShadows) {
-			// Hide the camera switch even if strong night lighting already dominates
-			// at sunset. Lunar atmospheric attenuation handles the moon's own horizon.
-			float visibility = smoothstep(.5f, .8f, handoff) * (1 - smoothstep(-.5f, 0, state.sunAltitudeDegrees));
-			multiply(directionalLight, currentFrame.moonDirectionalLight, visibility);
+			moonShadowVisibility = smoothstep(.5f, .8f, handoff);
+			multiply(directionalLight, currentFrame.moonDirectionalLight, moonShadowVisibility);
 		} else {
 			multiply(directionalLight, currentFrame.sunDirectionalLight, 1 - smoothstep(.2f, .5f, handoff));
 		}
@@ -340,6 +341,7 @@ public class SkyRenderer {
 		plugin.uboSky.customGradient.set(currentFrame.customGradient);
 		plugin.uboSky.moonDiskColor.set(currentFrame.moonDisk);
 		plugin.uboSky.moonReflectionVisibility.set(currentFrame.moonReflectionVisibility);
+		plugin.uboSky.moonShadowVisibility.set(moonShadowVisibility);
 		updateSkyUbo(currentFrame.configuration, state, currentFrame);
 	}
 
@@ -386,8 +388,9 @@ public class SkyRenderer {
 		out.nightLuminance = nightLuminance * exposure;
 		multiply(nightAmbientLight, nightAmbientLight, exposure);
 		multiply(out.moonDirectionalLight, out.moonDirectionalLight, exposure);
-		// Moon reflections lose contrast as twilight brightens the sky.
-		out.moonReflectionVisibility = 1 - smoothstep(-12, 0, sunAltDeg);
+		// Approximate the loss of lunar contrast against brightening twilight.
+		// Finish before the sun disk appears and takes ownership of the shadow map.
+		out.moonReflectionVisibility = 1 - smoothstep(-12, -4, sunAltDeg);
 		add(out.ambientLight, out.ambientLight, nightAmbientLight);
 		// Broad local scattering, independent of shadow ownership. The quarter is
 		// the spherical average of a directional source in our diffuse-light units;

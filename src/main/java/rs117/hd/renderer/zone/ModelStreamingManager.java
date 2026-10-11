@@ -23,6 +23,7 @@ import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PooledArrayType;
@@ -208,6 +209,7 @@ public class ModelStreamingManager {
 		WorldViewContext ctx = sceneManager.getContext(scene);
 		if (root == null || ctx == null ||
 			!sceneManager.isRoot(ctx) && ctx.isLoading ||
+			plugin.configSimpleBoatSilhouettes && ctx.isSquashed ||
 			!renderCallbackManager.drawObject(scene, tileObject))
 			return;
 
@@ -221,8 +223,8 @@ public class ModelStreamingManager {
 
 		final StreamingContext streamingContext = context(renderThreadId);
 		final float[] worldPos = vec4(streamingContext.objectWorldPos, x, y, z, 1.0f);
-		if (ctx.uboWorldViewStruct != null)
-			ctx.uboWorldViewStruct.project(worldPos);
+		if (ctx.projection != null)
+			Mat4.mulVec(worldPos, ctx.projection, worldPos);
 
 		final int uuid;
 		if (r instanceof DynamicObject) {
@@ -410,8 +412,7 @@ public class ModelStreamingManager {
 			);
 
 			final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
-			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
-			if (shouldSort && !isSquashed)
+			if (shouldSort && !ctx.isSquashed)
 				facePrioritySorter.sortModelFaces(visibleFaces, m, faceDistances, !isActor);
 
 			if (facePrioritySorter != null)
@@ -455,7 +456,7 @@ public class ModelStreamingManager {
 					modelOverride,
 					preOrientation,
 					orient,
-					isSquashed,
+					ctx.isSquashed,
 					opaqueView,
 					alphaView
 				);

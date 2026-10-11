@@ -1,7 +1,7 @@
 package rs117.hd.scene;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
 import javax.annotation.Nonnull;
@@ -189,10 +189,11 @@ public class ModelOverrideManager {
 				}
 			}
 
-			if (current != null && current.areaOverrides != null && !current.areaOverrides.isEmpty()) {
-				var areaOverrides = current.areaOverrides;
-				current = entry.copy();
-				current.areaOverrides = areaOverrides;
+			if (current != null && current.areaOverrides != null) {
+				var replacement = entry.copy();
+				replacement.areaOverrideBounds = current.areaOverrideBounds;
+				replacement.areaOverrides = current.areaOverrides;
+				current = replacement;
 			} else {
 				current = entry;
 			}
@@ -203,14 +204,24 @@ public class ModelOverrideManager {
 				current = ModelOverride.NONE;
 
 			if (current.areaOverrides == null) {
-				// We need to replace the override with a copy that has a separate list of area overrides to avoid conflicts
+				// Create a copy to avoid aliasing area overrides with other UUIDs
 				current = current.copy();
-				current.areaOverrides = new HashMap<>();
 				modelOverrides.put(uuid, current);
 			}
 
-			for (var area : entry.areas)
-				current.areaOverrides.put(area, entry);
+			int size = entry.areas.length;
+			if (current.areaOverrides == null) {
+				current.areaOverrides = new ModelOverride[size];
+				Arrays.fill(current.areaOverrides, 0, size, entry);
+				current.areaOverrideBounds = entry.areas;
+			} else {
+				int offset = current.areaOverrides.length;
+				size += offset;
+				current.areaOverrides = Arrays.copyOf(current.areaOverrides, size);
+				Arrays.fill(current.areaOverrides, offset, size, entry);
+				current.areaOverrideBounds = Arrays.copyOf(current.areaOverrideBounds, size);
+				System.arraycopy(entry.areas, 0, current.areaOverrideBounds, offset, entry.areas.length);
+			}
 		}
 	}
 
@@ -244,9 +255,9 @@ public class ModelOverrideManager {
 			return ModelOverride.NONE;
 
 		if (override.areaOverrides != null)
-			for (var entry : override.areaOverrides.entrySet())
-				if (entry.getKey().contains(worldPos))
-					return entry.getValue();
+			for (int i = 0; i < override.areaOverrides.length; i++)
+				if (override.areaOverrideBounds[i].contains(worldPos))
+					return override.areaOverrides[i];
 
 		return override;
 	}
