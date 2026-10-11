@@ -77,8 +77,12 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 		} else {
 			frameTimer.removeTimingsListener(this);
 			overlayManager.remove(this);
-			frames.clear();
+			reset();
 		}
+	}
+
+	public void reset() {
+		frames.clear();
 	}
 
 	private String format(String format, Object... args) {

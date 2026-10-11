@@ -1844,7 +1844,8 @@ public class HdPlugin extends Plugin {
 			}
 		}
 
-		skyManager.updateConfig(config);
+		skyManager.updateConfig();
+		developerTools.updateConfig();
 	}
 
 	@Subscribe
