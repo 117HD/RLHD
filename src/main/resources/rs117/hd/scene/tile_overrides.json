@@ -5687,7 +5687,6 @@
     "groundMaterial": "VARIED_DIRT",
     "uvOrientation": 256,
     "maxLightness": 9,
-    "blended": false,
     "replacements": {
       "Mount Karuulm Dungeon Floor": "blendingColors",
       "NONE": "!textures"

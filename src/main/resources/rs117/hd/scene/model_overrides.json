@@ -104675,8 +104675,9 @@
     ]
   },
   {
-    "description": "Karuulm Slayer Dungeon - Wall with Lava",
+    "description": "Karuulm Slayer Dungeon - Kaal Thrones",
     "baseMaterial": "ROCK_3_SMOOTH_LIGHT",
+    "disableDetailCulling": true,
     "shiftLightness": 1,
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -104741,11 +104742,21 @@
     ]
   },
   {
-    "description": "Mount Karuulm - Lava Fire - Brighten with upwards normals",
+    "description": "Mount Karuulm - Lava Fire - Brighten with upwards normals & disable detail distance culling",
     "upwardsNormals": true,
+    "disableDetailCulling": true,
     "baseMaterial": "NONE",
     "objectIds": [
       "KARUULM_LAVAFIRE"
+    ]
+  },
+  {
+    "description": "Mount Karuulm - Lava Bubbles and Gas - Disable detail distance culling",
+    "disableDetailCulling": true,
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "KARUULM_LAVABUBBLES",
+      "KARUULM_LAVA_GAS"
     ]
   }
 ]
