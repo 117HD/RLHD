@@ -20651,6 +20651,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -20669,6 +20670,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -20687,6 +20689,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -20865,6 +20868,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 50,
     "duration": 0,
     "nightMultiplier": 1.5,
     "range": 20,
@@ -21312,6 +21317,7 @@
     ],
     "type": "FLICKER",
     "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 40,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -38637,6 +38643,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 24,
     "objectIds": [
@@ -39361,6 +39368,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 103,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -49256,6 +49265,8 @@
       255
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 128,
     "duration": 0,
     "range": 20,
     "objectIds": [
