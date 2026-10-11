@@ -47878,6 +47878,7 @@
       33.847893
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 10
   },
@@ -47889,6 +47890,7 @@
     "radius": 425,
     "strength": 12,
     "visibleFromOtherPlanes": false,
+    "shadowMode": "STATIC",
     "color": [
       253.63197,
       182.39111,
@@ -47912,6 +47914,7 @@
       33.847893
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 10
   },
