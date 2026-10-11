@@ -20937,6 +20937,57 @@
     ]
   },
   {
+    "description": "KOUREND_MAIN_TABLE_CANDLES_1",
+    "offset": [ -83, 200, 141 ],
+    "radius": 280,
+    "strength": 14,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "KOUREND_MAIN_TABLE"
+    ]
+  },
+  {
+    "description": "KOUREND_MAIN_TABLE_CANDLES_2",
+    "offset": [ -228, 150, -29 ],
+    "radius": 130,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "KOUREND_MAIN_TABLE"
+    ]
+  },
+  {
+    "description": "KOUREND_MAIN_TABLE_CANDLES_3",
+    "offset": [ 380, 150, 49 ],
+    "radius": 130,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "KOUREND_MAIN_TABLE"
+    ]
+  },
+  {
     "description": "GAMES_ROOM_FIREPLACE",
     "height": 185,
     "radius": 1500,
@@ -46181,7 +46232,8 @@
     "range": 5,
     "objectIds": [
       "FAI_VARROCK_RANGE",
-      "KR_SIN_RANGE"
+      "KR_SIN_RANGE",
+      "_100_DAVE_STOVE"
     ]
   },
   {
@@ -46200,7 +46252,8 @@
     "range": 5,
     "objectIds": [
       "FAI_VARROCK_RANGE",
-      "KR_SIN_RANGE"
+      "KR_SIN_RANGE",
+      "_100_DAVE_STOVE"
     ]
   },
   {
@@ -46219,7 +46272,8 @@
     "range": 5,
     "objectIds": [
       "FAI_VARROCK_RANGE",
-      "KR_SIN_RANGE"
+      "KR_SIN_RANGE",
+      "_100_DAVE_STOVE"
     ]
   },
   {
@@ -48372,6 +48426,146 @@
     ]
   },
   {
+    "description": "Sailing - Cabin Boy Jenkins",
+    "height": 80,
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      200,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "ignoreActorHiding": true,
+    "npcIds": [
+      "SAILING_CREW_GHOST_JENKINS_DOCK",
+      "SAILING_CREW_GHOST_JENKINS_UNRECRUITED",
+      "SAILING_CREW_GHOST_JENKINS_RECRUITED",
+      "SAILING_CREW_GHOST_JENKINS_WORLD",
+      "SAILING_CREW_GHOST_JENKINS_DOCK",
+      "SAILING_CREW_GHOST_JENKINS_SHIP",
+      "SAILING_CREW_GHOST_JENKINS_SHIP_OP",
+      "SAILING_CREW_GHOST_JENKINS_SHIP_NO_OP",
+      "SAILING_CREW_GHOST_JENKINS_CARGO",
+      "SAILING_CREW_GHOST_JENKINS_CARGO_2",
+      "SAILING_CREW_GHOST_JENKINS_CARGO_3"
+    ]
+  },
+  {
+    "description": "Sailing - Crystal Extractor - Ready",
+    "height": 175,
+    "radius": 150,
+    "strength": 10,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150,
+    "spawnDelay": 200,
+    "color": [
+      200,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "objectIds": [
+      "SAILING_CRYSTAL_EXTRACTOR_ACTIVATED"
+    ],
+    "animationIds": [
+      "SAILING_BOATS_CRYSTAL_EXTRACTOR_KANDARIN_EXTRACTED_01"
+    ]
+  },
+  {
+    "description": "Sailing - Player Boat Cannon - Shot",
+    "offset": [ 0, 75, -150 ],
+    "radius": 375,
+    "strength": 10,
+    "fadeOutDuration": 200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 300,
+    "fadeInDuration": 400,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SAILING_BRONZE_CANNON",
+      "SAILING_IRON_CANNON",
+      "SAILING_STEEL_CANNON",
+      "SAILING_MITHRIL_CANNON",
+      "SAILING_ADAMANT_CANNON",
+      "SAILING_RUNE_CANNON",
+      "SAILING_DRAGON_CANNON",
+      "SAILING_GOLD_CANNON"
+    ],
+    "animationIds": [
+      "SAILING_CANNON01_SMALL01_ATTACK01"
+    ]
+  },
+  {
+    "description": "Sailing - Tiny raft 1x3 - Eternal brazier",
+    "objectIds": [ "SAILING_BOAT_1X3_ETERNAL_BRAZIER" ],
+    "offset": [ -44, 93, 69 ],
+    "radius": 1250,
+    "strength": 13.5,
+    "color": "#FFA50C",
+    "type": "FLICKER",
+    "range": 5.8
+  },
+  {
+    "description": "Sailing - Tiny raft 1x3 - Eternal brazier - bloom",
+    "objectIds": [ "SAILING_BOAT_1X3_ETERNAL_BRAZIER" ],
+    "offset": [ -44, 170, 69 ],
+    "radius": 75,
+    "strength": 25,
+    "color": "#FFA50C",
+    "type": "FLICKER",
+    "range": 5.8
+  },
+  {
+    "description": "Sailing - Small skiff 2x5 - Eternal brazier",
+    "objectIds": [ "SAILING_BOAT_SKIFF_ETERNAL_BRAZIER" ],
+    "offset": [ -62, 182, 51 ],
+    "radius": 1250,
+    "strength": 13.5,
+    "color": "#FFA50C",
+    "type": "FLICKER",
+    "range": 5.8
+  },
+  {
+    "description": "Sailing - Small skiff 2x5 - Eternal brazier - bloom",
+    "objectIds": [ "SAILING_BOAT_SKIFF_ETERNAL_BRAZIER" ],
+    "offset": [ -62, 259, 51 ],
+    "radius": 75,
+    "strength": 25,
+    "color": "#FFA50C",
+    "type": "FLICKER",
+    "range": 5.8
+  },
+  {
+    "description": "Sailing - Medium sloop 3x10 - Eternal brazier",
+    "objectIds": [ "SAILING_BOAT_SLOOP_ETERNAL_BRAZIER" ],
+    "offset": [ -61, 218, 53 ],
+    "radius": 1250,
+    "strength": 13.5,
+    "color": "#FFA50C",
+    "type": "FLICKER",
+    "range": 5.8
+  },
+  {
+    "description": "Sailing - Medium sloop 3x10 - Eternal brazier - bloom",
+    "objectIds": [ "SAILING_BOAT_SLOOP_ETERNAL_BRAZIER" ],
+    "offset": [ -61, 295, 53 ],
+    "radius": 75,
+    "strength": 25,
+    "color": "#FFA50C",
+    "type": "FLICKER",
+    "range": 5.8
+  },
+  {
     "description": "Meiyerditch - Myreque Hideout - Shrine Candles 1",
     "offset": [ 50, 140, -40 ],
     "radius": 135,
@@ -48892,6 +49086,194 @@
     "objectIds": [
       "WYRMSCRAIG_CAVE_EXIT_SAILABLE"
     ]
+  },
+  {
+    "description": "Wyrmscraig Mad Angel Light Tennis Attack",
+    "offset": [ 0, 30, 0 ],
+    "radius": 220,
+    "strength": 7,
+    "color": [
+      255,
+      240,
+      240
+    ],
+    "type": "STATIC",
+    "projectileIds": [ "VFX_MAD_ANGEL_ATTACK_BOMB_THROW_PROJECTILE" ]
+  },
+  {
+    "description": "Wyrmscraig Mad Angel Light Tennis Volley Attack - Impact",
+    "offset": [ 0, 300, 0 ],
+    "radius": 450,
+    "strength": 7,
+    "spawnDelay": 50,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 150,
+    "despawnDelay": 500,
+    "fixedDespawnTime": true,
+    "waitForAnimation": true,
+    "color": [
+      255,
+      240,
+      240
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [ "VFX_MAD_ANGEL_ATTACK_BOMB_THROW_IMPACT_02" ]
+  },
+  {
+    "description": "Wyrmscraig Mad Angel Light Tennis Volley Attack - Impact - Failed Volley",
+    "offset": [ 0, 100, 0 ],
+    "radius": 200,
+    "strength": 7,
+    "fadeOutDuration": 150,
+    "despawnDelay": 400,
+    "fixedDespawnTime": true,
+    "waitForAnimation": true,
+    "color": [
+      255,
+      240,
+      240
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [ "VFX_MAD_ANGEL_ATTACK_BOMB_THROW_IMPACT_01" ]
+  },
+  {
+    "description": "Wyrmscraig Mad Angel Light Tennis Attack - Cast",
+    "offset": [ 0, 270, 100 ],
+    "radius": 350,
+    "strength": 9,
+    "spawnDelay": 350,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 450,
+    "despawnDelay": 900,
+    "fixedDespawnTime": true,
+    "waitForAnimation": true,
+    "color": [
+      255,
+      240,
+      240
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [ "VFX_MAD_ANGEL_ATTACK_BOMB_THROW" ]
+  },
+  {
+    "description": "Wyrmscraig Mad Angel Lightening Attack Normal - Charge",
+    "offset": [ 0, 150, 55 ],
+    "radius": 220,
+    "strength": 20,
+    "color": [
+      0,
+      160,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 20,
+    "spawnDelay": 700,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3500,
+    "fadeInDuration": 1500,
+    "fadeOutDuration": 500,
+    "despawnWithParent": true,
+    "graphicsObjectIds": [ "VFX_MAD_ANGEL_ATTACK_SMITE" ]
+  },
+  {
+    "description": "Wyrmscraig Mad Angel Lightening Attack Normal - Flash",
+    "offset": [ 0, 150, 35 ],
+    "radius": 350,
+    "strength": 30,
+    "color": [
+      0,
+      160,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 20,
+    "spawnDelay": 3550,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
+    "despawnWithParent": true,
+    "graphicsObjectIds": [ "VFX_MAD_ANGEL_ATTACK_SMITE" ]
+  },
+  {
+    "description": "Wyrmscraig Mad Angel Lightening Attack Enraged - Charge",
+    "offset": [ 0, 150, 55 ],
+    "radius": 220,
+    "strength": 20,
+    "color": [
+      0,
+      160,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 20,
+    "spawnDelay": 700,
+    "fixedDespawnTime": true,
+    "despawnDelay": 7300,
+    "fadeInDuration": 1500,
+    "fadeOutDuration": 500,
+    "despawnWithParent": true,
+    "graphicsObjectIds": [ "VFX_MAD_ANGEL_ATTACK_SMITE_ENRAGED" ]
+  },
+  {
+    "description": "Wyrmscraig Mad Angel Lightening Attack Enraged - Flash 1",
+    "offset": [ 0, 150, 35 ],
+    "radius": 350,
+    "strength": 30,
+    "color": [
+      0,
+      160,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 20,
+    "spawnDelay": 3550,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
+    "despawnWithParent": true,
+    "graphicsObjectIds": [ "VFX_MAD_ANGEL_ATTACK_SMITE_ENRAGED" ]
+  },
+  {
+    "description": "Wyrmscraig Mad Angel Lightening Attack Enraged - Flash 2",
+    "offset": [ 0, 150, 35 ],
+    "radius": 350,
+    "strength": 30,
+    "color": [
+      0,
+      160,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 20,
+    "spawnDelay": 6000,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
+    "despawnWithParent": true,
+    "graphicsObjectIds": [ "VFX_MAD_ANGEL_ATTACK_SMITE_ENRAGED" ]
+  },
+  {
+    "description": "Wyrmscraig Mad Angel Lightening Attack Enraged - Flash 3",
+    "offset": [ 0, 150, 25 ],
+    "radius": 350,
+    "strength": 30,
+    "color": [
+      0,
+      160,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 20,
+    "spawnDelay": 7200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
+    "despawnWithParent": true,
+    "graphicsObjectIds": [ "VFX_MAD_ANGEL_ATTACK_SMITE_ENRAGED" ]
   },
   {
     "description": "Wyrmscraig Cathedral Candles",
