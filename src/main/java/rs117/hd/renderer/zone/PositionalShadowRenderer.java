@@ -79,6 +79,7 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 
 	private static final int MAX_FACE_RESOLUTION = 512;
 	private static final int MIN_FACE_RESOLUTION = 32;
+	private static final int DYNAMIC_MODEL_MIN_RESOLUTION = 128;
 
 	private static final int MIN_SIZE_EXP = Integer.numberOfTrailingZeros(MIN_FACE_RESOLUTION);
 	private static final int MAX_SIZE_EXP = Integer.numberOfTrailingZeros(MAX_FACE_RESOLUTION);
@@ -602,12 +603,14 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 					if (!shadowData.drawBuffer.isEmpty())
 						shadowData.drawBuffer.execute(renderState);
 
-					root.vaoSceneCmd.execute(renderState);
-					root.vaoDirectionalCmd.execute(renderState);
+					if (shadowData.atlasRect.size >= DYNAMIC_MODEL_MIN_RESOLUTION) {
+						root.vaoSceneCmd.execute(renderState);
+						root.vaoDirectionalCmd.execute(renderState);
 
-					if (light.sceneContext != null && light.sceneContext.worldViewContext != null) {
-						light.sceneContext.worldViewContext.vaoSceneCmd.execute(renderState);
-						light.sceneContext.worldViewContext.vaoDirectionalCmd.execute(renderState);
+						if (light.sceneContext != null && light.sceneContext.worldViewContext != null) {
+							light.sceneContext.worldViewContext.vaoSceneCmd.execute(renderState);
+							light.sceneContext.worldViewContext.vaoDirectionalCmd.execute(renderState);
+						}
 					}
 				}
 			}
