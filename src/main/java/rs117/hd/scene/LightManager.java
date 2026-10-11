@@ -42,16 +42,17 @@ import net.runelite.api.*;
 import net.runelite.api.coords.*;
 import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
-import net.runelite.client.config.ConfigManager;
+import net.runelite.client.callback.RenderCallbackManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
-import net.runelite.client.plugins.PluginManager;
-import net.runelite.client.plugins.entityhider.EntityHiderConfig;
-import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import rs117.hd.HdPlugin;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.data.ObjectType;
 import rs117.hd.opengl.uniforms.UBOLights;
+import rs117.hd.scene.daylight_cycle.SkyConfiguration;
+import rs117.hd.scene.daylight_cycle.SkyState;
+import rs117.hd.scene.daylight_cycle.SkyState.LightingSample;
+import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.LightDefinition;
@@ -63,6 +64,7 @@ import rs117.hd.utils.ResourcePath;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.utils.ColorUtils.linearSrgbLuminance;
 import static rs117.hd.utils.HDUtils.isSphereIntersectingFrustum;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
@@ -84,10 +86,7 @@ public class LightManager {
 	private EventBus eventBus;
 
 	@Inject
-	private PluginManager pluginManager;
-
-	@Inject
-	private ConfigManager configManager;
+	private RenderCallbackManager renderCallbackManager;
 
 	@Inject
 	private HdPlugin plugin;
@@ -99,7 +98,10 @@ public class LightManager {
 	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
-	private EntityHiderPlugin entityHiderPlugin;
+	private SkyManager skyManager;
+
+	@Inject
+	private EnvironmentManager environmentManager;
 
 	private final ArrayList<Light> WORLD_LIGHTS = new ArrayList<>();
 	private final ListMultimap<Integer, LightDefinition> NPC_LIGHTS = ArrayListMultimap.create();
@@ -107,10 +109,10 @@ public class LightManager {
 	private final ListMultimap<Integer, LightDefinition> PROJECTILE_LIGHTS = ArrayListMultimap.create();
 	private final ListMultimap<Integer, LightDefinition> GRAPHICS_OBJECT_LIGHTS = ArrayListMultimap.create();
 
-	private final Renderable[] imposterRenderables = new Renderable[2];
 	private boolean reloadLights;
-	private EntityHiderConfig entityHiderConfig;
 	private int currentPlane;
+	private final Renderable[] imposterRenderables = new Renderable[2];
+	private final LightingSample outdoorLightingSample = new LightingSample();
 
 	public void loadConfig(Gson gson, ResourcePath path) {
 		LightDefinition[] lights;
@@ -132,30 +134,38 @@ public class LightManager {
 			PROJECTILE_LIGHTS.clear();
 			GRAPHICS_OBJECT_LIGHTS.clear();
 
-			for (LightDefinition lightDef : lights) {
-				lightDef.normalize();
-				if (lightDef.worldX != null && lightDef.worldY != null) {
-					Light light = new Light(lightDef);
-					light.worldPoint = new WorldPoint(lightDef.worldX, lightDef.worldY, lightDef.plane);
+			for (int i = 0; i < lights.length; i++) {
+				LightDefinition def = lights[i];
+				try {
+					def.normalize();
+				} catch (RuntimeException ex) {
+					log.error("Ignoring invalid light at index {}: {}", i, ex.getMessage());
+					continue;
+				}
+
+				if (def.worldX != null && def.worldY != null) {
+					Light light = new Light(def);
+					light.worldLight = true;
 					light.persistent = true;
+					light.worldPos[0] = def.worldX;
+					light.worldPos[1] = def.worldY;
+					light.worldPos[2] = def.plane;
 					WORLD_LIGHTS.add(light);
 				}
-				lightDef.npcIds.forEach(id -> NPC_LIGHTS.put(id, lightDef));
-				lightDef.objectIds.forEach(id -> OBJECT_LIGHTS.put(id, lightDef));
-				lightDef.projectileIds.forEach(id -> PROJECTILE_LIGHTS.put(id, lightDef));
-				lightDef.graphicsObjectIds.forEach(id -> GRAPHICS_OBJECT_LIGHTS.put(id, lightDef));
+				def.npcIds.forEach(id -> NPC_LIGHTS.put(id, def));
+				def.objectIds.forEach(id -> OBJECT_LIGHTS.put(id, def));
+				def.projectileIds.forEach(id -> PROJECTILE_LIGHTS.put(id, def));
+				def.graphicsObjectIds.forEach(id -> GRAPHICS_OBJECT_LIGHTS.put(id, def));
 			}
 
 			log.debug("Loaded {} lights", lights.length);
 
-			// Reload lights once on plugin startup, and whenever lights.json should be hot-swapped.
-			// If we don't reload on startup, NPCs won't have lights added until RuneLite fires events
+			// Reload after startup or hot-swapping so existing NPCs receive lights
 			reloadLights = true;
 		});
 	}
 
 	public void startUp() {
-		entityHiderConfig = configManager.getConfig(EntityHiderConfig.class);
 		LIGHTS_PATH.watch(path -> loadConfig(plugin.getGson(), path));
 		eventBus.register(this);
 	}
@@ -234,7 +244,8 @@ public class LightManager {
 
 			// Whatever the light is attached to is presumed to exist if it's not marked for removal yet
 			boolean parentExists = !light.markedForRemoval;
-			boolean hiddenTemporarily = light.hiddenTemporarily;
+			boolean hiddenTemporarily = light.hiddenTemporarily && !light.hiddenByPlane;
+			boolean hiddenByPlane = false;
 
 			if (light.tileObject != null) {
 				if (!light.markedForRemoval && light.animationSpecific && light.tileObject instanceof GameObject) {
@@ -251,7 +262,7 @@ public class LightManager {
 				light.origin[0] = (int) light.projectile.getX();
 				light.origin[1] = (int) light.projectile.getZ() - light.def.height;
 				light.origin[2] = (int) light.projectile.getY();
-				hiddenTemporarily = !shouldShowProjectileLights();
+				hiddenTemporarily = isRenderableHidden(light.projectile);
 				if (light.projectile.getRemainingCycles() <= 0) {
 					light.markedForRemoval = true;
 				} else {
@@ -319,7 +330,7 @@ public class LightManager {
 						tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE &&
 						(tile = tiles[plane][tileExX][tileExY]) != null
 					) {
-						hiddenTemporarily = !isActorLightVisible(light.actor);
+						hiddenTemporarily = isRenderableHidden(light.actor);
 
 						if (!light.def.ignoreActorHiding &&
 							!(light.actor instanceof NPC && ((NPC) light.actor).getComposition().getSize() > 1)
@@ -417,11 +428,13 @@ public class LightManager {
 			if (!hiddenTemporarily && !light.def.visibleFromOtherPlanes) {
 				// Hide certain lights on planes lower than the player to prevent light 'leaking' through the floor
 				if (light.plane < plane && light.belowFloor)
-					hiddenTemporarily = true;
+					hiddenByPlane = true;
 				// Hide any light that is above the current plane and is above a solid floor
 				if (light.plane > plane && light.aboveFloor)
-					hiddenTemporarily = true;
+					hiddenByPlane = true;
+				hiddenTemporarily = hiddenByPlane;
 			}
+			light.hiddenByPlane = hiddenByPlane;
 
 			if (parentExists != light.parentExists) {
 				light.parentExists = parentExists;
@@ -453,13 +466,16 @@ public class LightManager {
 			if (light.visible && light.hiddenTemporarily)
 				light.visible = light.changedVisibilityAt != -1 && light.elapsedTime - light.changedVisibilityAt < Light.VISIBILITY_FADE;
 
+			if (light.visible)
+				skyManager.prepareLightSchedule(light);
+
 			if (light.visible) {
 				// Prioritize lights closer to the focal point
 				float distX = plugin.cameraFocalPoint[0] - light.pos[0];
 				float distZ = plugin.cameraFocalPoint[1] - light.pos[2];
 				light.distanceSquared = distX * distX + distZ * distZ;
 
-				float maxRadius = light.def.radius;
+				float maxRadius = light.def.radius * light.daylightCycleRadiusScale;
 				switch (light.def.type) {
 					case FLICKER:
 						maxRadius *= 1.5f;
@@ -471,28 +487,31 @@ public class LightManager {
 
 				// Hide lights which cannot possibly affect the visible scene,
 				// by either being behind the camera, or too far beyond the edge of the scene
-				float near = -maxRadius * maxRadius;
-				float far = drawDistance + LOCAL_HALF_TILE_SIZE + maxRadius;
-				far *= far;
-				light.visible = near < light.distanceSquared && light.distanceSquared < far;
+				if (!plugin.orthographicProjection) {
+					float near = -maxRadius * maxRadius;
+					float far = drawDistance + LOCAL_HALF_TILE_SIZE + maxRadius;
+					far *= far;
+					light.visible = near < light.distanceSquared && light.distanceSquared < far;
 
-				// Check that the light is within the camera's frustum specifically: left, right, bottom, top
-				// The above check already covers the near plane
-				if (plugin.configTiledLighting && light.visible) {
-					light.visible = isSphereIntersectingFrustum(
-						light.pos[0] + cameraShift[0],
-						light.pos[1],
-						light.pos[2] + cameraShift[1],
-						maxRadius, // use max radius, since the radius hasn't been updated yet
-						cameraFrustum,
-						4
-					);
+					// Check that the light is within the camera's frustum specifically: left, right, bottom, top
+					// The above check already covers the near plane
+					if (plugin.configTiledLighting && light.visible) {
+						light.visible = isSphereIntersectingFrustum(
+							light.pos[0] + cameraShift[0],
+							light.pos[1],
+							light.pos[2] + cameraShift[1],
+							maxRadius, // use max radius, since the radius hasn't been updated yet
+							cameraFrustum,
+							4
+						);
+					}
 				}
 			}
 		}
 
 		// Order visible lights first, then by distance. Leave hidden lights unordered at the end.
-		quickSort(sceneContext.lights,
+		quickSort(
+			sceneContext.lights,
 			(a, b) -> a.visible && b.visible ?
 				Float.compare(a.distanceSquared, b.distanceSquared) :
 				Boolean.compare(b.visible, a.visible)
@@ -515,14 +534,15 @@ public class LightManager {
 
 			if (light.def.type == LightType.FLICKER) {
 				float t = TWO_PI * (mod(plugin.elapsedTime, 60) / 60 + light.randomOffset);
-				float flicker = (
-					pow(cos(11 * t), 3) +
-					pow(cos(17 * t), 6) +
-					pow(cos(23 * t), 2) +
-					pow(cos(31 * t), 6) +
-					pow(cos(71 * t), 4) +
-					pow(cos(151 * t), 6) / 2
-				) / 4.335f;
+				float flicker =
+					(
+						pow(cos(11 * t), 3) +
+						pow(cos(17 * t), 6) +
+						pow(cos(23 * t), 2) +
+						pow(cos(31 * t), 6) +
+						pow(cos(71 * t), 4) +
+						pow(cos(151 * t), 6) / 2
+					) / 4.335f;
 
 				float maxFlicker = 1f + (light.def.range / 100f);
 				float minFlicker = 1f - (light.def.range / 100f);
@@ -540,8 +560,11 @@ public class LightManager {
 			} else {
 				light.strength = light.def.strength;
 				light.radius = light.def.radius;
-				light.color = light.def.color;
 			}
+
+			light.strength *= light.daylightCycleStrengthScale;
+			light.radius *= light.daylightCycleRadiusScale;
+			applyOutdoorLighting(light);
 
 			// Spawn & despawn fade-in and fade-out
 			if (light.fadeInDuration > 0)
@@ -568,71 +591,102 @@ public class LightManager {
 		}
 	}
 
-	private boolean isActorLightVisible(@Nonnull Actor actor) {
-		try {
-			// getModel may throw an exception from vanilla client code
-			if (actor.getModel() == null)
-				return false;
-		} catch (Exception ex) {
-			// Vanilla handles exceptions thrown in `DrawCallbacks#draw` gracefully, but here we have to handle them
-			return false;
+	private void applyOutdoorLighting(Light light) {
+		copyTo(light.color, light.def.color);
+		if (!light.def.outdoorLighting || skyManager.isCycleDisabled())
+			return;
+
+		Environment environment = environmentManager.getOverworldEnvironment();
+		int[] sampleWorldPos = light.def.outdoorLightingSampleWorldPos;
+		if (sampleWorldPos != null) {
+			Environment sampledEnvironment = environmentManager.getEnvironmentAt(sampleWorldPos);
+			if (sampledEnvironment != null)
+				environment = sampledEnvironment;
 		}
 
-		boolean entityHiderEnabled = pluginManager.isPluginEnabled(entityHiderPlugin);
+		LightingSample lighting = sampleOutdoorLighting(environment);
+		SkyState skyState = lighting.sky;
+		SkyConfiguration sky = environment.getSky();
+		float[] authoredColor = light.def.color;
+		float defLuminance = linearSrgbLuminance(authoredColor);
+		float referenceLuminance = max(linearSrgbLuminance(lighting.referenceFogColorLinear), 1e-4f);
+		float[] lightColor = copy(lighting.horizon);
+		float sunAltDeg = skyState.sunAltitudeDegrees;
 
-		if (actor instanceof NPC) {
-			if (!plugin.configNpcLights)
-				return false;
-
-			if (entityHiderEnabled) {
-				var npc = (NPC) actor;
-				boolean isPet = npc.getComposition().isFollower();
-
-				if (client.getFollower() != null && client.getFollower().getIndex() == npc.getIndex())
-					return true;
-
-				if (entityHiderConfig.hideNPCs() && !isPet)
-					return false;
-
-				return !entityHiderConfig.hidePets() || !isPet;
-			}
-		} else if (actor instanceof Player) {
-			if (entityHiderEnabled) {
-				var player = (Player) actor;
-				Player local = client.getLocalPlayer();
-				if (local == null || player.getName() == null)
-					return true;
-
-				if (player == local)
-					return !entityHiderConfig.hideLocalPlayer();
-
-				if (entityHiderConfig.hideAttackers() && player.getInteracting() == local)
-					return false;
-
-				if (player.isFriend())
-					return !entityHiderConfig.hideFriends();
-				if (player.isFriendsChatMember())
-					return !entityHiderConfig.hideFriendsChatMembers();
-				if (player.isClanMember())
-					return !entityHiderConfig.hideClanChatMembers();
-				if (client.getIgnoreContainer().findByName(player.getName()) != null)
-					return !entityHiderConfig.hideIgnores();
-
-				return !entityHiderConfig.hideOthers();
+		float moonStrengthFloor = 0;
+		if (sunAltDeg < 5) {
+			float moonAltDeg = skyState.moonAltitudeDegrees;
+			float moonIllumination = skyState.moonLightIllumination;
+			if (moonAltDeg > -5 && moonIllumination > .01f) {
+				float sunFade = saturate((5 - sunAltDeg) / 10);
+				float moonElevation = smoothstep(-5, 20, moonAltDeg);
+				float moonBlend = moonIllumination * .25f * moonElevation * sunFade;
+				mix(lightColor, lightColor, sky.moonAmbientColor, moonBlend);
+				moonStrengthFloor = moonIllumination * .12f * moonElevation;
 			}
 		}
 
-		return true;
+		if (sunAltDeg > 0) {
+			float desaturation = smoothstep(0, 90, sunAltDeg) * .75f;
+			float luminance = linearSrgbLuminance(lightColor);
+			mix(lightColor, lightColor, vec(luminance), desaturation);
+		}
+
+		float horizonLuminance = linearSrgbLuminance(lightColor);
+		float middayFactor = smoothstep(15, 30, sunAltDeg);
+		if (middayFactor > 0)
+			mix(lightColor, lightColor, authoredColor, middayFactor);
+
+		copyTo(light.color, lightColor);
+		float peakScale = defLuminance / referenceLuminance;
+		float timeScale = max(min(horizonLuminance / referenceLuminance, 1), moonStrengthFloor);
+		float outdoorLightScale = peakScale * timeScale;
+		if (outdoorLightScale > 1) {
+			float scaleRange = 3;
+			outdoorLightScale = 1 + scaleRange * (1 - exp(-(outdoorLightScale - 1) / scaleRange));
+		}
+		light.strength *= mix(outdoorLightScale, 1, middayFactor);
 	}
 
-	private boolean shouldShowProjectileLights() {
-		return plugin.configProjectileLights && !(pluginManager.isPluginEnabled(entityHiderPlugin) && entityHiderConfig.hideProjectiles());
+	private LightingSample sampleOutdoorLighting(Environment environment) {
+		var sample = outdoorLightingSample;
+		if (environment != sample.environment || plugin.frame != sample.frame) {
+			sample.environment = environment;
+			sample.frame = plugin.frame;
+
+			float[] fogColor = environmentManager.getFogColor(environment);
+			skyManager.sampleLighting(sample, environment, fogColor);
+		}
+
+		return sample;
+	}
+
+	private boolean isRenderableHidden(@Nonnull Renderable renderable) {
+		try {
+			// getModel may throw an exception from vanilla client code
+			if (renderable.getModel() == null)
+				return true;
+		} catch (Exception ex) {
+			// Vanilla handles exceptions thrown in `DrawCallbacks#draw` gracefully, but here we have to handle them
+			return true;
+		}
+
+		if (!renderCallbackManager.addEntity(renderable, false))
+			return true;
+
+		if (renderable instanceof NPC)
+			return !plugin.configNpcLights;
+
+		if (renderable instanceof Projectile)
+			return !plugin.configProjectileLights;
+
+		return false;
 	}
 
 	public void loadSceneLights(SceneContext sceneContext) {
 		for (Light light : WORLD_LIGHTS) {
-			assert light.worldPoint != null;
-			if (sceneContext.sceneBounds.contains(light.worldPoint))
+			assert light.worldLight;
+			if (sceneContext.sceneBounds.contains(light.worldPos))
 				addWorldLight(sceneContext, light);
 		}
 
@@ -740,8 +794,7 @@ public class LightManager {
 		}
 	}
 
-	private void addNpcLights(NPC npc)
-	{
+	private void addNpcLights(NPC npc) {
 		var sceneContext = plugin.getSceneContext();
 		if (sceneContext == null)
 			return;
@@ -993,22 +1046,25 @@ public class LightManager {
 		}
 	}
 
-	private void addWorldLight(SceneContext sceneContext, Light light) {
-		assert light.worldPoint != null;
-		sceneContext.worldToLocals(light.worldPoint).forEach(local -> {
-			int tileExX = local[0] / LOCAL_TILE_SIZE + sceneContext.sceneOffset;
-			int tileExY = local[1] / LOCAL_TILE_SIZE + sceneContext.sceneOffset;
-			if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
-				return;
+	private void addWorldLight(SceneContext ctx, Light light) {
+		assert light.worldLight;
+		var scenePoints = ctx.worldToScene(light.worldPos);
+		var tileHeights = ctx.scene.getTileHeights();
+		for (int i = 0; i < scenePoints.size(); i++) {
+			var scenePoint = scenePoints.get(i);
+			int tileExX = scenePoint[0] + ctx.sceneOffset;
+			int tileExY = scenePoint[1] + ctx.sceneOffset;
 
 			var copy = new Light(light.def);
-			copy.plane = local[2];
+			copyTo(copy.worldPos, light.worldPos);
+			copy.worldLight = true;
+			copy.plane = scenePoint[2];
 			copy.persistent = light.persistent;
-			copy.origin[0] = local[0] + LOCAL_HALF_TILE_SIZE;
-			copy.origin[1] = sceneContext.scene.getTileHeights()[local[2]][tileExX][tileExY] - copy.def.height - 1;
-			copy.origin[2] = local[1] + LOCAL_HALF_TILE_SIZE;
-			sceneContext.lights.add(copy);
-		});
+			copy.origin[0] = scenePoint[0] * LOCAL_TILE_SIZE + LOCAL_HALF_TILE_SIZE;
+			copy.origin[1] = tileHeights[scenePoint[2]][tileExX][tileExY] - copy.def.height - 1;
+			copy.origin[2] = scenePoint[1] * LOCAL_TILE_SIZE + LOCAL_HALF_TILE_SIZE;
+			ctx.lights.add(copy);
+		}
 	}
 
 	@Subscribe

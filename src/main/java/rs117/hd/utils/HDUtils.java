@@ -32,6 +32,7 @@ import java.awt.Graphics2D;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.lang.management.ManagementFactory;
+import java.util.Random;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import javax.swing.JFrame;
@@ -83,6 +84,13 @@ public final class HDUtils {
 
 	public static float[] sunAngles(float altitude, float azimuth) {
 		return multiply(vec(altitude, azimuth), DEG_TO_RAD);
+	}
+
+	public static void randomPointOnSphere(float[] out, Random rng) {
+		float z = rng.nextFloat() * 2 - 1;
+		float t = rng.nextFloat() * 2 * PI;
+		float r = sqrt(max(0, 1 - z * z));
+		vec3(out, r * cos(t), z, r * sin(t));
 	}
 
 	public static float[] ensureArrayLength(float[] array, int targetLength) {
@@ -580,5 +588,29 @@ public final class HDUtils {
 	public static void drawStringCentered(Graphics2D g, String s) {
 		var b = g.getClipBounds();
 		drawStringCentered(g, s, b.width / 2.f, b.height / 2.f);
+	}
+
+	@Nullable
+	public static float[] parseLatLon(String coordinates) {
+		if (coordinates == null || coordinates.isEmpty())
+			return null;
+
+		String[] values = coordinates.split(",", 3);
+		if (values.length != 2)
+			return null;
+
+		try {
+			float latitude = Float.parseFloat(values[0]);
+			float longitude = Float.parseFloat(values[1]);
+			if (Float.isFinite(latitude) &&
+				Float.isFinite(longitude) &&
+				Math.abs(latitude) <= 90 &&
+				Math.abs(longitude) <= 180
+			) {
+				return vec(latitude, longitude);
+			}
+		} catch (NumberFormatException ignored) {
+		}
+		return null;
 	}
 }

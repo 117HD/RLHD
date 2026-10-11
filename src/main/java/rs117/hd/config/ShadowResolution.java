@@ -35,7 +35,9 @@ public enum ShadowResolution
 	RES_2048("Medium (2K)", 2048),
 	RES_4096("High (4K)", 4096),
 	RES_8192("Ultra (8K)", 8192),
-	RES_16384("Extreme (16K)", 16384);
+	RES_16384("Extreme (16K)", 16384),
+	RES_32768("Insane (32K)", 32768),
+	;
 
 	private final String name;
 	private final int value;

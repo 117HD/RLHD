@@ -11341,7 +11341,9 @@
     "name": "Vampyrium - Blood",
     "area": "VAMPYRIUM",
     "overlayIds": [
-      636
+      636,
+      637,
+      638
     ],
     "waterType": "BLOOD_DARK"
   },
