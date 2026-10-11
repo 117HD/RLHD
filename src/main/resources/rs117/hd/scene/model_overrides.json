@@ -83398,7 +83398,6 @@
       {
         "description": "Flame",
         "colors": "a < 255",
-        "baseMaterial": "NONE",
         "upwardsNormals": true,
         "receiveShadows": false
       },
