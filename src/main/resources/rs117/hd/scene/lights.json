@@ -28014,6 +28014,7 @@
       103
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "nightMultiplier": 1.5,
     "range": 20,
