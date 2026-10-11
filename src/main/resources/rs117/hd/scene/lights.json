@@ -48002,7 +48002,6 @@
       255,
       255
     ],
-    "type": "STATIC",
     "objectIds": [
       "YNYSDAIL_CAVE_EXIT"
     ]
@@ -48017,7 +48016,6 @@
       255,
       255
     ],
-    "type": "STATIC",
     "npcIds": [
       "SLAYER_AQUANITE"
     ]

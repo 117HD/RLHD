@@ -269,7 +269,7 @@
   },
   {
     "area": "DORGESHKAAN_AGILITY_AREA",
-    "sunAngles": [
+    "shadowAngles": [
       80,
       190
     ],
