@@ -64,10 +64,12 @@ public class Zone implements Destructible {
 	public static final int METADATA_SIZE = 12;
 
 	public static int LEVEL_COUNT = MAX_Z;
+	public static final int LEVEL_TERRAIN = LEVEL_COUNT++;
 	public static final int LEVEL_WATER_SURFACE = LEVEL_COUNT++;
 	public static final int LEVEL_GAP_FILLER = LEVEL_COUNT++;
 
 	public int glVao;
+	int modelCount;
 	int bufLen;
 	int dist;
 
@@ -392,7 +394,7 @@ public class Zone implements Destructible {
 	void renderOpaqueLevel(CommandBuffer cmd, int level) {
 		drawIdx = 0;
 
-		pushRange(this.levelOffsets[level - 1], this.levelOffsets[level]);
+		pushRange(level > 0 ? this.levelOffsets[level - 1] : 0, this.levelOffsets[level]);
 
 		if (drawIdx == 0)
 			return;
@@ -681,6 +683,7 @@ public class Zone implements Destructible {
 	synchronized void postAlphaPass() {
 		sortedAlphaFacesUpload.waitForCompletion();
 		alphaSortingJob.waitForCompletion();
+		alphaSortingJob.reset();
 
 		for (int i = alphaModels.size() - 1; i >= 0; --i) {
 			AlphaModel m = alphaModels.get(i);

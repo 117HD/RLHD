@@ -28,19 +28,22 @@ public class CommandBuffer {
 	private static final int GL_DRAW_ARRAYS_INDIRECT_TYPE = 3;
 	private static final int GL_DRAW_ELEMENTS_TYPE = 4;
 	private static final int GL_DRAW_ELEMENTS_INDIRECT_TYPE = 5;
-	private static final int GL_DRAW_CALL_TYPE_COUNT = 6;
+	private static final int GL_DRAW_ARRAYS_INSTANCED_TYPE = 6;
+	private static final int GL_DRAW_CALL_TYPE_COUNT = 7;
 
-	private static final int GL_BIND_VERTEX_ARRAY_TYPE = 6;
+	private static final int GL_BIND_VERTEX_ARRAY_TYPE = 7;
 	private static final int GL_BIND_INDIRECT_ARRAY_TYPE = 8;
 	private static final int GL_BIND_TEXTURE_UNIT_TYPE = 9;
 	private static final int GL_DEPTH_MASK_TYPE = 10;
 	private static final int GL_COLOR_MASK_TYPE = 11;
-	private static final int GL_USE_PROGRAM = 12;
+	private static final int GL_BLEND_FUNC_TYPE = 12;
+	private static final int GL_USE_PROGRAM = 13;
+	private static final int GL_TIMER = 14;
 
-	private static final int GL_TOGGLE_TYPE = 13; // Combined glEnable & glDisable
-	private static final int GL_FENCE_SYNC = 14;
+	private static final int GL_TOGGLE_TYPE = 15; // Combined glEnable & glDisable
+	private static final int GL_FENCE_SYNC = 16;
 
-	private static final int GL_EXECUTE_SUB_COMMAND_BUFFER = 15;
+	private static final int GL_EXECUTE_SUB_COMMAND_BUFFER = 17;
 
 	private static final long INT_MASK = 0xFFFF_FFFFL;
 	private static final int DRAW_MODE_MASK = 0xF;
@@ -118,6 +121,16 @@ public class CommandBuffer {
 		cmd[writeHead++] = GL_USE_PROGRAM & 0xFF | (long) objectIdx << 8;
 	}
 
+	public void PushTimer(Timer timer) {
+		ensureCapacity(1);
+		cmd[writeHead++] = GL_TIMER & 0xFF | 1 << 8 | (long) timer.ordinal() << 9;
+	}
+
+	public void PopTimer(Timer timer) {
+		ensureCapacity(1);
+		cmd[writeHead++] = GL_TIMER & 0xFF | (long) timer.ordinal() << 9;
+	}
+
 	public void ExecuteSubCommandBuffer(CommandBuffer subCommandBuffer) {
 		ensureCapacity(1);
 		assert !subCommandBuffer.includes(this);
@@ -138,6 +151,14 @@ public class CommandBuffer {
 			(writeGreen ? 1 : 0) << 9 |
 			(writeBlue ? 1 : 0) << 10 |
 			(writeAlpha ? 1 : 0) << 11;
+	}
+
+	public void BlendFunc(int sfactorRGB, int dfactorRGB, int sfactorAlpha, int dfactorAlpha) {
+		ensureCapacity(3);
+
+		cmd[writeHead++] = GL_BLEND_FUNC_TYPE & 0xFF;
+		cmd[writeHead++] = ((long) sfactorRGB & INT_MASK) | ((long) dfactorRGB & INT_MASK) << 32;
+		cmd[writeHead++] = ((long) sfactorAlpha & INT_MASK) | ((long) dfactorAlpha & INT_MASK) << 32;
 	}
 
 	public void MultiDrawArrays(int mode, int[] offsets, int[] counts) {
@@ -167,6 +188,13 @@ public class CommandBuffer {
 		ensureCapacity(2);
 		cmd[writeHead++] = GL_DRAW_ARRAYS_TYPE & 0xFF | (mode & DRAW_MODE_MASK) << 8;
 		cmd[writeHead++] = (long) offset << 32 | vertexCount & INT_MASK;
+	}
+
+	public void DrawArraysInstanced(int mode, int offset, int vertexCount, int instanceCount) {
+		ensureCapacity(3);
+		cmd[writeHead++] = GL_DRAW_ARRAYS_INSTANCED_TYPE & 0xFF | (mode & DRAW_MODE_MASK) << 8;
+		cmd[writeHead++] = offset;
+		cmd[writeHead++] = (long) vertexCount << 32 | (instanceCount & INT_MASK);
 	}
 
 	public void DrawArraysIndirect(int mode, int vertexOffset, int vertexCount, GpuIntBuffer indirectBuffer) {
@@ -303,6 +331,17 @@ public class CommandBuffer {
 						renderState.colorMask.set(red, green, blue, alpha);
 						break;
 					}
+					case GL_BLEND_FUNC_TYPE: {
+						long packed = cmd[readHead++];
+						int sfactorRGB = (int) packed;
+						int dfactorRGB = (int) (packed >>> 32);
+
+						packed = cmd[readHead++];
+						int sfactorAlpha = (int) packed;
+						int dfactorAlpha = (int) (packed >>> 32);
+						renderState.blendFunc.set(sfactorRGB, dfactorRGB, sfactorAlpha, dfactorAlpha);
+						break;
+					}
 					case GL_BIND_VERTEX_ARRAY_TYPE: {
 						long packed = cmd[readHead++];
 						int eboIdx = (int) (packed >> 32);
@@ -330,6 +369,19 @@ public class CommandBuffer {
 						renderState.program.set((ShaderProgram) objects[objectIdx]);
 						break;
 					}
+					case GL_TIMER: {
+						if (frameTimer != null) {
+							int timerOrdinal = (int) (data >> 9);
+							assert timerOrdinal >= 0 && timerOrdinal < Timer.TIMERS.length;
+							var timer = Timer.TIMERS[timerOrdinal];
+							if (((data >> 8) & 1) == 1) {
+								frameTimer.begin(timer);
+							} else {
+								frameTimer.end(timer);
+							}
+						}
+						break;
+					}
 					case GL_TOGGLE_TYPE: {
 						long packed = cmd[readHead++];
 						int capability = (int) (packed & INT_MASK);
@@ -353,6 +405,13 @@ public class CommandBuffer {
 						int count = (int) packed;
 
 						glDrawArrays(mode, offset, count);
+						break;
+					}
+					case GL_DRAW_ARRAYS_INSTANCED_TYPE: {
+						int mode = (int) data >> 8;
+						int offset = (int) cmd[readHead++];
+						long packed = cmd[readHead++];
+						glDrawArraysInstanced(mode, offset, (int) (packed >> 32), (int) packed);
 						break;
 					}
 					case GL_DRAW_ELEMENTS_TYPE: {

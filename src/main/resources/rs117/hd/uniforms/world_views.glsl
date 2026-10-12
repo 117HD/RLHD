@@ -11,8 +11,8 @@
     };
 
     layout(std140) uniform UBOWorldViews {
-        WorldView WorldViewArray[MAX_SIMULTANEOUS_WORLD_VIEWS];
-    };
+        WorldView Array[MAX_SIMULTANEOUS_WORLD_VIEWS];
+    } uboWorldViews;
 
     #include WORLD_VIEW_GETTER
 
@@ -31,3 +31,9 @@
     #define getWorldViewProjection(worldViewIndex) mat4(1)
     #define getWorldViewTint(worldViewIndex) ivec4(0)
 #endif
+
+bool isWorldViewSquashed(int worldViewIndex) {
+    if (worldViewIndex <= 0)
+        return false;
+    return getWorldViewProjection(worldViewIndex)[1][1] < .1f;
+}
