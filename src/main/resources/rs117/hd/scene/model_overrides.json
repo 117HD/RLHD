@@ -87604,7 +87604,9 @@
     "objectIds": [
       "TARNISHED_PIRATE_THIEVING_CHEST_CROWN_JEWEL",
       "TARNISHED_PIRATE_THIEVING_CHEST_SHIMMERING_ATOLL",
-      "TARNISHED_PIRATE_THIEVING_CHEST_OPEN"
+      "TARNISHED_PIRATE_THIEVING_CHEST_OPEN",
+      "RUSTY_PIRATE_THIEVING_CHEST_DOGNOSE",
+      "RUSTY_PIRATE_THIEVING_CHEST_OPEN"
     ],
     "colorOverrides": [
       {
@@ -105520,6 +105522,14 @@
     "objectIds": [
       "KARUULM_LAVABUBBLES",
       "KARUULM_LAVA_GAS"
+    ]
+  },
+  {
+    "description": "Crab Quest - Quest Start Sand",
+    "uvType": "BOX",
+    "baseMaterial": "SAND_4",
+    "objectIds": [
+      "ENAKH_TEMPLE_SAND_PILE1"
     ]
   }
 ]
