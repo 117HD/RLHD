@@ -16,13 +16,10 @@ struct SkyGradient {
     vec3 color;          // linear sRGB gradient + sun glow (before haze/stars/moon)
 };
 
-// The camera makes the perceived horizon about 5° below astronomical 0°.
-#define HORIZON_OFFSET 0.087
-
 SkyGradient computeSkyGradient(vec3 viewDir, bool includeSunGlow) {
     SkyGradient g;
 
-    g.sunDir = normalize(vec3(uboSky.sunDir.x, -uboSky.sunDir.y + HORIZON_OFFSET, uboSky.sunDir.z));
+    g.sunDir = normalize(vec3(uboSky.sunDir.x, -uboSky.sunDir.y + CELESTIAL_HORIZON_OFFSET, uboSky.sunDir.z));
     g.upAmount = -viewDir.y;
 
     // Fade the sun-facing bias near vertical views to avoid pinching.
@@ -59,7 +56,7 @@ SkyGradient computeSkyGradient(vec3 viewDir, bool includeSunGlow) {
     // Use multiply/sqrt equivalents of pow for the glow falloffs.
     // Below sunset, keep scattered sunlight at the perceived horizon. Its color and
     // disappearance are authored in sunGlow, independently of the sun disk's position.
-    vec3 glowDir = normalize(vec3(uboSky.sunDir.x, -max(0.0, uboSky.sunDir.y) + HORIZON_OFFSET, uboSky.sunDir.z));
+    vec3 glowDir = normalize(vec3(uboSky.sunDir.x, -max(0.0, uboSky.sunDir.y) + CELESTIAL_HORIZON_OFFSET, uboSky.sunDir.z));
     float sunDot = dot(viewDir, glowDir);
     if (includeSunGlow && sunDot > 0.0) {
         float s2 = sunDot * sunDot;
@@ -112,7 +109,7 @@ vec3 visibleSkyColor(SkyGradient sky, vec3 viewDir, float elapsedSeconds, float 
 vec3 foggedSkyColor(vec3 viewDir) {
     SkyGradient sky = computeSkyGradient(viewDir);
     vec3 color = visibleSkyColor(sky, viewDir, uboGlobal.elapsedTime, 1.0);
-    vec3 moonDir = normalize(vec3(uboSky.moonDir.x, -uboSky.moonDir.y + HORIZON_OFFSET, uboSky.moonDir.z));
+    vec3 moonDir = normalize(vec3(uboSky.moonDir.x, -uboSky.moonDir.y + CELESTIAL_HORIZON_OFFSET, uboSky.moonDir.z));
     float transmittance = skyFogTransmittance(sky.upAmount);
     return applySkyFog(color, transmittance) + skyFogGlow(viewDir, sky.sunDir, moonDir, transmittance);
 }

@@ -68,8 +68,13 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     float downDotNormals = -normals.y;
     float viewDotNormals = dot(viewDir, normals);
 
-    vec2 distortion = uvFlow * .00075;
-    float shadow = sampleShadowMap(IN.position, distortion, vec3(0.0), false, false);
+    vec3 distortion = mat3(uboGlobal.invLightProjectionMatrix) * vec3(uvFlow * .0015, 0);
+    vec3 lightAxis = uboGlobal.invLightProjectionMatrix[2].xyz;
+    vec2 surfaceDistortion = vec2(0);
+    if (abs(lightAxis.y) > .001 * length(lightAxis))
+        surfaceDistortion = distortion.xz - lightAxis.xz * (distortion.y / lightAxis.y);
+    vec3 shadowReceiver = IN.position + vec3(surfaceDistortion.x, 0, surfaceDistortion.y);
+    float shadow = sampleShadowMap(shadowReceiver, vec3(0, -1, 0), false, false, true);
     float inverseShadow = 1 - shadow;
 
     vec3 vSpecularStrength = vec3(waterType.specularStrength);
@@ -151,7 +156,17 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         vec3 diskViewDir = reflect(-viewDir, n);
         // Reduce only nebula emission to suit the deliberately strong legacy reflection.
         const float nebulaReflectionStrength = .25f;
-        SkySample sky = sampleSky(skyViewDir, diskViewDir, false, false, n, 0.07, nebulaReflectionStrength, WATER_SPECULAR_REFLECTIONS != 0);
+        SkySample sky = sampleSky(
+            skyViewDir,
+            diskViewDir,
+            false,
+            false,
+            n,
+            0.07,
+            nebulaReflectionStrength,
+            WATER_SPECULAR_REFLECTIONS != 0,
+            0
+        );
         surfaceColor = linearToSrgb(sky.background * finalFresnel);
         #if WATER_SPECULAR_REFLECTIONS
             // Only the active source has a shadow map. Do not shadow the other disk
@@ -159,10 +174,15 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
             vec3 sunDir = uboSky.sunDir * vec3(1, -1, 1);
             vec3 moonDir = uboSky.moonDir * vec3(1, -1, 1);
             bool moonOwnsShadowMap = dot(uboGlobal.lightDir, moonDir) > dot(uboGlobal.lightDir, sunDir);
+            vec3 shadowedReflection = moonOwnsShadowMap ?
+                sky.moon * uboSky.moonReflectionVisibility * uboSky.moonShadowVisibility : sky.sun;
+            float reflectionShadow = 0.0;
+            if (any(greaterThan(shadowedReflection, vec3(0.0))))
+                reflectionShadow = sampleShadowMap(shadowReceiver, vec3(0, -1, 0), false, false, false);
             celestialReflection =
-                sky.sun * (moonOwnsShadowMap ? 1.0 : inverseShadow) +
+                sky.sun * (moonOwnsShadowMap ? 1.0 : 1.0 - reflectionShadow) +
                 sky.moon * uboSky.moonReflectionVisibility *
-                    (moonOwnsShadowMap ? 1.0 - shadow * uboSky.moonShadowVisibility : 1.0);
+                    (moonOwnsShadowMap ? 1.0 - reflectionShadow * uboSky.moonShadowVisibility : 1.0);
         #endif
     } else if (finalFresnel < 0.5) {
         surfaceColor = mix(uboGlobal.waterColorDark, uboGlobal.waterColorMid, finalFresnel * 2);
