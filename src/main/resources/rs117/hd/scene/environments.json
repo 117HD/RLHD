@@ -431,15 +431,16 @@
     "windSpeed": 7,
     "windStrength": 26,
     "sky": {
-      "moonDiskColor": "#FF0000",
-      "moonDirectionalColor": "#FF6D6D",
+      "moonDiskColor": "#FF3D25",
+      "moonDiskStrength": 2,
       "skyVisibility": 0.32,
+      "auroraVisibility": 0,
       "sunStrength": 0.02,
+      "sunriseSunsetStrength": 0.2,
       "skyFogDensity": 0.02,
       "nightHorizonColor": "#0F070E",
       "nightHorizonStrength": 1,
-      "starVisibility": 0.229,
-      "auroraVisibility": 0.229
+      "starVisibility": 0.229
     }
   },
   {
@@ -477,15 +478,16 @@
     "windSpeed": 7,
     "windStrength": 26,
     "sky": {
-      "moonDiskColor": "#FF0000",
-      "moonDirectionalColor": "#FF6D6D",
+      "moonDiskColor": "#FF3D25",
+      "moonDiskStrength": 2,
       "skyVisibility": 0.32,
+      "auroraVisibility": 0,
       "sunStrength": 0.02,
+      "sunriseSunsetStrength": 0.2,
       "skyFogDensity": 0.02,
       "nightHorizonColor": "#0F070E",
       "nightHorizonStrength": 1,
-      "starVisibility": 0.229,
-      "auroraVisibility": 0.229
+      "starVisibility": 0.229
     }
   },
   {
