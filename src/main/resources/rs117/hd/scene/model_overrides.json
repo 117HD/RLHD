@@ -36469,7 +36469,8 @@
       "FAI_LEAFLESS_BUSH_SMALL_02",
       "DOV_HUNTING_PLANT2",
       "DOV_HUNTING_PLANT2_OP",
-      "HW17_JARVIS_BUSH"
+      "HW17_JARVIS_BUSH",
+      "CRAB_ENAKH_LEAFLESSBUSH"
     ],
     "uvType": "BOX",
     "uvOrientation": 600
@@ -105530,6 +105531,106 @@
     "baseMaterial": "SAND_4",
     "objectIds": [
       "ENAKH_TEMPLE_SAND_PILE1"
+    ]
+  },
+  {
+    "description": "Crab Quest - Floatsam",
+    "uvType": "BOX",
+    "baseMaterial": "SAND_4",
+    "npcIds": [
+      "CRAB_FLOATSAM_1",
+      "CRAB_FLOATSAM_2",
+      "CRAB_FLOATSAM_3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 0 || h == 5 && s == 1",
+        "baseMaterial": "METALLIC_1_SMOOTH"
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.35,
+        "uvOrientationY": 256
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "h == 12",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      },
+      {
+        "colors": "h == 37 && a < 255",
+        "baseMaterial": "NONE",
+        "hideAsWaterEffect": true
+      }
+    ]
+  },
+  {
+    "description": "Crab Quest - Coconut",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "baseMaterial": "FUR",
+    "objectIds": [
+      "CRAB_DRUMS"
+    ]
+  },
+  {
+    "description": "Crab Quest - Bass Guitar",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "baseMaterial": "FUR",
+    "objectIds": [
+      "CRAB_BASS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 0 || h == 5 && s == 1",
+        "baseMaterial": "METALLIC_1_SMOOTH"
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.35,
+        "uvOrientation": -256
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Crab Quest - Note Shells",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "baseMaterial": "GRUNGE_3_SMOOTH",
+    "objectIds": [
+      "CRAB_SHELL_1",
+      "CRAB_SHELL_2",
+      "CRAB_SHELL_3",
+      "CRAB_SHELL_4",
+      "CRAB_SHELL_5",
+      "CRAB_SHELL_6",
+      "CRAB_SHELL_7"
     ]
   }
 ]
