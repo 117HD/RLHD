@@ -991,7 +991,7 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	String KEY_WATER_SPECULAR_REFLECTIONS = "waterSunReflection";
+	String KEY_WATER_SPECULAR_REFLECTIONS = "waterSpecularReflection";
 	@ConfigItem(
 		keyName = KEY_WATER_SPECULAR_REFLECTIONS,
 		name = "Water sun & moon reflections",
