@@ -1594,7 +1594,7 @@
       "parent": "VOID",
       "moonVisibility": 0,
       "nebulaVisibility": 0,
-      "horizonWidth": 15,
+      "horizonWidth": 45,
       "profile": {
         "horizon": [
           {
