@@ -44,23 +44,35 @@
 #endif
 
 #if SHADOW_MODE != SHADOW_MODE_OFF
-float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal, bool applyBias, bool applyNormalBias) {
-    if (!uboGlobal.castsShadows)
-        return 0.f;
-
-    vec4 shadowPos = uboGlobal.lightProjectionMatrix * vec4(fragPos, 1);
-    shadowPos.xyz /= shadowPos.w;
-
+float shadowDistanceFade(vec3 fragPos) {
     // Fade out shadows near the shadow map edges
     #if ZONE_RENDERER
         float fadeEnd = max(uboGlobal.shadowDrawDistance, 1.0);
         float fadeStart = max(fadeEnd * .5, fadeEnd - 10.0 * TILE_SIZE);
-        float fadeOut = smoothstep(fadeStart, fadeEnd, length(fragPos - uboGlobal.cameraPos));
+        return smoothstep(fadeStart, fadeEnd, length(fragPos - uboGlobal.cameraPos));
     #else
-        float fadeOut = smoothstep(.75, 1., dot(shadowPos.xy, shadowPos.xy));
+        vec4 shadowPos = uboGlobal.lightProjectionMatrix * vec4(fragPos, 1);
+        vec2 ndc = shadowPos.xy / shadowPos.w;
+        return smoothstep(.75, 1., dot(ndc, ndc));
     #endif
+}
+
+float sampleShadowMap(
+    vec3 fragPos,
+    vec3 surfaceNormal,
+    bool preventSelfShadowing,
+    bool applyNormalBias,
+    bool applyDistanceFade
+) {
+    if (!uboGlobal.castsShadows)
+        return 0.f;
+
+    float fadeOut = applyDistanceFade ? shadowDistanceFade(fragPos) : 0.0;
     if (fadeOut >= 1)
         return 0.f;
+
+    vec4 shadowPos = uboGlobal.lightProjectionMatrix * vec4(fragPos, 1);
+    shadowPos.xyz /= shadowPos.w;
 
     // NDC to texture space
     shadowPos.xyz += 1;
@@ -68,15 +80,14 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal, bool ap
     vec2 shadowMapSize = vec2(textureSize(shadowMap, 0));
     float bias = 0.0;
     float depthPrecisionBias = 0.0;
-    vec2 receiverDepthPerTexel = vec2(0.0);
-    if (applyBias) {
-        vec3 receiverNormal = surfaceNormal * mat3(uboGlobal.invLightProjectionMatrix);
-        // A parallel receiver has unbounded slope. Keep it finite before
-        // the per-tap correction is bounded, including zero-offset taps.
-        receiverNormal.z = (receiverNormal.z < 0.0 ? -1.0 : 1.0) * max(abs(receiverNormal.z), 1e-7);
-        // Keep the actual plane slope for each filter tap; clipping it creates self-shadowing.
-        receiverDepthPerTexel = -receiverNormal.xy / receiverNormal.z / shadowMapSize;
+    vec3 receiverNormal = surfaceNormal * mat3(uboGlobal.invLightProjectionMatrix);
+    // A parallel receiver has unbounded slope. Keep it finite before
+    // the per-tap correction is bounded, including zero-offset taps.
+    receiverNormal.z = (receiverNormal.z < 0.0 ? -1.0 : 1.0) * max(abs(receiverNormal.z), 1e-7);
+    // Filtering follows the geometric receiver plane
+    vec2 receiverDepthPerTexel = -receiverNormal.xy / receiverNormal.z / shadowMapSize;
 
+    if (preventSelfShadowing) {
         // Move the receiver plane toward the light along its normal.
         // Shift XY as well as depth so every filter tap evaluates the displaced plane.
         if (applyNormalBias) {
@@ -92,7 +103,6 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal, bool ap
         // Cover one truncated depth step plus a step of rounding margin, independently of resolution
         depthPrecisionBias = 2.0 / float(SHADOW_DEPTH_MAX);
     }
-    shadowPos.xy += distortion;
     shadowPos.xy = clamp(shadowPos.xy, 0, 1);
     vec4 receiverPlane = vec4(shadowPos.xy * shadowMapSize, receiverDepthPerTexel);
 
@@ -119,7 +129,8 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal, bool ap
                     terrainShadowMap, false, shadowPos.z - terrainBias, shadowPos, terrainReceiverPlane, fragPos);
             #else
                 // Hardware PCF shares one reference depth across its bilinear footprint
-                terrainBias += dot(abs(terrainReceiverPlane.zw), vec2(1.0));
+                if (preventSelfShadowing)
+                    terrainBias += dot(abs(terrainReceiverPlane.zw), vec2(1.0));
                 float terrainShadow = sampleHardwareShadow(
                     terrainShadowMap, shadowPos.z - terrainBias, shadowPos, terrainReceiverPlane);
             #endif
@@ -130,5 +141,5 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, vec3 surfaceNormal, bool ap
     return shadow * (1 - fadeOut);
 }
 #else
-#define sampleShadowMap(fragPos, distortion, surfaceNormal, applyBias, applyNormalBias) 0
+#define sampleShadowMap(fragPos, surfaceNormal, preventSelfShadowing, applyNormalBias, applyDistanceFade) 0.0
 #endif
