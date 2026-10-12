@@ -38,11 +38,20 @@ float celestialHorizonFade(float viewUpAmount, float bodyUpAmount) {
 // Camera projection correction is for direct viewing only, never reflected rays.
 // diskViewDir can follow stronger waves than viewDir for artistic water reflections.
 // roughness is the RMS slope of unresolved waves; normal is their mean normal.
-SkySample sampleSky(vec3 viewDir, vec3 diskViewDir, bool correctProjection, bool toneMap, vec3 normal, float roughness, float nebulaStrength) {
+SkySample sampleSky(
+    vec3 viewDir,
+    vec3 diskViewDir,
+    bool correctProjection,
+    bool toneMap,
+    vec3 normal,
+    float roughness,
+    float nebulaStrength,
+    bool includeSunGlow
+) {
     if (!uboSky.enabled)
         return SkySample(uboGlobal.fogColor, vec3(0.0), vec3(0.0));
 
-    SkyGradient sky = computeSkyGradient(viewDir);
+    SkyGradient sky = computeSkyGradient(viewDir, includeSunGlow);
     // A slope perturbation rotates the reflected ray by 2*slope in the
     // incidence plane, and by 2*slope*cos(incidence) across it. Projection
     // onto the water then produces the long reflection at grazing angles.
@@ -389,6 +398,6 @@ SkySample sampleSky(vec3 viewDir, vec3 diskViewDir, bool correctProjection, bool
 }
 
 vec3 sampleSky(vec3 viewDir, bool correctProjection, bool toneMap) {
-    SkySample sky = sampleSky(viewDir, viewDir, correctProjection, toneMap, vec3(0, -1, 0), 0.0, 1.0);
+    SkySample sky = sampleSky(viewDir, viewDir, correctProjection, toneMap, vec3(0, -1, 0), 0.0, 1.0, true);
     return sky.background + sky.sun + sky.moon;
 }

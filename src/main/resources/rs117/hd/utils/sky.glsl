@@ -19,7 +19,7 @@ struct SkyGradient {
 // The camera makes the perceived horizon about 5° below astronomical 0°.
 #define HORIZON_OFFSET 0.087
 
-SkyGradient computeSkyGradient(vec3 viewDir) {
+SkyGradient computeSkyGradient(vec3 viewDir, bool includeSunGlow) {
     SkyGradient g;
 
     g.sunDir = normalize(vec3(uboSky.sunDir.x, -uboSky.sunDir.y + HORIZON_OFFSET, uboSky.sunDir.z));
@@ -61,7 +61,7 @@ SkyGradient computeSkyGradient(vec3 viewDir) {
     // disappearance are authored in sunGlow, independently of the sun disk's position.
     vec3 glowDir = normalize(vec3(uboSky.sunDir.x, -max(0.0, uboSky.sunDir.y) + HORIZON_OFFSET, uboSky.sunDir.z));
     float sunDot = dot(viewDir, glowDir);
-    if (sunDot > 0.0) {
+    if (includeSunGlow && sunDot > 0.0) {
         float s2 = sunDot * sunDot;
         float s4 = s2 * s2;
         float s8 = s4 * s4;
@@ -78,6 +78,10 @@ SkyGradient computeSkyGradient(vec3 viewDir) {
     }
 
     return g;
+}
+
+SkyGradient computeSkyGradient(vec3 viewDir) {
+    return computeSkyGradient(viewDir, true);
 }
 
 vec3 blendSkyBackground(vec3 gradient, vec3 background, float amount) {
