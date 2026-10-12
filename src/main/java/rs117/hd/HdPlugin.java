@@ -463,7 +463,7 @@ public class HdPlugin extends Plugin {
 
 	@Getter
 	private boolean isPluginStopPending;
-	private Throwable shutdownException;
+	private Throwable pluginStopReason;
 	@Getter
 	private boolean isActive;
 	private boolean lwjglInitialized;
@@ -849,14 +849,16 @@ public class HdPlugin extends Plugin {
 		});
 	}
 
-	public void requestPluginStop() { requestPluginStop(null); }
+	public void requestPluginStop(String message) {
+		requestPluginStop(message, new Throwable());
+	}
 
-	public void requestPluginStop(Throwable ex) {
+	public void requestPluginStop(String message, Throwable reason) {
 		if (isPluginStopPending)
 			return;
-		log.debug("Requesting plugin to stop when safe");
 		isPluginStopPending = true;
-		shutdownException = ex;
+		pluginStopReason = new RuntimeException(message, reason);
+		log.error("Scheduling plugin stop due to:", pluginStopReason);
 	}
 
 	private boolean handleShutdownRequest() {
@@ -864,23 +866,21 @@ public class HdPlugin extends Plugin {
 			return false;
 
 		try {
-			log.debug("Shutdown has been requested, stopping plugin");
+			log.debug("Stopping plugin...");
 			stopPlugin();
 
-			final Throwable shutdownException = this.shutdownException;
-			if (shutdownException != null) {
+			Throwable ex = pluginStopReason;
+			if (ex != null) {
 				clientThread.invoke((Runnable) () -> {
 					log.debug("Reporting exception to RuneLite");
-					RuntimeException reported = new RuntimeException("117HD - Shutdown caused by Exception: " + shutdownException.getMessage(), shutdownException);
-					reported.setStackTrace(shutdownException.getStackTrace());
-					throw reported;
+					throw new RuntimeException("117 HD shutdown", ex);
 				});
 			}
 
 			return true;
 		} finally {
 			isPluginStopPending = false;
-			shutdownException = null;
+			pluginStopReason = null;
 		}
 	}
 
@@ -2142,7 +2142,7 @@ public class HdPlugin extends Plugin {
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
-		if(handleShutdownRequest())
+		if (handleShutdownRequest())
 			return;
 
 		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
