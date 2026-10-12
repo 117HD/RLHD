@@ -574,10 +574,16 @@ void main() {
             if (combinedFog > 1e-4) {
                 vec3 fogViewDir = normalize(IN.position - uboGlobal.cameraPos);
                 vec3 distanceFogColor = foggedSkyColor(fogViewDir);
+                #if RS3_HIGH_CONTRAST && RS3_HIGH_CONTRAST_SKY
+                    distanceFogColor = srgbToLinear(applyRs3HighContrast(ENTITY_TERRAIN, linearToSrgb(distanceFogColor)));
+                #endif
                 if (groundFog > 1e-4 && fogAmount < 1.0) {
                     // Approximate reduced nighttime color sensitivity without changing luminance.
                     vec3 nightFogColor = mix(uboSky.groundFogLight,
                         vec3(linearSrgbLuminance(uboSky.groundFogLight)), 0.5);
+                    #if RS3_HIGH_CONTRAST && RS3_HIGH_CONTRAST_SKY
+                        nightFogColor = srgbToLinear(applyRs3HighContrast(ENTITY_TERRAIN, linearToSrgb(nightFogColor)));
+                    #endif
                     // Preserve the regular fog color by day; introduce adapted local
                     // illumination only through civil dusk, from sun altitude 0 to -6 degrees.
                     vec3 groundFogColor = mix(distanceFogColor, nightFogColor, nightFogBlend);
@@ -589,7 +595,11 @@ void main() {
                     outputColor.rgb = mix(outputColor.rgb, linearToSrgb(distanceFogColor), fogAmount);
             }
         } else {
-            outputColor.rgb = mix(outputColor.rgb, linearToSrgb(uboGlobal.fogColor), combinedFog);
+            vec3 flatFogColor = linearToSrgb(uboGlobal.fogColor);
+            #if RS3_HIGH_CONTRAST && RS3_HIGH_CONTRAST_SKY
+                flatFogColor = applyRs3HighContrast(ENTITY_TERRAIN, flatFogColor);
+            #endif
+            outputColor.rgb = mix(outputColor.rgb, flatFogColor, combinedFog);
         }
     }
 

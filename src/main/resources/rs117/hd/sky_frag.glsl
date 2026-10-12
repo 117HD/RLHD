@@ -23,7 +23,7 @@ void main() {
 
     vec3 srgb = linearToSrgb(color);
     #if RS3_HIGH_CONTRAST && RS3_HIGH_CONTRAST_SKY
-        srgb = vec3(1.0, 0.0, 0.0); // TEMP DEBUG: should turn the whole sky solid red
+        srgb = applyRs3HighContrast(ENTITY_TERRAIN, srgb);
     #endif
     srgb = applyColorAdjustments(srgb);
     srgb = applyOutputCorrection(srgb);
