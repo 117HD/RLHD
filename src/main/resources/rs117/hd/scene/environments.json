@@ -2878,6 +2878,7 @@
     "area": "MAGGOT_KING_ARENA",
     "ambientColor": "#FFFFFF",
     "ambientStrength": 1,
+    "nightExposure": 2.6,
     "fogDepth": 50,
     "windAngle": 40,
     "windSpeed": 15,
@@ -2889,7 +2890,8 @@
       "sunStrength": 0.01,
       "sunriseSunsetStrength": 0.2,
       "skyFogDensity": 0.16,
-      "nightHorizonColor": "#0F070E",
+      "nightHorizonColor": "#FF0000",
+      "nightHorizonStrength": 0.01,
       "starVisibility": 0.755
     }
   },
@@ -2962,7 +2964,8 @@
       "sunStrength": 0.01,
       "sunriseSunsetStrength": 0.2,
       "skyFogDensity": 0.16,
-      "nightHorizonColor": "#0F070E",
+      "nightHorizonColor": "#FF0000",
+      "nightHorizonStrength": 0.01,
       "starVisibility": 0.755
     }
   },
