@@ -64,15 +64,15 @@ void main() {
     ObjectWindSample windSample;
     #if WIND_DISPLACEMENT
     {
-        float modelNoise = noise((vec2(minfo.x, minfo.z) + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION);
+        float modelNoise = noise((vec2(minfo.x, minfo.z) + vec2(uboCompute.windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION);
         float angle = modelNoise * (PI / 2.0);
         float c = cos(angle);
         float s = sin(angle);
         float y = minfo.y >> 16;
         float height = minfo.y & 0xffff;
 
-        windSample.direction = normalize(vec3(windDirectionX * c + windDirectionZ * s, 0.0, -windDirectionX * s + windDirectionZ * c));
-        windSample.heightBasedStrength = saturate((abs(y) + height) / windCeiling) * windStrength;
+        windSample.direction = normalize(vec3(uboCompute.windDirectionX * c + uboCompute.windDirectionZ * s, 0.0, -uboCompute.windDirectionX * s + uboCompute.windDirectionZ * c));
+        windSample.heightBasedStrength = saturate((abs(y) + height) / uboCompute.windCeiling) * uboCompute.windStrength;
         windSample.displacement = windSample.direction.xyz * (windSample.heightBasedStrength * modelNoise);
     }
     #endif

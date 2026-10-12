@@ -54,6 +54,10 @@
         "type": "boolean",
         "description": "Indicates whether the texture includes transparency."
       },
+      "doubleSidedFaces": {
+        "type": "boolean",
+        "description": "Whether triangles should be visible when viewed from either side. Defaults to false."
+      },
       "overrideBaseColor": {
         "type": "boolean",
         "description": "Whether the material's color texture should override the colors of the underlying model."
@@ -65,6 +69,11 @@
       "brightness": {
         "type": "number",
         "description": "A brightness multiplier for the material's color."
+      },
+      "subsurface": {
+        "type": "number",
+        "minimum": 0,
+        "description": "Crude approximation of subsurface scattering, with a fixed exponent. Strength above 1 intentionally amplifies light."
       },
       "displacementScale": {
         "type": "number",

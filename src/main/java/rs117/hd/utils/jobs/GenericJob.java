@@ -14,7 +14,7 @@ public final class GenericJob extends Job {
 		GenericJob newTask = POOL.acquire();
 		newTask.context = context;
 		newTask.runnable = runnable;
-		newTask.isReleased = false;
+		newTask.resetReleased();
 
 		return newTask;
 	}

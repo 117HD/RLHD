@@ -153,6 +153,10 @@
         "type": "boolean",
         "description": "Whether the model receive shadows cast by other objects. Defaults to true."
       },
+      "doubleSidedFaces": {
+        "type": "boolean",
+        "description": "Whether triangles should be visible when viewed from either side. Defaults to false."
+      },
       "terrainVertexSnap": {
         "type": "boolean",
         "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
@@ -172,6 +176,10 @@
       "shadowOpacityThreshold": {
         "type": "number",
         "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
+      },
+      "shadowNormalBias": {
+        "type": "boolean",
+        "description": "Whether to offset shadow receivers along their surface normal to prevent self-shadowing. Defaults to false."
       },
       "tzHaarRecolorType": {
         "type": "string",
@@ -282,6 +290,10 @@
         "type": "integer",
         "description": "Vertex colors with a higher alpha value value will be clamped to the specified max alpha value. Defaults to 255, where 0 is fully transparent, 255 is fully opaque."
       },
+      "heightOffset": {
+        "type": "integer",
+        "description": "Height offset to apply to the model, where negative values move the model upward."
+      },
       "materialOverrides": {
         "type": "object",
         "description": "A subset of options can be tweaked separately for specific materials of the model.",
@@ -363,6 +375,10 @@
               "type": "boolean",
               "description": "Whether the model receive shadows cast by other objects. Defaults to true."
             },
+            "doubleSidedFaces": {
+              "type": "boolean",
+              "description": "Whether triangles should be visible when viewed from either side. Defaults to false."
+            },
             "terrainVertexSnap": {
               "type": "boolean",
               "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
@@ -382,6 +398,15 @@
             "shadowOpacityThreshold": {
               "type": "number",
               "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
+            },
+            "shadowNormalBias": {
+              "type": "boolean",
+              "description": "Whether to offset shadow receivers along their surface normal to prevent self-shadowing. Defaults to false."
+            },
+            "inheritTileColorType": {
+              "type": "string",
+              "description": "Whether to inherit color from the overlay or underlay of the tile beneath. Defaults to NONE.",
+              "enum": [ "NONE", "OVERLAY", "UNDERLAY" ]
             },
             "windDisplacementMode": {
               "type": "string",
@@ -566,6 +591,10 @@
               "type": "boolean",
               "description": "Whether the model receive shadows cast by other objects. Defaults to true."
             },
+            "doubleSidedFaces": {
+              "type": "boolean",
+              "description": "Whether triangles should be visible when viewed from either side. Defaults to false.2"
+            },
             "terrainVertexSnap": {
               "type": "boolean",
               "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
@@ -585,6 +614,15 @@
             "shadowOpacityThreshold": {
               "type": "number",
               "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
+            },
+            "shadowNormalBias": {
+              "type": "boolean",
+              "description": "Whether to offset shadow receivers along their surface normal to prevent self-shadowing. Defaults to false."
+            },
+            "inheritTileColorType": {
+              "type": "string",
+              "description": "Whether to inherit color from the overlay or underlay of the tile beneath. Defaults to NONE.",
+              "enum": [ "NONE", "OVERLAY", "UNDERLAY" ]
             },
             "windDisplacementMode": {
               "type": "string",

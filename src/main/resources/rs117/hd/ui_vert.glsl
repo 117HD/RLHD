@@ -44,6 +44,6 @@ void main() {
     fUv = vec2(vUv.x, 1.0 - vUv.y);
 
     #if UI_SCALING_MODE == UI_SCALING_MODE_XBR
-        xbrTable = xbr_vert(fUv, sourceDimensions);
+        xbrTable = xbr_vert(fUv, uboUi.sourceDimensions);
     #endif
 }

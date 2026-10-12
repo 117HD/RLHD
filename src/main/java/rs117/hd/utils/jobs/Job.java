@@ -2,7 +2,6 @@ package rs117.hd.utils.jobs;
 
 import com.google.inject.Injector;
 import java.util.concurrent.atomic.AtomicBoolean;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -17,8 +16,7 @@ public abstract class Job {
 	protected final AtomicBoolean queued = new AtomicBoolean();
 	protected JobGroup<Job> group;
 
-	@Getter
-	protected boolean isReleased;
+	private final AtomicBoolean released = new AtomicBoolean();
 
 	boolean executeAsync = true;
 	JobHandle handle;
@@ -90,12 +88,22 @@ public abstract class Job {
 	}
 
 	public final void release() {
-		if (isReleased)
+		// Only release once
+		if (!released.compareAndSet(false, true))
 			return;
-		isReleased = true;
+
 		queued.set(false);
 		waitForCompletion();
 		onReleased();
+	}
+
+	public final boolean isReleased() {
+		return released.get();
+	}
+
+	protected final void resetReleased() {
+		// Only the new owner may reset this after acquiring the job from the pool
+		released.set(false);
 	}
 
 	public final boolean isDone() {
