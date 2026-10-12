@@ -96,6 +96,7 @@
       "sunStrength": 0.05,
       "skyFogDensity": 0,
       "nightHorizonColor": "#060810",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.019,
       "auroraVisibility": 0.019
     }
@@ -118,6 +119,7 @@
       "sunStrength": 0.1,
       "skyFogDensity": 0.02,
       "nightHorizonColor": "#070912",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.215,
       "auroraVisibility": 0.215
     }
@@ -143,6 +145,7 @@
       "sunStrength": 0.05,
       "skyFogDensity": 0,
       "nightHorizonColor": "#060911",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.144,
       "auroraVisibility": 0.144
     }
@@ -434,6 +437,7 @@
       "sunStrength": 0.02,
       "skyFogDensity": 0.02,
       "nightHorizonColor": "#0F070E",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.229,
       "auroraVisibility": 0.229
     }
@@ -479,6 +483,7 @@
       "sunStrength": 0.02,
       "skyFogDensity": 0.02,
       "nightHorizonColor": "#0F070E",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.229,
       "auroraVisibility": 0.229
     }
@@ -632,7 +637,8 @@
       "skyFogDensity": 0,
       "moonVisibility": 0.35,
       "sunStrength": 0.025,
-      "nightHorizonColor": "#080A12"
+      "nightHorizonColor": "#080A12",
+      "nightHorizonStrength": 1
     }
   },
   {
@@ -676,6 +682,7 @@
       "sunriseSunsetStrength": 0.2,
       "skyFogDensity": 0.02,
       "nightHorizonColor": "#0F070E",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.229
     }
   },
@@ -699,6 +706,7 @@
       "sunStrength": 0.04,
       "skyFogDensity": 0,
       "nightHorizonColor": "#080A13",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.049,
       "auroraVisibility": 0.049
     }
@@ -749,6 +757,7 @@
       "skyVisibility": 0.94,
       "skyFogDensity": 0.06,
       "nightHorizonColor": "#32060C",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.838,
       "auroraVisibility": 0
     }
@@ -858,6 +867,7 @@
       "sunStrength": 0.01,
       "skyFogDensity": 0,
       "nightHorizonColor": "#080A12",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.182,
       "auroraVisibility": 0.182
     }
@@ -913,7 +923,8 @@
       "sunStrength": 0.02,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.15,
-      "nightHorizonColor": "#060913"
+      "nightHorizonColor": "#060913",
+      "nightHorizonStrength": 1
     }
   },
   {
@@ -929,7 +940,8 @@
       "sunStrength": 0.02,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.13,
-      "nightHorizonColor": "#0C0F19"
+      "nightHorizonColor": "#0C0F19",
+      "nightHorizonStrength": 1
     }
   },
   {
@@ -967,7 +979,8 @@
       "moonDirectionalStrength": 2,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.16,
-      "nightHorizonColor": "#090B13"
+      "nightHorizonColor": "#090B13",
+      "nightHorizonStrength": 1
     }
   },
   {
@@ -1155,6 +1168,7 @@
       "sunStrength": 0.6,
       "skyFogDensity": 0.07,
       "nightHorizonColor": "#080A13",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.302,
       "auroraVisibility": 0.302
     }
@@ -1173,6 +1187,7 @@
       "sunStrength": 0.6,
       "skyFogDensity": 0.07,
       "nightHorizonColor": "#080A13",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.302,
       "auroraVisibility": 0.302
     }
@@ -1216,6 +1231,7 @@
       "sunStrength": 0.6,
       "skyFogDensity": 0.1,
       "nightHorizonColor": "#090B14",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.396,
       "auroraVisibility": 0.396
     }
@@ -1237,6 +1253,7 @@
       "sunStrength": 0.6,
       "skyFogDensity": 0.1,
       "nightHorizonColor": "#090B14",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.396,
       "auroraVisibility": 0.396
     }
@@ -1260,6 +1277,7 @@
       "sunStrength": 0.6,
       "skyFogDensity": 0.1,
       "nightHorizonColor": "#090B14",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.396,
       "auroraVisibility": 0.396
     }
@@ -1323,6 +1341,7 @@
       "sunStrength": 0.8,
       "skyFogDensity": 0.12,
       "nightHorizonColor": "#0B0D17",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.736,
       "auroraVisibility": 0.736
     }
@@ -1386,6 +1405,7 @@
       "sunStrength": 0.02,
       "skyFogDensity": 0,
       "nightHorizonColor": "#060810",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.144,
       "auroraVisibility": 0.144
     }
@@ -1408,6 +1428,7 @@
       "sunStrength": 0.02,
       "skyFogDensity": 0,
       "nightHorizonColor": "#060810",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.144,
       "auroraVisibility": 0.144
     }
@@ -1463,6 +1484,7 @@
       "sunStrength": 0.02,
       "skyFogDensity": 0,
       "nightHorizonColor": "#060810",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.144,
       "auroraVisibility": 0.144
     }
@@ -1534,6 +1556,7 @@
       "sunStrength": 0.1,
       "skyFogDensity": 0.02,
       "nightHorizonColor": "#070912",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.215,
       "auroraVisibility": 0.215
     }
@@ -1687,7 +1710,8 @@
       "sunStrength": 0.1,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.13,
-      "nightHorizonColor": "#0C0F19"
+      "nightHorizonColor": "#0C0F19",
+      "nightHorizonStrength": 1
     }
   },
   {
@@ -1707,7 +1731,8 @@
       "sunStrength": 0.02,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.13,
-      "nightHorizonColor": "#0C0F19"
+      "nightHorizonColor": "#0C0F19",
+      "nightHorizonStrength": 1
     }
   },
   {
@@ -1724,6 +1749,7 @@
       "sunStrength": 0.1,
       "skyFogDensity": 0.02,
       "nightHorizonColor": "#070912",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.215,
       "auroraVisibility": 0.215
     }
@@ -1749,6 +1775,7 @@
       "sunStrength": 0.1,
       "skyFogDensity": 0.03,
       "nightHorizonColor": "#0C0F19",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.203,
       "auroraVisibility": 0.203
     }
@@ -1767,7 +1794,8 @@
       "sunStrength": 0.1,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.13,
-      "nightHorizonColor": "#0C0F19"
+      "nightHorizonColor": "#0C0F19",
+      "nightHorizonStrength": 1
     }
   },
   {
@@ -1786,6 +1814,7 @@
       "skyColorTakeoverAngle": 10,
       "skyFogDensity": 0,
       "nightHorizonColor": "#05070F",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.049,
       "auroraVisibility": 0.049
     }
@@ -1803,7 +1832,8 @@
     "sky": {
       "skyVisibility": 0.99,
       "skyFogDensity": 0.13,
-      "nightHorizonColor": "#0C0F19"
+      "nightHorizonColor": "#0C0F19",
+      "nightHorizonStrength": 1
     }
   },
   {
@@ -1819,6 +1849,7 @@
       "sunStrength": 0.8,
       "skyFogDensity": 0.03,
       "nightHorizonColor": "#0C0F19",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.203,
       "auroraVisibility": 0.203
     }
@@ -1961,6 +1992,7 @@
       "sunStrength": 0.02,
       "skyFogDensity": 0,
       "nightHorizonColor": "#060810",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.144,
       "auroraVisibility": 0.144
     }
@@ -1978,6 +2010,7 @@
       "sunStrength": 0.02,
       "skyFogDensity": 0,
       "nightHorizonColor": "#060810",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.144,
       "auroraVisibility": 0.144
     }
@@ -2002,6 +2035,7 @@
       "sunStrength": 0.02,
       "skyFogDensity": 0,
       "nightHorizonColor": "#060810",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.144,
       "auroraVisibility": 0.144
     }
@@ -2599,6 +2633,7 @@
       "sunStrength": 0.6,
       "skyFogDensity": 0.1,
       "nightHorizonColor": "#090B14",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.396,
       "auroraVisibility": 0.396
     }
@@ -2618,6 +2653,7 @@
       "sunStrength": 0.6,
       "skyFogDensity": 0.1,
       "nightHorizonColor": "#090B14",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.396,
       "auroraVisibility": 0.396
     }
@@ -2637,6 +2673,7 @@
       "sunStrength": 0.6,
       "skyFogDensity": 0.1,
       "nightHorizonColor": "#090B14",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.396,
       "auroraVisibility": 0.396
     }
@@ -2837,6 +2874,7 @@
       "sunriseSunsetStrength": 0.2,
       "moonVisibility": 0,
       "nightHorizonColor": "#0F070E",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.604,
       "skyFogColor": "#000000",
       "skyFogColorMix": 1,
@@ -2861,6 +2899,7 @@
       "sunriseSunsetStrength": 0.2,
       "moonVisibility": 0,
       "nightHorizonColor": "#0F070E",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.604,
       "skyFogColor": "#000000",
       "skyFogColorMix": 1,
@@ -2938,6 +2977,7 @@
       "skyFogDensity": 0,
       "moonVisibility": 0,
       "nightHorizonColor": "#0F070E",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.604
     },
     "fogDepth": 17.5,
@@ -3016,6 +3056,7 @@
       "sunStrength": 0.6,
       "skyFogDensity": 0.1,
       "nightHorizonColor": "#090B14",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.396,
       "auroraVisibility": 0.396
     }
@@ -3042,6 +3083,7 @@
       "sunStrength": 0.025,
       "skyFogDensity": 0,
       "nightHorizonColor": "#080A12",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.182,
       "auroraVisibility": 0.182
     }
@@ -3061,7 +3103,8 @@
       "sunStrength": 0.02,
       "skyVisibility": 0.99,
       "skyFogDensity": 0.15,
-      "nightHorizonColor": "#060913"
+      "nightHorizonColor": "#060913",
+      "nightHorizonStrength": 1
     }
   },
   {
@@ -3079,6 +3122,7 @@
       "sunStrength": 0.6,
       "skyFogDensity": 0.07,
       "nightHorizonColor": "#080A13",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.302,
       "auroraVisibility": 0.302
     }
@@ -3102,6 +3146,7 @@
       "sunStrength": 0.5,
       "skyFogDensity": 0.1,
       "nightHorizonColor": "#0C0F19",
+      "nightHorizonStrength": 1,
       "starVisibility": 0.376,
       "auroraVisibility": 0.376
     }
