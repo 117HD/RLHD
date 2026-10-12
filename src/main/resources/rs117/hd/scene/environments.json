@@ -3049,19 +3049,19 @@
   {
     "area": "PLAYER_OWNED_HOUSE_DEATH",
     "isPohTheme": true,
-    "ambientColor": "#999189",
+    "nightExposure": 1.2,
+    "lightningEffects": true,
+    "ambientColor": "#615c57",
     "ambientStrength": 3,
     "directionalColor": "#ffbcb7",
-    "directionalStrength": 0.75,
-    "fogColor": "#000000",
-    "fogDepth": 25,
+    "directionalStrength": 0.5,
+    "fogColor": "#0c0b0a",
+    "fogDepth": 45,
     "sky": {
-      "parent": "NIGHT",
-      "skyVisibility": 0.57,
-      "skyFogDensity": 0.1,
-      "nightHorizonColor": "#0C0F19",
-      "starVisibility": 0.376,
-      "auroraVisibility": 0.376
+      "sunStrength": 0.02,
+      "skyVisibility": 0.99,
+      "skyFogDensity": 0.15,
+      "nightHorizonColor": "#060913"
     }
   },
   {
