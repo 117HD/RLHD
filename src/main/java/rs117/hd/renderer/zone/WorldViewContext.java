@@ -255,7 +255,9 @@ public class WorldViewContext {
 				final int dx = camPosX - ((zx - offset) << 10);
 				final int dz = camPosZ - ((zz - offset) << 10);
 				z.dist = dx * dx + dz * dz;
-				z.alphaSortingJob.setup(camera, zx, zz);
+				// AlphaModel distances are relative to scene-local coordinates (matching the camera and zone distances),
+				// so the extended zone index must be converted back to a scene-local one.
+				z.alphaSortingJob.setup(camera, zx - offset, zz - offset);
 				alphaZones.add(z);
 			}
 		}

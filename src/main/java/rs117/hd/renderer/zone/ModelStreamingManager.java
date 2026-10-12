@@ -279,7 +279,7 @@ public class ModelStreamingManager {
 		final Zone.AlphaModel alphaModel = hasAlpha ?
 			zone.requestTempAlphaModel(
 				renderer.sceneCamera,
-				zx, zz,
+				zx - offset, zz - offset,
 				modelOverride,
 				Math.min(ctx.maxLevel, tileObject.getPlane()),
 				x & 1023,

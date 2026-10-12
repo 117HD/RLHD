@@ -731,7 +731,7 @@ public final class Zone implements Destructible {
 
 		alphaSortingJob.waitForCompletion();
 		if(alphaModelCount == 2) {
-			if(alphaModels.get(0).dist > alphaModels.get(1).dist)
+			if(alphaModels.get(0).dist < alphaModels.get(1).dist)
 				Collections.swap(alphaModels, 0, 1);
 			return;
 		}
@@ -740,7 +740,7 @@ public final class Zone implements Destructible {
 			alphaModelsKeys = new int[alphaModelCount];
 
 		for(int i = 0; i < alphaModelCount; i++)
-			alphaModelsKeys[i] = alphaModels.get(i).dist;
+			alphaModelsKeys[i] = -alphaModels.get(i).dist;
 
 		quickSortByKey(alphaModelsKeys, alphaModels, 0, alphaModelCount - 1);
 	}
