@@ -1039,9 +1039,9 @@ public class ZoneRenderer implements Renderer {
 					z.alphaSort();
 
 				if ((z.alphaLevelMask & (1 << level)) != 0) {
-					if (skyRenderer.castsShadows && !ctx.isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
+					if (skyRenderer.castsShadows && level == 0 && !ctx.isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 						directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
-						z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, shouldDrawRoofShadows);
+						z.renderAlphaShadows(directionalCmd, zx - offset, zz - offset, ctx, shouldDrawRoofShadows);
 					}
 
 					if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {

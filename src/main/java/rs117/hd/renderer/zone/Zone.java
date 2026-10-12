@@ -227,20 +227,20 @@ public class Zone implements Destructible {
 	public void unmap() {
 		assert client.isClientThread();
 
-		if (vboO != null)
-			vboO.unmap();
-		if (vboA != null)
-			vboA.unmap();
-		if (tboF != null)
-			tboF.unmap();
-
 		if (vboO != null) {
+			vboO.mapped().syncViews();
 			this.bufLen = vboO.mapped().byteView().position() / VERT_SIZE;
+			vboO.unmap();
 		}
 
 		if (vboA != null) {
+			vboA.mapped().syncViews();
 			this.bufLenA = vboA.mapped().byteView().position() / VERT_SIZE;
+			vboA.unmap();
 		}
+
+		if (tboF != null)
+			tboF.unmap();
 	}
 
 	private void setupVao(int vao, int buffer, int metadata) {
@@ -412,7 +412,6 @@ public class Zone implements Destructible {
 			return;
 
 		if (drawIdx > 0 && drawRanges[(drawIdx - 1) * 2 + 1] == start) {
-			// extend the previous range
 			drawRanges[(drawIdx - 1) * 2 + 1] = end;
 		} else if (drawIdx >= NUM_DRAW_RANGES) {
 			log.debug("draw ranges exhausted");
@@ -861,6 +860,58 @@ public class Zone implements Destructible {
 
 		if (collection != null)
 			collection.queue(eboAlphaOffset - eboAlphaStart);
+	}
+
+	void renderAlphaShadows(CommandBuffer cmd, int zx, int zz, WorldViewContext ctx, boolean includeRoof) {
+		drawIdx = 0;
+
+		if (glVaoA != 0 && bufLenA > 0 && tboF != null) {
+			lastDrawMode = STATIC_UNSORTED;
+			lastVao = glVaoA;
+			lastTboF = tboF.getTexId();
+			lastzx = zx;
+			lastzz = zz;
+			pushRange(0, bufLenA * (VERT_SIZE >> 2)); // pushRange works in ints, flush converts to verts
+			flush(cmd);
+		}
+
+		if (alphaModels.isEmpty())
+			return;
+
+		int minLevel = ctx.minLevel;
+		int currentLevel = ctx.level;
+		int maxLevel = ctx.maxLevel;
+		var hiddenRoofIds = ctx.hideRoofIds;
+		if (includeRoof) {
+			maxLevel = 3;
+			hiddenRoofIds = Collections.emptySet();
+		}
+
+		for (int i = 0; i < alphaModels.size(); i++) {
+			final AlphaModel m = alphaModels.get(i);
+
+			if ((m.flags & (AlphaModel.SKIP | AlphaModel.TEMP)) != 0 || m.vao == -1 || m.vao == glVaoA)
+				continue;
+
+			final AsyncCachedModel asyncModel = m.asyncModel;
+			if (asyncModel != null)
+				asyncModel.waitForCompletion();
+
+			if (m.level < minLevel || m.level > maxLevel ||
+				m.level > currentLevel && !hiddenRoofIds.isEmpty() && hiddenRoofIds.contains((int) m.rid))
+				continue;
+
+			int drawMode = m.isTemp() ? TEMP : STATIC_UNSORTED;
+			if (lastDrawMode != drawMode || lastVao != m.vao || lastTboF != m.tboF) {
+				flush(cmd);
+				lastDrawMode = drawMode;
+				lastVao = m.vao;
+				lastTboF = m.tboF;
+			}
+
+			pushRange(m.startpos, m.endpos);
+		}
+		flush(cmd);
 	}
 
 	private void flush(CommandBuffer cmd) {
