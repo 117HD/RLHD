@@ -39,12 +39,12 @@ public final class StaticAlphaSortingJob extends Job {
 
 		final int modelX = ((zx - m.zofx) << 10) + m.x;
 		final int modelZ = ((zz - m.zofz) << 10) + m.z;
-		minBoundX = min(minBoundX, modelX + m.minX);
-		maxBoundX = max(maxBoundX, modelX + m.maxX);
-		minBoundY = min(minBoundY, m.y + m.minY);
-		maxBoundY = max(maxBoundY, m.y + m.maxY);
-		minBoundZ = min(minBoundZ, modelZ + m.minZ);
-		maxBoundZ = max(maxBoundZ, modelZ + m.maxZ);
+		minBoundX = min(minBoundX, modelX - m.extentsX);
+		maxBoundX = max(maxBoundX, modelX + m.extentsX);
+		minBoundY = min(minBoundY, m.y - m.extentsY);
+		maxBoundY = max(maxBoundY, m.y + m.extentsY);
+		minBoundZ = min(minBoundZ, modelZ - m.extentsZ);
+		maxBoundZ = max(maxBoundZ, modelZ + m.extentsZ);
 	}
 
 	public void setup(Camera camera, int zx, int zz, boolean frustumCull){
@@ -104,8 +104,8 @@ public final class StaticAlphaSortingJob extends Job {
 					final int modelX = ((zx - m.zofx) << 10) + m.x;
 					final int modelZ = ((zz - m.zofz) << 10) + m.z;
 					if (!camera.intersectsAABB(
-						modelX + m.minX, m.y + m.minY, modelZ + m.minZ,
-						modelX + m.maxX, m.y + m.maxY, modelZ + m.maxZ
+						modelX - m.extentsX, m.y - m.extentsY, modelZ - m.extentsZ,
+						modelX + m.extentsX, m.y + m.extentsY, modelZ + m.extentsZ
 					)) {
 						// Alpha Models always start as visible to avoid pop-in, so we mark them as hidden since we know they're not visible
 						m.setHidden();

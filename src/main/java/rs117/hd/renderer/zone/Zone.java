@@ -428,6 +428,7 @@ public final class Zone implements Destructible {
 		AsyncCachedModel asyncModel;
 		int startpos, endpos;
 		short x, y, z; // local position
+		short extentsX, extentsY, extentsZ;
 		short rid;
 		int vao;
 		int tboF;
@@ -441,8 +442,6 @@ public final class Zone implements Destructible {
 		int[] packedFaces;
 		int[] doubleSidedBitSet;
 		char doubleSidedCount;
-		// local-space bounds of the alpha geometry, relative to the model's position (x, y, z)
-		int minX, minY, minZ, maxX, maxY, maxZ;
 
 		int dist;
 		int asyncSortIdx = -1;
@@ -691,14 +690,14 @@ public final class Zone implements Destructible {
 		m.doubleSidedBitSet = doubleSidedCount > 0 ? Arrays.copyOf(doubleSidedBitSet, ceil(bufferIdx / 32.0f)) : null;
 		m.doubleSidedCount = doubleSidedCount;
 
-		if (bufferIdx == 0)
-			minBoundX = minBoundY = minBoundZ = maxBoundX = maxBoundY = maxBoundZ = 0;
-		m.minX = minBoundX;
-		m.minY = minBoundY;
-		m.minZ = minBoundZ;
-		m.maxX = maxBoundX;
-		m.maxY = maxBoundY;
-		m.maxZ = maxBoundZ;
+		if (bufferIdx == 0) {
+			m.extentsX = m.extentsY = m.extentsZ = 0;
+		} else {
+			// Symmetric half-extents around the model origin, which is conservative for off-centre geometry
+			m.extentsX = (short) Math.min(Short.MAX_VALUE, Math.max(Math.abs(minBoundX), Math.abs(maxBoundX)));
+			m.extentsY = (short) Math.min(Short.MAX_VALUE, Math.max(Math.abs(minBoundY), Math.abs(maxBoundY)));
+			m.extentsZ = (short) Math.min(Short.MAX_VALUE, Math.max(Math.abs(minBoundZ), Math.abs(maxBoundZ)));
+		}
 
 		alphaModels.add(m);
 
@@ -1032,6 +1031,9 @@ public final class Zone implements Destructible {
 				m2.x = m.x;
 				m2.y = m.y;
 				m2.z = m.z;
+				m2.extentsX = m.extentsX;
+				m2.extentsY = m.extentsY;
+				m2.extentsZ = m.extentsZ;
 				m2.vao = m.vao;
 				m2.tboF = m.tboF;
 				m2.rid = m.rid;
@@ -1047,12 +1049,6 @@ public final class Zone implements Destructible {
 				m2.doubleSidedBitSet = m.doubleSidedBitSet;
 				m2.radius = m.radius;
 				m2.doubleSidedCount = m.doubleSidedCount;
-				m2.minX = m.minX;
-				m2.minY = m.minY;
-				m2.minZ = m.minZ;
-				m2.maxX = m.maxX;
-				m2.maxY = m.maxY;
-				m2.maxZ = m.maxZ;
 				m2.asyncSortIdx = m.asyncSortIdx;
 				m2.sortedIndiciesOffset = m.sortedIndiciesOffset;
 				m2.sortedIndiciesCount = m.sortedIndiciesCount;
