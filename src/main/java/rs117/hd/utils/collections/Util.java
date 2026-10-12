@@ -61,11 +61,18 @@ public final class Util {
 	private static void quickSortInternal(SortAccessor accessor, int left, int right) {
 		if (right <= left) return;
 
+		// insertion sort for tiny ranges (JDK 8)
 		if (right - left + 1 <= INSERTION_SORT_THRESHOLD) {
 			insertionSort(accessor, left, right);
 			return;
 		}
 
+		/*
+		 * Stack layout: pairs of (lo, hi) indices.
+		 * Worst-case depth with "always push larger, tail-loop smaller" is
+		 * ceil(log2(n)), so 64 int slots (= 32 pairs) covers 2^32 elements.
+		 * We borrow from the pool to keep the entire call heap-allocation-free.
+		 */
 		final int[] stack = PooledArrayType.INT.borrow(64);
 		try {
 			int top = 0;
@@ -80,21 +87,27 @@ public final class Util {
 				while (left < right) {
 					int length = right - left + 1;
 
-					// insertion sort for tiny ranges
+					// insertion sort for tiny ranges (JDK 8)
 					if (length <= INSERTION_SORT_THRESHOLD) {
 						insertionSort(accessor, left, right);
 						break;
 					}
 
-					// 5-sample pivot selection
+					// 5-sample pivot selection (mirrors JDK 8 sort)
+					//
+					// Divide the range into 6 equal-ish segments, take the
+					// element at each interior boundary, sort those 5 candidates
+					// in-place, then use the middle one (e3) as the pivot.
+					// This keeps the pivot selection cost at O(1) while giving a
+					// much better median estimate than median-of-three alone.
 					int sixth = length / 6;
 					int e1 = left + sixth;
 					int e5 = right - sixth;
-					int e3 = left + (length >>> 1);
+					int e3 = left + (length >>> 1);  // midpoint
 					int e2 = e3 - sixth;
 					int e4 = e3 + sixth;
 
-					// sort the 5 samples
+					// sort the 5 samples with a 5-element sort network (7 comparisons)
 					if (accessor.compare(e1, e2) > 0) accessor.swap(e1, e2);
 					if (accessor.compare(e4, e5) > 0) accessor.swap(e4, e5);
 					if (accessor.compare(e1, e3) > 0) accessor.swap(e1, e3);
@@ -104,8 +117,9 @@ public final class Util {
 					if (accessor.compare(e2, e5) > 0) accessor.swap(e2, e5);
 					if (accessor.compare(e2, e3) > 0) accessor.swap(e2, e3);
 					if (accessor.compare(e4, e5) > 0) accessor.swap(e4, e5);
+					// invariant: a[e1] <= a[e2] <= a[e3] <= a[e4] <= a[e5]
 
-					accessor.savePivot(e3);
+					accessor.savePivot(e3); // true median of 5 samples
 
 					// 3-way partition
 					int lt = left;
@@ -124,22 +138,26 @@ public final class Util {
 						}
 					}
 
-					// push larger partition; continue with smaller
+					// push larger partition; tail-loop smaller
+					//
+					// This is the key invariant that keeps the pooled stack at
 					int leftLen = lt - 1 - left;
 					int rightLen = right - (gt + 1);
 
 					if (leftLen >= rightLen) {
+						// left side larger -> push it, tail-recurse right
 						if (left < lt - 1) {
 							stack[top++] = left;
 							stack[top++] = lt - 1;
 						}
-						left = gt + 1;
+						left = gt + 1;  // continue with right partition
 					} else {
+						// right side larger -> push it, tail-recurse left
 						if (gt + 1 < right) {
 							stack[top++] = gt + 1;
 							stack[top++] = right;
 						}
-						right = lt - 1;
+						right = lt - 1;  // continue with left partition
 					}
 				}
 			}
@@ -148,6 +166,10 @@ public final class Util {
 		}
 	}
 
+	/**
+	 * Straight insertion sort for small ranges.
+	 * JDK 8 uses the same algorithm for ranges below its INSERTION_SORT_THRESHOLD.
+	 */
 	private static void insertionSort(SortAccessor accessor, int left, int right) {
 		for (int i = left + 1; i <= right; i++) {
 			int j = i;
