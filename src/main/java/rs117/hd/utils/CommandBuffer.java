@@ -49,8 +49,8 @@ public class CommandBuffer {
 	private static final int DRAW_MODE_MASK = 0xF;
 
 	private static final ThreadLocal<ArrayDeque<CommandBuffer>> CALL_STACK = ThreadLocal.withInitial(ArrayDeque::new);
-	private static final ThreadLocal<int[]> INDIRECT_STAGING = ThreadLocal.withInitial(() -> new int[8]);
 
+	private int[] indirectStaging = new int[8];
 	private Object[] objects = new Object[8];
 	private int objectCount = 0;
 
@@ -204,7 +204,7 @@ public class CommandBuffer {
 		// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDrawArraysIndirect.xhtml
 		int indirectOffset = indirectBuffer.position();
 		try {
-			final int[] drawArgs = INDIRECT_STAGING.get();
+			final int[] drawArgs = indirectStaging;
 			drawArgs[0] = vertexCount;  // count
 			drawArgs[1] = 1;            // primCount
 			drawArgs[2] = vertexOffset; // first
@@ -230,7 +230,7 @@ public class CommandBuffer {
 		// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDrawElementsIndirect.xhtml
 		int indirectOffset = indirectBuffer.position();
 		try {
-			final int[] drawArgs = INDIRECT_STAGING.get();
+			final int[] drawArgs = indirectStaging;
 			drawArgs[0] = indexCount;   // count
 			drawArgs[1] = 1; 			// instanceCount
 			drawArgs[2] = indexOffset;  // firstIndex
@@ -268,9 +268,9 @@ public class CommandBuffer {
 		// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glMultiDrawArraysIndirect.xhtml
 		indirectBuffer.ensureCapacity(drawCount * 4);
 		try {
-			int[] drawArgs = INDIRECT_STAGING.get();
+			int[] drawArgs = indirectStaging;
 			if(drawArgs.length < drawCount * 4)
-				INDIRECT_STAGING.set((drawArgs = new int[drawCount * 4]));
+				indirectStaging = drawArgs = new int[drawCount * 4];
 
 			for (int i = 0; i < drawCount; i++) {
 				final int base = i * 4;
