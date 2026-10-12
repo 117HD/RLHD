@@ -971,6 +971,7 @@ public class HdPlugin extends Plugin {
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
 			.define("MATERIAL_COUNT", MaterialManager.MATERIALS.length)
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
+			.define("WATER_SPECULAR_REFLECTIONS", config.waterSpecularReflections())
 			.define("DYNAMIC_LIGHTS", configDynamicLights != DynamicLights.NONE)
 			.define("TILED_LIGHTING", configTiledLighting)
 			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getTiledLightingLayers())
@@ -1740,8 +1741,8 @@ public class HdPlugin extends Plugin {
 	}
 
 	/**
-     * Convert the front framebuffer to an Image
-     */
+	 * Convert the front framebuffer to an Image
+	 */
 	public Image screenshot() {
 		if (uiResolution == null)
 			return null;
@@ -1978,6 +1979,7 @@ public class HdPlugin extends Plugin {
 							case KEY_POINT_SPRITES:
 							case KEY_NEBULAE:
 							case KEY_LEGACY_BOAT_SILHOUETTES:
+							case KEY_WATER_SPECULAR_REFLECTIONS:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:

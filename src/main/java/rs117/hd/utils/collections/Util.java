@@ -101,11 +101,11 @@ public final class Util {
 					// This keeps the pivot selection cost at O(1) while giving a
 					// much better median estimate than median-of-three alone.
 					int sixth = length / 6;
-					int e1 = left + sixth;
+					int e1 = left  + sixth;
 					int e5 = right - sixth;
-					int e3 = left + (length >>> 1);  // midpoint
-					int e2 = e3 - sixth;
-					int e4 = e3 + sixth;
+					int e3 = left  + (length >>> 1); // midpoint
+					int e2 = e3   - sixth;
+					int e4 = e3   + sixth;
 
 					// sort the 5 samples with a 5-element sort network (7 comparisons)
 					if (accessor.compare(e1, e2) > 0) accessor.swap(e1, e2);
@@ -121,10 +121,10 @@ public final class Util {
 
 					accessor.savePivot(e3); // true median of 5 samples
 
-					// 3-way partition
+					// 3-way partition (Dutch-flag / Bentley-McIlroy)
 					int lt = left;
 					int gt = right;
-					int i = left;
+					int i  = left;
 
 					while (i <= gt) {
 						int cmp = accessor.compareToPivot(i);
@@ -141,7 +141,7 @@ public final class Util {
 					// push larger partition; tail-loop smaller
 					//
 					// This is the key invariant that keeps the pooled stack at
-					int leftLen = lt - 1 - left;
+					int leftLen  = lt - 1 - left;
 					int rightLen = right - (gt + 1);
 
 					if (leftLen >= rightLen) {
@@ -150,14 +150,14 @@ public final class Util {
 							stack[top++] = left;
 							stack[top++] = lt - 1;
 						}
-						left = gt + 1;  // continue with right partition
+						left = gt + 1; // continue with right partition
 					} else {
 						// right side larger -> push it, tail-recurse left
 						if (gt + 1 < right) {
 							stack[top++] = gt + 1;
 							stack[top++] = right;
 						}
-						right = lt - 1;  // continue with left partition
+						right = lt - 1; // continue with left partition
 					}
 				}
 			}
