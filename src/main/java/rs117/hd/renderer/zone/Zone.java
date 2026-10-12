@@ -441,6 +441,8 @@ public final class Zone implements Destructible {
 		int[] packedFaces;
 		int[] doubleSidedBitSet;
 		char doubleSidedCount;
+		// local-space bounds of the alpha geometry, relative to the model's position (x, y, z)
+		int minX, minY, minZ, maxX, maxY, maxZ;
 
 		int dist;
 		int asyncSortIdx = -1;
@@ -450,9 +452,18 @@ public final class Zone implements Destructible {
 		static final int SKIP = 1; // temporary model is in a closer zone
 		static final int TEMP = 2; // temporary model added to a closer zone
 		static final int SORT_COMPLETED = 4;
+		static final int VISIBLE = 8;
 
 		void setSorted() {
 			flags |= SORT_COMPLETED;
+		}
+
+		void setVisible() {
+			flags |= VISIBLE;
+		}
+
+		boolean isVisible() {
+			return (flags & VISIBLE) != 0;
 		}
 
 		boolean needsSorting() {
@@ -593,6 +604,8 @@ public final class Zone implements Destructible {
 		int radius = 0;
 		char bufferIdx = 0;
 		char doubleSidedCount = 0;
+		int minBoundX = Integer.MAX_VALUE, minBoundY = Integer.MAX_VALUE, minBoundZ = Integer.MAX_VALUE;
+		int maxBoundX = Integer.MIN_VALUE, maxBoundY = Integer.MIN_VALUE, maxBoundZ = Integer.MIN_VALUE;
 		for (int f = 0; f < faceCount; ++f) {
 			if (color3[f] == -2)
 				continue;
@@ -641,6 +654,17 @@ public final class Zone implements Destructible {
 			if (!hasAlpha)
 				continue;
 
+			final int i1 = indices1[f], i2 = indices2[f], i3 = indices3[f];
+			final int vx1 = (int) vertexX[i1], vx2 = (int) vertexX[i2], vx3 = (int) vertexX[i3];
+			final int vy1 = (int) vertexY[i1], vy2 = (int) vertexY[i2], vy3 = (int) vertexY[i3];
+			final int vz1 = (int) vertexZ[i1], vz2 = (int) vertexZ[i2], vz3 = (int) vertexZ[i3];
+			minBoundX = min(minBoundX, min(vx1, min(vx2, vx3)));
+			maxBoundX = max(maxBoundX, max(vx1, max(vx2, vx3)));
+			minBoundY = min(minBoundY, min(vy1, min(vy2, vy3)));
+			maxBoundY = max(maxBoundY, max(vy1, max(vy2, vy3)));
+			minBoundZ = min(minBoundZ, min(vz1, min(vz2, vz3)));
+			maxBoundZ = max(maxBoundZ, max(vz1, max(vz2, vz3)));
+
 			final int fx = (((int) (vertexX[indices1[f]] + vertexX[indices2[f]] + vertexX[indices3[f]]) / 3) - cx) >> shift;
 			final int fy = (((int) (vertexY[indices1[f]] + vertexY[indices2[f]] + vertexY[indices3[f]]) / 3) - cy) >> shift;
 			final int fz = (((int) (vertexZ[indices1[f]] + vertexZ[indices2[f]] + vertexZ[indices3[f]]) / 3) - cz) >> shift;
@@ -667,6 +691,15 @@ public final class Zone implements Destructible {
 		m.doubleSidedBitSet = doubleSidedCount > 0 ? Arrays.copyOf(doubleSidedBitSet, ceil(bufferIdx / 32.0f)) : null;
 		m.doubleSidedCount = doubleSidedCount;
 
+		if (bufferIdx == 0)
+			minBoundX = minBoundY = minBoundZ = maxBoundX = maxBoundY = maxBoundZ = 0;
+		m.minX = minBoundX;
+		m.minY = minBoundY;
+		m.minZ = minBoundZ;
+		m.maxX = maxBoundX;
+		m.maxY = maxBoundY;
+		m.maxZ = maxBoundZ;
+
 		alphaModels.add(m);
 
 		PooledArrayType.INT.release(packedFaces);
@@ -682,7 +715,7 @@ public final class Zone implements Destructible {
 		m.z = (short) z;
 		m.level = (byte) level;
 		m.vao = m.tboF = m.rid = m.lx = m.lz = m.ux = m.uz = -1;
-		m.flags = 0;
+		m.flags = AlphaModel.VISIBLE;
 		m.zofx = m.zofz = 0;
 		m.calculateDist((int) camera.getPositionX(), (int) camera.getPositionY(), (int) camera.getPositionZ(), zx, zz);
 		alphaLevelMask = (byte) (alphaLevelMask | 1 << level);
@@ -700,7 +733,7 @@ public final class Zone implements Destructible {
 			m.dist = Integer.MAX_VALUE;
 			m.asyncSortIdx = -1;
 			m.sortedIndiciesOffset = m.sortedIndiciesCount = 0;
-			m.flags &= ~(AlphaModel.SKIP | AlphaModel.SORT_COMPLETED);
+			m.flags &= ~(AlphaModel.SKIP | AlphaModel.VISIBLE | AlphaModel.SORT_COMPLETED);
 			assert m.asyncModel == null;
 
 			if (m.isTemp() || (m.flags & AlphaModel.TEMP) != 0) {
@@ -804,7 +837,7 @@ public final class Zone implements Destructible {
 
 		for (int i = 0; i < alphaModels.size(); i++) {
 			final AlphaModel m = alphaModels.get(i);
-			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level)
+			if ((m.flags & AlphaModel.SKIP) != 0 || !m.isVisible() || m.level != level)
 				continue;
 
 			final AsyncCachedModel asyncModel = m.asyncModel;
@@ -1013,6 +1046,12 @@ public final class Zone implements Destructible {
 				m2.doubleSidedBitSet = m.doubleSidedBitSet;
 				m2.radius = m.radius;
 				m2.doubleSidedCount = m.doubleSidedCount;
+				m2.minX = m.minX;
+				m2.minY = m.minY;
+				m2.minZ = m.minZ;
+				m2.maxX = m.maxX;
+				m2.maxY = m.maxY;
+				m2.maxZ = m.maxZ;
 				m2.asyncSortIdx = m.asyncSortIdx;
 				m2.sortedIndiciesOffset = m.sortedIndiciesOffset;
 				m2.sortedIndiciesCount = m.sortedIndiciesCount;
