@@ -105521,5 +105521,13 @@
       "KARUULM_LAVABUBBLES",
       "KARUULM_LAVA_GAS"
     ]
+  },
+  {
+    "description": "Mount Quidamortem - Fix gaps in terrain",
+    "objectIds": [
+      "TOX_TILES_RED_1",
+      "TOX_TILES_RED_10"
+    ],
+    "heightOffset": -1
   }
 ]

@@ -75,7 +75,8 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "General",
 		description = "General settings",
-		position = 0
+		position = 0,
+		closedByDefault = true
 	)
 	String generalSettings = "generalSettings";
 
