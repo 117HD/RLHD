@@ -382,10 +382,12 @@ public class SkyRenderer {
 		out.dayLuminance =
 			linearSrgbLuminance(out.ambientLight) +
 			linearSrgbLuminance(out.sunDirectionalLight) * max(0, sin(sunAltDeg * DEG_TO_RAD));
-		// Meter all illumination, but amplify only night sources. Ignoring daylight
-		// here lets adapted airglow overpower the sun in darker environments.
-		float exposure = getNightExposure(out.dayLuminance + nightLuminance, env.nightExposure * 1.5f);
-		out.nightLuminance = nightLuminance * exposure;
+		float nightExposure = env.nightExposure * 1.5f;
+		out.nightLuminance = nightLuminance * getNightExposure(out.dayLuminance + nightLuminance, nightExposure);
+		float exposureAdjustedDayLuminance = out.dayLuminance / max(plugin.configNightBrightness, 1);
+		float targetLuminance = nightExposure - exposureAdjustedDayLuminance;
+		// Ease in during the sunset
+		float exposure = mix(1, getNightExposure(nightLuminance, targetLuminance), smoothstep(3.8f, -6, sunAltDeg));
 		multiply(nightAmbientLight, nightAmbientLight, exposure);
 		multiply(out.moonDirectionalLight, out.moonDirectionalLight, exposure);
 		// Approximate the loss of lunar contrast against brightening twilight.
