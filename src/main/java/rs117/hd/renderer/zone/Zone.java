@@ -38,7 +38,7 @@ import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.collections.Util.quickSortByKey;
 
 @Slf4j
-public class Zone implements Destructible {
+public final class Zone implements Destructible {
 	private static final ConcurrentPool<AlphaModel> ALPHA_MODEL_POOL = new ConcurrentPool<>(AlphaModel::new);
 
 	@Inject
@@ -716,6 +716,7 @@ public class Zone implements Destructible {
 	private static final int TEMP = 2;
 	private static final int STATIC_UNSORTED = 3;
 
+	private static int[] alphaModelsKeys = new int[64];
 	private static int alphaFaceCount;
 	private static int eboAlphaOffset;
 	private static int lastDrawMode;
@@ -728,23 +729,20 @@ public class Zone implements Destructible {
 		if (alphaModelCount <= 1)
 			return;
 
+		alphaSortingJob.waitForCompletion();
 		if(alphaModelCount == 2) {
-			alphaSortingJob.waitForCompletion();
 			if(alphaModels.get(0).dist > alphaModels.get(1).dist)
 				Collections.swap(alphaModels, 0, 1);
 			return;
 		}
 
-		final int[] alphaModelsKeys = PooledArrayType.INT.borrow(alphaModelCount);
-		try {
-			alphaSortingJob.waitForCompletion();
-			for(int i = 0; i < alphaModelCount; i++)
-				alphaModelsKeys[i] = alphaModels.get(i).dist;
+		if(alphaModelCount > alphaModelsKeys.length)
+			alphaModelsKeys = new int[alphaModelCount];
 
-			quickSortByKey(alphaModelsKeys, alphaModels, 0, alphaModelCount - 1);
-		} finally {
-			PooledArrayType.INT.release(alphaModelsKeys);
-		}
+		for(int i = 0; i < alphaModelCount; i++)
+			alphaModelsKeys[i] = alphaModels.get(i).dist;
+
+		quickSortByKey(alphaModelsKeys, alphaModels, 0, alphaModelCount - 1);
 	}
 
 	int setupAlphaModelSort(int startOffset) {
