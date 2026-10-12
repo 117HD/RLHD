@@ -113,6 +113,7 @@ public final class AsyncCachedModel extends Job implements Model {
 	private Zone zone;
 	private AlphaModel alphaModel;
 	private boolean isModelPartiallyVisible;
+	private int category;
 	private int drawIndex;
 	private int orientation;
 	private int x;
@@ -217,6 +218,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		@Nonnull Zone zone,
 		AlphaModel alphaModel,
 		boolean isModelPartiallyVisible,
+		int category,
 		int drawIndex,
 		int orientation,
 		int x, int y, int z,
@@ -230,6 +232,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		this.zone = zone;
 		this.alphaModel = alphaModel;
 		this.isModelPartiallyVisible = isModelPartiallyVisible;
+		this.category = category;
 		this.drawIndex = drawIndex;
 		this.orientation = orientation;
 		this.x = x;
@@ -343,6 +346,7 @@ public final class AsyncCachedModel extends Job implements Model {
 				zone,
 				alphaModel,
 				isModelPartiallyVisible,
+				category,
 				drawIndex,
 				orientation,
 				x, y, z
@@ -456,6 +460,7 @@ public final class AsyncCachedModel extends Job implements Model {
 			@Nonnull Zone zone,
 			AlphaModel alphaModel,
 			boolean isModelPartiallyVisible,
+			int category,
 			int drawIndex,
 			int orientation,
 			int x, int y, int z

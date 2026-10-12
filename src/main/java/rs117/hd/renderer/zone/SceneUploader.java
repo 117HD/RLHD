@@ -92,6 +92,9 @@ public class SceneUploader implements AutoCloseable {
 	}
 
 	@Inject
+	private Client client;
+
+	@Inject
 	private RenderCallbackManager renderCallbackManager;
 
 	@Inject
@@ -108,6 +111,9 @@ public class SceneUploader implements AutoCloseable {
 
 	@Inject
 	private ProceduralGenerator proceduralGenerator;
+
+	@Inject
+	public SceneManager sceneManager;
 
 	@FunctionalInterface
 	public interface OnBeforeProcessTileFunc {
@@ -796,8 +802,12 @@ public class SceneUploader implements AutoCloseable {
 			}
 
 			var composition = dynamic.getRecordedObjectComposition();
-			if (composition != null)
+			if (composition != null) {
 				uuid = ModelHash.packUuid(ModelHash.TYPE_GAME_OBJECT, composition.getId());
+				if (plugin.configRs3HighContrast) {
+					sceneManager.interactiveObjects.add(composition.getId());
+				}
+			}
 		} else {
 			return;
 		}
@@ -805,6 +815,9 @@ public class SceneUploader implements AutoCloseable {
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 		if (modelOverride.hide)
 			return;
+
+		boolean hasActions = sceneManager.interactiveObjects.contains(id);
+		int category = ModelHash.getCategoryForUuid(client, r, uuid, hasActions, plugin.configRs3HighContrast);
 
 		int alphaStart = alphaBuffer != null ? alphaBuffer.position() : 0;
 		try {
@@ -815,7 +828,8 @@ public class SceneUploader implements AutoCloseable {
 				tileExX, tileExY, tileZ,
 				opaqueBuffer,
 				alphaBuffer,
-				textureBuffer
+				textureBuffer,
+				category
 			);
 		} catch (Throwable ex) {
 			try (var gamevals = gamevalManager.obtainHandle()) {
@@ -1527,7 +1541,8 @@ public class SceneUploader implements AutoCloseable {
 		int tileExX, int tileExY, int tileZ,
 		GpuIntBuffer opaqueBuffer,
 		GpuIntBuffer alphaBuffer,
-		GpuIntBuffer textureBuffer
+		GpuIntBuffer textureBuffer,
+		int category
 	) {
 		if (writeCache == null)
 			writeCache = new VertexWriteCache.Collection();
@@ -1795,7 +1810,7 @@ public class SceneUploader implements AutoCloseable {
 					uvType = isVanillaUVMapped && textureFace != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 			}
 
-			final int materialData = material.packMaterialData(faceOverride, uvType, false);
+			final int materialData = material.packMaterialData(faceOverride, uvType, false,category);
 
 			final float[] faceUVs;
 			if (uvType == UvType.VANILLA && textureId != -1) {
@@ -2171,7 +2186,8 @@ public class SceneUploader implements AutoCloseable {
 		int orientation,
 		boolean isShadow,
 		DynamicModelVAO.View opaqueView,
-		DynamicModelVAO.View alphaView
+		DynamicModelVAO.View alphaView,
+		int category
 	) {
 		if (writeCache == null)
 			writeCache = new VertexWriteCache.Collection();
@@ -2254,7 +2270,7 @@ public class SceneUploader implements AutoCloseable {
 				color3 = faceOverride.modifyColor(color3);
 			}
 
-			final int materialData = material.packMaterialData(faceOverride, uvType, false);
+			final int materialData = material.packMaterialData(faceOverride, uvType, false, category);
 
 			final int triangleA = indices1[face];
 			final int vertexOffsetA = triangleA * 3;

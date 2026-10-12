@@ -454,6 +454,8 @@ public class HdPlugin extends Plugin {
 	public ShadingMode configShadingMode;
 	public ColorFilter configColorFilter = ColorFilter.NONE;
 	public ColorFilter configColorFilterPrevious;
+	public boolean configRs3HighContrast;
+	public boolean configRs3HighContrastSky;
 
 	public boolean useLowMemoryMode;
 	public boolean enableDetailedTimers;
@@ -940,6 +942,8 @@ public class HdPlugin extends Plugin {
 			.define("UI_SCALING_MODE", config.uiScalingMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
+			.define("RS3_HIGH_CONTRAST", configRs3HighContrast)
+			.define("RS3_HIGH_CONTRAST_SKY", configRs3HighContrastSky)
 			.define("MATERIAL_COUNT", MaterialManager.MATERIALS.length)
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
 			.define("DYNAMIC_LIGHTS", configDynamicLights != DynamicLights.NONE)
@@ -1808,6 +1812,8 @@ public class HdPlugin extends Plugin {
 			configGroundTextures = false;
 			configModelTextures = false;
 		}
+		configRs3HighContrast = config.rs3HighContrast();
+		configRs3HighContrastSky = config.rs3HighContrastSky();
 
 		if (configSeasonalTheme == SeasonalTheme.AUTOMATIC) {
 			var time = ZonedDateTime.now(ZoneOffset.UTC);
@@ -1914,6 +1920,14 @@ public class HdPlugin extends Plugin {
 									recompilePrograms = true;
 								if (configColorFilter == ColorFilter.CEL_SHADING || configColorFilterPrevious == ColorFilter.CEL_SHADING)
 									reloadScene = true;
+								break;
+							case KEY_RS3_HIGH_CONTRAST:
+								recompilePrograms = true;
+								sceneManager.interactiveObjects.clear();
+								reloadScene = true;
+								break;
+							case KEY_RS3_HIGH_CONTRAST_SKY:
+								recompilePrograms = true;
 								break;
 							case KEY_CPU_USAGE_LIMIT:
 								if (jobSystem.isActive()) {

@@ -18,7 +18,7 @@ vec3 applyColorAdjustments(vec3 srgb) {
     }
     srgb = colorBlindnessCompensation(srgb);
     #if APPLY_COLOR_FILTER
-        srgb = applyColorFilter(srgb);
+        srgb = applyColorFilter(srgb, ENTITY_TERRAIN);
     #endif
     return srgb;
 }

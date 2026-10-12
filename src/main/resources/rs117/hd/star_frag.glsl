@@ -32,6 +32,9 @@ void main() {
 
     vec3 starColor = vColor * vBrightness * falloff * 4.0;
     starColor = linearToSrgb(starColor);
+    #if RS3_HIGH_CONTRAST && RS3_HIGH_CONTRAST_SKY
+        starColor = applyRs3HighContrast(ENTITY_TERRAIN, starColor);
+    #endif
     starColor = applyColorAdjustments(starColor);
     starColor = applyOutputCorrection(starColor);
     FragColor = vec4(starColor, 0.0);
