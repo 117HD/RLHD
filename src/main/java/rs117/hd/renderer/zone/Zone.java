@@ -310,26 +310,29 @@ public class Zone implements Destructible {
 	}
 
 	private static final int NUM_DRAW_RANGES = 512;
-	private static final int[] drawOff = new int[NUM_DRAW_RANGES];
-	private static final int[] drawEnd = new int[NUM_DRAW_RANGES];
-
+	private static final int[] drawRanges = new int[NUM_DRAW_RANGES * 2];
 	private static final int[] glDrawOffset = new int[NUM_DRAW_RANGES];
 	private static final int[] glDrawLength = new int[NUM_DRAW_RANGES];
+
 	private static int drawIdx = 0;
 
 	private void convertForDraw(int vertSize) {
-		for (int i = 0; i < drawIdx; ++i) {
-			assert drawEnd[i] >= drawOff[i];
+		final int vertSizeInts = vertSize >> 2;
+		for (int i = 0, j = 0; i < drawIdx; ++i) {
+			int start = drawRanges[j++];
+			int end = drawRanges[j++];
 
-			// convert from bytes to verts
-			drawOff[i] /= vertSize >> 2;
-			drawEnd[i] /= vertSize >> 2;
+			assert end >= start;
 
-			drawEnd[i] -= drawOff[i]; // convert from end pos to length
+			// convert from ints to verts
+			start /= vertSizeInts;
+			end /= vertSizeInts;
+
+			end -= start; // convert from end pos to length
+
+			glDrawOffset[i] = start;
+			glDrawLength[i] = end;
 		}
-
-		copyTo(glDrawOffset, drawOff, 0, drawIdx);
-		copyTo(glDrawLength, drawEnd, 0, drawIdx);
 	}
 
 	void renderOpaque(CommandBuffer cmd, WorldViewContext ctx, boolean roofShadows) {
@@ -408,13 +411,14 @@ public class Zone implements Destructible {
 		if (end <= start)
 			return;
 
-		if (drawIdx > 0 && drawEnd[drawIdx - 1] == start) {
-			drawEnd[drawIdx - 1] = end;
+		if (drawIdx > 0 && drawRanges[(drawIdx - 1) * 2 + 1] == start) {
+			// extend the previous range
+			drawRanges[(drawIdx - 1) * 2 + 1] = end;
 		} else if (drawIdx >= NUM_DRAW_RANGES) {
 			log.debug("draw ranges exhausted");
 		} else {
-			drawOff[drawIdx] = start;
-			drawEnd[drawIdx] = end;
+			drawRanges[drawIdx * 2] = start;
+			drawRanges[drawIdx * 2 + 1] = end;
 			drawIdx++;
 		}
 	}
@@ -880,9 +884,9 @@ public class Zone implements Destructible {
 			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 			if (drawIdx == 1) {
 				if (SUPPORTS_INDIRECT_DRAW) {
-					cmd.DrawArraysIndirect(GL_TRIANGLES, drawOff[0], drawEnd[0], ZoneRenderer.indirectDrawCmdsStaging);
+					cmd.DrawArraysIndirect(GL_TRIANGLES, glDrawOffset[0], glDrawLength[0], ZoneRenderer.indirectDrawCmdsStaging);
 				} else {
-					cmd.DrawArrays(GL_TRIANGLES, drawOff[0], drawEnd[0]);
+					cmd.DrawArrays(GL_TRIANGLES, glDrawOffset[0], glDrawLength[0]);
 				}
 			} else {
 				if (SUPPORTS_MULTI_INDIRECT_DRAW) {
