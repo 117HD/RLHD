@@ -2959,13 +2959,14 @@
     "windStrength": 50,
     "fogColor": "#330D0D",
     "sky": {
-      "skyVisibility": 0.8,
+      "skyVisibility": 1,
       "auroraVisibility": 0,
-      "sunStrength": 0.01,
-      "sunriseSunsetStrength": 0.2,
-      "skyFogDensity": 0.16,
+      "sunStrength": 0.04,
+      "skyFogDensity": 25,
+      "skyFogColor": "#330D0D",
       "nightHorizonColor": "#FF0000",
       "nightHorizonStrength": 0.01,
+      "skyFogHorizonAltitude": -30,
       "starVisibility": 0.755
     }
   },
