@@ -458,8 +458,8 @@ public final class Zone implements Destructible {
 			flags |= SORT_COMPLETED;
 		}
 
-		void setVisible() {
-			flags |= VISIBLE;
+		void setHidden() {
+			flags &= ~VISIBLE;
 		}
 
 		boolean isVisible() {
@@ -733,7 +733,8 @@ public final class Zone implements Destructible {
 			m.dist = Integer.MAX_VALUE;
 			m.asyncSortIdx = -1;
 			m.sortedIndiciesOffset = m.sortedIndiciesCount = 0;
-			m.flags &= ~(AlphaModel.SKIP | AlphaModel.VISIBLE | AlphaModel.SORT_COMPLETED);
+			m.flags &= ~(AlphaModel.SKIP | AlphaModel.SORT_COMPLETED);
+			m.flags |= AlphaModel.VISIBLE;
 			assert m.asyncModel == null;
 
 			if (m.isTemp() || (m.flags & AlphaModel.TEMP) != 0) {
@@ -1056,7 +1057,7 @@ public final class Zone implements Destructible {
 				m2.sortedIndiciesOffset = m.sortedIndiciesOffset;
 				m2.sortedIndiciesCount = m.sortedIndiciesCount;
 
-				m2.flags = AlphaModel.TEMP;
+				m2.flags = AlphaModel.TEMP | AlphaModel.VISIBLE;
 				m.flags |= AlphaModel.SKIP;
 
 				z.alphaLevelMask = (byte) (z.alphaLevelMask | 1 << m2.level);

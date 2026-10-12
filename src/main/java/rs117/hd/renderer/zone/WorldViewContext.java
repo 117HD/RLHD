@@ -249,7 +249,7 @@ public class WorldViewContext {
 		for (int zx = 0; zx < sizeX; zx++) {
 			for (int zz = 0; zz < sizeZ; zz++) {
 				final Zone z = zones[zx][zz];
-				if (z.alphaModels.isEmpty() || (worldViewId == WorldView.TOPLEVEL && !z.inSceneFrustum))
+				if (z.alphaModels.isEmpty())
 					continue;
 
 				final int dx = camPosX - ((zx - offset) << 10);
@@ -273,6 +273,7 @@ public class WorldViewContext {
 			if(alphaFaceCount <= 0)
 				return;
 
+			ZoneRenderer.eboAlpha.ensureCapacity((long) alphaFaceCount * Integer.BYTES);
 			eboAlphaIndices = PooledArrayType.INT.ensureCapacity(eboAlphaIndices, alphaFaceCount);
 			for (int i = 0; i < alphaZones.size(); i++)
 				alphaZones.get(i).alphaSortingJob.queue(eboAlphaIndices);

@@ -85,25 +85,30 @@ public final class StaticAlphaSortingJob extends Job {
 		// Classify the combined AABB of every alpha model against the frustum, so we can skip
 		// per-model culling entirely when the zone's alpha geometry is fully visible.
 		final int boundsClassification = frustumCull ?
-			camera.classifyAABB(minBoundX, minBoundY, minBoundZ, maxBoundX, maxBoundY, maxBoundZ) : 0;
+			camera.classifyAABB(minBoundX, minBoundY, minBoundZ, maxBoundX, maxBoundY, maxBoundZ) : 1;
+
+		final boolean fullyOutside = boundsClassification == -1;
+		final boolean partiallyVisible = boundsClassification == 0;
 
 		try (FacePrioritySorter sorter = FacePrioritySorter.POOL.acquire()) {
 			for (int i = 0; i < size; i++) {
 				final AlphaModel m = models[i];
 				m.sortedIndiciesCount = 0;
 
-				if (!frustumCull || boundsClassification == 1) {
-					// Fully visible, so every model in the zone is visible
-					m.setVisible();
-				} else if (boundsClassification == 0) {
+				if (fullyOutside) {
+					// The combined AABB of every alpha model in this zone is entirely outside the
+					// frustum, so every model is guaranteed to be invisible.
+					m.setHidden();
+				} else if (partiallyVisible) {
 					// Partially visible, so cull each model individually
 					final int modelX = ((zx - m.zofx) << 10) + m.x;
 					final int modelZ = ((zz - m.zofz) << 10) + m.z;
-					if (camera.intersectsAABB(
+					if (!camera.intersectsAABB(
 						modelX + m.minX, m.y + m.minY, modelZ + m.minZ,
 						modelX + m.maxX, m.y + m.maxY, modelZ + m.maxZ
 					)) {
-						m.setVisible();
+						// Alpha Models always start as visible to avoid pop-in, so we mark them as hidden since we know they're not visible
+						m.setHidden();
 					}
 				}
 
