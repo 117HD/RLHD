@@ -434,7 +434,7 @@ public final class Zone implements Destructible {
 		byte level;
 		byte lx, lz, ux, uz; // lower/upper zone coords
 		byte zofx, zofz; // for temp alpha models, offset of source zone from target zone
-		byte flags;
+		byte flags = VISIBLE;
 
 		// only set for static geometry as they require sorting
 		int radius;
