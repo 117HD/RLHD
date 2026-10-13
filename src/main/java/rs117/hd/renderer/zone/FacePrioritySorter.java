@@ -227,10 +227,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 		Arrays.fill(zsortHead, 0, diameter, -1);
 		Arrays.fill(zsortTail, 0, diameter, -1);
 
-		// A single int[] per triangle slot, reused across orientations to avoid per-frame allocation
-		if (model.sortedFaces == null || model.sortedFaces.length < maxFaceCount)
-			model.sortedFaces = new int[maxFaceCount];
-		final int[] sortedFaces = model.sortedFaces;
+		final char[] sortedFaces = model.sortedFaces;
 		int sortedCount = 0;
 		int backfaceWord = 0;
 		int minFz = diameter, maxFz = 0;
@@ -264,7 +261,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 					backfaceWord = doubleSidedBitSet[i >> 5];
 
 				if ((backfaceWord & 1) != 0)
-					sortedFaces[sortedCount++] = ++f;
+					sortedFaces[sortedCount++] = (char) ++f;
 
 				backfaceWord >>>= 1;
 			}
@@ -272,7 +269,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 
 		for (int i = maxFz; i >= minFz; --i) {
 			for (int f = zsortHead[i]; f != -1; f = zsortNext[f])
-				sortedFaces[sortedCount++] = f;
+				sortedFaces[sortedCount++] = (char) f;
 		}
 
 		model.sortedFaceCount = sortedCount;

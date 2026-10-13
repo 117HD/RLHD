@@ -19,8 +19,7 @@ public final class StaticAlphaModel {
 	// Number of AlphaModelInstances referencing this model. Guarded by the owning WorldViewContext
 	int refCount;
 
-	// Cached sort result shared by all instances. Guarded by synchronized(this)
-	int[] sortedFaces;
+	final char[] sortedFaces;
 	int sortedFaceCount;
 	int sortKey = -1;
 	int sortedIndiciesOffset = -1;
@@ -30,6 +29,7 @@ public final class StaticAlphaModel {
 		this.doubleSidedBitSet = doubleSidedBitSet;
 		this.doubleSidedCount = doubleSidedCount;
 		this.radius = radius;
+		this.sortedFaces = new char[packedFaces.length + doubleSidedCount];
 
 		int h = Arrays.hashCode(packedFaces);
 		h = 31 * h + Arrays.hashCode(doubleSidedBitSet);

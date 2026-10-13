@@ -818,9 +818,6 @@ public final class Zone implements Destructible {
 
 		drawIdx = 0;
 
-		if(!depthOnly)
-			ctx.alphaSortingJob.waitForCompletion();
-
 		for (int i = 0; i < visibleAlphaModels.length; i++) {
 			final AlphaModelInstance m = alphaModels.get(visibleAlphaModels.array[i]);
 			if ((m.flags & AlphaModelInstance.SKIP) != 0 || m.level != level)
@@ -866,8 +863,6 @@ public final class Zone implements Destructible {
 			if (model == null || model.sortedIndiciesOffset < 0 || model.sortedFaceCount <= 0)
 				continue;
 
-			// Each instance's sorted indices live at the world view's EBO base offset + its model's block offset,
-			// which was reserved in alphaSort().
 			final int dest = ctx.eboAlphaBaseOffset + model.sortedIndiciesOffset;
 			if (drawIdx >= NUM_DRAW_RANGES)
 				flush(cmd);
