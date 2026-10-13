@@ -1,6 +1,5 @@
 package rs117.hd.utils.jobs;
 
-import com.google.inject.Injector;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,8 +17,13 @@ public abstract class Job {
 
 	private final AtomicBoolean released = new AtomicBoolean();
 
+	boolean needsInject = false;
 	boolean executeAsync = true;
 	JobHandle handle;
+
+	public Job() {}
+
+	public Job(boolean needsInject) { this.needsInject = needsInject; }
 
 	public final void waitForCompletion() {
 		waitForCompletion(false);
@@ -113,8 +117,6 @@ public abstract class Job {
 	public final boolean isHighPriority() {
 		return (group != null && group.highPriority) || (handle != null && handle.highPriority);
 	}
-
-	protected static Injector getInjector() { return JOB_SYSTEM.injector; }
 
 	protected void invokeClientCallback(Runnable callback) throws InterruptedException {
 		JOB_SYSTEM.invokeClientCallback(callback);

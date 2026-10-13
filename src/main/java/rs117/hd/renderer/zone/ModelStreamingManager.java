@@ -1,6 +1,7 @@
 package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.annotation.Nullable;
@@ -77,15 +78,43 @@ public class ModelStreamingManager {
 	private final StreamingContext[] streamingContexts = new StreamingContext[RL_RENDER_THREADS + 1];
 	private int numRenderThreads = -1;
 
-	static final class StreamingContext {
+	final class StreamingContext {
+		final ArrayDeque<AsyncCachedModel> freeModels = new ArrayDeque<>();
 		final int[] worldPos = new int[3];
 		final float[] objectWorldPos = new float[4];
+
 		int renderableCount;
+
+		void prewarm() {
+			if(freeModels.size() >= renderableCount)
+				return;
+
+			final int acquireCount = renderableCount - freeModels.size();
+			for(int i = 0; i < acquireCount; i++)
+				freeModels.add(AsyncCachedModel.POOL.acquire());
+		}
+
+		AsyncCachedModel obtainAvailableAsyncCachedModel(Model model) {
+			if (AsyncCachedModel.POOL == null || numRenderThreads <= 0)
+				return null;
+
+			AsyncCachedModel result = !freeModels.isEmpty() ? freeModels.poll() : AsyncCachedModel.POOL.acquire();
+			if (result == null)
+				return null;
+
+			if (result.setup(model))
+				return result;
+
+			// We failed to reserve space to cache the model, so return the model back to the pool
+			AsyncCachedModel.POOL.recycle(result);
+
+			return null;
+		}
 	}
 
 	public void initialize() {
 		for (int i = 0; i < streamingContexts.length; i++)
-			streamingContexts[i] = injector.getInstance(StreamingContext.class);
+			streamingContexts[i] = new StreamingContext();
 
 		if (useMultithreading())
 			AsyncCachedModel.initialize(injector);
@@ -95,7 +124,7 @@ public class ModelStreamingManager {
 	}
 
 	public void destroy() {
-		ensureAsyncUploadsComplete(null);
+		ensureAsyncUploadsComplete();
 
 		eventBus.unregister(this);
 		AsyncCachedModel.destroy();
@@ -133,8 +162,11 @@ public class ModelStreamingManager {
 
 	@Subscribe
 	public void onBeforeRender(BeforeRender event) {
-		for (int i = 0; i < streamingContexts.length; i++)
-			streamingContexts[i].renderableCount = 0;
+		for (int i = 0; i < streamingContexts.length; i++) {
+			final StreamingContext streamingContext = streamingContexts[i];
+			streamingContext.prewarm();
+			streamingContext.renderableCount = 0;
+		}
 
 		updateRenderThreads();
 	}
@@ -244,8 +276,10 @@ public class ModelStreamingManager {
 		final boolean hasAlpha =
 			(modelOverride.mightHaveTransparency || isAlphaModel(m)) &&
 			(!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
-		final Zone.AlphaModel alphaModel = hasAlpha ?
+		final AlphaModelInstance alphaModel = hasAlpha ?
 			zone.requestTempAlphaModel(
+				renderer.sceneCamera,
+				zx - offset, zz - offset,
 				modelOverride,
 				Math.min(ctx.maxLevel, tileObject.getPlane()),
 				x & 1023,
@@ -255,7 +289,7 @@ public class ModelStreamingManager {
 
 		final int drawIndex = renderThreadId != -1 ? -1 : ctx.obtainDrawIndex(r instanceof Player ? VAO_PLAYER : VAO_OPAQUE);
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
-		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(m);
+		final AsyncCachedModel asyncModelCache = streamingContext.obtainAvailableAsyncCachedModel(m);
 		if (asyncModelCache != null) {
 			// Fast path, buffer the model into the job queue to unblock rl internals
 			asyncModelCache.queue(
@@ -301,7 +335,7 @@ public class ModelStreamingManager {
 		ModelOverride modelOverride,
 		Model model,
 		Zone zone,
-		Zone.AlphaModel alphaModel,
+		AlphaModelInstance alphaModel,
 		boolean isModelPartiallyVisible,
 		int drawIndex,
 		int orientation,
@@ -334,7 +368,7 @@ public class ModelStreamingManager {
 		ModelOverride modelOverride,
 		Model m,
 		@Nullable Zone zone,
-		@Nullable Zone.AlphaModel alphaModel,
+		@Nullable AlphaModelInstance alphaModel,
 		boolean isModelPartiallyVisible,
 		int vaoType,
 		int drawIndex,
@@ -441,14 +475,14 @@ public class ModelStreamingManager {
 		}
 	}
 
-	public void ensureAsyncUploadsComplete(@Nullable Zone zone) {
+	public void ensureAsyncUploadsComplete() {
 		if (AsyncCachedModel.POOL == null)
 			return;
 
 		frameTimer.begin(Timer.MODEL_UPLOAD_COMPLETE);
 		pending.clear();
 		AsyncCachedModel model;
-		while ((model = (zone != null ? zone.pendingModelJobs.poll() : AsyncCachedModel.INFLIGHT.poll())) != null)
+		while ((model = AsyncCachedModel.INFLIGHT.poll()) != null)
 			pending.add(model);
 
 		AsyncCachedModel pendingModel;
@@ -478,23 +512,5 @@ public class ModelStreamingManager {
 		}
 
 		frameTimer.end(Timer.MODEL_UPLOAD_COMPLETE);
-	}
-
-
-	private synchronized AsyncCachedModel obtainAvailableAsyncCachedModel(Model model) {
-		if (AsyncCachedModel.POOL == null || numRenderThreads <= 0)
-			return null;
-
-		AsyncCachedModel result = AsyncCachedModel.POOL.acquire();
-		if (result == null)
-			return null;
-
-		if (result.setup(model))
-			return result;
-
-		// We failed to reserve space to cache the model, so return the model back to the pool
-		AsyncCachedModel.POOL.recycle(result);
-
-		return null;
 	}
 }

@@ -198,6 +198,11 @@ public final class JobSystem {
 		item.encounteredError.set(false);
 		item.ranToCompletion.set(false);
 
+		if(item.needsInject) {
+			item.needsInject = false;
+			injector.injectMembers(item);
+		}
+
 		if (shouldQueue) {
 			newHandle.setInQueue();
 			if (VALIDATE) log.debug("Handle [{}] Added to queue (Dep Count: {{}})", newHandle, dependencies);

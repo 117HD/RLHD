@@ -662,6 +662,8 @@ public class ZoneRenderer implements Renderer {
 			if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
 				return;
 
+			ctx.alphaSortingJob.waitForCompletion();
+
 			frameTimer.begin(Timer.DRAW_POSTSCENE);
 			if (scene.getWorldViewId() == WorldView.TOPLEVEL)
 				postDrawTopLevel();
@@ -1039,44 +1041,44 @@ public class ZoneRenderer implements Renderer {
 			if (renderWater)
 				z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
 
-			modelStreamingManager.ensureAsyncUploadsComplete(z);
-
 			final boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
 			if (hasAlpha) {
 				final int offset = ctx.sceneContext.sceneOffset >> 3;
 				// Only sort if the alpha will be directly visible, since shadows don't require sorting
 				if (level == 0 && (!sceneManager.isRoot(ctx) || z.inSceneFrustum))
-					z.alphaSort(zx - offset, zz - offset, sceneCamera);
+					z.alphaSort(sceneCamera, zx - offset, zz - offset);
 
-				if (skyRenderer.castsShadows && !ctx.isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
-					directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
-					z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, shouldDrawRoofShadows);
-				}
+				if (z.doesLevelHaveAlphaModels(level)) {
+					if (skyRenderer.castsShadows && level == 0 && !ctx.isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
+						directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
+						z.renderAlphaShadows(directionalCmd, zx - offset, zz - offset, ctx, shouldDrawRoofShadows);
+					}
 
-				if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
-					if (renderWater) {
-						// Water is currently drawn with depth writes & depth testing enabled, and as such, alpha models and the water plane
-						// can Z-fight depending on draw order. To avoid alpha models above water causing the water surface to fail its
-						// depth test, we disable depth writes for alpha models and rely on correct back to front ordering of the zones
-						sceneCmd.DepthMask(false);
-						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
-						sceneCmd.DepthMask(true);
-					} else {
-						// Draw alpha models in two passes, first blending colors correctly, then writing depth for subsequent opaque models
-						// to test against. This is necessary because opaque models on higher planes can be drawn later
+					if (z.hasVisibleAlphaModels() && (!sceneManager.isRoot(ctx) || z.inSceneFrustum)) {
+						if (renderWater) {
+							// Water is currently drawn with depth writes & depth testing enabled, and as such, alpha models and the water plane
+							// can Z-fight depending on draw order. To avoid alpha models above water causing the water surface to fail its
+							// depth test, we disable depth writes for alpha models and rely on correct back to front ordering of the zones
+							sceneCmd.DepthMask(false);
+							z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
+							sceneCmd.DepthMask(true);
+						} else {
+							// Draw alpha models in two passes, first blending colors correctly, then writing depth for subsequent opaque models
+							// to test against. This is necessary because opaque models on higher planes can be drawn later
 
-						// Write color without depth writes
-						sceneCmd.DepthMask(false);
-						sceneCmd.ColorMask(true, true, true, true);
-						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
+							// Write color without depth writes
+							sceneCmd.DepthMask(false);
+							sceneCmd.ColorMask(true, true, true, true);
+							z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
 
-						// Write depth without color
-						sceneCmd.DepthMask(true);
-						sceneCmd.ColorMask(false, false, false, false);
-						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, true, false);
+							// Write depth without color
+							sceneCmd.DepthMask(true);
+							sceneCmd.ColorMask(false, false, false, false);
+							z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, true, false);
 
-						// Restore color writes
-						sceneCmd.ColorMask(true, true, true, true);
+							// Restore color writes
+							sceneCmd.ColorMask(true, true, true, true);
+						}
 					}
 				}
 			}
@@ -1101,7 +1103,10 @@ public class ZoneRenderer implements Renderer {
 
 		try {
 			WorldViewContext ctx = sceneManager.getContext(scene);
-			if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
+			if(ctx == null)
+				return;
+
+			if (!sceneManager.isRoot(ctx) && ctx.isLoading)
 				return;
 
 			frameTimer.begin(Timer.DRAW_PASS);
@@ -1120,7 +1125,7 @@ public class ZoneRenderer implements Renderer {
 					}
 					break;
 				case DrawCallbacks.PASS_ALPHA:
-					modelStreamingManager.ensureAsyncUploadsComplete(null);
+					modelStreamingManager.ensureAsyncUploadsComplete();
 
 					if (sceneManager.isRoot(ctx))
 						frameTimer.begin(Timer.UNMAP_ROOT_CTX);

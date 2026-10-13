@@ -9,6 +9,8 @@ public final class PrimitiveIntArray {
 	public int[] array = new int[16];
 	public int length;
 
+	public boolean isEmpty() { return length == 0; }
+
 	public PrimitiveIntArray reset() {
 		length = 0;
 		return this;
@@ -37,6 +39,12 @@ public final class PrimitiveIntArray {
 		ensureCapacity(count);
 		arraycopy(ints, offset, array, length, count);
 		length += count;
+	}
+
+	public void swap(int a, int b) {
+		final int tmp = array[a];
+		array[a] = array[b];
+		array[b] = tmp;
 	}
 
 	public void removeAt(int idx) {

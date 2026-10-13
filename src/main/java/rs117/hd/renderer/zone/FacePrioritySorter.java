@@ -31,7 +31,6 @@ import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.collections.PrimitiveCharArray;
 
-import static rs117.hd.renderer.zone.Zone.VERT_SIZE;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -39,7 +38,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 	public static ConcurrentPool<FacePrioritySorter> POOL;
 
 	public static final int MAX_FACE_COUNT = 8192;
-	private static final int MAX_DIAMETER = 6000;
+	static final int MAX_DIAMETER = 6000;
 	private static final int MAX_FACES_PER_PRIORITY = 4000;
 	private static final int PRIORITY_COUNT = 12;
 
@@ -200,23 +199,27 @@ public final class FacePrioritySorter implements AutoCloseable {
 		}
 	}
 
-	void sortStaticModelFacesByDistance(
-		Zone.AlphaModel m,
+	public void sortStaticModelFaces(
+		StaticAlphaModel model,
 		int yawCos, int yawSin,
 		int pitchCos, int pitchSin
 	) {
-		final int radius = m.radius;
+		model.sortedFaceCount = 0;
+
+		final int radius = model.radius;
 		final int diameter = 1 + radius * 2;
-		if (diameter >= MAX_DIAMETER)
+		if (diameter >= FacePrioritySorter.MAX_DIAMETER)
 			return;
 
-		final int start = m.startpos / (VERT_SIZE >> 2);
-		final int maxFaceCount = m.packedFaces.length + m.doubleSidedCount;
+		final int[] packedFaces = model.packedFaces;
+		final int[] doubleSidedBitSet = model.doubleSidedBitSet;
+		final int faceCount = packedFaces.length;
+		final int maxFaceCount = faceCount + model.doubleSidedCount;
+		if (maxFaceCount <= 0)
+			return;
+
 		ensureCapacity(diameter, maxFaceCount);
 
-		final int[] packedFaces = m.packedFaces;
-		final int[] doubleSidedBitSet = m.doubleSidedBitSet;
-		final int[] sortedFaces = m.tempSortedFaces;
 		final int[] zsortHead = this.zsortHead;
 		final int[] zsortTail = this.zsortTail;
 		final int[] zsortNext = this.zsortNext;
@@ -224,11 +227,12 @@ public final class FacePrioritySorter implements AutoCloseable {
 		Arrays.fill(zsortHead, 0, diameter, -1);
 		Arrays.fill(zsortTail, 0, diameter, -1);
 
-		int sortedOffset = 0;
+		final char[] sortedFaces = model.sortedFaces;
+		int sortedCount = 0;
 		int backfaceWord = 0;
 		int minFz = diameter, maxFz = 0;
 
-		for (int i = 0, f = 0; i < m.packedFaces.length; ++i, ++f) {
+		for (int i = 0, f = 0; i < faceCount; ++i, ++f) {
 			final int packed = packedFaces[i];
 			final short x = (short) (packed >> 21);
 			final short y = (short) ((packed << 11) >> 22);
@@ -251,33 +255,24 @@ public final class FacePrioritySorter implements AutoCloseable {
 			}
 			zsortNext[f] = -1;
 
-			// Backfaces are not sorted, so we skip over them if this face is marked as double-sided
+			// Backfaces are not sorted, so we emit them first if this face is marked as double-sided
 			if (doubleSidedBitSet != null) {
 				if ((i & 31) == 0)
 					backfaceWord = doubleSidedBitSet[i >> 5];
 
-				if ((backfaceWord & 1) != 0) {
-					final int faceStart = ++f * 3 + start;
-					sortedFaces[sortedOffset++] = faceStart;
-					sortedFaces[sortedOffset++] = faceStart + 1;
-					sortedFaces[sortedOffset++] = faceStart + 2;
-				}
+				if ((backfaceWord & 1) != 0)
+					sortedFaces[sortedCount++] = (char) ++f;
+
 				backfaceWord >>>= 1;
 			}
 		}
 
 		for (int i = maxFz; i >= minFz; --i) {
-			for (int f = zsortHead[i]; f != -1; f = zsortNext[f]) {
-				if (f >= maxFaceCount)
-					continue;
-
-				final int faceStart = f * 3 + start;
-				sortedFaces[sortedOffset++] = faceStart;
-				sortedFaces[sortedOffset++] = faceStart + 1;
-				sortedFaces[sortedOffset++] = faceStart + 2;
-			}
+			for (int f = zsortHead[i]; f != -1; f = zsortNext[f])
+				sortedFaces[sortedCount++] = (char) f;
 		}
-		m.sortedFacesLen = sortedOffset;
+
+		model.sortedFaceCount = sortedCount;
 	}
 
 	@Override

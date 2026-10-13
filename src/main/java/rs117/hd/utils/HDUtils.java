@@ -479,6 +479,38 @@ public final class HDUtils {
 		return true;
 	}
 
+	public static int classifyAABBIntersectingFrustum(
+		float minX,
+		float minY,
+		float minZ,
+		float maxX,
+		float maxY,
+		float maxZ,
+		float[][] cullingPlanes
+	) {
+		boolean fullyInside = true;
+		for (int i = 0; i < cullingPlanes.length; i++) {
+			final float[] plane = cullingPlanes[i];
+			final float nx = plane[0];
+			final float ny = plane[1];
+			final float nz = plane[2];
+			final float d = plane[3];
+
+			final float px = nx >= 0 ? maxX : minX;
+			final float py = ny >= 0 ? maxY : minY;
+			final float pz = nz >= 0 ? maxZ : minZ;
+			if (nx * px + ny * py + nz * pz + d < 0.0f)
+				return -1; // Fully outside
+
+			final float qx = nx >= 0 ? minX : maxX;
+			final float qy = ny >= 0 ? minY : maxY;
+			final float qz = nz >= 0 ? minZ : maxZ;
+			if (nx * qx + ny * qy + nz * qz + d < 0.0f)
+				fullyInside = false;
+		}
+		return fullyInside ? 1 : 0; // 1 = Fully inside, 0 = Partially inside
+	}
+
 	public static int packTerrainData(boolean isTerrain, int waterDepth, WaterType waterType, int plane) {
 		// Up to 12-bit water depth | 8-bit water type | 2-bit plane | terrain flag
 		assert waterType.index < 1 << 7 : "Too many water types";

@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
@@ -730,6 +731,26 @@ public class SceneManager {
 
 		nextZones = null;
 		nextSceneContext = null;
+
+		int alphaModelInstances = 0;
+		HashSet<StaticAlphaModel> staticAlphaModels = new HashSet<>();
+		for (int x = 0; x < ctx.sizeX; x++) {
+			for (int z = 0; z < ctx.sizeZ; z++) {
+				Zone zone = ctx.zones[x][z];
+				if (zone == null)
+					continue;
+				for (AlphaModelInstance m : zone.alphaModels) {
+					alphaModelInstances++;
+					if (m.staticModel != null)
+						staticAlphaModels.add(m.staticModel);
+				}
+			}
+		}
+		log.debug(
+			"swapScene AlphaModelInstances: {} vs StaticAlphaModels: {}",
+			alphaModelInstances,
+			staticAlphaModels.size()
+		);
 
 		if (isFirst) {
 			root.initBuffers();
