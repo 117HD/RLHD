@@ -12953,6 +12953,12 @@
     ]
   },
   {
+    "name": "CRAB_QUEST_ISLAND",
+    "aabbs": [
+      [ 3000, 2592, 3103, 2695 ]
+    ]
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",
