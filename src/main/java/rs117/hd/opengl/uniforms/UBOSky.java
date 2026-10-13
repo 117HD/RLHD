@@ -10,6 +10,8 @@ public class UBOSky extends UniformBuffer<GLBuffer> {
 		super(GL_DYNAMIC_DRAW);
 	}
 
+	public Property glareIntensity = addProperty(PropertyType.Float, "glareIntensity");
+
 	public Property enabled = addProperty(PropertyType.Int, "enabled");
 	public Property zenithColor = addProperty(PropertyType.FVec3, "zenithColor");
 	public Property horizonColor = addProperty(PropertyType.FVec3, "horizonColor");
@@ -40,7 +42,6 @@ public class UBOSky extends UniformBuffer<GLBuffer> {
 
 	public Property moonSizeMult = addProperty(PropertyType.Float, "moonSizeMult");
 	public Property starHorizonHeight = addProperty(PropertyType.Float, "starHorizonHeight");
-	public Property celestialGlareIntensity = addProperty(PropertyType.Float, "celestialGlareIntensity");
 
 	public final Property[] nebulaClusters = addPropertyArray(PropertyType.FVec4, "nebulaClusters", StarField.CLUSTER_COUNT);
 }

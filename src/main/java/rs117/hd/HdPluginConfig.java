@@ -742,23 +742,6 @@ public interface HdPluginConfig extends Config
 		return 60;
 	}
 
-	String KEY_CELESTIAL_GLARE = "celestialGlareIntensity";
-	@Range(min = 0, max = 100)
-	@Units(Units.PERCENT)
-	@ConfigItem(
-		keyName = KEY_CELESTIAL_GLARE,
-		name = "Sun & moon glare",
-		description =
-			"Controls the intensity of the glare/glow surrounding the sun and moon.<br>" +
-			"Lower this if bright light sensitivity makes the glare uncomfortable to look at.<br>" +
-			"Does not affect the brightness of the sun or moon disk itself.",
-		position = 8,
-		section = daylightCycleSettings
-	)
-	default int celestialGlareIntensity() {
-		return 100;
-	}
-
 	String KEY_LATITUDE_DEGREES = "latitudeDegrees";
 	@Range(min = -90, max = 90)
 	@Units("°")
@@ -771,7 +754,7 @@ public interface HdPluginConfig extends Config
 			"For southern latitudes, use negative values. For more precise timing, you can provide<br>" +
 			"coordinates including decimals in the in-game chat with: <b>::117hd latlon &lt;latitude&gt; &lt;longitude&gt;</b><br>" +
 			"To return to using the values specified in the config panel, type: <b>::117hd latlon reset</b>",
-		position = 9,
+		position = 8,
 		section = daylightCycleSettings
 	)
 	default int latitudeDegrees() {
@@ -790,7 +773,7 @@ public interface HdPluginConfig extends Config
 			"For western longitudes, use negative values. For more precise timing, you can provide<br>" +
 			"coordinates including decimals in the in-game chat with: <b>::117hd latlon &lt;latitude&gt; &lt;longitude&gt;</b><br>" +
 			"To return to using the values specified in the config panel, type: <b>::117hd latlon reset</b>",
-		position = 10,
+		position = 9,
 		section = daylightCycleSettings
 	)
 	default int longitudeDegrees() {
@@ -1192,6 +1175,19 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean windowsHdrCorrection() {
 		return false;
+	}
+
+	String KEY_GLARE_INTENSITY = "glareIntensity";
+	@Range(min = 0, max = 100)
+	@Units(Units.PERCENT)
+	@ConfigItem(
+		keyName = KEY_GLARE_INTENSITY,
+		name = "Glare intensity",
+		description = "Reduce the brightness of the sun & moon, both in the sky and in water reflections.",
+		section = miscellaneousSettings
+	)
+	default int glareIntensity() {
+		return 100;
 	}
 
 

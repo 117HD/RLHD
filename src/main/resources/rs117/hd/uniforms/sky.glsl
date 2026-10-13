@@ -3,6 +3,8 @@
 #include NEBULA_CLUSTER_COUNT
 
 layout(std140) uniform UBOSky {
+    float glareIntensity;
+
     bool enabled;
     vec3 zenithColor;
     vec3 horizonColor;
@@ -34,7 +36,6 @@ layout(std140) uniform UBOSky {
     float moonSizeMult;
 
     float starHorizonHeight;
-    float celestialGlareIntensity;
 
     vec4 nebulaClusters[NEBULA_CLUSTER_COUNT];
 } uboSky;
