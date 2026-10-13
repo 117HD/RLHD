@@ -26,19 +26,10 @@ public final class AlphaModelInstance {
 	byte flags = VISIBLE;
 
 	int dist;
-	int asyncSortIdx = -1;
-	int sortedIndiciesOffset; // offset into the sorted index buffer of the shared block
-	int sortedIndiciesCount; // number of indices in the shared block
-	int baseVertex; // vertex offset of this instance's geometry within the zone's alpha VBO
 
 	static final int SKIP = 1; // temporary model is in a closer zone
 	static final int TEMP = 2; // temporary model added to a closer zone
-	static final int SORT_COMPLETED = 4;
 	static final int VISIBLE = 8;
-
-	void setSorted() {
-		flags |= SORT_COMPLETED;
-	}
 
 	void setHidden() {
 		flags &= ~VISIBLE;
@@ -46,10 +37,6 @@ public final class AlphaModelInstance {
 
 	boolean isVisible() {
 		return (flags & VISIBLE) != 0;
-	}
-
-	boolean needsSorting() {
-		return (flags & SORT_COMPLETED) == 0;
 	}
 
 	boolean isTemp() {

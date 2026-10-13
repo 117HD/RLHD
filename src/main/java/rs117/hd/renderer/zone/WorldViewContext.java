@@ -2,10 +2,7 @@ package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
 import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
@@ -31,7 +28,6 @@ import static rs117.hd.renderer.zone.DynamicModelVAO.METADATA_SIZE;
 import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
 import static rs117.hd.renderer.zone.ZoneRenderer.FRAMES_IN_FLIGHT;
 import static rs117.hd.utils.MathUtils.*;
-import static rs117.hd.utils.collections.Util.quickSort;
 
 @Slf4j
 public class WorldViewContext {
@@ -87,9 +83,6 @@ public class WorldViewContext {
 	int eboAlphaCount;
 	// Absolute EBO offset the whole packed block array is uploaded to, resolved once per frame on first use, or -1.
 	int eboAlphaBaseOffset = -1;
-
-	private final Comparator<Zone> alphaSortComparator = Comparator.comparingInt((Zone z) -> z.dist).reversed();
-	private final List<Zone> alphaZones = new ArrayList<>();
 
 	// Interned StaticAlphaModels so identical static models can be shared across zones in this world view.
 	// Guarded by synchronizing on the map itself.
@@ -280,48 +273,24 @@ public class WorldViewContext {
 	}
 
 	void sortStaticAlphaModels(Camera camera) {
-		alphaZones.clear();
+		// One job per world view, so each distinct StaticAlphaModel is sorted and assigned an index block exactly
+		// once, no matter how many zones reference it. Instance visibility and distances are handled per zone in
+		// Zone.alphaSort().
+		alphaSortingJob.reset();
 
-		final int offset = sceneContext.sceneOffset >> 3;
-		final int camPosX = (int) camera.getPositionX();
-		final int camPosZ = (int) camera.getPositionZ();
-		final boolean frustumCull = worldViewId == WorldView.TOPLEVEL;
 		for (int zx = 0; zx < sizeX; zx++) {
 			for (int zz = 0; zz < sizeZ; zz++) {
 				final Zone z = zones[zx][zz];
-				if (z.alphaModels.isEmpty())
-					continue;
-
-				final int dx = camPosX - ((zx - offset) << 10);
-				final int dz = camPosZ - ((zz - offset) << 10);
-				z.dist = dx * dx + dz * dz;
-				// AlphaModel distances are relative to scene-local coordinates (matching the camera and zone distances),
-				// so the extended zone index must be converted back to a scene-local one.
-				z.sortZoneX = zx - offset;
-				z.sortZoneZ = zz - offset;
-				alphaZones.add(z);
-			}
-		}
-
-		// One job per world view, so each distinct StaticAlphaModel is sorted and assigned an index block exactly
-		// once, no matter how many zones reference it.
-		alphaSortingJob.reset();
-
-		int alphaFaceCount = 0;
-		if (!alphaZones.isEmpty()) {
-			quickSort(alphaZones, alphaSortComparator);
-			for (int i = 0; i < alphaZones.size(); i++) {
-				final Zone z = alphaZones.get(i);
-				alphaSortingJob.beginZone(camera, z.sortZoneX, z.sortZoneZ, frustumCull);
-				for (int j = 0; j < z.alphaModels.size(); j++) {
-					final AlphaModelInstance m = z.alphaModels.get(j);
+				for (int i = 0; i < z.alphaModels.size(); i++) {
+					final AlphaModelInstance m = z.alphaModels.get(i);
 					if ((m.flags & AlphaModelInstance.SKIP) != 0 || m.isTemp())
 						continue;
-					alphaSortingJob.addAlphaModel(m);
+					alphaSortingJob.addStaticAlphaModel(m.staticModel);
 				}
 			}
-			alphaFaceCount = alphaSortingJob.getAssignedIndexCount();
 		}
+
+		final int alphaFaceCount = alphaSortingJob.getAssignedIndexCount();
 
 		// The packed block array is uploaded to the EBO as one contiguous copy, so the destination of any block is
 		// just eboAlphaBaseOffset + its offset within eboAlphaIndices, resolved once on first use per frame.
@@ -331,7 +300,7 @@ public class WorldViewContext {
 		if (alphaFaceCount > 0) {
 			ZoneRenderer.eboAlpha.ensureCapacity((long) alphaFaceCount * Integer.BYTES);
 			eboAlphaIndices = PooledArrayType.INT.ensureCapacity(eboAlphaIndices, alphaFaceCount);
-			alphaSortingJob.queue(eboAlphaIndices);
+			alphaSortingJob.queue(camera, eboAlphaIndices);
 		} else {
 			if (eboAlphaIndices != null)
 				PooledArrayType.INT.release(eboAlphaIndices);

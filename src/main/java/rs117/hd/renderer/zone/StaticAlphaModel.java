@@ -24,6 +24,10 @@ public final class StaticAlphaModel {
 	int sortedFaceCount;
 	int sortKey = -1;
 
+	// Offset of this model's sorted-index block within the world view's packed index buffer, assigned per frame by
+	// StaticAlphaSortingJob, or -1 when the model has no block this frame.
+	int sortedIndiciesOffset = -1;
+
 	StaticAlphaModel(int[] packedFaces, int[] doubleSidedBitSet, char doubleSidedCount, int radius) {
 		this.packedFaces = packedFaces;
 		this.doubleSidedBitSet = doubleSidedBitSet;

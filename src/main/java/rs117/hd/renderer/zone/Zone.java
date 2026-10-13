@@ -70,9 +70,6 @@ public final class Zone implements Destructible {
 	public 	int glVao;
 	int modelCount;
 	int bufLen;
-	int dist;
-	// Scene-local zone coordinates for the current frame's static alpha sort, set by the WorldViewContext
-	int sortZoneX, sortZoneZ;
 
 	byte staticAlphaLevelMask = 0;
 	byte alphaLevelMask = 0;
@@ -694,9 +691,7 @@ public final class Zone implements Destructible {
 		for (int i = alphaModels.size() - 1; i >= 0; --i) {
 			AlphaModelInstance m = alphaModels.get(i);
 			m.dist = Integer.MAX_VALUE;
-			m.asyncSortIdx = -1;
-			m.sortedIndiciesOffset = m.sortedIndiciesCount = 0;
-			m.flags &= ~(AlphaModelInstance.SKIP | AlphaModelInstance.SORT_COMPLETED);
+			m.flags &= ~AlphaModelInstance.SKIP;
 			m.flags |= AlphaModelInstance.VISIBLE;
 			assert m.asyncModel == null;
 
@@ -725,12 +720,17 @@ public final class Zone implements Destructible {
 	private static final int[] staticDrawLength = new int[NUM_DRAW_RANGES];
 	private static final int[] staticDrawBaseVertex = new int[NUM_DRAW_RANGES];
 
-	synchronized void alphaSort() {
+	synchronized void alphaSort(Camera camera, int zx, int zz) {
 		visibleAlphaModels.reset();
 
 		final int alphaModelCount = alphaModels.size();
 		if (alphaModelCount == 0)
 			return;
+
+		// The world view's sorting job assigns the shared models their index blocks, which the renderer needs below.
+		if (viewContext != null)
+			viewContext.alphaSortingJob.waitForCompletion();
+
 		if (alphaModelCount == 1) {
 			visibleAlphaModels.put(0);
 			return;
@@ -740,11 +740,60 @@ public final class Zone implements Destructible {
 			alphaModelsKeys = new int[alphaModelCount];
 
 		visibleAlphaModels.ensureCapacity(alphaModelCount);
-		if (viewContext != null)
-			viewContext.alphaSortingJob.waitForCompletion();
+
+		final boolean frustumCull = viewContext != null && viewContext.worldViewId == WorldView.TOPLEVEL;
+
+		// Classify the combined AABB of the zone's static instances against the frustum, so the per-model test can be
+		// skipped entirely when the whole zone is visible. Alpha models start visible to avoid pop-in, so culling only
+		// ever hides instances.
+		int minBoundX = Integer.MAX_VALUE, minBoundY = Integer.MAX_VALUE, minBoundZ = Integer.MAX_VALUE;
+		int maxBoundX = Integer.MIN_VALUE, maxBoundY = Integer.MIN_VALUE, maxBoundZ = Integer.MIN_VALUE;
+		boolean hasStatic = false;
+		for (int i = 0; i < alphaModelCount; i++) {
+			final AlphaModelInstance m = alphaModels.get(i);
+			if ((m.flags & AlphaModelInstance.SKIP) != 0 || m.isTemp())
+				continue;
+
+			hasStatic = true;
+			final int modelX = m.x + ((zx - m.zofx) << 10);
+			final int modelZ = m.z + ((zz - m.zofz) << 10);
+			minBoundX = min(minBoundX, modelX - m.extentsX);
+			maxBoundX = max(maxBoundX, modelX + m.extentsX);
+			minBoundY = min(minBoundY, m.y - m.extentsY);
+			maxBoundY = max(maxBoundY, m.y + m.extentsY);
+			minBoundZ = min(minBoundZ, modelZ - m.extentsZ);
+			maxBoundZ = max(maxBoundZ, modelZ + m.extentsZ);
+		}
+
+		final int boundsClassification = hasStatic && frustumCull ?
+			camera.classifyAABB(minBoundX, minBoundY, minBoundZ, maxBoundX, maxBoundY, maxBoundZ) : 1;
+		final boolean fullyOutside = boundsClassification == -1;
+		final boolean partiallyVisible = boundsClassification == 0;
+		final int cx = (int) camera.getPositionX();
+		final int cy = (int) camera.getPositionY();
+		final int cz = (int) camera.getPositionZ();
 
 		for(int i = 0; i < alphaModelCount; i++) {
 			final AlphaModelInstance model = alphaModels.get(i);
+
+			if ((model.flags & AlphaModelInstance.SKIP) == 0 && !model.isTemp()) {
+				if (fullyOutside) {
+					model.setHidden();
+				} else if (partiallyVisible) {
+					final int modelX = model.x + ((zx - model.zofx) << 10);
+					final int modelZ = model.z + ((zz - model.zofz) << 10);
+					if (!camera.intersectsAABB(
+						modelX - model.extentsX, model.y - model.extentsY, modelZ - model.extentsZ,
+						modelX + model.extentsX, model.y + model.extentsY, modelZ + model.extentsZ
+					)) {
+						model.setHidden();
+					}
+				}
+
+				if (model.isVisible())
+					model.calculateDist(cx, cy, cz, zx, zz);
+			}
+
 			if(!model.isVisible())
 				continue;
 
@@ -803,7 +852,7 @@ public final class Zone implements Destructible {
 			if (m.isTemp()) {
 				// these are already sorted and so just requires a glMultiDrawArrays() from the active vao
 				drawMode = TEMP;
-			} else if (depthOnly || m.asyncSortIdx < 0) {
+			} else if (depthOnly) {
 				drawMode = STATIC_UNSORTED;
 			}
 
@@ -826,11 +875,12 @@ public final class Zone implements Destructible {
 				continue;
 			}
 
-			if (m.sortedIndiciesCount <= 0 || m.needsSorting() || m.sortedIndiciesOffset < 0)
+			final StaticAlphaModel model = m.staticModel;
+			if (model == null || model.sortedIndiciesOffset < 0 || model.sortedFaceCount <= 0)
 				continue;
 
 			// The whole packed block array is uploaded to the EBO as one contiguous copy once per world view, so each
-			// instance's sorted indices live at eboAlphaBaseOffset + its own block offset. Instances in different
+			// instance's sorted indices live at eboAlphaBaseOffset + its model's block offset. Instances in different
 			// zones referencing the same model resolve to the same destination without per-frame bookkeeping.
 			if (ctx.eboAlphaBaseOffset < 0) {
 				final EboAlphaWriterJob.ZoneAlphaModelCollection collection = ctx.sortedAlphaFacesUpload.obtain();
@@ -838,14 +888,14 @@ public final class Zone implements Destructible {
 				ctx.eboAlphaBaseOffset = collection.queue(ctx.eboAlphaCount);
 			}
 
-			final int dest = ctx.eboAlphaBaseOffset + m.sortedIndiciesOffset;
+			final int dest = ctx.eboAlphaBaseOffset + model.sortedIndiciesOffset;
 
 			if (staticDrawCount >= NUM_DRAW_RANGES)
 				flush(cmd);
 
 			staticDrawOffset[staticDrawCount] = dest;
-			staticDrawLength[staticDrawCount] = m.sortedIndiciesCount;
-			staticDrawBaseVertex[staticDrawCount] = m.baseVertex;
+			staticDrawLength[staticDrawCount] = model.sortedFaceCount * 3;
+			staticDrawBaseVertex[staticDrawCount] = m.startpos / (VERT_SIZE >> 2);
 			staticDrawCount++;
 		}
 		flush(cmd);
@@ -1017,9 +1067,6 @@ public final class Zone implements Destructible {
 
 				// The clone shares the owner's StaticAlphaModel. The owner zone owns the refcount and releases it
 				m2.staticModel = m.staticModel;
-				m2.asyncSortIdx = m.asyncSortIdx;
-				m2.sortedIndiciesOffset = m.sortedIndiciesOffset;
-				m2.sortedIndiciesCount = m.sortedIndiciesCount;
 
 				m2.flags = AlphaModelInstance.TEMP | AlphaModelInstance.VISIBLE;
 				m.flags |= AlphaModelInstance.SKIP;

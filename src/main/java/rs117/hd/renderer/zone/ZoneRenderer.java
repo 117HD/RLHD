@@ -1049,7 +1049,7 @@ public class ZoneRenderer implements Renderer {
 				final int offset = ctx.sceneContext.sceneOffset >> 3;
 				// Only sort if the alpha will be directly visible, since shadows don't require sorting
 				if (level == 0 && (!sceneManager.isRoot(ctx) || z.inSceneFrustum))
-					z.alphaSort();
+					z.alphaSort(sceneCamera, zx - offset, zz - offset);
 
 				if (z.doesLevelHaveAlphaModels(level)) {
 					if (skyRenderer.castsShadows && level == 0 && !ctx.isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
