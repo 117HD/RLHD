@@ -1577,8 +1577,8 @@
       "skyVisibility": 0.34,
       "moonVisibility": 0.3,
       "skyFogDensity": 2.42,
-      "nightHorizonColor": "#070912",
-      "nightHorizonStrength": 1,
+      "nightHorizonColor": "#32372f",
+      "nightHorizonStrength": 0.075,
       "starVisibility": 0.215,
       "auroraVisibility": 0.215,
       "skyFogHorizonAltitude": 90,
@@ -1755,7 +1755,7 @@
     "sky": {
       "skyVisibility": 0.99,
       "skyFogDensity": 4.14,
-      "nightHorizonColor": "#0C0F19",
+      "nightHorizonColor": "#0A0000",
       "nightHorizonStrength": 1,
       "skyFogHorizonAltitude": 90,
       "skyFogColor": "#4f1426"
@@ -1841,7 +1841,7 @@
       "sunriseSunsetStrength": 0.2,
       "skyColorTakeoverAngle": 10,
       "skyFogDensity": 2.4,
-      "nightHorizonColor": "#05070F",
+      "nightHorizonColor": "#0A0402",
       "nightHorizonStrength": 1,
       "starVisibility": 0.049,
       "auroraVisibility": 0.049,
