@@ -1,11 +1,13 @@
 package rs117.hd.renderer.zone;
 
+import java.nio.IntBuffer;
 import java.util.Arrays;
 import javax.inject.Inject;
 import lombok.Getter;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.utils.Camera;
+import rs117.hd.utils.buffer.GLMappedBufferIntWriter;
 import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.Job;
 
@@ -23,21 +25,21 @@ public final class StaticAlphaSortingJob extends Job {
 	@Inject
 	private FrameTimer frameTimer;
 
-	private Camera camera;
-	private int[] sortedAlphaIndicies;
+	public final WorldViewContext context;
 
-	// Distinct models assigned an index block this frame, in block order. A model's block offset within the packed
-	// index buffer is stored in its {@code sortedIndiciesOffset}, which doubles as the "already assigned" marker.
+	private GLMappedBufferIntWriter.ReservedView eboAlphaView;
+
+	private Camera camera;
+
 	private StaticAlphaModel[] blockModels = new StaticAlphaModel[16];
 	private int blockCount = 0;
 	@Getter
 	private int assignedIndexCount = 0;
 
-	private int[] zsortHead;
-	private int[] zsortTail;
-	private int[] zsortNext;
-
-	public StaticAlphaSortingJob() { super(true); }
+	public StaticAlphaSortingJob(WorldViewContext context) {
+		super(true);
+		this.context = context;
+	}
 
 	public void reset() {
 		for (int block = 0; block < blockCount; block++)
@@ -63,32 +65,29 @@ public final class StaticAlphaSortingJob extends Job {
 		assignedIndexCount += model.getFaceCount() * 3;
 	}
 
-	public void queue(Camera camera, int[] sortedAlphaIndicies) {
+	public int queue(Camera camera) {
 		if (blockCount == 0)
-			return;
+			return 0;
+
 		this.camera = camera;
-		this.sortedAlphaIndicies = sortedAlphaIndicies;
-		super.queue();
+		this.eboAlphaView = ZoneRenderer.eboAlphaWriter.reserve(assignedIndexCount);
+		final int offsetInts = eboAlphaView.getBufferOffsetInts();
+
+		queue();
+		return offsetInts;
 	}
 
 	public void destroy() {
 		waitForCompletion();
 		reset();
-		PooledArrayType.INT.release(zsortHead);
-		PooledArrayType.INT.release(zsortTail);
-		PooledArrayType.INT.release(zsortNext);
-		zsortHead = zsortTail = zsortNext = null;
 	}
 
-	private void ensureCapacity(int diameter, int faceCount) {
-		zsortHead = PooledArrayType.INT.ensureCapacity(zsortHead, min(FacePrioritySorter.MAX_DIAMETER, diameter + 1));
-		zsortTail = PooledArrayType.INT.ensureCapacity(zsortTail, min(FacePrioritySorter.MAX_DIAMETER, diameter + 1));
-		zsortNext = PooledArrayType.INT.ensureCapacity(zsortNext, min(FacePrioritySorter.MAX_FACE_COUNT, faceCount));
-	}
 
 	@Override
 	protected void onRun() {
-		final long start = System.nanoTime();
+		long start = System.nanoTime();
+		final GLMappedBufferIntWriter.ReservedView view = eboAlphaView;
+		eboAlphaView = null;
 
 		final int yaw = camera.getFixedYaw();
 		final int yawSin = SINE14[yaw];
@@ -99,130 +98,40 @@ public final class StaticAlphaSortingJob extends Job {
 
 		// Face order depends only on camera orientation, so this identifies a StaticAlphaModel's cached sort
 		final int sortKey = yaw << 16 | pitch;
+		final int[] sortedAlphaIndices = PooledArrayType.INT.borrow(assignedIndexCount);
+		try (final FacePrioritySorter sorter = FacePrioritySorter.POOL.acquire()) {
+			int sortedOffset = 0;
+			for (int block = 0; block < blockCount; block++) {
+				final StaticAlphaModel model = blockModels[block];
 
-		for (int block = 0; block < blockCount; block++) {
-			final StaticAlphaModel model = blockModels[block];
-			sortStaticModelFacesByDistance(sortedAlphaIndicies, model, model.sortedIndiciesOffset, sortKey, yawCos, yawSin, pitchCos, pitchSin);
-		}
+				synchronized (model) {
+					if (model.sortKey != sortKey || model.sortedFaces == null) {
+						sorter.sortStaticModelFaces(model, yawCos, yawSin, pitchCos, pitchSin);
+						model.sortKey = sortKey;
+					}
+				}
 
-		frameTimer.add(Timer.STATIC_ALPHA_SORT, System.nanoTime() - start);
-	}
+				final int[] sortedFaces = model.sortedFaces;
+				final int sortedFaceCount = model.sortedFaceCount;
+				if (sortedFaces == null || sortedFaceCount <= 0)
+					return;
 
-	/**
-	 * Ensures the shared {@link StaticAlphaModel} has a sorted face order for the current camera orientation, then
-	 * writes the model's local indices (shared by every instance referencing it) at the given offset. The expensive
-	 * sort is performed at most once per orientation, no matter how many instances reference the model.
-	 */
-	private void sortStaticModelFacesByDistance(
-		int[] sortedAlphaIndicies,
-		StaticAlphaModel model,
-		int sortedOffset,
-		int sortKey,
-		int yawCos, int yawSin,
-		int pitchCos, int pitchSin
-	) {
-		// The monitor guards both the sort cache and the cached order it points at. Sorting only happens when the
-		// camera orientation changes, so this lock is almost always uncontended, and the copy loop is cheap.
-		synchronized (model) {
-			if (model.sortKey != sortKey || model.sortedFaces == null) {
-				sortStaticModelFaces(model, yawCos, yawSin, pitchCos, pitchSin);
-				model.sortKey = sortKey;
+				for (int i = 0; i < sortedFaceCount; i++) {
+					final int faceStart = sortedFaces[i] * 3;
+					sortedAlphaIndices[sortedOffset++] = faceStart;
+					sortedAlphaIndices[sortedOffset++] = faceStart + 1;
+					sortedAlphaIndices[sortedOffset++] = faceStart + 2;
+				}
 			}
 
-			final int[] sortedFaces = model.sortedFaces;
-			final int sortedFaceCount = model.sortedFaceCount;
-			if (sortedFaces == null || sortedFaceCount <= 0)
-				return;
-
-			for (int i = 0; i < sortedFaceCount; i++) {
-				final int faceStart = sortedFaces[i] * 3;
-				sortedAlphaIndicies[sortedOffset++] = faceStart;
-				sortedAlphaIndicies[sortedOffset++] = faceStart + 1;
-				sortedAlphaIndicies[sortedOffset++] = faceStart + 2;
+			if (view != null) {
+				final IntBuffer eboAlphaBuffer = view.getBuffer();
+				if (eboAlphaBuffer != null)
+					eboAlphaBuffer.put(sortedAlphaIndices, 0, sortedOffset);
 			}
+		} finally {
+			PooledArrayType.INT.release(sortedAlphaIndices);
+			frameTimer.add(Timer.STATIC_ALPHA_SORT, System.nanoTime() - start);
 		}
-	}
-
-	/**
-	 * Sorts a {@link StaticAlphaModel}'s local face slots by distance for the given camera orientation, caching the
-	 * result on the model. Must be called while holding the model's monitor.
-	 */
-	private void sortStaticModelFaces(
-		StaticAlphaModel model,
-		int yawCos, int yawSin,
-		int pitchCos, int pitchSin
-	) {
-		model.sortedFaceCount = 0;
-
-		final int radius = model.radius;
-		final int diameter = 1 + radius * 2;
-		if (diameter >= FacePrioritySorter.MAX_DIAMETER)
-			return;
-
-		final int[] packedFaces = model.packedFaces;
-		final int[] doubleSidedBitSet = model.doubleSidedBitSet;
-		final int faceCount = packedFaces.length;
-		final int maxFaceCount = faceCount + model.doubleSidedCount;
-		if (maxFaceCount <= 0)
-			return;
-
-		ensureCapacity(diameter, maxFaceCount);
-
-		final int[] zsortHead = this.zsortHead;
-		final int[] zsortTail = this.zsortTail;
-		final int[] zsortNext = this.zsortNext;
-
-		Arrays.fill(zsortHead, 0, diameter, -1);
-		Arrays.fill(zsortTail, 0, diameter, -1);
-
-		// A single int[] per triangle slot, reused across orientations to avoid per-frame allocation
-		if (model.sortedFaces == null || model.sortedFaces.length < maxFaceCount)
-			model.sortedFaces = new int[maxFaceCount];
-		final int[] sortedFaces = model.sortedFaces;
-		int sortedCount = 0;
-		int backfaceWord = 0;
-		int minFz = diameter, maxFz = 0;
-
-		for (int i = 0, f = 0; i < faceCount; ++i, ++f) {
-			final int packed = packedFaces[i];
-			final short x = (short) (packed >> 21);
-			final short y = (short) ((packed << 11) >> 22);
-			final short z = (short) ((packed << 21) >> 21);
-
-			// We do rotations with 16 bits of extra precision, which we discard post-rotation.
-			// Very little of this can actually be pre-computed without discarding that precision.
-			int fz = (z * yawCos - x * yawSin) >> 16;
-			fz = ((y * pitchSin + fz * pitchCos) >> 16) + radius;
-
-			final int tailFaceIdx = zsortTail[fz];
-			if (tailFaceIdx == -1) {
-				zsortHead[fz] = f;
-				zsortTail[fz] = f;
-				minFz = min(minFz, fz);
-				maxFz = max(maxFz, fz);
-			} else {
-				zsortNext[tailFaceIdx] = f;
-				zsortTail[fz] = f;
-			}
-			zsortNext[f] = -1;
-
-			// Backfaces are not sorted, so we emit them first if this face is marked as double-sided
-			if (doubleSidedBitSet != null) {
-				if ((i & 31) == 0)
-					backfaceWord = doubleSidedBitSet[i >> 5];
-
-				if ((backfaceWord & 1) != 0)
-					sortedFaces[sortedCount++] = ++f;
-
-				backfaceWord >>>= 1;
-			}
-		}
-
-		for (int i = maxFz; i >= minFz; --i) {
-			for (int f = zsortHead[i]; f != -1; f = zsortNext[f])
-				sortedFaces[sortedCount++] = f;
-		}
-
-		model.sortedFaceCount = sortedCount;
 	}
 }

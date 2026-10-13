@@ -25,8 +25,6 @@ public final class AlphaModelInstance {
 	byte zofx, zofz; // for temp alpha models, offset of source zone from target zone
 	byte flags = VISIBLE;
 
-	int dist;
-
 	static final int SKIP = 1; // temporary model is in a closer zone
 	static final int TEMP = 2; // temporary model added to a closer zone
 	static final int VISIBLE = 8;
@@ -55,10 +53,10 @@ public final class AlphaModelInstance {
 		endpos = view.getEndOffset();
 	}
 
-	void calculateDist(int cx, int cy, int cz, int zx, int zz) {
+	int calculateDist(int cx, int cy, int cz, int zx, int zz) {
 		final int dx = (x + ((zx - zofx) << 10)) - cx;
 		final int dy = y - cy;
 		final int dz = (z + ((zz - zofz) << 10)) - cz;
-		dist = dx * dx + dy * dy + dz * dz;
+		return dx * dx + dy * dy + dz * dz;
 	}
 }

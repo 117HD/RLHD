@@ -98,10 +98,6 @@ public final class Zone implements Destructible {
 
 	ZoneUploadJob uploadJob;
 
-	// The WorldViewContext which owns this zone. Used to release shared StaticAlphaModels when the zone is destroyed
-	@Nullable
-	WorldViewContext viewContext;
-
 	void setUploadJob(ZoneUploadJob uploadJob) {
 		this.uploadJob = uploadJob;
 		if (uploadJob != null)
@@ -115,8 +111,6 @@ public final class Zone implements Destructible {
 	int[][] roofEnd;
 
 	final List<AlphaModelInstance> alphaModels = new ArrayList<>(0);
-	// StaticAlphaModels deduplicated by the WorldViewContext for this zone in unmap(), released when destroyed
-	final List<StaticAlphaModel> acquiredStaticModels = new ArrayList<>(0);
 	final PrimitiveIntArray visibleAlphaModels = new PrimitiveIntArray();
 
 	// Combined AABB of this zone's own static alpha models, in zone-local coordinates. Maintained by addAlphaModel so
@@ -234,14 +228,12 @@ public final class Zone implements Destructible {
 		roofStart = null;
 		roofEnd = null;
 
-		if (viewContext != null) {
-			for (int i = 0; i < acquiredStaticModels.size(); i++)
-				viewContext.releaseStaticAlphaModel(acquiredStaticModels.get(i));
+		for (int i = 0; i < alphaModels.size(); i++) {
+			final AlphaModelInstance m = alphaModels.get(i);
+			if(m.staticModel != null)
+				m.staticModel.refCount--;
 		}
-		acquiredStaticModels.clear();
-
 		alphaModels.clear();
-		viewContext = null;
 	}
 
 	@Override
@@ -275,7 +267,6 @@ public final class Zone implements Destructible {
 			final AlphaModelInstance m = alphaModels.get(i);
 			if (m.staticModel != null) {
 				m.staticModel = viewContext.dedupeStaticAlphaModel(m.staticModel);
-				acquiredStaticModels.add(m.staticModel);
 			}
 		}
 	}
@@ -319,7 +310,6 @@ public final class Zone implements Destructible {
 	}
 
 	public void setMetadata(WorldViewContext viewContext, SceneContext sceneContext, int mx, int mz) {
-		this.viewContext = viewContext;
 		if (vboM == null)
 			return;
 
@@ -693,21 +683,17 @@ public final class Zone implements Destructible {
 		m.staticModel = null;
 		m.flags = AlphaModelInstance.VISIBLE;
 		m.zofx = m.zofz = 0;
-		m.calculateDist((int) camera.getPositionX(), (int) camera.getPositionY(), (int) camera.getPositionZ(), zx, zz);
 		alphaLevelMask = (byte) (alphaLevelMask | 1 << level);
 		alphaModels.add(m);
 		return m;
 	}
 
 	synchronized void postAlphaPass() {
-		if (viewContext != null)
-			viewContext.alphaSortingJob.waitForCompletion();
 		alphaLevelMask = staticAlphaLevelMask;
 		visibleAlphaModels.reset();
 
 		for (int i = alphaModels.size() - 1; i >= 0; --i) {
 			AlphaModelInstance m = alphaModels.get(i);
-			m.dist = Integer.MAX_VALUE;
 			m.flags &= ~AlphaModelInstance.SKIP;
 			m.flags |= AlphaModelInstance.VISIBLE;
 			assert m.asyncModel == null;
@@ -737,15 +723,6 @@ public final class Zone implements Destructible {
 		if (alphaModelCount == 0)
 			return;
 
-		// The world view's sorting job assigns the shared models their index blocks, and the whole packed block array
-		// is uploaded to the EBO as one contiguous copy per world view, so reserve its destination once, before any
-		// instance draws reference it. The EBO is already mapped at this point, since this runs during scene draw.
-		if (viewContext != null) {
-			viewContext.alphaSortingJob.waitForCompletion();
-			if (viewContext.eboAlphaBaseOffset < 0 && viewContext.eboAlphaCount > 0)
-				viewContext.eboAlphaBaseOffset = viewContext.sortedAlphaFacesUpload.reserve(viewContext.eboAlphaCount);
-		}
-
 		if (alphaModelCount == 1) {
 			visibleAlphaModels.put(0);
 			return;
@@ -760,17 +737,12 @@ public final class Zone implements Destructible {
 		final int cy = (int) camera.getPositionY();
 		final int cz = (int) camera.getPositionZ();
 
-		// Instance visibility already resolved for this frame by WorldViewContext.sortStaticAlphaModels(). Just compute
-		// distances and order the visible instances back to front.
 		for(int i = 0; i < alphaModelCount; i++) {
 			final AlphaModelInstance model = alphaModels.get(i);
 			if (!model.isVisible())
 				continue;
 
-			if ((model.flags & AlphaModelInstance.SKIP) == 0 && !model.isTemp())
-				model.calculateDist(cx, cy, cz, zx, zz);
-
-			alphaModelsKeys[visibleAlphaModels.length] = -model.dist;
+			alphaModelsKeys[visibleAlphaModels.length] = -model.calculateDist(cx, cy, cz, zx, zz);;
 			visibleAlphaModels.put(i);
 		}
 
@@ -780,13 +752,6 @@ public final class Zone implements Destructible {
 		quickSortByKey(alphaModelsKeys, visibleAlphaModels.array, 0, visibleAlphaModels.length - 1);
 	}
 
-	/**
-	 * Hides this zone's static alpha model instances which are outside the frustum. Called once per frame by
-	 * {@link WorldViewContext#sortStaticAlphaModels(Camera)} before the shared models are sorted, so unnecessary models
-	 * can be skipped. The zone's combined AABB is maintained during upload by {@link #addAlphaModel}, allowing the
-	 * per-instance test to be skipped entirely when the whole zone is visible. Instances start visible to avoid pop-in,
-	 * so this only ever hides.
-	 */
 	void determineAlphaModelVisibility(Camera camera, int zx, int zz, boolean frustumCull) {
 		final int alphaModelCount = alphaModels.size();
 		if (alphaModelCount <= 1)
@@ -904,7 +869,6 @@ public final class Zone implements Destructible {
 			// Each instance's sorted indices live at the world view's EBO base offset + its model's block offset,
 			// which was reserved in alphaSort().
 			final int dest = ctx.eboAlphaBaseOffset + model.sortedIndiciesOffset;
-
 			if (drawIdx >= NUM_DRAW_RANGES)
 				flush(cmd);
 

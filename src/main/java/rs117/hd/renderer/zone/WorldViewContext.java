@@ -3,7 +3,6 @@ package rs117.hd.renderer.zone;
 import com.google.inject.Injector;
 import java.nio.IntBuffer;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -20,7 +19,6 @@ import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
-import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.JobGroup;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -76,17 +74,12 @@ public class WorldViewContext {
 	int minLevel, level, maxLevel;
 	Set<Integer> hideRoofIds;
 
-	final EboAlphaWriterJob sortedAlphaFacesUpload = new EboAlphaWriterJob(this);
-	final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob();
-	int[] eboAlphaIndices;
-	// Number of valid indices in eboAlphaIndices this frame (the packed blocks for this world view).
-	int eboAlphaCount;
-	// Absolute EBO offset the whole packed block array is uploaded to, resolved once per frame on first use, or -1.
+	final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob(this);
 	int eboAlphaBaseOffset = -1;
 
 	// Interned StaticAlphaModels so identical static models can be shared across zones in this world view.
 	// Guarded by synchronizing on the map itself.
-	private final Map<StaticAlphaModel, StaticAlphaModel> staticAlphaModels = new HashMap<>();
+	private final HashMap<StaticAlphaModel, StaticAlphaModel> staticAlphaModels = new HashMap<>();
 
 	CommandBuffer vaoSceneCmd;
 	CommandBuffer vaoDirectionalCmd;
@@ -244,12 +237,6 @@ public class WorldViewContext {
 		}
 	}
 
-	/**
-	 * Deduplicates an already constructed static alpha model against the models already interned for this world view.
-	 * If an equal model exists, it is returned and {@code model} can be discarded; otherwise {@code model} is interned
-	 * and returned. The returned model's {@code refCount} must eventually be balanced with
-	 * {@link #releaseStaticAlphaModel(StaticAlphaModel)}.
-	 */
 	StaticAlphaModel dedupeStaticAlphaModel(StaticAlphaModel model) {
 		synchronized (staticAlphaModels) {
 			final StaticAlphaModel existing = staticAlphaModels.get(model);
@@ -263,23 +250,16 @@ public class WorldViewContext {
 		}
 	}
 
-	void releaseStaticAlphaModel(StaticAlphaModel model) {
-		if (model == null)
-			return;
-		synchronized (staticAlphaModels) {
-			if (--model.refCount <= 0)
-				staticAlphaModels.remove(model);
-		}
-	}
-
 	void sortStaticAlphaModels(Camera camera) {
-		// One job per world view, so each distinct StaticAlphaModel is sorted and assigned an index block exactly
-		// once, no matter how many zones reference it. Instance visibility is resolved per zone here, and only models
-		// which have at least one visible instance are queued for sorting.
+		alphaSortingJob.waitForCompletion();
 		alphaSortingJob.reset();
 
 		final int offset = sceneContext.sceneOffset >> 3;
 		final boolean frustumCull = worldViewId == WorldView.TOPLEVEL;
+
+		synchronized (staticAlphaModels) {
+			staticAlphaModels.values().removeIf((model) -> model.refCount <= 0);
+		}
 
 		for (int zx = 0; zx < sizeX; zx++) {
 			for (int zz = 0; zz < sizeZ; zz++) {
@@ -298,22 +278,7 @@ public class WorldViewContext {
 			}
 		}
 
-		final int alphaFaceCount = alphaSortingJob.getAssignedIndexCount();
-
-		// The packed block array is uploaded to the EBO as one contiguous copy, so the destination of any block is
-		// just eboAlphaBaseOffset + its offset within eboAlphaIndices. The base offset is reserved in Zone.alphaSort().
-		eboAlphaCount = alphaFaceCount;
-		eboAlphaBaseOffset = -1;
-
-		if (alphaFaceCount > 0) {
-			ZoneRenderer.eboAlpha.ensureCapacity((long) alphaFaceCount * Integer.BYTES);
-			eboAlphaIndices = PooledArrayType.INT.ensureCapacity(eboAlphaIndices, alphaFaceCount);
-			alphaSortingJob.queue(camera, eboAlphaIndices);
-		} else {
-			if (eboAlphaIndices != null)
-				PooledArrayType.INT.release(eboAlphaIndices);
-			eboAlphaIndices = null;
-		}
+		eboAlphaBaseOffset = alphaSortingJob.queue(camera);
 	}
 
 	// Synchronize creation of delayed upload jobs with zone swaps and invalidation
@@ -413,7 +378,6 @@ public class WorldViewContext {
 	void free() {
 		sceneLoadGroup.cancel();
 		streamingGroup.cancel();
-		sortedAlphaFacesUpload.cancel();
 		alphaSortingJob.destroy();
 
 		if (sceneContext != null) {
@@ -427,10 +391,6 @@ public class WorldViewContext {
 		uboWorldViewStruct = null;
 		projection = null;
 		isSquashed = false;
-
-		if(eboAlphaIndices != null)
-			PooledArrayType.INT.release(eboAlphaIndices);
-		eboAlphaIndices = null;
 
 		for (int i = 0; i < VAO_COUNT; i++) {
 			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {

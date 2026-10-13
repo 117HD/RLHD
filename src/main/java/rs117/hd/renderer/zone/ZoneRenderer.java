@@ -72,7 +72,6 @@ import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLMappedBufferIntWriter;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
-import rs117.hd.utils.jobs.JobGroup;
 import rs117.hd.utils.jobs.JobSystem;
 
 import static net.runelite.api.Constants.*;
@@ -176,7 +175,6 @@ public class ZoneRenderer implements Renderer {
 	private GLBuffer indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
 
-	private final JobGroup<EboAlphaWriterJob> eboAlphaUploadGroup = new JobGroup<>(true, true);
 	public static GLBuffer.EBO eboAlpha;
 	public static GLMappedBufferIntWriter eboAlphaWriter;
 
@@ -296,7 +294,6 @@ public class ZoneRenderer implements Renderer {
 			eboAlpha.destroy();
 		eboAlpha = null;
 
-		eboAlphaUploadGroup.cancel();
 		if (eboAlphaWriter != null)
 			eboAlphaWriter.destroy();
 		eboAlphaWriter = null;
@@ -665,6 +662,8 @@ public class ZoneRenderer implements Renderer {
 			if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
 				return;
 
+			ctx.alphaSortingJob.waitForCompletion();
+
 			frameTimer.begin(Timer.DRAW_POSTSCENE);
 			if (scene.getWorldViewId() == WorldView.TOPLEVEL)
 				postDrawTopLevel();
@@ -691,10 +690,8 @@ public class ZoneRenderer implements Renderer {
 		sceneManager.updateWorldViewProjections();
 		uboWorldViews.upload();
 
-		if (eboAlphaWriter != null) {
-			eboAlphaUploadGroup.complete();
+		if (eboAlphaWriter != null)
 			eboAlphaWriter.flush();
-		}
 
 		// Scene draw state to apply before all recorded commands
 		if (SUPPORTS_INDIRECT_DRAW && indirectDrawCmdsStaging.position() > 0) {
@@ -1108,9 +1105,6 @@ public class ZoneRenderer implements Renderer {
 			WorldViewContext ctx = sceneManager.getContext(scene);
 			if(ctx == null)
 				return;
-
-			if(pass == DrawCallbacks.PASS_ALPHA)
-				ctx.sortedAlphaFacesUpload.queue(eboAlphaUploadGroup);
 
 			if (!sceneManager.isRoot(ctx) && ctx.isLoading)
 				return;
