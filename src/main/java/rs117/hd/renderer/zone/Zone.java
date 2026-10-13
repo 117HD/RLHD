@@ -262,12 +262,10 @@ public final class Zone implements Destructible {
 		if (tboF != null)
 			tboF.unmap();
 
-		// Deduplicate static alpha models now that upload has completed, sharing identical models across all zones
 		for (int i = 0; i < alphaModels.size(); i++) {
 			final AlphaModelInstance m = alphaModels.get(i);
-			if (m.staticModel != null) {
+			if (m.staticModel != null)
 				m.staticModel = viewContext.dedupeStaticAlphaModel(m.staticModel);
-			}
 		}
 	}
 
@@ -742,12 +740,18 @@ public final class Zone implements Destructible {
 			if (!model.isVisible())
 				continue;
 
-			alphaModelsKeys[visibleAlphaModels.length] = -model.calculateDist(cx, cy, cz, zx, zz);;
+			alphaModelsKeys[visibleAlphaModels.length] = -model.calculateDist(cx, cy, cz, zx, zz);
 			visibleAlphaModels.put(i);
 		}
 
 		if (visibleAlphaModels.length <= 1)
 			return;
+
+		if(visibleAlphaModels.length <= 2){
+			if(alphaModelsKeys[0] > alphaModelsKeys[1])
+				visibleAlphaModels.swap(0, 1);
+			return;
+		}
 
 		quickSortByKey(alphaModelsKeys, visibleAlphaModels.array, 0, visibleAlphaModels.length - 1);
 	}

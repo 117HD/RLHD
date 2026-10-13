@@ -41,6 +41,12 @@ public final class PrimitiveIntArray {
 		length += count;
 	}
 
+	public void swap(int a, int b) {
+		final int tmp = array[a];
+		array[a] = array[b];
+		array[b] = tmp;
+	}
+
 	public void removeAt(int idx) {
 		if (idx < 0 || idx >= length)
 			return;

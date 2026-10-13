@@ -2,13 +2,6 @@ package rs117.hd.renderer.zone;
 
 import java.util.Arrays;
 
-/**
- * The shared, position-independent geometry of an alpha model. Multiple {@link AlphaModelInstance}s can reference the
- * same {@link StaticAlphaModel}, since the packed face data only encodes the model's local shape and orientation.
- * <p>
- * Because the sorted face order only depends on the camera orientation, a single sort can be shared by every instance
- * referencing this model. The cached sort result is guarded by {@code synchronized(this)}.
- */
 public final class StaticAlphaModel {
 	final int[] packedFaces;
 	final int[] doubleSidedBitSet; // null if there are no double-sided faces
