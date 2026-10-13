@@ -1731,9 +1731,9 @@
     "windStrength": 30,
     "windSpeed": 10,
     "sky": {
-      "skyVisibility": 0.99,
-      "skyFogDensity": 2.53,
-      "nightHorizonColor": "#0C0F19",
+      "skyVisibility": 0.55,
+      "skyFogDensity": 2.5,
+      "nightHorizonColor": "#080C06",
       "nightHorizonStrength": 1,
       "skyFogHorizonAltitude": 90,
       "skyFogColor": "#2c2f18"
@@ -3033,7 +3033,7 @@
     "windStrength": 50,
     "fogColor": "#330D0D",
     "sky": {
-      "skyVisibility": 1,
+      "skyVisibility": 0.85,
       "auroraVisibility": 0,
       "skyFogDensity": 5.6,
       "skyFogColor": "#2D0400",
