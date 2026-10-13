@@ -1,7 +1,6 @@
 package rs117.hd.renderer.zone;
 
 import java.util.Arrays;
-import java.util.IdentityHashMap;
 import javax.inject.Inject;
 import lombok.Getter;
 import rs117.hd.overlays.FrameTimer;
@@ -27,11 +26,9 @@ public final class StaticAlphaSortingJob extends Job {
 	private Camera camera;
 	private int[] sortedAlphaIndicies;
 
-	// Per-world-view assignment of shared StaticAlphaModel sorted-index blocks. Each distinct model is written once, and
-	// every instance referencing it draws the same block with its own baseVertex.
-	private final IdentityHashMap<StaticAlphaModel, Integer> modelBlocks = new IdentityHashMap<>();
+	// Distinct models assigned an index block this frame, in block order. A model's block offset within the packed
+	// index buffer is stored in its {@code sortedIndiciesOffset}, which doubles as the "already assigned" marker.
 	private StaticAlphaModel[] blockModels = new StaticAlphaModel[16];
-	private int[] blockSourceOffsets = new int[16];
 	private int blockCount = 0;
 	@Getter
 	private int assignedIndexCount = 0;
@@ -43,29 +40,25 @@ public final class StaticAlphaSortingJob extends Job {
 	public StaticAlphaSortingJob() { super(true); }
 
 	public void reset() {
+		for (int block = 0; block < blockCount; block++)
+			blockModels[block].sortedIndiciesOffset = -1;
 		Arrays.fill(blockModels, 0, blockCount, null);
 		blockCount = 0;
 		assignedIndexCount = 0;
-		modelBlocks.clear();
 	}
 
 	/**
 	 * Assigns the given model a contiguous block of sorted indices, if it does not already have one this frame.
 	 */
 	public void addStaticAlphaModel(StaticAlphaModel model) {
-		if (model == null || modelBlocks.containsKey(model))
+		if (model == null || model.sortedIndiciesOffset >= 0)
 			return;
 
 		final int block = blockCount++;
-		modelBlocks.put(model, block);
-		if (blockModels.length <= block) {
-			final int newCapacity = ceilPow2(block + 1);
-			blockModels = Arrays.copyOf(blockModels, newCapacity);
-			blockSourceOffsets = Arrays.copyOf(blockSourceOffsets, newCapacity);
-		}
-
+		if (blockModels.length <= block)
+			blockModels = Arrays.copyOf(blockModels, ceilPow2(block + 1));
 		blockModels[block] = model;
-		blockSourceOffsets[block] = assignedIndexCount;
+
 		model.sortedIndiciesOffset = assignedIndexCount;
 		assignedIndexCount += model.getFaceCount() * 3;
 	}
@@ -80,11 +73,11 @@ public final class StaticAlphaSortingJob extends Job {
 
 	public void destroy() {
 		waitForCompletion();
+		reset();
 		PooledArrayType.INT.release(zsortHead);
 		PooledArrayType.INT.release(zsortTail);
 		PooledArrayType.INT.release(zsortNext);
 		zsortHead = zsortTail = zsortNext = null;
-		modelBlocks.clear();
 	}
 
 	private void ensureCapacity(int diameter, int faceCount) {
@@ -109,7 +102,7 @@ public final class StaticAlphaSortingJob extends Job {
 
 		for (int block = 0; block < blockCount; block++) {
 			final StaticAlphaModel model = blockModels[block];
-			sortStaticModelFacesByDistance(sortedAlphaIndicies, model, blockSourceOffsets[block], sortKey, yawCos, yawSin, pitchCos, pitchSin);
+			sortStaticModelFacesByDistance(sortedAlphaIndicies, model, model.sortedIndiciesOffset, sortKey, yawCos, yawSin, pitchCos, pitchSin);
 		}
 
 		frameTimer.add(Timer.STATIC_ALPHA_SORT, System.nanoTime() - start);
@@ -226,11 +219,8 @@ public final class StaticAlphaSortingJob extends Job {
 		}
 
 		for (int i = maxFz; i >= minFz; --i) {
-			for (int f = zsortHead[i]; f != -1; f = zsortNext[f]) {
-				if (f >= maxFaceCount)
-					continue;
+			for (int f = zsortHead[i]; f != -1; f = zsortNext[f])
 				sortedFaces[sortedCount++] = f;
-			}
 		}
 
 		model.sortedFaceCount = sortedCount;

@@ -301,7 +301,7 @@ public class WorldViewContext {
 		final int alphaFaceCount = alphaSortingJob.getAssignedIndexCount();
 
 		// The packed block array is uploaded to the EBO as one contiguous copy, so the destination of any block is
-		// just eboAlphaBaseOffset + its offset within eboAlphaIndices, resolved once on first use per frame.
+		// just eboAlphaBaseOffset + its offset within eboAlphaIndices. The base offset is reserved in Zone.alphaSort().
 		eboAlphaCount = alphaFaceCount;
 		eboAlphaBaseOffset = -1;
 

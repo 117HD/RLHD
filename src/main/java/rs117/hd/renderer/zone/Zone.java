@@ -67,7 +67,7 @@ public final class Zone implements Destructible {
 	public static final int LEVEL_WATER_SURFACE = LEVEL_COUNT++;
 	public static final int LEVEL_GAP_FILLER = LEVEL_COUNT++;
 
-	public 	int glVao;
+	public int glVao;
 	int modelCount;
 	int bufLen;
 
@@ -743,9 +743,14 @@ public final class Zone implements Destructible {
 		if (alphaModelCount == 0)
 			return;
 
-		// The world view's sorting job assigns the shared models their index blocks, which the renderer needs below.
-		if (viewContext != null)
+		// The world view's sorting job assigns the shared models their index blocks, and the whole packed block array
+		// is uploaded to the EBO as one contiguous copy per world view, so reserve its destination once, before any
+		// instance draws reference it. The EBO is already mapped at this point, since this runs during scene draw.
+		if (viewContext != null) {
 			viewContext.alphaSortingJob.waitForCompletion();
+			if (viewContext.eboAlphaBaseOffset < 0 && viewContext.eboAlphaCount > 0)
+				viewContext.eboAlphaBaseOffset = viewContext.sortedAlphaFacesUpload.reserve(viewContext.eboAlphaCount);
+		}
 
 		if (alphaModelCount == 1) {
 			visibleAlphaModels.put(0);
@@ -903,15 +908,8 @@ public final class Zone implements Destructible {
 			if (model == null || model.sortedIndiciesOffset < 0 || model.sortedFaceCount <= 0)
 				continue;
 
-			// The whole packed block array is uploaded to the EBO as one contiguous copy once per world view, so each
-			// instance's sorted indices live at eboAlphaBaseOffset + its model's block offset. Instances in different
-			// zones referencing the same model resolve to the same destination without per-frame bookkeeping.
-			if (ctx.eboAlphaBaseOffset < 0) {
-				final EboAlphaWriterJob.ZoneAlphaModelCollection collection = ctx.sortedAlphaFacesUpload.obtain();
-				collection.add(0, ctx.eboAlphaCount);
-				ctx.eboAlphaBaseOffset = collection.queue(ctx.eboAlphaCount);
-			}
-
+			// Each instance's sorted indices live at the world view's EBO base offset + its model's block offset,
+			// which was reserved in alphaSort().
 			final int dest = ctx.eboAlphaBaseOffset + model.sortedIndiciesOffset;
 
 			if (staticDrawCount >= NUM_DRAW_RANGES)
