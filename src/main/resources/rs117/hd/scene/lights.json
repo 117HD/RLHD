@@ -20730,6 +20730,7 @@
   },
   {
     "description": "LANTERN",
+    "excludeAreas": [ "LADY_ZAY" ],
     "height": 250,
     "radius": 500,
     "strength": 12.5,
@@ -20746,6 +20747,80 @@
       "VC_LANTERN_DECOR",
       "QUEST_LUNAR_HANGING_LANTERN"
     ]
+  },
+  {
+    "description": "LADY_ZAY_LANTERN_UPPER",
+    "areas": [ "LADY_ZAY" ],
+    "excludeAreas": [ "LADY_ZAY_PLANE_0" ],
+    "visibleFromOtherPlanes": false,
+    "offset": [ 0, 250, -20 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "QUEST_LUNAR_HANGING_LANTERN"
+    ]
+  },
+  {
+    "description": "LADY_ZAY_LANTERN_LOWER",
+    "areas": [ "LADY_ZAY_PLANE_0" ],
+    "offset": [ 0, 300, -20 ],
+    "radius": 300,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "QUEST_LUNAR_HANGING_LANTERN"
+    ]
+  },
+  {
+    "description": "LADY_ZAY_TRANSITION_LIGHT_LUNAR",
+    "height": 300,
+    "worldX": 2140,
+    "worldY": 3912,
+    "visibleFromOtherPlanes": false,
+    "plane": 0,
+    "radius": 300,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "LADY_ZAY_TRANSITION_LIGHT_COVE",
+    "height": 300,
+    "worldX": 2224,
+    "worldY": 3809,
+    "visibleFromOtherPlanes": false,
+    "plane": 0,
+    "radius": 300,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
   },
   {
     "description": "LANTERN - VISIBLE ON OTHER PLANES",
@@ -47546,10 +47621,27 @@
     ]
   },
   {
+    "description": "Mercanry Ship Wreak Fire Main",
+    "offset": [ -70, 400, 70 ],
+    "nightMultiplier": 3,
+    "radius": 550,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "SAILING_MERCENARY_SHIPWRECK"
+    ]
+  },
+  {
     "description": "Mercanry Ship Wreak Fire 1",
-    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
-    "offset": [ -70, 350, 70 ],
-    "radius": 350,
+    "offset": [ -70, 400, 70 ],
+    "radius": 375,
     "strength": 12.5,
     "color": [
       252,
@@ -47565,9 +47657,8 @@
   },
   {
     "description": "Mercanry Ship Wreak Fire 2",
-    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
-    "offset": [ 100, 550, -30 ],
-    "radius": 250,
+    "offset": [ 100, 580, -30 ],
+    "radius": 270,
     "strength": 12.5,
     "color": [
       252,
@@ -47583,7 +47674,6 @@
   },
   {
     "description": "Mercanry Ship Wreak Fire 3",
-    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
     "offset": [ -220, 180, 100 ],
     "radius": 150,
     "strength": 17,
@@ -47601,7 +47691,6 @@
   },
   {
     "description": "Mercanry Ship Wreak Fire 4",
-    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
     "offset": [ 65, 250, 190 ],
     "radius": 200,
     "strength": 17,
@@ -47619,7 +47708,6 @@
   },
   {
     "description": "Mercanry Ship Wreak Fire 5",
-    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
     "offset": [ 145, 230, -140 ],
     "radius": 200,
     "strength": 17,
@@ -47637,7 +47725,6 @@
   },
   {
     "description": "Mercanry Ship Wreak Fire 6",
-    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
     "offset": [ 85, 95, -200 ],
     "radius": 100,
     "strength": 25,
@@ -47655,7 +47742,6 @@
   },
   {
     "description": "Mercanry Ship Wreak Fire 7",
-    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
     "offset": [ -60, 295, -80 ],
     "radius": 100,
     "strength": 25,
