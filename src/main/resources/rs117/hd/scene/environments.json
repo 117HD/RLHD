@@ -3003,12 +3003,11 @@
     "sky": {
       "skyVisibility": 1,
       "auroraVisibility": 0,
-      "sunStrength": 0.04,
-      "skyFogDensity": 25,
-      "skyFogColor": "#330D0D",
+      "skyFogDensity": 5.6,
+      "skyFogColor": "#2D0400",
       "nightHorizonColor": "#FF0000",
       "nightHorizonStrength": 0.01,
-      "skyFogHorizonAltitude": -30,
+      "skyFogHorizonAltitude": 90,
       "starVisibility": 0.755
     }
   },
