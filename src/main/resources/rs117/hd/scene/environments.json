@@ -2089,7 +2089,16 @@
     "windStrength": 30,
     "windAngle": 140,
     "groundFogOpacity": 0.7,
-    "waterCausticsStrength": 40
+    "waterCausticsStrength": 40,
+    "sky": {
+      "parent": "NIGHT",
+      "skyVisibility": 0.6,
+      "moonVisibility": 0.7,
+      "skyFogDensity": 0.11,
+      "starVisibility": 0.439,
+      "starHorizonHeight": 0.93,
+      "auroraVisibility": 0.439
+    }
   },
   {
     "area": "DEATHS_OFFICE",
@@ -2231,7 +2240,19 @@
       80,
       190
     ],
-    "fogDepth": 40
+    "fogDepth": 40,
+    "sky":{
+      "parent": "VOID",
+      "horizonWidth": 35,
+      "profile": {
+        "horizon": [
+          {
+            "altitude": 0,
+            "color": "#00030F"
+          }
+        ]
+      }
+    }
   },
   {
     "area": "TRUE_BLOOD_ALTAR",
