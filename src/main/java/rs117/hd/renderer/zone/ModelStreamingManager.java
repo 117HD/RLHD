@@ -276,7 +276,7 @@ public class ModelStreamingManager {
 		final boolean hasAlpha =
 			(modelOverride.mightHaveTransparency || isAlphaModel(m)) &&
 			(!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
-		final Zone.AlphaModel alphaModel = hasAlpha ?
+		final AlphaModelInstance alphaModel = hasAlpha ?
 			zone.requestTempAlphaModel(
 				renderer.sceneCamera,
 				zx - offset, zz - offset,
@@ -335,7 +335,7 @@ public class ModelStreamingManager {
 		ModelOverride modelOverride,
 		Model model,
 		Zone zone,
-		Zone.AlphaModel alphaModel,
+		AlphaModelInstance alphaModel,
 		boolean isModelPartiallyVisible,
 		int drawIndex,
 		int orientation,
@@ -368,7 +368,7 @@ public class ModelStreamingManager {
 		ModelOverride modelOverride,
 		Model m,
 		@Nullable Zone zone,
-		@Nullable Zone.AlphaModel alphaModel,
+		@Nullable AlphaModelInstance alphaModel,
 		boolean isModelPartiallyVisible,
 		int vaoType,
 		int drawIndex,

@@ -45,7 +45,7 @@ public final class ZoneUploadJob extends Job {
 				workerHandleCancel();
 
 				if (shouldUnmap)
-					invokeClientCallback(zoneBeingUploaded::unmap);
+					invokeClientCallback(() -> zoneBeingUploaded.unmap(viewContext));
 			}
 			zoneBeingUploaded.initialized = true;
 		}

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import javax.inject.Inject;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
-import rs117.hd.renderer.zone.Zone.AlphaModel;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.jobs.Job;
 
@@ -16,7 +15,7 @@ public final class StaticAlphaSortingJob extends Job {
 	@Inject
 	private FrameTimer frameTimer;
 
-	private AlphaModel[] models = new AlphaModel[16];
+	private AlphaModelInstance[] models = new AlphaModelInstance[16];
 	private int[] sortedAlphaIndicies;
 	private int size = 0;
 
@@ -27,7 +26,7 @@ public final class StaticAlphaSortingJob extends Job {
 
 	public StaticAlphaSortingJob() { super(true); }
 
-	public void addAlphaModel(AlphaModel m) {
+	public void addAlphaModel(AlphaModelInstance m) {
 		if (size == models.length) {
 			final int newCapacity = ceilPow2(models.length * 2);
 			models = Arrays.copyOf(models, newCapacity);
@@ -82,6 +81,9 @@ public final class StaticAlphaSortingJob extends Job {
 		final int pitchSin = SINE14[pitch];
 		final int pitchCos = COSINE14[pitch];
 
+		// Face order depends only on camera orientation, so this identifies a StaticAlphaModel's cached sort
+		final int sortKey = yaw << 16 | pitch;
+
 		// Classify the combined AABB of every alpha model against the frustum, so we can skip
 		// per-model culling entirely when the zone's alpha geometry is fully visible.
 		final int boundsClassification = frustumCull ?
@@ -92,15 +94,12 @@ public final class StaticAlphaSortingJob extends Job {
 
 		try (FacePrioritySorter sorter = FacePrioritySorter.POOL.acquire()) {
 			for (int i = 0; i < size; i++) {
-				final AlphaModel m = models[i];
+				final AlphaModelInstance m = models[i];
 				m.sortedIndiciesCount = 0;
 
 				if (fullyOutside) {
-					// The combined AABB of every alpha model in this zone is entirely outside the
-					// frustum, so every model is guaranteed to be invisible.
 					m.setHidden();
 				} else if (partiallyVisible) {
-					// Partially visible, so cull each model individually
 					final int modelX = ((zx - m.zofx) << 10) + m.x;
 					final int modelZ = ((zz - m.zofz) << 10) + m.z;
 					if (!camera.intersectsAABB(
@@ -113,7 +112,8 @@ public final class StaticAlphaSortingJob extends Job {
 				}
 
 				if (m.isVisible()) {
-					sorter.sortStaticModelFacesByDistance(sortedAlphaIndicies, m, yawCos, yawSin, pitchCos, pitchSin);
+					// Sorts the shared StaticAlphaModel if its cached order is stale, then writes this instance's indices
+					sorter.sortStaticModelFacesByDistance(sortedAlphaIndicies, m, sortKey, yawCos, yawSin, pitchCos, pitchSin);
 					m.calculateDist(cx, cy, cz, zx, zz);
 					m.setSorted();
 				}

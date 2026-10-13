@@ -13,7 +13,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import rs117.hd.renderer.zone.Zone.AlphaModel;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PooledArrayType;
@@ -111,7 +110,7 @@ public final class AsyncCachedModel extends Job implements Model {
 	private Renderable renderable;
 	private ModelOverride modelOverride;
 	private Zone zone;
-	private AlphaModel alphaModel;
+	private AlphaModelInstance alphaModel;
 	private boolean isModelPartiallyVisible;
 	private int drawIndex;
 	private int orientation;
@@ -215,7 +214,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		@Nonnull ModelOverride modelOverride,
 		@Nonnull Model model,
 		@Nonnull Zone zone,
-		AlphaModel alphaModel,
+		AlphaModelInstance alphaModel,
 		boolean isModelPartiallyVisible,
 		int drawIndex,
 		int orientation,
@@ -454,7 +453,7 @@ public final class AsyncCachedModel extends Job implements Model {
 			@Nonnull ModelOverride modelOverride,
 			@Nonnull Model model,
 			@Nonnull Zone zone,
-			AlphaModel alphaModel,
+			AlphaModelInstance alphaModel,
 			boolean isModelPartiallyVisible,
 			int drawIndex,
 			int orientation,

@@ -4,7 +4,9 @@ import com.google.inject.Injector;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -83,6 +85,10 @@ public class WorldViewContext {
 
 	private final Comparator<Zone> alphaSortComparator = Comparator.comparingInt((Zone z) -> z.dist).reversed();
 	private final List<Zone> alphaZones = new ArrayList<>();
+
+	// Interned StaticAlphaModels so identical static models can be shared across zones in this world view.
+	// Guarded by synchronizing on the map itself.
+	private final Map<StaticAlphaModel, StaticAlphaModel> staticAlphaModels = new HashMap<>();
 
 	CommandBuffer vaoSceneCmd;
 	CommandBuffer vaoDirectionalCmd;
@@ -240,6 +246,34 @@ public class WorldViewContext {
 		}
 	}
 
+	/**
+	 * Deduplicates an already constructed static alpha model against the models already interned for this world view.
+	 * If an equal model exists, it is returned and {@code model} can be discarded; otherwise {@code model} is interned
+	 * and returned. The returned model's {@code refCount} must eventually be balanced with
+	 * {@link #releaseStaticAlphaModel(StaticAlphaModel)}.
+	 */
+	StaticAlphaModel dedupeStaticAlphaModel(StaticAlphaModel model) {
+		synchronized (staticAlphaModels) {
+			final StaticAlphaModel existing = staticAlphaModels.get(model);
+			if (existing != null) {
+				existing.refCount++;
+				return existing;
+			}
+			model.refCount = 1;
+			staticAlphaModels.put(model, model);
+			return model;
+		}
+	}
+
+	void releaseStaticAlphaModel(StaticAlphaModel model) {
+		if (model == null)
+			return;
+		synchronized (staticAlphaModels) {
+			if (--model.refCount <= 0)
+				staticAlphaModels.remove(model);
+		}
+	}
+
 	void sortStaticAlphaModels(Camera camera) {
 		alphaZones.clear();
 
@@ -320,7 +354,7 @@ public class WorldViewContext {
 				Zone prevZone = curZone;
 				// Swap the zone out with the one we just uploaded
 				zones[zx][zz] = curZone = uploadedZone;
-				clientThread.invoke(curZone::unmap);
+				clientThread.invoke(() -> uploadedZone.unmap(this));
 
 				if (prevZone != curZone) {
 					curZone.inSceneFrustum = prevZone.inSceneFrustum;
@@ -413,6 +447,10 @@ public class WorldViewContext {
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)
 				zones[x][z].destroy();
+
+		synchronized (staticAlphaModels) {
+			staticAlphaModels.clear();
+		}
 
 		if (vboM != null)
 			vboM.destroy();

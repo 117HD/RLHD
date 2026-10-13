@@ -93,7 +93,7 @@ public final class EboAlphaWriterJob extends Job {
 		private int[] offsetCounts = new int[2];
 		private int count;
 
-		public void add(Zone.AlphaModel model) {
+		public void add(AlphaModelInstance model) {
 			final int base = count++ * 2;
 			if(base >= offsetCounts.length)
 				offsetCounts = Arrays.copyOf(offsetCounts, offsetCounts.length * 2);
