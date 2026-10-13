@@ -9,6 +9,8 @@ public final class PrimitiveIntArray {
 	public int[] array = new int[16];
 	public int length;
 
+	public boolean isEmpty() { return length == 0; }
+
 	public PrimitiveIntArray reset() {
 		length = 0;
 		return this;

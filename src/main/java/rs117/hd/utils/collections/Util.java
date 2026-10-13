@@ -1,6 +1,5 @@
 package rs117.hd.utils.collections;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -56,9 +55,15 @@ public final class Util {
 	 *   https://github.com/openjdk/jdk/blob/master/src/java.base/share/classes/java/util/DualPivotQuicksort.java
 	 */
 	private static final int INSERTION_SORT_THRESHOLD = 47;
-	private static final ThreadLocal<SortAccessor> LOCAL_ACCESSOR = ThreadLocal.withInitial(SortAccessor::new);
+	private static final ThreadLocal<IntAccessor> LOCAL_INT_ACCESSOR = ThreadLocal.withInitial(IntAccessor::new);
+	private static final ThreadLocal<FloatAccessor> LOCAL_FLOAT_ACCESSOR = ThreadLocal.withInitial(FloatAccessor::new);
+	private static final ThreadLocal<ObjectAccessor> LOCAL_OBJECT_ACCESSOR = ThreadLocal.withInitial(ObjectAccessor::new);
+	private static final ThreadLocal<ListAccessor> LOCAL_LIST_ACCESSOR = ThreadLocal.withInitial(ListAccessor::new);
+	private static final ThreadLocal<KeyedListAccessor> LOCAL_KEYED_LIST_ACCESSOR = ThreadLocal.withInitial(KeyedListAccessor::new);
+	private static final ThreadLocal<KeyedIntArrayAccessor> LOCAL_KEYED_INT_ACCESSOR = ThreadLocal.withInitial(KeyedIntArrayAccessor::new);
+	private static final ThreadLocal<KeyedFloatArrayAccessor> LOCAL_KEYED_FLOAT_ACCESSOR = ThreadLocal.withInitial(KeyedFloatArrayAccessor::new);
 
-	private static void quickSortInternal(SortAccessor accessor, int left, int right) {
+	private static void quickSortInternal(final SortAccessor accessor, int left, int right) {
 		if (right <= left) return;
 
 		// insertion sort for tiny ranges (JDK 8)
@@ -192,7 +197,40 @@ public final class Util {
 
 	public static void quickSort(float[] a, int left, int right, Comparator<Float> comparator) {
 		if (right > left)
-			quickSortInternal(LOCAL_ACCESSOR.get().setupFloat(a, comparator), left, right);
+			quickSortInternal(LOCAL_FLOAT_ACCESSOR.get().setup(a, comparator), left, right);
+	}
+
+	private static final class FloatAccessor implements SortAccessor {
+		private float[] array;
+		private Comparator<Float> comparator;
+		private float pivot;
+
+		FloatAccessor setup(float[] array, Comparator<Float> comparator) {
+			this.array = array;
+			this.comparator = comparator;
+			this.pivot = 0;
+			return this;
+		}
+
+		@Override
+		public int compare(int i, int j) {
+			return comparator != null ? comparator.compare(array[i], array[j]) : Float.compare(array[i], array[j]);
+		}
+
+		@Override
+		public int compareToPivot(int i) {
+			return comparator != null ? comparator.compare(array[i], pivot) : Float.compare(array[i], pivot);
+		}
+
+		@Override
+		public void savePivot(int index) { pivot = array[index]; }
+
+		@Override
+		public void swap(int i, int j) {
+			final float t = array[i];
+			array[i] = array[j];
+			array[j] = t;
+		}
 	}
 
 	public static void quickSort(int[] a) {
@@ -207,7 +245,42 @@ public final class Util {
 
 	public static void quickSort(int[] a, int left, int right, Comparator<Integer> comparator) {
 		if (right > left)
-			quickSortInternal(LOCAL_ACCESSOR.get().setupInt(a, comparator), left, right);
+			quickSortInternal(LOCAL_INT_ACCESSOR.get().setup(a, comparator), left, right);
+	}
+
+	private static final class IntAccessor implements SortAccessor {
+		private int[] array;
+		private Comparator<Integer> comparator;
+		private int pivot;
+
+		IntAccessor setup(int[] array, Comparator<Integer> comparator) {
+			this.array = array;
+			this.comparator = comparator;
+			this.pivot = 0;
+			return this;
+		}
+
+		@Override
+		public int compare(int i, int j) {
+			return comparator != null ? comparator.compare(array[i], array[j]) : Integer.compare(array[i], array[j]);
+		}
+
+		@Override
+		public int compareToPivot(int i) {
+			return comparator != null ? comparator.compare(array[i], pivot) : Integer.compare(array[i], pivot);
+		}
+
+		@Override
+		public void savePivot(int index) {
+			pivot = array[index];
+		}
+
+		@Override
+		public void swap(int i, int j) {
+			final int t = array[i];
+			array[i] = array[j];
+			array[j] = t;
+		}
 	}
 
 	public static <T> void quickSort(T[] a, Comparator<? super T> comparator) {
@@ -217,15 +290,100 @@ public final class Util {
 
 	public static <T> void quickSort(T[] a, int left, int right, Comparator<? super T> comparator) {
 		if (right > left)
-			quickSortInternal(LOCAL_ACCESSOR.get().setupObject(a, comparator), left, right);
+			quickSortInternal(LOCAL_OBJECT_ACCESSOR.get().setup(a, comparator), left, right);
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private static final class ObjectAccessor implements SortAccessor {
+		private Object[] array;
+		private Comparator comparator;
+		private Object pivot;
+
+		ObjectAccessor setup(Object[] array, Comparator comparator) {
+			this.array = array;
+			this.comparator = comparator;
+			this.pivot = null;
+			return this;
+		}
+
+		@Override
+		public int compare(int i, int j) {
+			return comparator != null ? comparator.compare(array[i], array[j]) : ((Comparable) array[i]).compareTo(array[j]);
+		}
+
+		@Override
+		public int compareToPivot(int i) {
+			return comparator != null ? comparator.compare(array[i], pivot) : ((Comparable) array[i]).compareTo(pivot);
+		}
+
+		@Override
+		public void savePivot(int index) {
+			pivot = array[index];
+		}
+
+		@Override
+		public void swap(int i, int j) {
+			final Object t = array[i];
+			array[i] = array[j];
+			array[j] = t;
+		}
+	}
+
+	public static <T> void quickSort(List<T> list, Comparator<? super T> comparator) {
+		if (list.size() > 1)
+			quickSort(list, 0, list.size() - 1, comparator);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> void quickSort(List<T> list, Comparator<? super T> comparator) {
-		final int size = list.size();
-		if (size <= 1) return;
+	public static <T> void quickSort(List<T> list, int left, int right, Comparator<? super T> comparator) {
+		if (right <= left) return;
 
-		quickSortInternal(LOCAL_ACCESSOR.get().setupList((List<Object>) list, comparator), 0, size - 1);
+		final ListAccessor accessor = LOCAL_LIST_ACCESSOR.get();
+		try {
+			quickSortInternal(accessor.setup((List<Object>) list, comparator), left, right);
+		} finally {
+			accessor.release();
+		}
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private static final class ListAccessor implements SortAccessor {
+		private List<Object> list;
+		private Comparator comparator;
+		private Object pivot;
+
+		ListAccessor setup(List<Object> list, Comparator comparator) {
+			this.list = list;
+			this.comparator = comparator;
+			this.pivot = null;
+			return this;
+		}
+
+		void release() {
+			list = null;
+			comparator = null;
+			pivot = null;
+		}
+
+		@Override
+		public int compare(int i, int j) {
+			return comparator != null ? comparator.compare(list.get(i), list.get(j)) : ((Comparable) list.get(i)).compareTo(list.get(j));
+		}
+
+		@Override
+		public int compareToPivot(int i) {
+			return comparator != null ? comparator.compare(list.get(i), pivot) : ((Comparable) list.get(i)).compareTo(pivot);
+		}
+
+		@Override
+		public void savePivot(int index) {
+			pivot = list.get(index);
+		}
+
+		@Override
+		public void swap(int i, int j) {
+			list.set(i, list.set(j, list.get(i)));
+		}
 	}
 
 	public static <T> void quickSortByKey(int[] keys, List<T> payload) {
@@ -235,145 +393,184 @@ public final class Util {
 
 	@SuppressWarnings("unchecked")
 	public static <T> void quickSortByKey(int[] keys, List<T> payload, int left, int right) {
-		if (right > left)
-			quickSortInternal(LOCAL_ACCESSOR.get().setupKeyedList(keys, (List<Object>) payload), left, right);
+		if (right <= left) return;
+
+		final KeyedListAccessor accessor = LOCAL_KEYED_LIST_ACCESSOR.get();
+		try {
+			quickSortInternal(accessor.setup(keys, (List<Object>) payload), left, right);
+		} finally {
+			accessor.release();
+		}
 	}
 
-	@SuppressWarnings("rawtypes")
-	private static final class SortAccessor {
-		private enum Kind { INT, FLOAT, OBJECT, LIST, KEYED_LIST }
-		private Kind kind;
-
-		private int[] intArray;
-		private float[] floatArray;
-		private Object[] objArray;
-		private List<Object> list;
+	private static final class KeyedListAccessor implements SortAccessor {
 		private int[] keys;
+		private List<Object> payload;
+		private int pivot;
 
-		private Comparator comparator;
-
-		private int intPivot;
-		private float floatPivot;
-		private Object objPivot;
-
-		SortAccessor setupInt(int[] array, Comparator<Integer> comparator) {
-			this.kind = Kind.INT;
-			this.intArray = array;
-			this.comparator = comparator;
-			this.intPivot = 0;
-			return this;
-		}
-
-		SortAccessor setupFloat(float[] array, Comparator<Float> comparator) {
-			this.kind = Kind.FLOAT;
-			this.floatArray = array;
-			this.comparator = comparator;
-			this.floatPivot = 0;
-			return this;
-		}
-
-		SortAccessor setupObject(Object[] array, Comparator comparator) {
-			this.kind = Kind.OBJECT;
-			this.objArray = array;
-			this.comparator = comparator;
-			this.objPivot = null;
-			return this;
-		}
-
-		SortAccessor setupList(List<Object> list, Comparator comparator) {
-			this.kind = Kind.LIST;
-			this.list = list;
-			this.comparator = comparator;
-			this.objPivot = null;
-			return this;
-		}
-
-		SortAccessor setupKeyedList(int[] keys, List<Object> list) {
-			this.kind = Kind.KEYED_LIST;
+		KeyedListAccessor setup(int[] keys, List<Object> payload) {
 			this.keys = keys;
-			this.list = list;
-			this.comparator = null;
-			this.intPivot = 0;
+			this.payload = payload;
+			this.pivot = 0;
 			return this;
 		}
 
-		int compare(int i, int j) {
-			switch (kind) {
-				case INT:
-					return comparator != null ? comparator.compare(intArray[i], intArray[j]) : Integer.compare(intArray[i], intArray[j]);
-				case FLOAT:
-					return comparator != null ? comparator.compare(floatArray[i], floatArray[j]) : Float.compare(floatArray[i], floatArray[j]);
-				case OBJECT:
-					return comparator.compare(objArray[i], objArray[j]);
-				case LIST:
-					return comparator.compare(list.get(i), list.get(j));
-				case KEYED_LIST:
-					return Integer.compare(keys[i], keys[j]);
-				default:
-					throw new IllegalStateException("Unknown kind: " + kind);
-			}
+		void release() {
+			keys = null;
+			payload = null;
+			pivot = 0;
 		}
 
-		int compareToPivot(int i) {
-			switch (kind) {
-				case INT:
-					return comparator != null ? comparator.compare(intArray[i], intPivot) : Integer.compare(intArray[i], intPivot);
-				case FLOAT:
-					return comparator != null ? comparator.compare(floatArray[i], floatPivot) : Float.compare(floatArray[i], floatPivot);
-				case OBJECT:
-					return comparator.compare(objArray[i], objPivot);
-				case LIST:
-					return comparator.compare(list.get(i), objPivot);
-				case KEYED_LIST:
-					return Integer.compare(keys[i], intPivot);
-				default:
-					throw new IllegalStateException("Unknown kind: " + kind);
-			}
+		@Override
+		public int compare(int i, int j) {
+			return Integer.compare(keys[i], keys[j]);
 		}
 
-		void savePivot(int index) {
-			switch (kind) {
-				case INT:        intPivot = intArray[index]; break;
-				case FLOAT:      floatPivot = floatArray[index]; break;
-				case OBJECT:     objPivot = objArray[index]; break;
-				case LIST:       objPivot = list.get(index); break;
-				case KEYED_LIST: intPivot = keys[index]; break;
-				default: throw new IllegalStateException("Unknown kind: " + kind);
-			}
+		@Override
+		public int compareToPivot(int i) {
+			return Integer.compare(keys[i], pivot);
 		}
 
-		void swap(int i, int j) {
-			switch (kind) {
-				case INT: {
-					final int t = intArray[i];
-					intArray[i] = intArray[j];
-					intArray[j] = t;
-					break;
-				}
-				case FLOAT: {
-					final float t = floatArray[i];
-					floatArray[i] = floatArray[j];
-					floatArray[j] = t;
-					break;
-				}
-				case OBJECT: {
-					final Object t = objArray[i];
-					objArray[i] = objArray[j];
-					objArray[j] = t;
-					break;
-				}
-				case KEYED_LIST: {
-					final int tk = keys[i];
-					keys[i] = keys[j];
-					keys[j] = tk;
-				}
-				case LIST: {
-					Collections.swap(list, i, j);
-					break;
-				}
-				default:
-					throw new IllegalStateException("Unknown kind: " + kind);
-			}
+		@Override
+		public void savePivot(int index) {
+			pivot = keys[index];
 		}
+
+		@Override
+		public void swap(int i, int j) {
+			final int tk = keys[i];
+			keys[i] = keys[j];
+			keys[j] = tk;
+			payload.set(i, payload.set(j, payload.get(i)));
+		}
+	}
+
+	public static void quickSortByKey(int[] keys, int[] payload) {
+		if (keys.length > 1)
+			quickSortByKey(keys, payload, 0, keys.length - 1);
+	}
+
+	public static void quickSortByKey(int[] keys, int[] payload, int left, int right) {
+		if (right <= left) return;
+
+		final KeyedIntArrayAccessor accessor = LOCAL_KEYED_INT_ACCESSOR.get();
+		try {
+			quickSortInternal(accessor.setup(keys, payload), left, right);
+		} finally {
+			accessor.release();
+		}
+	}
+
+	public static void quickSortByKey(int[] keys, float[] payload) {
+		if (keys.length > 1)
+			quickSortByKey(keys, payload, 0, keys.length - 1);
+	}
+
+	public static void quickSortByKey(int[] keys, float[] payload, int left, int right) {
+		if (right <= left) return;
+
+		final KeyedFloatArrayAccessor accessor = LOCAL_KEYED_FLOAT_ACCESSOR.get();
+		try {
+			quickSortInternal(accessor.setup(keys, payload), left, right);
+		} finally {
+			accessor.release();
+		}
+	}
+
+	private static final class KeyedIntArrayAccessor implements SortAccessor {
+		private int[] keys;
+		private int[] payload;
+		private int pivot;
+
+		KeyedIntArrayAccessor setup(int[] keys, int[] payload) {
+			this.keys = keys;
+			this.payload = payload;
+			this.pivot = 0;
+			return this;
+		}
+
+		void release() {
+			keys = null;
+			payload = null;
+			pivot = 0;
+		}
+
+		@Override
+		public int compare(int i, int j) {
+			return Integer.compare(keys[i], keys[j]);
+		}
+
+		@Override
+		public int compareToPivot(int i) {
+			return Integer.compare(keys[i], pivot);
+		}
+
+		@Override
+		public void savePivot(int index) {
+			pivot = keys[index];
+		}
+
+		@Override
+		public void swap(int i, int j) {
+			final int tk = keys[i];
+			keys[i] = keys[j];
+			keys[j] = tk;
+
+			final int tp = payload[i];
+			payload[i] = payload[j];
+			payload[j] = tp;
+		}
+	}
+
+	private static final class KeyedFloatArrayAccessor implements SortAccessor {
+		private int[] keys;
+		private float[] payload;
+		private int pivot;
+
+		KeyedFloatArrayAccessor setup(int[] keys, float[] payload) {
+			this.keys = keys;
+			this.payload = payload;
+			this.pivot = 0;
+			return this;
+		}
+
+		void release() {
+			keys = null;
+			payload = null;
+			pivot = 0;
+		}
+
+		@Override
+		public int compare(int i, int j) {
+			return Integer.compare(keys[i], keys[j]);
+		}
+
+		@Override
+		public int compareToPivot(int i) {
+			return Integer.compare(keys[i], pivot);
+		}
+
+		@Override
+		public void savePivot(int index) {
+			pivot = keys[index];
+		}
+
+		@Override
+		public void swap(int i, int j) {
+			final int tk = keys[i];
+			keys[i] = keys[j];
+			keys[j] = tk;
+
+			final float tp = payload[i];
+			payload[i] = payload[j];
+			payload[j] = tp;
+		}
+	}
+
+	interface SortAccessor {
+		int compare(int i, int j);
+		int compareToPivot(int i);
+		void savePivot(int index);
+		void swap(int i, int j);
 	}
 }
