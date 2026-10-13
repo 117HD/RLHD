@@ -112,16 +112,16 @@ public final class Util {
 					int e2 = e3   - sixth;
 					int e4 = e3   + sixth;
 
-					// sort the 5 samples with a 5-element sort network (7 comparisons)
-					if (accessor.compare(e1, e2) > 0) accessor.swap(e1, e2);
-					if (accessor.compare(e4, e5) > 0) accessor.swap(e4, e5);
-					if (accessor.compare(e1, e3) > 0) accessor.swap(e1, e3);
-					if (accessor.compare(e2, e3) > 0) accessor.swap(e2, e3);
-					if (accessor.compare(e1, e4) > 0) accessor.swap(e1, e4);
-					if (accessor.compare(e3, e4) > 0) accessor.swap(e3, e4);
-					if (accessor.compare(e2, e5) > 0) accessor.swap(e2, e5);
-					if (accessor.compare(e2, e3) > 0) accessor.swap(e2, e3);
-					if (accessor.compare(e4, e5) > 0) accessor.swap(e4, e5);
+					// sort the 5 samples with a 5-element sort network (9 compare-and-swaps)
+					accessor.swapIfGreater(e1, e2);
+					accessor.swapIfGreater(e4, e5);
+					accessor.swapIfGreater(e1, e3);
+					accessor.swapIfGreater(e2, e3);
+					accessor.swapIfGreater(e1, e4);
+					accessor.swapIfGreater(e3, e4);
+					accessor.swapIfGreater(e2, e5);
+					accessor.swapIfGreater(e2, e3);
+					accessor.swapIfGreater(e4, e5);
 					// invariant: a[e1] <= a[e2] <= a[e3] <= a[e4] <= a[e5]
 
 					accessor.savePivot(e3); // true median of 5 samples
@@ -175,13 +175,11 @@ public final class Util {
 	 * Straight insertion sort for small ranges.
 	 * JDK 8 uses the same algorithm for ranges below its INSERTION_SORT_THRESHOLD.
 	 */
-	private static void insertionSort(SortAccessor accessor, int left, int right) {
+	private static void insertionSort(final SortAccessor accessor, final int left, final int right) {
 		for (int i = left + 1; i <= right; i++) {
 			int j = i;
-			while (j > left && accessor.compare(j - 1, j) > 0) {
-				accessor.swap(j - 1, j);
+			while (j > left && accessor.swapIfGreater(j - 1, j))
 				j--;
-			}
 		}
 	}
 
@@ -230,6 +228,17 @@ public final class Util {
 			final float t = array[i];
 			array[i] = array[j];
 			array[j] = t;
+		}
+
+		@Override
+		public boolean swapIfGreater(int i, int j) {
+			final float a = array[i], b = array[j];
+			if ((comparator != null ? comparator.compare(a, b) : Float.compare(a, b)) > 0) {
+				array[i] = b;
+				array[j] = a;
+				return true;
+			}
+			return false;
 		}
 	}
 
@@ -281,6 +290,17 @@ public final class Util {
 			array[i] = array[j];
 			array[j] = t;
 		}
+
+		@Override
+		public boolean swapIfGreater(int i, int j) {
+			final int a = array[i], b = array[j];
+			if ((comparator != null ? comparator.compare(a, b) : Integer.compare(a, b)) > 0) {
+				array[i] = b;
+				array[j] = a;
+				return true;
+			}
+			return false;
+		}
 	}
 
 	public static <T> void quickSort(T[] a, Comparator<? super T> comparator) {
@@ -326,6 +346,17 @@ public final class Util {
 			final Object t = array[i];
 			array[i] = array[j];
 			array[j] = t;
+		}
+
+		@Override
+		public boolean swapIfGreater(int i, int j) {
+			final Object a = array[i], b = array[j];
+			if ((comparator != null ? comparator.compare(a, b) : ((Comparable) a).compareTo(b)) > 0) {
+				array[i] = b;
+				array[j] = a;
+				return true;
+			}
+			return false;
 		}
 	}
 
@@ -383,6 +414,17 @@ public final class Util {
 		@Override
 		public void swap(int i, int j) {
 			list.set(i, list.set(j, list.get(i)));
+		}
+
+		@Override
+		public boolean swapIfGreater(int i, int j) {
+			final Object a = list.get(i), b = list.get(j);
+			if ((comparator != null ? comparator.compare(a, b) : ((Comparable) a).compareTo(b)) > 0) {
+				list.set(i, b);
+				list.set(j, a);
+				return true;
+			}
+			return false;
 		}
 	}
 
@@ -442,6 +484,18 @@ public final class Util {
 			keys[i] = keys[j];
 			keys[j] = tk;
 			payload.set(i, payload.set(j, payload.get(i)));
+		}
+
+		@Override
+		public boolean swapIfGreater(int i, int j) {
+			final int ka = keys[i], kb = keys[j];
+			if (ka > kb) {
+				keys[i] = kb;
+				keys[j] = ka;
+				payload.set(i, payload.set(j, payload.get(i)));
+				return true;
+			}
+			return false;
 		}
 	}
 
@@ -520,6 +574,21 @@ public final class Util {
 			payload[i] = payload[j];
 			payload[j] = tp;
 		}
+
+		@Override
+		public boolean swapIfGreater(int i, int j) {
+			final int ka = keys[i], kb = keys[j];
+			if (ka > kb) {
+				keys[i] = kb;
+				keys[j] = ka;
+
+				final int tp = payload[i];
+				payload[i] = payload[j];
+				payload[j] = tp;
+				return true;
+			}
+			return false;
+		}
 	}
 
 	private static final class KeyedFloatArrayAccessor implements SortAccessor {
@@ -565,6 +634,21 @@ public final class Util {
 			payload[i] = payload[j];
 			payload[j] = tp;
 		}
+
+		@Override
+		public boolean swapIfGreater(int i, int j) {
+			final int ka = keys[i], kb = keys[j];
+			if (ka > kb) {
+				keys[i] = kb;
+				keys[j] = ka;
+
+				final float tp = payload[i];
+				payload[i] = payload[j];
+				payload[j] = tp;
+				return true;
+			}
+			return false;
+		}
 	}
 
 	interface SortAccessor {
@@ -572,5 +656,14 @@ public final class Util {
 		int compareToPivot(int i);
 		void savePivot(int index);
 		void swap(int i, int j);
+
+		/** Swaps elements i and j if element i > element j. Returns true if a swap happened. */
+		default boolean swapIfGreater(int i, int j) {
+			if (compare(i, j) > 0) {
+				swap(i, j);
+				return true;
+			}
+			return false;
+		}
 	}
 }
