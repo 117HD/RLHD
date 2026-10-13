@@ -2,9 +2,15 @@
 
 #include <uniforms/sky.glsl>
 
-// Clear the daytime sky and its haze together through astronomical twilight.
+// Keep the daytime sky visible through astronomical twilight.
 float skyDaylightFactor() {
     return smoothstep(sin(radians(-18.0)), 0.0, uboSky.sunDir.y);
+}
+
+// Release opacity rather than optical depth, retaining subdued sunset colors
+// before gradually revealing the night sky.
+float skyFogDaylightFactor() {
+    return smoothstep(sin(radians(-25.0)), 0.f, uboSky.sunDir.y);
 }
 
 float skyFogTransmittance(float upAmount) {
@@ -12,8 +18,8 @@ float skyFogTransmittance(float upAmount) {
     // path approximation has a smooth, flat slope at the horizon and stays positive.
     float elevation = max(upAmount - uboSky.fogHorizonHeight, 0.0) / 0.16;
     float pathLength = 1.0 / (1.0 + elevation * elevation);
-    float density = uboSky.fogDensity * skyDaylightFactor();
-    return uboSky.visibility * exp(-density * pathLength);
+    float daytimeTransmittance = exp(-uboSky.fogDensity * pathLength);
+    return uboSky.visibility * mix(1.0, daytimeTransmittance, skyFogDaylightFactor());
 }
 
 // Forward lobe of Henyey-Greenstein scattering, normalized to one on-axis.
