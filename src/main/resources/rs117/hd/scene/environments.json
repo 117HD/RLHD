@@ -2234,7 +2234,8 @@
   {
     "area": "COSMIC_ALTAR",
     "allowSkyOverride": false,
-    "ambientStrength": 0.2,
+    "ambientStrength": 1.5,
+    "fogColor": "#000000",
     "directionalStrength": 3,
     "shadowAngles": [
       80,
