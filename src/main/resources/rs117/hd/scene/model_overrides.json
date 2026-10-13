@@ -82062,7 +82062,7 @@
       {
         "description": "Sail",
         "colors": "h == 8",
-        "baseMaterial": "CARPET_LIGHT_SMOOTH",
+        "baseMaterial": "SAIL_CLOTH_LIGHT_SMOOTH",
         "shadowNormalBias": true
       }
     ]
@@ -82073,7 +82073,8 @@
     "objectIds": [
       "BOATKIT_MAST_MIDDLEMAST_HOISTED",
       "BOATKIT_MAST_REARMAST_HOISTED",
-      "BOATKIT_MAST_MIDDLEMAST_UNFURLED"
+      "BOATKIT_MAST_MIDDLEMAST_UNFURLED",
+      "BOATKIT_MAST_MIDDLEMAST_FULL"
     ],
     "disableDetailCulling": true,
     "colorOverrides": [
@@ -82088,7 +82089,7 @@
       {
         "description": "Sail",
         "colors": "h == 8",
-        "baseMaterial": "CARPET_LIGHT_SMOOTH",
+        "baseMaterial": "SAIL_CLOTH_LIGHT_SMOOTH",
         "shadowNormalBias": true
       }
     ]
