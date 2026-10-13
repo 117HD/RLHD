@@ -67,10 +67,12 @@ public final class Zone implements Destructible {
 	public static final int LEVEL_WATER_SURFACE = LEVEL_COUNT++;
 	public static final int LEVEL_GAP_FILLER = LEVEL_COUNT++;
 
-	public int glVao;
+	public 	int glVao;
 	int modelCount;
 	int bufLen;
 	int dist;
+	// Scene-local zone coordinates for the current frame's static alpha sort, set by the WorldViewContext
+	int sortZoneX, sortZoneZ;
 
 	byte staticAlphaLevelMask = 0;
 	byte alphaLevelMask = 0;
@@ -97,7 +99,6 @@ public final class Zone implements Destructible {
 
 	public IntHashSet animatedDynamicObjectIds = new IntHashSet();
 
-	final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob();
 	ZoneUploadJob uploadJob;
 
 	// The WorldViewContext which owns this zone. Used to release shared StaticAlphaModels when the zone is destroyed
@@ -233,7 +234,6 @@ public final class Zone implements Destructible {
 		}
 		acquiredStaticModels.clear();
 
-		alphaSortingJob.destroy();
 		alphaModels.clear();
 		viewContext = null;
 	}
@@ -686,9 +686,9 @@ public final class Zone implements Destructible {
 	}
 
 	synchronized void postAlphaPass() {
-		alphaSortingJob.waitForCompletion();
+		if (viewContext != null)
+			viewContext.alphaSortingJob.waitForCompletion();
 		alphaLevelMask = staticAlphaLevelMask;
-		alphaSortingJob.reset();
 		visibleAlphaModels.reset();
 
 		for (int i = alphaModels.size() - 1; i >= 0; --i) {
@@ -724,8 +724,6 @@ public final class Zone implements Destructible {
 	private static final int[] staticDrawOffset = new int[NUM_DRAW_RANGES];
 	private static final int[] staticDrawLength = new int[NUM_DRAW_RANGES];
 	private static final int[] staticDrawBaseVertex = new int[NUM_DRAW_RANGES];
-	// Maps a zone's distinct StaticAlphaModel block index to its destination offset in the EBO for this render pass
-	private int[] blockDest = new int[0];
 
 	synchronized void alphaSort() {
 		visibleAlphaModels.reset();
@@ -742,7 +740,8 @@ public final class Zone implements Destructible {
 			alphaModelsKeys = new int[alphaModelCount];
 
 		visibleAlphaModels.ensureCapacity(alphaModelCount);
-		alphaSortingJob.waitForCompletion();
+		if (viewContext != null)
+			viewContext.alphaSortingJob.waitForCompletion();
 
 		for(int i = 0; i < alphaModelCount; i++) {
 			final AlphaModelInstance model = alphaModels.get(i);
@@ -757,29 +756,6 @@ public final class Zone implements Destructible {
 			return;
 
 		quickSortByKey(alphaModelsKeys, visibleAlphaModels.array, 0, visibleAlphaModels.length - 1);
-	}
-
-	int setupAlphaModelSort(int startOffset) {
-		alphaSortingJob.reset();
-		alphaSortingJob.beginAssignment(startOffset);
-
-		for (int i = 0; i < alphaModels.size(); i++ ) {
-			final AlphaModelInstance m = alphaModels.get(i);
-			if ((m.flags & AlphaModelInstance.SKIP) != 0 || m.isTemp())
-				continue;
-
-			alphaSortingJob.addAlphaModel(m);
-		}
-
-		// Reset the block -> EBO destination mapping for this frame's render passes. It is intentionally not reset
-		// per renderAlpha() call, so a shared block is only copied into the EBO once even when its instances span
-		// multiple level passes.
-		final int blockCount = alphaSortingJob.getBlockCount();
-		if (blockDest.length < blockCount)
-			blockDest = new int[ceilPow2(blockCount)];
-		Arrays.fill(blockDest, 0, blockCount, -1);
-
-		return alphaSortingJob.getAssignedIndexCount();
 	}
 
 	void renderAlpha(
@@ -806,12 +782,8 @@ public final class Zone implements Destructible {
 		drawIdx = 0;
 		staticDrawCount = 0;
 
-		EboAlphaWriterJob.ZoneAlphaModelCollection collection = null;
-		int eboAlphaStart = ZoneRenderer.eboAlphaWriter.getWrittenInts();
-		int eboAlphaOffset = eboAlphaStart;
-
 		if(!depthOnly)
-			alphaSortingJob.waitForCompletion();
+			ctx.alphaSortingJob.waitForCompletion();
 
 		for (int i = 0; i < visibleAlphaModels.length; i++) {
 			final AlphaModelInstance m = alphaModels.get(visibleAlphaModels.array[i]);
@@ -854,20 +826,19 @@ public final class Zone implements Destructible {
 				continue;
 			}
 
-			if (m.sortedIndiciesCount <= 0 || m.needsSorting() || m.blockIndex < 0 || m.blockIndex >= blockDest.length)
+			if (m.sortedIndiciesCount <= 0 || m.needsSorting() || m.sortedIndiciesOffset < 0)
 				continue;
 
-			// Copy each distinct sorted-index block into the EBO exactly once, then draw it per instance with the
-			// instance's own baseVertex. Instances sharing a model only differ by baseVertex.
-			int dest = blockDest[m.blockIndex];
-			if (dest == -1) {
-				if (collection == null)
-					collection = ctx.sortedAlphaFacesUpload.obtain();
-				collection.add(m.sortedIndiciesOffset, m.sortedIndiciesCount);
-				dest = eboAlphaOffset;
-				blockDest[m.blockIndex] = dest;
-				eboAlphaOffset += m.sortedIndiciesCount;
+			// The whole packed block array is uploaded to the EBO as one contiguous copy once per world view, so each
+			// instance's sorted indices live at eboAlphaBaseOffset + its own block offset. Instances in different
+			// zones referencing the same model resolve to the same destination without per-frame bookkeeping.
+			if (ctx.eboAlphaBaseOffset < 0) {
+				final EboAlphaWriterJob.ZoneAlphaModelCollection collection = ctx.sortedAlphaFacesUpload.obtain();
+				collection.add(0, ctx.eboAlphaCount);
+				ctx.eboAlphaBaseOffset = collection.queue(ctx.eboAlphaCount);
 			}
+
+			final int dest = ctx.eboAlphaBaseOffset + m.sortedIndiciesOffset;
 
 			if (staticDrawCount >= NUM_DRAW_RANGES)
 				flush(cmd);
@@ -878,9 +849,6 @@ public final class Zone implements Destructible {
 			staticDrawCount++;
 		}
 		flush(cmd);
-
-		if (collection != null)
-			collection.queue(eboAlphaOffset - eboAlphaStart);
 	}
 
 	void renderAlphaShadows(CommandBuffer cmd, int zx, int zz, WorldViewContext ctx, boolean includeRoof) {

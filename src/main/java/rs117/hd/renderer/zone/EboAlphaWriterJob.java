@@ -102,14 +102,20 @@ public final class EboAlphaWriterJob extends Job {
 			offsetCounts[base + 1] = sourceCount;
 		}
 
-		public void queue(int alphaCount) {
+		/**
+		 * Reserves {@code alphaCount} ints in the EBO and schedules the copy of this collection's ranges into it.
+		 *
+		 * @return the absolute EBO offset the reserved region starts at, or -1 if nothing was reserved.
+		 */
+		public int queue(int alphaCount) {
 			if(alphaCount <= 0 || count == 0) {
 				owner.free.add(this);
-				return;
+				return -1;
 			}
 
 			eboAlphaView = ZoneRenderer.eboAlphaWriter.reserve(alphaCount);
 			owner.pending.add(this);
+			return eboAlphaView.getBufferOffsetInts();
 		}
 	}
 }

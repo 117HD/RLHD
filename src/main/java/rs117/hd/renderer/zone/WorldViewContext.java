@@ -81,7 +81,12 @@ public class WorldViewContext {
 	Set<Integer> hideRoofIds;
 
 	final EboAlphaWriterJob sortedAlphaFacesUpload = new EboAlphaWriterJob(this);
+	final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob();
 	int[] eboAlphaIndices;
+	// Number of valid indices in eboAlphaIndices this frame (the packed blocks for this world view).
+	int eboAlphaCount;
+	// Absolute EBO offset the whole packed block array is uploaded to, resolved once per frame on first use, or -1.
+	int eboAlphaBaseOffset = -1;
 
 	private final Comparator<Zone> alphaSortComparator = Comparator.comparingInt((Zone z) -> z.dist).reversed();
 	private final List<Zone> alphaZones = new ArrayList<>();
@@ -280,6 +285,7 @@ public class WorldViewContext {
 		final int offset = sceneContext.sceneOffset >> 3;
 		final int camPosX = (int) camera.getPositionX();
 		final int camPosZ = (int) camera.getPositionZ();
+		final boolean frustumCull = worldViewId == WorldView.TOPLEVEL;
 		for (int zx = 0; zx < sizeX; zx++) {
 			for (int zz = 0; zz < sizeZ; zz++) {
 				final Zone z = zones[zx][zz];
@@ -291,28 +297,43 @@ public class WorldViewContext {
 				z.dist = dx * dx + dz * dz;
 				// AlphaModel distances are relative to scene-local coordinates (matching the camera and zone distances),
 				// so the extended zone index must be converted back to a scene-local one.
-				z.alphaSortingJob.setup(camera, zx - offset, zz - offset, worldViewId == WorldView.TOPLEVEL);
+				z.sortZoneX = zx - offset;
+				z.sortZoneZ = zz - offset;
 				alphaZones.add(z);
 			}
 		}
 
+		// One job per world view, so each distinct StaticAlphaModel is sorted and assigned an index block exactly
+		// once, no matter how many zones reference it.
+		alphaSortingJob.reset();
+
+		int alphaFaceCount = 0;
 		if (!alphaZones.isEmpty()) {
 			quickSort(alphaZones, alphaSortComparator);
-			int alphaFaceCount = 0;
 			for (int i = 0; i < alphaZones.size(); i++) {
 				final Zone z = alphaZones.get(i);
-				alphaFaceCount += z.setupAlphaModelSort(alphaFaceCount);
+				alphaSortingJob.beginZone(camera, z.sortZoneX, z.sortZoneZ, frustumCull);
+				for (int j = 0; j < z.alphaModels.size(); j++) {
+					final AlphaModelInstance m = z.alphaModels.get(j);
+					if ((m.flags & AlphaModelInstance.SKIP) != 0 || m.isTemp())
+						continue;
+					alphaSortingJob.addAlphaModel(m);
+				}
 			}
+			alphaFaceCount = alphaSortingJob.getAssignedIndexCount();
+		}
 
-			if(alphaFaceCount <= 0)
-				return;
+		// The packed block array is uploaded to the EBO as one contiguous copy, so the destination of any block is
+		// just eboAlphaBaseOffset + its offset within eboAlphaIndices, resolved once on first use per frame.
+		eboAlphaCount = alphaFaceCount;
+		eboAlphaBaseOffset = -1;
 
+		if (alphaFaceCount > 0) {
 			ZoneRenderer.eboAlpha.ensureCapacity((long) alphaFaceCount * Integer.BYTES);
 			eboAlphaIndices = PooledArrayType.INT.ensureCapacity(eboAlphaIndices, alphaFaceCount);
-			for (int i = 0; i < alphaZones.size(); i++)
-				alphaZones.get(i).alphaSortingJob.queue(eboAlphaIndices);
+			alphaSortingJob.queue(eboAlphaIndices);
 		} else {
-			if(eboAlphaIndices != null)
+			if (eboAlphaIndices != null)
 				PooledArrayType.INT.release(eboAlphaIndices);
 			eboAlphaIndices = null;
 		}
@@ -416,6 +437,7 @@ public class WorldViewContext {
 		sceneLoadGroup.cancel();
 		streamingGroup.cancel();
 		sortedAlphaFacesUpload.cancel();
+		alphaSortingJob.destroy();
 
 		if (sceneContext != null) {
 			sceneContext.worldViewContext = null;

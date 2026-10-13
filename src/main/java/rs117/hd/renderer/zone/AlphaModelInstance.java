@@ -27,7 +27,6 @@ public final class AlphaModelInstance {
 
 	int dist;
 	int asyncSortIdx = -1;
-	int blockIndex = -1; // index of this instance's shared StaticAlphaModel sorted-index block within its zone
 	int sortedIndiciesOffset; // offset into the sorted index buffer of the shared block
 	int sortedIndiciesCount; // number of indices in the shared block
 	int baseVertex; // vertex offset of this instance's geometry within the zone's alpha VBO

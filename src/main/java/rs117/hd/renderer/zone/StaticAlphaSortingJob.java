@@ -13,6 +13,12 @@ import static net.runelite.api.Perspective.*;
 import static rs117.hd.renderer.zone.Zone.VERT_SIZE;
 import static rs117.hd.utils.MathUtils.*;
 
+/**
+ * Sorts the alpha faces of every {@link StaticAlphaModel} referenced by a {@link WorldViewContext}, and culls the
+ * instances referencing them. Because a {@link StaticAlphaModel} is interned per world view, a single job handles every
+ * zone in the world view, assigning each distinct model's sorted-index block exactly once. This lets the renderer copy
+ * each block into the EBO once per frame instead of once per zone.
+ */
 public final class StaticAlphaSortingJob extends Job {
 
 	@Inject
@@ -22,7 +28,7 @@ public final class StaticAlphaSortingJob extends Job {
 	private int[] sortedAlphaIndicies;
 	private int size = 0;
 
-	// Per-zone assignment of shared StaticAlphaModel sorted-index blocks. Each distinct model is written once, and
+	// Per-world-view assignment of shared StaticAlphaModel sorted-index blocks. Each distinct model is written once, and
 	// every instance referencing it draws the same block with its own baseVertex.
 	private final IdentityHashMap<StaticAlphaModel, Integer> modelBlocks = new IdentityHashMap<>();
 	private StaticAlphaModel[] blockModels = new StaticAlphaModel[16];
@@ -31,30 +37,68 @@ public final class StaticAlphaSortingJob extends Job {
 	private int assignedIndexStart = 0;
 	private int assignedIndexCount = 0;
 
+	// A contiguous run of models belonging to the same zone, so the combined-AABB culling optimization is preserved.
+	private int[] zoneStarts = new int[16];
+	private int[] zoneX = new int[16];
+	private int[] zoneZ = new int[16];
+	private boolean[] zoneFrustumCull = new boolean[16];
+	private int[] zoneMinBoundX = new int[16];
+	private int[] zoneMinBoundY = new int[16];
+	private int[] zoneMinBoundZ = new int[16];
+	private int[] zoneMaxBoundX = new int[16];
+	private int[] zoneMaxBoundY = new int[16];
+	private int[] zoneMaxBoundZ = new int[16];
+	private int zoneCount = 0;
+
 	private int[] zsortHead;
 	private int[] zsortTail;
 	private int[] zsortNext;
 
 	private Camera camera;
-	private int zx, zz;
-	private int minBoundX, minBoundY, minBoundZ, maxBoundX, maxBoundY, maxBoundZ;
-	private boolean frustumCull;
 
 	public StaticAlphaSortingJob() { super(true); }
 
-	public void beginAssignment(int startOffset) {
+	public void reset() {
+		Arrays.fill(models, 0, size, null);
+		size = 0;
 		modelBlocks.clear();
 		blockCount = 0;
-		assignedIndexStart = startOffset;
-		assignedIndexCount = startOffset;
+		zoneCount = 0;
+		assignedIndexStart = 0;
+		assignedIndexCount = 0;
+	}
+
+	/**
+	 * Begins a new zone segment. Every {@link #addAlphaModel} call until the next zone begins belongs to it.
+	 */
+	public void beginZone(Camera camera, int zx, int zz, boolean frustumCull) {
+		this.camera = camera;
+
+		if (zoneCount == zoneStarts.length) {
+			final int newCapacity = ceilPow2(zoneStarts.length * 2);
+			zoneStarts = Arrays.copyOf(zoneStarts, newCapacity);
+			zoneX = Arrays.copyOf(zoneX, newCapacity);
+			zoneZ = Arrays.copyOf(zoneZ, newCapacity);
+			zoneFrustumCull = Arrays.copyOf(zoneFrustumCull, newCapacity);
+			zoneMinBoundX = Arrays.copyOf(zoneMinBoundX, newCapacity);
+			zoneMinBoundY = Arrays.copyOf(zoneMinBoundY, newCapacity);
+			zoneMinBoundZ = Arrays.copyOf(zoneMinBoundZ, newCapacity);
+			zoneMaxBoundX = Arrays.copyOf(zoneMaxBoundX, newCapacity);
+			zoneMaxBoundY = Arrays.copyOf(zoneMaxBoundY, newCapacity);
+			zoneMaxBoundZ = Arrays.copyOf(zoneMaxBoundZ, newCapacity);
+		}
+
+		final int z = zoneCount++;
+		zoneStarts[z] = size;
+		zoneX[z] = zx;
+		zoneZ[z] = zz;
+		zoneFrustumCull[z] = frustumCull;
+		zoneMinBoundX[z] = zoneMinBoundY[z] = zoneMinBoundZ[z] = Integer.MAX_VALUE;
+		zoneMaxBoundX[z] = zoneMaxBoundY[z] = zoneMaxBoundZ[z] = Integer.MIN_VALUE;
 	}
 
 	public int getAssignedIndexCount() {
 		return assignedIndexCount - assignedIndexStart;
-	}
-
-	public int getBlockCount() {
-		return blockCount;
 	}
 
 	public void addAlphaModel(AlphaModelInstance m) {
@@ -67,14 +111,15 @@ public final class StaticAlphaSortingJob extends Job {
 		models[size] = m;
 		size++;
 
-		final int modelX = ((zx - m.zofx) << 10) + m.x;
-		final int modelZ = ((zz - m.zofz) << 10) + m.z;
-		minBoundX = min(minBoundX, modelX - m.extentsX);
-		maxBoundX = max(maxBoundX, modelX + m.extentsX);
-		minBoundY = min(minBoundY, m.y - m.extentsY);
-		maxBoundY = max(maxBoundY, m.y + m.extentsY);
-		minBoundZ = min(minBoundZ, modelZ - m.extentsZ);
-		maxBoundZ = max(maxBoundZ, modelZ + m.extentsZ);
+		final int z = zoneCount - 1;
+		final int modelX = ((zoneX[z] - m.zofx) << 10) + m.x;
+		final int modelZ = ((zoneZ[z] - m.zofz) << 10) + m.z;
+		zoneMinBoundX[z] = min(zoneMinBoundX[z], modelX - m.extentsX);
+		zoneMaxBoundX[z] = max(zoneMaxBoundX[z], modelX + m.extentsX);
+		zoneMinBoundY[z] = min(zoneMinBoundY[z], m.y - m.extentsY);
+		zoneMaxBoundY[z] = max(zoneMaxBoundY[z], m.y + m.extentsY);
+		zoneMinBoundZ[z] = min(zoneMinBoundZ[z], modelZ - m.extentsZ);
+		zoneMaxBoundZ[z] = max(zoneMaxBoundZ[z], modelZ + m.extentsZ);
 
 		final StaticAlphaModel model = m.staticModel;
 		if (model == null)
@@ -94,31 +139,16 @@ public final class StaticAlphaSortingJob extends Job {
 			assignedIndexCount += model.getFaceCount() * 3;
 		}
 
-		m.blockIndex = block;
 		m.sortedIndiciesOffset = blockSourceOffsets[block];
 		m.sortedIndiciesCount = model.getFaceCount() * 3;
 		m.baseVertex = m.startpos / (VERT_SIZE >> 2);
 	}
 
-	public void setup(Camera camera, int zx, int zz, boolean frustumCull){
-		this.camera = camera;
-		this.zx = zx;
-		this.zz = zz;
-		this.frustumCull = frustumCull;
-	}
-
 	public void queue(int[] sortedAlphaIndicies) {
-		if(size == 0)
+		if (size == 0)
 			return;
 		this.sortedAlphaIndicies = sortedAlphaIndicies;
 		super.queue();
-	}
-
-	public void reset() {
-		Arrays.fill(models, 0, size, null);
-		size = 0;
-		minBoundX = minBoundY = minBoundZ = Integer.MAX_VALUE;
-		maxBoundX = maxBoundY = maxBoundZ = Integer.MIN_VALUE;
 	}
 
 	public void destroy() {
@@ -153,35 +183,45 @@ public final class StaticAlphaSortingJob extends Job {
 		// Face order depends only on camera orientation, so this identifies a StaticAlphaModel's cached sort
 		final int sortKey = yaw << 16 | pitch;
 
-		// Classify the combined AABB of every alpha model against the frustum, so we can skip
-		// per-model culling entirely when the zone's alpha geometry is fully visible.
-		final int boundsClassification = frustumCull ?
-			camera.classifyAABB(minBoundX, minBoundY, minBoundZ, maxBoundX, maxBoundY, maxBoundZ) : 1;
+		for (int z = 0; z < zoneCount; z++) {
+			final int zoneStart = zoneStarts[z];
+			final int end = z + 1 < zoneCount ? zoneStarts[z + 1] : size;
 
-		final boolean fullyOutside = boundsClassification == -1;
-		final boolean partiallyVisible = boundsClassification == 0;
+			// Classify the combined AABB of every alpha model in the zone against the frustum, so we can skip
+			// per-model culling entirely when the zone's alpha geometry is fully visible.
+			final int boundsClassification = zoneFrustumCull[z] ?
+				camera.classifyAABB(
+					zoneMinBoundX[z], zoneMinBoundY[z], zoneMinBoundZ[z],
+					zoneMaxBoundX[z], zoneMaxBoundY[z], zoneMaxBoundZ[z]
+				) : 1;
 
-		for (int i = 0; i < size; i++) {
-			final AlphaModelInstance m = models[i];
-			m.sortedIndiciesCount = 0;
+			final boolean fullyOutside = boundsClassification == -1;
+			final boolean partiallyVisible = boundsClassification == 0;
+			final int zx = zoneX[z];
+			final int zz = zoneZ[z];
 
-			if (fullyOutside) {
-				m.setHidden();
-			} else if (partiallyVisible) {
-				final int modelX = ((zx - m.zofx) << 10) + m.x;
-				final int modelZ = ((zz - m.zofz) << 10) + m.z;
-				if (!camera.intersectsAABB(
-					modelX - m.extentsX, m.y - m.extentsY, modelZ - m.extentsZ,
-					modelX + m.extentsX, m.y + m.extentsY, modelZ + m.extentsZ
-				)) {
-					// Alpha Models always start as visible to avoid pop-in, so we mark them as hidden since we know they're not visible
+			for (int i = zoneStart; i < end; i++) {
+				final AlphaModelInstance m = models[i];
+				m.sortedIndiciesCount = 0;
+
+				if (fullyOutside) {
 					m.setHidden();
+				} else if (partiallyVisible) {
+					final int modelX = ((zx - m.zofx) << 10) + m.x;
+					final int modelZ = ((zz - m.zofz) << 10) + m.z;
+					if (!camera.intersectsAABB(
+						modelX - m.extentsX, m.y - m.extentsY, modelZ - m.extentsZ,
+						modelX + m.extentsX, m.y + m.extentsY, modelZ + m.extentsZ
+					)) {
+						// Alpha Models always start as visible to avoid pop-in, so we mark them as hidden since we know they're not visible
+						m.setHidden();
+					}
 				}
-			}
 
-			if (m.isVisible()) {
-				m.calculateDist(cx, cy, cz, zx, zz);
-				m.setSorted();
+				if (m.isVisible()) {
+					m.calculateDist(cx, cy, cz, zx, zz);
+					m.setSorted();
+				}
 			}
 		}
 
