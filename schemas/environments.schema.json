@@ -407,7 +407,7 @@
                   "string",
                   "array"
                 ],
-                "description": "Fog color in sRGB. Omit to follow the sky's horizon color. Blends with that color using skyFogColorMix.",
+                "description": "Daytime fog color in sRGB. Transitions to nightHorizonColor * nightHorizonStrength around sunset, or the evaluated horizon for custom gradients. Omit to always follow the evaluated horizon color.",
                 "pattern": "^#[A-Fa-f0-9]{6}$",
                 "minItems": 3,
                 "maxItems": 3,
@@ -415,15 +415,9 @@
                   "type": "number"
                 }
               },
-              "skyFogColorMix": {
-                "type": "number",
-                "description": "Color blend: 0 follows the horizon color; 1 uses skyFogColor. Defaults to 1. Does not change fog opacity.",
-                "minimum": 0,
-                "maximum": 1
-              },
               "skyFogDensity": {
                 "type": "number",
-                "description": "Horizon optical depth: 0 disables horizon fog; 0.69 halves transmission at the horizon. Fades upward. Defaults to 0.16 + environment fogDepth / 100; ground fog is independent.",
+                "description": "Daytime horizon optical depth: 0 disables density-based fog; 0.69 halves transmission at the horizon. Fades upward; its opacity clears gradually through twilight. Defaults to environment fogDepth / 100; skyVisibility and ground fog are independent.",
                 "minimum": 0
               },
               "skyFogHorizonAltitude": {

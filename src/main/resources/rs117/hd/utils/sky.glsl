@@ -41,7 +41,7 @@ SkyGradient computeSkyGradient(vec3 viewDir, bool includeSunGlow) {
     vec3 sunSideColor = uboSky.horizonColor;
 
     // Retain residual twilight until the sun reaches astronomical night at -18 degrees.
-    g.nightFade = smoothstep(sin(radians(-18.0)), 0.0, uboSky.sunDir.y) * (1.0 - uboSky.customGradient);
+    g.nightFade = skyDaylightFactor() * (1.0 - uboSky.customGradient);
 
     vec3 horizonColor = mix(darkSideColor, sunSideColor, g.sunSideBlend);
     horizonColor = mix(uboSky.zenithColor, horizonColor, g.nightFade);
