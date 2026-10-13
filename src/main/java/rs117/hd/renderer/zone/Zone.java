@@ -747,7 +747,7 @@ public final class Zone implements Destructible {
 		if (visibleAlphaModels.length <= 1)
 			return;
 
-		if(visibleAlphaModels.length <= 2){
+		if(visibleAlphaModels.length == 2){
 			if(alphaModelsKeys[0] > alphaModelsKeys[1])
 				visibleAlphaModels.swap(0, 1);
 			return;

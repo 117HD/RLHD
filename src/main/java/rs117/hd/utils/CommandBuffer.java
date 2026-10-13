@@ -31,24 +31,23 @@ public class CommandBuffer {
 	private static final int GL_DRAW_ELEMENTS_TYPE = 4;
 	private static final int GL_DRAW_ELEMENTS_INDIRECT_TYPE = 5;
 	private static final int GL_DRAW_ARRAYS_INSTANCED_TYPE = 6;
-	private static final int GL_DRAW_CALL_TYPE_COUNT = 7;
+	private static final int GL_DRAW_ELEMENTS_BASE_VERTEX_TYPE = 7;
+	private static final int GL_MULTI_DRAW_ELEMENTS_INDIRECT_TYPE = 8;
+	private static final int GL_DRAW_CALL_TYPE_COUNT = 9;
 
-	private static final int GL_BIND_VERTEX_ARRAY_TYPE = 7;
-	private static final int GL_BIND_INDIRECT_ARRAY_TYPE = 8;
-	private static final int GL_BIND_TEXTURE_UNIT_TYPE = 9;
-	private static final int GL_DEPTH_MASK_TYPE = 10;
-	private static final int GL_COLOR_MASK_TYPE = 11;
-	private static final int GL_BLEND_FUNC_TYPE = 12;
-	private static final int GL_USE_PROGRAM = 13;
-	private static final int GL_TIMER = 14;
+	private static final int GL_BIND_VERTEX_ARRAY_TYPE = 10;
+	private static final int GL_BIND_INDIRECT_ARRAY_TYPE = 11;
+	private static final int GL_BIND_TEXTURE_UNIT_TYPE = 12;
+	private static final int GL_DEPTH_MASK_TYPE = 13;
+	private static final int GL_COLOR_MASK_TYPE = 14;
+	private static final int GL_BLEND_FUNC_TYPE = 15;
+	private static final int GL_USE_PROGRAM = 16;
+	private static final int GL_TIMER = 17;
 
-	private static final int GL_TOGGLE_TYPE = 15; // Combined glEnable & glDisable
-	private static final int GL_FENCE_SYNC = 16;
+	private static final int GL_TOGGLE_TYPE = 18; // Combined glEnable & glDisable
+	private static final int GL_FENCE_SYNC = 19;
 
-	private static final int GL_EXECUTE_SUB_COMMAND_BUFFER = 17;
-
-	private static final int GL_DRAW_ELEMENTS_BASE_VERTEX_TYPE = 18;
-	private static final int GL_MULTI_DRAW_ELEMENTS_INDIRECT_TYPE = 19;
+	private static final int GL_EXECUTE_SUB_COMMAND_BUFFER = 20;
 
 	private static final long INT_MASK = 0xFFFF_FFFFL;
 	private static final int DRAW_MODE_MASK = 0xF;
@@ -384,9 +383,7 @@ public class CommandBuffer {
 				// Casting from long to int keeps the lower 32 bits
 				long data = cmd[readHead++];
 				int type = (int) data & 0xFF;
-				if (type < GL_DRAW_CALL_TYPE_COUNT ||
-					type == GL_DRAW_ELEMENTS_BASE_VERTEX_TYPE ||
-					type == GL_MULTI_DRAW_ELEMENTS_INDIRECT_TYPE)
+				if (type < GL_DRAW_CALL_TYPE_COUNT)
 					renderState.apply();
 
 				switch (type) {
