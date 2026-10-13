@@ -114,10 +114,9 @@ public final class StaticAlphaSortingJob extends Job {
 
 				if (m.isVisible()) {
 					sorter.sortStaticModelFacesByDistance(sortedAlphaIndicies, m, yawCos, yawSin, pitchCos, pitchSin);
+					m.calculateDist(cx, cy, cz, zx, zz);
 					m.setSorted();
 				}
-
-				m.calculateDist(cx, cy, cz, zx, zz);
 			}
 		}
 		frameTimer.add(Timer.STATIC_ALPHA_SORT, System.nanoTime() - start);

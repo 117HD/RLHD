@@ -1051,13 +1051,13 @@ public class ZoneRenderer implements Renderer {
 				if (level == 0 && (!sceneManager.isRoot(ctx) || z.inSceneFrustum))
 					z.alphaSort();
 
-				if ((z.alphaLevelMask & (1 << level)) != 0) {
+				if (z.doesLevelHaveAlphaModels(level)) {
 					if (skyRenderer.castsShadows && level == 0 && !ctx.isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 						directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
 						z.renderAlphaShadows(directionalCmd, zx - offset, zz - offset, ctx, shouldDrawRoofShadows);
 					}
 
-					if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
+					if (z.hasVisibleAlphaModels() && (!sceneManager.isRoot(ctx) || z.inSceneFrustum)) {
 						if (renderWater) {
 							// Water is currently drawn with depth writes & depth testing enabled, and as such, alpha models and the water plane
 							// can Z-fight depending on draw order. To avoid alpha models above water causing the water surface to fail its

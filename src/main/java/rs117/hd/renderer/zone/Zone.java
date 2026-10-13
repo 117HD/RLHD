@@ -26,6 +26,7 @@ import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.Int2IntHashMap;
 import rs117.hd.utils.collections.IntHashSet;
 import rs117.hd.utils.collections.PooledArrayType;
+import rs117.hd.utils.collections.PrimitiveIntArray;
 
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -112,6 +113,15 @@ public final class Zone implements Destructible {
 	int[][] roofEnd;
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
+	final PrimitiveIntArray visibleAlphaModels = new PrimitiveIntArray();
+
+	public boolean doesLevelHaveAlphaModels(int level) {
+		return (alphaLevelMask & (1 << level)) != 0;
+	}
+
+	public boolean hasVisibleAlphaModels() {
+		return !visibleAlphaModels.isEmpty();
+	}
 
 	public void initialize(GLBuffer o, GLBuffer a, GLTextureBuffer f) {
 		assert glVao == 0;
@@ -726,6 +736,7 @@ public final class Zone implements Destructible {
 		alphaSortingJob.waitForCompletion();
 		alphaLevelMask = staticAlphaLevelMask;
 		alphaSortingJob.reset();
+		visibleAlphaModels.reset();
 
 		for (int i = alphaModels.size() - 1; i >= 0; --i) {
 			AlphaModel m = alphaModels.get(i);
@@ -759,23 +770,30 @@ public final class Zone implements Destructible {
 
 	synchronized void alphaSort() {
 		final int alphaModelCount = alphaModels.size();
-		if (alphaModelCount <= 1)
-			return;
-
-		alphaSortingJob.waitForCompletion();
-		if(alphaModelCount == 2) {
-			if(alphaModels.get(0).dist < alphaModels.get(1).dist)
-				Collections.swap(alphaModels, 0, 1);
+		if (alphaModelCount <= 1) {
+			visibleAlphaModels.put(0);
 			return;
 		}
 
 		if(alphaModelCount > alphaModelsKeys.length)
 			alphaModelsKeys = new int[alphaModelCount];
 
-		for(int i = 0; i < alphaModelCount; i++)
-			alphaModelsKeys[i] = -alphaModels.get(i).dist;
+		visibleAlphaModels.ensureCapacity(alphaModelCount);
+		alphaSortingJob.waitForCompletion();
 
-		quickSortByKey(alphaModelsKeys, alphaModels, 0, alphaModelCount - 1);
+		for(int i = 0; i < alphaModelCount; i++) {
+			final AlphaModel model = alphaModels.get(i);
+			if(!model.isVisible())
+				continue;
+
+			alphaModelsKeys[visibleAlphaModels.length] = -model.dist;
+			visibleAlphaModels.put(i);
+		}
+
+		if(visibleAlphaModels.length > 1)
+			return;
+
+		quickSortByKey(alphaModelsKeys, visibleAlphaModels.array, 0, visibleAlphaModels.length - 1);
 	}
 
 	int setupAlphaModelSort(int startOffset) {
@@ -815,7 +833,7 @@ public final class Zone implements Destructible {
 		boolean depthOnly,
 		boolean includeRoof
 	) {
-		if (alphaModels.isEmpty())
+		if (visibleAlphaModels.isEmpty())
 			return;
 
 		int minLevel = ctx.minLevel;
@@ -835,9 +853,9 @@ public final class Zone implements Destructible {
 		if(!depthOnly)
 			alphaSortingJob.waitForCompletion();
 
-		for (int i = 0; i < alphaModels.size(); i++) {
-			final AlphaModel m = alphaModels.get(i);
-			if ((m.flags & AlphaModel.SKIP) != 0 || !m.isVisible() || m.level != level)
+		for (int i = 0; i < visibleAlphaModels.length; i++) {
+			final AlphaModel m = alphaModels.get(visibleAlphaModels.array[i]);
+			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level)
 				continue;
 
 			final AsyncCachedModel asyncModel = m.asyncModel;
