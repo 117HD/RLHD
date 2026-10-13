@@ -463,6 +463,7 @@ public class HdPlugin extends Plugin {
 
 	@Getter
 	private boolean isPluginStopPending;
+	private Throwable pluginStopReason;
 	@Getter
 	private boolean isActive;
 	private boolean lwjglInitialized;
@@ -848,11 +849,39 @@ public class HdPlugin extends Plugin {
 		});
 	}
 
-	public void requestPluginStop() {
+	public void requestPluginStop(String message) {
+		requestPluginStop(message, new Throwable());
+	}
+
+	public void requestPluginStop(String message, Throwable reason) {
 		if (isPluginStopPending)
 			return;
-		log.debug("Requesting plugin to stop when safe");
 		isPluginStopPending = true;
+		pluginStopReason = new RuntimeException(message, reason);
+		log.error("Scheduling plugin stop due to:", pluginStopReason);
+	}
+
+	private boolean handleShutdownRequest() {
+		if (!isPluginStopPending)
+			return false;
+
+		try {
+			log.debug("Stopping plugin...");
+			stopPlugin();
+
+			Throwable ex = pluginStopReason;
+			if (ex != null) {
+				clientThread.invoke((Runnable) () -> {
+					log.debug("Reporting exception to RuneLite");
+					throw new RuntimeException("117 HD shutdown", ex);
+				});
+			}
+
+			return true;
+		} finally {
+			isPluginStopPending = false;
+			pluginStopReason = null;
+		}
 	}
 
 	public void stopPlugin() {
@@ -942,6 +971,7 @@ public class HdPlugin extends Plugin {
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
 			.define("MATERIAL_COUNT", MaterialManager.MATERIALS.length)
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
+			.define("WATER_SPECULAR_REFLECTIONS", config.waterSpecularReflections())
 			.define("DYNAMIC_LIGHTS", configDynamicLights != DynamicLights.NONE)
 			.define("TILED_LIGHTING", configTiledLighting)
 			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getTiledLightingLayers())
@@ -1949,6 +1979,7 @@ public class HdPlugin extends Plugin {
 							case KEY_POINT_SPRITES:
 							case KEY_NEBULAE:
 							case KEY_LEGACY_BOAT_SILHOUETTES:
+							case KEY_WATER_SPECULAR_REFLECTIONS:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:
@@ -2113,16 +2144,11 @@ public class HdPlugin extends Plugin {
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
-		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
-
-		frame = (frame + 1) & Integer.MAX_VALUE;
-
-		if (isPluginStopPending) {
-			log.debug("Shutdown has been requested, stopping plugin");
-			isPluginStopPending = false;
-			stopPlugin();
+		if (handleShutdownRequest())
 			return;
-		}
+
+		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
+		frame = (frame + 1) & Integer.MAX_VALUE;
 
 		if (lastFrameTimeMillis > 0) {
 			deltaTimeMs = System.currentTimeMillis() - lastFrameTimeMillis;

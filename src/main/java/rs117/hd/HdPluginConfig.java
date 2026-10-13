@@ -75,7 +75,8 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "General",
 		description = "General settings",
-		position = 0
+		position = 0,
+		closedByDefault = true
 	)
 	String generalSettings = "generalSettings";
 
@@ -955,24 +956,12 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	@ConfigItem(
-		keyName = "underwaterCaustics",
-		name = "Underwater caustics",
-		description = "Apply underwater lighting effects to imitate sunlight passing through waves on the surface.",
-		position = 12,
-		section = environmentSettings
-	)
-	default boolean underwaterCaustics()
-	{
-		return true;
-	}
-
 	String KEY_WIND_DISPLACEMENT = "windDisplacement";
 	@ConfigItem(
 		keyName = KEY_WIND_DISPLACEMENT,
 		name = "Wind displacement",
 		description = "Controls whether things like grass and leaves should be affected by wind.",
-		position = 13,
+		position = 12,
 		section = environmentSettings
 	)
 	default boolean windDisplacement() {
@@ -984,10 +973,33 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_CHARACTER_DISPLACEMENT,
 		name = "Character displacement",
 		description = "Let players & NPCs affect things like grass whilst walking around.",
-		position = 14,
+		position = 13,
 		section = environmentSettings
 	)
 	default boolean characterDisplacement() {
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "underwaterCaustics",
+		name = "Underwater caustics",
+		description = "Apply underwater lighting effects to imitate sunlight passing through waves on the surface.",
+		position = 14,
+		section = environmentSettings
+	)
+	default boolean underwaterCaustics() {
+		return true;
+	}
+
+	String KEY_WATER_SPECULAR_REFLECTIONS = "waterSpecularReflection";
+	@ConfigItem(
+		keyName = KEY_WATER_SPECULAR_REFLECTIONS,
+		name = "Water sun & moon reflections",
+		description = "Enables sun and moon highlights on water, including the fake sun when day & night is disabled.",
+		position = 15,
+		section = environmentSettings
+	)
+	default boolean waterSpecularReflections() {
 		return true;
 	}
 
@@ -996,7 +1008,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_HIDE_VANILLA_WATER_EFFECTS,
 		name = "Hide vanilla water ripples",
 		description = "Hide vanilla ripples found around objects floating in the water.",
-		position = 15,
+		position = 16,
 		section = environmentSettings
 	)
 	default boolean hideVanillaWaterEffects() { return true; }
@@ -1006,7 +1018,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_POH_THEME_ENVIRONMENTS,
 		name = "Player-owned house themes",
 		description = "Change the environmental lighting based on the POH style.",
-		position = 16,
+		position = 17,
 		section = environmentSettings
 	)
 	default boolean pohThemeEnvironments() { return true; }

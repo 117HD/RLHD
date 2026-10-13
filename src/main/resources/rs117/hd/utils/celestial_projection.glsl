@@ -2,6 +2,8 @@
 
 #include <uniforms/global.glsl>
 
+#define CELESTIAL_HORIZON_OFFSET 0.05
+
 vec3 celestialViewDirection(vec3 viewDir, vec3 center) {
     vec4 centerClip = uboGlobal.projectionMatrix * vec4(center, 0.0);
     vec4 viewClip = uboGlobal.projectionMatrix * vec4(viewDir, 0.0);
