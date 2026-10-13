@@ -93,13 +93,13 @@ public final class EboAlphaWriterJob extends Job {
 		private int[] offsetCounts = new int[2];
 		private int count;
 
-		public void add(AlphaModelInstance model) {
+		public void add(int sourceOffset, int sourceCount) {
 			final int base = count++ * 2;
 			if(base >= offsetCounts.length)
 				offsetCounts = Arrays.copyOf(offsetCounts, offsetCounts.length * 2);
 
-			offsetCounts[base] = model.sortedIndiciesOffset;
-			offsetCounts[base + 1] = model.sortedIndiciesCount;
+			offsetCounts[base] = sourceOffset;
+			offsetCounts[base + 1] = sourceCount;
 		}
 
 		public void queue(int alphaCount) {

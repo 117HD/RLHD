@@ -233,6 +233,7 @@ public final class Zone implements Destructible {
 		}
 		acquiredStaticModels.clear();
 
+		alphaSortingJob.destroy();
 		alphaModels.clear();
 		viewContext = null;
 	}
@@ -712,12 +713,19 @@ public final class Zone implements Destructible {
 	private static final int STATIC_UNSORTED = 3;
 
 	private static int[] alphaModelsKeys = new int[64];
-	private static int alphaFaceCount;
-	private static int eboAlphaOffset;
 	private static int lastDrawMode;
 	private static int lastVao;
 	private static int lastTboF;
 	private static int lastzx, lastzz;
+
+	// Per-instance draws for the sorted (STATIC) alpha path. Each instance references a shared sorted-index block
+	// with its own baseVertex, so we can't collapse them into a single contiguous draw anymore.
+	private static int staticDrawCount;
+	private static final int[] staticDrawOffset = new int[NUM_DRAW_RANGES];
+	private static final int[] staticDrawLength = new int[NUM_DRAW_RANGES];
+	private static final int[] staticDrawBaseVertex = new int[NUM_DRAW_RANGES];
+	// Maps a zone's distinct StaticAlphaModel block index to its destination offset in the EBO for this render pass
+	private int[] blockDest = new int[0];
 
 	synchronized void alphaSort() {
 		visibleAlphaModels.reset();
@@ -753,30 +761,25 @@ public final class Zone implements Destructible {
 
 	int setupAlphaModelSort(int startOffset) {
 		alphaSortingJob.reset();
+		alphaSortingJob.beginAssignment(startOffset);
 
-		int sortedAlphaFaceCount = 0;
-		for (int i = 0; i < alphaModels.size(); i++ ) {
-			final AlphaModelInstance m = alphaModels.get(i);
-			if ((m.flags & AlphaModelInstance.SKIP) != 0 || m.isTemp())
-				continue;
-			sortedAlphaFaceCount += m.getSortedFaceCount() * 3;
-		}
-
-		if(sortedAlphaFaceCount == 0)
-			return 0;
-
-		int sortedAlphaFaceOffset = startOffset;
 		for (int i = 0; i < alphaModels.size(); i++ ) {
 			final AlphaModelInstance m = alphaModels.get(i);
 			if ((m.flags & AlphaModelInstance.SKIP) != 0 || m.isTemp())
 				continue;
 
-			m.sortedIndiciesOffset = sortedAlphaFaceOffset;
 			alphaSortingJob.addAlphaModel(m);
-
-			sortedAlphaFaceOffset += m.getSortedFaceCount() * 3;
 		}
-		return sortedAlphaFaceCount;
+
+		// Reset the block -> EBO destination mapping for this frame's render passes. It is intentionally not reset
+		// per renderAlpha() call, so a shared block is only copied into the EBO once even when its instances span
+		// multiple level passes.
+		final int blockCount = alphaSortingJob.getBlockCount();
+		if (blockDest.length < blockCount)
+			blockDest = new int[ceilPow2(blockCount)];
+		Arrays.fill(blockDest, 0, blockCount, -1);
+
+		return alphaSortingJob.getAssignedIndexCount();
 	}
 
 	void renderAlpha(
@@ -801,9 +804,11 @@ public final class Zone implements Destructible {
 		}
 
 		drawIdx = 0;
+		staticDrawCount = 0;
 
 		EboAlphaWriterJob.ZoneAlphaModelCollection collection = null;
-		int eboAlphaStart = eboAlphaOffset = ZoneRenderer.eboAlphaWriter.getWrittenInts();
+		int eboAlphaStart = ZoneRenderer.eboAlphaWriter.getWrittenInts();
+		int eboAlphaOffset = eboAlphaStart;
 
 		if(!depthOnly)
 			alphaSortingJob.waitForCompletion();
@@ -849,16 +854,28 @@ public final class Zone implements Destructible {
 				continue;
 			}
 
-			if (m.sortedIndiciesCount <= 0 || m.needsSorting())
+			if (m.sortedIndiciesCount <= 0 || m.needsSorting() || m.blockIndex < 0 || m.blockIndex >= blockDest.length)
 				continue;
 
-			if(collection == null)
-				collection = ctx.sortedAlphaFacesUpload.obtain();
-			collection.add(m);
+			// Copy each distinct sorted-index block into the EBO exactly once, then draw it per instance with the
+			// instance's own baseVertex. Instances sharing a model only differ by baseVertex.
+			int dest = blockDest[m.blockIndex];
+			if (dest == -1) {
+				if (collection == null)
+					collection = ctx.sortedAlphaFacesUpload.obtain();
+				collection.add(m.sortedIndiciesOffset, m.sortedIndiciesCount);
+				dest = eboAlphaOffset;
+				blockDest[m.blockIndex] = dest;
+				eboAlphaOffset += m.sortedIndiciesCount;
+			}
 
-			eboAlphaOffset += m.sortedIndiciesCount;
-			alphaFaceCount += m.sortedIndiciesCount / 3;
-			lastDrawMode = STATIC;
+			if (staticDrawCount >= NUM_DRAW_RANGES)
+				flush(cmd);
+
+			staticDrawOffset[staticDrawCount] = dest;
+			staticDrawLength[staticDrawCount] = m.sortedIndiciesCount;
+			staticDrawBaseVertex[staticDrawCount] = m.baseVertex;
+			staticDrawCount++;
 		}
 		flush(cmd);
 
@@ -920,19 +937,31 @@ public final class Zone implements Destructible {
 
 	private void flush(CommandBuffer cmd) {
 		if (lastDrawMode == STATIC) {
-			if (alphaFaceCount > 0 && lastVao != 0) {
-				int vertexCount = alphaFaceCount * 3;
-				long byteOffset = 4L * (eboAlphaOffset - vertexCount);
+			if (staticDrawCount > 0 && lastVao != 0) {
 				cmd.BindVertexArray(lastVao, eboAlpha);
 				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
-				// The EBO & IDO is bound by in ZoneRenderer
-				if (SUPPORTS_INDIRECT_DRAW) {
-					cmd.DrawElementsIndirect(GL_TRIANGLES, vertexCount, (int) (byteOffset / 4L), ZoneRenderer.indirectDrawCmdsStaging);
+				// The EBO & IDO are bound by ZoneRenderer
+				if (SUPPORTS_MULTI_INDIRECT_DRAW) {
+					cmd.MultiDrawElementsIndirect(
+						GL_TRIANGLES,
+						staticDrawLength, staticDrawOffset, staticDrawBaseVertex,
+						staticDrawCount,
+						ZoneRenderer.indirectDrawCmdsStaging
+					);
+				} else if (SUPPORTS_INDIRECT_DRAW) {
+					for (int i = 0; i < staticDrawCount; i++)
+						cmd.DrawElementsIndirect(
+							GL_TRIANGLES, staticDrawLength[i], staticDrawOffset[i], staticDrawBaseVertex[i],
+							ZoneRenderer.indirectDrawCmdsStaging
+						);
 				} else {
-					cmd.DrawElements(GL_TRIANGLES, vertexCount, byteOffset);
+					for (int i = 0; i < staticDrawCount; i++)
+						cmd.DrawElementsBaseVertex(
+							GL_TRIANGLES, staticDrawLength[i], 4L * staticDrawOffset[i], staticDrawBaseVertex[i]
+						);
 				}
 			}
-			alphaFaceCount = 0;
+			staticDrawCount = 0;
 		} else if (drawIdx != 0) {
 			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : DynamicModelVAO.VERT_SIZE);
 			cmd.BindVertexArray(lastVao);

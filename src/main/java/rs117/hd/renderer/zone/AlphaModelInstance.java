@@ -27,8 +27,10 @@ public final class AlphaModelInstance {
 
 	int dist;
 	int asyncSortIdx = -1;
-	int sortedIndiciesOffset;
-	int sortedIndiciesCount;
+	int blockIndex = -1; // index of this instance's shared StaticAlphaModel sorted-index block within its zone
+	int sortedIndiciesOffset; // offset into the sorted index buffer of the shared block
+	int sortedIndiciesCount; // number of indices in the shared block
+	int baseVertex; // vertex offset of this instance's geometry within the zone's alpha VBO
 
 	static final int SKIP = 1; // temporary model is in a closer zone
 	static final int TEMP = 2; // temporary model added to a closer zone
@@ -53,10 +55,6 @@ public final class AlphaModelInstance {
 
 	boolean isTemp() {
 		return staticModel == null;
-	}
-
-	int getSortedFaceCount() {
-		return staticModel == null ? 0 : staticModel.getFaceCount();
 	}
 
 	void createStaticModel(int[] packedFaces, int[] doubleSidedBitSet, char doubleSidedCount, int radius) {
