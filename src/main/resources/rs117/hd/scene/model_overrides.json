@@ -84324,7 +84324,7 @@
     "colorOverrides": [
       {
         "description": "Canvas Roof",
-        "baseMaterial": "CARPET_LIGHT_SMOOTH",
+        "baseMaterial": "SAIL_CLOTH_LIGHT_SMOOTH",
         "colors": "h > 6 && h < 11"
       },
       {
