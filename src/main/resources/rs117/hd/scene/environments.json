@@ -2244,7 +2244,20 @@
     "waterCausticsStrength": 0,
     "fogDepth": 20,
     "windSpeed": 10,
-    "windStrength": 27.5
+    "windStrength": 27.5,
+    "sky": {
+      "parent": "BLOOD_MOON",
+      "moonSizeMult": 1.3,
+      "moonDirectionalStrength": 0.003,
+      "moonDiskStrength": 0.75,
+      "skyVisibility": 0.8,
+      "starVisibility": 0.1,
+      "auroraVisibility": 0,
+      "nightHorizonColor": "#110000",
+      "nightHorizonStrength": 2.5,
+      "skyFogHorizonAltitude": 90,
+      "skyFogColor": "#4f1426"
+    }
   },
   {
     "area": "TARNS_LAIR",

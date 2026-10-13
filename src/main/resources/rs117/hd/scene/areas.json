@@ -13041,6 +13041,7 @@
   {
     "name": "MAINLAND_EXTENSIONS",
     "areas": [
+      "TRUE_BLOOD_ALTAR",
       "FISHING_TRAWLER",
       "MISTHALIN_MYSTERY_MANOR_REGION",
       "VAMPYRIUM",
