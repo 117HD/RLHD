@@ -40,6 +40,7 @@ public class UBOSky extends UniformBuffer<GLBuffer> {
 
 	public Property moonSizeMult = addProperty(PropertyType.Float, "moonSizeMult");
 	public Property starHorizonHeight = addProperty(PropertyType.Float, "starHorizonHeight");
+	public Property celestialGlareIntensity = addProperty(PropertyType.Float, "celestialGlareIntensity");
 
 	public final Property[] nebulaClusters = addPropertyArray(PropertyType.FVec4, "nebulaClusters", StarField.CLUSTER_COUNT);
 }

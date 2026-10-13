@@ -742,6 +742,23 @@ public interface HdPluginConfig extends Config
 		return 60;
 	}
 
+	String KEY_CELESTIAL_GLARE = "celestialGlareIntensity";
+	@Range(min = 0, max = 100)
+	@Units(Units.PERCENT)
+	@ConfigItem(
+		keyName = KEY_CELESTIAL_GLARE,
+		name = "Sun & moon glare",
+		description =
+			"Controls the intensity of the glare/glow surrounding the sun and moon.<br>" +
+			"Lower this if bright light sensitivity makes the glare uncomfortable to look at.<br>" +
+			"Does not affect the brightness of the sun or moon disk itself.",
+		position = 8,
+		section = daylightCycleSettings
+	)
+	default int celestialGlareIntensity() {
+		return 100;
+	}
+
 	String KEY_LATITUDE_DEGREES = "latitudeDegrees";
 	@Range(min = -90, max = 90)
 	@Units("°")

@@ -436,6 +436,8 @@ public class SkyRenderer {
 		ubo.moonVisibility.set(state.moonVisibility);
 		ubo.moonSizeMult.set(configuration.moonSizeMult);
 		ubo.starHorizonHeight.set(configuration.starHorizonHeight);
+		float glareIntensity = plugin.configCelestialGlareIntensity;
+		ubo.celestialGlareIntensity.set(glareIntensity * glareIntensity * glareIntensity);
 		ubo.starVisibility.set(configuration.starVisibility);
 		ubo.nebulaVisibility.set(configuration.nebulaVisibility);
 		ubo.auroraVisibility.set(state.auroraStrength * configuration.auroraVisibility);

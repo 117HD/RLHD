@@ -376,7 +376,7 @@ SkySample sampleSky(
             halo *= (1.0 - sharpMoonDisk) * uboSky.moonIllumination * phaseWeight * moonDayVisibility * uboSky.moonVisibility;
             halo *= 6; // looks about right
             halo *= uboSky.moonSizeMult * uboSky.moonSizeMult;
-            moonHalo = uboSky.moonDiskColor * halo * moonHorizonFade;
+            moonHalo = uboSky.moonDiskColor * halo * moonHorizonFade * uboSky.celestialGlareIntensity;
         }
     }
 

@@ -34,6 +34,7 @@ layout(std140) uniform UBOSky {
     float moonSizeMult;
 
     float starHorizonHeight;
+    float celestialGlareIntensity;
 
     vec4 nebulaClusters[NEBULA_CLUSTER_COUNT];
 } uboSky;

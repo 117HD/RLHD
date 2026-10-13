@@ -71,7 +71,7 @@ SkyGradient computeSkyGradient(vec3 viewDir, bool includeSunGlow) {
         float outerGlow = s2 * sunDot * sqrt(sunDot) * 0.08;
         float diskDot = dot(celestialViewDirection(viewDir, g.sunDir), g.sunDir);
         float disk = smoothstep(0.99933, 0.99955, diskDot);
-        g.color += uboSky.sunColor * (coreGlow + innerGlow + midGlow + outerGlow);
+        g.color += uboSky.sunColor * (coreGlow + innerGlow + midGlow + outerGlow) * uboSky.celestialGlareIntensity;
     }
 
     return g;

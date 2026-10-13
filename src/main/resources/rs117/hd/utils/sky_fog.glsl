@@ -39,5 +39,5 @@ vec3 skyFogGlow(vec3 viewDir, vec3 sunDir, vec3 moonDir, float transmittance) {
         uboSky.moonDiskColor * skyFogForwardScatter(dot(viewDir, moonDir)) *
             uboSky.moonIllumination * uboSky.moonVisibility * 0.003;
     // Attenuate the glow to feel approximately right
-    return glow * (1.0 - transmittance) * sqrt(transmittance);
+    return glow * uboSky.celestialGlareIntensity * (1.0 - transmittance);
 }
