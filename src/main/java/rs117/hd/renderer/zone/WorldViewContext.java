@@ -274,16 +274,24 @@ public class WorldViewContext {
 
 	void sortStaticAlphaModels(Camera camera) {
 		// One job per world view, so each distinct StaticAlphaModel is sorted and assigned an index block exactly
-		// once, no matter how many zones reference it. Instance visibility and distances are handled per zone in
-		// Zone.alphaSort().
+		// once, no matter how many zones reference it. Instance visibility is resolved per zone here, and only models
+		// which have at least one visible instance are queued for sorting.
 		alphaSortingJob.reset();
+
+		final int offset = sceneContext.sceneOffset >> 3;
+		final boolean frustumCull = worldViewId == WorldView.TOPLEVEL;
 
 		for (int zx = 0; zx < sizeX; zx++) {
 			for (int zz = 0; zz < sizeZ; zz++) {
 				final Zone z = zones[zx][zz];
+				if (z.alphaModels.isEmpty())
+					continue;
+
+				z.determineAlphaModelVisibility(camera, zx - offset, zz - offset, frustumCull);
+
 				for (int i = 0; i < z.alphaModels.size(); i++) {
 					final AlphaModelInstance m = z.alphaModels.get(i);
-					if ((m.flags & AlphaModelInstance.SKIP) != 0 || m.isTemp())
+					if ((m.flags & AlphaModelInstance.SKIP) != 0 || m.isTemp() || !m.isVisible())
 						continue;
 					alphaSortingJob.addStaticAlphaModel(m.staticModel);
 				}

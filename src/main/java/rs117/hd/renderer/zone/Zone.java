@@ -119,6 +119,15 @@ public final class Zone implements Destructible {
 	final List<StaticAlphaModel> acquiredStaticModels = new ArrayList<>(0);
 	final PrimitiveIntArray visibleAlphaModels = new PrimitiveIntArray();
 
+	// Combined AABB of this zone's own static alpha models, in zone-local coordinates. Maintained by addAlphaModel so
+	// the world view can frustum-cull the whole zone without recomputing bounds every frame.
+	int alphaMinBoundsX = Integer.MAX_VALUE, alphaMinBoundsY = Integer.MAX_VALUE, alphaMinBoundsZ = Integer.MAX_VALUE;
+	int alphaMaxBoundsX = Integer.MIN_VALUE, alphaMaxBoundsY = Integer.MIN_VALUE, alphaMaxBoundsZ = Integer.MIN_VALUE;
+
+	boolean hasAlphaBounds() {
+		return alphaMaxBoundsX >= alphaMinBoundsX;
+	}
+
 	public boolean doesLevelHaveAlphaModels(int level) {
 		return (alphaLevelMask & (1 << level)) != 0;
 	}
@@ -658,6 +667,13 @@ public final class Zone implements Destructible {
 			m.extentsZ = (short) Math.min(Short.MAX_VALUE, Math.max(Math.abs(minBoundZ), Math.abs(maxBoundZ)));
 		}
 
+		alphaMinBoundsX = min(alphaMinBoundsX, m.x - m.extentsX);
+		alphaMaxBoundsX = max(alphaMaxBoundsX, m.x + m.extentsX);
+		alphaMinBoundsY = min(alphaMinBoundsY, m.y - m.extentsY);
+		alphaMaxBoundsY = max(alphaMaxBoundsY, m.y + m.extentsY);
+		alphaMinBoundsZ = min(alphaMinBoundsZ, m.z - m.extentsZ);
+		alphaMaxBoundsZ = max(alphaMaxBoundsZ, m.z + m.extentsZ);
+
 		alphaModels.add(m);
 
 		PooledArrayType.INT.release(packedFaces);
@@ -741,61 +757,19 @@ public final class Zone implements Destructible {
 
 		visibleAlphaModels.ensureCapacity(alphaModelCount);
 
-		final boolean frustumCull = viewContext != null && viewContext.worldViewId == WorldView.TOPLEVEL;
-
-		// Classify the combined AABB of the zone's static instances against the frustum, so the per-model test can be
-		// skipped entirely when the whole zone is visible. Alpha models start visible to avoid pop-in, so culling only
-		// ever hides instances.
-		int minBoundX = Integer.MAX_VALUE, minBoundY = Integer.MAX_VALUE, minBoundZ = Integer.MAX_VALUE;
-		int maxBoundX = Integer.MIN_VALUE, maxBoundY = Integer.MIN_VALUE, maxBoundZ = Integer.MIN_VALUE;
-		boolean hasStatic = false;
-		for (int i = 0; i < alphaModelCount; i++) {
-			final AlphaModelInstance m = alphaModels.get(i);
-			if ((m.flags & AlphaModelInstance.SKIP) != 0 || m.isTemp())
-				continue;
-
-			hasStatic = true;
-			final int modelX = m.x + ((zx - m.zofx) << 10);
-			final int modelZ = m.z + ((zz - m.zofz) << 10);
-			minBoundX = min(minBoundX, modelX - m.extentsX);
-			maxBoundX = max(maxBoundX, modelX + m.extentsX);
-			minBoundY = min(minBoundY, m.y - m.extentsY);
-			maxBoundY = max(maxBoundY, m.y + m.extentsY);
-			minBoundZ = min(minBoundZ, modelZ - m.extentsZ);
-			maxBoundZ = max(maxBoundZ, modelZ + m.extentsZ);
-		}
-
-		final int boundsClassification = hasStatic && frustumCull ?
-			camera.classifyAABB(minBoundX, minBoundY, minBoundZ, maxBoundX, maxBoundY, maxBoundZ) : 1;
-		final boolean fullyOutside = boundsClassification == -1;
-		final boolean partiallyVisible = boundsClassification == 0;
 		final int cx = (int) camera.getPositionX();
 		final int cy = (int) camera.getPositionY();
 		final int cz = (int) camera.getPositionZ();
 
+		// Instance visibility already resolved for this frame by WorldViewContext.sortStaticAlphaModels(). Just compute
+		// distances and order the visible instances back to front.
 		for(int i = 0; i < alphaModelCount; i++) {
 			final AlphaModelInstance model = alphaModels.get(i);
-
-			if ((model.flags & AlphaModelInstance.SKIP) == 0 && !model.isTemp()) {
-				if (fullyOutside) {
-					model.setHidden();
-				} else if (partiallyVisible) {
-					final int modelX = model.x + ((zx - model.zofx) << 10);
-					final int modelZ = model.z + ((zz - model.zofz) << 10);
-					if (!camera.intersectsAABB(
-						modelX - model.extentsX, model.y - model.extentsY, modelZ - model.extentsZ,
-						modelX + model.extentsX, model.y + model.extentsY, modelZ + model.extentsZ
-					)) {
-						model.setHidden();
-					}
-				}
-
-				if (model.isVisible())
-					model.calculateDist(cx, cy, cz, zx, zz);
-			}
-
-			if(!model.isVisible())
+			if (!model.isVisible())
 				continue;
+
+			if ((model.flags & AlphaModelInstance.SKIP) == 0 && !model.isTemp())
+				model.calculateDist(cx, cy, cz, zx, zz);
 
 			alphaModelsKeys[visibleAlphaModels.length] = -model.dist;
 			visibleAlphaModels.put(i);
@@ -805,6 +779,56 @@ public final class Zone implements Destructible {
 			return;
 
 		quickSortByKey(alphaModelsKeys, visibleAlphaModels.array, 0, visibleAlphaModels.length - 1);
+	}
+
+	/**
+	 * Hides this zone's static alpha model instances which are outside the frustum. Called once per frame by
+	 * {@link WorldViewContext#sortStaticAlphaModels(Camera)} before the shared models are sorted, so unnecessary models
+	 * can be skipped. The zone's combined AABB is maintained during upload by {@link #addAlphaModel}, allowing the
+	 * per-instance test to be skipped entirely when the whole zone is visible. Instances start visible to avoid pop-in,
+	 * so this only ever hides.
+	 */
+	void determineAlphaModelVisibility(Camera camera, int zx, int zz, boolean frustumCull) {
+		final int alphaModelCount = alphaModels.size();
+		if (alphaModelCount <= 1)
+			return;
+
+		int boundsClassification = 1;
+		if (frustumCull && hasAlphaBounds()) {
+			final int shiftX = zx << 10;
+			final int shiftZ = zz << 10;
+			boundsClassification = camera.classifyAABB(
+				alphaMinBoundsX + shiftX, alphaMinBoundsY, alphaMinBoundsZ + shiftZ,
+				alphaMaxBoundsX + shiftX, alphaMaxBoundsY, alphaMaxBoundsZ + shiftZ
+			);
+		}
+
+		final boolean fullyOutside = boundsClassification == -1;
+		final boolean partiallyVisible = boundsClassification == 0;
+		if (!fullyOutside && !partiallyVisible)
+			return;
+
+		for (int i = 0; i < alphaModelCount; i++) {
+			final AlphaModelInstance m = alphaModels.get(i);
+			if ((m.flags & AlphaModelInstance.SKIP) != 0 || m.isTemp())
+				continue;
+
+			// The zone AABB only covers this zone's own instances. Multizone clones are positioned in another zone, so
+			// they always fall back to the individual test instead of the zone-wide result.
+			if (fullyOutside && (m.flags & AlphaModelInstance.TEMP) == 0) {
+				m.setHidden();
+				continue;
+			}
+
+			final int modelX = m.x + ((zx - m.zofx) << 10);
+			final int modelZ = m.z + ((zz - m.zofz) << 10);
+			if (!camera.intersectsAABB(
+				modelX - m.extentsX, m.y - m.extentsY, modelZ - m.extentsZ,
+				modelX + m.extentsX, m.y + m.extentsY, modelZ + m.extentsZ
+			)) {
+				m.setHidden();
+			}
+		}
 	}
 
 	void renderAlpha(

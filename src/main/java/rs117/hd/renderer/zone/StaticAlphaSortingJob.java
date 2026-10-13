@@ -3,6 +3,7 @@ package rs117.hd.renderer.zone;
 import java.util.Arrays;
 import java.util.IdentityHashMap;
 import javax.inject.Inject;
+import lombok.Getter;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.utils.Camera;
@@ -32,6 +33,7 @@ public final class StaticAlphaSortingJob extends Job {
 	private StaticAlphaModel[] blockModels = new StaticAlphaModel[16];
 	private int[] blockSourceOffsets = new int[16];
 	private int blockCount = 0;
+	@Getter
 	private int assignedIndexCount = 0;
 
 	private int[] zsortHead;
@@ -45,10 +47,6 @@ public final class StaticAlphaSortingJob extends Job {
 		blockCount = 0;
 		assignedIndexCount = 0;
 		modelBlocks.clear();
-	}
-
-	public int getAssignedIndexCount() {
-		return assignedIndexCount;
 	}
 
 	/**
