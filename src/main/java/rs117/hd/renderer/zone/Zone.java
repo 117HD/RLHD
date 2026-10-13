@@ -351,6 +351,7 @@ public final class Zone implements Destructible {
 	private static final int[] drawRanges = new int[NUM_DRAW_RANGES * 2];
 	private static final int[] glDrawOffset = new int[NUM_DRAW_RANGES];
 	private static final int[] glDrawLength = new int[NUM_DRAW_RANGES];
+	private static final int[] glBaseVertex = new int[NUM_DRAW_RANGES];
 
 	private static int drawIdx = 0;
 
@@ -729,13 +730,6 @@ public final class Zone implements Destructible {
 	private static int lastTboF;
 	private static int lastzx, lastzz;
 
-	// Per-instance draws for the sorted (STATIC) alpha path. Each instance references a shared sorted-index block
-	// with its own baseVertex, so we can't collapse them into a single contiguous draw anymore.
-	private static int staticDrawCount;
-	private static final int[] staticDrawOffset = new int[NUM_DRAW_RANGES];
-	private static final int[] staticDrawLength = new int[NUM_DRAW_RANGES];
-	private static final int[] staticDrawBaseVertex = new int[NUM_DRAW_RANGES];
-
 	synchronized void alphaSort(Camera camera, int zx, int zz) {
 		visibleAlphaModels.reset();
 
@@ -858,7 +852,6 @@ public final class Zone implements Destructible {
 		}
 
 		drawIdx = 0;
-		staticDrawCount = 0;
 
 		if(!depthOnly)
 			ctx.alphaSortingJob.waitForCompletion();
@@ -912,13 +905,13 @@ public final class Zone implements Destructible {
 			// which was reserved in alphaSort().
 			final int dest = ctx.eboAlphaBaseOffset + model.sortedIndiciesOffset;
 
-			if (staticDrawCount >= NUM_DRAW_RANGES)
+			if (drawIdx >= NUM_DRAW_RANGES)
 				flush(cmd);
 
-			staticDrawOffset[staticDrawCount] = dest;
-			staticDrawLength[staticDrawCount] = model.sortedFaceCount * 3;
-			staticDrawBaseVertex[staticDrawCount] = m.startpos / (VERT_SIZE >> 2);
-			staticDrawCount++;
+			glDrawOffset[drawIdx] = dest;
+			glDrawLength[drawIdx] = model.sortedFaceCount * 3;
+			glBaseVertex[drawIdx] = m.startpos / (VERT_SIZE >> 2);
+			drawIdx++;
 		}
 		flush(cmd);
 	}
@@ -977,31 +970,31 @@ public final class Zone implements Destructible {
 
 	private void flush(CommandBuffer cmd) {
 		if (lastDrawMode == STATIC) {
-			if (staticDrawCount > 0 && lastVao != 0) {
+			if (drawIdx > 0 && lastVao != 0) {
 				cmd.BindVertexArray(lastVao, eboAlpha);
 				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 				// The EBO & IDO are bound by ZoneRenderer
 				if (SUPPORTS_MULTI_INDIRECT_DRAW) {
 					cmd.MultiDrawElementsIndirect(
 						GL_TRIANGLES,
-						staticDrawLength, staticDrawOffset, staticDrawBaseVertex,
-						staticDrawCount,
+						glDrawLength, glDrawOffset, glBaseVertex,
+						drawIdx,
 						ZoneRenderer.indirectDrawCmdsStaging
 					);
 				} else if (SUPPORTS_INDIRECT_DRAW) {
-					for (int i = 0; i < staticDrawCount; i++)
+					for (int i = 0; i < drawIdx; i++)
 						cmd.DrawElementsIndirect(
-							GL_TRIANGLES, staticDrawLength[i], staticDrawOffset[i], staticDrawBaseVertex[i],
+							GL_TRIANGLES, glDrawLength[i], glDrawOffset[i], glBaseVertex[i],
 							ZoneRenderer.indirectDrawCmdsStaging
 						);
 				} else {
-					for (int i = 0; i < staticDrawCount; i++)
+					for (int i = 0; i < drawIdx; i++)
 						cmd.DrawElementsBaseVertex(
-							GL_TRIANGLES, staticDrawLength[i], 4L * staticDrawOffset[i], staticDrawBaseVertex[i]
+							GL_TRIANGLES, glDrawLength[i], 4L * glDrawOffset[i], glBaseVertex[i]
 						);
 				}
 			}
-			staticDrawCount = 0;
+			drawIdx = 0;
 		} else if (drawIdx != 0) {
 			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : DynamicModelVAO.VERT_SIZE);
 			cmd.BindVertexArray(lastVao);
