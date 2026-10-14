@@ -175,8 +175,6 @@ public class SkyRenderer {
 		copyTo(waterColor, env.getWaterColor());
 		copyTo(fogColor, env.getFogColor());
 
-		plugin.uboSky.glareIntensity.set(config.glareIntensity() / 100f);
-
 		if (skyEnabled) {
 			updateSky(skyManager.getState());
 		} else {

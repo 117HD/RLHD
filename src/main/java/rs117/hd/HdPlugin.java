@@ -441,7 +441,7 @@ public class HdPlugin extends Plugin {
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
 	public boolean configOverrideSky;
-	private boolean configReduceGlareIntensity;
+	public boolean configReduceGlareIntensity;
 	public int configDetailDrawDistance;
 	public int configExpandedMapLoadingChunks;
 	public float configNightBrightness;
@@ -1910,7 +1910,7 @@ public class HdPlugin extends Plugin {
 				// Synchronize with scene loading
 				// TODO: Move this synchronization into LegacyRenderer
 				synchronized (this) {
-					boolean previousReduceCelestialGlare = configReduceGlareIntensity;
+					boolean previousReduceGlareIntensity = configReduceGlareIntensity;
 
 					updateCachedConfigs();
 
@@ -1988,7 +1988,7 @@ public class HdPlugin extends Plugin {
 								recompilePrograms = true;
 								break;
 							case KEY_GLARE_INTENSITY:
-								recompilePrograms |= previousReduceCelestialGlare != configReduceGlareIntensity;
+								recompilePrograms |= configReduceGlareIntensity != previousReduceGlareIntensity;
 								break;
 							case KEY_ANTI_ALIASING_MODE:
 							case KEY_SCENE_RESOLUTION_SCALE:

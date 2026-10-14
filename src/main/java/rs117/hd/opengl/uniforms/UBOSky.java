@@ -10,8 +10,6 @@ public class UBOSky extends UniformBuffer<GLBuffer> {
 		super(GL_DYNAMIC_DRAW);
 	}
 
-	public Property glareIntensity = addProperty(PropertyType.Float, "glareIntensity");
-
 	public Property enabled = addProperty(PropertyType.Int, "enabled");
 	public Property zenithColor = addProperty(PropertyType.FVec3, "zenithColor");
 	public Property horizonColor = addProperty(PropertyType.FVec3, "horizonColor");

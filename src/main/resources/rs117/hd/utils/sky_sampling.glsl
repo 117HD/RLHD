@@ -415,17 +415,18 @@ SkySample sampleSky(
         float backgroundBlend = nightFactor * nightSkyHorizonFade(sky.upAmount, horizonShift);
         if (backgroundBlend <= 0.001)
             backgroundBlend = 0.0;
-        result.glare = sky.glare * mix(1.0, uboSky.customGradient, backgroundBlend) * fogTransmittance +
-            moonHalo * diskFogTransmittance * (1.0 - moonCompositeAlpha) + fogGlow;
+        result.glare =
+            sky.glare * mix(1.0, uboSky.customGradient, backgroundBlend) * fogTransmittance +
+            moonHalo * diskFogTransmittance * (1.0 - moonCompositeAlpha) +
+            fogGlow;
     #endif
     return result;
 }
 
 vec3 sampleSky(vec3 viewDir, bool correctProjection, bool toneMap) {
     SkySample sky = sampleSky(viewDir, viewDir, correctProjection, toneMap, vec3(0, -1, 0), 0.0, 1.0, true, CELESTIAL_HORIZON_OFFSET);
-    vec3 color = sky.background + sky.sun + sky.moon;
     #if REDUCE_GLARE_INTENSITY
-        color = reduceCelestialGlare(color, max(sky.background - sky.glare, vec3(0.0)));
+        sky.background = reduceGlare(sky.background, max(sky.background - sky.glare, vec3(0.0)));
     #endif
-    return color;
+    return sky.background + sky.sun + sky.moon;
 }

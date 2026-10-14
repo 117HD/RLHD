@@ -1183,7 +1183,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_GLARE_INTENSITY,
 		name = "Glare intensity",
-		description = "Reduce the brightness of the sun & moon, both in the sky and in water reflections.",
+		description = "Reduce the glow around the sun & moon and their bright water reflections.",
 		section = miscellaneousSettings
 	)
 	default int glareIntensity() {

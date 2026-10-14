@@ -6,7 +6,7 @@
 #include <utils/celestial_projection.glsl>
 #include <utils/starfield.glsl>
 #include <utils/sky_fog.glsl>
-#include <utils/celestial_glare.glsl>
+#include <utils/misc.glsl>
 
 struct SkyGradient {
     vec3 sunDir;         // sun direction with the perceived-horizon offset applied
@@ -125,11 +125,12 @@ vec3 foggedSkyColor(vec3 viewDir) {
     vec3 glow = skyFogGlow(viewDir, sky.sunDir, moonDir, transmittance);
     color = applySkyFog(color, transmittance) + glow;
     #if REDUCE_GLARE_INTENSITY
-        float blend = nightSkyBlend(sky) * nightSkyHorizonFade(sky.upAmount, nightHorizonOffset(uboSky.starHorizonHeight));
+        float blend = nightSkyBlend(sky) *
+            nightSkyHorizonFade(sky.upAmount, nightHorizonOffset(uboSky.starHorizonHeight));
         if (blend <= 0.001)
             blend = 0.0;
         vec3 glare = sky.glare * mix(1.0, uboSky.customGradient, blend) * transmittance + glow;
-        color = reduceCelestialGlare(color, max(color - glare, vec3(0.0)));
+        color = reduceGlare(color, max(color - glare, vec3(0.0)));
     #endif
     return color;
 }
