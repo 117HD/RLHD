@@ -1505,6 +1505,16 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	@ConfigItem(
+		keyName = "experimentalNightAdaptationEverywhere",
+		name = "Night adaptation everywhere",
+		description = "Apply Day & night's 'Night brightness' adaptation to all dark scenes.",
+		section = experimentalSettings
+	)
+	default boolean nightAdaptationEverywhere() {
+		return false;
+	}
+
 
 	/*====== Internal settings ======*/
 

@@ -178,6 +178,14 @@ public class SkyRenderer {
 		if (skyEnabled) {
 			updateSky(skyManager.getState());
 		} else {
+			if (config.nightAdaptationEverywhere()) {
+				float luminance =
+					linearSrgbLuminance(ambientLight) +
+					linearSrgbLuminance(directionalLight) * max(0, sin(env.getShadowAngles()[0]));
+				float exposure = getNightExposure(luminance, env.nightExposure * 1.5f);
+				multiply(ambientLight, ambientLight, exposure);
+				multiply(directionalLight, directionalLight, exposure);
+			}
 			usesMoonShadows = false;
 			previousTransition = 1;
 			interruptedTransition = false;
@@ -391,11 +399,18 @@ public class SkyRenderer {
 			linearSrgbLuminance(out.ambientLight) +
 			linearSrgbLuminance(out.sunDirectionalLight) * max(0, sin(sunAltDeg * DEG_TO_RAD));
 		float nightExposure = env.nightExposure * 1.5f;
-		out.nightLuminance = nightLuminance * getNightExposure(out.dayLuminance + nightLuminance, nightExposure);
-		float exposureAdjustedDayLuminance = out.dayLuminance / max(plugin.configNightBrightness, 1);
-		float targetLuminance = nightExposure - exposureAdjustedDayLuminance;
-		// Ease in during the sunset
-		float exposure = mix(1, getNightExposure(nightLuminance, targetLuminance), smoothstep(3.8f, -6, sunAltDeg));
+		float exposure = getNightExposure(out.dayLuminance + nightLuminance, nightExposure);
+		out.nightLuminance = nightLuminance * exposure;
+		if (config.nightAdaptationEverywhere()) {
+			out.dayLuminance *= exposure;
+			multiply(out.ambientLight, out.ambientLight, exposure);
+			multiply(out.sunDirectionalLight, out.sunDirectionalLight, exposure);
+		} else {
+			float exposureAdjustedDayLuminance = out.dayLuminance / max(plugin.configNightBrightness, 1);
+			float targetLuminance = nightExposure - exposureAdjustedDayLuminance;
+			// Ease in during the sunset
+			exposure = mix(1, getNightExposure(nightLuminance, targetLuminance), smoothstep(3.8f, -6, sunAltDeg));
+		}
 		multiply(nightAmbientLight, nightAmbientLight, exposure);
 		multiply(out.moonDirectionalLight, out.moonDirectionalLight, exposure);
 		// Approximate the loss of lunar contrast against brightening twilight.
