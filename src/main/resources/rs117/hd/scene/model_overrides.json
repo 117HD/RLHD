@@ -39229,7 +39229,8 @@
       "MAGIC_TREE_11",
       "MAGIC_TREE_FULLYGROWN_1",
       "MAGIC_TREE_FULLYGROWN_2",
-      "MAGICTREE"
+      "MAGICTREE",
+      "CRAB_MAGICTREE"
     ],
     "uvType": "BOX",
     "uvOrientation": 150,
