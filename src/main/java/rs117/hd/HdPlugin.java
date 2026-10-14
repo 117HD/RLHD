@@ -76,6 +76,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.ColorFilter;
+import rs117.hd.config.DefaultBoolean;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.GroundBlending;
@@ -339,6 +340,7 @@ public class HdPlugin extends Plugin {
 	public static GLCapabilities GL_CAPS;
 	public static boolean AMD_GPU;
 	public static boolean INTEL_GPU;
+	public static boolean OLD_INTEL_GPU;
 	public static boolean NVIDIA_GPU;
 	public static boolean APPLE;
 	public static boolean APPLE_ARM;
@@ -606,6 +608,7 @@ public class HdPlugin extends Plugin {
 				APPLE_ARM = APPLE && osArch.equals("aarch64");
 				AMD_GPU = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
 				INTEL_GPU = glRenderer.contains("Intel");
+				OLD_INTEL_GPU = glRenderer.equals("Intel(R) UHD Graphics");
 				NVIDIA_GPU = glRenderer.toLowerCase().contains("nvidia");
 
 				SUPPORTS_INDIRECT_DRAW =
@@ -1081,7 +1084,7 @@ public class HdPlugin extends Plugin {
 					log.warn("Disabling TILED_LIGHTING_LAYERED due to:", ex);
 					// If both tiled lighting implementations fail, fall back to the old lighting, and warn about it
 					if (!Props.DEVELOPMENT) {
-						config.tiledLighting(false);
+						config.tiledLighting(DefaultBoolean.OFF);
 						PopupUtils.displayPopupMessage(
 							client, "117 HD Error",
 							"Tiled lighting has been automatically disabled, since it failed to compile on your GPU.<br>" +
@@ -1818,7 +1821,7 @@ public class HdPlugin extends Plugin {
 		configModelCaching = config.modelCaching();
 		configDefaultSkyColor = config.defaultSkyColor();
 		configDynamicLights = config.dynamicLights();
-		configTiledLighting = config.tiledLighting();
+		configTiledLighting = config.tiledLighting().get(!OLD_INTEL_GPU);
 		configTiledLightingImageLoadStore = config.tiledLightingImageLoadStore();
 		configOverrideSky = config.overrideSky();
 		configDetailDrawDistance = config.detailDrawDistance();

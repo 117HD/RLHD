@@ -519,15 +519,18 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_TILED_LIGHTING,
 		name = "Tiled lighting",
-		description = "Allows rendering <b>a lot</b> more lights simultaneously.",
+		description =
+			"Allows rendering <b>a lot</b> more lights simultaneously.<br>" +
+			"Disabled by default on older Intel GPUs.",
 		section = lightingSettings,
 		position = 1
 	)
-	default boolean tiledLighting() {
-		return true;
+	default DefaultBoolean tiledLighting() {
+		return DefaultBoolean.DEFAULT;
 	}
 	@ConfigItem(keyName = KEY_TILED_LIGHTING, hidden = true, name = "", description = "")
-	void tiledLighting(boolean enabled);
+	void tiledLighting(DefaultBoolean state);
+
 
 	String KEY_PROJECTILE_LIGHTS = "projectileLights";
 	@ConfigItem(
