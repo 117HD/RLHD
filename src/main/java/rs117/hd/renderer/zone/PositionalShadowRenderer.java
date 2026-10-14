@@ -30,6 +30,7 @@ import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11.GL_NONE;
+import static org.lwjgl.opengl.GL11.GL_SCISSOR_TEST;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_S;
@@ -38,9 +39,12 @@ import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearDepth;
 import static org.lwjgl.opengl.GL11.glDeleteTextures;
+import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glDrawBuffer;
+import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL11.glReadBuffer;
+import static org.lwjgl.opengl.GL11.glScissor;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL11C.GL_LEQUAL;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
@@ -81,6 +85,12 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 	private static final int MAX_FACE_RESOLUTION = 512;
 	private static final int MIN_FACE_RESOLUTION = 32;
 	private static final int DYNAMIC_MODEL_MIN_RESOLUTION = 128;
+
+	//Fraction by which the desired resolution must leave its current tier's band before the tier changes
+	private static final float RESOLUTION_HYSTERESIS = 0.25f;
+
+	//Fraction of the atlas covered by MOVEABLE lights before a full clear is used instead of scissor-clearing
+	private static final float MOVEABLE_FULL_CLEAR_FRACTION = 0.5f;
 
 	private static final int MIN_SIZE_EXP = Integer.numberOfTrailingZeros(MIN_FACE_RESOLUTION);
 	private static final int MAX_SIZE_EXP = Integer.numberOfTrailingZeros(MAX_FACE_RESOLUTION);
@@ -139,6 +149,8 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 	private int fboShadow;
 	private int texShadowCubemapArray;
 
+	private boolean atlasNeedsFullClear = true;
+
 	public PositionalShadowRenderer() {
 		for (int i = 0; i < packRects.length; i++)
 			packRects[i] = new Rect();
@@ -185,6 +197,8 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 		glReadBuffer(GL_NONE);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		atlasNeedsFullClear = true;
 	}
 
 	public void destroy() {
@@ -208,11 +222,15 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 		if (texShadowCubemapArray != 0)
 			glDeleteTextures(texShadowCubemapArray);
 		texShadowCubemapArray = 0;
+
+		atlasNeedsFullClear = true;
 	}
 
 	public void update() {
-		if(!plugin.configPositionalShadows)
+		if(!plugin.configPositionalShadows) {
+			atlasNeedsFullClear = true;
 			return;
+		}
 
 		for(int i = 0; i < pendingAdd.size(); i++) {
 			final Light light = pendingAdd.get(i);
@@ -251,6 +269,7 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 			final Light light = shadowLights.get(i);
 			light.shadowData.overlappingZones.reset();
 			light.shadowData.atlasRect = null;
+			light.shadowData.needsAtlasCopy = false;
 
 			if (light.visible && visibleIndices.length < MAX_LIGHTS) {
 				visibleIndices.put(i);
@@ -261,6 +280,12 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 		}
 
 		packShadowAtlas();
+
+		for (int i = 0; i < shadowLights.size(); i++) {
+			final ShadowData shadowData = shadowLights.get(i).shadowData;
+			if (shadowData.atlasRect == null)
+				shadowData.invalidateAtlasCopy();
+		}
 	}
 
 	private void packShadowAtlas() {
@@ -302,21 +327,32 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 	}
 
 	private int estimateShadowResolution(Light light) {
+		final ShadowData shadowData = light.shadowData;
 		final Camera sceneCamera = zoneRenderer.sceneCamera;
 		final float distance = sceneCamera.distanceTo(light.pos[0], light.pos[1], light.pos[2]);
 		if (distance <= light.shadowNearPlane)
-			return MAX_FACE_RESOLUTION;
+			return shadowData.estimatedResolution = MAX_FACE_RESOLUTION;
 
 		final float tanHalfFovY = sceneCamera.getViewportHeight() / sceneCamera.getZoom() / 2f;
 		final float angularRadius = light.radius / distance;
 		final float screenFraction = angularRadius / tanHalfFovY; // ~fraction of viewport height covered by the light's radius
 		final float pixels = screenFraction * sceneCamera.getViewportHeight();
 
+		// Hysteresis: keep the current tier while the estimate stays near its band, so rects stay stable
+		// frame to frame. The band edges at the min / max tiers are open-ended since there's no tier beyond.
+		final int current = shadowData.estimatedResolution;
+		if (current != 0) {
+			final float upper = current >= MAX_FACE_RESOLUTION ? Float.MAX_VALUE : current * (1f + RESOLUTION_HYSTERESIS);
+			final float lower = current <= MIN_FACE_RESOLUTION ? 0f : (current >> 1) * (1f - RESOLUTION_HYSTERESIS);
+			if (pixels > lower && pixels <= upper)
+				return current;
+		}
+
 		// Quantize to a power of two within [MIN_FACE_RESOLUTION, MAX_FACE_RESOLUTION]
 		int size = MIN_FACE_RESOLUTION;
 		while (size < MAX_FACE_RESOLUTION && size < pixels)
 			size <<= 1;
-		return size;
+		return shadowData.estimatedResolution = size;
 	}
 
 	public void buildDrawLists() {
@@ -490,7 +526,8 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 				continue;
 
 			final ShadowData shadowData = light.shadowData;
-			if(!shadowData.dirty)
+			// Without an atlas rect the draw buffer was left empty, so baking now would store an empty cubemap
+			if(!shadowData.dirty || shadowData.atlasRect == null)
 				continue;
 
 			renderState.viewport.set(0, 0, MAX_FACE_RESOLUTION, MAX_FACE_RESOLUTION);
@@ -518,16 +555,82 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 			glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 			glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 			shadowData.dirty = false;
+
+			// The baked source changed, so whatever was previously copied into the atlas is stale
+			shadowData.invalidateAtlasCopy();
 		}
 		checkGLErrors();
 
 		final boolean supportsLayeredImageCopy = HdPlugin.GL_CAPS.OpenGL43 || HdPlugin.GL_CAPS.GL_ARB_copy_image;
 
-		// Clear every atlas layer before restoring the cached baked faces.
-		for(int face = 0; face < NUM_FACES; face++) {
-			renderState.framebufferTextureLayer.set(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texShadowCubemapArray, 0, face);
-			renderState.apply();
-			glClear(GL_DEPTH_BUFFER_BIT);
+		// If MOVEABLE rects already cover a large part of the atlas, one full clear beats many scissored clears.
+		// Doing so invalidates the cached STATIC copies, but they're only a small share of the atlas by now.
+		if (!atlasNeedsFullClear) {
+			long moveableArea = 0;
+			for (int i = 0; i < visibleIndices.length; i++) {
+				final Light light = shadowLights.get(visibleIndices.array[i]);
+				final Rect rect = light.shadowData.atlasRect;
+				if (rect != null && light.shadowMode == PositionalShadowMode.MOVEABLE)
+					moveableArea += (long) rect.size * rect.size;
+			}
+			if (moveableArea >= (long) ((long) ATLAS_SIZE * ATLAS_SIZE * MOVEABLE_FULL_CLEAR_FRACTION))
+				atlasNeedsFullClear = true;
+		}
+
+		// The atlas persists across frames, so a full clear is only needed when its contents are untrusted
+		boolean didFullClear = false;
+		if (atlasNeedsFullClear) {
+			for(int face = 0; face < NUM_FACES; face++) {
+				renderState.framebufferTextureLayer.set(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texShadowCubemapArray, 0, face);
+				renderState.apply();
+				glClear(GL_DEPTH_BUFFER_BIT);
+			}
+			for (int i = 0; i < shadowLights.size(); i++)
+				shadowLights.get(i).shadowData.invalidateAtlasCopy();
+			atlasNeedsFullClear = false;
+			didFullClear = true;
+		}
+
+		// Decide which lights need their baked faces (re)copied into the atlas this frame.
+		//  - STATIC: only when the atlas rect changed or the bake was redone
+		//  - DYNAMIC: every frame, since dynamic geometry is drawn on top of the baked faces
+		//  - MOVEABLE: never copied, but their rect must be cleared every frame
+		boolean hasMoveableLights = false;
+		for (int i = 0; i < visibleIndices.length; i++) {
+			final Light light = shadowLights.get(visibleIndices.array[i]);
+			final ShadowData shadowData = light.shadowData;
+			shadowData.needsAtlasCopy = false;
+			if (shadowData.atlasRect == null)
+				continue;
+
+			if (light.shadowMode == PositionalShadowMode.MOVEABLE) {
+				hasMoveableLights = true;
+			} else {
+				final boolean drawsModels = shadowData.atlasRect.size >= DYNAMIC_MODEL_MIN_RESOLUTION;
+				shadowData.needsAtlasCopy = (light.shadowMode == PositionalShadowMode.DYNAMIC && drawsModels)
+											|| !shadowData.isAtlasCopyCurrent();
+			}
+		}
+
+		// Only MOVEABLE rects need clearing. STATIC and DYNAMIC rects are fully overwritten by the copy
+		// (or are skipped because they're still valid), and unused atlas space is never sampled.
+		if (hasMoveableLights && !didFullClear) {
+			glEnable(GL_SCISSOR_TEST);
+			for (int face = 0; face < NUM_FACES; face++) {
+				renderState.framebufferTextureLayer.set(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texShadowCubemapArray, 0, face);
+				renderState.apply();
+
+				for (int i = 0; i < visibleIndices.length; i++) {
+					final Light light = shadowLights.get(visibleIndices.array[i]);
+					final Rect rect = light.shadowData.atlasRect;
+					if (rect == null || light.shadowMode != PositionalShadowMode.MOVEABLE)
+						continue;
+
+					glScissor(rect.x, rect.y, rect.size, rect.size);
+					glClear(GL_DEPTH_BUFFER_BIT);
+				}
+			}
+			glDisable(GL_SCISSOR_TEST);
 		}
 
 		if (supportsLayeredImageCopy) {
@@ -535,11 +638,8 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 			// this copies all six faces without a scaled framebuffer blit.
 			for (int i = 0; i < visibleIndices.length; i++) {
 				final Light light = shadowLights.get(visibleIndices.array[i]);
-				if (light.shadowMode == PositionalShadowMode.MOVEABLE)
-					continue;
-
 				final ShadowData shadowData = light.shadowData;
-				if (shadowData.atlasRect == null)
+				if (!shadowData.needsAtlasCopy)
 					continue;
 
 				final Rect rect = shadowData.atlasRect;
@@ -568,10 +668,15 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 				final Light light = shadowLights.get(lightIndex);
 				final ShadowData shadowData = light.shadowData;
 
-				if (shadowData.atlasRect == null || (supportsLayeredImageCopy && light.shadowMode == PositionalShadowMode.STATIC))
+				if (shadowData.atlasRect == null)
 					continue;
 
-				if(light.shadowMode != PositionalShadowMode.STATIC && !shadowData.drawBuffer.isEmpty()) {
+				// STATIC lights have nothing to draw. They either already have valid data in the atlas,
+				// or were handled by the layered image copy above.
+				if (light.shadowMode == PositionalShadowMode.STATIC && (!shadowData.needsAtlasCopy || supportsLayeredImageCopy))
+					continue;
+
+				if(light.shadowMode != PositionalShadowMode.STATIC) {
 					shiftedLightPos[0] = light.pos[0] + plugin.cameraShift[0];
 					shiftedLightPos[1] = light.pos[1];
 					shiftedLightPos[2] = light.pos[2] + plugin.cameraShift[1];
@@ -592,7 +697,7 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 				}
 				renderState.apply();
 
-				if(light.shadowMode != PositionalShadowMode.MOVEABLE && !supportsLayeredImageCopy) {
+				if(shadowData.needsAtlasCopy && !supportsLayeredImageCopy) {
 					final Rect rect = shadowData.atlasRect;
 					final int sourceMipLevel = MAX_SIZE_EXP - Integer.numberOfTrailingZeros(rect.size);
 					glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowData.texBakedCubemap, sourceMipLevel, face);
@@ -623,6 +728,13 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 				glPopDebugGroup();
 		}
 		frameTimer.end(Timer.RENDER_DYNAMIC_POSITIONAL_SHADOWS);
+
+		// STATIC lights are now valid in the atlas at their current rect
+		for (int i = 0; i < visibleIndices.length; i++) {
+			final Light light = shadowLights.get(visibleIndices.array[i]);
+			if (light.shadowMode == PositionalShadowMode.STATIC && light.shadowData.needsAtlasCopy)
+				light.shadowData.markAtlasCopied();
+		}
 
 		checkGLErrors();
 
@@ -663,10 +775,39 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 
 		private Rect atlasRect;
 
+		private int estimatedResolution;
+
+		// Where the baked faces were last copied into the atlas. Stored by value, since packRects are reused between lights.
+		private boolean atlasCopyValid;
+		private int copiedX, copiedY, copiedSize;
+		private boolean needsAtlasCopy; // per-frame scratch flag
+
 		public void destroy() {
 			if(texBakedCubemap != 0)
 				glDeleteTextures(texBakedCubemap);
 			texBakedCubemap = 0;
+			atlasCopyValid = false;
+		}
+
+		private void invalidateAtlasCopy() {
+			atlasCopyValid = false;
+		}
+
+		private boolean isAtlasCopyCurrent() {
+			return atlasCopyValid
+				   && atlasRect != null
+				   && copiedX == atlasRect.x
+				   && copiedY == atlasRect.y
+				   && copiedSize == atlasRect.size;
+		}
+
+		private void markAtlasCopied() {
+			if (atlasRect == null)
+				return;
+			copiedX = atlasRect.x;
+			copiedY = atlasRect.y;
+			copiedSize = atlasRect.size;
+			atlasCopyValid = true;
 		}
 
 		public int pack() {
