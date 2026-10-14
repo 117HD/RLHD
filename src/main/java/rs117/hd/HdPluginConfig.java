@@ -461,7 +461,7 @@ public interface HdPluginConfig extends Config
 		section = shadowSettings
 	)
 	default boolean roofShadows() {
-		return false;
+		return true;
 	}
 
 	String KEY_TERRAIN_SHADOWS = "terrainShadows";
