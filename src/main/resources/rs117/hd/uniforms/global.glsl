@@ -17,6 +17,7 @@ layout(std140) uniform UBOGlobal {
     float drawDistance;
 
     float colorBlindnessIntensity;
+    float glareIntensity;
     float gammaCorrection;
     float saturation;
 	float contrast;

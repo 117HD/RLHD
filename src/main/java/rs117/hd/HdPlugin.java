@@ -441,6 +441,7 @@ public class HdPlugin extends Plugin {
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
 	public boolean configOverrideSky;
+	public boolean configReduceGlareIntensity;
 	public int configDetailDrawDistance;
 	public int configExpandedMapLoadingChunks;
 	public float configNightBrightness;
@@ -1000,6 +1001,7 @@ public class HdPlugin extends Plugin {
 			.define("WIREFRAME", config.wireframe())
 			.define("WINDOWS_HDR_CORRECTION", config.windowsHdrCorrection())
 			.define("LEGACY_BOAT_SILHOUETTES", config.legacyBoatSilhouettes())
+			.define("REDUCE_GLARE_INTENSITY", configReduceGlareIntensity)
 			.define("LEGACY_RENDERER", renderer instanceof LegacyRenderer)
 			.define("ZONE_RENDERER", renderer instanceof ZoneRenderer)
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", 0)
@@ -1827,6 +1829,7 @@ public class HdPlugin extends Plugin {
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
 		configSeasonalFoliage = config.seasonalFoliage();
+		configReduceGlareIntensity = config.glareIntensity() < 100;
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {
@@ -1907,6 +1910,8 @@ public class HdPlugin extends Plugin {
 				// Synchronize with scene loading
 				// TODO: Move this synchronization into LegacyRenderer
 				synchronized (this) {
+					boolean previousReduceGlareIntensity = configReduceGlareIntensity;
+
 					updateCachedConfigs();
 
 					log.debug("Processing {} pending config changes: {}", pendingConfigChanges.size(), pendingConfigChanges);
@@ -1981,6 +1986,9 @@ public class HdPlugin extends Plugin {
 							case KEY_LEGACY_BOAT_SILHOUETTES:
 							case KEY_WATER_SPECULAR_REFLECTIONS:
 								recompilePrograms = true;
+								break;
+							case KEY_GLARE_INTENSITY:
+								recompilePrograms |= configReduceGlareIntensity != previousReduceGlareIntensity;
 								break;
 							case KEY_ANTI_ALIASING_MODE:
 							case KEY_SCENE_RESOLUTION_SCALE:

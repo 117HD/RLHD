@@ -24,6 +24,7 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public final Property drawDistance = addProperty(PropertyType.Float, "drawDistance");
 
 	public final Property colorBlindnessIntensity = addProperty(PropertyType.Float, "colorBlindnessIntensity");
+	public final Property glareIntensity = addProperty(PropertyType.Float, "glareIntensity");
 	public final Property gammaCorrection = addProperty(PropertyType.Float, "gammaCorrection");
 	public final Property saturation = addProperty(PropertyType.Float, "saturation");
 	public final Property contrast = addProperty(PropertyType.Float, "contrast");

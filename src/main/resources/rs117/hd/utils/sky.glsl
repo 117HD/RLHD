@@ -6,6 +6,7 @@
 #include <utils/celestial_projection.glsl>
 #include <utils/starfield.glsl>
 #include <utils/sky_fog.glsl>
+#include <utils/misc.glsl>
 
 struct SkyGradient {
     vec3 sunDir;         // sun direction with the perceived-horizon offset applied
@@ -14,10 +15,16 @@ struct SkyGradient {
     float zenithBlend;   // 0 = horizon, 1 = zenith
     float nightFade;     // 0 = deep night, 1 = sun at/above horizon
     vec3 color;          // linear sRGB gradient + sun glow (before haze/stars/moon)
+    #if REDUCE_GLARE_INTENSITY
+        vec3 glare;
+    #endif
 };
 
 SkyGradient computeSkyGradient(vec3 viewDir, bool includeSunGlow) {
     SkyGradient g;
+    #if REDUCE_GLARE_INTENSITY
+        g.glare = vec3(0.0);
+    #endif
 
     g.sunDir = normalize(vec3(uboSky.sunDir.x, -uboSky.sunDir.y + CELESTIAL_HORIZON_OFFSET, uboSky.sunDir.z));
     g.upAmount = -viewDir.y;
@@ -71,7 +78,11 @@ SkyGradient computeSkyGradient(vec3 viewDir, bool includeSunGlow) {
         float outerGlow = s2 * sunDot * sqrt(sunDot) * 0.08;
         float diskDot = dot(celestialViewDirection(viewDir, g.sunDir), g.sunDir);
         float disk = smoothstep(0.99933, 0.99955, diskDot);
-        g.color += uboSky.sunColor * (coreGlow + innerGlow + midGlow + outerGlow);
+        vec3 glow = uboSky.sunColor * (coreGlow + innerGlow + midGlow + outerGlow);
+        g.color += glow;
+        #if REDUCE_GLARE_INTENSITY
+            g.glare = glow;
+        #endif
     }
 
     return g;
@@ -111,5 +122,15 @@ vec3 foggedSkyColor(vec3 viewDir) {
     vec3 color = visibleSkyColor(sky, viewDir, uboGlobal.elapsedTime, 1.0);
     vec3 moonDir = normalize(vec3(uboSky.moonDir.x, -uboSky.moonDir.y + CELESTIAL_HORIZON_OFFSET, uboSky.moonDir.z));
     float transmittance = skyFogTransmittance(sky.upAmount);
-    return applySkyFog(color, transmittance) + skyFogGlow(viewDir, sky.sunDir, moonDir, transmittance);
+    vec3 glow = skyFogGlow(viewDir, sky.sunDir, moonDir, transmittance);
+    color = applySkyFog(color, transmittance) + glow;
+    #if REDUCE_GLARE_INTENSITY
+        float blend = nightSkyBlend(sky) *
+            nightSkyHorizonFade(sky.upAmount, nightHorizonOffset(uboSky.starHorizonHeight));
+        if (blend <= 0.001)
+            blend = 0.0;
+        vec3 glare = sky.glare * mix(1.0, uboSky.customGradient, blend) * transmittance + glow;
+        color = reduceGlare(color, max(color - glare, vec3(0.0)));
+    #endif
+    return color;
 }

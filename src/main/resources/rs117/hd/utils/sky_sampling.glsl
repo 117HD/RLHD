@@ -22,6 +22,9 @@ struct SkySample {
     vec3 background;
     vec3 sun;
     vec3 moon;
+    #if REDUCE_GLARE_INTENSITY
+        vec3 glare;
+    #endif
 };
 
 // Fade across the perceived horizon, then hide the body fully below -4°.
@@ -50,8 +53,14 @@ SkySample sampleSky(
     bool includeSunGlow,
     float diskHorizonOffset
 ) {
+    SkySample result;
+    result.background = uboGlobal.fogColor;
+    result.sun = result.moon = vec3(0.0);
+    #if REDUCE_GLARE_INTENSITY
+        result.glare = vec3(0.0);
+    #endif
     if (!uboSky.enabled)
-        return SkySample(uboGlobal.fogColor, vec3(0.0), vec3(0.0));
+        return result;
 
     SkyGradient sky = computeSkyGradient(viewDir, includeSunGlow);
     // A slope perturbation rotates the reflected ray by 2*slope in the
@@ -394,14 +403,30 @@ SkySample sampleSky(
     // lets water shadow either disk without darkening the reflected background.
     skyColor = mix(skyColor, moonCompositeColor, moonCompositeAlpha);
     vec3 fogMoonDir = normalize(vec3(uboSky.moonDir.x, -uboSky.moonDir.y + CELESTIAL_HORIZON_OFFSET, uboSky.moonDir.z));
-    skyColor += skyFogGlow(viewDir, sky.sunDir, fogMoonDir, fogTransmittance);
+    vec3 fogGlow = skyFogGlow(viewDir, sky.sunDir, fogMoonDir, fogTransmittance);
+    skyColor += fogGlow;
     // Shooting stars and auroras are in front of the moon, but still attenuated by fog.
     skyColor += atmosphericForeground * fogTransmittance;
 
-    return SkySample(skyColor, sunLight * (1.0 - moonCompositeAlpha), moonDiskLight * moonCompositeAlpha);
+    result.background = skyColor;
+    result.sun = sunLight * (1.0 - moonCompositeAlpha);
+    result.moon = moonDiskLight * moonCompositeAlpha;
+    #if REDUCE_GLARE_INTENSITY
+        float backgroundBlend = nightFactor * nightSkyHorizonFade(sky.upAmount, horizonShift);
+        if (backgroundBlend <= 0.001)
+            backgroundBlend = 0.0;
+        result.glare =
+            sky.glare * mix(1.0, uboSky.customGradient, backgroundBlend) * fogTransmittance +
+            moonHalo * diskFogTransmittance * (1.0 - moonCompositeAlpha) +
+            fogGlow;
+    #endif
+    return result;
 }
 
 vec3 sampleSky(vec3 viewDir, bool correctProjection, bool toneMap) {
     SkySample sky = sampleSky(viewDir, viewDir, correctProjection, toneMap, vec3(0, -1, 0), 0.0, 1.0, true, CELESTIAL_HORIZON_OFFSET);
+    #if REDUCE_GLARE_INTENSITY
+        sky.background = reduceGlare(sky.background, max(sky.background - sky.glare, vec3(0.0)));
+    #endif
     return sky.background + sky.sun + sky.moon;
 }
