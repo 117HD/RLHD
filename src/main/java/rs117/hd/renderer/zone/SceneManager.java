@@ -5,7 +5,11 @@ import com.google.inject.Injector;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -21,6 +25,7 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.config.ColorFilter;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
@@ -92,6 +97,9 @@ public class SceneManager {
 	private FrameTimer frameTimer;
 
 	private UBOWorldViews uboWorldViews;
+
+	public Set<Integer> interactiveObjects = new HashSet<>();
+	private final Map<Integer, Boolean> staticObjectActionsCache = new HashMap<>();
 
 	@Getter
 	private final WorldViewContext root = new WorldViewContext(null, null, null);
@@ -626,6 +634,83 @@ public class SceneManager {
 		}
 	}
 
+	public void addIfInteractive(@Nullable TileObject obj)
+	{
+		if (obj == null || !plugin.configRs3HighContrast) {
+			return;
+		}
+
+		int id = obj.getId();
+		Boolean cachedHasActions = staticObjectActionsCache.get(id);
+		if (cachedHasActions != null) {
+			if (cachedHasActions)
+				interactiveObjects.add(id);
+			return;
+		}
+
+		ObjectComposition def = client.getObjectDefinition(id);
+		var impostorIds = def.getImpostorIds();
+		boolean isStatic = impostorIds == null;
+		if (!isStatic) {
+			try {
+				int impostorVarbit = def.getVarbitId();
+				int impostorVarp = def.getVarPlayerId();
+				int impostorIndex = -1;
+				if (impostorVarbit != -1) {
+					impostorIndex = client.getVarbitValue(impostorVarbit);
+				} else if (impostorVarp != -1) {
+					impostorIndex = client.getVarpValue(impostorVarp);
+				}
+				if (impostorIndex >= 0)
+					def = client.getObjectDefinition(impostorIds[min(impostorIndex, impostorIds.length - 1)]);
+			} catch (Exception ex) {
+				log.debug("Error getting impostor:", ex);
+			}
+		}
+
+		boolean hasActions = false;
+		for (String action : def.getActions()) {
+			if (action != null) {
+				hasActions = true;
+				break;
+			}
+		}
+
+		if (hasActions)
+			interactiveObjects.add(id);
+
+		if (isStatic)
+			staticObjectActionsCache.put(id, hasActions);
+	}
+
+	public void rebuildInteractiveObjects() {
+		interactiveObjects.clear();
+		if (isTopLevelValid())
+			buildInteractiveObjects(client.getTopLevelWorldView().getScene());
+	}
+
+	private void buildInteractiveObjects(Scene scene) {
+		if (!plugin.configRs3HighContrast) {
+			return;
+		}
+
+		for (Tile[][] tiles : scene.getTiles()) {
+			for (Tile[] row : tiles) {
+				for (Tile tile : row) {
+					if (tile == null) continue;
+
+					addIfInteractive(tile.getWallObject());
+					addIfInteractive(tile.getDecorativeObject());
+					addIfInteractive(tile.getGroundObject());
+
+					for (GameObject gameObject : tile.getGameObjects()) {
+						addIfInteractive(gameObject);
+					}
+				}
+			}
+		}
+	}
+
 	public void swapScene(Scene scene) {
 		if (!plugin.isActive() || plugin.skipScene == scene) {
 			plugin.redrawPreviousFrame = true;
@@ -644,6 +729,8 @@ public class SceneManager {
 
 		fishingSpotReplacer.despawnRuneLiteObjects();
 		npcDisplacementCache.clear();
+		interactiveObjects.clear();
+		buildInteractiveObjects(scene);
 
 		boolean isFirst = root.sceneContext == null;
 		if (!isFirst)

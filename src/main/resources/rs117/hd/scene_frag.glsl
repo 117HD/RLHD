@@ -525,6 +525,25 @@ void main() {
         }
     #endif
 
+	#if APPLY_COLOR_FILTER || RS3_HIGH_CONTRAST
+		int category;
+		if (isTerrain) {
+			category = ENTITY_TERRAIN;
+		} else {
+			category = fMaterialData[0] >> MATERIAL_CATEGORY_SHIFT & MATERIAL_CATEGORY_MASK;
+		}
+
+		#if RS3_HIGH_CONTRAST
+			if (fWorldViewId > 0)
+				category = isSquashed ? ENTITY_BOAT_SQUASHED : ENTITY_BOAT;
+			outputColor.rgb = applyRs3HighContrast(category, outputColor.rgb);
+		#elif APPLY_COLOR_FILTER
+			outputColor.rgb = applyColorFilter(outputColor.rgb, category);
+		#endif
+	#endif
+
+	outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
+
     #if WIREFRAME
         outputColor.rgb *= wireframeMask();
     #endif
@@ -557,10 +576,16 @@ void main() {
             if (combinedFog > 1e-4) {
                 vec3 fogViewDir = normalize(IN.position - uboGlobal.cameraPos);
                 vec3 distanceFogColor = foggedSkyColor(fogViewDir);
+                #if RS3_HIGH_CONTRAST && RS3_HIGH_CONTRAST_SKY
+                    distanceFogColor = srgbToLinear(applyRs3HighContrast(ENTITY_TERRAIN, linearToSrgb(distanceFogColor)));
+                #endif
                 if (groundFog > 1e-4 && fogAmount < 1.0) {
                     // Approximate reduced nighttime color sensitivity without changing luminance.
                     vec3 nightFogColor = mix(uboSky.groundFogLight,
                         vec3(linearSrgbLuminance(uboSky.groundFogLight)), 0.5);
+                    #if RS3_HIGH_CONTRAST && RS3_HIGH_CONTRAST_SKY
+                        nightFogColor = srgbToLinear(applyRs3HighContrast(ENTITY_TERRAIN, linearToSrgb(nightFogColor)));
+                    #endif
                     // Preserve the regular fog color by day; introduce adapted local
                     // illumination only through civil dusk, from sun altitude 0 to -6 degrees.
                     vec3 groundFogColor = mix(distanceFogColor, nightFogColor, nightFogBlend);
@@ -572,7 +597,11 @@ void main() {
                     outputColor.rgb = mix(outputColor.rgb, linearToSrgb(distanceFogColor), fogAmount);
             }
         } else {
-            outputColor.rgb = mix(outputColor.rgb, linearToSrgb(uboGlobal.fogColor), combinedFog);
+            vec3 flatFogColor = linearToSrgb(uboGlobal.fogColor);
+            #if RS3_HIGH_CONTRAST && RS3_HIGH_CONTRAST_SKY
+                flatFogColor = applyRs3HighContrast(ENTITY_TERRAIN, flatFogColor);
+            #endif
+            outputColor.rgb = mix(outputColor.rgb, flatFogColor, combinedFog);
         }
     }
 

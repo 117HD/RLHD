@@ -69,7 +69,7 @@ layout (location = 0) in vec3 vPosition;
 
             float opacity = 1 - (alphaBiasHsl >> 24 & 0xFF) / float(0xFF);
 
-            float opacityThreshold = float(materialData >> MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT & 0x3F) / 0x3F;
+            float opacityThreshold = float(materialData >> MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT & 0x3) / 0x3;
             if (opacityThreshold == 0)
                 opacityThreshold = SHADOW_DEFAULT_OPACITY_THRESHOLD;
 
@@ -150,7 +150,7 @@ layout (location = 0) in vec3 vPosition;
         int waterTypeIndex = vTerrainData >> 3 & 0xFF;
         float opacity = 1 - (vAlphaBiasHsl >> 24 & 0xFF) / float(0xFF);
 
-        float opacityThreshold = float(vMaterialData >> MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT & 0x3F) / 0x3F;
+        float opacityThreshold = float(vMaterialData >> MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT & 0x3) / 0x3;
         if (opacityThreshold == 0)
             opacityThreshold = SHADOW_DEFAULT_OPACITY_THRESHOLD;
 

@@ -239,6 +239,10 @@ public class ModelStreamingManager {
 		)) {
 			return;
 		}
+		// Must be computed on the client thread, since e.g. NPC#getCombatLevel() asserts client thread access
+		boolean hasActions = sceneManager.interactiveObjects.contains(tileObject.getId());
+		int category = ModelHash.getCategoryForUuid(
+			client, r, uuid, hasActions, plugin.configRs3HighContrast, plugin.configRs3HighContrastHostileOnlyWhenFighting);
 		streamingContext.renderableCount++;
 
 		final boolean hasAlpha =
@@ -268,6 +272,7 @@ public class ModelStreamingManager {
 				zone,
 				alphaModel,
 				isModelPartiallyVisible,
+				category,
 				drawIndex,
 				orient,
 				x, y, z,
@@ -286,6 +291,7 @@ public class ModelStreamingManager {
 			zone,
 			alphaModel,
 			isModelPartiallyVisible,
+			category,
 			-1,
 			drawIndex,
 			orient,
@@ -303,6 +309,7 @@ public class ModelStreamingManager {
 		Zone zone,
 		Zone.AlphaModel alphaModel,
 		boolean isModelPartiallyVisible,
+		int category,
 		int drawIndex,
 		int orientation,
 		int x, int y, int z
@@ -318,6 +325,7 @@ public class ModelStreamingManager {
 			zone,
 			alphaModel,
 			isModelPartiallyVisible,
+			category,
 			-1,
 			drawIndex,
 			orientation,
@@ -336,6 +344,7 @@ public class ModelStreamingManager {
 		@Nullable Zone zone,
 		@Nullable Zone.AlphaModel alphaModel,
 		boolean isModelPartiallyVisible,
+		int category,
 		int vaoType,
 		int drawIndex,
 		int orient,
@@ -398,7 +407,8 @@ public class ModelStreamingManager {
 					orient,
 					true,
 					shadowView,
-					shadowView
+					shadowView,
+					category
 				);
 				shadowView.end();
 			}
@@ -424,7 +434,8 @@ public class ModelStreamingManager {
 					orient,
 					ctx.isSquashed,
 					opaqueView,
-					alphaView
+					alphaView,
+					category
 				);
 
 				if (opaqueView != alphaView && alphaView.getEndOffset() > alphaView.getStartOffset()) {

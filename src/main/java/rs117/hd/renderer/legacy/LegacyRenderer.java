@@ -54,6 +54,7 @@ import rs117.hd.scene.daylight_cycle.SkyState;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
@@ -1072,6 +1073,25 @@ public class LegacyRenderer implements Renderer {
 				plugin.uboGlobal.colorFilterPrevious.set(plugin.configColorFilterPrevious.ordinal());
 				long timeSinceChange = System.currentTimeMillis() - plugin.colorFilterChangedAt;
 				plugin.uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
+			}
+
+			if (plugin.configRs3HighContrast) {
+				float[][] rs3Colors = {
+					ColorUtils.rgba(config.rs3HighContrastPlayerColor()),
+					ColorUtils.rgba(config.rs3HighContrastNpcFriendlyColor()),
+					ColorUtils.rgba(config.rs3HighContrastHostileColor()),
+					ColorUtils.rgba(config.rs3HighContrastObjectColor()),
+					ColorUtils.rgba(config.rs3HighContrastProjectileColor()),
+					ColorUtils.rgba(config.rs3HighContrastGraphicsColor()),
+					ColorUtils.rgba(config.rs3HighContrastPlayerOtherColor()),
+					ColorUtils.rgba(config.rs3HighContrastGroundItemColor()),
+					ColorUtils.rgba(config.rs3HighContrastBoatColor()),
+					ColorUtils.rgba(config.rs3HighContrastSquashedBoatColor()),
+				};
+
+				for (int i = 0; i < rs3Colors.length; i++) {
+					plugin.uboGlobal.highContrastColors[i].set(rs3Colors[i]);
+				}
 			}
 
 			if (plugin.configShadowsEnabled && plugin.fboShadowMap != 0 && skyRenderer.castsShadows) {
