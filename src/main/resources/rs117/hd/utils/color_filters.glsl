@@ -91,6 +91,10 @@ vec3 applyColorFilter(vec3 color, int category) {
 #define ENTITY_BOAT_SQUASHED 9
 #define ENTITY_TERRAIN      15
 
+vec3 applyRs3HighContrastColor(vec3 color, vec4 highContrastColor) {
+    return mix(color, highContrastColor.rgb, highContrastColor.a);
+}
+
 vec3 applyRs3HighContrast(int category, vec3 color) {
     switch (category) {
         case ENTITY_TERRAIN:
@@ -98,34 +102,34 @@ vec3 applyRs3HighContrast(int category, vec3 color) {
             return mix(vec3(l), color, 0.08);
 
         case ENTITY_PLAYER:
-            return mix(color, uboGlobal.highContrastColors[0], 0.75);
+            return applyRs3HighContrastColor(color, uboGlobal.highContrastColors[0]);
 
         case ENTITY_PLAYER_OTHER:
-            return mix(color, uboGlobal.highContrastColors[6], 0.8);
+            return applyRs3HighContrastColor(color, uboGlobal.highContrastColors[6]);
 
         case ENTITY_HOSTILE:
-            return mix(color, uboGlobal.highContrastColors[2], 0.8);
+            return applyRs3HighContrastColor(color, uboGlobal.highContrastColors[2]);
 
         case ENTITY_NPC_FRIENDLY:
-            return mix(color, uboGlobal.highContrastColors[1], 0.65);
+            return applyRs3HighContrastColor(color, uboGlobal.highContrastColors[1]);
 
         case ENTITY_OBJECT:
-            return mix(color, uboGlobal.highContrastColors[3], 0.7);
+            return applyRs3HighContrastColor(color, uboGlobal.highContrastColors[3]);
 
         case ENTITY_PROJECTILE:
-            return mix(color, uboGlobal.highContrastColors[4], 0.75);
+            return applyRs3HighContrastColor(color, uboGlobal.highContrastColors[4]);
 
         case ENTITY_GRAPHICS:
-            return mix(color, uboGlobal.highContrastColors[5], 0.6);
+            return applyRs3HighContrastColor(color, uboGlobal.highContrastColors[5]);
 
         case ENTITY_GROUND_ITEMS:
-           return mix(color, uboGlobal.highContrastColors[7], 0.6);
+            return applyRs3HighContrastColor(color, uboGlobal.highContrastColors[7]);
 
         case ENTITY_BOAT:
-            return mix(color, uboGlobal.highContrastColors[8], 0.7);
+            return applyRs3HighContrastColor(color, uboGlobal.highContrastColors[8]);
 
         case ENTITY_BOAT_SQUASHED:
-            return mix(color, uboGlobal.highContrastColors[9], 0.8);
+            return applyRs3HighContrastColor(color, uboGlobal.highContrastColors[9]);
 
         default:
             return color;

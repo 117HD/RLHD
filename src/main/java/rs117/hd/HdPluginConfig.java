@@ -26,6 +26,7 @@
 package rs117.hd;
 
 import java.awt.Color;
+import net.runelite.client.config.Alpha;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
@@ -755,12 +756,208 @@ public interface HdPluginConfig extends Config
 	}
 
 
+	/*====== Accessibility settings ======*/
+
+	@ConfigSection(
+		name = "Accessibility",
+		description = "Accessibility settings",
+		position = 4,
+		closedByDefault = true
+	)
+	String accessibilitySettings = "accessibilitySettings";
+
+	String KEY_COLOR_BLINDNESS = "colorBlindMode";
+
+	@ConfigItem(
+		keyName = KEY_COLOR_BLINDNESS,
+		name = "Color Blindness",
+		description = "Adjust colors to make them more distinguishable for people with a certain type of color blindness.",
+		section = accessibilitySettings,
+		position = -100
+	)
+	default ColorBlindMode colorBlindness() {
+		return ColorBlindMode.NONE;
+	}
+
+	@ConfigItem(
+		keyName = "colorBlindnessIntensity",
+		name = "Blindness Intensity",
+		description = "Specifies how intense the color blindness adjustment should be.",
+		section = accessibilitySettings,
+		position = -99
+	)
+	@Units(Units.PERCENT)
+	@Range(max = 100)
+	default int colorBlindnessIntensity() {
+		return 100;
+	}
+
+	String KEY_RS3_HIGH_CONTRAST = "rs3HighContrast";
+
+	@ConfigItem(
+		keyName = KEY_RS3_HIGH_CONTRAST,
+		name = "RS3 High Contrast",
+		description = "Enable RS3-style high contrast mode that overrides color filters.",
+		section = accessibilitySettings,
+		position = -98
+	)
+	default boolean rs3HighContrast() {
+		return false;
+	}
+
+	String KEY_RS3_HIGH_CONTRAST_HOSTILE_ONLY_WHEN_FIGHTING = "rs3HighContrastHostileOnlyWhenFighting";
+
+	@ConfigItem(
+		keyName = KEY_RS3_HIGH_CONTRAST_HOSTILE_ONLY_WHEN_FIGHTING,
+		name = "Hostile Only When Fighting",
+		description = "Only color an NPC as hostile while it's actually fighting you, instead of any NPC with a combat level.",
+		section = accessibilitySettings,
+		position = -97
+	)
+	default boolean rs3HighContrastHostileOnlyWhenFighting() {
+		return false;
+	}
+
+	String KEY_RS3_HIGH_CONTRAST_SKY = "rs3HighContrastSky";
+
+	@ConfigItem(
+		keyName = KEY_RS3_HIGH_CONTRAST_SKY,
+		name = "Desaturate Sky",
+		description = "Also apply the RS3 High Contrast terrain desaturation effect to the sky and stars.",
+		section = accessibilitySettings,
+		position = -96
+	)
+	default boolean rs3HighContrastSky() {
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "rs3HighContrastPlayerColor",
+		name = "Player Color",
+		description = "Color used for your own player character when RS3 High Contrast filter is enabled.",
+		section = accessibilitySettings,
+		position = -95
+	)
+	@Alpha
+	default Color rs3HighContrastPlayerColor() {
+		return new Color(9, 44, 238, 191);
+	}
+
+	@ConfigItem(
+		keyName = "rs3HighContrastPlayerOtherColor",
+		name = "Other Player Color",
+		description = "Color used for other players when RS3 High Contrast filter is enabled.",
+		section = accessibilitySettings,
+		position = -94
+	)
+	@Alpha
+	default Color rs3HighContrastPlayerOtherColor() {
+		return new Color(192, 192, 192, 204);
+	}
+
+	@ConfigItem(
+		keyName = "rs3HighContrastNpcFriendlyColor",
+		name = "Friendly NPC Color",
+		description = "Color used for friendly NPCs when RS3 High Contrast filter is enabled.",
+		section = accessibilitySettings,
+		position = -93
+	)
+	@Alpha
+	default Color rs3HighContrastNpcFriendlyColor() {
+		return new Color(255, 211, 0, 166);
+	}
+
+	@ConfigItem(
+		keyName = "rs3HighContrastObjectColor",
+		name = "Object Color",
+		description = "Color used for objects when RS3 High Contrast filter is enabled.",
+		section = accessibilitySettings,
+		position = -92
+	)
+	@Alpha
+	default Color rs3HighContrastObjectColor() {
+		return new Color(0, 255, 255, 179);
+	}
+
+	@ConfigItem(
+		keyName = "rs3HighContrastProjectileColor",
+		name = "Projectile Color",
+		description = "Color used for projectiles when RS3 High Contrast filter is enabled.",
+		section = accessibilitySettings,
+		position = -91
+	)
+	@Alpha
+	default Color rs3HighContrastProjectileColor() {
+		return new Color(112, 54, 33, 191);
+	}
+
+	@ConfigItem(
+		keyName = "rs3HighContrastGraphicsColor",
+		name = "Graphics Color",
+		description = "Color used for graphics objects when RS3 High Contrast filter is enabled.",
+		section = accessibilitySettings,
+		position = -90
+	)
+	@Alpha
+	default Color rs3HighContrastGraphicsColor() {
+		return new Color(238, 100, 0, 153);
+	}
+
+	@ConfigItem(
+		keyName = "rs3HighContrastGroundItemColor",
+		name = "Ground Item Color",
+		description = "Color used for ground items when RS3 High Contrast filter is enabled.",
+		section = accessibilitySettings,
+		position = -89
+	)
+	@Alpha
+	default Color rs3HighContrastGroundItemColor() {
+		return new Color(94, 239, 19, 153);
+	}
+
+	@ConfigItem(
+		keyName = "rs3HighContrastHostileColor",
+		name = "Hostile Color",
+		description = "Color used for hostile NPCs and actions when RS3 High Contrast filter is enabled.",
+		section = accessibilitySettings,
+		position = -88
+	)
+	@Alpha
+	default Color rs3HighContrastHostileColor() {
+		return new Color(255, 13, 22, 204);
+	}
+
+	@ConfigItem(
+		keyName = "rs3HighContrastBoatColor",
+		name = "Boat Color",
+		description = "Color used for boats when RS3 High Contrast filter is enabled.",
+		section = accessibilitySettings,
+		position = -87
+	)
+	@Alpha
+	default Color rs3HighContrastBoatColor() {
+		return new Color(153, 102, 255, 179);
+	}
+
+	@ConfigItem(
+		keyName = "rs3HighContrastSquashedBoatColor",
+		name = "Squashed Boat Color",
+		description = "Color used for boats flattened beneath other boats when RS3 High Contrast filter is enabled.",
+		section = accessibilitySettings,
+		position = -86
+	)
+	@Alpha
+	default Color rs3HighContrastSquashedBoatColor() {
+		return new Color(90, 60, 120, 204);
+	}
+
+
 	/*====== Environment settings ======*/
 
 	@ConfigSection(
 		name = "Environment",
 		description = "Environment settings",
-		position = 4,
+		position = 5,
 		closedByDefault = true
 	)
 	String environmentSettings = "environmentSettings";
@@ -997,199 +1194,12 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean pohThemeEnvironments() { return true; }
 
-
-	/*====== Accessibility settings ======*/
-
-	String accessibilitySettings = "accessibilitySettings";
-
-	@ConfigSection(
-		name = "Accessibility",
-		description = "Accessibility settings",
-		position = 3,
-		closedByDefault = true
-	)
-		
-	String KEY_COLOR_BLINDNESS = "colorBlindMode";
-
-	@ConfigItem(
-		keyName = KEY_COLOR_BLINDNESS,
-		name = "Color Blindness",
-		description = "Adjust colors to make them more distinguishable for people with a certain type of color blindness.",
-		position = 0,
-		section = accessibilitySettings
-	)
-	default ColorBlindMode colorBlindness() {
-		return ColorBlindMode.NONE;
-	}
-
-	@ConfigItem(
-		keyName = "colorBlindnessIntensity",
-		name = "Blindness Intensity",
-		description = "Specifies how intense the color blindness adjustment should be.",
-		position = 1,
-		section = accessibilitySettings
-	)
-	@Units(Units.PERCENT)
-	@Range(max = 100)
-	default int colorBlindnessIntensity() {
-		return 100;
-	}
-
-	String KEY_RS3_HIGH_CONTRAST = "rs3HighContrast";
-
-	@ConfigItem(
-		keyName = KEY_RS3_HIGH_CONTRAST,
-		name = "RS3 High Contrast",
-		description = "Enable RS3-style high contrast mode that overrides color filters.",
-		position = 2,
-		section = accessibilitySettings
-	)
-	default boolean rs3HighContrast() {
-		return false;
-	}
-
-	String KEY_RS3_HIGH_CONTRAST_HOSTILE_ONLY_WHEN_FIGHTING = "rs3HighContrastHostileOnlyWhenFighting";
-
-	@ConfigItem(
-		keyName = KEY_RS3_HIGH_CONTRAST_HOSTILE_ONLY_WHEN_FIGHTING,
-		name = "Hostile Only When Fighting",
-		description = "Only color an NPC as hostile while it's actually fighting you, instead of any NPC with a combat level.",
-		position = 3,
-		section = accessibilitySettings
-	)
-	default boolean rs3HighContrastHostileOnlyWhenFighting() {
-		return false;
-	}
-
-	String KEY_RS3_HIGH_CONTRAST_SKY = "rs3HighContrastSky";
-
-	@ConfigItem(
-		keyName = KEY_RS3_HIGH_CONTRAST_SKY,
-		name = "Desaturate Sky",
-		description = "Also apply the RS3 High Contrast terrain desaturation effect to the sky and stars.",
-		position = 4,
-		section = accessibilitySettings
-	)
-	default boolean rs3HighContrastSky() {
-		return true;
-	}
-
-	@ConfigItem(
-		keyName = "rs3HighContrastPlayerColor",
-		name = "Player Color",
-		description = "Color used for your own player character when RS3 High Contrast filter is enabled.",
-		position = 5,
-		section = accessibilitySettings
-	)
-	default Color rs3HighContrastPlayerColor() {
-		return new Color(9, 44, 238);
-	}
-
-	@ConfigItem(
-		keyName = "rs3HighContrastPlayerOtherColor",
-		name = "Other Player Color",
-		description = "Color used for other players when RS3 High Contrast filter is enabled.",
-		position = 6,
-		section = accessibilitySettings
-	)
-	default Color rs3HighContrastPlayerOtherColor() {
-		return new Color(192, 192, 192);
-	}
-
-	@ConfigItem(
-		keyName = "rs3HighContrastNpcFriendlyColor",
-		name = "Friendly NPC Color",
-		description = "Color used for friendly NPCs when RS3 High Contrast filter is enabled.",
-		position = 7,
-		section = accessibilitySettings
-	)
-	default Color rs3HighContrastNpcFriendlyColor() {
-		return new Color(255, 211, 0);
-	}
-
-	@ConfigItem(
-		keyName = "rs3HighContrastObjectColor",
-		name = "Object Color",
-		description = "Color used for objects when RS3 High Contrast filter is enabled.",
-		position = 8,
-		section = accessibilitySettings
-	)
-	default Color rs3HighContrastObjectColor() {
-		return new Color(0, 255, 255);
-	}
-
-	@ConfigItem(
-		keyName = "rs3HighContrastProjectileColor",
-		name = "Projectile Color",
-		description = "Color used for projectiles when RS3 High Contrast filter is enabled.",
-		position = 9,
-		section = accessibilitySettings
-	)
-	default Color rs3HighContrastProjectileColor() {
-		return new Color(112, 54, 33);
-	}
-
-	@ConfigItem(
-		keyName = "rs3HighContrastGraphicsColor",
-		name = "Graphics Color",
-		description = "Color used for graphics objects when RS3 High Contrast filter is enabled.",
-		position = 10,
-		section = accessibilitySettings
-	)
-	default Color rs3HighContrastGraphicsColor() {
-		return new Color(238, 100, 0);
-	}
-
-	@ConfigItem(
-		keyName = "rs3HighContrastGroundItemColor",
-		name = "Ground Item Color",
-		description = "Color used for ground items when RS3 High Contrast filter is enabled.",
-		position = 11,
-		section = accessibilitySettings
-	)
-	default Color rs3HighContrastGroundItemColor() {
-		return new Color(94, 239, 19);
-	}
-
-	@ConfigItem(
-		keyName = "rs3HighContrastHostileColor",
-		name = "Hostile Color",
-		description = "Color used for hostile NPCs and actions when RS3 High Contrast filter is enabled.",
-		position = 12,
-		section = accessibilitySettings
-	)
-	default Color rs3HighContrastHostileColor() {
-		return new Color(255, 13, 22);
-	}
-
-	@ConfigItem(
-		keyName = "rs3HighContrastBoatColor",
-		name = "Boat Color",
-		description = "Color used for boats when RS3 High Contrast filter is enabled.",
-		position = 13,
-		section = accessibilitySettings
-	)
-	default Color rs3HighContrastBoatColor() {
-		return new Color(153, 102, 255);
-	}
-
-	@ConfigItem(
-		keyName = "rs3HighContrastSquashedBoatColor",
-		name = "Squashed Boat Color",
-		description = "Color used for boats flattened beneath other boats when RS3 High Contrast filter is enabled.",
-		position = 14,
-		section = accessibilitySettings
-	)
-	default Color rs3HighContrastSquashedBoatColor() {
-		return new Color(90, 60, 120);
-	}
-
 	/*====== Miscellaneous settings ======*/
 
 	@ConfigSection(
 		name = "Miscellaneous",
 		description = "Miscellaneous settings",
-		position = 5,
+		position = 6,
 		closedByDefault = true
 	)
 	String miscellaneousSettings = "miscellaneousSettings";
@@ -1343,7 +1353,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Legacy",
 		description = "Legacy options. If you dislike a change, you might find an option to change it back here.",
-		position = 6,
+		position = 7,
 		closedByDefault = true
 	)
 	String legacySettings = "legacySettings";
@@ -1507,7 +1517,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Experimental",
 		description = "Experimental features - if you're experiencing issues, you should consider disabling these.",
-		position = 7,
+		position = 8,
 		closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";

@@ -317,6 +317,17 @@ public class ColorUtils {
 	}
 
 	/**
+	 * Convert Color instance from sRGB to linear RGB in the range 0-1, plus its alpha channel unconverted.
+	 *
+	 * @param color sRGB Color instance
+	 * @return float[4] linear RGB values from 0-1, followed by alpha from 0-1
+	 */
+	public static float[] rgba(Color color) {
+		float[] rgb = rgb(color);
+		return new float[] { rgb[0], rgb[1], rgb[2], color.getAlpha() / 255f };
+	}
+
+	/**
 	 * Convert red, green and blue in the range 0-255 from sRGB to sRGB in the range 0-1.
 	 *
 	 * @param r red color

@@ -638,16 +638,16 @@ public class ZoneRenderer implements Renderer {
 
 		if (plugin.configRs3HighContrast) {
 			float[][] rs3Colors = {
-				ColorUtils.rgb(config.rs3HighContrastPlayerColor().getRGB() & 0xFFFFFF),
-				ColorUtils.rgb(config.rs3HighContrastNpcFriendlyColor().getRGB() & 0xFFFFFF),
-				ColorUtils.rgb(config.rs3HighContrastHostileColor().getRGB() & 0xFFFFFF),
-				ColorUtils.rgb(config.rs3HighContrastObjectColor().getRGB() & 0xFFFFFF),
-				ColorUtils.rgb(config.rs3HighContrastProjectileColor().getRGB() & 0xFFFFFF),
-				ColorUtils.rgb(config.rs3HighContrastGraphicsColor().getRGB() & 0xFFFFFF),
-				ColorUtils.rgb(config.rs3HighContrastPlayerOtherColor().getRGB() & 0xFFFFFF),
-				ColorUtils.rgb(config.rs3HighContrastGroundItemColor().getRGB() & 0xFFFFFF),
-				ColorUtils.rgb(config.rs3HighContrastBoatColor().getRGB() & 0xFFFFFF),
-				ColorUtils.rgb(config.rs3HighContrastSquashedBoatColor().getRGB() & 0xFFFFFF),
+				ColorUtils.rgba(config.rs3HighContrastPlayerColor()),
+				ColorUtils.rgba(config.rs3HighContrastNpcFriendlyColor()),
+				ColorUtils.rgba(config.rs3HighContrastHostileColor()),
+				ColorUtils.rgba(config.rs3HighContrastObjectColor()),
+				ColorUtils.rgba(config.rs3HighContrastProjectileColor()),
+				ColorUtils.rgba(config.rs3HighContrastGraphicsColor()),
+				ColorUtils.rgba(config.rs3HighContrastPlayerOtherColor()),
+				ColorUtils.rgba(config.rs3HighContrastGroundItemColor()),
+				ColorUtils.rgba(config.rs3HighContrastBoatColor()),
+				ColorUtils.rgba(config.rs3HighContrastSquashedBoatColor()),
 			};
 
 			for (int i = 0; i < rs3Colors.length; i++) {
