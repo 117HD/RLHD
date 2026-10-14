@@ -3239,7 +3239,7 @@
   {
     "description": "Crab quest sunset cutscene",
     "area": "CRAB_QUEST_ISLAND",
-    "varbitCondition": "CRAB_PUT_BACK_IN_INSTANCE && CUTSCENE_STATUS && CRAB_BASS >= 183",
+    "varbitCondition": "CRAB_PUT_BACK_IN_INSTANCE && CUTSCENE_STATUS && CRAB_BASS >= 184",
     "varpCondition": "MUSIC_CURRENT_TRACK == 7086",
     "sky": {
       "sunAngles": [ 0, 221 ]
@@ -3255,6 +3255,7 @@
     "windAngle": 40,
     "windSpeed": 15,
     "windStrength": 50,
+    "instantTransition": true,
     "hideVanillaSkyboxes": true
   },
   {
