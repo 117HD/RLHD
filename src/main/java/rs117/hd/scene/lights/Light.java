@@ -2,7 +2,9 @@ package rs117.hd.scene.lights;
 
 import javax.annotation.Nullable;
 import net.runelite.api.*;
+import rs117.hd.config.PositionalShadowMode;
 import rs117.hd.scene.SceneContext;
+import rs117.hd.renderer.zone.PositionalShadowRenderer;
 
 import static rs117.hd.utils.MathUtils.*;
 
@@ -33,6 +35,8 @@ public class Light
 	public boolean markedForRemoval;
 	public boolean persistent;
 	public boolean replayable;
+	public PositionalShadowMode shadowMode;
+	public float shadowNearPlane;
 
 	public final boolean animationSpecific;
 	public final boolean dynamicLifetime;
@@ -63,6 +67,7 @@ public class Light
 	public Projectile projectile;
 	public TileObject tileObject;
 	public GraphicsObject graphicsObject;
+	public PositionalShadowRenderer.ShadowData shadowData;
 	public int tileObjectId;
 	public int spotanimId = -1;
 	public int[] projectileRefCounter;
@@ -83,6 +88,8 @@ public class Light
 		strength = def.strength;
 		alignment = def.alignment;
 		plane = def.plane;
+		shadowMode = def.shadowMode;
+		shadowNearPlane = def.shadowNearPlane;
 		if (def.type == LightType.PULSE)
 			animation = (float) Math.random();
 

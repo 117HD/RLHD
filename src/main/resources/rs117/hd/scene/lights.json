@@ -16813,6 +16813,8 @@
       33.847893
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 180,
     "duration": 1000,
     "range": 20
   },
@@ -16830,6 +16832,8 @@
       33.847893
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 180,
     "duration": 1000,
     "range": 20
   },
@@ -20166,6 +20170,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 85,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -20229,7 +20235,7 @@
   },
   {
     "description": "STANDING_TORCH_SHORT",
-    "height": 200,
+    "height": 180,
     "radius": 450,
     "strength": 12.5,
     "color": [
@@ -20238,6 +20244,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 55,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -20342,6 +20350,26 @@
     ]
   },
   {
+    "description": "CANDLE_WALL_TORCH",
+    "offset": [ -35, 0, 0 ],
+    "height": 210,
+    "radius": 300,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 25,
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "CANDLE_WALL"
+    ]
+  },
+  {
     "description": "WALL_TORCH",
     "height": 235,
     "radius": 300,
@@ -20352,6 +20380,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -20359,7 +20388,6 @@
       "_100_DUNGEON_SKULLTORCH",
       "DS2_GUILD_WALL_SCONCE",
       "_100_DAVE_CANDLE_WALL",
-      "CANDLE_WALL",
       "LOTG_CRYPT_PRIEST_GRAVE1",
       "LOTG_CRYPT_PRIEST_GRAVE2",
       "LOTG_CRYPT_PRIEST_GRAVE3",
@@ -20389,6 +20417,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
+    "shadowMode": "STATIC",
     "objectIds": [
       "TORCH",
       "TORCH_GRUBBY",
@@ -20414,6 +20443,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 80,
     "duration": 0,
     "range": 20,
     "schedule": "NIGHT",
@@ -20505,6 +20536,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 45,
     "duration": 0,
     "range": 20,
     "schedule": "NIGHT",
@@ -20524,6 +20557,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 20,
     "duration": 0,
     "range": 20,
     "schedule": "NIGHT",
@@ -20543,6 +20578,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 60,
     "duration": 0,
     "range": 20,
     "schedule": "NIGHT",
@@ -20562,6 +20599,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 50,
     "duration": 0,
     "range": 20,
     "schedule": "NIGHT",
@@ -20598,6 +20637,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -20652,6 +20692,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -20670,6 +20711,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -20688,6 +20730,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -20706,6 +20749,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -20725,6 +20769,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -20750,7 +20795,8 @@
   },
   {
     "description": "LANTERN",
-    "height": 250,
+    "offset": [0, 0, 0],
+    "height": 210,
     "radius": 500,
     "strength": 12.5,
     "color": [
@@ -20759,6 +20805,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -20864,6 +20912,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 50,
     "duration": 0,
     "nightMultiplier": 1.5,
     "range": 20,
@@ -20882,6 +20932,7 @@
       52
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -20902,6 +20953,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 30,
     "objectIds": [
@@ -20919,6 +20971,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 40,
     "objectIds": [
@@ -20936,6 +20989,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 40,
     "objectIds": [
@@ -20953,6 +21007,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 30,
     "objectIds": [
@@ -20970,6 +21025,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "schedule": {
       "during": "NIGHT",
       "randomOffset": 0
@@ -20991,6 +21047,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "schedule": {
       "during": "NIGHT",
       "randomOffset": 0
@@ -21080,6 +21137,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 40,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -21117,6 +21176,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -21135,6 +21195,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 50,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -21306,6 +21368,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 40,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -21392,6 +21456,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -21409,6 +21475,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 200,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -21426,6 +21494,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 80,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -21443,6 +21513,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -21505,7 +21576,7 @@
   },
   {
     "description": "STANDING_TORCH_BLUE",
-    "height": 250,
+    "height": 200,
     "radius": 450,
     "strength": 12.5,
     "color": [
@@ -21514,6 +21585,8 @@
       255
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 100,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -21522,7 +21595,7 @@
   },
   {
     "description": "STANDING_TORCH_LARGE_BLUE",
-    "height": 250,
+    "height": 200,
     "radius": 600,
     "strength": 12.5,
     "color": [
@@ -21531,6 +21604,8 @@
       255
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 100,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -21548,6 +21623,8 @@
       237
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 80,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -21566,6 +21643,8 @@
       22
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 80,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -21765,6 +21844,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -21820,6 +21900,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 15,
     "duration": 0,
     "range": 30,
     "objectIds": [
@@ -21838,6 +21920,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 15,
     "duration": 0,
     "range": 30,
     "objectIds": [
@@ -22167,6 +22251,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 85,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -22936,6 +23022,8 @@
       255
     ],
     "type": "PULSE",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 90,
     "duration": 4100,
     "range": 20,
     "objectIds": [
@@ -26038,6 +26126,7 @@
       255
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -26055,6 +26144,8 @@
       255
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 50,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -26967,6 +27058,8 @@
       100
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 100,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -26984,6 +27077,7 @@
       85
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -27051,6 +27145,7 @@
     "height": 40,
     "radius": 250,
     "strength": 10,
+    "shadowMode": "STATIC",
     "color": [
       252,
       148,
@@ -27115,6 +27210,7 @@
       0
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
     "duration": 1000,
     "range": 20
   },
@@ -27132,6 +27228,7 @@
       0
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
     "duration": 1000,
     "range": 20
   },
@@ -27934,6 +28031,8 @@
       103
     ],
     "type": "STATIC",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 31,
     "duration": 0,
     "nightMultiplier": 1.55,
     "range": 20,
@@ -27976,6 +28075,8 @@
       103
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 20,
     "duration": 0,
     "nightMultiplier": 1.5,
     "range": 20,
@@ -27996,6 +28097,7 @@
       103
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "nightMultiplier": 1.5,
     "range": 20,
@@ -32112,6 +32214,17 @@
     ]
   },
   {
+    "description": "Sailing eternal brazier medium sloop 3x10",
+    "objectIds": [ "SAILING_BOAT_SLOOP_ETERNAL_BRAZIER" ],
+    "offset": [ -61, 218, 53 ],
+    "radius": 1250,
+    "strength": 13.5,
+    "color": "#FFA50C",
+    "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "range": 5.8
+  },
+  {
     "description": "CERBERUS_LAIR_RIVER_LIGHT_1",
     "offset": [ 0, 350, -400 ],
     "radius": 1050,
@@ -32352,7 +32465,9 @@
       191.49066,
       255
     ],
-    "type": "STATIC"
+    "type": "STATIC",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 50
   },
   {
     "description": "GOTR_REWARDS_GUARDIAN",
@@ -32365,6 +32480,8 @@
       140
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 100,
     "duration": 0,
     "range": 0,
     "objectIds": [
@@ -32391,7 +32508,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_FIRE",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       255,
@@ -32399,6 +32516,8 @@
       0
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32410,7 +32529,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_NATURE",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       0,
@@ -32418,6 +32537,8 @@
       0
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32429,7 +32550,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_EARTH",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       200.19334,
@@ -32437,6 +32558,8 @@
       0
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32448,7 +32571,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_WATER",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       0,
@@ -32456,6 +32579,8 @@
       255
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32468,7 +32593,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_COSMIC",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       255,
@@ -32476,6 +32601,8 @@
       140
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32506,7 +32633,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_MIND",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       255,
@@ -32514,6 +32641,8 @@
       0
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32526,7 +32655,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_BODY",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       158.46326,
@@ -32534,6 +32663,8 @@
       255
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32545,7 +32676,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_CHAOS",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       255,
@@ -32553,6 +32684,8 @@
       182.86261
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32564,7 +32697,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_DEATH",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       236.88396,
@@ -32572,6 +32705,8 @@
       236.88396
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32583,7 +32718,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_LAW",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       182.86261,
@@ -32591,6 +32726,8 @@
       255
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32602,7 +32739,7 @@
   {
     "description": "GOTR_GUARDIAN_OF_BLOOD",
     "height": 260,
-    "radius": 150,
+    "radius": 250,
     "strength": 7.7,
     "color": [
       255,
@@ -32610,6 +32747,8 @@
       0
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 30,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -32668,6 +32807,8 @@
       255
     ],
     "type": "PULSE",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 30,
     "duration": 2000,
     "range": 10,
     "objectIds": [
@@ -32796,6 +32937,8 @@
       140
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 50,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -34484,6 +34627,7 @@
       255
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "range": 20
   },
   {
@@ -34500,6 +34644,7 @@
       255
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "range": 20
   },
   {
@@ -38597,6 +38742,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 24,
     "objectIds": [
@@ -38632,6 +38778,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 50,
     "duration": 0,
     "range": 30,
     "objectIds": [
@@ -38649,6 +38797,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "nightMultiplier": 1.25,
     "range": 24,
@@ -39158,6 +39307,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 113,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -39318,6 +39469,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 103,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -39962,6 +40115,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -41786,6 +41940,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 50,
     "duration": 0,
     "range": 20,
     "schedule": {
@@ -42343,6 +42499,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20
   },
@@ -42360,6 +42517,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20
   },
@@ -42543,6 +42701,7 @@
       0
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
     "duration": 30,
     "range": 10,
     "objectIds": [
@@ -42564,6 +42723,7 @@
       0
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
     "duration": 30,
     "range": 10,
     "objectIds": [
@@ -47841,6 +48001,7 @@
       33.847893
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 10
   },
@@ -47852,6 +48013,7 @@
     "radius": 425,
     "strength": 12,
     "visibleFromOtherPlanes": false,
+    "shadowMode": "STATIC",
     "color": [
       253.63197,
       182.39111,
@@ -47875,6 +48037,7 @@
       33.847893
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 10
   },
@@ -48434,6 +48597,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 50,
     "visibleFromOtherPlanes": true,
     "duration": 0,
     "range": 20,
@@ -48453,6 +48618,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 100,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -49205,6 +49372,8 @@
       255
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 128,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -50204,6 +50373,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -50221,6 +50391,8 @@
       40
     ],
     "type": "STATIC",
+    "shadowMode": "DYNAMIC",
+    "shadowNearPlane": 60,
     "duration": 0,
     "range": 20,
     "objectIds": [

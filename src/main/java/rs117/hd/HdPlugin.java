@@ -177,6 +177,7 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_NEBULA_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_POSITIONAL_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -428,6 +429,7 @@ public class HdPlugin extends Plugin {
 	public boolean configRoofShadows;
 	public boolean configTerrainShadows;
 	public boolean configConservativeShadowCulling;
+	public boolean configPositionalShadows;
 	public boolean configUseFasterModelHashing;
 	public boolean configZoneStreaming;
 	public boolean configSimpleBoatSilhouettes;
@@ -1794,6 +1796,7 @@ public class HdPlugin extends Plugin {
 		configShadowTransparency = config.shadowTransparency();
 		configRoofShadows = config.roofShadows();
 		configTerrainShadows = config.terrainShadows() && renderer instanceof ZoneRenderer;
+		configPositionalShadows = config.positionalShadows();
 		configGroundTextures = config.groundTextures();
 		var groundBlending = config.groundBlending();
 		configGroundBlending = groundBlending != GroundBlending.OFF;
@@ -1979,6 +1982,7 @@ public class HdPlugin extends Plugin {
 							case KEY_WIND_DISPLACEMENT:
 							case KEY_CHARACTER_DISPLACEMENT:
 							case KEY_WIREFRAME:
+							case KEY_SHADOW_POSITIONAL:
 							case KEY_WINDOWS_HDR_CORRECTION:
 							case KEY_STARS:
 							case KEY_POINT_SPRITES:

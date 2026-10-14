@@ -46,6 +46,15 @@ public final class PrimitiveIntArray {
 		length--;
 	}
 
+	public int indexOf(int value) {
+		for(int i = 0; i < length; i++) {
+			if(array[i] == value) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	public void removeAtSwap(int idx) {
 		if (idx < 0 || idx >= length)
 			return;

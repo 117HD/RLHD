@@ -137,6 +137,10 @@ public class SceneManager {
 		return root;
 	}
 
+	public WorldViewContext[] getSubContexts() {
+		return subs;
+	}
+
 	public void initialize(UBOWorldViews uboWorldViews) {
 		this.uboWorldViews = uboWorldViews;
 		root.initialize(injector);

@@ -29,6 +29,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.gson.Gson;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -116,6 +117,7 @@ public class LightManager {
 	@Getter
 	private int numVisibleLights;
 
+	private final ArrayDeque<Listener> listeners = new ArrayDeque<>();
 	private final ArrayList<Light> WORLD_LIGHTS = new ArrayList<>();
 	private final ListMultimap<Integer, LightDefinition> NPC_LIGHTS = ArrayListMultimap.create();
 	private final ListMultimap<Integer, LightDefinition> OBJECT_LIGHTS = ArrayListMultimap.create();
@@ -191,6 +193,7 @@ public class LightManager {
 		OBJECT_LIGHTS.clear();
 		PROJECTILE_LIGHTS.clear();
 		GRAPHICS_OBJECT_LIGHTS.clear();
+		removeAllListeners();
 
 		eventBus.unregister(this);
 	}
@@ -205,7 +208,7 @@ public class LightManager {
 
 		if (reloadLights) {
 			reloadLights = false;
-			lights.clear();
+			removeAllLights();
 			sceneContext.knownProjectiles.clear();
 			loadSceneLights(sceneContext);
 			swapSceneLights(sceneContext);
@@ -220,11 +223,11 @@ public class LightManager {
 		}
 		if (lights.size() > 10000) {
 			log.warn("Too many lights: {}. Clearing...", lights.size());
-			lights.clear();
+			removeAllLights();
 		}
 
 		// Remove orphaned worldview lights, just in case despawn events are unreliable
-		lights.removeIf(light -> {
+		removeLightsIf(light -> {
 			if (light.sceneContext == null)
 				return false;
 			if (light.tileObject != null)
@@ -613,6 +616,7 @@ public class LightManager {
 				lights.remove(i);
 				if (light.projectile != null && --light.projectileRefCounter[0] == 0)
 					sceneContext.knownProjectiles.remove(light.projectile);
+				triggerCallbacks(light, false);
 			}
 		}
 	}
@@ -741,7 +745,7 @@ public class LightManager {
 
 	public void swapSceneLights(SceneContext sceneContext) {
 		// Remove any lights associated with the top-level scene
-		lights.removeIf(light -> light.sceneContext == null);
+		removeLightsIf(light -> light.sceneContext == null);
 		sceneContext.knownProjectiles.clear();
 		publishSceneLights(sceneContext);
 		currentPlane = -1;
@@ -754,7 +758,7 @@ public class LightManager {
 	}
 
 	public void unloadWorldViewLights(SceneContext source) {
-		lights.removeIf(light -> light.sceneContext == source);
+		removeLightsIf(light -> light.sceneContext == source);
 		numVisibleLights = 0;
 	}
 
@@ -779,10 +783,26 @@ public class LightManager {
 		numVisibleLights = 0;
 	}
 
+	private void removeAllLights() { removeLightsIf(light -> true); }
+
 	private void removeLightIf(Predicate<Light> predicate) {
 		for (var light : lights)
 			if (predicate.test(light))
 				light.markedForRemoval = true;
+	}
+
+	private void removeLightsIf(Predicate<Light> predicate) {
+		removeLightsIf(lights, predicate);
+	}
+
+	private void removeLightsIf(ArrayList<Light> list, Predicate<Light> predicate) {
+		for (int i = list.size() - 1; i >= 0; i--) {
+			Light light = list.get(i);
+			if (predicate.test(light)) {
+				list.remove(i);
+				triggerCallbacks(light, false);
+			}
+		}
 	}
 
 	private void addSpotanimLights(Actor actor) {
@@ -822,6 +842,7 @@ public class LightManager {
 				light.actor = actor;
 				light.sceneContext = actor.getWorldView().isTopLevel() ? null : ctx;
 				lights.add(light);
+				triggerCallbacks(light, true);
 			}
 		}
 	}
@@ -834,7 +855,7 @@ public class LightManager {
 		if (ctx == null)
 			return;
 		if (!npc.getWorldView().isTopLevel())
-			lights.removeIf(light -> light.actor == npc && light.markedForRemoval);
+			removeLightsIf(light -> light.actor == npc && light.markedForRemoval);
 
 		int uuid = ModelHash.packUuid(ModelHash.TYPE_NPC, npc.getId());
 		int[] worldPos = ctx.localToWorld(npc.getLocalLocation(), npc.getWorldView().getPlane());
@@ -869,6 +890,7 @@ public class LightManager {
 			light.actor = npc;
 			light.sceneContext = npc.getWorldView().isTopLevel() ? null : ctx;
 			lights.add(light);
+			triggerCallbacks(light, true);
 		}
 	}
 
@@ -926,7 +948,7 @@ public class LightManager {
 		if (tileObject.getPlane() < 0)
 			return;
 		if (sceneContext.scene.getWorldViewId() != WorldView.TOPLEVEL)
-			destination.removeIf(light -> light.tileObject == tileObject && light.markedForRemoval);
+			removeLightsIf(destination, light -> light.tileObject == tileObject && light.markedForRemoval);
 
 		// GameObjects with DynamicObject renderables may be impostors, so handle those in swapScene
 		int tileObjectId = tileObject.getId();
@@ -1101,6 +1123,7 @@ public class LightManager {
 				light.sizeX = sizeX;
 				light.sizeY = sizeY;
 				destination.add(light);
+				triggerCallbacks(light, true);
 			}
 		}
 	}
@@ -1123,6 +1146,7 @@ public class LightManager {
 			copy.origin[1] = tileHeights[scenePoint[2]][tileExX][tileExY] - copy.def.height - 1;
 			copy.origin[2] = scenePoint[1] * LOCAL_TILE_SIZE + LOCAL_HALF_TILE_SIZE;
 			ctx.pendingLights.add(copy);
+			triggerCallbacks(copy, true);
 		}
 	}
 
@@ -1162,6 +1186,7 @@ public class LightManager {
 			light.plane = projectile.getFloor();
 
 			lights.add(light);
+			triggerCallbacks(light, true);
 		}
 	}
 
@@ -1236,6 +1261,7 @@ public class LightManager {
 			light.origin[2] = lp.getY();
 			light.plane = worldPos[2];
 			lights.add(light);
+			triggerCallbacks(light, true);
 		}
 	}
 
@@ -1301,4 +1327,25 @@ public class LightManager {
 //		if (plugin.enableDetailedTimers)
 //			frameTimer.end(Timer.IMPOSTOR_TRACKING);
 //	}
+
+	private void triggerCallbacks(Light light, boolean added) {
+		for (var listener : listeners) {
+			if (added) {
+				listener.onLightAdded(light);
+			} else {
+				listener.onLightRemoved(light);
+			}
+		}
+	}
+
+	public void addListener(Listener listener) { listeners.add(listener); }
+
+	public void removeListener(Listener listener) { listeners.remove(listener); }
+
+	public void removeAllListeners() { listeners.clear(); }
+
+	public interface Listener {
+		void onLightAdded(Light light);
+		void onLightRemoved(Light light);
+	}
 }
