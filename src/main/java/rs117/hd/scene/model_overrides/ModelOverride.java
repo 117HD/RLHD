@@ -268,6 +268,8 @@ public class ModelOverride
 
 		if (!castShadows && shadowOpacityThreshold == 0)
 			shadowOpacityThreshold = 1;
+
+		shadowNormalBias |= baseMaterial.subsurface > 0 || textureMaterial.subsurface > 0;
 	}
 
 	public void clearIds(){

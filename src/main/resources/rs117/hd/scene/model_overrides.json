@@ -82042,6 +82042,31 @@
     ]
   },
   {
+    "description": "Sailing - NPC Ship",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
+    "objectIds": [
+      "SAILING_BOAT_NPC_KANDARIN_LARGE01A",
+      "SAILING_BOAT_NPC_KANDARIN_LARGE01B1",
+      "SAILING_BOAT_NPC_KANDARIN_LARGE01B2",
+      "SAILING_BOAT_NPC_KANDARIN_LARGE01C1",
+      "SAILING_BOAT_NPC_KANDARIN_LARGE01C2",
+      "SAILING_BOAT_NPC_KANDARIN_LARGE01D",
+      "SAILING_BOAT_NPC_KANDARIN_LARGE01E",
+      "SAILING_BOAT_NPC_KANDARIN_LARGE01F",
+      "SAILING_BOAT_NPC_KANDARIN_LARGE01G"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Hull",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
     "description": "Ship - Wood with Sails or Metal",
     "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
     "objectIds": [
@@ -82069,7 +82094,7 @@
       {
         "description": "Sail",
         "colors": "h == 8",
-        "baseMaterial": "CARPET_LIGHT_SMOOTH",
+        "baseMaterial": "SAIL_CLOTH_LIGHT_SMOOTH",
         "shadowNormalBias": true
       }
     ]
@@ -82080,7 +82105,8 @@
     "objectIds": [
       "BOATKIT_MAST_MIDDLEMAST_HOISTED",
       "BOATKIT_MAST_REARMAST_HOISTED",
-      "BOATKIT_MAST_MIDDLEMAST_UNFURLED"
+      "BOATKIT_MAST_MIDDLEMAST_UNFURLED",
+      "BOATKIT_MAST_MIDDLEMAST_FULL"
     ],
     "disableDetailCulling": true,
     "colorOverrides": [
@@ -82095,7 +82121,7 @@
       {
         "description": "Sail",
         "colors": "h == 8",
-        "baseMaterial": "CARPET_LIGHT_SMOOTH",
+        "baseMaterial": "SAIL_CLOTH_LIGHT_SMOOTH",
         "shadowNormalBias": true
       }
     ]
@@ -84305,7 +84331,7 @@
     "colorOverrides": [
       {
         "description": "Canvas Roof",
-        "baseMaterial": "CARPET_LIGHT_SMOOTH",
+        "baseMaterial": "SAIL_CLOTH_LIGHT_SMOOTH",
         "colors": "h > 6 && h < 11"
       },
       {

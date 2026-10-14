@@ -2133,6 +2133,11 @@
     "subsurface": 1
   },
   {
+    "name": "SAIL_CLOTH_LIGHT_SMOOTH",
+    "parent": "SAIL_CLOTH_LIGHT",
+    "normalMap": null
+  },
+  {
     "name": "FUR_N"
   },
   {
