@@ -5,7 +5,10 @@ import com.google.inject.Injector;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -437,8 +440,6 @@ public class SceneManager {
 			}
 
 			assert worldView.getId() == WorldView.TOPLEVEL;
-			if (nextZones != null)
-				throw new RuntimeException("Double zone load!"); // does this happen?
 
 			Stopwatch sw = Stopwatch.createStarted();
 			root.loadTime = root.uploadTime = root.sceneSwapTime = 0;
@@ -447,6 +448,9 @@ public class SceneManager {
 			root.sceneLoadGroup.complete();
 			root.streamingGroup.complete();
 			root.invalidationGroup.complete();
+
+			if (nextZones != null)
+				discardPendingScene();
 
 			if (nextSceneContext != null)
 				nextSceneContext.destroy();
@@ -624,6 +628,49 @@ public class SceneManager {
 			loadingLock.unlock();
 			log.trace("loadingLock unlocked - holdCount: {}", loadingLock.getHoldCount());
 		}
+	}
+
+	private void discardPendingScene() {
+		log.info("Discarding pending scene load...");
+
+		// Wait for jobs which depend on nextSceneContext & nextZones
+		generateSceneDataTask.waitForCompletion();
+		loadSceneLightsTask.waitForCompletion();
+		calculateRoofChangesTask.waitForCompletion();
+
+		// Gather the set of active zones, where synchronizing with invalidation isn't important
+		Set<Zone> activeZones = new HashSet<>();
+		for (Zone[] column : root.zones)
+			Collections.addAll(activeZones, column);
+
+		// Synchronize with zone invalidations while cancelling zone upload jobs in nextZones
+		Set<Zone> zonesToDiscard = new HashSet<>();
+		synchronized (root) {
+			for (Zone[] column : nextZones) {
+				for (Zone zone : column) {
+					if (zone == null)
+						continue;
+					// Deferred uploads can be attached to a reused zone they're meant to replace
+					ZoneUploadJob upload = zone.uploadJob;
+					if (upload != null) {
+						upload.cancel();
+						if (upload.zoneBeingUploaded != null)
+							zonesToDiscard.add(upload.zoneBeingUploaded);
+						upload.release();
+					}
+					if (!activeZones.contains(zone))
+						zonesToDiscard.add(zone);
+				}
+			}
+		}
+
+		nextZones = null;
+		nextRoofChanges.clear();
+
+		clientThread.invoke(() -> {
+			for (Zone zone : zonesToDiscard)
+				DestructibleHandler.destroy(zone);
+		});
 	}
 
 	public void swapScene(Scene scene) {
