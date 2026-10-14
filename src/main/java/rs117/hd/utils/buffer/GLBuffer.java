@@ -507,9 +507,10 @@ public class GLBuffer implements Destructible {
 
 		unbind();
 
-		if (id != oldBuffer && oldBuffer != 0 && byteOffset > 0) {
+		if (id != oldBuffer && oldBuffer != 0) {
 			// Neither buffer must be mapped before this, except for with the persistent bit
-			copyRangeTo(oldBuffer, id, 0, 0, byteOffset);
+			if (byteOffset > 0)
+				copyRangeTo(oldBuffer, id, 0, 0, byteOffset);
 			glDeleteBuffers(oldBuffer);
 		}
 

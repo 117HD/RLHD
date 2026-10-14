@@ -180,6 +180,14 @@ public class WorldViewContext {
 		}
 	}
 
+	private static ConcurrentPool<DynamicModelVAO> getDynamicModelVaoPool(int type) {
+		// Choose a pool to both acquire from and release back into, irrespective of the storage buffers setting.
+		// Without this, buffers allocated during acquisition from the staging pool may be erroneously released
+		// back into the non-staging pool, leading to buffers accumulating with unnecessary allocations.
+		return type == VAO_OPAQUE || type == VAO_PLAYER || type == VAO_SHADOW ?
+			DYNAMIC_MODEL_VAO_STAGING_POOL : DYNAMIC_MODEL_VAO_POOL;
+	}
+
 	void initBuffers() {
 		if (vboM != null)
 			return;
@@ -196,10 +204,9 @@ public class WorldViewContext {
 
 		long start = System.nanoTime();
 		for (int i = 0; i < VAO_COUNT; i++) {
-			final boolean needsStaging = i == VAO_OPAQUE || i == VAO_PLAYER || i == VAO_SHADOW;
-			final var POOL = needsStaging ? DYNAMIC_MODEL_VAO_STAGING_POOL : DYNAMIC_MODEL_VAO_POOL;
+			var pool = getDynamicModelVaoPool(i);
 			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {
-				DynamicModelVAO dynamicModelVao = dynamicModelVaos[k][i] = POOL.acquire();
+				DynamicModelVAO dynamicModelVao = dynamicModelVaos[k][i] = pool.acquire();
 				if (dynamicModelVao.getVao() == 0)
 					dynamicModelVao.initialize();
 				dynamicModelVao.bindMetadataVAO(vboM);
@@ -373,13 +380,12 @@ public class WorldViewContext {
 		isSquashed = false;
 
 		for (int i = 0; i < VAO_COUNT; i++) {
+			var pool = getDynamicModelVaoPool(i);
 			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {
 				if (dynamicModelVaos[k][i] == null)
 					continue;
-				final var POOL = dynamicModelVaos[k][i].hasStagingBuffer() ?
-					DYNAMIC_MODEL_VAO_STAGING_POOL :
-					DYNAMIC_MODEL_VAO_POOL;
-				POOL.recycle(dynamicModelVaos[k][i]);
+				pool.recycle(dynamicModelVaos[k][i]);
+				dynamicModelVaos[k][i] = null;
 			}
 		}
 

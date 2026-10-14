@@ -25,7 +25,7 @@ import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
 
 @Slf4j
 public class DynamicModelVAO implements Destructible {
-	public static final int INITIAL_SIZE = (int) (8 * MiB);
+	public static final int INITIAL_SIZE = (int) (64 * KiB);
 
 	// Temp vertex format
 	// pos float vec3(x, y, z)
