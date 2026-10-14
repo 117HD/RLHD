@@ -545,11 +545,59 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_NPC_LIGHTS,
 		name = "NPC lights",
-		description = "Adds dynamic lights to some NPCs.",
+		description = "Adds dynamic lights to some NPCs, excluding pets and followers.",
 		position = 3,
 		section = lightingSettings
 	)
 	default boolean npcLights() {
+		return true;
+	}
+
+	String KEY_PET_LIGHTS = "petLights";
+	@ConfigItem(
+		keyName = KEY_PET_LIGHTS,
+		name = "Pet lights",
+		description = "Adds dynamic lights to pets and followers.",
+		position = 4,
+		section = lightingSettings
+	)
+	default boolean petLights() {
+		return true;
+	}
+
+	String KEY_SPOTANIM_LIGHTS = "spotanimLights";
+	@ConfigItem(
+		keyName = KEY_SPOTANIM_LIGHTS,
+		name = "Animation lights",
+		description = "Adds dynamic lights to spells and other graphical effects.",
+		position = 5,
+		section = lightingSettings
+	)
+	default boolean spotanimLights() {
+		return true;
+	}
+
+	String KEY_OBJECT_LIGHTS = "objectLights";
+	@ConfigItem(
+		keyName = KEY_OBJECT_LIGHTS,
+		name = "Object lights",
+		description = "Adds dynamic lights to objects, such as lamps and fires.",
+		position = 6,
+		section = lightingSettings
+	)
+	default boolean objectLights() {
+		return true;
+	}
+
+	String KEY_WORLD_LIGHTS = "worldLights";
+	@ConfigItem(
+		keyName = KEY_WORLD_LIGHTS,
+		name = "World lights",
+		description = "Adds dynamic lights at certain world locations.",
+		position = 7,
+		section = lightingSettings
+	)
+	default boolean worldLights() {
 		return true;
 	}
 
@@ -558,7 +606,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_ATMOSPHERIC_LIGHTING,
 		name = "Atmospheric lighting",
 		description = "Change environmental lighting based on the current area.",
-		position = 4,
+		position = 8,
 		section = lightingSettings
 	)
 	default boolean atmosphericLighting() {

@@ -396,6 +396,13 @@ public class LightManager {
 				}
 			}
 
+			if (!plugin.configSpotanimLights && (light.spotanimId != -1 || light.graphicsObject != null))
+				hiddenTemporarily = true;
+			if (!plugin.configWorldLights && light.worldLight)
+				hiddenTemporarily = true;
+			if (!plugin.configObjectLights && light.tileObject != null)
+				hiddenTemporarily = true;
+
 			copyTo(light.sceneLocalPos, light.origin);
 
 			int orientation = 0;
@@ -691,8 +698,12 @@ public class LightManager {
 		if (!renderCallbackManager.addEntity(renderable, false))
 			return true;
 
-		if (renderable instanceof NPC)
-			return !plugin.configNpcLights;
+		boolean hideSomeNpcLights = !plugin.configNpcLights || !plugin.configPetLights;
+		if (hideSomeNpcLights && renderable instanceof NPC) {
+			if (!plugin.configNpcLights && !plugin.configPetLights)
+				return true;
+			return ((NPC) renderable).getComposition().isFollower() != plugin.configPetLights;
+		}
 
 		if (renderable instanceof Projectile)
 			return !plugin.configProjectileLights;

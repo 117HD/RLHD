@@ -419,6 +419,10 @@ public class HdPlugin extends Plugin {
 	public boolean configLegacyTzHaarReskin;
 	public boolean configProjectileLights;
 	public boolean configNpcLights;
+	public boolean configPetLights;
+	public boolean configSpotanimLights;
+	public boolean configWorldLights;
+	public boolean configObjectLights;
 	public boolean configHideFakeShadows;
 	public boolean configLegacyGreyColors;
 	public boolean configModelBatching;
@@ -1803,6 +1807,10 @@ public class HdPlugin extends Plugin {
 		configLegacyTzHaarReskin = config.legacyTzHaarReskin();
 		configProjectileLights = config.projectileLights();
 		configNpcLights = config.npcLights();
+		configPetLights = config.petLights();
+		configSpotanimLights = config.spotanimLights();
+		configWorldLights = config.worldLights();
+		configObjectLights = config.objectLights();
 		configVanillaShadowMode = config.vanillaShadowMode();
 		configHideFakeShadows = configVanillaShadowMode != VanillaShadowMode.SHOW;
 		configLegacyGreyColors = config.legacyGreyColors();
