@@ -60,7 +60,7 @@ public class Material {
 	private boolean unlit;
 	@JsonAdapter(ColorUtils.LinearAdapter.class)
 	public float brightness = 1;
-	private float subsurface;
+	public float subsurface;
 	private float displacementScale = .1f;
 	private float flowMapStrength;
 	private float[] flowMapDuration = { 0, 0 };
