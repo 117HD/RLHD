@@ -421,6 +421,20 @@ public final class HDUtils {
 		return distSq < (sphereRadius * sphereRadius);
 	}
 
+	public static boolean SphereSphereIntersects(
+		float aX, float aY, float aZ, float aRadius,
+		float bX, float bY, float bZ, float bRadius
+	) {
+		final float dx = bX - aX;
+		final float dy = bY - aY;
+		final float dz = bZ - aZ;
+
+		final float distSq = dx * dx + dy * dy + dz * dz;
+		final float radiusSum = aRadius + bRadius;
+
+		return distSq < radiusSum * radiusSum;
+	}
+
 	public static boolean isPointWithinFrustum(float x, float y, float z, float[][] cullingPlanes, int numPlanes) {
 		for (int i = 0; i < numPlanes; i++) {
 			final float[] p = cullingPlanes[i];

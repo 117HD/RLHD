@@ -20343,6 +20343,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "DYNAMIC",
     "duration": 0,
     "range": 20,
     "objectIds": [

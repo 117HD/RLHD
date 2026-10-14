@@ -2,6 +2,7 @@ package rs117.hd.renderer.zone;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -85,6 +86,9 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 	private static final int MAX_FACE_RESOLUTION = 512;
 	private static final int MIN_FACE_RESOLUTION = 32;
 	private static final int DYNAMIC_MODEL_MIN_RESOLUTION = 128;
+
+	//A model whose projected diameter on a cubemap face is below this contributes nothing to the atlas
+	private static final float MIN_PROJECTED_MODEL_TEXELS = 1f;
 
 	//Fraction by which the desired resolution must leave its current tier's band before the tier changes
 	private static final float RESOLUTION_HYSTERESIS = 0.25f;
@@ -270,6 +274,7 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 			light.shadowData.overlappingZones.reset();
 			light.shadowData.atlasRect = null;
 			light.shadowData.needsAtlasCopy = false;
+			light.shadowData.clearWorldViewDraws();
 
 			if (light.visible && visibleIndices.length < MAX_LIGHTS) {
 				visibleIndices.put(i);
@@ -389,6 +394,26 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 		}
 	}
 
+	public void buildContextDraws(WorldViewContext ctx) {
+		if (!plugin.configPositionalShadows)
+			return;
+
+		for (int i = 0; i < visibleIndices.length; i++) {
+			final Light light = shadowLights.get(visibleIndices.array[i]);
+			final ShadowData shadowData = light.shadowData;
+			if (shadowData == null ||
+				light.shadowMode == PositionalShadowMode.STATIC ||
+				shadowData.atlasRect == null ||
+				shadowData.atlasRect.size < DYNAMIC_MODEL_MIN_RESOLUTION)
+				continue;
+
+			for (WorldViewContextDraw draw : shadowData.worldViewContextDraws) {
+				if (draw.context == ctx)
+					draw.build();
+			}
+		}
+	}
+
 	private boolean anyOverlappingZoneUnbaked(ShadowData shadowData, WorldViewContext ctx) {
 		for (int z = 0; z < shadowData.overlappingZones.length; z++) {
 			final Zone zone = shadowZone(shadowData, ctx, z);
@@ -439,6 +464,27 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 		if (zx >= ctx.sizeX || zz >= ctx.sizeZ)
 			return null;
 		return ctx.zones[zx][zz];
+	}
+
+	public synchronized void overlapTempModel(WorldViewContext ctx, int drawIdx, int vao, float x, float y, float z, float radius) {
+		for(int i = 0; i < visibleIndices.length; i++) {
+			final Light light = shadowLights.get(visibleIndices.array[i]);
+			final ShadowData shadowData = light.shadowData;
+			// STATIC lights never draw dynamic models, and anything below the atlas size cutoff is too
+			// low resolution to resolve them anyway.
+			if (light.shadowMode == PositionalShadowMode.STATIC ||
+				shadowData.atlasRect == null ||
+				shadowData.atlasRect.size < DYNAMIC_MODEL_MIN_RESOLUTION)
+				continue;
+
+			if(!HDUtils.SphereSphereIntersects(
+				light.pos[0], light.pos[1], light.pos[2], light.radius,
+				x, y, z, radius
+			))
+				continue;
+
+			shadowData.findDraw(ctx, vao).drawIndexs.put(drawIdx);
+		}
 	}
 
 	public boolean izZoneVisible(WorldViewContext context, Zone zone, int zx, int zz, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
@@ -501,9 +547,6 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 		zoneRenderer.depthProgram.use();
 
 		frameTimer.begin(Timer.RENDER_STATIC_POSITIONAL_SHADOWS);
-
-		final WorldViewContext root = sceneManager.getRoot();
-		final WorldViewContext[] subs = sceneManager.getSubContexts();
 
 		// Keep the baked cubemap FBO bound for reads while RenderState updates only
 		// the atlas draw target.
@@ -593,22 +636,24 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 
 		// Decide which lights need their baked faces (re)copied into the atlas this frame.
 		//  - STATIC: only when the atlas rect changed or the bake was redone
-		//  - DYNAMIC: every frame, since dynamic geometry is drawn on top of the baked faces
+		//  - DYNAMIC: only when the atlas rect changed, the bake was redone, or world view
+		//    context overlays were drawn over the baked faces last frame and must be erased
 		//  - MOVEABLE: never copied, but their rect must be cleared every frame
 		boolean hasMoveableLights = false;
 		for (int i = 0; i < visibleIndices.length; i++) {
 			final Light light = shadowLights.get(visibleIndices.array[i]);
 			final ShadowData shadowData = light.shadowData;
+			final boolean drewWorldViewDraws = shadowData.drewWorldViewDraws;
+			shadowData.drewWorldViewDraws = false;
 			shadowData.needsAtlasCopy = false;
+
 			if (shadowData.atlasRect == null)
 				continue;
 
 			if (light.shadowMode == PositionalShadowMode.MOVEABLE) {
 				hasMoveableLights = true;
 			} else {
-				final boolean drawsModels = shadowData.atlasRect.size >= DYNAMIC_MODEL_MIN_RESOLUTION;
-				shadowData.needsAtlasCopy = (light.shadowMode == PositionalShadowMode.DYNAMIC && drawsModels)
-											|| !shadowData.isAtlasCopyCurrent();
+				shadowData.needsAtlasCopy = !shadowData.isAtlasCopyCurrent() || drewWorldViewDraws;
 			}
 		}
 
@@ -709,16 +754,15 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 				}
 
 				if(light.shadowMode != PositionalShadowMode.STATIC) {
-					if (!shadowData.drawBuffer.isEmpty())
+					if (!shadowData.drawBuffer.isEmpty() && light.shadowMode == PositionalShadowMode.MOVEABLE)
 						shadowData.drawBuffer.execute(renderState);
 
 					if (shadowData.atlasRect.size >= DYNAMIC_MODEL_MIN_RESOLUTION) {
-						root.vaoSceneCmd.execute(renderState);
-						root.vaoDirectionalCmd.execute(renderState);
-
-						if (light.sceneContext != null && light.sceneContext.worldViewContext != null) {
-							light.sceneContext.worldViewContext.vaoSceneCmd.execute(renderState);
-							light.sceneContext.worldViewContext.vaoDirectionalCmd.execute(renderState);
+						for(WorldViewContextDraw draw : shadowData.worldViewContextDraws) {
+							if (draw.drawBuffer.isEmpty())
+								continue;
+							draw.drawBuffer.execute(renderState);
+							shadowData.drewWorldViewDraws = true;
 						}
 					}
 				}
@@ -729,10 +773,10 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 		}
 		frameTimer.end(Timer.RENDER_DYNAMIC_POSITIONAL_SHADOWS);
 
-		// STATIC lights are now valid in the atlas at their current rect
+		// Non-moveable lights now hold the current bake at their current rect
 		for (int i = 0; i < visibleIndices.length; i++) {
 			final Light light = shadowLights.get(visibleIndices.array[i]);
-			if (light.shadowMode == PositionalShadowMode.STATIC && light.shadowData.needsAtlasCopy)
+			if (light.shadowMode != PositionalShadowMode.MOVEABLE && light.shadowData.needsAtlasCopy)
 				light.shadowData.markAtlasCopied();
 		}
 
@@ -764,11 +808,27 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 		pendingRemove.add(light);
 	}
 
+	private static final class WorldViewContextDraw {
+		public WorldViewContext context;
+		public int vaoType;
+		public final PrimitiveIntArray drawIndexs = new PrimitiveIntArray();
+		public final CommandBuffer drawBuffer = new CommandBuffer("WorldViewContextDraw::DrawBuffer");
+
+		void build() {
+			drawBuffer.reset();
+			if(drawIndexs.length == 0)
+				return;
+
+			context.draw(drawBuffer, vaoType, drawIndexs);
+		}
+	}
+
 	public static final class ShadowData {
 		private final IntHashSet bakedZoneHashes = new IntHashSet(); // TODO: This isn't needed for Dynamic Lights
 		private final PrimitiveIntArray overlappingZones = new PrimitiveIntArray();
 		private final CommandBuffer drawBuffer = new CommandBuffer("Shadow::DrawBuffer");
 		private final float[] lightProjection = new float[16];
+		private final List<WorldViewContextDraw> worldViewContextDraws = new ArrayList<>();
 		private int texBakedCubemap;
 		private boolean dirty;
 		private int packedNearPlane;
@@ -781,6 +841,24 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 		private boolean atlasCopyValid;
 		private int copiedX, copiedY, copiedSize;
 		private boolean needsAtlasCopy; // per-frame scratch flag
+		private boolean drewWorldViewDraws; // whether world view overlays were drawn over the baked copy last frame
+
+		void clearWorldViewDraws() {
+			worldViewContextDraws.clear();
+		}
+
+		WorldViewContextDraw findDraw(WorldViewContext context, int vaoType) {
+			for(WorldViewContextDraw draw : worldViewContextDraws) {
+				if(draw.context == context && draw.vaoType == vaoType)
+					return draw;
+			}
+			// TODO: POOL
+			WorldViewContextDraw newDraw = new WorldViewContextDraw();
+			newDraw.context = context;
+			newDraw.vaoType = vaoType;
+			worldViewContextDraws.add(newDraw);
+			return newDraw;
+		}
 
 		public void destroy() {
 			if(texBakedCubemap != 0)

@@ -680,8 +680,16 @@ public class ZoneRenderer implements Renderer {
 				return;
 
 			frameTimer.begin(Timer.DRAW_POSTSCENE);
-			if (scene.getWorldViewId() == WorldView.TOPLEVEL)
+			if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
 				postDrawTopLevel();
+				frameTimer.begin(Timer.UNMAP_ROOT_CTX);
+			}
+
+			ctx.unmap();
+
+			if (sceneManager.isRoot(ctx))
+				frameTimer.end(Timer.UNMAP_ROOT_CTX);
+
 			frameTimer.end(Timer.DRAW_POSTSCENE);
 		} catch (Throwable ex) {
 			plugin.requestPluginStop(
@@ -1144,14 +1152,6 @@ public class ZoneRenderer implements Renderer {
 				case DrawCallbacks.PASS_ALPHA:
 					modelStreamingManager.ensureAsyncUploadsComplete(null);
 
-					if (sceneManager.isRoot(ctx))
-						frameTimer.begin(Timer.UNMAP_ROOT_CTX);
-
-					ctx.unmap();
-
-					if (sceneManager.isRoot(ctx))
-						frameTimer.end(Timer.UNMAP_ROOT_CTX);
-
 					// Draw opaque
 					ctx.drawAll(VAO_OPAQUE, ctx.vaoSceneCmd);
 
@@ -1173,6 +1173,8 @@ public class ZoneRenderer implements Renderer {
 					ctx.vaoSceneCmd.ColorMask(false, false, false, false);
 					ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
 					ctx.vaoSceneCmd.ColorMask(true, true, true, true);
+
+					shadowRenderer.buildContextDraws(ctx);
 
 					for (int zx = 0; zx < ctx.sizeX; ++zx)
 						for (int zz = 0; zz < ctx.sizeZ; ++zz)

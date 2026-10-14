@@ -68,6 +68,9 @@ public class ModelStreamingManager {
 	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
+	private PositionalShadowRenderer positionalShadowRenderer;
+
+	@Inject
 	private FrameTimer frameTimer;
 
 	@Inject
@@ -400,6 +403,7 @@ public class ModelStreamingManager {
 					shadowView,
 					shadowView
 				);
+				positionalShadowRenderer.overlapTempModel(ctx, shadowView.getDrawIdx(), VAO_SHADOW, x, y, z, m.getRadius());
 				shadowView.end();
 			}
 
@@ -431,6 +435,7 @@ public class ModelStreamingManager {
 					alphaModel.setView(alphaView);
 					alphaView.end();
 				}
+				positionalShadowRenderer.overlapTempModel(ctx, opaqueView.getDrawIdx(), vaoType, x, y, z, m.getRadius());
 				opaqueView.end();
 			}
 		} catch (Exception e) {

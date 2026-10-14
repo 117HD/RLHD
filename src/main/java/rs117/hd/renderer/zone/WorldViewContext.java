@@ -21,6 +21,7 @@ import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
+import rs117.hd.utils.collections.PrimitiveIntArray;
 import rs117.hd.utils.jobs.JobGroup;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -235,11 +236,13 @@ public class WorldViewContext {
 		dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].draw(cmd);
 	}
 
+	void draw(CommandBuffer cmd, int type, PrimitiveIntArray drawIndexes) {
+		dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].draw(cmd, drawIndexes.array, drawIndexes.length);
+	}
+
 	void unmap() {
-		for (int i = 0; i < VAO_COUNT; i++) {
-			final boolean shouldCoalesce = i == VAO_OPAQUE || i == VAO_PLAYER || i == VAO_SHADOW;
-			dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][i].unmap(shouldCoalesce);
-		}
+		for (int i = 0; i < VAO_COUNT; i++)
+			dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][i].unmap();
 	}
 
 	void sortStaticAlphaModels(Camera camera) {
