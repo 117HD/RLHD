@@ -12170,7 +12170,8 @@
       "DADDYSHOME_CARPET_SIDE_BROKEN_0OP",
       "DADDYSHOME_CARPET_SIDE_FIXED",
       "DT2_GHORROCK_RUGSIDE",
-      "DOGQ_DEN_BED"
+      "DOGQ_DEN_BED",
+      "DOGQ_DEN_BED_NOOP"
     ]
   },
   {
@@ -15437,7 +15438,8 @@
       "FIGHTARENA_DOOR2_ESCAPE",
       "DOTI_INTERROGATION_DOOR",
       "LUC2_MOV_DOOR_CLOSED",
-      "LUC2_MOV_DOOR_OPEN"
+      "LUC2_MOV_DOOR_OPEN",
+      "BRASSKEYDOOR"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -18125,7 +18127,8 @@
       "CRATE_WOODEN01_REINFORCED01_OPEN01_IMCANDO01",
       "SLUG2_LIGHTHOUSE_CRATE_STACK",
       "BANANACRATE",
-      "DOGQ_DEN_BOX"
+      "DOGQ_DEN_BOX",
+      "DOGQ_DEN_BOX_NOOP"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -24948,7 +24951,9 @@
       "AVIUM_TREE_2",
       "AVIUM_TREE_DARK",
       "KHARAZI_JUNGLE_TREE1",
-      "XBOWS_BEACH_TO_ISLAND_TREE_BASIC"
+      "XBOWS_BEACH_TO_ISLAND_TREE_BASIC",
+      "CRAB_AVIUM_TREE_1",
+      "CRAB_AVIUM_TREE_2"
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.25,
@@ -39227,7 +39232,8 @@
       "MAGIC_TREE_11",
       "MAGIC_TREE_FULLYGROWN_1",
       "MAGIC_TREE_FULLYGROWN_2",
-      "MAGICTREE"
+      "MAGICTREE",
+      "CRAB_MAGICTREE"
     ],
     "uvType": "BOX",
     "uvOrientation": 150,
@@ -48213,6 +48219,7 @@
       "GROUNDCOVER_PLANT3_WITHERED",
       "GROUNDCOVER_PLANT4_WITHERED",
       "GROUNDCOVER_PLANT5_WITHERED",
+      "CRAB_GROUNDCOVER_PLANT4_WITHERED",
       "TT_HUNTING_PLANT_04_OP",
       "TT_HUNTING_PLANT_04_NOOP",
       "TT_HUNTING_PLANT_05_OP",
@@ -84415,7 +84422,10 @@
       "PALM_UPDATE03",
       "TT_PALM_1",
       "TT_PALM_2",
-      "TT_PALM_3"
+      "TT_PALM_3",
+      "CRAB_PALM_UPDATE01",
+      "CRAB_PALM_UPDATE02",
+      "CRAB_PALM_UPDATE03"
     ],
     "colorOverrides": [
       {
@@ -105712,7 +105722,8 @@
     "shiftLightness": 2,
     "uvType": "BOX",
     "objectIds": [
-      "DOGQ_DEN_SCRAPS"
+      "DOGQ_DEN_SCRAPS",
+      "DOGQ_DEN_SCRAPS_NOOP"
     ]
   },
   {
@@ -105764,6 +105775,24 @@
     ],
     "objectIds": [
       "PRISON_BUCKET_SPILT"
+    ]
+  },
+  {
+    "description": "Ruff Situation - Varrock Dog Bed",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "MODEL_XZ"
+      }
+    ],
+    "objectIds": [
+      "DOGQ_DOG_GUARD_HOUSE"
     ]
   },
   {

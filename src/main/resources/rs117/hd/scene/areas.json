@@ -12586,6 +12586,12 @@
     ]
   },
   {
+    "name": "TAVERLEY_STONE_CIRCLE",
+    "aabbs": [
+      [ 2917, 3475, 2934, 3493 ]
+    ]
+  },
+  {
     "name": "GRIMSTONE_DUNGEON_PERFORMANCE_FIX",
     "aabbs": [
       [ 2934, 10432, 2943, 10495 ],

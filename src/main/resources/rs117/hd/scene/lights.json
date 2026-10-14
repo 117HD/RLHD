@@ -20155,6 +20155,7 @@
   },
   {
     "description": "STANDING_TORCH",
+    "excludeAreas": [ "TAVERLEY_STONE_CIRCLE" ],
     "height": 200,
     "radius": 500,
     "strength": 9,
@@ -20188,6 +20189,25 @@
       "FAI_BARBARIAN_TORCH",
       "ROYAL_TORCH",
       "DWARF_KELDAGRIM_LAMP_STAND"
+    ]
+  },
+  {
+    "description": "TAVERLEY_STONE_CIRCLE_STANDING_TORCH",
+    "areas": [ "TAVERLEY_STONE_CIRCLE" ],
+    "height": 200,
+    "radius": 275,
+    "strength": 13,
+    "nightMultiplier": 1.35,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "STANDING_TORCH"
     ]
   },
   {
