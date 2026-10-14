@@ -313,7 +313,7 @@ public class DynamicModelVAO implements Destructible {
 		private int drawIdx;
 
 		public int getStartOffset() {
-			return vbo.getBufferOffsetInts();
+			return vbo.getOffsetInts();
 		}
 
 		public int getEndOffset() {

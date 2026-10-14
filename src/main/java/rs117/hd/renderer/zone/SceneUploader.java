@@ -2175,12 +2175,7 @@ public class SceneUploader implements AutoCloseable {
 	) {
 		if (writeCache == null)
 			writeCache = new VertexWriteCache.Collection();
-		writeCache.setOutputBuffers(
-			opaqueView.vbo.getBuffer(),
-			alphaView.vbo.getBuffer(),
-			opaqueView.tbo.getBuffer(),
-			alphaView.tbo.getBuffer()
-		);
+		writeCache.setOutputBuffers(opaqueView.vbo, alphaView.vbo, opaqueView.tbo, alphaView.tbo);
 
 		final int[] indices1 = model.getFaceIndices1();
 		final int[] indices2 = model.getFaceIndices2();
