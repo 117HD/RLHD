@@ -50110,7 +50110,7 @@
   {
     "description": "Wyrmscraig Mad Angel Light Tennis Attack - Cast",
     "offset": [ 0, 270, 100 ],
-    "radius": 350,
+    "radius": 750,
     "strength": 9,
     "spawnDelay": 350,
     "fadeInDuration": 100,
