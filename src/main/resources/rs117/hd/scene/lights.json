@@ -20215,7 +20215,7 @@
   },
   {
     "description": "STANDING_TORCH_SHORT",
-    "height": 200,
+    "height": 180,
     "radius": 450,
     "strength": 12.5,
     "color": [
@@ -20225,7 +20225,7 @@
     ],
     "type": "FLICKER",
     "shadowMode": "STATIC",
-    "shadowNearPlane": 75,
+    "shadowNearPlane": 55,
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -20330,6 +20330,26 @@
     ]
   },
   {
+    "description": "CANDLE_WALL_TORCH",
+    "offset": [ -35, 0, 0 ],
+    "height": 210,
+    "radius": 300,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 25,
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "CANDLE_WALL"
+    ]
+  },
+  {
     "description": "WALL_TORCH",
     "height": 235,
     "radius": 300,
@@ -20348,7 +20368,6 @@
       "_100_DUNGEON_SKULLTORCH",
       "DS2_GUILD_WALL_SCONCE",
       "_100_DAVE_CANDLE_WALL",
-      "CANDLE_WALL",
       "LOTG_CRYPT_PRIEST_GRAVE1",
       "LOTG_CRYPT_PRIEST_GRAVE2",
       "LOTG_CRYPT_PRIEST_GRAVE3",
