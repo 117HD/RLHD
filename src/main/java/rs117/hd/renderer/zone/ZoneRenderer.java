@@ -966,7 +966,7 @@ public class ZoneRenderer implements Renderer {
 			zone.inSceneFrustum = sceneCamera.intersectsAABB(
 				minX - PADDING, minY, minZ - PADDING, maxX + PADDING, maxY, maxZ + PADDING);
 
-			final boolean isShadowVisible = shadowRenderer.izZoneVisible(ctx, zone, zx, zz, minX, minY, minZ, maxX, maxY, maxZ);
+			final boolean isShadowVisible = shadowRenderer.izZoneVisible(ctx, zx, zz, minX, minY, minZ, maxX, maxY, maxZ);
 
 			if (zone.inSceneFrustum) {
 				if (plugin.enableDetailedTimers)
