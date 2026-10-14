@@ -202,3 +202,72 @@ float sampleHardwareShadow3x3(sampler2DShadow tex, float fragDepth, vec4 shadowP
 
     return shadow / 9.0;
 }
+
+#if POSITIONAL_SHADOWS
+// Positional shadows use a hardware comparison sampler, so filtering mirrors the
+// hardware-PCF path used for the terrain shadow map. Taps are clamped to the light's
+// atlas rect so filters don't pull in neighbouring lights.
+float fetchPositionalShadowTexel(
+    sampler2DArrayShadow tex,
+    vec2 atlasUV,
+    int layer,
+    float compareDepth,
+    vec2 originPx,
+    float sizePx,
+    int i
+) {
+    vec2 atlasSize = vec2(textureSize(tex, 0).xy);
+    vec2 pixelCoord = atlasUV * atlasSize + getShadowDitherOffset(i);
+    pixelCoord = clamp(pixelCoord, originPx + 0.5, originPx + sizePx - 0.5);
+    return texture(tex, vec4(pixelCoord / atlasSize, float(layer), compareDepth));
+}
+
+float samplePositionalShadowPCF1x1(
+    sampler2DArrayShadow tex, vec2 atlasUV, int layer, float compareDepth, vec2 originPx, float sizePx
+) {
+    return fetchPositionalShadowTexel(tex, atlasUV, layer, compareDepth, originPx, sizePx, 0);
+}
+
+float samplePositionalShadowPCF2x2(
+    sampler2DArrayShadow tex, vec2 atlasUV, int layer, float compareDepth, vec2 originPx, float sizePx
+) {
+    vec2 texelSize = 1.0 / vec2(textureSize(tex, 0).xy);
+    vec2 offset = atlasUV - .5 * texelSize;
+
+    float c00 = fetchPositionalShadowTexel(tex, offset + vec2(0, 0) * texelSize, layer, compareDepth, originPx, sizePx, 0);
+    float c10 = fetchPositionalShadowTexel(tex, offset + vec2(1, 0) * texelSize, layer, compareDepth, originPx, sizePx, 1);
+    float c01 = fetchPositionalShadowTexel(tex, offset + vec2(0, 1) * texelSize, layer, compareDepth, originPx, sizePx, 2);
+    float c11 = fetchPositionalShadowTexel(tex, offset + vec2(1, 1) * texelSize, layer, compareDepth, originPx, sizePx, 3);
+
+    return (c00 + c10 + c01 + c11) * 0.25;
+}
+
+float samplePositionalShadowPCF3x3(
+    sampler2DArrayShadow tex, vec2 atlasUV, int layer, float compareDepth, vec2 originPx, float sizePx
+) {
+    vec2 texelSize = 1.0 / vec2(textureSize(tex, 0).xy);
+
+    const int kernelSize = 3;
+    vec2 offset = atlasUV - float(kernelSize / 2) * texelSize;
+
+    float shadow = 0.0;
+    for (int y = 0; y < kernelSize; y++)
+        for (int x = 0; x < kernelSize; x++)
+            shadow += fetchPositionalShadowTexel(
+                tex, offset + vec2(x, y) * texelSize, layer, compareDepth, originPx, sizePx, y * kernelSize + x);
+
+    return shadow / float(kernelSize * kernelSize);
+}
+
+    #if SHADOW_FILTERING == SHADOW_FILTERING_PCSS
+        // PCSS models an area light (the sun); point lights have no angular size here,
+        // so fall back to hardware PCF just like sampleShadowMap does for tiny radii.
+        #define samplePositionalShadowFiltered samplePositionalShadowPCF2x2
+    #elif SHADOW_FILTERING_KERNEL == 3
+        #define samplePositionalShadowFiltered samplePositionalShadowPCF3x3
+    #elif SHADOW_FILTERING_KERNEL == 2
+        #define samplePositionalShadowFiltered samplePositionalShadowPCF2x2
+    #else
+        #define samplePositionalShadowFiltered samplePositionalShadowPCF1x1
+    #endif
+#endif

@@ -279,9 +279,16 @@ float samplePositionalShadow(vec3 fragPos, vec3 lightPos, vec3 normal, int packe
 	vec2 atlasUV = uvAndDist.xy;
 	float forwardDist = uvAndDist.z;
 
-	float compareDepth = shadowDistanceToDepth(forwardDist, unpackShadowNearPlane(packedShadowData), sqrt(lightRadiusSq));
+	float near = unpackShadowNearPlane(packedShadowData);
+	float far = sqrt(lightRadiusSq);
+	float compareDepth = shadowDistanceToDepth(forwardDist, near, far);
 
-	return texture(shadowCubemapArray, vec4(atlasUV, float(face), compareDepth));
+	// Depth bias following the receiver slope by one texel, plus a margin for the
+	// 16-bit depth buffer's precision (mirrors sampleShadowMap's bias terms).
+	float depthPerTexel = abs(shadowDistanceToDepth(forwardDist + texelWorldSize, near, far) - compareDepth);
+	float bias = depthPerTexel * slopeScale + 2.0 / float(SHADOW_DEPTH_MAX);
+
+	return samplePositionalShadowFiltered(shadowCubemapArray, atlasUV, face, compareDepth - bias, originPx, sizePx);
 }
 
 vec3 debugShadow(vec3 fragPos, vec3 lightPos, vec3 normal, int packedShadowData, float lightRadiusSq) {
