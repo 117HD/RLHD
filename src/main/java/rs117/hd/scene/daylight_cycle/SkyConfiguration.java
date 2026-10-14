@@ -64,7 +64,6 @@ public class SkyConfiguration {
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	@Nullable
 	public float[] skyFogColor;
-	public float skyFogColorMix = 1;
 	public float skyFogDensity = -1;
 	public float skyFogHorizonAltitude;
 	public float skyVisibility = 1;

@@ -362,7 +362,7 @@ void main() {
 		float shadow = 0;
 		if ((fMaterialData[0] >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0) {
 			bool applyNormalBias = (fMaterialData[0] >> MATERIAL_FLAG_SHADOW_NORMAL_BIAS & 1) == 1;
-			shadow = sampleShadowMap(fragPos, vec2(0), flatNormal, true, applyNormalBias);
+			shadow = sampleShadowMap(fragPos, flatNormal, true, applyNormalBias, true);
 		}
         float inverseShadow = 1 - shadow;
 

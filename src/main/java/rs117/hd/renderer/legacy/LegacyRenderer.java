@@ -1061,7 +1061,7 @@ public class LegacyRenderer implements Renderer {
 
 			SkyState sky = skyManager.getState();
 			float[] shadowAngles = skyRenderer.usesMoonShadows ? sky.moonAngles : sky.shadowAngles;
-			float[] lightViewMatrix = Mat4.rotateX(shadowAngles[0]);
+			float[] lightViewMatrix = Mat4.rotateX(skyManager.getShadowAltitude(skyRenderer.usesMoonShadows));
 			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - shadowAngles[1]));
 			// Extract the 3rd column from the light view matrix (the float array is column-major).
 			// This produces the light's direction vector in world space, which we negate in order to

@@ -9573,6 +9573,7 @@
   },
   {
     "name": "TEMPLE_OF_THE_EYE",
+    "hideOtherAreas": true,
     "areas": [
       "TEMPLE_OF_THE_EYE_REGULAR",
       "TEMPLE_OF_THE_EYE_QUEST_1",
@@ -12953,6 +12954,12 @@
     ]
   },
   {
+    "name": "CRAB_QUEST_ISLAND",
+    "aabbs": [
+      [ 3000, 2592, 3103, 2695 ]
+    ]
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",
@@ -13070,6 +13077,8 @@
       "AIR_ALTAR",
       "NATURE_ALTAR",
       "WATER_ALTAR",
+      "TRUE_BLOOD_ALTAR",
+      "COSMIC_ALTAR",
       "CANOE_CUTSCENE",
       "EYES_OF_GLOUPHRIE_GNOME_AND_GOBLIN_BATTLE_CUTSCENE",
       "PROBABLY_CUTSCENE_GRASS",

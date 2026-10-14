@@ -76,7 +76,8 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "General",
 		description = "General settings",
-		position = 0
+		position = 0,
+		closedByDefault = true
 	)
 	String generalSettings = "generalSettings";
 
@@ -282,7 +283,6 @@ public interface HdPluginConfig extends Config
 		return 60;
 	}
 
-
 	@ConfigItem(
 		keyName = "flashingEffects",
 		name = "Flashing effects",
@@ -299,7 +299,7 @@ public interface HdPluginConfig extends Config
 		keyName = "fSaturation",
 		name = "Saturation",
 		description = "Controls the saturation of the final rendered image.<br>" +
-			"Intended to be kept between 0% and 120%.",
+					  "Intended to be kept between 0% and 120%.",
 		position = 16,
 		section = generalSettings
 	)
@@ -319,7 +319,7 @@ public interface HdPluginConfig extends Config
 		keyName = "fContrast",
 		name = "Contrast",
 		description = "Controls the contrast of the final rendered image.<br>" +
-			"Intended to be kept between 90% and 110%.",
+					  "Intended to be kept between 90% and 110%.",
 		position = 17,
 		section = generalSettings
 	)
@@ -930,24 +930,12 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	@ConfigItem(
-		keyName = "underwaterCaustics",
-		name = "Underwater caustics",
-		description = "Apply underwater lighting effects to imitate sunlight passing through waves on the surface.",
-		position = 12,
-		section = environmentSettings
-	)
-	default boolean underwaterCaustics()
-	{
-		return true;
-	}
-
 	String KEY_WIND_DISPLACEMENT = "windDisplacement";
 	@ConfigItem(
 		keyName = KEY_WIND_DISPLACEMENT,
 		name = "Wind displacement",
 		description = "Controls whether things like grass and leaves should be affected by wind.",
-		position = 13,
+		position = 12,
 		section = environmentSettings
 	)
 	default boolean windDisplacement() {
@@ -959,14 +947,60 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_CHARACTER_DISPLACEMENT,
 		name = "Character displacement",
 		description = "Let players & NPCs affect things like grass whilst walking around.",
-		position = 14,
+		position = 13,
 		section = environmentSettings
 	)
 	default boolean characterDisplacement() {
 		return true;
 	}
 
+	@ConfigItem(
+		keyName = "underwaterCaustics",
+		name = "Underwater caustics",
+		description = "Apply underwater lighting effects to imitate sunlight passing through waves on the surface.",
+		position = 14,
+		section = environmentSettings
+	)
+	default boolean underwaterCaustics() {
+		return true;
+	}
+
+	String KEY_WATER_SPECULAR_REFLECTIONS = "waterSpecularReflection";
+	@ConfigItem(
+		keyName = KEY_WATER_SPECULAR_REFLECTIONS,
+		name = "Water sun & moon reflections",
+		description = "Enables sun and moon highlights on water, including the fake sun when day & night is disabled.",
+		position = 15,
+		section = environmentSettings
+	)
+	default boolean waterSpecularReflections() {
+		return true;
+	}
+
+	String KEY_HIDE_VANILLA_WATER_EFFECTS = "hideVanillaWaterEffects";
+	@ConfigItem(
+		keyName = KEY_HIDE_VANILLA_WATER_EFFECTS,
+		name = "Hide vanilla water ripples",
+		description = "Hide vanilla ripples found around objects floating in the water.",
+		position = 16,
+		section = environmentSettings
+	)
+	default boolean hideVanillaWaterEffects() { return true; }
+
+	String KEY_POH_THEME_ENVIRONMENTS = "pohThemeEnvironments";
+	@ConfigItem(
+		keyName = KEY_POH_THEME_ENVIRONMENTS,
+		name = "Player-owned house themes",
+		description = "Change the environmental lighting based on the POH style.",
+		position = 17,
+		section = environmentSettings
+	)
+	default boolean pohThemeEnvironments() { return true; }
+
+
 	/*====== Accessibility settings ======*/
+
+	String accessibilitySettings = "accessibilitySettings";
 
 	@ConfigSection(
 		name = "Accessibility",
@@ -974,9 +1008,9 @@ public interface HdPluginConfig extends Config
 		position = 3,
 		closedByDefault = true
 	)
-	String accessibilitySettings = "accessibilitySettings";
-
+		
 	String KEY_COLOR_BLINDNESS = "colorBlindMode";
+
 	@ConfigItem(
 		keyName = KEY_COLOR_BLINDNESS,
 		name = "Color Blindness",
@@ -984,8 +1018,7 @@ public interface HdPluginConfig extends Config
 		position = 0,
 		section = accessibilitySettings
 	)
-	default ColorBlindMode colorBlindness()
-	{
+	default ColorBlindMode colorBlindness() {
 		return ColorBlindMode.NONE;
 	}
 
@@ -998,12 +1031,12 @@ public interface HdPluginConfig extends Config
 	)
 	@Units(Units.PERCENT)
 	@Range(max = 100)
-	default int colorBlindnessIntensity()
-	{
+	default int colorBlindnessIntensity() {
 		return 100;
 	}
 
 	String KEY_RS3_HIGH_CONTRAST = "rs3HighContrast";
+
 	@ConfigItem(
 		keyName = KEY_RS3_HIGH_CONTRAST,
 		name = "RS3 High Contrast",
@@ -1013,6 +1046,32 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean rs3HighContrast() {
 		return false;
+	}
+
+	String KEY_RS3_HIGH_CONTRAST_HOSTILE_ONLY_WHEN_FIGHTING = "rs3HighContrastHostileOnlyWhenFighting";
+
+	@ConfigItem(
+		keyName = KEY_RS3_HIGH_CONTRAST_HOSTILE_ONLY_WHEN_FIGHTING,
+		name = "Hostile Only When Fighting",
+		description = "Only color an NPC as hostile while it's actually fighting you, instead of any NPC with a combat level.",
+		position = 3,
+		section = accessibilitySettings
+	)
+	default boolean rs3HighContrastHostileOnlyWhenFighting() {
+		return false;
+	}
+
+	String KEY_RS3_HIGH_CONTRAST_SKY = "rs3HighContrastSky";
+
+	@ConfigItem(
+		keyName = KEY_RS3_HIGH_CONTRAST_SKY,
+		name = "Desaturate Sky",
+		description = "Also apply the RS3 High Contrast terrain desaturation effect to the sky and stars.",
+		position = 4,
+		section = accessibilitySettings
+	)
+	default boolean rs3HighContrastSky() {
+		return true;
 	}
 
 	@ConfigItem(
@@ -1081,7 +1140,6 @@ public interface HdPluginConfig extends Config
 		return new Color(238, 100, 0);
 	}
 
-
 	@ConfigItem(
 		keyName = "rs3HighContrastGroundItemColor",
 		name = "Ground Item Color",
@@ -1093,9 +1151,8 @@ public interface HdPluginConfig extends Config
 		return new Color(94, 239, 19);
 	}
 
-
 	@ConfigItem(
-		keyName = "rs3HighContrastNpcHostileColor",
+		keyName = "rs3HighContrastHostileColor",
 		name = "Hostile Color",
 		description = "Color used for hostile NPCs and actions when RS3 High Contrast filter is enabled.",
 		position = 12,
@@ -1103,18 +1160,6 @@ public interface HdPluginConfig extends Config
 	)
 	default Color rs3HighContrastHostileColor() {
 		return new Color(255, 13, 22);
-	}
-
-	String KEY_RS3_HIGH_CONTRAST_HOSTILE_ONLY_WHEN_FIGHTING = "rs3HighContrastHostileOnlyWhenFighting";
-	@ConfigItem(
-		keyName = KEY_RS3_HIGH_CONTRAST_HOSTILE_ONLY_WHEN_FIGHTING,
-		name = "Hostile Only When Fighting",
-		description = "Only color an NPC as hostile while it's actually fighting you, instead of any NPC with a combat level.",
-		position = 3,
-		section = accessibilitySettings
-	)
-	default boolean rs3HighContrastHostileOnlyWhenFighting() {
-		return false;
 	}
 
 	@ConfigItem(
@@ -1138,39 +1183,6 @@ public interface HdPluginConfig extends Config
 	default Color rs3HighContrastSquashedBoatColor() {
 		return new Color(90, 60, 120);
 	}
-
-	String KEY_RS3_HIGH_CONTRAST_SKY = "rs3HighContrastSky";
-	@ConfigItem(
-		keyName = KEY_RS3_HIGH_CONTRAST_SKY,
-		name = "Desaturate Sky",
-		description = "Also apply the RS3 High Contrast terrain desaturation effect to the sky and stars.",
-		position = 4,
-		section = accessibilitySettings
-	)
-	default boolean rs3HighContrastSky() {
-		return true;
-	}
-
-	String KEY_HIDE_VANILLA_WATER_EFFECTS = "hideVanillaWaterEffects";
-	@ConfigItem(
-		keyName = KEY_HIDE_VANILLA_WATER_EFFECTS,
-		name = "Hide vanilla water ripples",
-		description = "Hide vanilla ripples found around objects floating in the water.",
-		position = 15,
-		section = environmentSettings
-	)
-	default boolean hideVanillaWaterEffects() { return true; }
-
-	String KEY_POH_THEME_ENVIRONMENTS = "pohThemeEnvironments";
-	@ConfigItem(
-		keyName = KEY_POH_THEME_ENVIRONMENTS,
-		name = "Player-owned house themes",
-		description = "Change the environmental lighting based on the POH style.",
-		position = 16,
-		section = environmentSettings
-	)
-	default boolean pohThemeEnvironments() { return true; }
-
 
 	/*====== Miscellaneous settings ======*/
 
