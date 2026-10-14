@@ -50064,7 +50064,7 @@
   {
     "description": "Wyrmscraig Mad Angel Light Tennis Attack",
     "offset": [ 0, 30, 0 ],
-    "radius": 220,
+    "radius": 600,
     "strength": 7,
     "color": [
       255,
@@ -50076,7 +50076,7 @@
   {
     "description": "Wyrmscraig Mad Angel Light Tennis Volley Attack - Impact",
     "offset": [ 0, 300, 0 ],
-    "radius": 450,
+    "radius": 850,
     "strength": 7,
     "spawnDelay": 50,
     "fadeInDuration": 100,
