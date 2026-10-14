@@ -372,6 +372,9 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 
 			zone.renderOpaque(shadowData.drawBuffer, 0, 0, 3, Collections.EMPTY_SET);
 
+			if(plugin.configTerrainShadows)
+				zone.renderOpaqueLevel(shadowData.drawBuffer, Zone.LEVEL_TERRAIN);
+
 			if (light.shadowMode != PositionalShadowMode.MOVEABLE)
 				shadowData.bakedZoneHashes.add(zone.hashCode());
 		}
