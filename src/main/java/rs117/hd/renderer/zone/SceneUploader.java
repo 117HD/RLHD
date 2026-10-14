@@ -816,7 +816,9 @@ public class SceneUploader implements AutoCloseable {
 		if (modelOverride.hide)
 			return;
 
-		int category = ModelHash.getCategoryForUuid(client, r, uuid, plugin.configRs3HighContrast);
+		boolean hasActions = sceneManager.interactiveObjects.contains(id);
+		int category = ModelHash.getCategoryForUuid(
+			client, r, uuid, hasActions, plugin.configRs3HighContrast, plugin.configRs3HighContrastHostileOnlyWhenFighting);
 
 		int alphaStart = alphaBuffer != null ? alphaBuffer.position() : 0;
 		try {
@@ -2185,7 +2187,8 @@ public class SceneUploader implements AutoCloseable {
 		int orientation,
 		boolean isShadow,
 		DynamicModelVAO.View opaqueView,
-		DynamicModelVAO.View alphaView
+		DynamicModelVAO.View alphaView,
+		int category
 	) {
 		if (writeCache == null)
 			writeCache = new VertexWriteCache.Collection();
@@ -2268,7 +2271,7 @@ public class SceneUploader implements AutoCloseable {
 				color3 = faceOverride.modifyColor(color3);
 			}
 
-			final int materialData = material.packMaterialData(faceOverride, uvType, false);
+			final int materialData = material.packMaterialData(faceOverride, uvType, false, category);
 
 			final int triangleA = indices1[face];
 			final int vertexOffsetA = triangleA * 3;

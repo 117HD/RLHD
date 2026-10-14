@@ -33,35 +33,35 @@ float perceptualLuminance(vec3 srgb) {
 vec3 applySingleColorFilter(int filterIndex, vec3 color, int category) {
     switch (filterIndex) {
         case COLOR_FILTER_GREYSCALE:
-            return vec3(perceptualLuminance(srgb));
+            return vec3(perceptualLuminance(color));
         case COLOR_FILTER_SEPIA:
-            return srgb * mat3(
+            return color * mat3(
                 0.393, 0.769, 0.189,
                 0.349, 0.686, 0.168,
                 0.272, 0.534, 0.131
             );
         case COLOR_FILTER_HIGH_CONTRAST: {
-            float intensity = perceptualLuminance(srgb);
+            float intensity = perceptualLuminance(color);
             float modifier = 2.2;
-            return clamp(intensity + (srgb - intensity) * modifier, 0.0, 1.0);
+            return clamp(intensity + (color - intensity) * modifier, 0.0, 1.0);
         }
         case COLOR_FILTER_CARTOON: {
             float quantizationLevels = 7.0;
-            return floor(srgb * quantizationLevels) / quantizationLevels;
+            return floor(color * quantizationLevels) / quantizationLevels;
         }
         case COLOR_FILTER_INVERT:
-            return 1 - srgb;
+            return 1 - color;
         case COLOR_FILTER_BLACK_AND_WHITE:
-            return perceptualLuminance(srgb) > 0.4 ? vec3(1) : vec3(0);
+            return perceptualLuminance(color) > 0.4 ? vec3(1) : vec3(0);
         case COLOR_FILTER_CEL_SHADING: {
-            float intensity = perceptualLuminance(srgb);
+            float intensity = perceptualLuminance(color);
             float quantizationLevels = 8.0;
             float quantizedIntensity = floor(intensity * quantizationLevels + 0.5) / quantizationLevels;
-            return clamp(srgb + quantizedIntensity - intensity, 0.0, 1.0);
+            return clamp(color + quantizedIntensity - intensity, 0.0, 1.0);
         }
     }
 
-    return srgb;
+    return color;
 }
 
 vec3 applyColorFilter(vec3 color, int category) {
@@ -119,6 +119,63 @@ vec3 applyRs3HighContrast(int category, vec3 color) {
 
         case ENTITY_GROUND_ITEMS:
            return mix(color, highContrastColors[7], 0.6);
+
+        default:
+            return color;
+    }
+}
+#endif
+
+#if RS3_HIGH_CONTRAST
+#include <uniforms/global.glsl>
+
+#define ENTITY_PLAYER        0
+#define ENTITY_NPC_FRIENDLY  1
+#define ENTITY_HOSTILE   2
+#define ENTITY_OBJECT        3
+#define ENTITY_PROJECTILE    4
+#define ENTITY_GRAPHICS      5
+#define ENTITY_PLAYER_OTHER  6
+#define ENTITY_GROUND_ITEMS  7
+#define ENTITY_BOAT          8
+#define ENTITY_BOAT_SQUASHED 9
+#define ENTITY_TERRAIN      15
+
+vec3 applyRs3HighContrast(int category, vec3 color) {
+    switch (category) {
+        case ENTITY_TERRAIN:
+            float l = dot(color, vec3(0.2126, 0.7152, 0.0722));
+            return mix(vec3(l), color, 0.08);
+
+        case ENTITY_PLAYER:
+            return mix(color, uboGlobal.highContrastColors[0], 0.75);
+
+        case ENTITY_PLAYER_OTHER:
+            return mix(color, uboGlobal.highContrastColors[6], 0.8);
+
+        case ENTITY_HOSTILE:
+            return mix(color, uboGlobal.highContrastColors[2], 0.8);
+
+        case ENTITY_NPC_FRIENDLY:
+            return mix(color, uboGlobal.highContrastColors[1], 0.65);
+
+        case ENTITY_OBJECT:
+            return mix(color, uboGlobal.highContrastColors[3], 0.7);
+
+        case ENTITY_PROJECTILE:
+            return mix(color, uboGlobal.highContrastColors[4], 0.75);
+
+        case ENTITY_GRAPHICS:
+            return mix(color, uboGlobal.highContrastColors[5], 0.6);
+
+        case ENTITY_GROUND_ITEMS:
+           return mix(color, uboGlobal.highContrastColors[7], 0.6);
+
+        case ENTITY_BOAT:
+            return mix(color, uboGlobal.highContrastColors[8], 0.7);
+
+        case ENTITY_BOAT_SQUASHED:
+            return mix(color, uboGlobal.highContrastColors[9], 0.8);
 
         default:
             return color;

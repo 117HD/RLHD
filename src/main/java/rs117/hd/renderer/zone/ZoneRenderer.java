@@ -67,6 +67,7 @@ import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
+import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.RenderState;
 import rs117.hd.utils.ShadowCasterVolume;
 import rs117.hd.utils.buffer.GLBuffer;
@@ -378,6 +379,7 @@ public class ZoneRenderer implements Renderer {
 						null,
 						null,
 						true,
+						ModelHash.CATEGORY_UNKNOWN,
 						VAO_PRESCENE,
 						-1,
 						0,
@@ -643,6 +645,8 @@ public class ZoneRenderer implements Renderer {
 				ColorUtils.rgb(config.rs3HighContrastGraphicsColor().getRGB() & 0xFFFFFF),
 				ColorUtils.rgb(config.rs3HighContrastPlayerOtherColor().getRGB() & 0xFFFFFF),
 				ColorUtils.rgb(config.rs3HighContrastGroundItemColor().getRGB() & 0xFFFFFF),
+				ColorUtils.rgb(config.rs3HighContrastBoatColor().getRGB() & 0xFFFFFF),
+				ColorUtils.rgb(config.rs3HighContrastSquashedBoatColor().getRGB() & 0xFFFFFF),
 			};
 
 			for (int i = 0; i < rs3Colors.length; i++) {

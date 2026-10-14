@@ -1085,6 +1085,8 @@ public class LegacyRenderer implements Renderer {
 					ColorUtils.rgb(config.rs3HighContrastGraphicsColor().getRGB() & 0xFFFFFF),
 					ColorUtils.rgb(config.rs3HighContrastPlayerOtherColor().getRGB() & 0xFFFFFF),
 					ColorUtils.rgb(config.rs3HighContrastGroundItemColor().getRGB() & 0xFFFFFF),
+					ColorUtils.rgb(config.rs3HighContrastBoatColor().getRGB() & 0xFFFFFF),
+					ColorUtils.rgb(config.rs3HighContrastSquashedBoatColor().getRGB() & 0xFFFFFF),
 				};
 
 				for (int i = 0; i < rs3Colors.length; i++) {

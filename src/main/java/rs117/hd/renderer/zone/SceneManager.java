@@ -5,17 +5,11 @@ import com.google.inject.Injector;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -105,6 +99,9 @@ public class SceneManager {
 	private UBOWorldViews uboWorldViews;
 
 	public Set<Integer> interactiveObjects = new HashSet<>();
+	// Cached hasActions result for IDs with no varbit/varp-driven transform, whose actions are fixed
+	// and so only need resolving once, regardless of how many times interactiveObjects gets cleared
+	private final Map<Integer, Boolean> staticObjectActionsCache = new HashMap<>();
 
 	@Getter
 	private final WorldViewContext root = new WorldViewContext(null, null, null);
@@ -641,39 +638,83 @@ public class SceneManager {
 
 	public void addIfInteractive(@Nullable TileObject obj)
 	{
-		if (obj == null) {
+		if (obj == null || !plugin.configRs3HighContrast) {
 			return;
 		}
 
-		String[] actions = client.getObjectDefinition(obj.getId()).getActions();
-		for (String action : actions) {
+		int id = obj.getId();
+		Boolean cachedHasActions = staticObjectActionsCache.get(id);
+		if (cachedHasActions != null) {
+			if (cachedHasActions)
+				interactiveObjects.add(id);
+			return;
+		}
+
+		ObjectComposition def = client.getObjectDefinition(id);
+		var impostorIds = def.getImpostorIds();
+		boolean isStatic = impostorIds == null;
+		if (!isStatic) {
+			try {
+				int impostorVarbit = def.getVarbitId();
+				int impostorVarp = def.getVarPlayerId();
+				int impostorIndex = -1;
+				if (impostorVarbit != -1) {
+					impostorIndex = client.getVarbitValue(impostorVarbit);
+				} else if (impostorVarp != -1) {
+					impostorIndex = client.getVarpValue(impostorVarp);
+				}
+				if (impostorIndex >= 0)
+					def = client.getObjectDefinition(impostorIds[min(impostorIndex, impostorIds.length - 1)]);
+			} catch (Exception ex) {
+				log.debug("Error getting impostor:", ex);
+			}
+		}
+
+		boolean hasActions = false;
+		for (String action : def.getActions()) {
 			if (action != null) {
-				interactiveObjects.add(obj.getId());
+				hasActions = true;
 				break;
 			}
 		}
+
+		if (hasActions)
+			interactiveObjects.add(id);
+
+		if (isStatic)
+			staticObjectActionsCache.put(id, hasActions);
 	}
 
+	public void rebuildInteractiveObjects() {
+		interactiveObjects.clear();
+		if (isTopLevelValid())
+			buildInteractiveObjects(client.getTopLevelWorldView().getScene());
+	}
+
+	// Scans every plane up front, before any zone gets uploaded. hasActions/category is baked into
+	// a zone's vertex data at upload time and isn't recomputed afterward, so interactiveObjects must
+	// be fully correct before the first upload - scanning only the current plane and backfilling
+	// other planes later (e.g. on a plane change) doesn't retroactively fix already-uploaded zones.
 	private void buildInteractiveObjects(Scene scene) {
 		if (!plugin.configRs3HighContrast) {
 			return;
 		}
-		Tile[][] tiles = scene.getTiles()[client.getTopLevelWorldView().getPlane()];
 
-		for (Tile[] row : tiles) {
-			for (Tile tile : row) {
-				if (tile == null) continue;
+		for (Tile[][] tiles : scene.getTiles()) {
+			for (Tile[] row : tiles) {
+				for (Tile tile : row) {
+					if (tile == null) continue;
 
-				addIfInteractive(tile.getWallObject());
-				addIfInteractive(tile.getDecorativeObject());
-				addIfInteractive(tile.getGroundObject());
+					addIfInteractive(tile.getWallObject());
+					addIfInteractive(tile.getDecorativeObject());
+					addIfInteractive(tile.getGroundObject());
 
-				for (GameObject gameObject : tile.getGameObjects()) {
-					addIfInteractive(gameObject);
+					for (GameObject gameObject : tile.getGameObjects()) {
+						addIfInteractive(gameObject);
+					}
 				}
 			}
 		}
-
 	}
 
 	public void swapScene(Scene scene) {

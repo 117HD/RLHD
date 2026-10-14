@@ -1019,7 +1019,7 @@ public interface HdPluginConfig extends Config
 		keyName = "rs3HighContrastPlayerColor",
 		name = "Player Color",
 		description = "Color used for your own player character when RS3 High Contrast filter is enabled.",
-		position = 3,
+		position = 5,
 		section = accessibilitySettings
 	)
 	default Color rs3HighContrastPlayerColor() {
@@ -1030,7 +1030,7 @@ public interface HdPluginConfig extends Config
 		keyName = "rs3HighContrastPlayerOtherColor",
 		name = "Other Player Color",
 		description = "Color used for other players when RS3 High Contrast filter is enabled.",
-		position = 4,
+		position = 6,
 		section = accessibilitySettings
 	)
 	default Color rs3HighContrastPlayerOtherColor() {
@@ -1041,7 +1041,7 @@ public interface HdPluginConfig extends Config
 		keyName = "rs3HighContrastNpcFriendlyColor",
 		name = "Friendly NPC Color",
 		description = "Color used for friendly NPCs when RS3 High Contrast filter is enabled.",
-		position = 5,
+		position = 7,
 		section = accessibilitySettings
 	)
 	default Color rs3HighContrastNpcFriendlyColor() {
@@ -1052,7 +1052,7 @@ public interface HdPluginConfig extends Config
 		keyName = "rs3HighContrastObjectColor",
 		name = "Object Color",
 		description = "Color used for objects when RS3 High Contrast filter is enabled.",
-		position = 6,
+		position = 8,
 		section = accessibilitySettings
 	)
 	default Color rs3HighContrastObjectColor() {
@@ -1063,7 +1063,7 @@ public interface HdPluginConfig extends Config
 		keyName = "rs3HighContrastProjectileColor",
 		name = "Projectile Color",
 		description = "Color used for projectiles when RS3 High Contrast filter is enabled.",
-		position = 7,
+		position = 9,
 		section = accessibilitySettings
 	)
 	default Color rs3HighContrastProjectileColor() {
@@ -1074,7 +1074,7 @@ public interface HdPluginConfig extends Config
 		keyName = "rs3HighContrastGraphicsColor",
 		name = "Graphics Color",
 		description = "Color used for graphics objects when RS3 High Contrast filter is enabled.",
-		position = 8,
+		position = 10,
 		section = accessibilitySettings
 	)
 	default Color rs3HighContrastGraphicsColor() {
@@ -1086,7 +1086,7 @@ public interface HdPluginConfig extends Config
 		keyName = "rs3HighContrastGroundItemColor",
 		name = "Ground Item Color",
 		description = "Color used for ground items when RS3 High Contrast filter is enabled.",
-		position = 9,
+		position = 11,
 		section = accessibilitySettings
 	)
 	default Color rs3HighContrastGroundItemColor() {
@@ -1098,11 +1098,57 @@ public interface HdPluginConfig extends Config
 		keyName = "rs3HighContrastNpcHostileColor",
 		name = "Hostile Color",
 		description = "Color used for hostile NPCs and actions when RS3 High Contrast filter is enabled.",
-		position = 10,
+		position = 12,
 		section = accessibilitySettings
 	)
 	default Color rs3HighContrastHostileColor() {
 		return new Color(255, 13, 22);
+	}
+
+	String KEY_RS3_HIGH_CONTRAST_HOSTILE_ONLY_WHEN_FIGHTING = "rs3HighContrastHostileOnlyWhenFighting";
+	@ConfigItem(
+		keyName = KEY_RS3_HIGH_CONTRAST_HOSTILE_ONLY_WHEN_FIGHTING,
+		name = "Hostile Only When Fighting",
+		description = "Only color an NPC as hostile while it's actually fighting you, instead of any NPC with a combat level.",
+		position = 3,
+		section = accessibilitySettings
+	)
+	default boolean rs3HighContrastHostileOnlyWhenFighting() {
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "rs3HighContrastBoatColor",
+		name = "Boat Color",
+		description = "Color used for boats when RS3 High Contrast filter is enabled.",
+		position = 13,
+		section = accessibilitySettings
+	)
+	default Color rs3HighContrastBoatColor() {
+		return new Color(153, 102, 255);
+	}
+
+	@ConfigItem(
+		keyName = "rs3HighContrastSquashedBoatColor",
+		name = "Squashed Boat Color",
+		description = "Color used for boats flattened beneath other boats when RS3 High Contrast filter is enabled.",
+		position = 14,
+		section = accessibilitySettings
+	)
+	default Color rs3HighContrastSquashedBoatColor() {
+		return new Color(90, 60, 120);
+	}
+
+	String KEY_RS3_HIGH_CONTRAST_SKY = "rs3HighContrastSky";
+	@ConfigItem(
+		keyName = KEY_RS3_HIGH_CONTRAST_SKY,
+		name = "Desaturate Sky",
+		description = "Also apply the RS3 High Contrast terrain desaturation effect to the sky and stars.",
+		position = 4,
+		section = accessibilitySettings
+	)
+	default boolean rs3HighContrastSky() {
+		return true;
 	}
 
 	String KEY_HIDE_VANILLA_WATER_EFFECTS = "hideVanillaWaterEffects";
