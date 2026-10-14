@@ -18,8 +18,6 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 
 	public final Property colorPicker = addProperty(PropertyType.FVec4, "colorPicker");
 
-	public Property[] highContrastColors = addPropertyArray(PropertyType.FVec3, "highContrastColors", 8);
-
 	public final Property orthographicProjection = addProperty(PropertyType.Int, "orthographicProjection");
 
 	public final Property expandedMapLoadingChunks = addProperty(PropertyType.Int, "expandedMapLoadingChunks");

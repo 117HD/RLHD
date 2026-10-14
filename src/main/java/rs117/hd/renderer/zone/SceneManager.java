@@ -99,8 +99,6 @@ public class SceneManager {
 	private UBOWorldViews uboWorldViews;
 
 	public Set<Integer> interactiveObjects = new HashSet<>();
-	// Cached hasActions result for IDs with no varbit/varp-driven transform, whose actions are fixed
-	// and so only need resolving once, regardless of how many times interactiveObjects gets cleared
 	private final Map<Integer, Boolean> staticObjectActionsCache = new HashMap<>();
 
 	@Getter
@@ -691,10 +689,6 @@ public class SceneManager {
 			buildInteractiveObjects(client.getTopLevelWorldView().getScene());
 	}
 
-	// Scans every plane up front, before any zone gets uploaded. hasActions/category is baked into
-	// a zone's vertex data at upload time and isn't recomputed afterward, so interactiveObjects must
-	// be fully correct before the first upload - scanning only the current plane and backfilling
-	// other planes later (e.g. on a plane change) doesn't retroactively fix already-uploaded zones.
 	private void buildInteractiveObjects(Scene scene) {
 		if (!plugin.configRs3HighContrast) {
 			return;

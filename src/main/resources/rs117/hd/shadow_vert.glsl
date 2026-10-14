@@ -64,12 +64,8 @@ layout (location = 0) in vec3 vPosition;
             if (windingReversed)
                 vertex = 2 - vertex;
 
-		float opacityThreshold = float(materialData >> MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT & 0x3) / 0x3;
-		if (opacityThreshold == 0)
-			opacityThreshold = SHADOW_DEFAULT_OPACITY_THRESHOLD;
-
-		int alphaBiasHsl = texelFetch(textureFaces, faceIdx)[vertex];
-		int materialData = texelFetch(textureFaces, faceIdx + 1)[vertex];
+            int alphaBiasHsl = texelFetch(textureFaces, faceIdx)[vertex];
+            int materialData = texelFetch(textureFaces, faceIdx + 1)[vertex];
 
             float opacity = 1 - (alphaBiasHsl >> 24 & 0xFF) / float(0xFF);
 

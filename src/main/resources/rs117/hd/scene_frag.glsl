@@ -523,25 +523,7 @@ void main() {
             // This is required if we always draw all underwater terrain.
             outputColor.a *= -256;
         }
-		outputColor.rgb = hsvToSrgb(hsv);
-	}
-
-	#if APPLY_COLOR_FILTER || RS3_HIGH_CONTRAST
-		int category;
-		if (isTerrain) {
-			category = ENTITY_TERRAIN;
-		} else {
-			category = fMaterialData[0] >> MATERIAL_CATEGORY_SHIFT & MATERIAL_CATEGORY_MASK;
-		}
-
-		#if RS3_HIGH_CONTRAST
-			outputColor.rgb = applyRs3HighContrast(category, outputColor.rgb);
-		#elif APPLY_COLOR_FILTER
-			outputColor.rgb = applyColorFilter(outputColor.rgb, category);
-		#endif
-	#endif
-
-	outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
+    #endif
 
 	#if APPLY_COLOR_FILTER || RS3_HIGH_CONTRAST
 		int category;
