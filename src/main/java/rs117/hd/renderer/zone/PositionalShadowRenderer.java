@@ -11,6 +11,7 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.lights.Light;
+import rs117.hd.scene.lights.LightType;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
@@ -637,7 +638,7 @@ public class PositionalShadowRenderer implements LightManager.Listener {
 			return;
 
 		// Sub world views can move around within the root scene, so their lights can only be MOVEABLE
-		if (light.sceneContext != null)
+		if (light.sceneContext != null || light.def.type == LightType.PULSE)
 			light.shadowMode = PositionalShadowMode.MOVEABLE;
 
 		pendingAdd.add(light);
