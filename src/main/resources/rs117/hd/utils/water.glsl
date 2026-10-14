@@ -270,7 +270,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
                 light = tonemap_hue_preserving(light);
                 light = softClipColor(light);
                 light = linearToSrgb(light);
-                baseColor = light;
+                water.rgb = light;
             }
         }
     #endif
