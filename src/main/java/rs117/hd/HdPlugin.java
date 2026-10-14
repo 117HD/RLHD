@@ -423,7 +423,6 @@ public class HdPlugin extends Plugin {
 	public boolean configNpcLights;
 	public boolean configPetLights;
 	public boolean configSpotanimLights;
-	public boolean configWorldLights;
 	public boolean configObjectLights;
 	public boolean configHideFakeShadows;
 	public boolean configLegacyGreyColors;
@@ -434,7 +433,6 @@ public class HdPlugin extends Plugin {
 	public boolean configRoofShadows;
 	public boolean configTerrainShadows;
 	public boolean configConservativeShadowCulling;
-	public boolean configUseFasterModelHashing;
 	public boolean configZoneStreaming;
 	public boolean configSimpleBoatSilhouettes;
 	public boolean configPowerSaving;
@@ -1812,7 +1810,6 @@ public class HdPlugin extends Plugin {
 		configNpcLights = config.npcLights();
 		configPetLights = config.petLights();
 		configSpotanimLights = config.spotanimLights();
-		configWorldLights = config.worldLights();
 		configObjectLights = config.objectLights();
 		configVanillaShadowMode = config.vanillaShadowMode();
 		configHideFakeShadows = configVanillaShadowMode != VanillaShadowMode.SHOW;
@@ -1822,11 +1819,10 @@ public class HdPlugin extends Plugin {
 		configDefaultSkyColor = config.defaultSkyColor();
 		configDynamicLights = config.dynamicLights();
 		configTiledLighting = config.tiledLighting().get(!OLD_INTEL_GPU);
-		configTiledLightingImageLoadStore = config.tiledLightingImageLoadStore();
+		configTiledLightingImageLoadStore = config.imageLoadStore().get(true);
 		configOverrideSky = config.overrideSky();
 		configDetailDrawDistance = config.detailDrawDistance();
 		configConservativeShadowCulling = config.conservativeShadowCulling();
-		configUseFasterModelHashing = config.fasterModelHashing();
 		configZoneStreaming = config.zoneStreaming();
 		configSimpleBoatSilhouettes = config.simpleBoatSilhouettes();
 		configPowerSaving = config.powerSaving();
@@ -1980,9 +1976,9 @@ public class HdPlugin extends Plugin {
 								break;
 							case KEY_COLOR_BLINDNESS:
 							case KEY_MACOS_INTEL_WORKAROUND:
-							case KEY_DYNAMIC_LIGHTS:
+							case KEY_LIGHTS:
 							case KEY_TILED_LIGHTING:
-							case KEY_TILED_LIGHTING_IMAGE_STORE:
+							case KEY_IMAGE_LOAD_STORE:
 							case KEY_NORMAL_MAPPING:
 							case KEY_PARALLAX_OCCLUSION_MAPPING:
 							case KEY_UI_SCALING_MODE:
@@ -2013,7 +2009,7 @@ public class HdPlugin extends Plugin {
 								recompilePrograms = true;
 								recreateShadowMapFbo = true;
 								break;
-							case KEY_ATMOSPHERIC_LIGHTING:
+							case KEY_LEGACY_DISABLE_ENVIRONMENTAL_LIGHTING:
 							case KEY_POH_THEME_ENVIRONMENTS:
 							case KEY_LEGACY_TOB_ENVIRONMENT:
 								reloadEnvironments = true;
@@ -2089,7 +2085,7 @@ public class HdPlugin extends Plugin {
 					}
 
 					if (reloadEnvironments) {
-						if (pendingConfigChanges.contains(KEY_ATMOSPHERIC_LIGHTING)) {
+						if (pendingConfigChanges.contains(KEY_LEGACY_DISABLE_ENVIRONMENTAL_LIGHTING)) {
 							environmentManager.reload();
 						} else {
 							environmentManager.reloadAndSmoothlyTransition();

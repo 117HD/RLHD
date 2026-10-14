@@ -398,9 +398,7 @@ public class LightManager {
 
 			if (!plugin.configSpotanimLights && (light.spotanimId != -1 || light.graphicsObject != null))
 				hiddenTemporarily = true;
-			if (!plugin.configWorldLights && light.worldLight)
-				hiddenTemporarily = true;
-			if (!plugin.configObjectLights && light.tileObject != null)
+			if (!plugin.configObjectLights && (light.tileObject != null || light.worldLight))
 				hiddenTemporarily = true;
 
 			copyTo(light.sceneLocalPos, light.origin);
