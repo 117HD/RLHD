@@ -160,65 +160,54 @@ public class ModelHash {
 	}
 
 	/**
-	 * Returns a category id (0-15) derived from the UUID type for coloring.
+	 * Returns a small category id (0-15) derived from the packed UUID's type for coloring.
+	 *
+	 * @param uuid a packed UUID, as produced by {@link #packUuid} or {@link #generateUuid}
 	 */
-	public static int getCategoryForUuid(Client client,Renderable renderable, long hash, boolean rs3HighContrast) {
-		return getCategoryForUuid(client,renderable, hash, false, rs3HighContrast);
-	}
-
-	/**
-	 * Returns a small category id (0-15) derived from the UUID type for coloring.
-	 */
-	public static int getCategoryForUuid(Client client, Renderable renderable ,long hash, boolean hasActions, boolean rs3HighContrast) {
-		if (!rs3HighContrast) {
+	public static int getCategoryForUuid(
+		Client client, Renderable renderable, int uuid, boolean hasActions, boolean rs3HighContrast, boolean hostileOnlyWhenFighting
+	) {
+		if (!rs3HighContrast)
 			return CATEGORY_UNKNOWN;
-		}
 
-		if (hash == -1) {
-			if (renderable instanceof Projectile) {
-				Projectile projectile = (Projectile) renderable;
-				return projectile.getTargetActor() == client.getLocalPlayer() ? CATEGORY_HOSTILE : CATEGORY_PROJECTILE;
-			} else if (renderable instanceof GraphicsObject) {
+		int type = getUuidType(uuid);
+
+		switch (type) {
+			case TYPE_OBJECT:
+				return hasActions ? CATEGORY_OBJECT : CATEGORY_UNKNOWN;
+			case TYPE_NPC:
+				// Don't resolve the NPC via the uuid's id - generateUuid() packs the NPC's composition/template
+				// ID there (for model override lookups), not its live world index, so it can't be used with
+				// npcs().byIndex(). The renderable passed in is already the actual NPC instance being drawn.
+				if (renderable instanceof NPC) {
+					NPC npc = (NPC) renderable;
+					if (npc.getCombatLevel() == 0)
+						return CATEGORY_NPC_FRIENDLY;
+					if (!hostileOnlyWhenFighting)
+						return CATEGORY_HOSTILE;
+					Player localPlayer = client.getLocalPlayer();
+					boolean isFighting = npc.getInteracting() == localPlayer || localPlayer.getInteracting() == npc;
+					return isFighting ? CATEGORY_HOSTILE : CATEGORY_NPC_FRIENDLY;
+				}
+				return CATEGORY_UNKNOWN;
+			case TYPE_PLAYER:
+				if (renderable instanceof Player) {
+					Player player = (Player) renderable;
+					return Objects.equals(player.getName(), client.getLocalPlayer().getName()) ?
+						CATEGORY_PLAYER : CATEGORY_PLAYER_OTHER;
+				}
+				return CATEGORY_UNKNOWN;
+			case TYPE_GROUND_ITEM:
+				return CATEGORY_GROUND_ITEM;
+			case TYPE_PROJECTILE:
+				if (renderable instanceof Projectile)
+					return ((Projectile) renderable).getTargetActor() == client.getLocalPlayer() ?
+						CATEGORY_HOSTILE : CATEGORY_PROJECTILE;
+				return CATEGORY_PROJECTILE;
+			case TYPE_GRAPHICS_OBJECT:
 				return CATEGORY_GRAPHICS;
-			}
+			default:
+				return CATEGORY_UNKNOWN;
 		}
-
-		int category = CATEGORY_UNKNOWN;
-		int type;
-		int id;
-
-		if (hash == -1) {
-			return hasActions ? CATEGORY_OBJECT : CATEGORY_UNKNOWN;
-		}
-
-		type = getType(hash);
-
-		if (type == TYPE_OBJECT) {
-			category = hasActions ? CATEGORY_OBJECT : CATEGORY_UNKNOWN;
-		} else if (type == TYPE_NPC) {
-			id = ModelHash.getIdOrIndex(hash);
-			var npcs = client.getTopLevelWorldView().npcs();
-			if (id >= 0 && id < 65536) {
-				category = CATEGORY_NPC_FRIENDLY;
-				NPC npc = npcs.byIndex(id);
-				if (npc != null) {
-					category = npc.getCombatLevel() != 0 ? CATEGORY_HOSTILE : CATEGORY_NPC_FRIENDLY;
-				}
-			}
-		} else if (type == TYPE_PLAYER) {
-			id = ModelHash.getIdOrIndex(hash);
-			var players = client.getTopLevelWorldView().players();
-			if (id >= 0 && id < 65536) {
-				Player player = players.byIndex(id);
-				if (player != null) {
-					category = Objects.equals(player.getName(), client.getLocalPlayer().getName()) ? CATEGORY_PLAYER : CATEGORY_PLAYER_OTHER;
-				}
-			}
-		} else if (type == TYPE_GROUND_ITEM) {
-			category = CATEGORY_GROUND_ITEM;
-		}
-
-		return category;
-
 	}
 }

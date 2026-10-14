@@ -241,7 +241,8 @@ public class ModelStreamingManager {
 		}
 		// Must be computed on the client thread, since e.g. NPC#getCombatLevel() asserts client thread access
 		boolean hasActions = sceneManager.interactiveObjects.contains(tileObject.getId());
-		int category = ModelHash.getCategoryForUuid(client, r, tileObject.getHash(), hasActions, plugin.configRs3HighContrast);
+		int category = ModelHash.getCategoryForUuid(
+			client, r, uuid, hasActions, plugin.configRs3HighContrast, plugin.configRs3HighContrastHostileOnlyWhenFighting);
 		streamingContext.renderableCount++;
 
 		final boolean hasAlpha =

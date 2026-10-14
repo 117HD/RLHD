@@ -817,7 +817,8 @@ public class SceneUploader implements AutoCloseable {
 			return;
 
 		boolean hasActions = sceneManager.interactiveObjects.contains(id);
-		int category = ModelHash.getCategoryForUuid(client, r, uuid, hasActions, plugin.configRs3HighContrast);
+		int category = ModelHash.getCategoryForUuid(
+			client, r, uuid, hasActions, plugin.configRs3HighContrast, plugin.configRs3HighContrastHostileOnlyWhenFighting);
 
 		int alphaStart = alphaBuffer != null ? alphaBuffer.position() : 0;
 		try {

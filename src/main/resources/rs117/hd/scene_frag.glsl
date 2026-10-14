@@ -534,6 +534,8 @@ void main() {
 		}
 
 		#if RS3_HIGH_CONTRAST
+			if (fWorldViewId > 0)
+				category = isSquashed ? ENTITY_BOAT_SQUASHED : ENTITY_BOAT;
 			outputColor.rgb = applyRs3HighContrast(category, outputColor.rgb);
 		#elif APPLY_COLOR_FILTER
 			outputColor.rgb = applyColorFilter(outputColor.rgb, category);

@@ -456,6 +456,7 @@ public class HdPlugin extends Plugin {
 	public ColorFilter configColorFilterPrevious;
 	public boolean configRs3HighContrast;
 	public boolean configRs3HighContrastSky;
+	public boolean configRs3HighContrastHostileOnlyWhenFighting;
 
 	public boolean useLowMemoryMode;
 	public boolean enableDetailedTimers;
@@ -1814,6 +1815,7 @@ public class HdPlugin extends Plugin {
 		}
 		configRs3HighContrast = config.rs3HighContrast();
 		configRs3HighContrastSky = config.rs3HighContrastSky();
+		configRs3HighContrastHostileOnlyWhenFighting = config.rs3HighContrastHostileOnlyWhenFighting();
 
 		if (configSeasonalTheme == SeasonalTheme.AUTOMATIC) {
 			var time = ZonedDateTime.now(ZoneOffset.UTC);
@@ -1923,7 +1925,7 @@ public class HdPlugin extends Plugin {
 								break;
 							case KEY_RS3_HIGH_CONTRAST:
 								recompilePrograms = true;
-								sceneManager.interactiveObjects.clear();
+								sceneManager.rebuildInteractiveObjects();
 								reloadScene = true;
 								break;
 							case KEY_RS3_HIGH_CONTRAST_SKY:

@@ -87,6 +87,8 @@ vec3 applyColorFilter(vec3 color, int category) {
 #define ENTITY_GRAPHICS      5
 #define ENTITY_PLAYER_OTHER  6
 #define ENTITY_GROUND_ITEMS  7
+#define ENTITY_BOAT          8
+#define ENTITY_BOAT_SQUASHED 9
 #define ENTITY_TERRAIN      15
 
 vec3 applyRs3HighContrast(int category, vec3 color) {
@@ -118,6 +120,12 @@ vec3 applyRs3HighContrast(int category, vec3 color) {
 
         case ENTITY_GROUND_ITEMS:
            return mix(color, uboGlobal.highContrastColors[7], 0.6);
+
+        case ENTITY_BOAT:
+            return mix(color, uboGlobal.highContrastColors[8], 0.7);
+
+        case ENTITY_BOAT_SQUASHED:
+            return mix(color, uboGlobal.highContrastColors[9], 0.8);
 
         default:
             return color;
