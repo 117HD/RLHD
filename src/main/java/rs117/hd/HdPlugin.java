@@ -2165,7 +2165,6 @@ public class HdPlugin extends Plugin {
 			return;
 
 		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
-		frame = (frame + 1) & Integer.MAX_VALUE;
 
 		if (lastFrameTimeMillis > 0) {
 			deltaTimeMs = System.currentTimeMillis() - lastFrameTimeMillis;

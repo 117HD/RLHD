@@ -74,6 +74,8 @@ import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.jobs.JobSystem;
 
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -94,6 +96,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Singleton
 public class ZoneRenderer implements Renderer {
 	public static final int FRAMES_IN_FLIGHT = 3;
+	private static final long FENCE_SYNC_TIMEOUT_NS = SECONDS.toNanos(1);
 
 	private static int TEXTURE_UNIT_COUNT = HdPlugin.TEXTURE_UNIT_COUNT;
 	public static final int TEXTURE_UNIT_TEXTURED_FACES = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
@@ -184,6 +187,10 @@ public class ZoneRenderer implements Renderer {
 	private boolean shouldClearShadowFbo;
 	private boolean shouldDrawRoofShadows;
 
+	private final long[] frameFences = new long[FRAMES_IN_FLIGHT];
+	private long lastFenceWarningMs = 0;
+	private int waitFailureCount = 0, timeoutCount = 0;
+
 	@Override
 	public boolean supportsGpu(GLCapabilities glCaps) {
 		return glCaps.OpenGL33;
@@ -234,11 +241,59 @@ public class ZoneRenderer implements Renderer {
 		sceneManager.destroy();
 		uboWorldViews.destroy();
 
+		for (int i = 0; i < frameFences.length; i++) {
+			if (frameFences[i] != 0)
+				glDeleteSync(frameFences[i]);
+			frameFences[i] = 0;
+		}
+
 		if (SceneUploader.POOL != null)
 			SceneUploader.POOL.destroy();
 
 		if (FacePrioritySorter.POOL != null)
 			FacePrioritySorter.POOL.destroy();
+	}
+
+	private void waitForFrameFence() {
+		final int slot = plugin.frame % FRAMES_IN_FLIGHT;
+		final long fence = frameFences[slot];
+		if (fence == 0)
+			return;
+
+		String warning = null;
+		try {
+			final long deadline = System.nanoTime() + FENCE_SYNC_TIMEOUT_NS;
+			int flags = GL_SYNC_FLUSH_COMMANDS_BIT;
+
+			while (true) {
+				final long remaining = Math.max(0, deadline - System.nanoTime());
+				final int result = glClientWaitSync(fence, flags, remaining);
+				flags = 0;
+
+				if (result == GL_ALREADY_SIGNALED || result == GL_CONDITION_SATISFIED)
+					return;
+
+				if (result == GL_WAIT_FAILED) {
+					waitFailureCount++;
+					warning = String.format("glClientWaitSync failed! count %d", waitFailureCount);
+					return;
+				}
+
+				if (System.nanoTime() >= deadline) {
+					timeoutCount++;
+					warning = String.format("Timed out after waiting %dms waiting for frame fence, count %d", NANOSECONDS.toMillis(
+						FENCE_SYNC_TIMEOUT_NS), timeoutCount);
+					return;
+				}
+			}
+		} finally {
+			if(warning != null && lastFenceWarningMs + 1000 < System.currentTimeMillis()) {
+				log.warn(warning);
+				lastFenceWarningMs = System.currentTimeMillis();
+			}
+			glDeleteSync(fence);
+			frameFences[slot] = 0;
+		}
 	}
 
 	@Override
@@ -409,9 +464,8 @@ public class ZoneRenderer implements Renderer {
 
 		scene.setDrawDistance(plugin.getDrawDistance());
 
-		// Ensure that the previous frames commands have finished flushing
 		frameTimer.begin(Timer.DRAW_FLUSH);
-		glFlush();
+		waitForFrameFence();
 		frameTimer.end(Timer.DRAW_FLUSH);
 
 		plugin.updateSceneFbo();
@@ -1225,6 +1279,9 @@ public class ZoneRenderer implements Renderer {
 				return;
 			}
 
+			// Should only ever wait when not rendering the scene, since this will have been called in preSceneDraw
+			waitForFrameFence();
+
 			try {
 				plugin.prepareInterfaceTexture();
 			} catch (Exception ex) {
@@ -1293,6 +1350,10 @@ public class ZoneRenderer implements Renderer {
 			frameTimer.end(Timer.RENDER_FRAME);
 
 			try {
+				final int fenceSlot = plugin.frame % FRAMES_IN_FLIGHT;
+				assert frameFences[fenceSlot] == 0 : "Frame fence already set, this should never happen";
+				frameFences[fenceSlot] = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+
 				frameTimer.begin(Timer.SWAP_BUFFERS);
 				plugin.awtContext.swapBuffers();
 				frameTimer.end(Timer.SWAP_BUFFERS);
@@ -1313,6 +1374,8 @@ public class ZoneRenderer implements Renderer {
 			checkGLErrors();
 
 			shouldRenderScene = false;
+			plugin.frame = (plugin.frame + 1) & Integer.MAX_VALUE;
+
 		} catch (Throwable ex) {
 			plugin.requestPluginStop(String.format("Error in draw(%08X)", overlayColor), ex);
 		}

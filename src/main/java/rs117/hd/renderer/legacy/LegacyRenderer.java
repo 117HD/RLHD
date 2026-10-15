@@ -1260,6 +1260,7 @@ public class LegacyRenderer implements Renderer {
 
 		frameTimer.endFrameAndReset();
 		frameModelInfoMap.clear();
+		plugin.frame = (plugin.frame + 1) & Integer.MAX_VALUE;
 		checkGLErrors();
 	}
 
