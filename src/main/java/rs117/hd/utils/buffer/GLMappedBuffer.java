@@ -120,7 +120,7 @@ public final class GLMappedBuffer {
 	private void updateViews(ByteBuffer buffer, long offsetBytes, long sizeBytes) {
 		int size = Math.toIntExact(sizeBytes);
 		if (mappingBuffer != buffer || absoluteViewOffset != offsetBytes || byteView.capacity() != size) {
-			assert absoluteViewOffset >= mappingOffset : "The view must be within the mapped slice of the backing buffer";
+			assert offsetBytes >= mappingOffset : "The view must be within the mapped slice of the backing buffer";
 			absoluteViewOffset = offsetBytes;
 			int mappedOffset = Math.toIntExact(absoluteViewOffset - mappingOffset);
 			mappingBuffer = buffer
