@@ -1549,6 +1549,17 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_CENTROID_QUALIFIER = "centroidQualifier";
+	@ConfigItem(
+		keyName = KEY_CENTROID_QUALIFIER,
+		name = "Centroid qualifier",
+		description = "Prevents artifacts when MSAA is enabled.",
+		section = technicalSettings
+	)
+	default DefaultBoolean centroidQualifier() {
+		return DefaultBoolean.DEFAULT;
+	}
+
 
 	/*====== Internal settings ======*/
 

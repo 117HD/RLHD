@@ -52,7 +52,11 @@ out FragmentData {
     vec3 position;
     vec2 uv;
     vec3 normal;
-    vec3 texBlend;
+    #if CENTROID_QUALIFIER
+        centroid out vec3 texBlend;
+    #else
+        vec3 texBlend;
+    #endif
 } OUT;
 
 void main() {

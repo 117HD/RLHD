@@ -1007,6 +1007,7 @@ public class HdPlugin extends Plugin {
 			.define("WINDOWS_HDR_CORRECTION", config.windowsHdrCorrection())
 			.define("LEGACY_BOAT_SILHOUETTES", config.legacyBoatSilhouettes())
 			.define("REDUCE_GLARE_INTENSITY", configReduceGlareIntensity)
+			.define("CENTROID_QUALIFIER", config.centroidQualifier().get(true))
 			.define("LEGACY_RENDERER", renderer instanceof LegacyRenderer)
 			.define("ZONE_RENDERER", renderer instanceof ZoneRenderer)
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", 0)
@@ -1992,6 +1993,7 @@ public class HdPlugin extends Plugin {
 							case KEY_NEBULAE:
 							case KEY_LEGACY_BOAT_SILHOUETTES:
 							case KEY_WATER_SPECULAR_REFLECTIONS:
+							case KEY_CENTROID_QUALIFIER:
 								recompilePrograms = true;
 								break;
 							case KEY_GLARE_INTENSITY:
