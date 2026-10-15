@@ -13,7 +13,6 @@ public enum Timer {
 	// CPU timers
 
 	// Draw callbacks
-	DRAW_FLUSH,
 	DRAW_FRAME,
 	DRAW_PRESCENE,
 	DRAW_SCENE,
@@ -27,6 +26,7 @@ public enum Timer {
 	DRAW_SUBMIT,
 
 	// Miscellaneous
+	FRAME_FENCE_WAIT,
 	SWAP_BUFFERS,
 	EXECUTE_COMMAND_BUFFER,
 	MAP_UI_BUFFER("Map UI Buffer"),
