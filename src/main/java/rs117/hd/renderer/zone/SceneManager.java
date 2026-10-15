@@ -778,6 +778,8 @@ public class SceneManager {
 		nextZones = null;
 		nextSceneContext = null;
 
+		plugin.updateRoofMap(scene);
+
 		if (isFirst) {
 			root.initBuffers();
 
