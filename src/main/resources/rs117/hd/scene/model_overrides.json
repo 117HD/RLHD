@@ -105075,15 +105075,16 @@
     ]
   },
   {
-    "description": "Wyrmscraig - Mad Angel - Darken Light Tennis Shadow Slightly",
+    "description": "Wyrmscraig - Mad Angel - Light Tennis landing shadow - Black and more opaque so it stays visible inside HD shadows",
     "areas": [ "WYRMSCRAIG" ],
-    "baseMaterial": "GRAY_125",
+    "baseMaterial": "BLACK",
+    "shiftAlpha": 60,
     "graphicsObjectIds": [
       "GARGBOSS_DEBRIS_SHADOW_150"
     ]
   },
   {
-    "description": "Wyrmscraig - Mad Angel - Darken Light Tennis Shadow Slightly",
+    "description": "Wyrmscraig - Mad Angel - Brighten Cathedral Light Rays Slightly",
     "areas": [ "WYRMSCRAIG" ],
     "shiftLightness": 3,
     "objectIds": [ "WYRMSCRAIG_CATHEDRAL_LIGHTRAY01" ]
