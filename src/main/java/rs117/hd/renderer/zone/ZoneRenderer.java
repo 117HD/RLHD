@@ -786,7 +786,7 @@ public class ZoneRenderer implements Renderer {
 					lightColor[0] = light.color[0] * light.strength;
 					lightColor[1] = light.color[1] * light.strength;
 					lightColor[2] = light.color[2] * light.strength;
-					lightColor[3] = 0.0f;
+					lightColor[3] = light.def.specularMultiplier;
 
 					plugin.uboLights.setLight(i, lightPosition, lightColor);
 
