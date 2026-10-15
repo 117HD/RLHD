@@ -50,6 +50,8 @@ public final class GLMappedBuffer {
 	GLMappedBuffer(GLBuffer owner, ByteBuffer mappedBuffer) {
 		this.owner = owner;
 		this.mapped = true;
+		if ((owner.storageFlags & GLBuffer.STORAGE_WRITE) != 0) mappedFlags |= MAP_WRITE;
+		if ((owner.storageFlags & GLBuffer.STORAGE_READ) != 0) mappedFlags |= MAP_READ;
 		updateViews(mappedBuffer, 0, mappedBuffer.capacity());
 	}
 
@@ -66,10 +68,10 @@ public final class GLMappedBuffer {
 		owner.bind();
 
 		final ByteBuffer buf;
-		if (owner.target != GL_STATIC_DRAW && GL_CAPS.GL_ARB_map_buffer_range && !GLBuffer.DEBUG_MAC_OS) {
+		if (GL_CAPS.GL_ARB_map_buffer_range && !GLBuffer.DEBUG_MAC_OS) {
 			// Map a part of the buffer or its entirety depending on the offset and size
 			int glFlags = 0;
-			if ((flags & MAP_WRITE) != 0) glFlags |= GL_MAP_WRITE_BIT;
+			if ((flags & MAP_WRITE) != 0) glFlags |= GL_MAP_WRITE_BIT | GL_MAP_FLUSH_EXPLICIT_BIT;
 			if ((flags & MAP_READ) != 0) glFlags |= GL_MAP_READ_BIT;
 			if ((flags & MAP_UNSYNCHRONIZED) != 0) glFlags |= GL_MAP_UNSYNCHRONIZED_BIT;
 
@@ -85,7 +87,7 @@ public final class GLMappedBuffer {
 				owner.target,
 				offsetBytes,
 				mapSize,
-				glFlags | GL_MAP_FLUSH_EXPLICIT_BIT,
+				glFlags,
 				mappingBuffer
 			);
 			this.mappingOffset = offsetBytes;
@@ -162,21 +164,38 @@ public final class GLMappedBuffer {
 	}
 
 	public void unmap() {
-		if (!mapped || owner.isStorageBuffer())
+		if (!mapped)
 			return;
 
 		syncViews();
 
 		owner.bind();
-		if (owner.target != GL_STATIC_DRAW && GL_CAPS.GL_ARB_map_buffer_range && !GLBuffer.DEBUG_MAC_OS) {
-			byteView.flip();
-			glFlushMappedBufferRange(owner.target, absoluteViewOffset - mappingOffset, byteView.remaining());
-			byteView.clear();
+
+		// Explicitly flush both persistent buffers and buffers mapped with the explicit flush bit
+		if ((mappedFlags & MAP_WRITE) != 0 &&
+			byteView.position() > 0 &&
+			(owner.isStorageBuffer() || GL_CAPS.GL_ARB_map_buffer_range && !GLBuffer.DEBUG_MAC_OS)
+		) {
+			glFlushMappedBufferRange(owner.target, absoluteViewOffset - mappingOffset, byteView.position());
 		}
-		glUnmapBuffer(owner.target);
+
+		boolean corrupted = false;
+		// Unmap non-persistent buffers, and handle possible buffer corruption
+		if (!owner.isStorageBuffer()) {
+			corrupted = !glUnmapBuffer(owner.target);
+			mapped = false;
+		}
 		owner.unbind();
 
-		mapped = false;
+		if (corrupted) {
+			// We might technically be able to recover from this, but it requires careful handling
+			throw new IllegalStateException(
+				String.format(
+					"Corrupted buffer contents while unmapping '%s', offset: %d",
+					owner,
+					mappingOffset
+				));
+		}
 	}
 
 	void destroy() {
