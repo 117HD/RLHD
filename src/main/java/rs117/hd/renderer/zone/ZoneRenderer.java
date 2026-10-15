@@ -261,7 +261,7 @@ public class ZoneRenderer implements Renderer {
 			return;
 
 		String warning = null;
-		try {
+		try (var ignored = frameTimer.begin(Timer.FRAME_FENCE_WAIT)) {
 			final long deadline = System.nanoTime() + FENCE_SYNC_TIMEOUT_NS;
 			int flags = GL_SYNC_FLUSH_COMMANDS_BIT;
 
@@ -464,9 +464,7 @@ public class ZoneRenderer implements Renderer {
 
 		scene.setDrawDistance(plugin.getDrawDistance());
 
-		frameTimer.begin(Timer.DRAW_FLUSH);
 		waitForFrameFence();
-		frameTimer.end(Timer.DRAW_FLUSH);
 
 		plugin.updateSceneFbo();
 
