@@ -1612,7 +1612,7 @@ public class HdPlugin extends Plugin {
 			glActiveTexture(TEXTURE_UNIT_TERRAIN_SHADOW_MAP);
 			glBindTexture(GL_TEXTURE_2D, texTerrainShadowMap);
 
-			terrainShadowMapResolution = shadowMapResolution / 2;
+			terrainShadowMapResolution = shadowMapResolution;
 			glTexImage2D(
 				GL_TEXTURE_2D,
 				0,

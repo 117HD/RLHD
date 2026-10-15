@@ -23,6 +23,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#pragma once
+
 #include <uniforms/global.glsl>
 
 #include <utils/constants.glsl>
@@ -104,35 +106,36 @@ float sampleShadowMap(
         depthPrecisionBias = 2.0 / float(SHADOW_DEPTH_MAX);
     }
     shadowPos.xy = clamp(shadowPos.xy, 0, 1);
-    vec4 receiverPlane = vec4(shadowPos.xy * shadowMapSize, receiverDepthPerTexel);
-
-    float shadow = sampleShadow(
-        shadowMap,
-        SHADOW_TRANSPARENCY == 1,
-        shadowPos.z - (bias + depthPrecisionBias),
-        shadowPos,
-        receiverPlane,
-        fragPos
+    // The inverse projection's Z column spans half the camera's depth range.
+    float depthRange = 2.0 * length(uboGlobal.invLightProjectionMatrix[2].xyz);
+    ShadowReceiver receiver = ShadowReceiver(
+        shadowPos.xy * shadowMapSize,
+        receiverDepthPerTexel,
+        shadowPos.z,
+        bias + depthPrecisionBias,
+        MODEL_SHADOW_BIAS_LIMIT / depthRange
     );
+
+    float shadow = sampleShadow(shadowMap, SHADOW_TRANSPARENCY == 1, receiver, fragPos, shadowPos);
 
     #if TERRAIN_SHADOWS
         if (shadow < 1.0) {
             vec2 terrainMapSize = vec2(textureSize(terrainShadowMap, 0));
             vec2 texelScale = shadowMapSize / terrainMapSize;
-            float terrainBias = bias * texelScale.x + depthPrecisionBias;
-            vec4 terrainReceiverPlane = vec4(
+            ShadowReceiver terrainReceiver = ShadowReceiver(
                 shadowPos.xy * terrainMapSize,
-                receiverDepthPerTexel * texelScale
+                receiverDepthPerTexel * texelScale,
+                shadowPos.z,
+                bias * texelScale.x + depthPrecisionBias,
+                TERRAIN_SHADOW_BIAS_LIMIT / depthRange
             );
             #if SHADOW_FILTERING == SHADOW_FILTERING_PCSS
-                float terrainShadow = sampleShadowPCSS(
-                    terrainShadowMap, false, shadowPos.z - terrainBias, shadowPos, terrainReceiverPlane, fragPos);
+                float terrainShadow = sampleShadowPCSS(terrainShadowMap, false, terrainReceiver, fragPos, shadowPos);
             #else
                 // Hardware PCF shares one reference depth across its bilinear footprint
                 if (preventSelfShadowing)
-                    terrainBias += dot(abs(terrainReceiverPlane.zw), vec2(1.0));
-                float terrainShadow = sampleHardwareShadow(
-                    terrainShadowMap, shadowPos.z - terrainBias, shadowPos, terrainReceiverPlane);
+                    terrainReceiver.bias += dot(abs(terrainReceiver.depthPerTexel), vec2(1.0));
+                float terrainShadow = sampleHardwareShadow(terrainShadowMap, terrainReceiver, shadowPos);
             #endif
             shadow = max(shadow, terrainShadow);
         }
