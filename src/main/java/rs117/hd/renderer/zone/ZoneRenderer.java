@@ -188,8 +188,14 @@ public class ZoneRenderer implements Renderer {
 	private boolean shouldDrawRoofShadows;
 
 	private final long[] frameFences = new long[FRAMES_IN_FLIGHT];
-	private long lastFenceWarningMs = 0;
-	private int waitFailureCount = 0, timeoutCount = 0;
+	private long
+		lastFenceCreationWarningMs,
+		lastFenceWaitWarningMs,
+		lastFenceTimeoutWarningMs;
+	private int
+		fenceCreationFailureCount,
+		fenceWaitFailureCount,
+		fenceTimeoutCount;
 
 	@Override
 	public boolean supportsGpu(GLCapabilities glCaps) {
@@ -260,37 +266,45 @@ public class ZoneRenderer implements Renderer {
 		if (fence == 0)
 			return;
 
-		String warning = null;
 		try (var ignored = frameTimer.begin(Timer.FRAME_FENCE_WAIT)) {
 			final long deadline = System.nanoTime() + FENCE_SYNC_TIMEOUT_NS;
 			int flags = GL_SYNC_FLUSH_COMMANDS_BIT;
+			boolean waitFailed = false;
+			long remaining;
 
-			while (true) {
-				final long remaining = Math.max(0, deadline - System.nanoTime());
+			while ((remaining = deadline - System.nanoTime()) > 0) {
 				final int result = glClientWaitSync(fence, flags, remaining);
-				flags = 0;
+				flags = 0; // only flush commands on the first sync
 
 				if (result == GL_ALREADY_SIGNALED || result == GL_CONDITION_SATISFIED)
 					return;
 
 				if (result == GL_WAIT_FAILED) {
-					waitFailureCount++;
-					warning = String.format("glClientWaitSync failed! count %d", waitFailureCount);
-					return;
+					waitFailed = true;
+					break;
 				}
+			}
 
-				if (System.nanoTime() >= deadline) {
-					timeoutCount++;
-					warning = String.format("Timed out after waiting %dms waiting for frame fence, count %d", NANOSECONDS.toMillis(
-						FENCE_SYNC_TIMEOUT_NS), timeoutCount);
-					return;
+			long now = System.currentTimeMillis();
+			if (waitFailed) {
+				fenceWaitFailureCount++;
+				if (fenceWaitFailureCount == 1 || now - lastFenceWaitWarningMs >= 1000) {
+					log.warn("glClientWaitSync failed, count {}. Falling back to glFinish...", fenceWaitFailureCount);
+					lastFenceWaitWarningMs = now;
+				}
+			} else {
+				fenceTimeoutCount++;
+				if (fenceTimeoutCount == 1 || now - lastFenceTimeoutWarningMs >= 1000) {
+					log.warn(
+						"Timed out waiting {}ms for frame fence, count {}. Falling back to glFinish...",
+						NANOSECONDS.toMillis(FENCE_SYNC_TIMEOUT_NS), fenceTimeoutCount
+					);
+					lastFenceTimeoutWarningMs = now;
 				}
 			}
+
+			glFinish();
 		} finally {
-			if(warning != null && lastFenceWarningMs + 1000 < System.currentTimeMillis()) {
-				log.warn(warning);
-				lastFenceWarningMs = System.currentTimeMillis();
-			}
 			glDeleteSync(fence);
 			frameFences[slot] = 0;
 		}
@@ -1348,9 +1362,18 @@ public class ZoneRenderer implements Renderer {
 			frameTimer.end(Timer.RENDER_FRAME);
 
 			try {
-				final int fenceSlot = plugin.frame % FRAMES_IN_FLIGHT;
-				assert frameFences[fenceSlot] == 0 : "Frame fence already set, this should never happen";
-				frameFences[fenceSlot] = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+				final int slot = plugin.frame % FRAMES_IN_FLIGHT;
+				assert frameFences[slot] == 0 : "Frame fence already set, this should never happen";
+				frameFences[slot] = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+				if (frameFences[slot] == 0) {
+					fenceCreationFailureCount++;
+					long now = System.currentTimeMillis();
+					if (fenceCreationFailureCount == 1 || now - lastFenceCreationWarningMs >= 1000) {
+						log.warn("Unable to create frame fence, count {}. Falling back to glFinish...", fenceCreationFailureCount);
+						lastFenceCreationWarningMs = now;
+					}
+					glFinish();
+				}
 
 				frameTimer.begin(Timer.SWAP_BUFFERS);
 				plugin.awtContext.swapBuffers();
@@ -1373,7 +1396,6 @@ public class ZoneRenderer implements Renderer {
 
 			shouldRenderScene = false;
 			plugin.frame = (plugin.frame + 1) & Integer.MAX_VALUE;
-
 		} catch (Throwable ex) {
 			plugin.requestPluginStop(String.format("Error in draw(%08X)", overlayColor), ex);
 		}
