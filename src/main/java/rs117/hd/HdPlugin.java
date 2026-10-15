@@ -178,6 +178,7 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_NEBULA_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_ROOF_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -405,6 +406,9 @@ public class HdPlugin extends Plugin {
 	public int tiledLightingLayerCount;
 	public int fboTiledLighting;
 	public int texTiledLighting;
+
+	private int texRoofMap;
+	private FloatBuffer roofMapBuffer;
 
 	public UBOGlobal uboGlobal;
 	public UBOSky uboSky;
@@ -740,6 +744,7 @@ public class HdPlugin extends Plugin {
 				initializeShaderHotswapping();
 				initializeUiTexture();
 				initializeShadowMapFbo();
+				initializeRoofMap();
 
 				checkGLErrors();
 
@@ -810,6 +815,7 @@ public class HdPlugin extends Plugin {
 				destroySceneFbo();
 				destroyShadowMapFbo();
 				destroyTiledLightingFbo();
+				destroyRoofMap();
 
 				if (renderer != null) {
 					eventBus.unregister(renderer);
@@ -1348,6 +1354,72 @@ public class HdPlugin extends Plugin {
 		if (texTiledLighting != 0)
 			glDeleteTextures(texTiledLighting);
 		texTiledLighting = 0;
+	}
+
+	private void initializeRoofMap() {
+		// One texel per extended scene tile. R holds whether the tile is under a roof,
+		// G holds the height of the roof above it, so fog can be kept off indoor surfaces
+		roofMapBuffer = BufferUtils.createFloatBuffer(EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE * 2);
+
+		texRoofMap = glGenTextures();
+		glActiveTexture(TEXTURE_UNIT_ROOF_MAP);
+		glBindTexture(GL_TEXTURE_2D, texRoofMap);
+		// Linear filtering softens the fog's edge in doorways and along walls
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexImage2D(
+			GL_TEXTURE_2D, 0, GL_RG16F,
+			EXTENDED_SCENE_SIZE, EXTENDED_SCENE_SIZE,
+			0, GL_RG, GL_FLOAT, roofMapBuffer
+		);
+	}
+
+	public void updateRoofMap(Scene scene) {
+		if (texRoofMap == 0)
+			return;
+
+		byte[][][] settings = scene.getExtendedTileSettings();
+		int[][][] tileHeights = scene.getTileHeights();
+		roofMapBuffer.clear();
+		for (int y = 0; y < EXTENDED_SCENE_SIZE; y++) {
+			for (int x = 0; x < EXTENDED_SCENE_SIZE; x++) {
+				int roofLevel = -1;
+				for (int z = MAX_Z - 1; z >= 0; z--) {
+					if ((settings[z][x][y] & TILE_FLAG_UNDER_ROOF) != 0) {
+						roofLevel = z;
+						break;
+					}
+				}
+
+				// The roof sits on the level above the highest roofed level. Uncovered tiles
+				// use the first level, which keeps the heights smooth across roof edges
+				int ceilingLevel = max(1, roofLevel + 1);
+				int ceiling;
+				if (ceilingLevel < MAX_Z) {
+					ceiling = tileHeights[ceilingLevel][x][y];
+				} else {
+					// There's no level above the top one, so extrapolate one storey above it
+					ceiling = 2 * tileHeights[MAX_Z - 1][x][y] - tileHeights[MAX_Z - 2][x][y];
+				}
+
+				roofMapBuffer.put(roofLevel == -1 ? 0 : 1);
+				roofMapBuffer.put(ceiling);
+			}
+		}
+		roofMapBuffer.flip();
+
+		glActiveTexture(TEXTURE_UNIT_ROOF_MAP);
+		glBindTexture(GL_TEXTURE_2D, texRoofMap);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, EXTENDED_SCENE_SIZE, EXTENDED_SCENE_SIZE, GL_RG, GL_FLOAT, roofMapBuffer);
+	}
+
+	private void destroyRoofMap() {
+		if (texRoofMap != 0)
+			glDeleteTextures(texRoofMap);
+		texRoofMap = 0;
+		roofMapBuffer = null;
 	}
 
 	public void updateSceneFbo() {

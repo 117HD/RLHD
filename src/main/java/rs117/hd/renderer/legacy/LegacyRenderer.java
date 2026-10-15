@@ -1046,6 +1046,7 @@ public class LegacyRenderer implements Renderer {
 			plugin.uboGlobal.groundFogStart.set(env.groundFogStart);
 			plugin.uboGlobal.groundFogEnd.set(env.groundFogEnd);
 			plugin.uboGlobal.groundFogOpacity.set(config.groundFog() ? env.groundFogOpacity : 0);
+			plugin.uboGlobal.groundFogUnderRoofs.set(environmentManager.getTargetEnvironment().groundFogUnderRoofs ? 1 : 0);
 
 			// Lights & lightning
 			plugin.uboGlobal.pointLightsCount.set(lightManager.getNumVisibleLights());
@@ -1354,6 +1355,7 @@ public class LegacyRenderer implements Renderer {
 		} else {
 			initializeTileHeightMap(scene);
 		}
+		plugin.updateRoofMap(scene);
 
 		tileVisibilityCached = false;
 		lightManager.loadSceneLights(nextSceneContext);

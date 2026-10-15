@@ -216,6 +216,10 @@
         "type": "number",
         "description": "Ground fog opacity ranging from 0 to 1, meaning no ground fog and full ground fog respectively. Defaults to 0."
       },
+      "groundFogUnderRoofs": {
+        "type": "boolean",
+        "description": "Whether ground fog should also cover tiles beneath roofs, such as building interiors. Useful for enclosed areas like caves, where every tile may be flagged as being under a roof. Defaults to false."
+      },
       "windAngle": {
         "type": "number",
         "description": "Angle in degrees for the wind direction. Zero is east and positive rotates towards north. Defaults to 0."

@@ -49,6 +49,7 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public final Property groundFogStart = addProperty(PropertyType.Float, "groundFogStart");
 	public final Property groundFogEnd = addProperty(PropertyType.Float, "groundFogEnd");
 	public final Property groundFogOpacity = addProperty(PropertyType.Float, "groundFogOpacity");
+	public final Property groundFogUnderRoofs = addProperty(PropertyType.Int, "groundFogUnderRoofs");
 
 	public final Property waterColorLight = addProperty(PropertyType.FVec3, "waterColorLight");
 	public final Property waterColorMid = addProperty(PropertyType.FVec3, "waterColorMid");

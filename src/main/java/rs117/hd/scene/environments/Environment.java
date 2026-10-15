@@ -86,6 +86,7 @@ public class Environment {
 	public float groundFogStart = -200;
 	public float groundFogEnd = -500;
 	public float groundFogOpacity = 0;
+	public boolean groundFogUnderRoofs = false;
 	@JsonAdapter(DegreesToRadians.class)
 	public float windAngle = 0.0f;
 	public float windSpeed = 15.0f;
