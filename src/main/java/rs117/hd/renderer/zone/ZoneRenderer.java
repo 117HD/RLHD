@@ -156,7 +156,7 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private SceneShaderProgram.Water waterProgram;
-	
+
 	@Inject
 	private SceneShaderProgram.GapFiller gapFillerProgram;
 
@@ -193,7 +193,7 @@ public class ZoneRenderer implements Renderer {
 	public static GLMappedBufferIntWriter eboAlphaWriter;
 
 	private int waterTypeMapTexture;
-	private final ByteBuffer waterTypeMapData = BufferUtils.createByteBuffer(EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE);
+	private ByteBuffer waterTypeMapData;
 
 	private boolean sceneFboValid;
 	private boolean shouldRenderScene;
@@ -266,6 +266,7 @@ public class ZoneRenderer implements Renderer {
 		if (waterTypeMapTexture != 0)
 			glDeleteTextures(waterTypeMapTexture);
 		waterTypeMapTexture = 0;
+		waterTypeMapData = null;
 
 		for (int i = 0; i < frameFences.length; i++) {
 			if (frameFences[i] != 0)
@@ -401,6 +402,7 @@ public class ZoneRenderer implements Renderer {
 
 
 	private void initializeWaterTypeMap() {
+		waterTypeMapData = BufferUtils.createByteBuffer(EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE);
 		waterTypeMapTexture = glGenTextures();
 		glActiveTexture(TEXTURE_UNIT_WATER_TYPE_MAP);
 		glBindTexture(GL_TEXTURE_2D, waterTypeMapTexture);
