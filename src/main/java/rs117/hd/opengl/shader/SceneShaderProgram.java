@@ -18,7 +18,6 @@ public class SceneShaderProgram extends ShaderProgram {
 	protected final UniformTexture uniTiledLightingTextureArray = addUniformTexture("tiledLightingArray");
 	protected final UniformTexture uniTextureFaces = addUniformTexture("textureFaces");
 	protected final UniformTexture uniNebulaMap = addUniformTexture("nebulaMap");
-	protected final UniformTexture uniWaterTypeMap = addUniformTexture("waterTypeMap");
 
 	protected boolean IS_WATER_SHADER = false;
 
@@ -29,7 +28,6 @@ public class SceneShaderProgram extends ShaderProgram {
 		uniTiledLightingTextureArray.ignoreMissing = true;
 		uniTerrainShadowMap.ignoreMissing = true;
 		uniNebulaMap.ignoreMissing = true;
-		uniWaterTypeMap.ignoreMissing = true;
 	}
 
 	@Override
@@ -40,7 +38,6 @@ public class SceneShaderProgram extends ShaderProgram {
 		uniTiledLightingTextureArray.set(TEXTURE_UNIT_TILED_LIGHTING_MAP);
 		uniTextureFaces.set(TEXTURE_UNIT_TEXTURED_FACES);
 		uniNebulaMap.set(TEXTURE_UNIT_NEBULA_MAP);
-		uniWaterTypeMap.set(TEXTURE_UNIT_WATER_TYPE_MAP);
 	}
 
 	@Override
@@ -58,7 +55,15 @@ public class SceneShaderProgram extends ShaderProgram {
 	}
 
 	public static class Water extends SceneShaderProgram {
+		protected final UniformTexture uniWaterTypeMap = addUniformTexture("waterTypeMap");
+
 		Water() { IS_WATER_SHADER = true; }
+
+		@Override
+		protected void initialize() {
+			super.initialize();
+			uniWaterTypeMap.set(TEXTURE_UNIT_WATER_TYPE_MAP);
+		}
 	}
 
 	public static class Legacy extends SceneShaderProgram {
