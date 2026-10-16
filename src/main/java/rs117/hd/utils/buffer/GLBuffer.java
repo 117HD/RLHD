@@ -47,17 +47,17 @@ public class GLBuffer implements Destructible {
 	private static ByteBuffer COPY_READ_BUFFER, COPY_WRITE_BUFFER;
 	public static final boolean DEBUG_MAC_OS = false;
 
-	public static int STORAGE_NONE = 0;
-	public static int STORAGE_PERSISTENT = 1;
-	public static int STORAGE_IMMUTABLE = 2;
-	public static int STORAGE_CLIENT = 4;
-	public static int STORAGE_READ = 8;
-	public static int STORAGE_WRITE = 16;
+	public static final int STORAGE_NONE = 0;
+	public static final int STORAGE_PERSISTENT = 1;
+	public static final int STORAGE_IMMUTABLE = 2;
+	public static final int STORAGE_CLIENT = 4;
+	public static final int STORAGE_READ = 8;
+	public static final int STORAGE_WRITE = 16;
 
-	public static int MAP_READ = 1;
-	public static int MAP_WRITE = 2;
-	public static int MAP_UNSYNCHRONIZED = 4;
-	public static int MAP_INVALIDATE = 8;
+	public static final int MAP_READ = 1;
+	public static final int MAP_WRITE = 2;
+	public static final int MAP_UNSYNCHRONIZED = 4;
+	public static final int MAP_INVALIDATE = 8;
 
 	public final int target;
 	public final int usage;

@@ -40,8 +40,9 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 @Singleton
 public class ModelStreamingManager {
-	public static final ConcurrentPool<PrimitiveCharArray> FACE_INDICES = new ConcurrentPool<>(PrimitiveCharArray::new);
 	public static final int RL_RENDER_THREADS = 2;
+
+	private static final ConcurrentPool<PrimitiveCharArray> FACE_INDICES = new ConcurrentPool<>(PrimitiveCharArray::new);
 
 	@Inject
 	private Injector injector;

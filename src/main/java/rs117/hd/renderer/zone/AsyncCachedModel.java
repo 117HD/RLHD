@@ -29,7 +29,6 @@ import static rs117.hd.utils.collections.PooledArrayType.SHORT;
 @Setter
 @Accessors(chain = false)
 public final class AsyncCachedModel extends Job implements Model {
-	public static final Runtime RUNTIME = Runtime.getRuntime();
 	public static final ConcurrentLinkedQueue<AsyncCachedModel> INFLIGHT = new ConcurrentLinkedQueue<>();
 	public static ConcurrentPool<AsyncCachedModel> POOL;
 
@@ -44,6 +43,8 @@ public final class AsyncCachedModel extends Job implements Model {
 			AsyncCachedModel.POOL.destroy();
 		AsyncCachedModel.POOL = null;
 	}
+
+	private static final Runtime RUNTIME = Runtime.getRuntime();
 
 	private int sceneId;
 	private int bufferOffset;

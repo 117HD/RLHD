@@ -19,8 +19,8 @@ public final class GenericJob extends Job {
 		return newTask;
 	}
 
-	public String context;
-	public TaskRunnable runnable;
+	private String context;
+	private TaskRunnable runnable;
 
 	@Override
 	public void onRun() throws InterruptedException {
