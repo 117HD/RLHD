@@ -26,6 +26,7 @@ package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Set;
 import javax.inject.Inject;
@@ -37,6 +38,7 @@ import net.runelite.api.hooks.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.DrawManager;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
@@ -62,6 +64,7 @@ import rs117.hd.scene.SkyManager;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
@@ -72,6 +75,7 @@ import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLMappedBufferIntWriter;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
+import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.JobSystem;
 
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
@@ -84,6 +88,7 @@ import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_WATER_TYPE_MAP;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
@@ -127,6 +132,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private EnvironmentManager environmentManager;
+
+	@Inject
+	private ProceduralGenerator proceduralGenerator;
 
 	@Inject
 	private SceneManager sceneManager;
@@ -181,6 +189,9 @@ public class ZoneRenderer implements Renderer {
 	public static GLBuffer.EBO eboAlpha;
 	public static GLMappedBufferIntWriter eboAlphaWriter;
 
+	private int waterTypeMapTexture;
+	private final ByteBuffer waterTypeMapData = BufferUtils.createByteBuffer(EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE);
+
 	private boolean sceneFboValid;
 	private boolean shouldRenderScene;
 	private boolean shouldRenderVanillaSkybox;
@@ -232,6 +243,8 @@ public class ZoneRenderer implements Renderer {
 
 		skyRenderer.initialize();
 
+		initializeWaterTypeMap();
+
 		// Force updates that only run when the cameras change
 		sceneCamera.setDirty();
 		directionalCamera.setDirty();
@@ -246,6 +259,10 @@ public class ZoneRenderer implements Renderer {
 		modelStreamingManager.destroy();
 		sceneManager.destroy();
 		uboWorldViews.destroy();
+
+		if (waterTypeMapTexture != 0)
+			glDeleteTextures(waterTypeMapTexture);
+		waterTypeMapTexture = 0;
 
 		for (int i = 0; i < frameFences.length; i++) {
 			if (frameFences[i] != 0)
@@ -374,6 +391,84 @@ public class ZoneRenderer implements Renderer {
 		if (indirectDrawCmdsStaging != null)
 			indirectDrawCmdsStaging.destroy();
 		indirectDrawCmdsStaging = null;
+	}
+
+
+
+	private void initializeWaterTypeMap() {
+		waterTypeMapTexture = glGenTextures();
+		glActiveTexture(TEXTURE_UNIT_WATER_TYPE_MAP);
+		glBindTexture(GL_TEXTURE_2D, waterTypeMapTexture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexImage2D(
+			GL_TEXTURE_2D,
+			0,
+			GL_R8UI,
+			EXTENDED_SCENE_SIZE,
+			EXTENDED_SCENE_SIZE,
+			0,
+			GL_RED_INTEGER,
+			GL_UNSIGNED_BYTE,
+			0
+		);
+	}
+
+	public void uploadWaterTypes() {
+		if (waterTypeMapTexture == 0)
+			return;
+
+		final WorldViewContext ctx = sceneManager.getRoot();
+		if(ctx == null || ctx.sceneContext == null)
+			return;
+
+		final byte[] waterTypeMapBytes = PooledArrayType.BYTE.borrow(EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE);
+		try {
+			Arrays.fill(waterTypeMapBytes, (byte) 0);
+			Tile[][] yTiles = ctx.sceneContext.scene.getExtendedTiles()[0];
+			int sizeX = min(EXTENDED_SCENE_SIZE, yTiles.length);
+			for (int x = 0; x < sizeX; x++) {
+				Tile[] xTiles = yTiles[x];
+				if (xTiles == null)
+					continue;
+
+				int sizeY = min(EXTENDED_SCENE_SIZE, xTiles.length);
+				for (int y = 0; y < sizeY; y++) {
+					Tile tile = xTiles[y];
+					if (tile == null)
+						continue;
+
+					if (tile.getBridge() != null)
+						tile = tile.getBridge();
+
+					WaterType waterType = proceduralGenerator.computeWaterType(ctx.sceneContext, tile, x, y);
+					if (waterType != WaterType.NONE)
+						waterTypeMapBytes[y * EXTENDED_SCENE_SIZE + x] = (byte) waterType.index;
+				}
+			}
+
+			waterTypeMapData.clear();
+			waterTypeMapData.put(waterTypeMapBytes, 0, EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE);
+			waterTypeMapData.flip();
+
+			glActiveTexture(TEXTURE_UNIT_WATER_TYPE_MAP);
+			glBindTexture(GL_TEXTURE_2D, waterTypeMapTexture);
+			glTexSubImage2D(
+				GL_TEXTURE_2D,
+				0,
+				0,
+				0,
+				EXTENDED_SCENE_SIZE,
+				EXTENDED_SCENE_SIZE,
+				GL_RED_INTEGER,
+				GL_UNSIGNED_BYTE,
+				waterTypeMapData
+			);
+		} finally {
+			PooledArrayType.BYTE.release(waterTypeMapBytes);
+		}
 	}
 
 	@Override
@@ -1465,6 +1560,7 @@ public class ZoneRenderer implements Renderer {
 	public void swapScene(Scene scene) {
 		try {
 			sceneManager.swapScene(scene);
+			uploadWaterTypes();
 			directionalCamera.setDirty();
 		} catch (Throwable ex) {
 			log.error("Error during swapScene:", ex);

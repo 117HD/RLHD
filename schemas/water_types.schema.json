@@ -85,6 +85,10 @@
         "type": "boolean",
         "description": "Whether shoreline foam should be drawn for the water type."
       },
+      "isSailing": {
+        "type": "boolean",
+        "description": "Whether this is a sailing water type."
+      },
       "duration": {
         "type": "number",
         "description": "The duration before the UV scrolling repeats. Smaller numbers yield faster scrolling waves."

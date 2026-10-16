@@ -53,6 +53,7 @@ uniform sampler2D shadowMap;
     #endif
 #endif
 uniform usampler2DArray tiledLightingArray;
+uniform usampler2D waterTypeMap;
 
 // general HD settings
 
