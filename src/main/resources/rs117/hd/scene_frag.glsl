@@ -42,6 +42,7 @@
 #include <utils/hash.glsl>
 
 #include MATERIAL_CONSTANTS
+#include IS_WATER_SHADER
 
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
@@ -143,7 +144,11 @@ void main() {
     int flowMap = material1.flowMap;
 
     bool isUnderwater = waterDepth != 0;
+    #if ZONE_RENDERER
+    bool isWater = IS_WATER_SHADER == 1;
+    #else
     bool isWater = waterTypeIndex > 0 && !isUnderwater;
+    #endif
 
     vec4 outputColor = vec4(1);
 

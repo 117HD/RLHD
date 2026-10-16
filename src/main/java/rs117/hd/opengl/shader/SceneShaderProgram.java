@@ -1,5 +1,7 @@
 package rs117.hd.opengl.shader;
 
+import java.io.IOException;
+
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_NEBULA_MAP;
@@ -17,6 +19,8 @@ public class SceneShaderProgram extends ShaderProgram {
 	protected final UniformTexture uniTextureFaces = addUniformTexture("textureFaces");
 	protected final UniformTexture uniNebulaMap = addUniformTexture("nebulaMap");
 	protected final UniformTexture uniWaterTypeMap = addUniformTexture("waterTypeMap");
+
+	protected boolean IS_WATER_SHADER = false;
 
 	public SceneShaderProgram() {
 		super(t -> t
@@ -39,6 +43,11 @@ public class SceneShaderProgram extends ShaderProgram {
 		uniWaterTypeMap.set(TEXTURE_UNIT_WATER_TYPE_MAP);
 	}
 
+	@Override
+	public void compile(ShaderIncludes includes) throws ShaderException, IOException {
+		super.compile(includes.copy().define("IS_WATER_SHADER", IS_WATER_SHADER));
+	}
+
 	public static class GapFiller extends SceneShaderProgram {
 		GapFiller() {
 			shaderTemplate.add(GL_FRAGMENT_SHADER, "gap_filler_frag.glsl");
@@ -46,6 +55,10 @@ public class SceneShaderProgram extends ShaderProgram {
 			uniTextureArray.ignoreMissing = true;
 			uniShadowMap.ignoreMissing = true;
 		}
+	}
+
+	public static class Water extends SceneShaderProgram {
+		Water() { IS_WATER_SHADER = true; }
 	}
 
 	public static class Legacy extends SceneShaderProgram {
