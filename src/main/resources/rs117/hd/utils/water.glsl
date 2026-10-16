@@ -300,6 +300,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
 
         vec3 surfaceColorOut = surface * max(combinedSpecularStrength, 0.2);
 
+
         // apply lighting
         vec3 compositeLight =
             ambientLightOut + lightOut + directionalSpecular + skyLightOut + lightningOut +
