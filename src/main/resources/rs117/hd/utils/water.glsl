@@ -232,25 +232,23 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
             underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut;
 
         vec3 baseColor = waterType.surfaceColor * compositeLight;
-        baseColor = mix(baseColor, surface, waterType.fresnelAmount);
-        if (waterType.fresnelAmount == 0.85) {
-            // Hack to improve visibility between different sailing water types, based on unshadowed luminance
-            vec3 unshadowedBaseColor = waterType.surfaceColor * (
-                ambientLightOut +
-                unshadowedLightOut +
-                skyLightOut +
-                lightningOut +
-                underglowOut +
-                pointLightsOut
-            );
+
+        // Hacks to improve visibility between different sailing water types, based on unshadowed luminance
+        bool isHazardous = waterType.fresnelAmount == 0.86;
+        float fresnelAmount = isHazardous ? 0.85 : waterType.fresnelAmount;
+        baseColor = mix(baseColor, surface, fresnelAmount);
+        if (isHazardous) {
+            vec3 unshadowedBaseColor = waterType.surfaceColor *
+                (ambientLightOut + unshadowedLightOut + skyLightOut + underglowOut);
             float waterLuminance = linearSrgbLuminance(srgbToLinear(max(unshadowedBaseColor, vec3(0))));
             float skyLuminance = linearSrgbLuminance(srgbToLinear(max(surface, vec3(0))));
             float reflectionDominance = skyLuminance / max(waterLuminance, 1e-6);
-            float reflectionAmount = mix(waterType.fresnelAmount, .55 * OPACITY, smoothstep(1.0, 4.0, reflectionDominance));
-            baseColor += (waterType.fresnelAmount - reflectionAmount) * (unshadowedBaseColor - surface);
+            float reflectionAmount = mix(fresnelAmount, fresnelAmount * 0.65, smoothstep(1.0, 4.0, reflectionDominance));
+            baseColor += (fresnelAmount - reflectionAmount) * (unshadowedBaseColor - surface);
         }
-        if (waterType.fresnelAmount == 0.85)
+        if (fresnelAmount == 0.85)
             baseColor *= .75f; // Sailing hack
+
         vec3 foamColor = waterType.foamColor * foamMask * compositeLight;
         float litFoamAmount = foamAmount * foamColor.r;
         baseColor = mix(baseColor, foamColor, litFoamAmount);
