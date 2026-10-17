@@ -134,9 +134,6 @@ public class ZoneRenderer implements Renderer {
 	private EnvironmentManager environmentManager;
 
 	@Inject
-	private ProceduralGenerator proceduralGenerator;
-
-	@Inject
 	private SceneManager sceneManager;
 
 	@Inject
@@ -144,6 +141,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private SkyManager skyManager;
+
+	@Inject
+	private ProceduralGenerator proceduralGenerator;
 
 	@Inject
 	private SkyRenderer skyRenderer;
@@ -1208,7 +1208,6 @@ public class ZoneRenderer implements Renderer {
 			if (renderWater) {
 				sceneCmd.SetShader(waterProgram);
 				z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
-
 				sceneCmd.SetShader(sceneProgram);
 			}
 
