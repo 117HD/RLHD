@@ -5438,8 +5438,6 @@
       "FAI_VARROCK_WATCHTOWER_WOODEN_BEAM_LVL2",
       "FAI_VARROCK_WATCHTOWER_CORNER_LVL3",
       "FAI_VARROCK_WATCHTOWER_WALL_LVL3",
-      "FAI_VARROCK_WATCHTOWER_ROOF_LVL4",
-      "FAI_VARROCK_WATCHTOWER_ROOF_3X3",
       "FAI_VARROCK_CASTLE_BATTLEMENT_SHAPE_8_RIGHT",
       "FAI_VARROCK_CASTLE_BATTLEMENT_SHAPE_8_LEFT",
       "FAI_VARROCK_CASTLE_BATTLEMENT_SHAPE_8_RIGHT_2",
@@ -5474,6 +5472,29 @@
       {
         "description": "Interior trim",
         "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 7",
+        "uvType": "BOX",
+        "uvOrientationZ": 512,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Varrock Watchtower Roof - Brick walls with taupe interior",
+    "baseMaterial": "SMOOTH_STONE_SEMI_DARK",
+    "flatNormals": true,
+    "doubleSidedFaces": true,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "FAI_VARROCK_WATCHTOWER_ROOF_LVL4",
+      "FAI_VARROCK_WATCHTOWER_ROOF_3X3"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Interior trim",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "doubleSidedFaces": true,
         "colors": "h == 7",
         "uvType": "BOX",
         "uvOrientationZ": 512,
@@ -7083,6 +7104,7 @@
         "description": "tiles",
         "colors": "h == 0",
         "baseMaterial": "STONE_NORMALED",
+        "doubleSidedFaces": true,
         "uvType": "BOX",
         "uvOrientation": -256,
         "uvScale": 0.8
@@ -36570,6 +36592,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "retainVanillaUvs": false,
+    "doubleSidedFaces": true,
     "colorOverrides": [
       {
         "colors": "h == 10 && s == 0",
@@ -39292,6 +39315,7 @@
   {
     "description": "Woodcutting Guild - Redwood Tree Top Leaves",
     "baseMaterial": "GRUNGE_3_DULL",
+    "doubleSidedFaces": true,
     "objectIds": [
       "REDWOODTREE_CANOPY_LOW_BLANK",
       "REDWOODTREE_CANOPY_LOW_SIDE1",
@@ -48146,6 +48170,7 @@
   {
     "description": "Zeah - Rough Plank Roofs",
     "baseMaterial": "WOOD_GRAIN_3",
+    "doubleSidedFaces": true,
     "objectIds": [
       "FARM_BARN_ROOF1", "FARM_BARN_ROOF2", "FARM_BARN_ROOF"
     ],
@@ -67804,6 +67829,7 @@
   {
     "description": "Corsair Cove - Hosidius - Thatch - Roofs",
     "baseMaterial": "HD_HAY_BRIGHT",
+    "doubleSidedFaces": true,
     "uvType": "BOX",
     "uvScale": 0.7,
     "objectIds": [
@@ -67818,6 +67844,7 @@
       {
         "description": "Ropes",
         "baseMaterial": "ROPE",
+        "doubleSidedFaces": true,
         "colors": "h == 7",
         "uvType": "BOX",
         "uvScale": 0.66

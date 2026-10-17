@@ -17,8 +17,8 @@
     "name": "WATER_FLAT",
     "surfaceColor": "#69809C",
     "fresnelAmount": 0.85,
-    "isSailing": true,
-    "flat": true
+    "flat": true,
+    "isSailing": true
   },
   {
     "name": "SWAMP_WATER",
@@ -335,423 +335,430 @@
     ]
   },
   {
+    "name": "WATER_OPEN",
+    "material": "WATER_OPEN",
+    "surfaceColor": "#597291",
+    "fresnelAmount": 0.85,
+    "isSailing": true
+  },
+  {
     "name": "WATER_SHELF",
-    "vanillaTextureIndex": 130,
-    "surfaceColor": "#556F8F",
+    "material": "WATER_SHELF",
+    "surfaceColor": "#526587",
     "fresnelAmount": 0.85,
     "isSailing": true
   },
   {
     "name": "WATER_DROPOFF",
-    "vanillaTextureIndex": 131,
-    "surfaceColor": "#536B88",
+    "material": "WATER_DROPOFF",
+    "surfaceColor": "#4e5d81",
     "fresnelAmount": 0.85,
     "isSailing": true
   },
   {
     "name": "WATER_DEEP",
-    "vanillaTextureIndex": 132,
-    "surfaceColor": "#4D5D81",
+    "material": "WATER_DEEP",
+    "surfaceColor": "#3d4b71",
     "fresnelAmount": 0.85,
     "isSailing": true
   },
   {
     "name": "WATER_TRENCH",
-    "vanillaTextureIndex": 133,
-    "surfaceColor": "#3C4B71",
+    "material": "WATER_TRENCH",
+    "surfaceColor": "#374567",
     "fresnelAmount": 0.85,
     "isSailing": true
   },
   {
     "name": "WATER_STORMY",
-    "vanillaTextureIndex": 134,
-    "surfaceColor": "#29334D",
-    "fresnelAmount": 0.85,
+    "material": "WATER_STORMY",
+    "surfaceColor": "#3f545e",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_STORMY_OPEN",
-    "vanillaTextureIndex": 135,
-    "surfaceColor": "#4E6875",
-    "fresnelAmount": 0.85,
+    "material": "WATER_STORMY_OPEN",
+    "surfaceColor": "#3a4d56",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_STORMY_SHELF",
-    "vanillaTextureIndex": 136,
-    "surfaceColor": "#4A6167",
-    "fresnelAmount": 0.85,
+    "material": "WATER_STORMY_SHELF",
+    "surfaceColor": "#324752",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_STORMY_DROPOFF",
-    "vanillaTextureIndex": 137,
-    "surfaceColor": "#3E5962",
-    "fresnelAmount": 0.85,
+    "material": "WATER_STORMY_DROPOFF",
+    "surfaceColor": "#2f3f4d",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_STORMY_DEEP",
-    "vanillaTextureIndex": 138,
-    "surfaceColor": "#40545F",
-    "fresnelAmount": 0.85,
+    "material": "WATER_STORMY_DEEP",
+    "surfaceColor": "#293744",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_SUNBAKED",
-    "vanillaTextureIndex": 139,
-    "surfaceColor": "#334556",
-    "fresnelAmount": 0.85,
+    "material": "WATER_SUNBAKED",
+    "surfaceColor": "#2e414c",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_SUNBAKED_OPEN",
-    "vanillaTextureIndex": 140,
-    "surfaceColor": "#3A505F",
-    "fresnelAmount": 0.85,
+    "material": "WATER_SUNBAKED_OPEN",
+    "surfaceColor": "#2c3d48",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_SUNBAKED_SHELF",
-    "vanillaTextureIndex": 141,
-    "surfaceColor": "#384C5A",
-    "fresnelAmount": 0.85,
+    "material": "WATER_SUNBAKED_SHELF",
+    "surfaceColor": "#293b46",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_SUNBAKED_DROPOFF",
-    "vanillaTextureIndex": 142,
-    "surfaceColor": "#334958",
-    "fresnelAmount": 0.85,
+    "material": "WATER_SUNBAKED_DROPOFF",
+    "surfaceColor": "#283744",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_SUNBAKED_DEEP",
-    "vanillaTextureIndex": 143,
-    "surfaceColor": "#324455",
-    "fresnelAmount": 0.85,
+    "material": "WATER_SUNBAKED_DEEP",
+    "surfaceColor": "#263541",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_PROFANE",
-    "vanillaTextureIndex": 144,
-    "surfaceColor": "#2F4251",
-    "fresnelAmount": 0.85,
+    "material": "WATER_PROFANE",
+    "surfaceColor": "#414861",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_PROFANE_OPEN",
-    "vanillaTextureIndex": 145,
-    "surfaceColor": "#515A7A",
-    "fresnelAmount": 0.85,
+    "material": "WATER_PROFANE_OPEN",
+    "surfaceColor": "#3a415c",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_PROFANE_SHELF",
-    "vanillaTextureIndex": 146,
-    "surfaceColor": "#485073",
-    "fresnelAmount": 0.85,
+    "material": "WATER_PROFANE_SHELF",
+    "surfaceColor": "#353856",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_PROFANE_DROPOFF",
-    "vanillaTextureIndex": 147,
-    "surfaceColor": "#42466B",
-    "fresnelAmount": 0.85,
+    "material": "WATER_PROFANE_DROPOFF",
+    "surfaceColor": "#333552",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_PROFANE_DEEP",
-    "vanillaTextureIndex": 148,
-    "surfaceColor": "#352E56",
-    "fresnelAmount": 0.85,
+    "material": "WATER_PROFANE_DEEP",
+    "surfaceColor": "#292b49",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_CURSED",
-    "vanillaTextureIndex": 149,
-    "surfaceColor": "#2F2A4A",
-    "fresnelAmount": 0.85,
+    "material": "WATER_CURSED",
+    "surfaceColor": "#3f495e",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_CURSED_OPEN",
-    "vanillaTextureIndex": 150,
-    "surfaceColor": "#4E5B76",
-    "fresnelAmount": 0.85,
+    "material": "WATER_CURSED_OPEN",
+    "surfaceColor": "#3a4356",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_CURSED_SHELF",
-    "vanillaTextureIndex": 151,
-    "surfaceColor": "#48526C",
-    "fresnelAmount": 0.85,
+    "material": "WATER_CURSED_SHELF",
+    "surfaceColor": "#323c52",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_CURSED_DROPOFF",
-    "vanillaTextureIndex": 152,
-    "surfaceColor": "#3E4B67",
-    "fresnelAmount": 0.85,
+    "material": "WATER_CURSED_DROPOFF",
+    "surfaceColor": "#2f354d",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_CURSED_DEEP",
-    "vanillaTextureIndex": 153,
-    "surfaceColor": "#3B4161",
-    "fresnelAmount": 0.85,
+    "material": "WATER_CURSED_DEEP",
+    "surfaceColor": "#262a44",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_SCALDING",
-    "vanillaTextureIndex": 154,
-    "surfaceColor": "#2F3456",
-    "fresnelAmount": 0.85,
+    "material": "WATER_SCALDING",
+    "surfaceColor": "#424759",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_SCALDING_OPEN",
-    "vanillaTextureIndex": 155,
-    "surfaceColor": "#525870",
-    "fresnelAmount": 0.85,
+    "material": "WATER_SCALDING_OPEN",
+    "surfaceColor": "#3d4152",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_SCALDING_SHELF",
-    "vanillaTextureIndex": 156,
-    "surfaceColor": "#4C5066",
-    "fresnelAmount": 0.85,
+    "material": "WATER_SCALDING_SHELF",
+    "surfaceColor": "#353a4d",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_SCALDING_DROPOFF",
-    "vanillaTextureIndex": 157,
-    "surfaceColor": "#434961",
-    "fresnelAmount": 0.85,
+    "material": "WATER_SCALDING_DROPOFF",
+    "surfaceColor": "#353546",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_SCALDING_DEEP",
-    "vanillaTextureIndex": 158,
-    "surfaceColor": "#424257",
-    "fresnelAmount": 0.85,
+    "material": "WATER_SCALDING_DEEP",
+    "surfaceColor": "#2b2b3c",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_ICY",
-    "vanillaTextureIndex": 159,
-    "surfaceColor": "#36344B",
-    "fresnelAmount": 0.85,
+    "material": "WATER_ICY",
+    "surfaceColor": "#435468",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_ICY_OPEN",
-    "vanillaTextureIndex": 160,
-    "surfaceColor": "#5C6A7A",
-    "fresnelAmount": 0.85,
+    "material": "WATER_ICY_OPEN",
+    "surfaceColor": "#3e4e61",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_ICY_SHELF",
-    "vanillaTextureIndex": 161,
-    "surfaceColor": "#566271",
-    "fresnelAmount": 0.85,
+    "material": "WATER_ICY_SHELF",
+    "surfaceColor": "#37495d",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_ICY_DROPOFF",
-    "vanillaTextureIndex": 162,
-    "surfaceColor": "#4C5C6D",
-    "fresnelAmount": 0.85,
+    "material": "WATER_ICY_DROPOFF",
+    "surfaceColor": "#344059",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_ICY_DEEP",
-    "vanillaTextureIndex": 163,
-    "surfaceColor": "#495268",
-    "fresnelAmount": 0.85,
+    "material": "WATER_ICY_DEEP",
+    "surfaceColor": "#2a354f",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_ENDLESS",
-    "vanillaTextureIndex": 164,
-    "surfaceColor": "#3C455C",
+    "material": "WATER_ENDLESS",
+    "surfaceColor": "#8899ad",
     "fresnelAmount": 0.85,
     "isSailing": true
   },
   {
     "name": "WATER_ENDLESS_OPEN",
-    "vanillaTextureIndex": 165,
-    "surfaceColor": "#667282",
+    "material": "WATER_ENDLESS_OPEN",
+    "surfaceColor": "#8290a3",
     "fresnelAmount": 0.85,
     "isSailing": true
   },
   {
     "name": "WATER_ENDLESS_SHELF",
-    "vanillaTextureIndex": 166,
-    "surfaceColor": "#626C7A",
+    "material": "WATER_ENDLESS_SHELF",
+    "surfaceColor": "#798a9e",
     "fresnelAmount": 0.85,
     "isSailing": true
   },
   {
     "name": "WATER_ENDLESS_DROPOFF",
-    "vanillaTextureIndex": 167,
-    "surfaceColor": "#5B6776",
+    "material": "WATER_ENDLESS_DROPOFF",
+    "surfaceColor": "#747f99",
     "fresnelAmount": 0.85,
     "isSailing": true
   },
   {
     "name": "WATER_ENDLESS_DEEP",
-    "vanillaTextureIndex": 168,
-    "surfaceColor": "#575F73",
+    "material": "WATER_ENDLESS_DEEP",
+    "surfaceColor": "#68728d",
     "fresnelAmount": 0.85,
     "isSailing": true
   },
   {
     "name": "WATER_CRYSTAL",
-    "vanillaTextureIndex": 169,
-    "surfaceColor": "#4E566A",
-    "fresnelAmount": 0.85,
+    "material": "WATER_CRYSTAL",
+    "surfaceColor": "#445b6c",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_CRYSTAL_OPEN",
-    "vanillaTextureIndex": 170,
-    "surfaceColor": "#567287",
-    "fresnelAmount": 0.85,
+    "material": "WATER_CRYSTAL_OPEN",
+    "surfaceColor": "#3a5062",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_CRYSTAL_SHELF",
-    "vanillaTextureIndex": 171,
-    "surfaceColor": "#47647A",
-    "fresnelAmount": 0.85,
+    "material": "WATER_CRYSTAL_SHELF",
+    "surfaceColor": "#32495c",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_CRYSTAL_DROPOFF",
-    "vanillaTextureIndex": 172,
-    "surfaceColor": "#3F5C73",
-    "fresnelAmount": 0.85,
+    "material": "WATER_CRYSTAL_DROPOFF",
+    "surfaceColor": "#2c4257",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_CRYSTAL_DEEP",
-    "vanillaTextureIndex": 173,
-    "surfaceColor": "#37526D",
-    "fresnelAmount": 0.85,
+    "material": "WATER_CRYSTAL_DEEP",
+    "surfaceColor": "#293f53",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_FETID",
-    "vanillaTextureIndex": 174,
-    "surfaceColor": "#324E68",
-    "fresnelAmount": 0.85,
+    "material": "WATER_FETID",
+    "surfaceColor": "#3b4c4e",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_FETID_OPEN",
-    "vanillaTextureIndex": 175,
-    "surfaceColor": "#465F56",
-    "fresnelAmount": 0.85,
+    "material": "WATER_FETID_OPEN",
+    "surfaceColor": "#354648",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_FETID_SHELF",
-    "vanillaTextureIndex": 176,
-    "surfaceColor": "#3D5D51",
-    "fresnelAmount": 0.85,
+    "material": "WATER_FETID_SHELF",
+    "surfaceColor": "#2c3e41",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_FETID_DROPOFF",
-    "vanillaTextureIndex": 177,
-    "surfaceColor": "#384E52",
-    "fresnelAmount": 0.85,
+    "material": "WATER_FETID_DROPOFF",
+    "surfaceColor": "#2c3e41",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_FETID_DEEP",
-    "vanillaTextureIndex": 178,
-    "surfaceColor": "#384E52",
-    "fresnelAmount": 0.85,
+    "material": "WATER_FETID_DEEP",
+    "surfaceColor": "#253537",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_TANGLED",
-    "vanillaTextureIndex": 179,
-    "surfaceColor": "#2E4345",
-    "fresnelAmount": 0.85,
+    "material": "WATER_TANGLED",
+    "surfaceColor": "#364a56",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_TANGLED_OPEN",
-    "vanillaTextureIndex": 180,
-    "surfaceColor": "#445C6C",
-    "fresnelAmount": 0.85,
+    "material": "WATER_TANGLED_OPEN",
+    "surfaceColor": "#32444f",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_TANGLED_SHELF",
-    "vanillaTextureIndex": 181,
-    "surfaceColor": "#3E5463",
-    "fresnelAmount": 0.85,
+    "material": "WATER_TANGLED_SHELF",
+    "surfaceColor": "#2c3e4a",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_TANGLED_DROPOFF",
-    "vanillaTextureIndex": 182,
-    "surfaceColor": "#374D5C",
-    "fresnelAmount": 0.85,
+    "material": "WATER_TANGLED_DROPOFF",
+    "surfaceColor": "#263744",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_TANGLED_DEEP",
-    "vanillaTextureIndex": 183,
-    "surfaceColor": "#3C4C57",
-    "fresnelAmount": 0.85,
+    "material": "WATER_TANGLED_DEEP",
+    "surfaceColor": "#1f2f41",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_JAGGED",
-    "vanillaTextureIndex": 184,
-    "surfaceColor": "#263A51",
-    "fresnelAmount": 0.85,
+    "material": "WATER_JAGGED",
+    "surfaceColor": "#333e4a",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_JAGGED_OPEN",
-    "vanillaTextureIndex": 185,
-    "surfaceColor": "#3A4657",
-    "fresnelAmount": 0.85,
+    "material": "WATER_JAGGED_OPEN",
+    "surfaceColor": "#2e3841",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_JAGGED_SHELF",
-    "vanillaTextureIndex": 186,
-    "surfaceColor": "#333E4D",
-    "fresnelAmount": 0.85,
+    "material": "WATER_JAGGED_SHELF",
+    "surfaceColor": "#28333d",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_JAGGED_DROPOFF",
-    "vanillaTextureIndex": 187,
-    "surfaceColor": "#2B3646",
-    "fresnelAmount": 0.85,
+    "material": "WATER_JAGGED_DROPOFF",
+    "surfaceColor": "#23313a",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_JAGGED_DEEP",
-    "vanillaTextureIndex": 188,
-    "surfaceColor": "#2B3A4A",
-    "fresnelAmount": 0.85,
+    "material": "WATER_JAGGED_DEEP",
+    "surfaceColor": "#212c35",
+    "fresnelAmount": 0.86,
     "isSailing": true
   },
   {
     "name": "WATER_OUT_OF_BOUNDS",
-    "vanillaTextureIndex": 208,
-    "surfaceColor": "#1C2234",
-    "fresnelAmount": 0.85,
+    "material": "WATER_OUT_OF_BOUNDS",
+    "surfaceColor": "#171b29",
+    "fresnelAmount": 0.86,
     "isSailing": true
   }
 ]

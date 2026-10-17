@@ -737,320 +737,320 @@
     "vanillaTextureIndex": 128
   },
   {
-    "name": "WATER_OPEN",
+    "name": "TEXTURE_THATCHED02",
     "vanillaTextureIndex": 129
   },
   {
-    "name": "WATER_SHELF",
+    "name": "WATER_OPEN",
     "vanillaTextureIndex": 130
   },
   {
-    "name": "WATER_DROPOFF",
+    "name": "WATER_SHELF",
     "vanillaTextureIndex": 131
   },
   {
-    "name": "WATER_DEEP",
+    "name": "WATER_DROPOFF",
     "vanillaTextureIndex": 132
   },
   {
-    "name": "WATER_TRENCH",
+    "name": "WATER_DEEP",
     "vanillaTextureIndex": 133
   },
   {
-    "name": "WATER_STORMY",
+    "name": "WATER_TRENCH",
     "vanillaTextureIndex": 134
   },
   {
-    "name": "WATER_STORMY_OPEN",
+    "name": "WATER_STORMY",
     "vanillaTextureIndex": 135
   },
   {
-    "name": "WATER_STORMY_SHELF",
+    "name": "WATER_STORMY_OPEN",
     "vanillaTextureIndex": 136
   },
   {
-    "name": "WATER_STORMY_DROPOFF",
+    "name": "WATER_STORMY_SHELF",
     "vanillaTextureIndex": 137
   },
   {
-    "name": "WATER_STORMY_DEEP",
+    "name": "WATER_STORMY_DROPOFF",
     "vanillaTextureIndex": 138
   },
   {
-    "name": "WATER_SUNBAKED",
+    "name": "WATER_STORMY_DEEP",
     "vanillaTextureIndex": 139
   },
   {
-    "name": "WATER_SUNBAKED_OPEN",
+    "name": "WATER_SUNBAKED",
     "vanillaTextureIndex": 140
   },
   {
-    "name": "WATER_SUNBAKED_SHELF",
+    "name": "WATER_SUNBAKED_OPEN",
     "vanillaTextureIndex": 141
   },
   {
-    "name": "WATER_SUNBAKED_DROPOFF",
+    "name": "WATER_SUNBAKED_SHELF",
     "vanillaTextureIndex": 142
   },
   {
-    "name": "WATER_SUNBAKED_DEEP",
+    "name": "WATER_SUNBAKED_DROPOFF",
     "vanillaTextureIndex": 143
   },
   {
-    "name": "WATER_PROFANE",
+    "name": "WATER_SUNBAKED_DEEP",
     "vanillaTextureIndex": 144
   },
   {
-    "name": "WATER_PROFANE_OPEN",
+    "name": "WATER_PROFANE",
     "vanillaTextureIndex": 145
   },
   {
-    "name": "WATER_PROFANE_SHELF",
+    "name": "WATER_PROFANE_OPEN",
     "vanillaTextureIndex": 146
   },
   {
-    "name": "WATER_PROFANE_DROPOFF",
+    "name": "WATER_PROFANE_SHELF",
     "vanillaTextureIndex": 147
   },
   {
-    "name": "WATER_PROFANE_DEEP",
+    "name": "WATER_PROFANE_DROPOFF",
     "vanillaTextureIndex": 148
   },
   {
-    "name": "WATER_CURSED",
+    "name": "WATER_PROFANE_DEEP",
     "vanillaTextureIndex": 149
   },
   {
-    "name": "WATER_CURSED_OPEN",
+    "name": "WATER_CURSED",
     "vanillaTextureIndex": 150
   },
   {
-    "name": "WATER_CURSED_SHELF",
+    "name": "WATER_CURSED_OPEN",
     "vanillaTextureIndex": 151
   },
   {
-    "name": "WATER_CURSED_DROPOFF",
+    "name": "WATER_CURSED_SHELF",
     "vanillaTextureIndex": 152
   },
   {
-    "name": "WATER_CURSED_DEEP",
+    "name": "WATER_CURSED_DROPOFF",
     "vanillaTextureIndex": 153
   },
   {
-    "name": "WATER_SCALDING",
+    "name": "WATER_CURSED_DEEP",
     "vanillaTextureIndex": 154
   },
   {
-    "name": "WATER_SCALDING_OPEN",
+    "name": "WATER_SCALDING",
     "vanillaTextureIndex": 155
   },
   {
-    "name": "WATER_SCALDING_SHELF",
+    "name": "WATER_SCALDING_OPEN",
     "vanillaTextureIndex": 156
   },
   {
-    "name": "WATER_SCALDING_DROPOFF",
+    "name": "WATER_SCALDING_SHELF",
     "vanillaTextureIndex": 157
   },
   {
-    "name": "WATER_SCALDING_DEEP",
+    "name": "WATER_SCALDING_DROPOFF",
     "vanillaTextureIndex": 158
   },
   {
-    "name": "WATER_ICY",
+    "name": "WATER_SCALDING_DEEP",
     "vanillaTextureIndex": 159
   },
   {
-    "name": "WATER_ICY_OPEN",
+    "name": "WATER_ICY",
     "vanillaTextureIndex": 160
   },
   {
-    "name": "WATER_ICY_SHELF",
+    "name": "WATER_ICY_OPEN",
     "vanillaTextureIndex": 161
   },
   {
-    "name": "WATER_ICY_DROPOFF",
+    "name": "WATER_ICY_SHELF",
     "vanillaTextureIndex": 162
   },
   {
-    "name": "WATER_ICY_DEEP",
+    "name": "WATER_ICY_DROPOFF",
     "vanillaTextureIndex": 163
   },
   {
-    "name": "WATER_ENDLESS",
+    "name": "WATER_ICY_DEEP",
     "vanillaTextureIndex": 164
   },
   {
-    "name": "WATER_ENDLESS_OPEN",
+    "name": "WATER_ENDLESS",
     "vanillaTextureIndex": 165
   },
   {
-    "name": "WATER_ENDLESS_SHELF",
+    "name": "WATER_ENDLESS_OPEN",
     "vanillaTextureIndex": 166
   },
   {
-    "name": "WATER_ENDLESS_DROPOFF",
+    "name": "WATER_ENDLESS_SHELF",
     "vanillaTextureIndex": 167
   },
   {
-    "name": "WATER_ENDLESS_DEEP",
+    "name": "WATER_ENDLESS_DROPOFF",
     "vanillaTextureIndex": 168
   },
   {
-    "name": "WATER_CRYSTAL",
+    "name": "WATER_ENDLESS_DEEP",
     "vanillaTextureIndex": 169
   },
   {
-    "name": "WATER_CRYSTAL_OPEN",
+    "name": "WATER_CRYSTAL",
     "vanillaTextureIndex": 170
   },
   {
-    "name": "WATER_CRYSTAL_SHELF",
+    "name": "WATER_CRYSTAL_OPEN",
     "vanillaTextureIndex": 171
   },
   {
-    "name": "WATER_CRYSTAL_DROPOFF",
+    "name": "WATER_CRYSTAL_SHELF",
     "vanillaTextureIndex": 172
   },
   {
-    "name": "WATER_CRYSTAL_DEEP",
+    "name": "WATER_CRYSTAL_DROPOFF",
     "vanillaTextureIndex": 173
   },
   {
-    "name": "WATER_FETID",
+    "name": "WATER_CRYSTAL_DEEP",
     "vanillaTextureIndex": 174
   },
   {
-    "name": "WATER_FETID_OPEN",
+    "name": "WATER_FETID",
     "vanillaTextureIndex": 175
   },
   {
-    "name": "WATER_FETID_SHELF",
+    "name": "WATER_FETID_OPEN",
     "vanillaTextureIndex": 176
   },
   {
-    "name": "WATER_FETID_DROPOFF",
+    "name": "WATER_FETID_SHELF",
     "vanillaTextureIndex": 177
   },
   {
-    "name": "WATER_FETID_DEEP",
+    "name": "WATER_FETID_DROPOFF",
     "vanillaTextureIndex": 178
   },
   {
-    "name": "WATER_TANGLED",
+    "name": "WATER_FETID_DEEP",
     "vanillaTextureIndex": 179
   },
   {
-    "name": "WATER_TANGLED_OPEN",
+    "name": "WATER_TANGLED",
     "vanillaTextureIndex": 180
   },
   {
-    "name": "WATER_TANGLED_SHELF",
+    "name": "WATER_TANGLED_OPEN",
     "vanillaTextureIndex": 181
   },
   {
-    "name": "WATER_TANGLED_DROPOFF",
+    "name": "WATER_TANGLED_SHELF",
     "vanillaTextureIndex": 182
   },
   {
-    "name": "WATER_TANGLED_DEEP",
+    "name": "WATER_TANGLED_DROPOFF",
     "vanillaTextureIndex": 183
   },
   {
-    "name": "WATER_JAGGED",
+    "name": "WATER_TANGLED_DEEP",
     "vanillaTextureIndex": 184
   },
   {
-    "name": "WATER_JAGGED_OPEN",
+    "name": "WATER_JAGGED",
     "vanillaTextureIndex": 185
   },
   {
-    "name": "WATER_JAGGED_SHELF",
+    "name": "WATER_JAGGED_OPEN",
     "vanillaTextureIndex": 186
   },
   {
-    "name": "WATER_JAGGED_DROPOFF",
+    "name": "WATER_JAGGED_SHELF",
     "vanillaTextureIndex": 187
   },
   {
-    "name": "WATER_JAGGED_DEEP",
+    "name": "WATER_JAGGED_DROPOFF",
     "vanillaTextureIndex": 188
   },
   {
-    "name": "LEAFY_JATOBA",
-    "vanillaTextureIndex": 189,
-    "hasTransparency": true,
-    "doubleSidedFaces": true
+    "name": "WATER_JAGGED_DEEP",
+    "vanillaTextureIndex": 189
   },
   {
-    "name": "LEAFY_JATOBA_TILED",
+    "name": "LEAFY_JATOBA",
     "vanillaTextureIndex": 190,
     "hasTransparency": true,
     "doubleSidedFaces": true
   },
   {
-    "name": "LEAFY_JATOBA_DISEASED",
+    "name": "LEAFY_JATOBA_TILED",
     "vanillaTextureIndex": 191,
     "hasTransparency": true,
     "doubleSidedFaces": true
   },
   {
-    "name": "LEAFY_JATOBA_DISEASED_TILED",
+    "name": "LEAFY_JATOBA_DISEASED",
     "vanillaTextureIndex": 192,
     "hasTransparency": true,
     "doubleSidedFaces": true
   },
   {
-    "name": "LEAFY_CAMPHOR",
+    "name": "LEAFY_JATOBA_DISEASED_TILED",
     "vanillaTextureIndex": 193,
     "hasTransparency": true,
     "doubleSidedFaces": true
   },
   {
-    "name": "LEAFY_CAMPHOR_TILED",
+    "name": "LEAFY_CAMPHOR",
     "vanillaTextureIndex": 194,
     "hasTransparency": true,
     "doubleSidedFaces": true
   },
   {
-    "name": "LEAFY_CAMPHOR_DISEASED",
+    "name": "LEAFY_CAMPHOR_TILED",
     "vanillaTextureIndex": 195,
     "hasTransparency": true,
     "doubleSidedFaces": true
   },
   {
-    "name": "LEAFY_CAMPHOR_DISEASED_TILED",
+    "name": "LEAFY_CAMPHOR_DISEASED",
     "vanillaTextureIndex": 196,
     "hasTransparency": true,
     "doubleSidedFaces": true
   },
   {
-    "name": "LEAFY_IRONWOOD",
+    "name": "LEAFY_CAMPHOR_DISEASED_TILED",
     "vanillaTextureIndex": 197,
     "hasTransparency": true,
     "doubleSidedFaces": true
   },
   {
-    "name": "LEAFY_IRONWOOD_TILED",
+    "name": "LEAFY_IRONWOOD",
     "vanillaTextureIndex": 198,
     "hasTransparency": true,
     "doubleSidedFaces": true
   },
   {
-    "name": "LEAFY_IRONWOOD_DISEASED",
+    "name": "LEAFY_IRONWOOD_TILED",
     "vanillaTextureIndex": 199,
     "hasTransparency": true,
     "doubleSidedFaces": true
   },
   {
-    "name": "LEAFY_IRONWOOD_DISEASED_TILED",
+    "name": "LEAFY_IRONWOOD_DISEASED",
     "vanillaTextureIndex": 200,
     "hasTransparency": true,
     "doubleSidedFaces": true
   },
   {
-    "name": "TEXTURE_THATCHED02",
-    "vanillaTextureIndex": 201
+    "name": "LEAFY_IRONWOOD_DISEASED_TILED",
+    "vanillaTextureIndex": 201,
+    "hasTransparency": true,
+    "doubleSidedFaces": true
   },
   {
     "name": "LEAFY_ROSEWOOD",
@@ -1097,6 +1097,30 @@
   {
     "name": "LEAFYTREE_DARKWOOD_TILED",
     "vanillaTextureIndex": 210,
+    "hasTransparency": true,
+    "doubleSidedFaces": true
+  },
+  {
+    "name": "LEAFYTREE_AUTUMN01",
+    "vanillaTextureIndex": 211,
+    "hasTransparency": true,
+    "doubleSidedFaces": true
+  },
+  {
+    "name": "LEAFYTREE_TILED_AUTUMN01",
+    "vanillaTextureIndex": 212,
+    "hasTransparency": true,
+    "doubleSidedFaces": true
+  },
+  {
+    "name": "LEAFYTREE_AUTUMN02",
+    "vanillaTextureIndex": 213,
+    "hasTransparency": true,
+    "doubleSidedFaces": true
+  },
+  {
+    "name": "LEAFYTREE_TILED_AUTUMN02",
+    "vanillaTextureIndex": 214,
     "hasTransparency": true,
     "doubleSidedFaces": true
   },
