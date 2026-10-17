@@ -977,10 +977,8 @@
     "vanillaTextureIndex": 188
   },
   {
-    "name": "LEAFY_JATOBA",
-    "vanillaTextureIndex": 189,
-    "hasTransparency": true,
-    "doubleSidedFaces": true
+    "name": "WATER_JAGGED_TRENCH",
+    "vanillaTextureIndex": 189
   },
   {
     "name": "LEAFY_JATOBA_TILED",
