@@ -39292,6 +39292,7 @@
   {
     "description": "Woodcutting Guild - Redwood Tree Top Leaves",
     "baseMaterial": "GRUNGE_3_DULL",
+    "doubleSidedFaces": true,
     "objectIds": [
       "REDWOODTREE_CANOPY_LOW_BLANK",
       "REDWOODTREE_CANOPY_LOW_SIDE1",
@@ -48146,6 +48147,7 @@
   {
     "description": "Zeah - Rough Plank Roofs",
     "baseMaterial": "WOOD_GRAIN_3",
+    "doubleSidedFaces": true,
     "objectIds": [
       "FARM_BARN_ROOF1", "FARM_BARN_ROOF2", "FARM_BARN_ROOF"
     ],
@@ -67804,6 +67806,7 @@
   {
     "description": "Corsair Cove - Hosidius - Thatch - Roofs",
     "baseMaterial": "HD_HAY_BRIGHT",
+    "doubleSidedFaces": true,
     "uvType": "BOX",
     "uvScale": 0.7,
     "objectIds": [
@@ -67818,6 +67821,7 @@
       {
         "description": "Ropes",
         "baseMaterial": "ROPE",
+        "doubleSidedFaces": true,
         "colors": "h == 7",
         "uvType": "BOX",
         "uvScale": 0.66
