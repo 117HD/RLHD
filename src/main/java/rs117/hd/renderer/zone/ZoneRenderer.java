@@ -1121,8 +1121,8 @@ public class ZoneRenderer implements Renderer {
 				}
 
 				if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
-					if (renderWater) {
-						// Water is currently drawn with depth writes & depth testing enabled, and as such, alpha models and the water plane
+					if (!sceneManager.isRoot(ctx) || renderWater) {
+						// Alpha is currently drawn with depth writes & depth testing enabled, and as such, alpha models and the water plane
 						// can Z-fight depending on draw order. To avoid alpha models above water causing the water surface to fail its
 						// depth test, we disable depth writes for alpha models and rely on correct back to front ordering of the zones
 						sceneCmd.DepthMask(false);
