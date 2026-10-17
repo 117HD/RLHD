@@ -44,6 +44,7 @@ public class WaterType {
 	private float[] depthColor = rgb(0, 117, 142);
 	private boolean hasFoam = true;
 	private boolean isSailing = false;
+	private boolean isHazardous = false;
 	private float duration = 1;
 	public int fishingSpotRecolor = -1;
 
@@ -84,7 +85,8 @@ public class WaterType {
 		struct.flags.set(
 			(flat ? 1 : 0) |
 			(hasFoam ? 2 : 0) |
-			(isSailing ? 4 : 0)
+			(isSailing ? 4 : 0) |
+			(isHazardous ? 8 : 0)
 		);
 		struct.specularStrength.set(specularStrength);
 		struct.specularGloss.set(specularGloss);

@@ -27,3 +27,5 @@ bool isWaterFlat(WaterType type) { return (type.flags & 1) != 0; }
 bool waterHasFoam(WaterType type) { return (type.flags & 2) != 0; }
 
 bool isWaterSailing(WaterType type) { return (type.flags & 4) != 0; }
+
+bool isWaterHazardous(WaterType type) { return (type.flags & 8) != 0; }

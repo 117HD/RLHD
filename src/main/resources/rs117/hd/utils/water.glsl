@@ -321,8 +321,9 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         vec3 baseColor = waterType.surfaceColor * compositeLight;
 
         // Hacks to improve visibility between different sailing water types, based on unshadowed luminance
-        bool isHazardous = waterType.fresnelAmount == 0.86;
-        float fresnelAmount = isHazardous ? 0.85 : waterType.fresnelAmount;
+        bool isSailing = isWaterSailing(waterType);
+        bool isHazardous = isWaterHazardous(waterType);
+        float fresnelAmount = waterType.fresnelAmount;
         baseColor = mix(baseColor, surface, fresnelAmount);
         if (isHazardous) {
             vec3 unshadowedBaseColor = waterType.surfaceColor *
@@ -333,7 +334,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
             float reflectionAmount = mix(fresnelAmount, fresnelAmount * 0.65, smoothstep(1.0, 4.0, reflectionDominance));
             baseColor += (fresnelAmount - reflectionAmount) * (unshadowedBaseColor - surface);
         }
-        if (isWaterSailing(waterType))
+        if (isSailing)
             baseColor *= .75f; // Sailing hack
 
         vec3 foamColor = waterType.foamColor * foamMask * compositeLight;

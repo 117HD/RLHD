@@ -89,6 +89,10 @@
         "type": "boolean",
         "description": "Whether this is a sailing water type."
       },
+      "isHazardous": {
+        "type": "boolean",
+        "description": "Whether this is a hazardous water type."
+      },
       "duration": {
         "type": "number",
         "description": "The duration before the UV scrolling repeats. Smaller numbers yield faster scrolling waves."
