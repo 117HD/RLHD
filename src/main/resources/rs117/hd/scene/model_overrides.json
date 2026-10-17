@@ -36592,6 +36592,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "retainVanillaUvs": false,
+    "doubleSidedFaces": true,
     "colorOverrides": [
       {
         "colors": "h == 10 && s == 0",
