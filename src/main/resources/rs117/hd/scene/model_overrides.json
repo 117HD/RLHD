@@ -7083,6 +7083,7 @@
         "description": "tiles",
         "colors": "h == 0",
         "baseMaterial": "STONE_NORMALED",
+        "doubleSidedFaces": true,
         "uvType": "BOX",
         "uvOrientation": -256,
         "uvScale": 0.8
