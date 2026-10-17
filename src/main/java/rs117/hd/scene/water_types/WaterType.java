@@ -43,6 +43,8 @@ public class WaterType {
 	@JsonAdapter(ColorUtils.SrgbToLinearAdapter.class)
 	private float[] depthColor = rgb(0, 117, 142);
 	private boolean hasFoam = true;
+	private boolean isSailing = false;
+	private boolean isHazardous = false;
 	private float duration = 1;
 	public int fishingSpotRecolor = -1;
 
@@ -80,12 +82,16 @@ public class WaterType {
 	}
 
 	public void fillStruct(UBOWaterTypes.WaterTypeStruct struct) {
-		struct.isFlat.set(flat ? 1 : 0);
+		struct.flags.set(
+			(flat ? 1 : 0) |
+			(hasFoam ? 2 : 0) |
+			(isSailing ? 4 : 0) |
+			(isHazardous ? 8 : 0)
+		);
 		struct.specularStrength.set(specularStrength);
 		struct.specularGloss.set(specularGloss);
 		struct.normalStrength.set(normalStrength);
 		struct.baseOpacity.set(baseOpacity);
-		struct.hasFoam.set(hasFoam ? 1 : 0);
 		struct.duration.set(duration);
 		struct.fresnelAmount.set(fresnelAmount);
 		struct.surfaceColor.set(linearToSrgb(surfaceColor));

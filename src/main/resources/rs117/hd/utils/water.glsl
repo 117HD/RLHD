@@ -32,8 +32,94 @@
 #include <utils/misc.glsl>
 #include <utils/sky_sampling.glsl>
 
+#if ZONE_RENDERER
+int fetchWaterTypeIndex(ivec2 coord) {
+    if (coord.x < 0 || coord.y < 0 || coord.x >= EXTENDED_SCENE_SIZE || coord.y >= EXTENDED_SCENE_SIZE)
+        return 0;
+    return int(texelFetch(waterTypeMap, coord, 0).r);
+}
+
+WaterType blendWaterTypes(int centerIndex) {
+    vec2 tilePos = IN.position.xz / float(TILE_SIZE) + float(EXTENDED_SCENE_OFFSET) - 0.5;
+    ivec2 base = ivec2(floor(tilePos));
+    vec2 f = fract(tilePos);
+
+    #if GL_ARB_texture_gather
+        vec2 uv = (tilePos + 0.5) / vec2(EXTENDED_SCENE_SIZE);
+        ivec4 idx = ivec4(textureGather(waterTypeMap, uv)).wzxy;
+    #else
+        ivec4 idx = ivec4(
+            centerIndex,
+            fetchWaterTypeIndex(base + ivec2(1, 0)),
+            fetchWaterTypeIndex(base + ivec2(0, 1)),
+            fetchWaterTypeIndex(base + ivec2(1, 1))
+        );
+    #endif
+
+    if (idx.x != 0 && all(equal(idx, ivec4(idx.x))))
+        return getWaterType(centerIndex);
+
+    vec4 w = vec4((1.0 - f.x) * (1.0 - f.y), f.x * (1.0 - f.y),
+                  (1.0 - f.x) * f.y,         f.x * f.y);
+    w *= vec4(notEqual(idx, ivec4(0)));      // zero out non-water corners
+
+    // merge duplicate indices so each type is fetched once
+    for (int i = 0; i < 3; i++) {
+        for (int j = i + 1; j < 4; j++) {
+            if (idx[j] == idx[i] && idx[i] != 0) {
+                w[i] += w[j];
+                w[j] = 0.0;
+            }
+        }
+    }
+
+    float total = w.x + w.y + w.z + w.w;
+    if (total <= 0.0)
+        return getWaterType(centerIndex);
+    w /= total;
+
+    WaterType result;
+    result.specularStrength = result.specularGloss = result.normalStrength = 0.0;
+    result.baseOpacity = result.fresnelAmount = 0.0;
+    result.surfaceColor = result.foamColor = result.depthColor = vec3(0.0);
+
+    float durationRate = 0.0;
+    float dominantW = -1.0;
+    int dominantIndex = centerIndex;
+    for (int i = 0; i < 4; i++) {
+        if (w[i] <= 0.0) continue;
+        WaterType wt = getWaterType(idx[i]);
+        result.specularStrength += wt.specularStrength * w[i];
+        result.specularGloss    += wt.specularGloss    * w[i];
+        result.normalStrength   += wt.normalStrength   * w[i];
+        result.baseOpacity      += wt.baseOpacity      * w[i];
+        result.fresnelAmount    += wt.fresnelAmount    * w[i];
+        result.surfaceColor     += wt.surfaceColor     * w[i];
+        result.foamColor        += wt.foamColor        * w[i];
+        result.depthColor       += wt.depthColor       * w[i];
+        durationRate            += w[i] / max(wt.duration, 1e-4);
+
+        if (w[i] > dominantW || (w[i] == dominantW && idx[i] > dominantIndex)) {
+            dominantW = w[i];
+            dominantIndex = idx[i];
+        }
+    }
+
+    result.duration = 1.0 / max(durationRate, 1e-4);
+
+    WaterType dominant = getWaterType(dominantIndex);
+    result.flags = dominant.flags;
+    result.normalMap = dominant.normalMap;
+    return result;
+}
+#else
+WaterType blendWaterTypes(int centerIndex) {
+    return getWaterType(centerIndex);
+}
+#endif
+
 vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
-    WaterType waterType = getWaterType(waterTypeIndex);
+    WaterType waterType = blendWaterTypes(waterTypeIndex);
 
     vec2 anchorUv1 = worldUvs(3).yx;
     vec2 anchorUv2 = worldUvs(5);
@@ -206,7 +292,8 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     vec4 water;
     float shoreLineMask = 1 - dot(IN.texBlend, (fAlphaBiasHsl & 127) / 127.f);
     float foamAmount = min(shoreLineMask, 0.8);
-    foamAmount = clamp(pow(1.0 - ((1.0 - foamAmount) / 0.7), 3), 0.0, 1.0) * waterType.hasFoam;
+    if(waterHasFoam(waterType))
+        foamAmount = clamp(pow(1.0 - ((1.0 - foamAmount) / 0.7), 3), 0.0, 1.0);
     float opacityFresnel = max(finalFresnel, 1.0 - dot(viewDir, vec3(0, -1, 0)));
 
     #if REDUCE_GLARE_INTENSITY
@@ -234,8 +321,9 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         vec3 baseColor = waterType.surfaceColor * compositeLight;
 
         // Hacks to improve visibility between different sailing water types, based on unshadowed luminance
-        bool isHazardous = waterType.fresnelAmount == 0.86;
-        float fresnelAmount = isHazardous ? 0.85 : waterType.fresnelAmount;
+        bool isSailing = isWaterSailing(waterType);
+        bool isHazardous = isWaterHazardous(waterType);
+        float fresnelAmount = waterType.fresnelAmount;
         baseColor = mix(baseColor, surface, fresnelAmount);
         if (isHazardous) {
             vec3 unshadowedBaseColor = waterType.surfaceColor *
@@ -246,7 +334,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
             float reflectionAmount = mix(fresnelAmount, fresnelAmount * 0.65, smoothstep(1.0, 4.0, reflectionDominance));
             baseColor += (fresnelAmount - reflectionAmount) * (unshadowedBaseColor - surface);
         }
-        if (fresnelAmount == 0.85)
+        if (isSailing)
             baseColor *= .75f; // Sailing hack
 
         vec3 foamColor = waterType.foamColor * foamMask * compositeLight;
@@ -257,7 +345,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
 
         float alpha = max(waterType.baseOpacity, max(litFoamAmount, max(opacityFresnel, length(specularComposite / 3))));
 
-        if (waterType.isFlat) {
+        if (isWaterFlat(waterType)) {
             baseColor = mix(waterType.depthColor, baseColor, alpha);
             alpha = 1;
         }

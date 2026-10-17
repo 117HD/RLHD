@@ -9,6 +9,9 @@
 
 #define TILE_SIZE 128
 
+#define EXTENDED_SCENE_SIZE 184
+#define EXTENDED_SCENE_OFFSET 40
+
 #include SHADER_TYPE
 #include LEGACY_RENDERER
 #include ZONE_RENDERER

@@ -30,12 +30,14 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.renderer.legacy.LegacySceneContext;
+import rs117.hd.renderer.zone.ZoneSceneContext;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.ColorUtils;
+import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.Int2IntHashMap;
 import rs117.hd.utils.collections.Int2ObjectHashMap;
@@ -350,6 +352,33 @@ public class ProceduralGenerator {
 //			return WaterType.ICE;
 
 		return waterType;
+	}
+
+	public WaterType computeWaterType(ZoneSceneContext ctx, Tile tile, int tileExX, int tileExY) {
+		int tileZ = tile.getRenderLevel();
+
+		SceneTilePaint paint = tile.getSceneTilePaint();
+		if (paint != null && paint.getNeColor() != HDUtils.HIDDEN_HSL) {
+			TileOverride override = ctx.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_MAIN);
+			return seasonalWaterType(override, paint.getTexture());
+		}
+
+		SceneTileModel model = tile.getSceneTileModel();
+		if (model != null) {
+			TileOverride overlayOverride = ctx.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_OVERLAY);
+			TileOverride underlayOverride = ctx.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_UNDERLAY);
+			int[] textures = model.getTriangleTextureId();
+			int faceCount = model.getFaceX().length;
+			for (int face = 0; face < faceCount; face++) {
+				TileOverride override = ProceduralGenerator.isOverlayFace(tile, face) ? overlayOverride : underlayOverride;
+				int textureId = textures == null ? -1 : textures[face];
+				WaterType waterType = seasonalWaterType(override, textureId);
+				if (waterType != WaterType.NONE)
+					return waterType;
+			}
+		}
+
+		return WaterType.NONE;
 	}
 
 	private static boolean[] getTileOverlayTris(int tileShapeIndex) {

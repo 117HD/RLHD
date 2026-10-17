@@ -8,12 +8,11 @@ import static org.lwjgl.opengl.GL33C.*;
 
 public class UBOWaterTypes extends UniformBuffer<GLBuffer> {
 	public static class WaterTypeStruct extends StructProperty {
-		public final Property isFlat = addProperty(PropertyType.Int, "isFlat");
+		public final Property flags = addProperty(PropertyType.Int, "flags");
 		public final Property specularStrength = addProperty(PropertyType.Float, "specularStrength");
 		public final Property specularGloss = addProperty(PropertyType.Float, "specularGloss");
 		public final Property normalStrength = addProperty(PropertyType.Float, "normalStrength");
 		public final Property baseOpacity = addProperty(PropertyType.Float, "baseOpacity");
-		public final Property hasFoam = addProperty(PropertyType.Int, "hasFoam");
 		public final Property duration = addProperty(PropertyType.Float, "duration");
 		public final Property fresnelAmount = addProperty(PropertyType.Float, "fresnelAmount");
 		public final Property surfaceColor = addProperty(PropertyType.FVec3, "surfaceColor");

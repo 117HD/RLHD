@@ -25,6 +25,8 @@
  */
 #version 330
 
+#extension GL_ARB_texture_gather : enable
+
 #define DISPLAY_BASE_COLOR 0
 #define DISPLAY_UV 0
 #define DISPLAY_NORMAL 0
@@ -42,6 +44,7 @@
 #include <utils/hash.glsl>
 
 #include MATERIAL_CONSTANTS
+#include IS_WATER_SHADER
 
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
@@ -53,6 +56,7 @@ uniform sampler2D shadowMap;
     #endif
 #endif
 uniform usampler2DArray tiledLightingArray;
+uniform usampler2D waterTypeMap;
 
 // general HD settings
 
@@ -142,7 +146,11 @@ void main() {
     int flowMap = material1.flowMap;
 
     bool isUnderwater = waterDepth != 0;
+    #if ZONE_RENDERER
+    bool isWater = IS_WATER_SHADER == 1;
+    #else
     bool isWater = waterTypeIndex > 0 && !isUnderwater;
+    #endif
 
     vec4 outputColor = vec4(1);
 

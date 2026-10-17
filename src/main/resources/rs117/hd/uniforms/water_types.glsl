@@ -3,12 +3,11 @@
 #include WATER_TYPE_COUNT
 
 struct WaterType {
-    bool isFlat;
+    int flags;
     float specularStrength;
     float specularGloss;
     float normalStrength;
     float baseOpacity;
-    int hasFoam;
     float duration;
     float fresnelAmount;
     vec3 surfaceColor;
@@ -22,3 +21,11 @@ layout(std140) uniform UBOWaterTypes {
 } uboWaterTypes;
 
 #include WATER_TYPE_GETTER
+
+bool isWaterFlat(WaterType type) { return (type.flags & 1) != 0; }
+
+bool waterHasFoam(WaterType type) { return (type.flags & 2) != 0; }
+
+bool isWaterSailing(WaterType type) { return (type.flags & 4) != 0; }
+
+bool isWaterHazardous(WaterType type) { return (type.flags & 8) != 0; }
