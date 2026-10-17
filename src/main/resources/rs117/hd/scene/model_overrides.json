@@ -5438,8 +5438,6 @@
       "FAI_VARROCK_WATCHTOWER_WOODEN_BEAM_LVL2",
       "FAI_VARROCK_WATCHTOWER_CORNER_LVL3",
       "FAI_VARROCK_WATCHTOWER_WALL_LVL3",
-      "FAI_VARROCK_WATCHTOWER_ROOF_LVL4",
-      "FAI_VARROCK_WATCHTOWER_ROOF_3X3",
       "FAI_VARROCK_CASTLE_BATTLEMENT_SHAPE_8_RIGHT",
       "FAI_VARROCK_CASTLE_BATTLEMENT_SHAPE_8_LEFT",
       "FAI_VARROCK_CASTLE_BATTLEMENT_SHAPE_8_RIGHT_2",
@@ -5474,6 +5472,29 @@
       {
         "description": "Interior trim",
         "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 7",
+        "uvType": "BOX",
+        "uvOrientationZ": 512,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Varrock Watchtower Roof - Brick walls with taupe interior",
+    "baseMaterial": "SMOOTH_STONE_SEMI_DARK",
+    "flatNormals": true,
+    "doubleSidedFaces": true,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "FAI_VARROCK_WATCHTOWER_ROOF_LVL4",
+      "FAI_VARROCK_WATCHTOWER_ROOF_3X3"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Interior trim",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "doubleSidedFaces": true,
         "colors": "h == 7",
         "uvType": "BOX",
         "uvOrientationZ": 512,
