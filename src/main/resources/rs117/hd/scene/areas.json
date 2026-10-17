@@ -2230,7 +2230,8 @@
     "aabbs": [
       [ 2882, 9536, 3085, 9599 ]
     ],
-    "hideOtherAreas": true
+    "hideOtherAreas": true,
+    "fillGaps": false
   },
   {
     "name": "ROYAL_TITANS_ARENA",
