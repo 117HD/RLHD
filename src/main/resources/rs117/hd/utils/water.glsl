@@ -44,7 +44,7 @@ WaterType blendWaterTypes(int centerIndex) {
     ivec2 base = ivec2(floor(tilePos));
     vec2 f = fract(tilePos);
 
-    #ifdef GL_ARB_texture_gather
+    #if GL_ARB_texture_gather
         vec2 uv = (tilePos + 0.5) / vec2(EXTENDED_SCENE_SIZE);
         ivec4 idx = ivec4(textureGather(waterTypeMap, uv)).wzxy;
     #else
@@ -52,7 +52,8 @@ WaterType blendWaterTypes(int centerIndex) {
             centerIndex,
             fetchWaterTypeIndex(base + ivec2(1, 0)),
             fetchWaterTypeIndex(base + ivec2(0, 1)),
-            fetchWaterTypeIndex(base + ivec2(1, 1)));
+            fetchWaterTypeIndex(base + ivec2(1, 1))
+        );
     #endif
 
     if (idx.x != 0 && all(equal(idx, ivec4(idx.x))))
@@ -63,9 +64,14 @@ WaterType blendWaterTypes(int centerIndex) {
     w *= vec4(notEqual(idx, ivec4(0)));      // zero out non-water corners
 
     // merge duplicate indices so each type is fetched once
-    for (int i = 0; i < 3; i++)
-        for (int j = i + 1; j < 4; j++)
-            if (idx[j] == idx[i] && idx[i] != 0) { w[i] += w[j]; w[j] = 0.0; }
+    for (int i = 0; i < 3; i++) {
+        for (int j = i + 1; j < 4; j++) {
+            if (idx[j] == idx[i] && idx[i] != 0) {
+                w[i] += w[j];
+                w[j] = 0.0;
+            }
+        }
+    }
 
     float total = w.x + w.y + w.z + w.w;
     if (total <= 0.0)
@@ -76,10 +82,10 @@ WaterType blendWaterTypes(int centerIndex) {
     result.specularStrength = result.specularGloss = result.normalStrength = 0.0;
     result.baseOpacity = result.fresnelAmount = 0.0;
     result.surfaceColor = result.foamColor = result.depthColor = vec3(0.0);
+
     float durationRate = 0.0;
     float dominantW = -1.0;
     int dominantIndex = centerIndex;
-
     for (int i = 0; i < 4; i++) {
         if (w[i] <= 0.0) continue;
         WaterType wt = getWaterType(idx[i]);
