@@ -25,6 +25,8 @@
  */
 #version 330
 
+#extension GL_ARB_texture_gather : enable
+
 #define DISPLAY_BASE_COLOR 0
 #define DISPLAY_UV 0
 #define DISPLAY_NORMAL 0

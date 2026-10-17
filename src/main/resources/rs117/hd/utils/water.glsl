@@ -44,11 +44,16 @@ WaterType blendWaterTypes(int centerIndex) {
     ivec2 base = ivec2(floor(tilePos));
     vec2 f = fract(tilePos);
 
-    ivec4 idx = ivec4(
-        fetchWaterTypeIndex(base),
-        fetchWaterTypeIndex(base + ivec2(1, 0)),
-        fetchWaterTypeIndex(base + ivec2(0, 1)),
-        fetchWaterTypeIndex(base + ivec2(1, 1)));
+    #ifdef GL_ARB_texture_gather
+        vec2 uv = (tilePos + 0.5) / vec2(EXTENDED_SCENE_SIZE);
+        ivec4 idx = ivec4(textureGather(waterTypeMap, uv)).wzxy;
+    #else
+        ivec4 idx = ivec4(
+            centerIndex,
+            fetchWaterTypeIndex(base + ivec2(1, 0)),
+            fetchWaterTypeIndex(base + ivec2(0, 1)),
+            fetchWaterTypeIndex(base + ivec2(1, 1)));
+    #endif
 
     if (idx.x != 0 && all(equal(idx, ivec4(idx.x))))
         return getWaterType(centerIndex);
