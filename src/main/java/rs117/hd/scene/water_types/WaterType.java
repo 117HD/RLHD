@@ -26,6 +26,8 @@ import static rs117.hd.utils.ColorUtils.rgb;
 public class WaterType {
 	public String name;
 	public int vanillaTextureIndex = -1;
+	@Nullable
+	private Material material;
 	private boolean flat = false;
 	private float specularStrength = .5f;
 	private float specularGloss = 500;
@@ -60,6 +62,8 @@ public class WaterType {
 		this.index = index;
 		if (name == null)
 			name = "UNNAMED_" + index;
+		if (material != null)
+			vanillaTextureIndex = material.vanillaTextureIndex;
 		if (normalMap == null)
 			normalMap = fallbackNormalMap;
 		if (surfaceColor == null)
