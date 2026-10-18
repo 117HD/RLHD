@@ -42,6 +42,7 @@
 #include <utils/hash.glsl>
 
 #include MATERIAL_CONSTANTS
+#include WATER_PASS
 
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
@@ -142,13 +143,23 @@ void main() {
     int flowMap = material1.flowMap;
 
     bool isUnderwater = waterDepth != 0;
-    bool isWater = waterTypeIndex > 0 && !isUnderwater;
+    #if LEGACY_RENDERER
+        bool isWater = waterTypeIndex > 0 && !isUnderwater;
+    #else
+        const bool isWater = WATER_PASS != 0;
+    #endif
 
     vec4 outputColor = vec4(1);
 
+    #if WATER_PASS
+        outputColor = sampleWater(waterTypeIndex, viewDir);
+    #else
+    #if LEGACY_RENDERER
     if (isWater) {
         outputColor = sampleWater(waterTypeIndex, viewDir);
-    } else {
+    } else
+    #endif
+    {
         vec2 blendedUv = IN.uv;
 
         float mipBias = 0;
@@ -519,6 +530,7 @@ void main() {
             sampleUnderwater(outputColor.rgb, waterType, waterDepth, lightDotNormals);
         }
     }
+    #endif // WATER_PASS
 
     #if LEGACY_RENDERER
         vec2 tiledist = abs(floor(IN.position.xz / 128) - floor(uboGlobal.cameraPos.xz / 128));

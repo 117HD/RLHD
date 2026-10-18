@@ -147,6 +147,9 @@ public class ZoneRenderer implements Renderer {
 	private SceneShaderProgram sceneProgram;
 
 	@Inject
+	private SceneShaderProgram.Water waterProgram;
+
+	@Inject
 	private SceneShaderProgram.GapFiller gapFillerProgram;
 
 	@Inject
@@ -330,6 +333,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
 		sceneProgram.compile(includes);
+		waterProgram.compile(includes);
 		gapFillerProgram.compile(includes);
 		fastShadowProgram.compile(includes);
 		detailedShadowProgram.compile(includes);
@@ -340,6 +344,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void destroyShaders() {
 		sceneProgram.destroy();
+		waterProgram.destroy();
 		gapFillerProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
@@ -1103,8 +1108,11 @@ public class ZoneRenderer implements Renderer {
 			sceneCmd.Enable(GL_BLEND);
 
 			final boolean renderWater = z.inSceneFrustum && level == 0 && z.hasWater;
-			if (renderWater)
+			if (renderWater) {
+				sceneCmd.SetShader(waterProgram);
 				z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
+				sceneCmd.SetShader(sceneProgram);
+			}
 
 			modelStreamingManager.ensureAsyncUploadsComplete(z);
 

@@ -1,5 +1,7 @@
 package rs117.hd.opengl.shader;
 
+import java.io.IOException;
+
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_NEBULA_MAP;
@@ -26,6 +28,11 @@ public class SceneShaderProgram extends ShaderProgram {
 	}
 
 	@Override
+	public void compile(ShaderIncludes includes) throws ShaderException, IOException {
+		super.compile(includes.copy().define("WATER_PASS", this instanceof Water));
+	}
+
+	@Override
 	protected void initialize() {
 		uniTextureArray.set(TEXTURE_UNIT_GAME);
 		uniShadowMap.set(TEXTURE_UNIT_SHADOW_MAP);
@@ -34,6 +41,8 @@ public class SceneShaderProgram extends ShaderProgram {
 		uniTextureFaces.set(TEXTURE_UNIT_TEXTURED_FACES);
 		uniNebulaMap.set(TEXTURE_UNIT_NEBULA_MAP);
 	}
+
+	public static class Water extends SceneShaderProgram {}
 
 	public static class GapFiller extends SceneShaderProgram {
 		GapFiller() {

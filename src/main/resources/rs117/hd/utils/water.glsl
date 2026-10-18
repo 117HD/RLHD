@@ -30,6 +30,9 @@
 #include <utils/constants.glsl>
 #include <utils/lights.glsl>
 #include <utils/misc.glsl>
+
+#if WATER_PASS || LEGACY_RENDERER
+
 #include <utils/sky_sampling.glsl>
 
 vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
@@ -297,6 +300,8 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     #endif
     return water;
 }
+
+#endif // WATER_PASS || LEGACY_RENDERER
 
 void sampleUnderwater(inout vec3 outputColor, WaterType waterType, float depth, float lightDotNormals) {
     // underwater terrain
