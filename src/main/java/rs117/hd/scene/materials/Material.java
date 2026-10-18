@@ -126,7 +126,7 @@ public class Material {
 		while (base.parent != null)
 			base = base.parent;
 		modifiesVanillaTexture =
-			base != NONE ||
+			(base != NONE && base.vanillaTextureIndex == -1) ||
 			normalMap != null ||
 			displacementMap != null ||
 			roughnessMap != null ||
