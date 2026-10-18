@@ -339,6 +339,7 @@ public class HdPlugin extends Plugin {
 	public static boolean SKIP_GL_ERROR_CHECKS;
 	public static GLCapabilities GL_CAPS;
 	public static boolean AMD_GPU;
+	public static boolean OLD_AMD_GPU;
 	public static boolean INTEL_GPU;
 	public static boolean OLD_INTEL_GPU;
 	public static boolean NVIDIA_GPU;
@@ -605,6 +606,7 @@ public class HdPlugin extends Plugin {
 				APPLE = osType == OSType.MacOS;
 				APPLE_ARM = APPLE && osArch.equals("aarch64");
 				AMD_GPU = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
+				OLD_AMD_GPU = glRenderer.equals("Radeon RX 580 Series");
 				INTEL_GPU = glRenderer.contains("Intel");
 				OLD_INTEL_GPU = glRenderer.equals("Intel(R) UHD Graphics");
 				NVIDIA_GPU = glRenderer.toLowerCase().contains("nvidia");
@@ -1007,7 +1009,7 @@ public class HdPlugin extends Plugin {
 			.define("WINDOWS_HDR_CORRECTION", config.windowsHdrCorrection())
 			.define("LEGACY_BOAT_SILHOUETTES", config.legacyBoatSilhouettes())
 			.define("REDUCE_GLARE_INTENSITY", configReduceGlareIntensity)
-			.define("CENTROID_QUALIFIER", config.centroidQualifier().get(true))
+			.define("CENTROID_QUALIFIER", config.centroidQualifier().get(!OLD_AMD_GPU))
 			.define("LEGACY_RENDERER", renderer instanceof LegacyRenderer)
 			.define("ZONE_RENDERER", renderer instanceof ZoneRenderer)
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", 0)
