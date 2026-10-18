@@ -356,6 +356,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private int heldCount;
 	private int heldWidth;
 	private int heldHeight;
+	private boolean interfacesDrawn;
 	private final ArrayDeque<Integer> freeSlotLayers = new ArrayDeque<>();
 	private final FloatBuffer vertices = BufferUtils.createFloatBuffer(MAX_ITEMS * FLOATS_PER_ITEM);
 	private final boolean[] known = new boolean[GRID_SIZE];
@@ -496,6 +497,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			}
 		}
 		newItemsThisFrame = 0;
+		interfacesDrawn = false;
 		itemCount = 0;
 		vertices.clear();
 		cutThisFrame.clear();
@@ -556,6 +558,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 	@Override
 	public Dimension render(Graphics2D graphics) {
+		interfacesDrawn = true;
 		super.render(graphics);
 		for (var widgetItem : draggedItems)
 			cutOut(widgetItem);
@@ -1029,7 +1032,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		int count = itemCount;
 		if (count > 0) {
 			hold();
-		} else if (heldCount > 0 && isHeldShown()) {
+		} else if (heldCount > 0 && !interfacesDrawn && isHeldShown()) {
 			// The game doesn't draw its interfaces while hopping or loading, so what was cut out last stays on screen
 			count = heldCount;
 			for (int i = 0; i < count; i++)
