@@ -447,6 +447,7 @@ public class HdPlugin extends Plugin {
 	public boolean configTiledLightingImageLoadStore;
 	public boolean configOverrideSky;
 	public boolean configReduceGlareIntensity;
+	public boolean configFrameSynchronization;
 	public int configDetailDrawDistance;
 	public int configExpandedMapLoadingChunks;
 	public float configNightBrightness;
@@ -1840,6 +1841,7 @@ public class HdPlugin extends Plugin {
 		configSeasonalHemisphere = config.seasonalHemisphere();
 		configSeasonalFoliage = config.seasonalFoliage();
 		configReduceGlareIntensity = config.glareIntensity() < 100;
+		configFrameSynchronization = config.frameSynchronization();
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {

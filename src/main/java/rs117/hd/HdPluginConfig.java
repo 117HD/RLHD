@@ -1560,6 +1560,17 @@ public interface HdPluginConfig extends Config
 		return DefaultBoolean.DEFAULT;
 	}
 
+	String KEY_FRAME_SYNCHRONIZATION = "frameSynchronization";
+	@ConfigItem(
+		keyName = KEY_FRAME_SYNCHRONIZATION,
+		name = "Frame synchronization",
+		description = "Waits for prior frames to complete rendering, to avoid corruption artifacts.",
+		section = technicalSettings
+	)
+	default boolean frameSynchronization() {
+		return true;
+	}
+
 
 	/*====== Internal settings ======*/
 

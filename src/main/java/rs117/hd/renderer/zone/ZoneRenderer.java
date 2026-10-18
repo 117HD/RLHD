@@ -264,6 +264,7 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void waitForFrameFence() {
+		// Drain existing fences even if synchronization has been disabled
 		final int slot = plugin.frame % FRAMES_IN_FLIGHT;
 		final long fence = frameFences[slot];
 		if (fence == 0)
@@ -1370,17 +1371,19 @@ public class ZoneRenderer implements Renderer {
 			frameTimer.end(Timer.RENDER_FRAME);
 
 			try {
-				final int slot = plugin.frame % FRAMES_IN_FLIGHT;
-				assert frameFences[slot] == 0 : "Frame fence already set, this should never happen";
-				frameFences[slot] = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
-				if (frameFences[slot] == 0) {
-					fenceCreationFailureCount++;
-					long now = System.currentTimeMillis();
-					if (fenceCreationFailureCount == 1 || now - lastFenceCreationWarningMs >= 1000) {
-						log.warn("Unable to create frame fence, count {}. Falling back to glFinish...", fenceCreationFailureCount);
-						lastFenceCreationWarningMs = now;
+				if (plugin.configFrameSynchronization) {
+					final int slot = plugin.frame % FRAMES_IN_FLIGHT;
+					assert frameFences[slot] == 0 : "Frame fence already set, this should never happen";
+					frameFences[slot] = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+					if (frameFences[slot] == 0) {
+						fenceCreationFailureCount++;
+						long now = System.currentTimeMillis();
+						if (fenceCreationFailureCount == 1 || now - lastFenceCreationWarningMs >= 1000) {
+							log.warn("Unable to create frame fence, count {}. Falling back to glFinish...", fenceCreationFailureCount);
+							lastFenceCreationWarningMs = now;
+						}
+						glFinish();
 					}
-					glFinish();
 				}
 
 				frameTimer.begin(Timer.SWAP_BUFFERS);
