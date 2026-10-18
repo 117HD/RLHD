@@ -18,8 +18,6 @@ import static org.lwjgl.opengl.GL33C.*;
 import static org.lwjgl.opengl.GL40.glDrawArraysIndirect;
 import static org.lwjgl.opengl.GL40.glDrawElementsIndirect;
 import static org.lwjgl.opengl.GL43.glMultiDrawArraysIndirect;
-import static org.lwjgl.opengl.GL45.glBindTextureUnit;
-import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -362,12 +360,7 @@ public class CommandBuffer {
 						int texUnit = (int) (packed >> 32);
 						int texId = (int) packed;
 
-						if(GL_CAPS.GL_ARB_direct_state_access) {
-							glBindTextureUnit(texUnit - GL_TEXTURE0, texId);
-						} else {
-							glActiveTexture(texUnit);
-							glBindTexture(texType, texId);
-						}
+						renderState.texture.set(texUnit, texType, texId);
 						break;
 					}
 					case GL_USE_PROGRAM: {
