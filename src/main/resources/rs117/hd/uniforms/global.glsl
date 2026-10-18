@@ -42,6 +42,7 @@ layout(std140) uniform UBOGlobal {
     float groundFogStart;
     float groundFogEnd;
     float groundFogOpacity;
+    bool groundFogUnderRoofs;
 
     vec3 waterColorLight;
     vec3 waterColorMid;

@@ -53,6 +53,7 @@ uniform sampler2D shadowMap;
     #endif
 #endif
 uniform usampler2DArray tiledLightingArray;
+uniform sampler2D roofMap;
 
 // general HD settings
 
@@ -93,6 +94,20 @@ vec2 worldUvs(float scale) {
 #include <utils/lights.glsl>
 #include <utils/sky.glsl>
 #include <utils/water.glsl>
+
+// Returns 1 for surfaces sheltered beneath a roof, and 0 for surfaces out in the open
+float sampleRoofShelter(vec3 position, vec3 cameraFacingNormal) {
+    // Nudge the sample towards the visible side of the surface, so each side
+    // of a wall picks the tile it faces, rather than the tile edge it sits on
+    const float SCENE_OFFSET = 40; // (EXTENDED_SCENE_SIZE - SCENE_SIZE) / 2
+    vec2 tileCoord = (position.xz + cameraFacingNormal.xz * 48) / TILE_SIZE + SCENE_OFFSET;
+    vec2 roof = textureLod(roofMap, tileCoord / vec2(textureSize(roofMap, 0)), 0.0).rg;
+    // Narrow the bilinear ramp between tile centers down to a short blend across the tile edge
+    float coverage = smoothstep(.25, .75, roof.r);
+    // Leave the roof itself fogged, along with anything else above the roof's base
+    float belowRoof = smoothstep(roof.g, roof.g + 64, position.y);
+    return coverage * belowRoof;
+}
 
 void main() {
     bool isTerrain = (fTerrainData[0] & 1) != 0;
@@ -542,6 +557,10 @@ void main() {
         float groundFog = 1.0 - clamp((IN.position.y - uboGlobal.groundFogStart) / (uboGlobal.groundFogEnd - uboGlobal.groundFogStart), 0.0, 1.0);
         groundFog = mix(0.0, uboGlobal.groundFogOpacity, groundFog);
         groundFog *= clamp(distance / closeFadeDistance, 0.0, 1.0);
+        if (!uboGlobal.groundFogUnderRoofs && groundFog > 0) {
+            vec3 cameraFacingNormal = dot(flatNormal, viewDir) < 0 ? -flatNormal : flatNormal;
+            groundFog *= 1 - sampleRoofShelter(IN.position, cameraFacingNormal);
+        }
         float nightFogBlend = 0.0;
 
         // Scale optical depth, with lighter haze at night. Apply before water coverage too.
