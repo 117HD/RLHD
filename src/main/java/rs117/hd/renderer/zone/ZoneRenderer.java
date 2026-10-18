@@ -1059,12 +1059,14 @@ public class ZoneRenderer implements Renderer {
 				return;
 
 			frameTimer.begin(Timer.DRAW_ZONE_OPAQUE);
+			boolean renderGroundLevel = ctx.minLevel == 0;
 			if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
 				sceneCmd.Disable(GL_BLEND);
-				z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_TERRAIN);
+				if (renderGroundLevel)
+					z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_TERRAIN);
 				z.renderOpaque(sceneCmd, ctx, false);
 
-				if (z.hasGapFiller)
+				if (renderGroundLevel && z.hasGapFiller)
 					z.renderOpaqueLevel(gapFillerCmd, Zone.LEVEL_GAP_FILLER);
 			}
 
@@ -1074,7 +1076,7 @@ public class ZoneRenderer implements Renderer {
 					z.renderOpaque(directionalCmd, ctx, shouldDrawRoofShadows);
 				}
 
-				if (plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0)
+				if (renderGroundLevel && plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0)
 					z.renderOpaqueLevel(terrainShadowCmd, Zone.LEVEL_TERRAIN);
 			}
 			frameTimer.end(Timer.DRAW_ZONE_OPAQUE);
@@ -1108,7 +1110,7 @@ public class ZoneRenderer implements Renderer {
 			frameTimer.begin(Timer.DRAW_ZONE_ALPHA);
 			sceneCmd.Enable(GL_BLEND);
 
-			final boolean renderWater = z.inSceneFrustum && level == 0 && z.hasWater;
+			final boolean renderWater = z.inSceneFrustum && ctx.minLevel == 0 && level == 0 && z.hasWater;
 			if (renderWater) {
 				sceneCmd.SetShader(waterProgram);
 				z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
