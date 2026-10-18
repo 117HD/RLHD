@@ -2034,7 +2034,6 @@
     "ambientColor": "#a5acbd",
     "ambientStrength": 3.5,
     "directionalColor": "#707070",
-    "fogColor": "#99AECC",
     "fogDepth": 10,
     "sky": {
       "skyVisibility": 0.23,
@@ -3114,7 +3113,7 @@
     "fogColor": "#969ca2",
     "fogDepth": 35,
     "groundFogEnd": -400,
-    "groundFogOpacity": 0.3,
+    "groundFogOpacity": 0.07,
     "windSpeed": 17.5,
     "windStrength": 60,
     "sky": {
