@@ -119,7 +119,8 @@ public class ModelOverride
 
 	public transient boolean isDummy;
 	public transient boolean isGenerated;
-	public transient Map<AABB, ModelOverride> areaOverrides;
+	public transient ModelOverride[] areaOverrides;
+	public transient AABB[] areaOverrideBounds;
 	public transient AhslPredicate ahslCondition;
 	public transient boolean mightHaveTransparency;
 	public transient boolean mightBeDoubleSided;
@@ -267,6 +268,8 @@ public class ModelOverride
 
 		if (!castShadows && shadowOpacityThreshold == 0)
 			shadowOpacityThreshold = 1;
+
+		shadowNormalBias |= baseMaterial.subsurface > 0 || textureMaterial.subsurface > 0;
 	}
 
 	public void clearIds(){
@@ -350,6 +353,7 @@ public class ModelOverride
 			isDummy,
 			isGenerated,
 			areaOverrides,
+			areaOverrideBounds,
 			ahslCondition,
 			mightHaveTransparency,
 			mightBeDoubleSided,

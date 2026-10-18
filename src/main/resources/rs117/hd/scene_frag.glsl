@@ -65,7 +65,12 @@ in FragmentData {
     vec3 position;
     vec2 uv;
     vec3 normal;
-    vec3 texBlend;
+    #if CENTROID_QUALIFIER
+        // Prevent negative components due to MSAA
+        centroid in vec3 texBlend;
+    #else
+        vec3 texBlend;
+    #endif
 } IN;
 
 out vec4 FragColor;
@@ -90,17 +95,34 @@ vec2 worldUvs(float scale) {
 #include <utils/water.glsl>
 
 void main() {
+    bool isTerrain = (fTerrainData[0] & 1) != 0;
+    bool isSquashed = isWorldViewSquashed(fWorldViewId);
+    #if LEGACY_BOAT_SILHOUETTES
+        isSquashed = false;
+    #endif
+
     vec3 downDir = vec3(0, -1, 0);
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(uboGlobal.cameraPos - IN.position);
     vec3 flatNormal = normalize(cross(dFdx(IN.position), dFdy(IN.position)));
 
-    Material material1 = getMaterial(fMaterialData[0] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
-    Material material2 = getMaterial(fMaterialData[1] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
-    Material material3 = getMaterial(fMaterialData[2] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
+    bool identicalMaterials = !isTerrain || (
+        ((fMaterialData[0] ^ fMaterialData[1] | (fMaterialData[0] ^ fMaterialData[2]))
+        >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK) == 0
+    );
+    Material material1;
+    if (isSquashed) {
+        material1 = MAT_NONE;
+        identicalMaterials = true;
+    } else {
+        material1 = getMaterial(fMaterialData[0] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
+    }
+    Material material2 = identicalMaterials ? material1 :
+        getMaterial(fMaterialData[1] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
+    Material material3 = identicalMaterials ? material1 :
+        getMaterial(fMaterialData[2] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
 
     // Water data
-    bool isTerrain = (fTerrainData[0] & 1) != 0; // 1 = 0b1
     int waterDepth1 = fTerrainData[0] >> 11 & 0xFFF;
     int waterDepth2 = fTerrainData[1] >> 11 & 0xFFF;
     int waterDepth3 = fTerrainData[2] >> 11 & 0xFFF;
@@ -153,8 +175,7 @@ void main() {
         // get flowMap map
         vec2 flowMapUv = uv1 - animationFrame(material1.flowMapDuration);
         float flowMapStrength = material1.flowMapStrength;
-        if (isUnderwater)
-        {
+        if (isUnderwater) {
             // Distort underwater textures
             flowMapUv = worldUvs(1.5) + animationFrame(10 * waterType.duration) * vec2(1, -1);
             flowMapStrength = 0.075;
@@ -173,7 +194,8 @@ void main() {
         #else
             N = normalize(IN.normal);
         #endif
-        mat3 TBN = cotangent_frame(N, IN.position, IN.uv * -1.0);
+        if (isSquashed)
+            N = vec3(0, -1, 0);
 
         #if DISPLAY_UV
             FragColor = vec4(fract(uv1 * IN.texBlend.x + uv2 * IN.texBlend.y + uv3 * IN.texBlend.z), 0.0, 1.0);
@@ -188,32 +210,23 @@ void main() {
         #endif
 
         #if DISPLAY_TANGENT
-            FragColor = vec4(TBN[0] * 0.5 + 0.5, 1.0);
+            FragColor = vec4(cotangent_frame(N, IN.position, IN.uv * -1.0)[0] * 0.5 + 0.5, 1.0);
             if (DISPLAY_TANGENT == 1) // Redundant, for syntax highlighting in IntelliJ
                 return;
         #endif
 
-        float selfShadowing = 0;
         vec3 fragPos = IN.position;
         #if PARALLAX_OCCLUSION_MAPPING
-            mat3 invTBN = inverse(TBN);
-            vec3 tsViewDir = invTBN * viewDir;
-            vec3 tsLightDir = invTBN * -uboGlobal.lightDir;
-
-            vec3 fragDelta = vec3(0);
-
-            sampleDisplacementMap(material1, tsViewDir, tsLightDir, uv1, fragDelta, selfShadowing);
-            sampleDisplacementMap(material2, tsViewDir, tsLightDir, uv2, fragDelta, selfShadowing);
-            sampleDisplacementMap(material3, tsViewDir, tsLightDir, uv3, fragDelta, selfShadowing);
-
-            // Average
-            fragDelta /= 3;
-            selfShadowing /= 3;
-
-            // Prevent displaced surfaces from casting flat shadows onto themselves
-            fragDelta.z = max(0, fragDelta.z);
-
-            fragPos += TBN * fragDelta;
+            applyDisplacement(
+                fragPos,
+                uv1, uv2, uv3,
+                material1, material2, material3,
+                identicalMaterials,
+                IN.texBlend,
+                flatNormal,
+                N,
+                viewDir
+            );
         #endif
 
         vec3 hsl1 = unpackRawHsl(fAlphaBiasHsl[0]);
@@ -238,6 +251,9 @@ void main() {
         baseColor2.rgb = srgbToLinear(hslToSrgb(baseColor2.xyz));
         baseColor3.rgb = srgbToLinear(hslToSrgb(baseColor3.xyz));
 
+        if (isSquashed)
+            baseColor1 = baseColor2 = baseColor3 = baseColor1 * .4;
+
         #if DISPLAY_BASE_COLOR
         if (DISPLAY_BASE_COLOR == 1) { // Redundant, used for syntax highlighting in IntelliJ
             outputColor = baseColor1 * IN.texBlend.x + baseColor2 * IN.texBlend.y + baseColor3 * IN.texBlend.z;
@@ -249,8 +265,10 @@ void main() {
 
         // get diffuse textures
         vec4 texColor1 = colorMap1 == -1 ? vec4(1) : texture(textureArray, vec3(uv1, colorMap1), mipBias);
-        vec4 texColor2 = colorMap2 == -1 ? vec4(1) : texture(textureArray, vec3(uv2, colorMap2), mipBias);
-        vec4 texColor3 = colorMap3 == -1 ? vec4(1) : texture(textureArray, vec3(uv3, colorMap3), mipBias);
+        vec4 texColor2 = identicalMaterials ? texColor1 :
+            colorMap2 == -1 ? vec4(1) : texture(textureArray, vec3(uv2, colorMap2), mipBias);
+        vec4 texColor3 = identicalMaterials ? texColor1 :
+            colorMap3 == -1 ? vec4(1) : texture(textureArray, vec3(uv3, colorMap3), mipBias);
         texColor1.rgb *= material1.brightness;
         texColor2.rgb *= material2.brightness;
         texColor3.rgb *= material3.brightness;
@@ -268,16 +286,13 @@ void main() {
         vec3 underlayBlend = IN.texBlend * isUnderlay;
         vec3 overlayBlend = IN.texBlend * isOverlay;
 
-        if (underlayCount == 0 || overlayCount == 0)
-        {
+        if (underlayCount == 0 || overlayCount == 0) {
             // if a tile has all overlay or underlay vertices,
             // use the default blend
 
             underlayBlend = IN.texBlend;
             overlayBlend = IN.texBlend;
-        }
-        else
-        {
+        } else {
             // if there's a mix of overlay and underlay vertices,
             // calculate custom blends for each 'layer'
 
@@ -292,11 +307,13 @@ void main() {
             overlayBlend = clamp(overlayBlend, 0, 1);
         }
 
-
         // get fragment colors by combining vertex colors and texture samples
-        vec4 texA = getMaterialShouldOverrideBaseColor(material1) ? texColor1 : vec4(texColor1.rgb * baseColor1.rgb, min(texColor1.a, baseColor1.a));
-        vec4 texB = getMaterialShouldOverrideBaseColor(material2) ? texColor2 : vec4(texColor2.rgb * baseColor2.rgb, min(texColor2.a, baseColor2.a));
-        vec4 texC = getMaterialShouldOverrideBaseColor(material3) ? texColor3 : vec4(texColor3.rgb * baseColor3.rgb, min(texColor3.a, baseColor3.a));
+        vec4 texA = getMaterialShouldOverrideBaseColor(material1) ? texColor1 :
+            vec4(texColor1.rgb * baseColor1.rgb, min(texColor1.a, baseColor1.a));
+        vec4 texB = getMaterialShouldOverrideBaseColor(material2) ? texColor2 :
+            vec4(texColor2.rgb * baseColor2.rgb, min(texColor2.a, baseColor2.a));
+        vec4 texC = getMaterialShouldOverrideBaseColor(material3) ? texColor3 :
+            vec4(texColor3.rgb * baseColor3.rgb, min(texColor3.a, baseColor3.a));
 
         // combine fragment colors based on each blend, creating
         // one color for each overlay/underlay 'layer'
@@ -305,8 +322,7 @@ void main() {
 
         float overlayMix = 0;
 
-        if (overlayCount > 0 && underlayCount > 0)
-        {
+        if (overlayCount > 0 && underlayCount > 0) {
             ivec3 isPrimary = isUnderlay;
             bool invert = true;
             if (overlayCount == 1) {
@@ -329,10 +345,15 @@ void main() {
         if ((fMaterialData[0] >> MATERIAL_FLAG_UPWARDS_NORMALS & 1) == 1) {
             normals = vec3(0, -1, 0);
         } else {
+            mat3 TBN = cotangent_frame(N, IN.position, IN.uv * -1.0);
             vec3 n1 = sampleNormalMap(material1, uv1, TBN);
-            vec3 n2 = sampleNormalMap(material2, uv2, TBN);
-            vec3 n3 = sampleNormalMap(material3, uv3, TBN);
-            normals = normalize(n1 * IN.texBlend.x + n2 * IN.texBlend.y + n3 * IN.texBlend.z);
+            if (identicalMaterials) {
+                normals = normalize(n1);
+            } else {
+                vec3 n2 = sampleNormalMap(material2, uv2, TBN);
+                vec3 n3 = sampleNormalMap(material3, uv3, TBN);
+                normals = normalize(n1 * IN.texBlend.x + n2 * IN.texBlend.y + n3 * IN.texBlend.z);
+            }
         }
 
         float lightDotNormals = dot(normals, uboGlobal.lightDir);
@@ -346,9 +367,8 @@ void main() {
 		float shadow = 0;
 		if ((fMaterialData[0] >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0) {
 			bool applyNormalBias = (fMaterialData[0] >> MATERIAL_FLAG_SHADOW_NORMAL_BIAS & 1) == 1;
-			shadow = sampleShadowMap(fragPos, vec2(0), flatNormal, true, applyNormalBias);
+			shadow = sampleShadowMap(fragPos, flatNormal, true, applyNormalBias, true);
 		}
-        shadow = max(shadow, selfShadowing);
         float inverseShadow = 1 - shadow;
 
         #if DISPLAY_SHADOWS
@@ -360,16 +380,19 @@ void main() {
         // specular
         vec3 vSpecularGloss = vec3(material1.specularGloss, material2.specularGloss, material3.specularGloss);
         vec3 vSpecularStrength = vec3(material1.specularStrength, material2.specularStrength, material3.specularStrength);
+        float roughness1 = material1.roughnessMap == -1 ? 1 :
+            linearToSrgb(texture(textureArray, vec3(uv1, material1.roughnessMap)).r);
         vSpecularStrength *= vec3(
-            material1.roughnessMap == -1 ? 1 : linearToSrgb(texture(textureArray, vec3(uv1, material1.roughnessMap)).r),
-            material2.roughnessMap == -1 ? 1 : linearToSrgb(texture(textureArray, vec3(uv2, material2.roughnessMap)).r),
-            material3.roughnessMap == -1 ? 1 : linearToSrgb(texture(textureArray, vec3(uv3, material3.roughnessMap)).r)
+            roughness1,
+            identicalMaterials ? roughness1 :
+                material2.roughnessMap == -1 ? 1 : linearToSrgb(texture(textureArray, vec3(uv2, material2.roughnessMap)).r),
+            identicalMaterials ? roughness1 :
+                material3.roughnessMap == -1 ? 1 : linearToSrgb(texture(textureArray, vec3(uv3, material3.roughnessMap)).r)
         );
 
         // apply specular highlights to anything semi-transparent
         // this isn't always desirable but adds subtle light reflections to windows, etc.
-        if (baseColor1.a + baseColor2.a + baseColor3.a < 2.99)
-        {
+        if (baseColor1.a + baseColor2.a + baseColor3.a < 2.99) {
             vSpecularGloss = vec3(30);
             vSpecularStrength = vec3(
                 clamp((1 - baseColor1.a) * 2, 0, 1),
@@ -385,10 +408,16 @@ void main() {
         // ambient light
         vec3 ambientLightOut = uboGlobal.ambientColor * uboGlobal.ambientStrength;
 
-        float aoFactor =
-            IN.texBlend.x * (material1.ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(uv1, material1.ambientOcclusionMap)).r) +
-            IN.texBlend.y * (material2.ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(uv2, material2.ambientOcclusionMap)).r) +
-            IN.texBlend.z * (material3.ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(uv3, material3.ambientOcclusionMap)).r);
+        float aoFactor = material1.ambientOcclusionMap == -1 ? 1 :
+            texture(textureArray, vec3(uv1, material1.ambientOcclusionMap)).r;
+        if (!identicalMaterials) {
+            aoFactor =
+                IN.texBlend.x * aoFactor +
+                IN.texBlend.y * (material2.ambientOcclusionMap == -1 ? 1 :
+                    texture(textureArray, vec3(uv2, material2.ambientOcclusionMap)).r) +
+                IN.texBlend.z * (material3.ambientOcclusionMap == -1 ? 1 :
+                    texture(textureArray, vec3(uv3, material3.ambientOcclusionMap)).r);
+        }
         ambientLightOut *= aoFactor;
 
         // directional light
@@ -483,11 +512,7 @@ void main() {
             outputColor.rgb = srgbToLinear(outputColor.rgb);
         #endif
 
-        if (tint.w > 0) {
-            outputColor.rgb *= 1.0 + skyLightOut;
-        } else {
-            outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
-        }
+        outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
         outputColor.rgb = linearToSrgb(outputColor.rgb);
 
         if (isUnderwater) {

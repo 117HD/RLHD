@@ -12,7 +12,7 @@ import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.Props;
 
 public final class ConcurrentPool<T> {
-	public static List<ConcurrentPool<?>> ALL_POOLS = new ArrayList<>();
+	private static final List<ConcurrentPool<?>> ALL_POOLS = new ArrayList<>();
 
 	private final ConcurrentLinkedQueue<Thread> parkedThreads;
 	private final ArrayDeque<T> pool = new ArrayDeque<>();

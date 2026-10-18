@@ -47,17 +47,17 @@ public class GLBuffer implements Destructible {
 	private static ByteBuffer COPY_READ_BUFFER, COPY_WRITE_BUFFER;
 	public static final boolean DEBUG_MAC_OS = false;
 
-	public static int STORAGE_NONE = 0;
-	public static int STORAGE_PERSISTENT = 1;
-	public static int STORAGE_IMMUTABLE = 2;
-	public static int STORAGE_CLIENT = 4;
-	public static int STORAGE_READ = 8;
-	public static int STORAGE_WRITE = 16;
+	public static final int STORAGE_NONE = 0;
+	public static final int STORAGE_PERSISTENT = 1;
+	public static final int STORAGE_IMMUTABLE = 2;
+	public static final int STORAGE_CLIENT = 4;
+	public static final int STORAGE_READ = 8;
+	public static final int STORAGE_WRITE = 16;
 
-	public static int MAP_READ = 1;
-	public static int MAP_WRITE = 2;
-	public static int MAP_UNSYNCHRONIZED = 4;
-	public static int MAP_INVALIDATE = 8;
+	public static final int MAP_READ = 1;
+	public static final int MAP_WRITE = 2;
+	public static final int MAP_UNSYNCHRONIZED = 4;
+	public static final int MAP_INVALIDATE = 8;
 
 	public final int target;
 	public final int usage;
@@ -207,7 +207,8 @@ public class GLBuffer implements Destructible {
 		long[] numBytes,
 		int count
 	) {
-		long srcMinOffset = Long.MAX_VALUE, dstMinOffset = Long.MAX_VALUE, bytesToMap = 0;
+		long srcMinOffset = Long.MAX_VALUE, dstMinOffset = Long.MAX_VALUE;
+		long srcEnd = 0, dstEnd = 0;
 		boolean contiguous = true;
 
 		for (int i = 0; i < count; i++) {
@@ -216,29 +217,30 @@ public class GLBuffer implements Destructible {
 
 			srcMinOffset = min(srcMinOffset, srcOffsetBytes[i]);
 			dstMinOffset = min(dstMinOffset, dstOffsetBytes[i]);
-			bytesToMap = max(bytesToMap, dstOffsetBytes[i] - dstMinOffset + numBytes[i]);
+			srcEnd = max(srcEnd, srcOffsetBytes[i] + numBytes[i]);
+			dstEnd = max(dstEnd, dstOffsetBytes[i] + numBytes[i]);
 		}
 
 		ByteBuffer src = null, dst = null;
 		try {
-			src = glMapBufferRange(GL_COPY_READ_BUFFER, srcMinOffset, bytesToMap, GL_MAP_READ_BIT, COPY_READ_BUFFER);
-			if (src == null) {
-				log.error("Failed to map SRC buffer {}, offset: {}, size: {}", srcId, srcMinOffset, bytesToMap, new Throwable());
-				return;
-			}
+			src = glMapBufferRange(GL_COPY_READ_BUFFER, srcMinOffset, srcEnd - srcMinOffset, GL_MAP_READ_BIT, COPY_READ_BUFFER);
+			if (src == null)
+				throw new IllegalStateException(String.format(
+					"Failed to map copy source buffer %d, offset: %d, size: %d bytes",
+					srcId, srcMinOffset, srcEnd - srcMinOffset));
 			COPY_READ_BUFFER = src;
 
 			dst = glMapBufferRange(
 				GL_COPY_WRITE_BUFFER,
 				dstMinOffset,
-				bytesToMap,
+				dstEnd - dstMinOffset,
 				GL_MAP_WRITE_BIT | (contiguous ? GL_MAP_INVALIDATE_RANGE_BIT : GL_MAP_FLUSH_EXPLICIT_BIT),
 				COPY_WRITE_BUFFER
 			);
-			if (dst == null) {
-				log.error("Failed to map DST buffer {}, offset: {}, size: {}", dstId, dstMinOffset, bytesToMap, new Throwable());
-				return;
-			}
+			if (dst == null)
+				throw new IllegalStateException(String.format(
+					"Failed to map copy destination buffer %d, offset: %d, size: %d bytes",
+					dstId, dstMinOffset, dstEnd - dstMinOffset));
 			COPY_WRITE_BUFFER = dst;
 
 			performCopies(
@@ -248,8 +250,7 @@ public class GLBuffer implements Destructible {
 				count, !contiguous
 			);
 		} finally {
-			if (src != null) glUnmapBuffer(GL_COPY_READ_BUFFER);
-			if (dst != null) glUnmapBuffer(GL_COPY_WRITE_BUFFER);
+			unmapCopyBuffers(src, dst, srcId, dstId);
 		}
 	}
 
@@ -264,18 +265,17 @@ public class GLBuffer implements Destructible {
 		ByteBuffer src = null, dst = null;
 		try {
 			src = glMapBuffer(GL_COPY_READ_BUFFER, GL_READ_ONLY, COPY_READ_BUFFER);
-			if (src == null) {
-				log.error("Failed to map SRC buffer={}", srcId);
-				return;
-			}
+			if (src == null)
+				throw new IllegalStateException(String.format(
+					"Failed to map copy source buffer %d, offset: 0, size: %d bytes",
+					srcId, glGetBufferParameteri64(GL_COPY_READ_BUFFER, GL_BUFFER_SIZE)));
 			COPY_READ_BUFFER = src;
 
 			dst = glMapBuffer(GL_COPY_WRITE_BUFFER, GL_WRITE_ONLY, COPY_WRITE_BUFFER);
-			if (dst == null) {
-				log.error("Failed to map DST buffer={}", dstId);
-				glUnmapBuffer(GL_COPY_READ_BUFFER);
-				return;
-			}
+			if (dst == null)
+				throw new IllegalStateException(String.format(
+					"Failed to map copy destination buffer %d, offset: 0, size: %d bytes",
+					dstId, glGetBufferParameteri64(GL_COPY_WRITE_BUFFER, GL_BUFFER_SIZE)));
 			COPY_WRITE_BUFFER = dst;
 
 			performCopies(
@@ -285,9 +285,15 @@ public class GLBuffer implements Destructible {
 				count, false
 			);
 		} finally {
-			if (src != null) glUnmapBuffer(GL_COPY_READ_BUFFER);
-			if (dst != null) glUnmapBuffer(GL_COPY_WRITE_BUFFER);
+			unmapCopyBuffers(src, dst, srcId, dstId);
 		}
+	}
+
+	private static void unmapCopyBuffers(ByteBuffer src, ByteBuffer dst, int srcId, int dstId) {
+		boolean srcValid = src == null || glUnmapBuffer(GL_COPY_READ_BUFFER);
+		boolean dstValid = dst == null || glUnmapBuffer(GL_COPY_WRITE_BUFFER);
+		if (!srcValid || !dstValid)
+			throw new IllegalStateException("Corrupted buffer contents while copying from " + srcId + " to " + dstId);
 	}
 
 	private static void performCopies(
@@ -326,7 +332,8 @@ public class GLBuffer implements Destructible {
 					flushEnd += len;
 				} else {
 					glFlushMappedBufferRange(GL_COPY_WRITE_BUFFER, flushStart, flushEnd - flushStart);
-					flushStart = flushEnd = -1;
+					flushStart = dstPos;
+					flushEnd = dstPos + len;
 				}
 			}
 		}
@@ -461,7 +468,7 @@ public class GLBuffer implements Destructible {
 			}
 			if ((storageFlags & STORAGE_WRITE) != 0) {
 				glStorageFlags |= GL_MAP_WRITE_BIT;
-				glMapFlags |= GL_MAP_WRITE_BIT;
+				glMapFlags |= GL_MAP_WRITE_BIT | GL_MAP_FLUSH_EXPLICIT_BIT;
 			}
 
 			glBufferStorage(target, numBytes, glStorageFlags);
@@ -483,6 +490,9 @@ public class GLBuffer implements Destructible {
 					glDeleteBuffers(id);
 					id = glGenBuffers();
 					storageFlags = STORAGE_NONE;
+					// The previous mapping belongs to the old storage
+					mappedBuffer = new GLMappedBuffer(this);
+					bind();
 				}
 				checkGLErrors();
 			}
@@ -507,9 +517,10 @@ public class GLBuffer implements Destructible {
 
 		unbind();
 
-		if (id != oldBuffer && oldBuffer != 0 && byteOffset > 0) {
+		if (id != oldBuffer && oldBuffer != 0) {
 			// Neither buffer must be mapped before this, except for with the persistent bit
-			copyRangeTo(oldBuffer, id, 0, 0, byteOffset);
+			if (byteOffset > 0)
+				copyRangeTo(oldBuffer, id, 0, 0, byteOffset);
 			glDeleteBuffers(oldBuffer);
 		}
 
@@ -536,9 +547,11 @@ public class GLBuffer implements Destructible {
 		long numBytes = data.remaining();
 		ensureCapacity(byteOffset, numBytes);
 		if (isStorageBuffer()) {
-			mappedBuffer.byteView()
-				.position((int) byteOffset)
+			mappedBuffer
+				.map(MAP_WRITE, byteOffset, numBytes)
+				.byteView()
 				.put(data);
+			mappedBuffer.unmap();
 		} else {
 			bind();
 			glBufferSubData(target, byteOffset, data);
@@ -563,9 +576,11 @@ public class GLBuffer implements Destructible {
 		long numBytes = 4L * data.remaining();
 		ensureCapacity(byteOffset, numBytes);
 		if (isStorageBuffer()) {
-			mappedBuffer.intView()
-				.position((int) (byteOffset / 4))
+			mappedBuffer
+				.map(MAP_WRITE, byteOffset, numBytes)
+				.intView()
 				.put(data);
+			mappedBuffer.unmap();
 		} else {
 			bind();
 			glBufferSubData(target, byteOffset, data);
@@ -590,9 +605,11 @@ public class GLBuffer implements Destructible {
 		long numBytes = 4L * data.remaining();
 		ensureCapacity(byteOffset, numBytes);
 		if (isStorageBuffer()) {
-			mappedBuffer.floatView()
-				.position((int) (byteOffset / 4))
+			mappedBuffer
+				.map(MAP_WRITE, byteOffset, numBytes)
+				.floatView()
 				.put(data);
+			mappedBuffer.unmap();
 		} else {
 			bind();
 			glBufferSubData(target, byteOffset, data);
@@ -656,7 +673,7 @@ public class GLBuffer implements Destructible {
 	public void copyMultiTo(GLBuffer dst, long[] srcOffsetBytes, long[] dstOffsetBytes, long[] numBytes, int count) {
 		long totalNumBytes = 0;
 		for (int i = 0; i < count; i++)
-			totalNumBytes = max(dstOffsetBytes[i] + numBytes[i], 0L);
+			totalNumBytes = max(totalNumBytes, max(dstOffsetBytes[i] + numBytes[i], 0L));
 		if (totalNumBytes <= 0)
 			return;
 

@@ -5,7 +5,10 @@ import com.google.inject.Injector;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -300,10 +303,12 @@ public class SceneManager {
 		int worldViewId = worldView.getId();
 		if (worldViewId != WorldView.TOPLEVEL) {
 			log.debug("WorldView despawn: {}", worldViewId);
-			if (subs[worldViewId] == null) {
+			var sub = subs[worldViewId];
+			if (sub == null) {
 				log.debug("Attempted to despawn unloaded worldview: {}", worldView);
 			} else {
-				subs[worldViewId].free();
+				lightManager.unloadWorldViewLights(sub.sceneContext);
+				sub.free();
 				subs[worldViewId] = null;
 			}
 		}
@@ -435,8 +440,6 @@ public class SceneManager {
 			}
 
 			assert worldView.getId() == WorldView.TOPLEVEL;
-			if (nextZones != null)
-				throw new RuntimeException("Double zone load!"); // does this happen?
 
 			Stopwatch sw = Stopwatch.createStarted();
 			root.loadTime = root.uploadTime = root.sceneSwapTime = 0;
@@ -445,6 +448,9 @@ public class SceneManager {
 			root.sceneLoadGroup.complete();
 			root.streamingGroup.complete();
 			root.invalidationGroup.complete();
+
+			if (nextZones != null)
+				discardPendingScene();
 
 			if (nextSceneContext != null)
 				nextSceneContext.destroy();
@@ -624,6 +630,49 @@ public class SceneManager {
 		}
 	}
 
+	private void discardPendingScene() {
+		log.info("Discarding pending scene load...");
+
+		// Wait for jobs which depend on nextSceneContext & nextZones
+		generateSceneDataTask.waitForCompletion();
+		loadSceneLightsTask.waitForCompletion();
+		calculateRoofChangesTask.waitForCompletion();
+
+		// Gather the set of active zones, where synchronizing with invalidation isn't important
+		Set<Zone> activeZones = new HashSet<>();
+		for (Zone[] column : root.zones)
+			Collections.addAll(activeZones, column);
+
+		// Synchronize with zone invalidations while cancelling zone upload jobs in nextZones
+		Set<Zone> zonesToDiscard = new HashSet<>();
+		synchronized (root) {
+			for (Zone[] column : nextZones) {
+				for (Zone zone : column) {
+					if (zone == null)
+						continue;
+					// Deferred uploads can be attached to a reused zone they're meant to replace
+					ZoneUploadJob upload = zone.uploadJob;
+					if (upload != null) {
+						upload.cancel();
+						if (upload.zoneBeingUploaded != null)
+							zonesToDiscard.add(upload.zoneBeingUploaded);
+						upload.release();
+					}
+					if (!activeZones.contains(zone))
+						zonesToDiscard.add(zone);
+				}
+			}
+		}
+
+		nextZones = null;
+		nextRoofChanges.clear();
+
+		clientThread.invoke(() -> {
+			for (Zone zone : zonesToDiscard)
+				DestructibleHandler.destroy(zone);
+		});
+	}
+
 	public void swapScene(Scene scene) {
 		if (!plugin.isActive() || plugin.skipScene == scene) {
 			plugin.redrawPreviousFrame = true;
@@ -671,7 +720,7 @@ public class SceneManager {
 			lightManager.handleObjectSpawn(nextSceneContext, tileObject);
 		nextSceneContext.lightSpawnsToHandleOnClientThread.clear();
 		nextSceneContext.lightSpawnsToHandleOnClientThread.trimToSize();
-		lightManager.swapSceneLights(nextSceneContext, root.sceneContext);
+		lightManager.swapSceneLights(nextSceneContext);
 
 		long lightsTime = sw.elapsed(TimeUnit.MILLISECONDS);
 		log.debug("swapScene - Lights: {} ms", lightsTime - roofsTime);
@@ -720,7 +769,10 @@ public class SceneManager {
 		}
 
 		ctx.zones = nextZones;
+		if (root.sceneContext != null)
+			root.sceneContext.worldViewContext = null;
 		root.sceneContext = nextSceneContext;
+		nextSceneContext.worldViewContext = root;
 		root.isLoading = false;
 
 		nextZones = null;
@@ -760,7 +812,10 @@ public class SceneManager {
 			log.error("Reload of an already loaded sub scene?");
 			prevCtx.sceneLoadGroup.cancel();
 			prevCtx.streamingGroup.cancel();
-			clientThread.invoke(prevCtx::free);
+			clientThread.invoke(() -> {
+				lightManager.unloadWorldViewLights(prevCtx.sceneContext);
+				prevCtx.free();
+			});
 		}
 
 		var sceneContext = new ZoneSceneContext(client, worldView, scene, plugin.configExpandedMapLoadingChunks, null);
@@ -790,7 +845,21 @@ public class SceneManager {
 		ctx.uploadTime = sw.elapsed(TimeUnit.NANOSECONDS);
 		ctx.sceneSwapTime = sw.elapsed(TimeUnit.NANOSECONDS);
 		ctx.isLoading = false;
+		lightManager.loadWorldViewLights(ctx.sceneContext);
 		log.debug("swapSubScene time {} WorldView ready: {}", ctx.sceneSwapTime, scene.getWorldViewId());
+	}
+
+	public void reloadWorldViewLights() {
+		for (WorldViewContext ctx : subs)
+			if (ctx != null && !ctx.isLoading)
+				lightManager.loadWorldViewLights(ctx.sceneContext);
+	}
+
+	public void updateWorldViewProjections() {
+		var topLevel = client.getTopLevelWorldView();
+		for (WorldViewContext ctx : subs)
+			if (ctx != null && !ctx.isLoading)
+				ctx.updateProjection(topLevel);
 	}
 
 	static class SortedZone implements Comparable<SortedZone> {
