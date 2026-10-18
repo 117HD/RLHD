@@ -9924,7 +9924,8 @@
     "name": "NIGHTMARE_OF_ASHIHAMA_ARENA",
     "regions": [
       15515
-    ]
+    ],
+    "fillGaps": false
   },
   {
     "name": "PEST_CONTROL_LANDER_WATER_FIX",
@@ -13129,6 +13130,7 @@
     "areas": [
       "MAINLAND",
       "MAINLAND_EXTENSIONS"
-    ]
+    ],
+    "fillGaps": true
   }
 ]
