@@ -275,6 +275,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		}
 	}
 
+	private static final int SHOWN = 1;
+	private static final int CLIPPED = 2;
 	private static final Icon PENDING = new Icon();
 	private static final GameIcon UNKNOWN = new GameIcon(-1, 0, new int[ICON_WIDTH * ICON_HEIGHT], new int[ICON_WIDTH * ICON_HEIGHT]);
 	// Drawn over an item, with nothing behind it
@@ -362,6 +364,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private final int[] overlays = new int[GRID_SIZE];
 	private final boolean[] captured = new boolean[GRID_SIZE];
 	private final boolean[] runePixels = new boolean[GRID_SIZE];
+	private final int[] shownRows = new int[ICON_HEIGHT];
+	private final int[] shownColumns = new int[ICON_WIDTH];
 
 	private int[] palette;
 	private double paletteBrightness;
@@ -606,10 +610,12 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		var widget = widgetItem.getWidget();
 		boolean dragged = isDragged(widgetItem);
 		var bounds = widgetItem.getDraggingCanvasBounds() != null ? widgetItem.getDraggingCanvasBounds() : widgetItem.getCanvasBounds();
-		var visible = bounds.intersection(dragged ? widget.getParent().getBounds() : visibleArea(widget));
-		// The game only reports items inside its clip, so the parents are still where they were before they were shown
-		if (visible.isEmpty() && !dragged)
-			visible = bounds;
+		var gameIcon = getGameIcon(widgetItem.getId(), widgetItem.getQuantity(), widget.getItemQuantityMode(), widget.getBorderType(), true);
+		// The parents can still be where they were a frame ago, like when an interface is shown or scrolled,
+		// so where the game drew the item tells how far it's clipped, unless it's see-through or a dragged item is drawn over it
+		var visible = dragged ? bounds.intersection(widget.getParent().getBounds()) :
+			widget.getOpacity() == 0 && client.getDraggedWidget() == null ? shownArea(gameIcon, bounds) :
+			bounds.intersection(visibleArea(widget));
 		// Some interfaces report their items twice
 		if (visible.isEmpty() || !cutThisFrame.add(bounds))
 			return;
@@ -623,7 +629,6 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 		// The game draws dragged items half transparent
 		float opacity = (dragged ? 128 : 256 - widget.getOpacity()) / 256f;
-		var gameIcon = getGameIcon(widgetItem.getId(), widgetItem.getQuantity(), widget.getItemQuantityMode(), widget.getBorderType(), true);
 		long slotKey = GameIcon.hash(gameIcon.key, bounds.x, bounds.y, drawn.x, drawn.y, drawn.width, drawn.height);
 		var slot = slots.get(slotKey);
 		if (slot == null) {
@@ -643,6 +648,52 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		}
 		itemSlots[itemCount] = slot;
 		putQuad(bounds, drawn, icon.layer, slot.layer, opacity, widget.getBorderType(), slot.shadow);
+	}
+
+	// Rows and columns of the item the game drew, up to the first ones it clipped
+	private Rectangle shownArea(GameIcon gameIcon, Rectangle bounds) {
+		var buffer = client.getBufferProvider();
+		int[] pixels = buffer.getPixels();
+		int width = buffer.getWidth();
+		int height = buffer.getHeight();
+		Arrays.fill(shownRows, 0);
+		Arrays.fill(shownColumns, 0);
+		int top = ICON_HEIGHT, bottom = -1, left = ICON_WIDTH, right = -1;
+		for (int y = 0; y < ICON_HEIGHT; y++) {
+			for (int x = 0; x < ICON_WIDTH; x++) {
+				int pixel = gameIcon.pixels[y * ICON_WIDTH + x];
+				if (pixel == 0 || gameIcon.stackSize[GameIcon.grid(x, y)])
+					continue;
+				int px = bounds.x + x;
+				int py = bounds.y + y;
+				int shown = px >= 0 && py >= 0 && px < width && py < height && ((pixels[py * width + px] ^ pixel) & 0xFFFFFF) == 0 ? SHOWN : CLIPPED;
+				shownRows[y] |= shown;
+				shownColumns[x] |= shown;
+				if (shown == SHOWN) {
+					top = min(top, y);
+					bottom = max(bottom, y);
+					left = min(left, x);
+					right = max(right, x);
+				}
+			}
+		}
+		if (bottom == -1)
+			return new Rectangle();
+
+		int fromY = 0, toY = ICON_HEIGHT, fromX = 0, toX = ICON_WIDTH;
+		for (int y = 0; y < top; y++)
+			if ((shownRows[y] & CLIPPED) != 0)
+				fromY = y + 1;
+		for (int y = ICON_HEIGHT - 1; y > bottom; y--)
+			if ((shownRows[y] & CLIPPED) != 0)
+				toY = y;
+		for (int x = 0; x < left; x++)
+			if ((shownColumns[x] & CLIPPED) != 0)
+				fromX = x + 1;
+		for (int x = ICON_WIDTH - 1; x > right; x--)
+			if ((shownColumns[x] & CLIPPED) != 0)
+				toX = x;
+		return new Rectangle(bounds.x + fromX, bounds.y + fromY, toX - fromX, toY - fromY);
 	}
 
 	private void putQuad(Rectangle bounds, Rectangle drawn, int iconLayer, int slotLayer, float opacity, int border, int shadow) {
