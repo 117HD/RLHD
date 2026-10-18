@@ -1841,7 +1841,7 @@ public class HdPlugin extends Plugin {
 		configSeasonalHemisphere = config.seasonalHemisphere();
 		configSeasonalFoliage = config.seasonalFoliage();
 		configReduceGlareIntensity = config.glareIntensity() < 100;
-		configFrameSynchronization = config.frameSynchronization();
+		configFrameSynchronization = config.frameSynchronization().get(true);
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {

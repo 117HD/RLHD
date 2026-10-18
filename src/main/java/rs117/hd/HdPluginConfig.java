@@ -1567,8 +1567,8 @@ public interface HdPluginConfig extends Config
 		description = "Waits for prior frames to complete rendering, to avoid corruption artifacts.",
 		section = technicalSettings
 	)
-	default boolean frameSynchronization() {
-		return true;
+	default DefaultBoolean frameSynchronization() {
+		return DefaultBoolean.DEFAULT;
 	}
 
 
