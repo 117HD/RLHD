@@ -21220,7 +21220,6 @@
       "NEWBIEFIRE",
       "OLAF2_CAVE_OLD_CAMP_FIRE",
       "SOTE_SCENE_FIRE",
-      "FIRE",
       "SOTE_SCENE_FIRE_LARGE",
       "EMBERS_WITH_PANS",
       "EMBERS",
@@ -50618,6 +50617,107 @@
     "visibleFromOtherPlanes": true,
     "objectIds": [
       "PRIF_CRYSTAL_STAIRCASE_TOP_ARCHES"
+    ]
+  },
+  {
+    "description": "HIGH_ALCH_1",
+    "offset": [ 0, 150, 50 ],
+    "radius": 300,
+    "strength": 8,
+    "fixedDespawnTime": true,
+    "fadeOverlap": true,
+    "despawnDelay": 650,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [
+      "HIGHLVLALCHEMY_CASTING"
+    ]
+  },
+  {
+    "description": "HIGH_ALCH_2",
+    "offset": [ 0, 150, 50 ],
+    "radius": 145,
+    "strength": 10,
+    "fixedDespawnTime": true,
+    "spawnDelay": 150,
+    "despawnDelay": 1600,
+    "fadeInDuration": 500,
+    "fadeOutDuration": 300,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "graphicsObjectIds": [
+      "HIGHLVLALCHEMY_CASTING"
+    ]
+  },
+  {
+    "description": "HIGH_ALCH_3",
+    "offset": [ 0, 150, 50 ],
+    "radius": 300,
+    "strength": 8,
+    "fixedDespawnTime": true,
+    "spawnDelay": 1300,
+    "despawnDelay": 1000,
+    "fadeInDuration": 600,
+    "fadeOutDuration": 300,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [
+      "HIGHLVLALCHEMY_CASTING"
+    ]
+  },
+  {
+    "description": "HIGH_ALCH_4",
+    "offset": [ 0, 150, 50 ],
+    "radius": 250,
+    "strength": 10,
+    "fixedDespawnTime": true,
+    "spawnDelay": 2000,
+    "despawnDelay": 800,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 500,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [
+      "HIGHLVLALCHEMY_CASTING"
+    ]
+  },
+  {
+    "description": "LOW_ALCH",
+    "offset": [ 0, 150, 50 ],
+    "radius": 250,
+    "strength": 10,
+    "fixedDespawnTime": true,
+    "spawnDelay": 250,
+    "despawnDelay": 650,
+    "fadeInDuration": 250,
+    "fadeOutDuration": 500,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [
+      "LOWLVLALCHEMY_CASTING"
     ]
   }
 ]
