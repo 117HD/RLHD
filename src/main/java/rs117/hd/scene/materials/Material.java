@@ -56,6 +56,7 @@ public class Material {
 	private Material shadowAlphaMap;
 	public boolean hasTransparency;
 	public boolean doubleSidedFaces;
+	private boolean seasonalFoliage;
 	private boolean overrideBaseColor;
 	private boolean unlit;
 	@JsonAdapter(ColorUtils.LinearAdapter.class)
@@ -121,18 +122,20 @@ public class Material {
 		if (!Props.DEVELOPMENT && replacementCondition instanceof ExpressionParser.SerializableExpressionPredicate)
 			replacementCondition = ((ExpressionParser.SerializableExpressionPredicate) replacementCondition).predicate;
 
-		// Determine whether the material contains some form of non-vanilla texture change
+		// Determine whether the material contains some form of non-vanilla texture change,
+		// and is not seasonal foliage, which ignores the model textures setting
 		var base = this;
 		while (base.parent != null)
 			base = base.parent;
-		modifiesVanillaTexture =
+		modifiesVanillaTexture = !seasonalFoliage && (
 			(base != NONE && base.vanillaTextureIndex == -1) ||
 			normalMap != null ||
 			displacementMap != null ||
 			roughnessMap != null ||
 			ambientOcclusionMap != null ||
 			flowMap != null ||
-			shadowAlphaMap != null;
+			shadowAlphaMap != null
+		);
 	}
 
 	@Override
