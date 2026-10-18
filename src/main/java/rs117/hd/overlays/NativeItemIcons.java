@@ -184,6 +184,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		final int[] background = new int[GRID_SIZE];
 		final int[] overlays = new int[GRID_SIZE];
 		final int[] elsewhere = new int[GRID_SIZE];
+		final int[] shown = new int[GRID_SIZE];
 		final boolean[] taken = new boolean[GRID_SIZE];
 		final List<RuneMatch> runes = new ArrayList<>();
 		List<RuneImage> runeImages;
@@ -348,6 +349,11 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private final List<WidgetItem> draggedItems = new ArrayList<>();
 	private final List<CutItem> draggedCuts = new ArrayList<>();
 	private final Slot[] itemSlots = new Slot[MAX_ITEMS];
+	private final Rectangle[] itemBounds = new Rectangle[MAX_ITEMS];
+	private final Rectangle[] itemDrawn = new Rectangle[MAX_ITEMS];
+	private int heldCount;
+	private int heldWidth;
+	private int heldHeight;
 	private final ArrayDeque<Integer> freeSlotLayers = new ArrayDeque<>();
 	private final FloatBuffer vertices = BufferUtils.createFloatBuffer(MAX_ITEMS * FLOATS_PER_ITEM);
 	private final boolean[] known = new boolean[GRID_SIZE];
@@ -451,6 +457,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		stackModels.clear();
 		stackModelSearches.clear();
 		slots.clear();
+		heldCount = 0;
 		containers.clear();
 		newItemLayers.clear();
 		visibleAreas.clear();
@@ -641,6 +648,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private void putQuad(Rectangle bounds, Rectangle drawn, int iconLayer, int slotLayer, float opacity, int border, int shadow) {
 		int canvasWidth = client.getCanvasWidth();
 		int canvasHeight = client.getCanvasHeight();
+		itemBounds[itemCount] = bounds;
+		itemDrawn[itemCount] = drawn;
 		var quad = new Rectangle(drawn.x - 1, drawn.y - 1, drawn.width + 2, drawn.height + 2);
 		for (int corner : QUAD_CORNERS) {
 			int x = corner % 2 == 0 ? quad.x : quad.x + quad.width;
@@ -940,7 +949,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	}
 
 	public boolean hasItems() {
-		return active && itemCount > 0;
+		return active && (itemCount > 0 || heldCount > 0);
 	}
 
 	public void render(int[] uiResolution, int[] actualUiResolution) {
@@ -966,7 +975,19 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		}
 		uploads.clear();
 
-		if (itemCount > 0) {
+		int count = itemCount;
+		if (count > 0) {
+			hold();
+		} else if (heldCount > 0 && isHeldShown()) {
+			// The game doesn't draw its interfaces while hopping or loading, so what was cut out last stays on screen
+			count = heldCount;
+			for (int i = 0; i < count; i++)
+				itemSlots[i].frame = frame;
+		} else {
+			heldCount = 0;
+		}
+
+		if (count > 0) {
 			glActiveTexture(TEXTURE_UNIT_ITEM_BACKGROUNDS);
 			glBindTexture(GL_TEXTURE_2D_ARRAY, texBackgrounds);
 			// Only what changed is uploaded, right before it's drawn
@@ -982,10 +1003,11 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			shader.use();
 			glBindVertexArray(vao);
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.flip());
+			if (itemCount > 0)
+				glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.flip());
 			glEnable(GL_BLEND);
 			glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
-			glDrawArrays(GL_TRIANGLES, 0, itemCount * 6);
+			glDrawArrays(GL_TRIANGLES, 0, count * 6);
 		}
 
 		// Rounded, so small window resizes don't invalidate the icons kept on disk
@@ -1043,6 +1065,45 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			remember();
 	}
 
+	// What the interface shows around each item now, to tell later whether the game drew it again
+	private void hold() {
+		var buffer = client.getBufferProvider();
+		int[] pixels = buffer.getPixels();
+		int width = buffer.getWidth();
+		heldCount = itemCount;
+		heldWidth = width;
+		heldHeight = buffer.getHeight();
+		for (int i = 0; i < itemCount; i++) {
+			if (itemSlots[i] == NO_SLOT)
+				continue;
+			var bounds = itemBounds[i];
+			var drawn = itemDrawn[i];
+			for (int y = drawn.y; y < drawn.y + drawn.height; y++)
+				System.arraycopy(pixels, y * width + drawn.x, itemSlots[i].shown, GameIcon.grid(drawn.x - bounds.x, y - bounds.y), drawn.width);
+		}
+	}
+
+	private boolean isHeldShown() {
+		var buffer = client.getBufferProvider();
+		int[] pixels = buffer.getPixels();
+		int width = buffer.getWidth();
+		if (width != heldWidth || buffer.getHeight() != heldHeight)
+			return false;
+		for (int i = 0; i < heldCount; i++) {
+			if (itemSlots[i] == NO_SLOT)
+				continue;
+			var bounds = itemBounds[i];
+			var drawn = itemDrawn[i];
+			for (int y = drawn.y; y < drawn.y + drawn.height; y++) {
+				int p = y * width + drawn.x;
+				int g = GameIcon.grid(drawn.x - bounds.x, y - bounds.y);
+				if (!Arrays.equals(pixels, p, p + drawn.width, itemSlots[i].shown, g, g + drawn.width))
+					return false;
+			}
+		}
+		return true;
+	}
+
 	private void startRemembered() {
 		long account = this.account;
 		var cache = this.cache;
@@ -1084,6 +1145,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 	private void clearIcons() {
 		prepared = false;
+		heldCount = 0;
 		icons.clear();
 		freeLayers.clear();
 		for (int i = 0; i < MAX_ICONS; i++)
