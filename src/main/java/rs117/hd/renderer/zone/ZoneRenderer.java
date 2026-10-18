@@ -150,6 +150,9 @@ public class ZoneRenderer implements Renderer {
 	private SceneShaderProgram.Water waterProgram;
 
 	@Inject
+	private SceneShaderProgram.Terrain terrainProgram;
+
+	@Inject
 	private SceneShaderProgram.GapFiller gapFillerProgram;
 
 	@Inject
@@ -335,6 +338,7 @@ public class ZoneRenderer implements Renderer {
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
 		sceneProgram.compile(includes);
 		waterProgram.compile(includes);
+		terrainProgram.compile(includes);
 		gapFillerProgram.compile(includes);
 		fastShadowProgram.compile(includes);
 		detailedShadowProgram.compile(includes);
@@ -346,6 +350,7 @@ public class ZoneRenderer implements Renderer {
 	public void destroyShaders() {
 		sceneProgram.destroy();
 		waterProgram.destroy();
+		terrainProgram.destroy();
 		gapFillerProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
@@ -1062,9 +1067,18 @@ public class ZoneRenderer implements Renderer {
 			boolean renderGroundLevel = ctx.minLevel == 0;
 			if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
 				sceneCmd.Disable(GL_BLEND);
-				if (renderGroundLevel)
+				if (renderGroundLevel) {
+					sceneCmd.SetShader(terrainProgram);
 					z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_TERRAIN);
+				}
+
+				if(renderGroundLevel && !z.isMultiLevelTerrain)
+					sceneCmd.SetShader(sceneProgram);
+
 				z.renderOpaque(sceneCmd, ctx, false);
+
+				if(renderGroundLevel && z.isMultiLevelTerrain)
+					sceneCmd.SetShader(sceneProgram);
 
 				if (renderGroundLevel && z.hasGapFiller)
 					z.renderOpaqueLevel(gapFillerCmd, Zone.LEVEL_GAP_FILLER);

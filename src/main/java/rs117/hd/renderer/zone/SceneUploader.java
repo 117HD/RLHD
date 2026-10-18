@@ -255,6 +255,7 @@ public class SceneUploader implements AutoCloseable {
 		}
 
 		if (vb != null) {
+			renderablePlane = 0;
 			uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, true, false, vb, ab, fb);
 			uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, true, false, vb, ab, fb);
 			uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, true, false, vb, ab, fb);
@@ -533,6 +534,7 @@ public class SceneUploader implements AutoCloseable {
 		if (paint != null && drawTile && !onlyRenderables) {
 			uploadTilePaint(
 				ctx,
+				zone,
 				t,
 				paint,
 				onlyWaterSurface,
@@ -545,7 +547,7 @@ public class SceneUploader implements AutoCloseable {
 
 		SceneTileModel model = t.getSceneTileModel();
 		if (model != null && drawTile && !onlyRenderables)
-			uploadTileModel(ctx, t, model, onlyWaterSurface, tileExX, tileExY, tileZ, basex, basez, vertexBuffer, textureBuffer);
+			uploadTileModel(ctx, zone, t, model, onlyWaterSurface, tileExX, tileExY, tileZ, basex, basez, vertexBuffer, textureBuffer);
 
 		if (!onlyWaterSurface && !onlyTiles)
 			uploadZoneTileRenderables(ctx, zone, t, tileExX, tileExY, tileZ, vertexBuffer, alphaBuffer, textureBuffer);
@@ -879,6 +881,7 @@ public class SceneUploader implements AutoCloseable {
 	@SuppressWarnings({ "UnnecessaryLocalVariable" })
 	private void uploadTilePaint(
 		ZoneSceneContext ctx,
+		Zone zone,
 		Tile tile,
 		SceneTilePaint paint,
 		boolean onlyWaterSurface,
@@ -1071,6 +1074,9 @@ public class SceneUploader implements AutoCloseable {
 		neHeight -= override.heightOffset;
 		nwHeight -= override.heightOffset;
 
+		if(renderablePlane != 0 && swMaterial != seMaterial && swMaterial != nwMaterial && swMaterial != neMaterial)
+			zone.isMultiLevelTerrain = true;
+
 		int swMaterialData = swMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, swVertexIsOverlay);
 		int seMaterialData = seMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, seVertexIsOverlay);
 		int nwMaterialData = nwMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, nwVertexIsOverlay);
@@ -1197,6 +1203,7 @@ public class SceneUploader implements AutoCloseable {
 
 	private void uploadTileModel(
 		ZoneSceneContext ctx,
+		Zone zone,
 		Tile tile,
 		SceneTileModel model,
 		boolean onlyWaterSurface,
@@ -1425,6 +1432,9 @@ public class SceneUploader implements AutoCloseable {
 				vertexBIsOverlay = true;
 			if (ctx.isVertexOverlay(vertexKeyC) && ctx.isVertexUnderlay(vertexKeyC))
 				vertexCIsOverlay = true;
+
+			if(renderablePlane != 0 && materialA != materialB && materialA != materialC)
+				zone.isMultiLevelTerrain = true;
 
 			ly0 -= override.heightOffset;
 			ly1 -= override.heightOffset;
