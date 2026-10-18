@@ -1616,9 +1616,6 @@ public class SceneUploader implements AutoCloseable {
 		}
 
 		boolean isVanillaTextured = faceTextures != null;
-		boolean isVanillaUVMapped =
-			isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
-			textureFaces != null;
 
 		final Material baseMaterial = modelOverride.baseMaterial;
 		final Material textureMaterial = modelOverride.textureMaterial;
@@ -1791,14 +1788,17 @@ public class SceneUploader implements AutoCloseable {
 			int textureFace = textureFaces != null ? textureFaces[face] : -1;
 			if (material != Material.NONE) {
 				uvType = faceOverride.uvType;
-				if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs))
-					uvType = isVanillaUVMapped && textureFace != -1 ? UvType.VANILLA : UvType.GEOMETRY;
+				if (textureId != -1 && faceOverride.retainVanillaUvs)
+					uvType = UvType.VANILLA;
 			}
+			// Fall back to geometry UVs if vanilla UVs aren't valid
+			if (uvType == UvType.VANILLA && (textureId == -1 || textureFace == -1))
+				uvType = UvType.GEOMETRY;
 
 			final int materialData = material.packMaterialData(faceOverride, uvType, false);
 
 			final float[] faceUVs;
-			if (uvType == UvType.VANILLA && textureId != -1) {
+			if (uvType == UvType.VANILLA) {
 				computeFaceUvsInline(faceUVs = modelUvs, model, textureFace, triangleA, triangleB, triangleC, null);
 			} else if (uvType != UvType.GEOMETRY) {
 				faceOverride.fillUvsForFace(faceUVs = modelUvs, model, preOrientation, uvType, face, workingSpace);
@@ -2018,9 +2018,6 @@ public class SceneUploader implements AutoCloseable {
 		final Material textureMaterial = modelOverride.textureMaterial;
 
 		final boolean isVanillaTextured = faceTextures != null;
-		final boolean isVanillaUVMapped =
-			isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
-			textureFaces != null;
 
 		final int zero = (int) proj.project(x, y, z, projected)[2];
 		final int radius = model.getRadius();
@@ -2092,11 +2089,12 @@ public class SceneUploader implements AutoCloseable {
 
 			if (material != Material.NONE) {
 				uvType = faceOverride.uvType;
-				if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs)) {
-					final int textureFace = textureFaces != null ? textureFaces[f] : -1;
-					uvType = isVanillaUVMapped && textureFace != -1 ? UvType.VANILLA : UvType.GEOMETRY;
-				}
+				if (textureId != -1 && faceOverride.retainVanillaUvs)
+					uvType = UvType.VANILLA;
 			}
+			// Fall back to geometry UVs if vanilla UVs aren't valid
+			if (uvType == UvType.VANILLA && (textureId == -1 || textureFaces == null || textureFaces[f] == -1))
+				uvType = UvType.GEOMETRY;
 
 			if (faceOverride.modifiesAlpha) {
 				transparency = 255 - faceOverride.modifyAlpha(255 - transparency);
@@ -2261,7 +2259,7 @@ public class SceneUploader implements AutoCloseable {
 			final int vertexOffsetC = triangleC * 3;
 
 			final float[] faceUVs;
-			if (uvType == UvType.VANILLA && textureId != -1) {
+			if (uvType == UvType.VANILLA) {
 				computeFaceUvsInline(faceUVs = modelUvs, model, textureFace, triangleA, triangleB, triangleC, modelProjected);
 			} else if (uvType != UvType.GEOMETRY) {
 				faceOverride.fillUvsForFace(faceUVs = modelUvs, model, preOrientation, uvType, face, workingSpace);
@@ -2618,6 +2616,7 @@ public class SceneUploader implements AutoCloseable {
 		int c,
 		@Nullable float[] projected
 	) {
+		assert textureFace != -1;
 		int tf = textureFace & 0xFF;
 		int o = model.getTexIndices1()[tf];
 		int u = model.getTexIndices2()[tf];
