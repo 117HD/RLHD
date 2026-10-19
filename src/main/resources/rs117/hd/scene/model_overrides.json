@@ -8646,6 +8646,13 @@
     "uvScale": 0.5
   },
   {
+    "description": "PoH - Anivesary Altar Room Decoration - Double sided faces",
+    "doubleSidedFaces": true,
+    "objectIds": [
+      "POH_ICON_9"
+    ]
+  },
+  {
     "description": "ROCK_CAVE_ENTRANCES",
     "baseMaterial": "ROCK_2",
     "shiftLightness": 3,
