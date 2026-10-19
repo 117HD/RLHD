@@ -615,6 +615,9 @@ public class HdPlugin extends Plugin {
 					config.indirectDraw().get(NVIDIA_GPU && !APPLE);
 				SUPPORTS_MULTI_INDIRECT_DRAW = SUPPORTS_INDIRECT_DRAW && (GL_CAPS.OpenGL43 || GL_CAPS.GL_ARB_multi_draw_indirect);
 				SUPPORTS_STORAGE_BUFFERS = GL_CAPS.GL_ARB_buffer_storage && !DEBUG_MAC_OS && config.storageBuffers().get(!INTEL_GPU);
+				
+				glBindFramebuffer(GL_FRAMEBUFFER,  awtContext.getFramebuffer(false));
+				final int backBufferMSAASamples = glGetInteger(GL_SAMPLES);
 
 				log.info("Starting 117 HD... (count: {})", startupCount);
 				log.info("Renderer:            {}", rendererClass.getSimpleName());
@@ -627,6 +630,7 @@ public class HdPlugin extends Plugin {
 				log.info("Memory:              {}", formatBytes(HDUtils.getTotalSystemMemory()));
 				log.info("GPU:                 {} ({})", glRenderer, glVendor);
 				log.info("GPU driver:          {}", glGetString(GL_VERSION));
+				log.info("Backbuffer MSAA:     {}", backBufferMSAASamples == 0 ? "None" : backBufferMSAASamples);
 				log.info("Indirect draw:       {}", SUPPORTS_INDIRECT_DRAW);
 				log.info("Multi indirect draw: {}", SUPPORTS_MULTI_INDIRECT_DRAW);
 				log.info("Storage buffers:     {}", SUPPORTS_STORAGE_BUFFERS);
