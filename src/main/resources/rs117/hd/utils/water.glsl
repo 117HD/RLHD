@@ -103,13 +103,13 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     vec3 lightSpecularOut = vec3(0);
     #if WATER_SPECULAR_REFLECTIONS
         if (!uboSky.enabled)
-            lightSpecularOut = lightColor * specular(IN.texBlend, viewDir, reflect(-uboGlobal.lightDir, normals), vSpecularGloss, vSpecularStrength);
+            lightSpecularOut = lightColor * specular(fTexBlend, viewDir, reflect(-uboGlobal.lightDir, normals), vSpecularGloss, vSpecularStrength);
     #endif
 
     // point lights
     vec3 pointLightsOut = vec3(0);
     vec3 pointLightsSpecularOut = vec3(0);
-    calculateLighting(IN.position, normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength,
+    calculateLighting(IN.position, normals, viewDir, fTexBlend, vSpecularGloss, vSpecularStrength,
         0.0, pointLightsOut, pointLightsSpecularOut);
 
     // sky light
@@ -207,7 +207,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     #endif
 
     vec4 water;
-    float shoreLineMask = 1 - dot(IN.texBlend, (fAlphaBiasHsl & 127) / 127.f);
+    float shoreLineMask = 1 - dot(fTexBlend, (fAlphaBiasHsl & 127) / 127.f);
     float foamAmount = min(shoreLineMask, 0.8);
     foamAmount = clamp(pow(1.0 - ((1.0 - foamAmount) / 0.7), 3), 0.0, 1.0) * waterType.hasFoam;
     float opacityFresnel = max(finalFresnel, 1.0 - dot(viewDir, vec3(0, -1, 0)));

@@ -48,15 +48,16 @@ flat out ivec3 fAlphaBiasHsl;
 flat out ivec3 fMaterialData;
 flat out ivec3 fTerrainData;
 
+#if CENTROID_QUALIFIER
+    centroid out vec3 fTexBlend;
+#else
+    out vec3 fTexBlend;
+#endif
+
 out FragmentData {
     vec3 position;
     vec2 uv;
     vec3 normal;
-    #if CENTROID_QUALIFIER
-        centroid out vec3 texBlend;
-    #else
-        vec3 texBlend;
-    #endif
 } OUT;
 
 void main() {
@@ -94,11 +95,12 @@ void main() {
         // Flat normals must be applied separately per vertex
         vec3 normal = gNormal[i];
 
+        fTexBlend = vec3(0);
+        fTexBlend[i] = 1;
+
         OUT.position = pos.xyz;
         OUT.uv = vUv[i].xy;
         OUT.normal = length(normal) == 0 ? N : normalize(normal);
-        OUT.texBlend = vec3(0);
-        OUT.texBlend[i] = 1;
 
         pos = uboGlobal.projectionMatrix * pos;
         gl_Position = pos;
