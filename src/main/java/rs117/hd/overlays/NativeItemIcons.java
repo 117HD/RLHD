@@ -10,6 +10,7 @@ import java.nio.FloatBuffer;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -351,6 +352,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private final Map<Long, Slot> slots = new HashMap<>();
 	private final List<CutItem> uncaptured = new ArrayList<>();
 	private final List<WidgetItem> draggedItems = new ArrayList<>();
+	private final Set<WidgetItem> coveredItems = Collections.newSetFromMap(new IdentityHashMap<>());
+	private final Map<Integer, List<Rectangle>> laterLayers = new HashMap<>();
 	private final List<CutItem> draggedCuts = new ArrayList<>();
 	private final Slot[] itemSlots = new Slot[MAX_ITEMS];
 	private final Rectangle[] itemBounds = new Rectangle[MAX_ITEMS];
@@ -564,6 +567,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	public Dimension render(Graphics2D graphics) {
 		interfacesDrawn = true;
 		takeOutDraggedItem();
+		findCoveredItems();
 		super.render(graphics);
 		for (var widgetItem : draggedItems)
 			cutOut(widgetItem);
@@ -602,6 +606,24 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		int group = WidgetUtil.componentToInterface(widget.getId());
 		return group == WidgetUtil.componentToInterface(InterfaceID.Bankmain.ITEMS) ||
 			group == WidgetUtil.componentToInterface(InterfaceID.SharedBank.ITEMS);
+	}
+
+	// Items of a layer drawn after another's are drawn over its items, like the rune pouch's runes to pick over its loadouts
+	private void findCoveredItems() {
+		coveredItems.clear();
+		laterLayers.clear();
+		var widgetItems = new ArrayList<>(overlayManager.getWidgetItems());
+		for (int i = widgetItems.size() - 1; i >= 0; i--) {
+			var widgetItem = widgetItems.get(i);
+			if (isDragged(widgetItem))
+				continue;
+			var bounds = widgetItem.getCanvasBounds();
+			int layerId = widgetItem.getWidget().getParentId();
+			for (var layer : laterLayers.entrySet())
+				if (layer.getKey() != layerId && layer.getValue().stream().anyMatch(bounds::intersects))
+					coveredItems.add(widgetItem);
+			laterLayers.computeIfAbsent(layerId, k -> new ArrayList<>()).add(bounds);
+		}
 	}
 
 	// What the bank drew its dragged item over, from how it's half see-through over it, so items under it are cut out without it
@@ -706,21 +728,28 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		boolean dragged = isDragged(widgetItem);
 		var bounds = widgetItem.getDraggingCanvasBounds() != null ? widgetItem.getDraggingCanvasBounds() : widgetItem.getCanvasBounds();
 		var gameIcon = getGameIcon(widgetItem.getId(), widgetItem.getQuantity(), widget.getItemQuantityMode(), widget.getBorderType(), true);
-		// The parents can still be where they were a frame ago, like when an interface is shown or scrolled,
-		// so where the game drew the item tells how far it's clipped, unless it's see-through or a dragged item is drawn over it
-		var visible = dragged ? bounds.intersection(widget.getParent().getBounds()) :
-			widget.getOpacity() == 0 && client.getDraggedWidget() == null ? shownArea(gameIcon, bounds) :
-			bounds.intersection(visibleArea(widget));
 		// Some interfaces report their items twice
-		if (visible.isEmpty() || !cutThisFrame.add(bounds))
+		if (cutThisFrame.contains(bounds))
 			return;
-		icon.frame = frame;
 
 		var buffer = client.getBufferProvider();
+		var around = new Rectangle(bounds.x - MARGIN, bounds.y - MARGIN, GRID_WIDTH, GRID_HEIGHT)
+			.intersection(new Rectangle(buffer.getWidth(), buffer.getHeight()));
+		putBackMargins(buffer.getPixels(), buffer.getWidth(), around, true);
+		// The parents can still be where they were a frame ago, like when an interface is shown or scrolled,
+		// so where the game drew the item tells how far it's clipped, unless it's see-through or a dragged item is drawn over it
+		var visible = dragged ? bounds.intersection(widget.getParent().getBounds()) : coveredItems.contains(widgetItem) ? new Rectangle() :
+			widget.getOpacity() == 0 && client.getDraggedWidget() == null ? shownArea(gameIcon, bounds) :
+			bounds.intersection(visibleArea(widget));
+		if (visible.isEmpty()) {
+			putBackMargins(buffer.getPixels(), buffer.getWidth(), around, false);
+			return;
+		}
+		cutThisFrame.add(bounds);
+		icon.frame = frame;
+
 		// Partly visible items stay clipped like the interface clips them
-		var drawn = !visible.equals(bounds) ? visible :
-			new Rectangle(bounds.x - MARGIN, bounds.y - MARGIN, GRID_WIDTH, GRID_HEIGHT)
-				.intersection(new Rectangle(buffer.getWidth(), buffer.getHeight()));
+		var drawn = !visible.equals(bounds) ? visible : around;
 
 		// The game draws dragged items half transparent
 		float opacity = (dragged ? 128 : 256 - widget.getOpacity()) / 256f;
@@ -746,6 +775,24 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		itemSlots[itemCount] = slot;
 		// The shadow taken out with it is drawn see-through like it
 		putQuad(bounds, drawn, icon.layer, slot.layer, opacity, widget.getBorderType(), takenOut ? BANK_SHADOW | 0x80000000 : slot.shadow);
+	}
+
+	// Items cut out just before took the edge of this one with them, like where the rune pouch's stack sizes start,
+	// which is put back while it's looked at, and taken out again if it's not cut out after all
+	private void putBackMargins(int[] pixels, int width, Rectangle area, boolean back) {
+		for (var item : uncaptured) {
+			if (!item.drawn.intersects(area))
+				continue;
+			var overlap = item.drawn.intersection(area);
+			for (int y = overlap.y; y < overlap.y + overlap.height; y++) {
+				for (int x = overlap.x; x < overlap.x + overlap.width; x++) {
+					int g = GameIcon.grid(x - item.bounds.x, y - item.bounds.y);
+					int i = y * width + x;
+					if (pixels[i] == (back ? item.slot.cut[g] : item.slot.behind[g]))
+						pixels[i] = back ? item.slot.behind[g] : item.slot.cut[g];
+				}
+			}
+		}
 	}
 
 	// Rows and columns of the item the game drew, up to the first ones it clipped
@@ -791,6 +838,20 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		for (int x = ICON_WIDTH - 1; x > right; x--)
 			if ((shownColumns[x] & CLIPPED) != 0)
 				toX = x;
+
+		// The game clips to a rectangle, so an item it drew is all there within it. Items hidden behind others only seem
+		// partly drawn where they look alike, like the stone of runes.
+		for (int y = fromY; y < toY; y++) {
+			for (int x = fromX; x < toX; x++) {
+				int pixel = gameIcon.pixels[y * ICON_WIDTH + x];
+				if (pixel == 0 || gameIcon.stackSize[GameIcon.grid(x, y)])
+					continue;
+				int px = bounds.x + x;
+				int py = bounds.y + y;
+				if (px < 0 || py < 0 || px >= width || py >= height || ((pixels[py * width + px] ^ pixel) & 0xFFFFFF) != 0)
+					return new Rectangle();
+			}
+		}
 		return new Rectangle(bounds.x + fromX, bounds.y + fromY, toX - fromX, toY - fromY);
 	}
 
