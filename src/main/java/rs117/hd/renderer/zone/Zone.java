@@ -319,7 +319,7 @@ public class Zone implements Destructible {
 	private static final int[] glDrawLength = new int[NUM_DRAW_RANGES];
 	private static int drawIdx = 0;
 
-	private void convertForDraw(int vertSize) {
+	private static void convertForDraw(int vertSize) {
 		for (int i = 0; i < drawIdx; ++i) {
 			assert drawEnd[i] >= drawOff[i];
 
@@ -757,6 +757,78 @@ public class Zone implements Destructible {
 			alphaSortingJob.addAlphaModel(m);
 		}
 		alphaSortingJob.queue(camera);
+	}
+
+	void renderAlphaShadows(
+		CommandBuffer cmd,
+		int zx,
+		int zz,
+		WorldViewContext ctx,
+		boolean includeRoof
+	) {
+		if (alphaModels.isEmpty() && bufLenA == 0)
+			return;
+
+		int minLevel = ctx.minLevel;
+		int currentLevel = ctx.level;
+		int maxLevel = ctx.maxLevel;
+		var hiddenRoofIds = ctx.hideRoofIds;
+		if (includeRoof) {
+			maxLevel = 3;
+			hiddenRoofIds = Collections.emptySet();
+		}
+
+		drawIdx = 0;
+
+		final int count = alphaModels.size();
+		final Object[] sorted = PooledArrayType.OBJECT.borrow(count);
+		try {
+			int idxCount = 0;
+			for (int i = 0; i < count; i++) {
+				final AlphaModel m = alphaModels.get(i);
+				if ((m.flags & AlphaModel.SKIP) != 0 || m.vao == -1)
+					continue;
+
+				final int level = m.level;
+				if (level < minLevel || level > maxLevel)
+					continue;
+
+				if (level > currentLevel && !hiddenRoofIds.isEmpty() && hiddenRoofIds.contains((int) m.rid))
+					continue;
+
+				sorted[idxCount++] = m;
+			}
+
+			quickSort(sorted, 0, idxCount - 1, (a, b) -> {
+				final AlphaModel ma = (AlphaModel) a, mb = (AlphaModel) b;
+				if (ma.vao != mb.vao)
+					return Integer.compare(ma.vao, mb.vao);
+				final boolean ta = ma.isTemp(), tb = mb.isTemp();
+				return Boolean.compare(ta, tb);
+			});
+
+			for (int i = 0; i < idxCount; i++) {
+				final AlphaModel m = (AlphaModel) sorted[i];
+				final int drawMode = m.isTemp() ? TEMP : STATIC_UNSORTED;
+				if (lastDrawMode != drawMode ||
+					lastVao != m.vao ||
+					lastTboF != m.tboF ||
+					lastzx != (zx - m.zofx) ||
+					lastzz != (zz - m.zofz)
+				) {
+					flush(cmd);
+					lastDrawMode = drawMode;
+					lastVao = m.vao;
+					lastTboF = m.tboF;
+					lastzx = zx - m.zofx;
+					lastzz = zz - m.zofz;
+				}
+				pushRange(m.startpos, m.endpos);
+			}
+		} finally {
+			PooledArrayType.OBJECT.release(sorted);
+		}
+		flush(cmd);
 	}
 
 	void renderAlpha(
