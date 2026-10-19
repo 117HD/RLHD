@@ -8984,22 +8984,20 @@
   },
   {
     "name": "COSMIC_ALTAR",
-    "aabbs": [
-      [ 2112, 4799, 2176, 4863 ]
+    "regions": [
+      8523
     ],
     "hideOtherAreas": true
   },
   {
     "name": "DEATH_ALTAR",
-    "aabbs": [
-      [ 2176, 4799, 2240, 4863 ]
-    ],
+    "regions": [ 8779 ],
     "hideOtherAreas": true
   },
   {
     "name": "CHAOS_ALTAR",
-    "aabbs": [
-      [ 2240, 4863, 2303, 4800 ]
+    "regions": [
+      9035
     ],
     "hideOtherAreas": true
   },

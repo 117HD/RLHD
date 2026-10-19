@@ -44970,6 +44970,44 @@
     ]
   },
   {
+    "description": "Voidwaker Special Attack Lightning - Highlight",
+    "offset": [ 0, 75, 125 ],
+    "radius": 90,
+    "spawnDelay": 650,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "strength": 75,
+    "color": [
+      176,
+      70,
+      165
+    ],
+    "type": "FLICKER",
+    "range": 20,
+    "fadeInDuration": 50,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [ "FX_VOIDWAKER02_SPECIAL" ]
+  },
+  {
+    "description": "Voidwaker Special Attack Lightning - Wide",
+    "offset": [ 0, 75, 125 ],
+    "radius": 175,
+    "spawnDelay": 650,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "strength": 30,
+    "color": [
+      176,
+      70,
+      165
+    ],
+    "type": "FLICKER",
+    "range": 35,
+    "fadeInDuration": 50,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [ "FX_VOIDWAKER02_SPECIAL" ]
+  },
+  {
     "description": "Varlamore - Ruins of Tapoyauik - Brazier",
     "offset": [ 0, 350, 0 ],
     "radius": 500,
@@ -49039,6 +49077,121 @@
     ]
   },
   {
+    "description": "PoH Magic Tree Top",
+    "offset": [ 10, 380, -10 ],
+    "radius": 300,
+    "strength": 2,
+    "nightMultiplier": 2,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 19,
+    "objectIds": [
+      "POH_BIG_TREE7_4",
+      "POH_SMALL_TREE7_5"
+    ]
+  },
+  {
+    "description": "PoH Magic Tree North",
+    "offset": [ 150, 250, -10 ],
+    "radius": 250,
+    "strength": 3,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 17,
+    "objectIds": [
+      "POH_BIG_TREE7_4",
+      "POH_SMALL_TREE7_5"
+    ]
+  },
+  {
+    "description": "PoH Magic Tree South",
+    "offset": [ -150, 250, -10 ],
+    "radius": 250,
+    "strength": 3,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "POH_BIG_TREE7_4",
+      "POH_SMALL_TREE7_5"
+    ]
+  },
+  {
+    "description": "PoH Magic Tree West",
+    "offset": [ 10, 250, 150 ],
+    "radius": 250,
+    "strength": 3,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "POH_BIG_TREE7_4",
+      "POH_SMALL_TREE7_5"
+    ]
+  },
+  {
+    "description": "PoH Magic Tree East",
+    "offset": [ 10, 250, -150 ],
+    "radius": 250,
+    "strength": 3,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "POH_BIG_TREE7_4",
+      "POH_SMALL_TREE7_5"
+    ]
+  },
+  {
+    "description": "PoH Magic Tree Main",
+    "offset": [ 10, 150, -10 ],
+    "radius": 250,
+    "strength": 7,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "POH_BIG_TREE7_4",
+      "POH_SMALL_TREE7_5"
+    ]
+  },
+  {
     "description": "Magic Tree Top",
     "offset": [ 10, 600, -10 ],
     "radius": 300,
@@ -50618,6 +50771,107 @@
     "visibleFromOtherPlanes": true,
     "objectIds": [
       "PRIF_CRYSTAL_STAIRCASE_TOP_ARCHES"
+    ]
+  },
+  {
+    "description": "HIGH_ALCH_1",
+    "offset": [ 0, 150, 50 ],
+    "radius": 300,
+    "strength": 8,
+    "fixedDespawnTime": true,
+    "fadeOverlap": true,
+    "despawnDelay": 650,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [
+      "HIGHLVLALCHEMY_CASTING"
+    ]
+  },
+  {
+    "description": "HIGH_ALCH_2",
+    "offset": [ 0, 150, 50 ],
+    "radius": 145,
+    "strength": 10,
+    "fixedDespawnTime": true,
+    "spawnDelay": 150,
+    "despawnDelay": 1600,
+    "fadeInDuration": 500,
+    "fadeOutDuration": 300,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "graphicsObjectIds": [
+      "HIGHLVLALCHEMY_CASTING"
+    ]
+  },
+  {
+    "description": "HIGH_ALCH_3",
+    "offset": [ 0, 150, 50 ],
+    "radius": 300,
+    "strength": 8,
+    "fixedDespawnTime": true,
+    "spawnDelay": 1300,
+    "despawnDelay": 1000,
+    "fadeInDuration": 600,
+    "fadeOutDuration": 300,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [
+      "HIGHLVLALCHEMY_CASTING"
+    ]
+  },
+  {
+    "description": "HIGH_ALCH_4",
+    "offset": [ 0, 150, 50 ],
+    "radius": 250,
+    "strength": 10,
+    "fixedDespawnTime": true,
+    "spawnDelay": 2000,
+    "despawnDelay": 800,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 500,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [
+      "HIGHLVLALCHEMY_CASTING"
+    ]
+  },
+  {
+    "description": "LOW_ALCH",
+    "offset": [ 0, 150, 50 ],
+    "radius": 250,
+    "strength": 10,
+    "fixedDespawnTime": true,
+    "spawnDelay": 250,
+    "despawnDelay": 650,
+    "fadeInDuration": 250,
+    "fadeOutDuration": 500,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [
+      "LOWLVLALCHEMY_CASTING"
     ]
   }
 ]
