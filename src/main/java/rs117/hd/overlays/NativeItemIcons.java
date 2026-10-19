@@ -365,6 +365,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private final boolean[] known = new boolean[GRID_SIZE];
 	private final boolean[] spread = new boolean[GRID_SIZE];
 	private final int[] shadeColors = new int[GRID_SIZE];
+	private final int[] alphaCounts = new int[256];
 	private final int[] overlays = new int[GRID_SIZE];
 	private final boolean[] captured = new boolean[GRID_SIZE];
 	private final boolean[] runePixels = new boolean[GRID_SIZE];
@@ -1391,35 +1392,49 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				if (gameIcon.shadow[g])
 					known[g] = false;
 
+		// A see-through interface lets what's drawn under it show through, like tile markers, which aren't painted under the item
+		Arrays.fill(alphaCounts, 0);
+		for (int g = 0; g < GRID_SIZE; g++)
+			if (known[g])
+				alphaCounts[background[g] >>> 24]++;
+		int seeThrough = 255;
+		for (int a = 0; a < 255; a++)
+			if (alphaCounts[a] > alphaCounts[seeThrough])
+				seeThrough = a;
+
 		// Paint over the item with what surrounds it, a pixel further in each step until it's all covered
-		for (boolean spreading = true; spreading; ) {
-			spreading = false;
-			System.arraycopy(known, 0, spread, 0, GRID_SIZE);
-			for (int g = 0; g < GRID_SIZE; g++) {
-				if (known[g])
-					continue;
-				int x = g % GRID_WIDTH;
-				int y = g / GRID_WIDTH;
-				int count = 0, alpha = 0, red = 0, green = 0, blue = 0;
-				for (int n = 0; n < 4; n++) {
-					int nx = x + NEIGHBOR_X[n];
-					int ny = y + NEIGHBOR_Y[n];
-					if (nx < 0 || nx >= GRID_WIDTH || ny < 0 || ny >= GRID_HEIGHT || !known[ny * GRID_WIDTH + nx])
+		for (int pass = seeThrough == 255 ? 1 : 0; pass < 2; pass++) {
+			for (boolean spreading = true; spreading; ) {
+				spreading = false;
+				System.arraycopy(known, 0, spread, 0, GRID_SIZE);
+				for (int g = 0; g < GRID_SIZE; g++) {
+					if (known[g])
 						continue;
-					int neighbor = background[ny * GRID_WIDTH + nx];
-					alpha += neighbor >>> 24;
-					red += neighbor >> 16 & 0xFF;
-					green += neighbor >> 8 & 0xFF;
-					blue += neighbor & 0xFF;
-					count++;
+					int x = g % GRID_WIDTH;
+					int y = g / GRID_WIDTH;
+					int count = 0, alpha = 0, red = 0, green = 0, blue = 0;
+					for (int n = 0; n < 4; n++) {
+						int nx = x + NEIGHBOR_X[n];
+						int ny = y + NEIGHBOR_Y[n];
+						if (nx < 0 || nx >= GRID_WIDTH || ny < 0 || ny >= GRID_HEIGHT || !known[ny * GRID_WIDTH + nx])
+							continue;
+						int neighbor = background[ny * GRID_WIDTH + nx];
+						if (pass == 0 && neighbor >>> 24 != seeThrough)
+							continue;
+						alpha += neighbor >>> 24;
+						red += neighbor >> 16 & 0xFF;
+						green += neighbor >> 8 & 0xFF;
+						blue += neighbor & 0xFF;
+						count++;
+					}
+					if (count > 0) {
+						background[g] = alpha / count << 24 | red / count << 16 | green / count << 8 | blue / count;
+						spread[g] = true;
+						spreading = true;
+					}
 				}
-				if (count > 0) {
-					background[g] = alpha / count << 24 | red / count << 16 | green / count << 8 | blue / count;
-					spread[g] = true;
-					spreading = true;
-				}
+				System.arraycopy(spread, 0, known, 0, GRID_SIZE);
 			}
-			System.arraycopy(spread, 0, known, 0, GRID_SIZE);
 		}
 		slot.shadow = shadow;
 		slot.kept = true;
