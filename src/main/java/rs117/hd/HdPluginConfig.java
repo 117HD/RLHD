@@ -644,7 +644,7 @@ public interface HdPluginConfig extends Config
 			"Controls the day & night cycle behavior.<br>" +
 			"'Off' disables the day & night cycle entirely.<br>" +
 			"'Default' shows everyone the same sky, with one complete day passing per hour.<br>" +
-			"'Real-time' follows your local time, roughly matching the real sun in your hemisphere.<br>" +
+			"'Real-time' matches the Sun & Moon in the real world, for your configured latitude & longitude.<br>" +
 			"'Custom' follows the sun and moon at the configured location, respecting the Custom cycle duration.<br>" +
 			"'Dawn' shows the sky just before sunrise.<br>" +
 			"'Sunrise' shows a constant sunrise.<br>" +
