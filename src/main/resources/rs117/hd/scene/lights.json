@@ -44969,6 +44969,44 @@
     ]
   },
   {
+    "description": "Voidwaker Special Attack Lightning - Highlight",
+    "offset": [ 0, 75, 125 ],
+    "radius": 90,
+    "spawnDelay": 650,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "strength": 75,
+    "color": [
+      176,
+      70,
+      165
+    ],
+    "type": "FLICKER",
+    "range": 20,
+    "fadeInDuration": 50,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [ "FX_VOIDWAKER02_SPECIAL" ]
+  },
+  {
+    "description": "Voidwaker Special Attack Lightning - Wide",
+    "offset": [ 0, 75, 125 ],
+    "radius": 175,
+    "spawnDelay": 650,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "strength": 30,
+    "color": [
+      176,
+      70,
+      165
+    ],
+    "type": "FLICKER",
+    "range": 35,
+    "fadeInDuration": 50,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [ "FX_VOIDWAKER02_SPECIAL" ]
+  },
+  {
     "description": "Varlamore - Ruins of Tapoyauik - Brazier",
     "offset": [ 0, 350, 0 ],
     "radius": 500,
