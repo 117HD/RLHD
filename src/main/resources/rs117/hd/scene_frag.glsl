@@ -38,9 +38,6 @@
 #include <uniforms/materials.glsl>
 #include <uniforms/water_types.glsl>
 
-#include <utils/sky_fog.glsl>
-#include <utils/hash.glsl>
-
 #include MATERIAL_CONSTANTS
 #include WATER_PASS
 
@@ -81,6 +78,7 @@ vec2 worldUvs(float scale) {
     return -(uboGlobal.sceneBase + IN.position.xz) / (128 * scale);
 }
 
+#include <utils/hash.glsl>
 #include <utils/constants.glsl>
 #include <utils/misc.glsl>
 #include <utils/output_transform.glsl>
@@ -93,7 +91,11 @@ vec2 worldUvs(float scale) {
 #include <utils/fog.glsl>
 #include <utils/wireframe.glsl>
 #include <utils/lights.glsl>
-#include <utils/sky.glsl>
+
+#if DAYLIGHT_CYCLE
+    #include <utils/sky.glsl>
+#endif
+
 #include <utils/water.glsl>
 
 void main() {
@@ -555,6 +557,7 @@ void main() {
         float groundFog = 1.0 - clamp((IN.position.y - uboGlobal.groundFogStart) / (uboGlobal.groundFogEnd - uboGlobal.groundFogStart), 0.0, 1.0);
         groundFog = mix(0.0, uboGlobal.groundFogOpacity, groundFog);
         groundFog *= clamp(distance / closeFadeDistance, 0.0, 1.0);
+        #if DAYLIGHT_CYCLE
         float nightFogBlend = 0.0;
 
         // Scale optical depth, with lighter haze at night. Apply before water coverage too.
@@ -562,6 +565,7 @@ void main() {
             nightFogBlend = 1.0 - smoothstep(sin(radians(-6.0)), 0.0, uboSky.sunDir.y);
             groundFog = 1.0 - pow(1.0 - clamp(groundFog, 0.0, 1.0), mix(0.88, 0.352, nightFogBlend));
         }
+        #endif
 
         // multiply the visibility of each fog
         float fogAmount = calculateFogAmount(IN.position);
@@ -571,6 +575,7 @@ void main() {
             outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
         }
 
+        #if DAYLIGHT_CYCLE
         if (uboSky.enabled) {
             if (combinedFog > 1e-4) {
                 vec3 fogViewDir = normalize(IN.position - uboGlobal.cameraPos);
@@ -589,7 +594,9 @@ void main() {
                 if (fogAmount > 1e-4)
                     outputColor.rgb = mix(outputColor.rgb, linearToSrgb(distanceFogColor), fogAmount);
             }
-        } else {
+        } else
+        #endif
+        {
             outputColor.rgb = mix(outputColor.rgb, linearToSrgb(uboGlobal.fogColor), combinedFog);
         }
     }

@@ -993,6 +993,7 @@ public class HdPlugin extends Plugin {
 			.define("SHADOW_FILTERING", config.shadowFiltering().filtering)
 			.define("SHADOW_FILTERING_KERNEL", config.shadowFiltering().kernelSize)
 			.define("STAR_MODE", config.starMode())
+			.define("DAYLIGHT_CYCLE", !skyManager.isCycleDisabled())
 			.define("POINT_SPRITES", config.pointSprites().get(true))
 			.define("NEBULAE", config.enableNebulae())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
@@ -1921,6 +1922,7 @@ public class HdPlugin extends Plugin {
 				// TODO: Move this synchronization into LegacyRenderer
 				synchronized (this) {
 					boolean previousReduceGlareIntensity = configReduceGlareIntensity;
+					boolean previousCycleDisabled = skyManager.isCycleDisabled();
 
 					updateCachedConfigs();
 
@@ -1928,7 +1930,7 @@ public class HdPlugin extends Plugin {
 
 					renderer.processConfigChanges(pendingConfigChanges);
 
-					boolean recompilePrograms = false;
+					boolean recompilePrograms = previousCycleDisabled != skyManager.isCycleDisabled();
 					boolean recreateSceneFbo = false;
 					boolean recreateShadowMapFbo = false;
 					boolean reloadTexturesAndMaterials = false;
