@@ -3216,19 +3216,6 @@
     }
   },
   {
-    "area": "WYRMSCRAIG",
-    "ambientColor": "#96a3cb",
-    "ambientStrength": 0.9,
-    "directionalColor": "#abc2d3",
-    "directionalStrength": 2,
-    "fogColor": "#969CB4",
-    "fogDepth": 35,
-    "groundFogEnd": -600,
-    "groundFogOpacity": 0.225,
-    "windSpeed": 17.5,
-    "windStrength": 60
-  },
-  {
     "description": "Crab quest sunset cutscene",
     "area": "CRAB_QUEST_ISLAND",
     "varbitCondition": "CRAB_PUT_BACK_IN_INSTANCE && CUTSCENE_STATUS && CRAB_BASS >= 184",
