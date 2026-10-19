@@ -1063,8 +1063,9 @@ public class ZoneRenderer implements Renderer {
 			if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
 				sceneCmd.Disable(GL_BLEND);
 				if (renderGroundLevel)
-					z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_TERRAIN);
-				z.renderOpaque(sceneCmd, ctx, false);
+					z.renderOpaqueLevel(null, Zone.LEVEL_TERRAIN);
+				z.renderOpaque(null, ctx, false);
+				z.flushOpaque(sceneCmd);
 
 				if (renderGroundLevel && z.hasGapFiller)
 					z.renderOpaqueLevel(gapFillerCmd, Zone.LEVEL_GAP_FILLER);

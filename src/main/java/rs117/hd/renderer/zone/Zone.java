@@ -335,7 +335,8 @@ public class Zone implements Destructible {
 	}
 
 	void renderOpaque(CommandBuffer cmd, WorldViewContext ctx, boolean roofShadows) {
-		drawIdx = 0;
+		if(cmd != null)
+			drawIdx = 0;
 
 		int currentLevel = ctx.level;
 		int maxLevel = ctx.maxLevel;
@@ -382,20 +383,21 @@ public class Zone implements Destructible {
 			pushRange(endpos, this.levelOffsets[level]);
 		}
 
-		if (drawIdx == 0)
-			return;
-
-		lastDrawMode = STATIC_UNSORTED;
-		lastVao = glVao;
-		lastTboF = tboF.getTexId();
-		flush(cmd);
+		if(cmd != null)
+			flushOpaque(cmd);
 	}
 
 	void renderOpaqueLevel(CommandBuffer cmd, int level) {
-		drawIdx = 0;
+		if(cmd != null)
+			drawIdx = 0;
 
 		pushRange(level > 0 ? this.levelOffsets[level - 1] : 0, this.levelOffsets[level]);
 
+		if(cmd != null)
+			flushOpaque(cmd);
+	}
+
+	void flushOpaque(CommandBuffer cmd) {
 		if (drawIdx == 0)
 			return;
 
