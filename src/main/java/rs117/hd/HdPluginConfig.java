@@ -45,6 +45,7 @@ import rs117.hd.config.GroundBlending;
 import rs117.hd.config.InfernalCape;
 import rs117.hd.config.MoonBehavior;
 import rs117.hd.config.MoonPhase;
+import rs117.hd.config.PlayerDepthPrepass;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SceneScalingMode;
 import rs117.hd.config.SeasonalHemisphere;
@@ -1435,8 +1436,8 @@ public interface HdPluginConfig extends Config
 			"Fixes capes being drawn over shields at certain angles.",
 		section = experimentalSettings
 	)
-	default boolean playerDepthPrepass() {
-		return false;
+	default PlayerDepthPrepass playerDepthPrepass() {
+		return PlayerDepthPrepass.OFF;
 	}
 
 	@ConfigItem(

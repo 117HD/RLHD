@@ -15,6 +15,7 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.config.PlayerDepthPrepass;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
@@ -428,7 +429,14 @@ public class ModelStreamingManager {
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
 				// The biases must apply to both the colour & depth pre-pass uploads, so their depths match exactly
-				final boolean depthPrepass = isPlayer && plugin.configPlayerDepthPrepass && !ctx.isSquashed;
+				final PlayerDepthPrepass prepassMode = plugin.configPlayerDepthPrepass;
+				final boolean depthPrepass =
+					isPlayer &&
+					!ctx.isSquashed &&
+					(
+						prepassMode == PlayerDepthPrepass.ALL_PLAYERS ||
+						prepassMode == PlayerDepthPrepass.LOCAL_PLAYER && renderable == client.getLocalPlayer()
+					);
 				sceneUploader.playerPriorityDepthBias = depthPrepass ? PLAYER_PRIORITY_DEPTH_BIAS : null;
 				sceneUploader.uploadTempModel(
 					visibleFaces,
