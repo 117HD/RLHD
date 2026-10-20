@@ -50873,7 +50873,6 @@
       "MURDERHIVE"
     ],
     "uvType": "BOX",
-    "upwardsNormals": false,
     "uvScale": 0.7,
     "uvOrientationX": 512
   },
@@ -65876,7 +65875,8 @@
       {
         "description": "Glass",
         "colors": "a < 255",
-        "baseMaterial": "BLANK_GLOSS",
+        "baseMaterial": "GRAY_50",
+        "shiftAlpha": -40,
         "uvType": "BOX",
         "uvScale": 0.4
       }
@@ -67106,9 +67106,10 @@
   },
   {
     "description": "Shayzien - Port Sarim - Fossil Island - Wooden - Volcano - Deposit Box",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
     "uvOrientationY": 512,
+    "undoVanillaShading": false,
     "objectIds": [
       "SARIM_DEPOSIT_BOX",
       "CLAN_MEDIEVAL_DEPOSIT_BOX",
