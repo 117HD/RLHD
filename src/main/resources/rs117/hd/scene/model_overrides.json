@@ -79128,6 +79128,361 @@
     "uvType": "BOX"
   },
   {
+    "description": "TFA Lobby - Barricade - Plank",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": 2,
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "TFA_BARRICADE_NEXUS01_PLANKS03A",
+      "TFA_BARRICADE_NEXUS01_PLANKS03B",
+      "TFA_BARRICADE_NEXUS01_PLANKS01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Sacks",
+        "colors": "h == 7",
+        "baseMaterial": "BURLAP",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Barricade - Log",
+    "baseMaterial": "LIGHT_BARK",
+    "shiftLightness": 2,
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.55555,
+    "objectIds": [
+      "TFA_BARRICADE_NEXUS01_WEAPONISED04",
+      "TFA_BARRICADE_NEXUS01_WEAPONISED03",
+      "TFA_RACK_NEXUS01_WEAPON03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Sacks",
+        "colors": "h == 7 && l >= 17",
+        "baseMaterial": "BURLAP",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Spear Shaft",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Spear Tip",
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_SMOOTH_LIGHT",
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Weapon Rack",
+    "baseMaterial": "LIGHT_BARK",
+    "shiftLightness": 2,
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TFA_RACK_NEXUS01_WEAPON01",
+      "TFA_RACK_NEXUS01_WEAPON02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grip",
+        "colors": "h == 18",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Bow Limbs",
+        "colors": "h == 7 && s == 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.3
+      },
+      {
+        "description": "Shield Frame",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftLightness": 3,
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 || h == 8 && s == 5 || h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Chest Barrel, Cart",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": 2,
+    "undoVanillaShading": false,
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TFA_CHEST_NEXUS01_SUPPLY01",
+      "TFA_BARREL_NEXUS01_EMPTY01",
+      "TFA_REWARDS_CHEST_LOBBY_CLOSED"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Pouch",
+        "colors": "h == 6",
+        "baseMaterial": "BURLAP",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Cloth",
+        "colors": "h == 7 && l > 20",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Glass",
+        "colors": "h == 0 || h >= 10",
+        "baseMaterial": "METALLIC_1_SMOOTH_LIGHT",
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Bank Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": 2,
+    "undoVanillaShading": false,
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TFA_LOBBY_BANKCHEST_CLOSED",
+      "TFA_LOBBY_BANKCHEST_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood Panels",
+        "colors": "h == 6 && s == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftLightness": 2,
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_SMOOTH_LIGHT",
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": 2,
+    "minLightness": 11,
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "TFA_CRATE_NEXUS01_SINGLE01",
+      "TFA_CRATE_NEXUS01_STACKED01"
+    ]
+  },
+  {
+    "description": "TFA Lobby - Sacks",
+    "baseMaterial": "BURLAP",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_SACK_NEXUS01_PILE01"
+    ]
+  },
+  {
+    "description": "TFA Lobby - Record Table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "uvOrientationY": 512,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_OUT_OF_RAID_SCOREBOARD",
+      "TFA_LOBBY_CHAIR_STUMP01_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Table Edge",
+        "colors": "h == 7 && s < 6",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Books, Parchment",
+        "colors": "h == 6 || h == 7 || h >= 13",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Cup",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Grouping Board",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvScale": 0.7,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_GROUPING_BOARD",
+      "TFA_BOARD_GUTHIXIAN01_PLANNING01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Tree",
+        "colors": "h == 7 && s < 6",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Parchment",
+        "colors": "h == 0 || h == 6 || h == 7  || h == 8 && s == 1 || h == 10",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Banners",
+        "colors": "h == 16",
+        "uvType": "BOX",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvScale": 0.6,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Planning Table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.7,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_LOBBY_TABLE_GUTHIXIAN01_PLANNING01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Parchment",
+        "colors": "h == 0 || h == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Wood Pole",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "undoVanillaShading": false,
+        "uvOrientation": 630
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Brazier",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_BRAZIER_ARCHIVE01_DEFAULT02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Paint",
+        "colors": "h == 8 || h == 16",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.15,
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Plank Stacks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": 2,
+    "minLightness": 11,
+    "undoVanillaShading": false,
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "TFA_BUNDLE_LUMBER02_PLANKS01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 10",
+        "undoVanillaShading": false,
+        "baseMaterial": "GRUNGE_3_DARK"
+      }
+    ]
+  },
+  {
     "description": "TFA Lobby - Chasm Edge",
     "baseMaterial": "ROCK_3_LIGHT",
     "shiftLightness": 3,
@@ -84168,6 +84523,7 @@
     "colorOverrides": [
       {
         "description": "Flame",
+        "baseMaterial": "NONE",
         "colors": "a < 255",
         "upwardsNormals": true,
         "receiveShadows": false

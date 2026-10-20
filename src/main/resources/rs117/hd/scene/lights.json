@@ -46534,6 +46534,23 @@
     ]
   },
   {
+    "description": "TFA - Brazier",
+    "offset": [ 0, 285, 0 ],
+    "radius": 400,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_BRAZIER_GUTHIXIAN_FLAME02"
+    ]
+  },
+  {
     "description": "Doom of Mokhaiotl Fire",
     "height": 40,
     "radius": 450,
