@@ -360,8 +360,7 @@ public class CommandBuffer {
 						int texUnit = (int) (packed >> 32);
 						int texId = (int) packed;
 
-						glActiveTexture(texUnit);
-						glBindTexture(texType, texId);
+						renderState.texture.set(texUnit, texType, texId);
 						break;
 					}
 					case GL_USE_PROGRAM: {

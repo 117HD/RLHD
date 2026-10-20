@@ -153,6 +153,9 @@ public class ZoneRenderer implements Renderer {
 	private SceneShaderProgram.GapFiller gapFillerProgram;
 
 	@Inject
+	private SceneShaderProgram.Depth depthProgram;
+
+	@Inject
 	private ShadowShaderProgram.Fast fastShadowProgram;
 
 	@Inject
@@ -336,6 +339,7 @@ public class ZoneRenderer implements Renderer {
 		sceneProgram.compile(includes);
 		waterProgram.compile(includes);
 		gapFillerProgram.compile(includes);
+		depthProgram.compile(includes);
 		fastShadowProgram.compile(includes);
 		detailedShadowProgram.compile(includes);
 		terrainShadowProgram.compile(includes);
@@ -347,6 +351,7 @@ public class ZoneRenderer implements Renderer {
 		sceneProgram.destroy();
 		waterProgram.destroy();
 		gapFillerProgram.destroy();
+		depthProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
 		terrainShadowProgram.destroy();
@@ -463,9 +468,11 @@ public class ZoneRenderer implements Renderer {
 				sceneCmd.Enable(GL_BLEND);
 				sceneCmd.DepthMask(false);
 				ctx.drawAll(VAO_PRESCENE, sceneCmd);
-				sceneCmd.DepthMask(true);
-				sceneCmd.Disable(GL_BLEND);
 			}
+
+			sceneCmd.DepthMask(true);
+			sceneCmd.Disable(GL_BLEND);
+			directionalCmd.SetShader(fastShadowProgram);
 
 			frameTimer.end(Timer.DRAW_PRESCENE);
 		} catch (Throwable ex) {
@@ -1071,10 +1078,8 @@ public class ZoneRenderer implements Renderer {
 			}
 
 			if (skyRenderer.castsShadows && !ctx.isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
-				if (!z.onlyWater || z.modelCount > 0) {
-					directionalCmd.SetShader(fastShadowProgram);
+				if (!z.onlyWater || z.modelCount > 0)
 					z.renderOpaque(directionalCmd, ctx, shouldDrawRoofShadows);
-				}
 
 				if (renderGroundLevel && plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0)
 					z.renderOpaqueLevel(terrainShadowCmd, Zone.LEVEL_TERRAIN);
@@ -1126,35 +1131,30 @@ public class ZoneRenderer implements Renderer {
 				if (level == 0 && (!sceneManager.isRoot(ctx) || z.inSceneFrustum))
 					z.alphaSort(zx - offset, zz - offset, sceneCamera);
 
-				if (skyRenderer.castsShadows && !ctx.isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
-					directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
+				if (skyRenderer.castsShadows && !ctx.isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum))
 					z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, shouldDrawRoofShadows);
-				}
 
 				if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
 					if (!sceneManager.isRoot(ctx) || renderWater) {
 						// Alpha is currently drawn with depth writes & depth testing enabled, and as such, alpha models and the water plane
 						// can Z-fight depending on draw order. To avoid alpha models above water causing the water surface to fail its
 						// depth test, we disable depth writes for alpha models and rely on correct back to front ordering of the zones
-						sceneCmd.DepthMask(false);
 						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
-						sceneCmd.DepthMask(true);
 					} else {
 						// Draw alpha models in two passes, first blending colors correctly, then writing depth for subsequent opaque models
 						// to test against. This is necessary because opaque models on higher planes can be drawn later
 
 						// Write color without depth writes
 						sceneCmd.DepthMask(false);
-						sceneCmd.ColorMask(true, true, true, true);
 						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
 
 						// Write depth without color
+						sceneCmd.SetShader(depthProgram);
 						sceneCmd.DepthMask(true);
-						sceneCmd.ColorMask(false, false, false, false);
 						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, true, false);
 
-						// Restore color writes
-						sceneCmd.ColorMask(true, true, true, true);
+						// Restore Depth Writes
+						sceneCmd.SetShader(sceneProgram);
 					}
 				}
 			}
@@ -1197,6 +1197,12 @@ public class ZoneRenderer implements Renderer {
 						sceneCmd.SetShader(sceneProgram);
 					}
 					break;
+				case DrawCallbacks.PRE_PASS_ALPHA:
+					if(plugin.configShadowMode == ShadowMode.DETAILED)
+						directionalCmd.SetShader(detailedShadowProgram);
+					sceneCmd.DepthMask(false);
+					sceneCmd.Enable(GL_BLEND);
+					break;
 				case DrawCallbacks.PASS_ALPHA:
 					modelStreamingManager.ensureAsyncUploadsComplete(null);
 
@@ -1226,9 +1232,9 @@ public class ZoneRenderer implements Renderer {
 					ctx.vaoSceneCmd.DepthMask(true);
 
 					// Redraw players, this time only writing depth, for correct ordering with the background
-					ctx.vaoSceneCmd.ColorMask(false, false, false, false);
+					ctx.vaoSceneCmd.SetShader(depthProgram);
 					ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
-					ctx.vaoSceneCmd.ColorMask(true, true, true, true);
+					ctx.vaoSceneCmd.SetShader(sceneProgram);
 
 					for (int zx = 0; zx < ctx.sizeX; ++zx)
 						for (int zz = 0; zz < ctx.sizeZ; ++zz)
