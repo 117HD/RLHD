@@ -8669,12 +8669,29 @@
       "FOSSIL_WYVERN_CAVE_ENTRANCE",
       "TZHAAR_KARAMJADUNGEON_WALL_ENTRANCE",
       "RC_ZMI_DUNGEON_WALL_CRACK_ENTRANCE_EXIT",
-      "TOG_CAVE_DOWN",
       "WILD_CAVE_ENTRANCE_MID",
       "WILDERNESS_GWD_ENTRANCE",
       "TROLL_STRONGHOLD_DOOR",
       "SOTFA_CAVE_ENTRANCE_OP",
       "SOTFA_CAVE_ENTRANCE_ESCAPE"
+    ]
+  },
+  {
+    "description": "Tears of Guthix Chasm Entrance Cave",
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "s == 7",
+        "baseMaterial": "ROCK_2",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ],
+    "objectIds": [
+      "TOG_CAVE_DOWN",
+      "TOG_CAVE_UP"
     ]
   },
   {
@@ -9352,6 +9369,7 @@
   },
   {
     "description": "LUMBRIDGE_CAVE_WALLS",
+    "hideInAreas": [ "LUMBRIDGE_SWAMP_CAVES_FLOATING_TERRAIN_FIX" ],
     "baseMaterial": "ROCK_2",
     "objectIds": [
       "SWAMP_CAVEWALL_OUTSIDECORNER",
@@ -9386,7 +9404,6 @@
       "SWAMP_CAVEWALLMOSS10",
       "SWAMP_CAVEWALLMOSS11",
       "SWAMP_CAVEWALLMOSS12",
-      "TOG_CAVE_UP",
       "TOG_WEEPINGWALL",
       "TOG_WEEPING_WALL_BACK_R",
       "TOG_WEEPING_WALL_BACK_L",

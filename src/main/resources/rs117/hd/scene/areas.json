@@ -388,6 +388,12 @@
     ]
   },
   {
+    "name": "LUMBRIDGE_SWAMP_CAVES_FLOATING_TERRAIN_FIX",
+    "aabbs": [
+      [ 3205, 9536, 3240, 9539, 3 ]
+    ]
+  },
+  {
     "name": "Lumbridge Watermill Basement",
     "aabbs": [
       [ 3203, 9664, 3250, 9708 ],

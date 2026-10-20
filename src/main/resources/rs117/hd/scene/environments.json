@@ -2449,7 +2449,10 @@
     ],
     "fogColor": "#060505",
     "fogDepth": 50,
-    "instantTransition": true
+    "instantTransition": true,
+    "groundFogEnd": -300,
+    "groundFogOpacity": 1,
+    "groundFogStart": 600
   },
   {
     "area": "BURGH_DE_ROTT_BASEMENT",
