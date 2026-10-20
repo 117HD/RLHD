@@ -46,7 +46,6 @@ import rs117.hd.config.ShadowMode;
 import rs117.hd.opengl.shader.OITCompositeShaderProgram;
 import rs117.hd.opengl.shader.OITPrePassShaderProgram;
 import rs117.hd.opengl.shader.OitDepthMergeShaderProgram;
-import rs117.hd.opengl.shader.ResolveShaderProgram;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
@@ -200,13 +199,10 @@ public class ZoneRenderer implements Renderer {
 	private OITPrePassShaderProgram.Water oitPrePassWaterProgram;
 
 	@Inject
-	private ResolveShaderProgram.Min msaaaMinResolveProgram;
-
-	@Inject
-	private ResolveShaderProgram.Max msaaaMaxResolveProgram;
-
-	@Inject
 	private OitDepthMergeShaderProgram oitDepthMergeProgram;
+
+	@Inject
+	private OitDepthMergeShaderProgram.MultiSample oitDepthMergeMSProgram;
 
 	@Inject
 	private TerrainShadowShaderProgram terrainShadowProgram;
@@ -420,9 +416,8 @@ public class ZoneRenderer implements Renderer {
 		oitCompositeSampleShadingProgram.compile(includes);
 		oitPrePassProgram.compile(includes);
 		oitPrePassWaterProgram.compile(includes);
-		msaaaMinResolveProgram.compile(includes);
-		msaaaMaxResolveProgram.compile(includes);
 		oitDepthMergeProgram.compile(includes);
+		oitDepthMergeMSProgram.compile(includes);
 		skyRenderer.initializeShaders(includes);
 	}
 
@@ -441,9 +436,8 @@ public class ZoneRenderer implements Renderer {
 		oitCompositeSampleShadingProgram.destroy();
 		oitPrePassProgram.destroy();
 		oitPrePassWaterProgram.destroy();
-		msaaaMinResolveProgram.destroy();
-		msaaaMaxResolveProgram.destroy();
 		oitDepthMergeProgram.destroy();
+		oitDepthMergeMSProgram.destroy();
 		skyRenderer.destroyShaders();
 	}
 
@@ -1293,44 +1287,37 @@ public class ZoneRenderer implements Renderer {
 			waterCmd.execute(renderState);
 		}
 
-		renderState.vao.setVao(0);
 		renderState.disable.set(GL_BLEND);
-		renderState.disable.set(GL_STENCIL_TEST);
-		renderState.apply();
+		renderState.stencilFunc.set(GL_EQUAL, 1, 0xFF);
+		renderState.stencilOp.set(GL_KEEP, GL_KEEP, GL_KEEP);
 
 		if (plugin.msaaSamples > 1) {
-			msaaaMinResolveProgram.resolve(
+			oitDepthMergeMSProgram.merge(
 				renderState,
 				plugin.vaoTri,
 				TEXTURE_UNIT_OIT_FIRST_LAYER,
+				TEXTURE_UNIT_OIT_FARTHEST_LAYER,
 				firstLayerDepthMSTex,
-				firstLayerDepthResolveTex,
-				plugin.msaaSamples
+				farthestLayerDepthMSTex,
+				firstLayerDepthTex
 			);
-			msaaaMaxResolveProgram.resolve(
+		} else {
+			oitDepthMergeProgram.merge(
 				renderState,
 				plugin.vaoTri,
+				TEXTURE_UNIT_OIT_FIRST_LAYER,
 				TEXTURE_UNIT_OIT_FARTHEST_LAYER,
-				farthestLayerDepthMSTex,
+				firstLayerDepthResolveTex,
 				farthestLayerDepthResolveTex,
-				plugin.msaaSamples
+				firstLayerDepthTex
 			);
 		}
-
-		oitDepthMergeProgram.merge(
-			renderState,
-			plugin.vaoTri,
-			TEXTURE_UNIT_OIT_FIRST_LAYER,
-			TEXTURE_UNIT_OIT_FARTHEST_LAYER,
-			firstLayerDepthResolveTex,
-			farthestLayerDepthResolveTex,
-			firstLayerDepthTex
-		);
 
 		glActiveTexture(TEXTURE_UNIT_UI);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		renderState.disable.set(GL_DEPTH_TEST);
+		renderState.disable.set(GL_STENCIL_TEST);
 
 		frameTimer.end(Timer.RENDER_ALPHA_PREPASS);
 		frameTimer.end(Timer.DRAW_ALPHA_PRE_PASS);
@@ -1489,6 +1476,7 @@ public class ZoneRenderer implements Renderer {
 			}
 
 			glDrawArrays(GL_TRIANGLES, 0, 3);
+
 			frameTimer.end(Timer.RENDER_ALPHA_COMPOSITE);
 			frameTimer.end(Timer.DRAW_ALPHA_COMPOSITE);
 		}

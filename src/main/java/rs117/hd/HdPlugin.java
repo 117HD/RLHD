@@ -1015,6 +1015,7 @@ public class HdPlugin extends Plugin {
 			.define("CENTROID_QUALIFIER", config.centroidQualifier().get(true))
 			.define("LEGACY_RENDERER", renderer instanceof LegacyRenderer)
 			.define("ZONE_RENDERER", renderer instanceof ZoneRenderer)
+			.define("OIT_DEPTH_MERGE_MSAA", msaaSamples)
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", 0)
 			.define("WORLD_VIEW_GETTER", "")
 			.define("NEBULA_CLUSTER_COUNT", StarField.CLUSTER_COUNT)
@@ -1052,6 +1053,7 @@ public class HdPlugin extends Plugin {
 	}
 
 	private void initializeShaders() throws ShaderException, IOException {
+		updateMsaaSamples();
 		var includes = getShaderIncludes();
 
 		// Bind a valid VAO, otherwise validation may fail on older Intel-based Macs
@@ -1355,6 +1357,13 @@ public class HdPlugin extends Plugin {
 		texTiledLighting = 0;
 	}
 
+	public void updateMsaaSamples() {
+		// Bind default FBO to check whether anti-aliasing is forced
+		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
+		final int forcedAASamples = glGetInteger(GL_SAMPLES);
+		msaaSamples = forcedAASamples != 0 ? forcedAASamples : min(config.antiAliasingMode().getSamples(), glGetInteger(GL_MAX_SAMPLES));
+	}
+
 	public boolean updateSceneFbo() {
 		if (uiResolution == null)
 			return false;
@@ -1388,20 +1397,16 @@ public class HdPlugin extends Plugin {
 		destroySceneFbo();
 		sceneViewport = viewport;
 
-		// Bind default FBO to check whether anti-aliasing is forced
-		int defaultFramebuffer = awtContext.getFramebuffer(false);
-		glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);
-		final int forcedAASamples = glGetInteger(GL_SAMPLES);
-		msaaSamples = forcedAASamples != 0 ? forcedAASamples : min(config.antiAliasingMode().getSamples(), glGetInteger(GL_MAX_SAMPLES));;
+		updateMsaaSamples();
 
-		// Since there's seemingly no reliable way to check if the default framebuffer will do sRGB conversions with GL_FRAMEBUFFER_SRGB
+		// Since there's seemingly no reliable way to check to check if the default framebuffer will do sRGB conversions with GL_FRAMEBUFFER_SRGB
 		// enabled, we always replace the default framebuffer with an sRGB one. We could technically support rendering to the default
 		// framebuffer when sRGB conversions aren't needed, but the goal is to transition to linear blending in the future anyway.
 		boolean sRGB = false; // This is currently unused
 
 		// Some implementations (*cough* Apple) complain when blitting from an FBO without an alpha channel to a (default) FBO with alpha.
 		// To work around this, we select a format which includes an alpha channel, even though we don't need it.
-		int defaultColorAttachment = defaultFramebuffer == 0 ? GL_BACK_LEFT : GL_COLOR_ATTACHMENT0;
+		int defaultColorAttachment = awtContext.getFramebuffer(false) == 0 ? GL_BACK_LEFT : GL_COLOR_ATTACHMENT0;
 		int alphaBits = glGetFramebufferAttachmentParameteri(GL_FRAMEBUFFER, defaultColorAttachment, GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE);
 		checkGLErrors();
 		boolean alpha = alphaBits > 0;
@@ -2026,6 +2031,12 @@ public class HdPlugin extends Plugin {
 								recompilePrograms |= configReduceGlareIntensity != previousReduceGlareIntensity;
 								break;
 							case KEY_ANTI_ALIASING_MODE:
+								// The OIT depth merge shader reduces all MSAA samples with a
+								// compile-time loop bound, so changing the sample count requires
+								// recompiling the programs before the scene FBO is recreated
+								recompilePrograms = true;
+								recreateSceneFbo = true;
+								break;
 							case KEY_SCENE_RESOLUTION_SCALE:
 								recreateSceneFbo = true;
 								break;

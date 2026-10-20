@@ -54,17 +54,16 @@ public class SceneShaderProgram extends ShaderProgram {
 	}
 
 	public static class TransparentOIT extends SceneShaderProgram {
-		protected final UniformTexture uniFirstLayerDepth = addUniformTexture("firstLayerDepth");
+		protected final UniformTexture uniAlphaFirstLastDepth = addUniformTexture("alphaFirstLastDepth");
 
 		TransparentOIT() {
 			shaderTemplate.add(GL_FRAGMENT_SHADER, "scene_frag_oit.glsl");
-			uniFirstLayerDepth.ignoreMissing = true;
 		}
 
 		@Override
 		protected void initialize() {
 			super.initialize();
-			uniFirstLayerDepth.set(TEXTURE_UNIT_OIT_FIRST_LAYER);
+			uniAlphaFirstLastDepth.set(TEXTURE_UNIT_OIT_FIRST_LAYER);
 		}
 
 		@Override
