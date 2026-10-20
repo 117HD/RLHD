@@ -79138,6 +79138,22 @@
     ]
   },
   {
+    "description": "TFA Lobby - Grass",
+    "areas": [ "TFA_LOBBY" ],
+    "baseMaterial": "GRASS_BLADE",
+    "uvType": "MODEL_XY",
+    "inheritTileColorType": "UNDERLAY",
+    "flatNormals": true,
+    "castShadows": false,
+    "upwardsNormals": true,
+    "windDisplacementMode": "OBJECT",
+    "objectIds": [
+      "AVIUM_GRASS_1",
+      "AVIUM_GRASS_2",
+      "AVIUM_GRASS_3"
+    ]
+  },
+  {
     "description": "TFA Lobby - Stalagtite",
     "baseMaterial": "ROCK_6",
     "objectIds": [

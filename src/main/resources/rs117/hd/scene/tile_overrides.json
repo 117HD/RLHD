@@ -11556,6 +11556,16 @@
     "groundMaterial": "DIRT"
   },
   {
+    "name": "TFA Lobby - Complex Tiles",
+    "area": "TFA_LOBBY",
+    "uvOrientation": 128,
+    "groundMaterial": "PACKED_EARTH",
+    "replacements": {
+      "DEFAULT_DIRT": "s == 1",
+      "DEFAULT_GRASS": "s != 0"
+    }
+  },
+  {
     "name": "TAG - Areas - END"
   },
   {
