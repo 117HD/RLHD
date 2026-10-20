@@ -574,8 +574,9 @@ public class ZoneRenderer implements Renderer {
 		}
 	}
 
-	private void updateTransparentFBO() {
-		if (transparentFBO != 0
+	private void updateTransparentFBO(boolean force) {
+		if (!force
+			&& transparentFBO != 0
 			&& transparentSamples == plugin.msaaSamples
 			&& transparentWidth == plugin.sceneResolution[0]
 			&& transparentHeight == plugin.sceneResolution[1])
@@ -797,8 +798,8 @@ public class ZoneRenderer implements Renderer {
 
 		waitForFrameFence();
 
-		plugin.updateSceneFbo();
-		updateTransparentFBO();
+		boolean sceneResized = plugin.updateSceneFbo();
+		updateTransparentFBO(sceneResized);
 
 		if (!sceneManager.isTopLevelValid() || plugin.sceneViewport == null)
 			return;
