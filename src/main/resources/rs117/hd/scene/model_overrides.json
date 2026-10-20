@@ -78664,8 +78664,7 @@
       "LUC2_GT_MAIN_SKULL_TENDRIL_TOPR",
       "LUC2_GT_MAIN_PILLAR_LEVEL4",
       "LUC2_GT_MAIN_PILLAR_LEVEL4_DAMAGED",
-      "TFA_WALLKIT_LOBBY02_DEFAULT01",
-      "TFA_PILLAR_GUTHIXIAN00_LOBBY01"
+      "TFA_WALLKIT_LOBBY02_DEFAULT01"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -79115,7 +79114,7 @@
   },
   {
     "description": "TFA Lobby - Stalagtite",
-    "baseMaterial": "ROCK_3_LIGHT",
+    "baseMaterial": "ROCK_6",
     "objectIds": [
       "TFA_STALAGMITE_GUTHIXIAN00_GROUP02_2X2",
       "TFA_STALAGMITE_GUTHIXIAN00_GROUP01",
@@ -79123,7 +79122,8 @@
       "TFA_STALAGMITE_GUTHIXIAN00_GROUP02",
       "TFA_STALAGMITE_GUTHIXIAN00_GROUP02_DARK01",
       "TFA_STALAGMITE_GUTHIXIAN00_GROUP01_DARK01",
-      "TFA_STALAGMITE_GUTHIXIAN00_GROUP01_2X2_DARK01"
+      "TFA_STALAGMITE_GUTHIXIAN00_GROUP01_2X2_DARK01",
+      "TFA_STALAGMITE_GUTHIXIAN00_GROUP02_2X2_DARK01"
     ],
     "uvType": "BOX"
   },
@@ -79237,7 +79237,7 @@
     ]
   },
   {
-    "description": "TFA Lobby - Chest Barrel, Cart",
+    "description": "TFA Lobby - Chest, Cart",
     "baseMaterial": "WOOD_GRAIN_3",
     "shiftLightness": 2,
     "undoVanillaShading": false,
@@ -79246,7 +79246,6 @@
     "uvScale": 0.5,
     "objectIds": [
       "TFA_CHEST_NEXUS01_SUPPLY01",
-      "TFA_BARREL_NEXUS01_EMPTY01",
       "TFA_REWARDS_CHEST_LOBBY_CLOSED"
     ],
     "colorOverrides": [
@@ -79269,6 +79268,27 @@
       {
         "description": "Glass",
         "colors": "h == 0 || h >= 10",
+        "baseMaterial": "METALLIC_1_SMOOTH_LIGHT",
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Barrel",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": 2,
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TFA_CHEST_NEXUS01_SUPPLY01",
+      "TFA_BARREL_NEXUS01_EMPTY01",
+      "TFA_REWARDS_CHEST_LOBBY_CLOSED"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 10",
         "baseMaterial": "METALLIC_1_SMOOTH_LIGHT",
         "undoVanillaShading": false
       }
@@ -79310,6 +79330,8 @@
     "shiftLightness": 2,
     "minLightness": 11,
     "undoVanillaShading": false,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
     "uvType": "BOX",
     "uvScale": 0.7,
     "objectIds": [
@@ -79382,6 +79404,7 @@
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.65,
+        "minLightness": 9,
         "undoVanillaShading": false
       },
       {
@@ -79487,13 +79510,142 @@
     "baseMaterial": "ROCK_3_LIGHT",
     "shiftLightness": 3,
     "uvOrientation": 200,
+    "undoVanillaShading": false,
     "objectIds": [
       "TFA_FLOORKIT_LOBBY01_CHASM01",
       "TFA_FLOORKIT_LOBBY01_CHASM02",
-      "TFA_FLOORKIT_LOBBY01_CHASM03"
+      "TFA_FLOORKIT_LOBBY01_CHASM03",
+      "TFA_FLOORKIT_LOBBY01_CHASM02_DARKER02",
+      "TFA_FLOORKIT_LOBBY01_CHASM03_DARKER02",
+      "TFA_FLOORKIT_LOBBY01_CHASM02_DARKER03",
+      "TFA_FLOORKIT_LOBBY01_CHASM01_DARKER01",
+      "TFA_FLOORKIT_LOBBY01_CHASM01_DARKER02"
     ],
     "uvType": "BOX",
     "castShadows": false
+  },
+  {
+    "description": "TFA Lobby - Chasm Edge Alt",
+    "baseMaterial": "ROCK_6",
+    "shiftLightness": 6,
+    "undoVanillaShading": false,
+    "uvScale": 2,
+    "objectIds": [
+      "TFA_FLOORKIT_LOBBY02_CHASM03",
+      "TFA_FLOORKIT_LOBBY02_CHASM01_TILE01",
+      "TFA_FLOORKIT_LOBBY02_CHASM02",
+      "TFA_FLOORKIT_LOBBY02_CHASM01",
+      "TFA_FLOORKIT_GUTHIXIAN00_TILE01",
+      "TFA_FLOORKIT_GUTHIXIAN00_TILE01_RAISEOBJ",
+      "TFA_FLOORKIT_GUTHIXIAN00_TILE02",
+      "TFA_FLOORKIT_GUTHIXIAN00_TILE03",
+      "TFA_FLOORKIT_LOBBY01_CHASM02_SUPPORT02",
+      "TFA_FLOORKIT_LOBBY01_CHASM03_RAISEOBJ",
+      "TFA_FLOORKIT_LOBBY01_CHASM02_SUPPORT02_RAISEOBJ",
+      "TFA_FLOORKIT_LOBBY01_CHASM03_RAISEOBJ02",
+      "TFA_FLOORKIT_LOBBY01_CHASM02_SUPPORT01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 120
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Stone Circle",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "TFA_FLOORKIT_GUTHIXIAN00_QUARTER01",
+      "TFA_FLOORKIT_GUTHIXIAN00_CORNER01",
+      "TFA_FLOORKIT_GUTHIXIAN00_QUARTER01_M",
+      "TFA_FLOORKIT_GUTHIXIAN00_SIDE01",
+      "TFA_FLOORKIT_GUTHIXIAN00_QUARTER03",
+      "TFA_FLOORKIT_GUTHIXIAN00_SIDE02_OFFSET01",
+      "TFA_FLOORKIT_GUTHIXIAN00_QUARTER02_M",
+      "TFA_FLOORKIT_GUTHIXIAN00_SIDE02"
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.5
+  },
+  {
+    "description": "TFA Lobby - Plank Bridges - Needs Proper UV Mapping",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "undoVanillaShading": false,
+    "uvOrientation": 512,
+    "objectIds": [
+      "TFA_FLOORKIT_GUTHIXIAN00_PLANKS03",
+      "TFA_FLOORKIT_GUTHIXIAN00_PLANKS01",
+      "TFA_FLOORKIT_GUTHIXIAN00_PLANKS02",
+      "TFA_FLOORKIT_GUTHIXIAN00_PLANKS01_RAISED",
+      "TFA_FLOORKIT_GUTHIXIAN00_PLANKS04"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "TFA Lobby - Raid Entrance Door",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_LOBBY_RAID_ENTRY"
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientation": 350,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Pillar",
+    "baseMaterial": "ROCK_6",
+    "undoVanillaShading": false,
+    "minLightness": 12,
+    "shiftLightness": 2,
+    "objectIds": [
+      "TFA_PILLAR_GUTHIXIAN00_LOBBY01",
+      "TFA_PILLAR_GUTHIXIAN00_LOBBY02"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": 2,
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Roots",
+    "baseMaterial": "LIGHT_BARK",
+    "uvOrientation": 120,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_ROOT_GUTHIXIAN01_LARGE03",
+      "TFA_ROOT_GUTHIXIAN01_LARGE02",
+      "TFA_ROOT_GUTHIXIAN01_LARGE01",
+      "TFA_ENTRANCE_GUTHIXIAN00_MANTEL01",
+      "TFA_ROOT_GUTHIXIAN01_LARGE02_OFFSET01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": 2,
+        "baseMaterial": "PURE_BLACK"
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_6",
+        "uvType": "BOX"
+      }
+    ]
   },
   {
     "description": "Arceuus - Crystal",
