@@ -78586,7 +78586,6 @@
       "LUC2_GT_WALLKIT_LEVEL1_02",
       "LUC2_RAID_ENTRY",
       "LUC2_RAID_ENTRY2",
-      "LUC2_RAID_ENTRY_OPEN",
       "LUC2_GT_TEMPLE_WALL_CLIMB2",
       "LUC2_GT_TEMPLE_WALL_CLIMB1",
       "LUC2_GT_WALLKIT_CHASM_01_BLEND",
@@ -79113,6 +79112,32 @@
     ]
   },
   {
+    "description": "TFA Lobby - Crystal Roots",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "TFA_GATHERING_ROCK_ACTIVE02",
+      "TFA_GATHERING_ROCK_INACTIVE01",
+      "TFA_GATHERING_ROCK_INACTIVE03",
+      "TFA_GATHERING_ROCK_ACTIVE01",
+      "TFA_GATHERING_ROCK_ACTIVE03",
+      "TFA_GATHERING_ROCK_INACTIVE02",
+      "TFA_GATHERING_ROCK_ACTIVE03",
+      "TFA_CRYSTAL_ASCENSION01_ROOTS02",
+      "TFA_CRYSTAL_ASCENSION01_ROOTS01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "undoVanillaShading": false,
+        "uvOrientation": 150
+      }
+    ]
+  },
+  {
     "description": "TFA Lobby - Stalagtite",
     "baseMaterial": "ROCK_6",
     "objectIds": [
@@ -79281,9 +79306,7 @@
     "uvType": "BOX",
     "uvScale": 0.5,
     "objectIds": [
-      "TFA_CHEST_NEXUS01_SUPPLY01",
-      "TFA_BARREL_NEXUS01_EMPTY01",
-      "TFA_REWARDS_CHEST_LOBBY_CLOSED"
+      "TFA_BARREL_NEXUS01_EMPTY01"
     ],
     "colorOverrides": [
       {
