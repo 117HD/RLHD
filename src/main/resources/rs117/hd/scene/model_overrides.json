@@ -78548,7 +78548,8 @@
     "objectIds": [
       "LUC2_CAVE_WALL_TOP_CRNR_INNER",
       "LUC2_CAVE_WALL_TOP_CRNR_OUTER",
-      "LUC2_CAVE_WALL_TOP"
+      "LUC2_CAVE_WALL_TOP",
+      "TFA_WALLKIT_LOBBY01_TOP03"
     ],
     "receiveShadows": false,
     "castShadows": false,
@@ -78585,6 +78586,7 @@
       "LUC2_GT_WALLKIT_LEVEL1_02",
       "LUC2_RAID_ENTRY",
       "LUC2_RAID_ENTRY2",
+      "LUC2_RAID_ENTRY_OPEN",
       "LUC2_GT_TEMPLE_WALL_CLIMB2",
       "LUC2_GT_TEMPLE_WALL_CLIMB1",
       "LUC2_GT_WALLKIT_CHASM_01_BLEND",
@@ -78619,9 +78621,36 @@
       "LUC2_GT_PILLAR_TORCH",
       "LUC2_GT_GIANT_SKULL_BOTTOM_FIRE_NOOP",
       "LUC2_GT_GIANT_SKULL_BOTTOM_AIR_NOOP",
-      "LUC2_GT_GIANT_SKULL_BOTTOM_EARTH_NOOP"
+      "LUC2_GT_GIANT_SKULL_BOTTOM_EARTH_NOOP",
+      "TFA_WALLKIT_LOBBY01_CHASM01",
+      "TFA_WALLKIT_LOBBY01_TOP01",
+      "TFA_WALLKIT_LOBBY02_LOW01_TOP01",
+      "TFA_WALLKIT_LOBBY02_LOW01",
+      "TFA_WALLKIT_LOBBY01_DEFAULT01",
+      "TFA_WALLKIT_LOBBY01_DEFAULT02_BLEND",
+      "TFA_WALLKIT_LOBBY01_DEFAULT02_BLEND_MIRROR"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Guthix Temple - Cave Walls and Misc Stone - Bottom",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "objectIds": [
+      "LUC2_RAID_ENTRY_OPEN",
+      "TFA_LOBBY_RAID_EXIT",
+      "TFA_LOBBY_RAID_EXIT_FLOOR2"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "uvType": "BOX",
+        "baseMaterial": "STONE_DARK",
+        "colors": "s == 7",
+        "upwardsNormals": true,
+        "receiveShadows": false,
+        "undoVanillaShading": false
+      }
+    ]
   },
   {
     "description": "Guthix Temple - Cave Walls - Top",
@@ -78634,7 +78663,9 @@
       "LUC2_GT_MAIN_SKULL_TENDRIL_TOPL",
       "LUC2_GT_MAIN_SKULL_TENDRIL_TOPR",
       "LUC2_GT_MAIN_PILLAR_LEVEL4",
-      "LUC2_GT_MAIN_PILLAR_LEVEL4_DAMAGED"
+      "LUC2_GT_MAIN_PILLAR_LEVEL4_DAMAGED",
+      "TFA_WALLKIT_LOBBY02_DEFAULT01",
+      "TFA_PILLAR_GUTHIXIAN00_LOBBY01"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -79081,6 +79112,33 @@
         "uvType": "BOX"
       }
     ]
+  },
+  {
+    "description": "TFA Lobby - Stalagtite",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "objectIds": [
+      "TFA_STALAGMITE_GUTHIXIAN00_GROUP02_2X2",
+      "TFA_STALAGMITE_GUTHIXIAN00_GROUP01",
+      "TFA_STALAGMITE_GUTHIXIAN00_GROUP01_2X2",
+      "TFA_STALAGMITE_GUTHIXIAN00_GROUP02",
+      "TFA_STALAGMITE_GUTHIXIAN00_GROUP02_DARK01",
+      "TFA_STALAGMITE_GUTHIXIAN00_GROUP01_DARK01",
+      "TFA_STALAGMITE_GUTHIXIAN00_GROUP01_2X2_DARK01"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "TFA Lobby - Chasm Edge",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "shiftLightness": 3,
+    "uvOrientation": 200,
+    "objectIds": [
+      "TFA_FLOORKIT_LOBBY01_CHASM01",
+      "TFA_FLOORKIT_LOBBY01_CHASM02",
+      "TFA_FLOORKIT_LOBBY01_CHASM03"
+    ],
+    "uvType": "BOX",
+    "castShadows": false
   },
   {
     "description": "Arceuus - Crystal",

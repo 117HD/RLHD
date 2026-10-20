@@ -3258,6 +3258,18 @@
     "hideVanillaSkyboxes": true
   },
   {
+    "area": "Guthix Temple - Entrance",
+    "groundFogOpacity": 0.85,
+    "groundFogStart": 100,
+    "groundFogEnd": -200
+  },
+  {
+    "area": "TFA_LOBBY",
+    "groundFogOpacity": 0.85,
+    "groundFogStart": 500,
+    "groundFogEnd": -50
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",
