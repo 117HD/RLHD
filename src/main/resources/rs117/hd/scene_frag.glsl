@@ -40,6 +40,7 @@
 
 #include MATERIAL_CONSTANTS
 #include WATER_PASS
+#include TERRAIN_PASS
 
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
@@ -110,14 +111,17 @@ void main() {
     vec3 viewDir = normalize(uboGlobal.cameraPos - IN.position);
     vec3 flatNormal = normalize(cross(dFdx(IN.position), dFdy(IN.position)));
 
-    bool identicalMaterials = !isTerrain || (
-        ((fMaterialData[0] ^ fMaterialData[1] | (fMaterialData[0] ^ fMaterialData[2]))
-        >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK) == 0
-    );
+    #if ZONE_RENDERER && !TERRAIN_PASS
+        #define identicalMaterials true
+    #else
+        bool identicalMaterials = !isTerrain || isSquashed || (
+                ((fMaterialData[0] ^ fMaterialData[1] | (fMaterialData[0] ^ fMaterialData[2]))
+                >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK) == 0
+            );
+    #endif
     Material material1;
     if (isSquashed) {
         material1 = MAT_NONE;
-        identicalMaterials = true;
     } else {
         material1 = getMaterial(fMaterialData[0] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
     }
@@ -195,7 +199,7 @@ void main() {
             flowMapStrength = 0.075;
         }
 
-        vec2 uvFlow = texture(textureArray, vec3(flowMapUv, flowMap)).xy;
+        vec2 uvFlow = flowMap == -1 ? vec2(1.0) : texture(textureArray, vec3(flowMapUv, flowMap)).xy;
         uv1 += uvFlow * flowMapStrength;
         uv2 += uvFlow * flowMapStrength;
         uv3 += uvFlow * flowMapStrength;

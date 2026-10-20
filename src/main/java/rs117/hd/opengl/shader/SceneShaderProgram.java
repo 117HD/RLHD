@@ -29,7 +29,10 @@ public class SceneShaderProgram extends ShaderProgram {
 
 	@Override
 	public void compile(ShaderIncludes includes) throws ShaderException, IOException {
-		super.compile(includes.copy().define("WATER_PASS", this instanceof Water));
+		super.compile(includes.copy()
+			.define("WATER_PASS", this instanceof Water)
+			.define("TERRAIN_PASS", this instanceof Terrain)
+		);
 	}
 
 	@Override
@@ -43,6 +46,8 @@ public class SceneShaderProgram extends ShaderProgram {
 	}
 
 	public static class Water extends SceneShaderProgram {}
+
+	public static class Terrain extends SceneShaderProgram {}
 
 	public static class GapFiller extends SceneShaderProgram {
 		GapFiller() {
