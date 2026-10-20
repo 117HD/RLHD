@@ -46,10 +46,11 @@ public class ModelStreamingManager {
 	private static final ConcurrentPool<PrimitiveCharArray> FACE_INDICES = new ConcurrentPool<>(PrimitiveCharArray::new);
 
 	// Depth bias per player face render priority, pulling faces towards the camera by roughly bias / 12800 of their
-	// distance. The cape (5) is biased so slightly clipping elbows don't poke through it. The head (6) is biased a bit
-	// further, since it's drawn on top of the cape in vanilla, and also contains decals lying on the cape, such as
-	// skillcape emblems. Helmets (7) are biased well above the head, so hair doesn't poke through them. Priorities 8 & 9
-	// are drawn on top of the cape in vanilla too, so they're kept level with the head.
+	// distance, so layers which vanilla draws on top still win against faces slightly clipping through them:
+	// - 5 (cape): above arms, so elbows don't poke through
+	// - 6 (head): above the cape, including skillcape emblems, which lie flat on the cape
+	// - 7 (helmet): well above the head, so hair doesn't poke through
+	// - 8 & 9: drawn on top of the cape in vanilla, so level with the head
 	private static final int[] PLAYER_PRIORITY_DEPTH_BIAS = { 0, 0, 0, 0, 0, 32, 40, 100, 40, 40, 0, 0 };
 
 	@Inject
@@ -371,7 +372,7 @@ public class ModelStreamingManager {
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
 			FacePrioritySorter facePrioritySorter = shouldSort ? FacePrioritySorter.POOL.acquire() : null
 		) {
-			sceneUploader.playerPriorityDepthBias = null; // In case a previous upload threw before resetting it
+			sceneUploader.playerPriorityDepthBias = null; // Pooled, so it may be left over from an upload which threw
 			final int[] faceDistances = shouldSort ? PooledArrayType.INT.borrow(m.getFaceCount()) : null;
 			shouldSort &= sceneUploader.preprocessTempModel(
 				projection,
@@ -426,8 +427,8 @@ public class ModelStreamingManager {
 				final DynamicModelVAO.View opaqueView = ctx.beginDraw(vaoType, drawIndex, opaqueFaceCount);
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
-				// Biases must apply to both the colour & depth pre-pass uploads, so their depths match exactly
-				final boolean depthPrepass = isPlayer && !ctx.isSquashed;
+				// The biases must apply to both the colour & depth pre-pass uploads, so their depths match exactly
+				final boolean depthPrepass = isPlayer && plugin.configPlayerDepthPrepass && !ctx.isSquashed;
 				sceneUploader.playerPriorityDepthBias = depthPrepass ? PLAYER_PRIORITY_DEPTH_BIAS : null;
 				sceneUploader.uploadTempModel(
 					visibleFaces,
@@ -459,11 +460,12 @@ public class ModelStreamingManager {
 	}
 
 	/**
-	 * Players are drawn in vanilla priority order without writing depth, which mostly works, except vanilla only
-	 * decides whether arms, shields & weapons (priority 10 & 11) go in front of the cape (priority 5) based on the
-	 * average depth of the head. To order those, along with the head (priority 6), per-pixel instead, their opaque faces
-	 * are also uploaded to a separate VAO, which is drawn depth-only before the player's colour pass. All other faces
-	 * keep their vanilla ordering.
+	 * Uploads a player's opaque cape (5), head (6), arm, shield & weapon (10 & 11) faces to a separate VAO, which is
+	 * drawn depth-only before the player's colour pass, ordering those faces per-pixel against each other. All other
+	 * faces keep their vanilla priority ordering.
+	 * <p>
+	 * Vanilla only decides whether arms, shields & weapons go in front of the cape based on the head's average depth,
+	 * which often draws long capes over shields that are closer to the camera.
 	 */
 	private void uploadPlayerDepthPrepass(
 		WorldViewContext ctx,

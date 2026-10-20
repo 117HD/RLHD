@@ -1428,6 +1428,18 @@ public interface HdPluginConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "experimentalPlayerDepthPrepass",
+		name = "Player depth pre-pass",
+		description =
+			"Order player capes, heads, arms, shields & weapons per-pixel, instead of only by vanilla's priorities.<br>" +
+			"Fixes capes being drawn over shields at certain angles.",
+		section = experimentalSettings
+	)
+	default boolean playerDepthPrepass() {
+		return false;
+	}
+
+	@ConfigItem(
 		keyName = "experimentalNightAdaptationEverywhere",
 		name = "Night adaptation everywhere",
 		description = "Apply Day & night's 'Night brightness' adaptation to all dark scenes.",

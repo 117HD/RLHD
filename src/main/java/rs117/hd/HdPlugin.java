@@ -435,6 +435,7 @@ public class HdPlugin extends Plugin {
 	public boolean configConservativeShadowCulling;
 	public boolean configZoneStreaming;
 	public boolean configSimpleBoatSilhouettes;
+	public boolean configPlayerDepthPrepass;
 	public boolean configPowerSaving;
 	public boolean configUnlitFaceColors;
 	public boolean configUndoVanillaShading;
@@ -1828,6 +1829,7 @@ public class HdPlugin extends Plugin {
 		configConservativeShadowCulling = config.conservativeShadowCulling();
 		configZoneStreaming = config.zoneStreaming();
 		configSimpleBoatSilhouettes = config.simpleBoatSilhouettes();
+		configPlayerDepthPrepass = config.playerDepthPrepass();
 		configPowerSaving = config.powerSaving();
 		configShadingMode = config.shadingMode();
 		configUnlitFaceColors = configShadingMode.unlitFaceColors;

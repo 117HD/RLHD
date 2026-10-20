@@ -1226,9 +1226,11 @@ public class ZoneRenderer implements Renderer {
 						ctx.drawAll(VAO_SHADOW, ctx.vaoDirectionalCmd);
 					}
 
-					// Write depth for player capes, heads, arms, shields & weapons first, so they're ordered per-pixel
-					// against each other in the colour pass, instead of by vanilla's priority approximation.
-					// Depth-only passes use a stub fragment shader, relying on gl_Position being invariant across programs.
+					// Depth-only player passes use a stub fragment shader. This relies on gl_Position being invariant,
+					// so depths match the colour pass exactly
+
+					// Write depth for player capes, heads, arms, shields & weapons first, so the colour pass orders them
+					// per-pixel against each other, instead of by vanilla's priority approximation
 					ctx.vaoSceneCmd.SetShader(depthOnlyProgram);
 					ctx.vaoSceneCmd.ColorMask(false, false, false, false);
 					ctx.drawAll(VAO_PLAYER_DEPTH, ctx.vaoSceneCmd);
