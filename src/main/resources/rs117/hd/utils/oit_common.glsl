@@ -25,10 +25,8 @@ OitBinLayout oitComputeBinLayout(float firstLayerViewZ, float farthestLayerViewZ
 	return result;
 }
 
-float oitBinSplatWeight(float z, float zStart, float zEnd) {
-	float halfWidth = max(OIT_EPSILON, (zEnd - zStart) * 0.5);
-	float center = zStart + halfWidth;
-	float d = (OIT_BIN_SPLAT_SIGMA / halfWidth) * abs(center - z);
+float oitBinSplatWeight(float z, float center, float splatScale) {
+	float d = (center - z) * splatScale;
 	return min(1.0, exp(-d * d) * 2.0);
 }
 

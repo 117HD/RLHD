@@ -63,8 +63,9 @@ float fetchNetCoverage(ivec2 coords) {
 
 #if DEBUG_MODE == 1 || DEBUG_MODE == 2
 void main() {
+	ivec2 coords = ivec2(gl_FragCoord.xy);
 	float coverage;
-	vec3 color = resolveBin(ivec2(gl_FragCoord.xy), DEBUG_LAYER, coverage);
+	vec3 color = resolveBin(coords, DEBUG_LAYER, coverage);
 	#if DEBUG_MODE == 1
 		frag = vec4(color, 1.0);
 	#else

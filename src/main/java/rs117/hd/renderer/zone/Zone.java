@@ -732,6 +732,8 @@ public class Zone implements Destructible {
 	public static final int ALPHA_DRAW_ROOF = 1;
 	public static final int ALPHA_DRAW_DISCARD_ONLY = 2;
 	public static final int ALPHA_DRAW_BLEND_ONLY = 4;
+	public static final int ALPHA_DRAW_ALL_LEVELS = 8;
+	public static final int ALPHA_DRAW_VISIBLE_LEVELS_ONLY = 16;
 
 	private static final int DYNAMIC_VAO = 0;
 	private static final int STATIC_VAO = 1;
@@ -839,7 +841,11 @@ public class Zone implements Destructible {
 
 		for (int i = 0; i < alphaModels.size(); i++) {
 			final AlphaModel m = alphaModels.get(i);
-			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level || m.vao == -1)
+			if ((m.flags & AlphaModel.SKIP) != 0 && m.vao == -1)
+				continue;
+
+			final int modelLvl = m.level;
+			if((flags & ALPHA_DRAW_ALL_LEVELS) == 0 && modelLvl != level)
 				continue;
 
 			if((flags & (ALPHA_DRAW_DISCARD_ONLY | ALPHA_DRAW_BLEND_ONLY)) != 0) {
@@ -847,8 +853,9 @@ public class Zone implements Destructible {
 					continue;
 			}
 
-			if (level < minLevel || level > maxLevel ||
-				level > currentLevel && !hiddenRoofIds.isEmpty() && hiddenRoofIds.contains((int) m.rid))
+			if ((flags & ALPHA_DRAW_VISIBLE_LEVELS_ONLY) != 0 && (
+				modelLvl < minLevel || modelLvl > maxLevel ||
+				modelLvl > currentLevel && !hiddenRoofIds.isEmpty() && hiddenRoofIds.contains((int) m.rid)))
 				continue;
 
 			final int drawMode = (m.flags & AlphaModel.DYNAMIC) != 0 ? DYNAMIC_VAO : STATIC_VAO;

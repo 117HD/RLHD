@@ -4,17 +4,16 @@
 
 in float vViewZ;
 
-layout(location = 0) out float outFirstLayerDepth;
+layout(location = 0) out vec2 outLayerDepth;
 layout(location = 1) out float outCoverage;
-layout(location = 2) out float outFarthestLayerDepth;
 
 void main() {
 	vec4 outputColor = shadeFragment();
 	if (outputColor.a <= 0.001)
 		discard;
 
-    float viewDepth = abs(vViewZ) / (uboGlobal.drawDistance * TILE_SIZE);
-    outFirstLayerDepth = viewDepth;
-    outCoverage = outputColor.a;
-    outFarthestLayerDepth = viewDepth;
+	float viewDepth = abs(vViewZ) / (uboGlobal.drawDistance * TILE_SIZE);
+	// Store the farthest depth negated so both bounds can use one GL_MIN target.
+	outLayerDepth = vec2(viewDepth, -viewDepth);
+	outCoverage = outputColor.a;
 }

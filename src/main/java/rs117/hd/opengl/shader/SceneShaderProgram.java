@@ -1,6 +1,7 @@
 package rs117.hd.opengl.shader;
 
 import java.io.IOException;
+import rs117.hd.renderer.zone.OitRenderer;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
@@ -8,8 +9,6 @@ import static rs117.hd.HdPlugin.TEXTURE_UNIT_NEBULA_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TERRAIN_SHADOW_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILED_LIGHTING_MAP;
-import static rs117.hd.renderer.zone.ZoneRenderer.OIT_BIN_COUNT;
-import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_OIT_FIRST_LAYER;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 
 public class SceneShaderProgram extends ShaderProgram {
@@ -54,17 +53,16 @@ public class SceneShaderProgram extends ShaderProgram {
 	}
 
 	public static class TransparentOIT extends SceneShaderProgram {
-		protected final UniformTexture uniFirstLayerDepth = addUniformTexture("firstLayerDepth");
+		protected final UniformTexture uniAlphaFirstLastDepth = addUniformTexture("alphaFirstLastDepth");
 
 		TransparentOIT() {
 			shaderTemplate.add(GL_FRAGMENT_SHADER, "scene_frag_oit.glsl");
-			uniFirstLayerDepth.ignoreMissing = true;
 		}
 
 		@Override
 		protected void initialize() {
 			super.initialize();
-			uniFirstLayerDepth.set(TEXTURE_UNIT_OIT_FIRST_LAYER);
+			uniAlphaFirstLastDepth.set(OitRenderer.TEXTURE_UNIT_FIRST_LAYER);
 		}
 
 		@Override
@@ -77,7 +75,7 @@ public class SceneShaderProgram extends ShaderProgram {
 
 		private String generateOitMrtOutputs() {
 			StringBuilder sb = new StringBuilder();
-			for (int k = 0; k < OIT_BIN_COUNT; k++) {
+			for (int k = 0; k < OitRenderer.BIN_COUNT; k++) {
 				sb.append("layout(location = ").append(k).append(") out vec4 colorAccum").append(k).append(";\n");
 			}
 			return sb.toString();
@@ -85,20 +83,21 @@ public class SceneShaderProgram extends ShaderProgram {
 
 		private String generateOitMrtInit() {
 			StringBuilder sb = new StringBuilder();
-			for (int k = 0; k < OIT_BIN_COUNT; k++)
+			for (int k = 0; k < OitRenderer.BIN_COUNT; k++)
 				sb.append("colorAccum").append(k).append(" = vec4(0.0);\n");
 			return sb.toString();
 		}
 
 		private String generateOitMrtWrite() {
-			StringBuilder sb = new StringBuilder();
-			for (int k = 0; k < OIT_BIN_COUNT; k++) {
+			StringBuilder sb = new StringBuilder("switch (k) {\n");
+			for (int k = 0; k < OitRenderer.BIN_COUNT; k++) {
 				sb
-					.append("if (k == ").append(k).append(") ")
+					.append("case ").append(k).append(":\n")
 					.append("colorAccum").append(k)
-					.append(" = vec4(outputColor.rgb * outputColor.a * bw, outputColor.a * bw);\n");
+					.append(" = vec4(outputColor.rgb * outputColor.a * bw, outputColor.a * bw);\n")
+					.append("break;\n");
 			}
-			return sb.toString();
+			return sb.append("}\n").toString();
 		}
 
 		public static class Water extends TransparentOIT {

@@ -7,7 +7,7 @@
 
 #include OIT_MRT_OUTPUTS
 
-uniform sampler2D firstLayerDepth;
+uniform sampler2D alphaFirstLastDepth;
 
 in float vViewZ;
 
@@ -17,10 +17,10 @@ void main() {
 		discard;
 
 	ivec2 coords = ivec2(gl_FragCoord.xy);
-	vec2 depth = texelFetch(firstLayerDepth, coords, 0).rg;
+	vec2 depth = texelFetch(alphaFirstLastDepth, coords, 0).rg;
 	float depthScale = uboGlobal.drawDistance * TILE_SIZE;
 	float firstLayerSample = depth.r * depthScale;
-	float farthestLayer = depth.g * depthScale;
+	float farthestLayer = -depth.g * depthScale;
 	float z = abs(vViewZ);
 
 	OitBinLayout bins = oitComputeBinLayout(firstLayerSample, farthestLayer, z, OIT_BIN_COUNT);
@@ -28,16 +28,20 @@ void main() {
 
 	#include OIT_MRT_INIT
 
-	for (int k = bins.home - 1; k <= bins.home + 1; ++k) {
-		if (k < 0 || k >= OIT_BIN_COUNT)
-			continue;
-
-		float bw = isOpaque
-			? (k == bins.home ? 1.0 : 0.0)
-			: oitBinSplatWeight(z, bins.firstLayer + float(k) * bins.binWidth, bins.firstLayer + float(k + 1) * bins.binWidth);
-		if (bw < OIT_EPSILON)
-			continue;
-
+	if (isOpaque) {
+		int k = bins.home;
+		float bw = 1.0;
 		#include OIT_MRT_WRITE
+	} else {
+		float halfWidth = max(OIT_EPSILON, bins.binWidth * 0.5);
+		float splatScale = OIT_BIN_SPLAT_SIGMA / halfWidth;
+		for (int k = max(0, bins.home - 1); k <= min(OIT_BIN_COUNT, bins.home + 1); ++k) {
+			float center = bins.firstLayer + (float(k) + 0.5) * bins.binWidth;
+			float bw = oitBinSplatWeight(z, center, splatScale);
+			if (bw < OIT_EPSILON)
+				continue;
+
+		    #include OIT_MRT_WRITE
+		}
 	}
 }
