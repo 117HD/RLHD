@@ -34,6 +34,7 @@ import static rs117.hd.HdPlugin.PROCESSOR_COUNT;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_ALPHA;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
+import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER_DEPTH;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -43,6 +44,13 @@ public class ModelStreamingManager {
 	public static final int RL_RENDER_THREADS = 2;
 
 	private static final ConcurrentPool<PrimitiveCharArray> FACE_INDICES = new ConcurrentPool<>(PrimitiveCharArray::new);
+
+	// Depth bias per player face render priority, pulling faces towards the camera by roughly bias / 12800 of their
+	// distance. The cape (5) is biased so slightly clipping elbows don't poke through it. The head (6) is biased a bit
+	// further, since it's drawn on top of the cape in vanilla, and also contains decals lying on the cape, such as
+	// skillcape emblems. Helmets (7) are biased well above the head, so hair doesn't poke through them. Priorities 8 & 9
+	// are drawn on top of the cape in vanilla too, so they're kept level with the head.
+	private static final int[] PLAYER_PRIORITY_DEPTH_BIAS = { 0, 0, 0, 0, 0, 32, 40, 100, 40, 40, 0, 0 };
 
 	@Inject
 	private Injector injector;
@@ -363,6 +371,7 @@ public class ModelStreamingManager {
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
 			FacePrioritySorter facePrioritySorter = shouldSort ? FacePrioritySorter.POOL.acquire() : null
 		) {
+			sceneUploader.playerPriorityDepthBias = null; // In case a previous upload threw before resetting it
 			final int[] faceDistances = shouldSort ? PooledArrayType.INT.borrow(m.getFaceCount()) : null;
 			shouldSort &= sceneUploader.preprocessTempModel(
 				projection,
@@ -417,6 +426,9 @@ public class ModelStreamingManager {
 				final DynamicModelVAO.View opaqueView = ctx.beginDraw(vaoType, drawIndex, opaqueFaceCount);
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
+				// Biases must apply to both the colour & depth pre-pass uploads, so their depths match exactly
+				final boolean depthPrepass = isPlayer && !ctx.isSquashed;
+				sceneUploader.playerPriorityDepthBias = depthPrepass ? PLAYER_PRIORITY_DEPTH_BIAS : null;
 				sceneUploader.uploadTempModel(
 					visibleFaces,
 					m,
@@ -433,12 +445,67 @@ public class ModelStreamingManager {
 					alphaView.end();
 				}
 				opaqueView.end();
+
+				if (depthPrepass)
+					uploadPlayerDepthPrepass(ctx, sceneUploader, visibleFaces, m, modelOverride, preOrientation, orient);
+				sceneUploader.playerPriorityDepthBias = null;
 			}
 		} catch (Exception e) {
 			log.error("Error rendering dynamic object", e);
 		} finally {
 			FACE_INDICES.recycle(visibleFaces);
 			FACE_INDICES.recycle(culledFaces);
+		}
+	}
+
+	/**
+	 * Players are drawn in vanilla priority order without writing depth, which mostly works, except vanilla only
+	 * decides whether arms, shields & weapons (priority 10 & 11) go in front of the cape (priority 5) based on the
+	 * average depth of the head. To order those, along with the head (priority 6), per-pixel instead, their opaque faces
+	 * are also uploaded to a separate VAO, which is drawn depth-only before the player's colour pass. All other faces
+	 * keep their vanilla ordering.
+	 */
+	private void uploadPlayerDepthPrepass(
+		WorldViewContext ctx,
+		SceneUploader sceneUploader,
+		PrimitiveCharArray visibleFaces,
+		Model m,
+		ModelOverride modelOverride,
+		int preOrientation,
+		int orient
+	) {
+		final byte[] priorities = m.getFaceRenderPriorities();
+		if (priorities == null)
+			return;
+
+		final PrimitiveCharArray depthFaces = FACE_INDICES.acquire();
+		try {
+			depthFaces.reset();
+			depthFaces.ensureCapacity(visibleFaces.length);
+			for (int i = 0; i < visibleFaces.length; i++) {
+				final char face = visibleFaces.array[i];
+				final int pri = priorities[face];
+				if ((pri == 5 || pri == 6 || pri >= 10) && !sceneUploader.isTempModelFaceAlpha(m, face))
+					depthFaces.put(face);
+			}
+
+			if (depthFaces.length == 0)
+				return;
+
+			final DynamicModelVAO.View depthView = ctx.beginDraw(VAO_PLAYER_DEPTH, depthFaces.length);
+			sceneUploader.uploadTempModel(
+				depthFaces,
+				m,
+				modelOverride,
+				preOrientation,
+				orient,
+				true,
+				depthView,
+				depthView
+			);
+			depthView.end();
+		} finally {
+			FACE_INDICES.recycle(depthFaces);
 		}
 	}
 

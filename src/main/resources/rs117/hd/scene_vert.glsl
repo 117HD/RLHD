@@ -41,6 +41,9 @@ layout (location = 0) in vec3 vPosition;
     layout (location = 7) in ivec2 vSceneBase;
 
     uniform isamplerBuffer textureFaces;
+
+    // Player depth pre-passes use a separate depth-only program, which must produce identical depth
+    invariant gl_Position;
 #else
     layout (location = 1) in vec3 vUv;
     layout (location = 2) in vec3 vNormal;

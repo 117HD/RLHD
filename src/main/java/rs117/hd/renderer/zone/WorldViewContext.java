@@ -37,7 +37,8 @@ public class WorldViewContext {
 	public static final int VAO_PLAYER = 2;
 	public static final int VAO_SHADOW = 3;
 	public static final int VAO_PRESCENE = 4;
-	public static final int VAO_COUNT = 5;
+	public static final int VAO_PLAYER_DEPTH = 5;
+	public static final int VAO_COUNT = 6;
 
 	public static final ConcurrentPool<DynamicModelVAO> DYNAMIC_MODEL_VAO_STAGING_POOL =
 		new ConcurrentPool<>(() -> new DynamicModelVAO("DynamicModelVAO::Staging", true));
@@ -184,7 +185,7 @@ public class WorldViewContext {
 		// Choose a pool to both acquire from and release back into, irrespective of the storage buffers setting.
 		// Without this, buffers allocated during acquisition from the staging pool may be erroneously released
 		// back into the non-staging pool, leading to buffers accumulating with unnecessary allocations.
-		return type == VAO_OPAQUE || type == VAO_PLAYER || type == VAO_SHADOW ?
+		return type == VAO_OPAQUE || type == VAO_PLAYER || type == VAO_PLAYER_DEPTH || type == VAO_SHADOW ?
 			DYNAMIC_MODEL_VAO_STAGING_POOL : DYNAMIC_MODEL_VAO_POOL;
 	}
 
@@ -238,7 +239,7 @@ public class WorldViewContext {
 
 	void unmap() {
 		for (int i = 0; i < VAO_COUNT; i++) {
-			final boolean shouldCoalesce = i == VAO_OPAQUE || i == VAO_PLAYER || i == VAO_SHADOW;
+			final boolean shouldCoalesce = i == VAO_OPAQUE || i == VAO_PLAYER || i == VAO_PLAYER_DEPTH || i == VAO_SHADOW;
 			dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][i].unmap(shouldCoalesce);
 		}
 	}

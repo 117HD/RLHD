@@ -53,6 +53,14 @@ public class SceneShaderProgram extends ShaderProgram {
 		}
 	}
 
+	public static class DepthOnly extends SceneShaderProgram {
+		DepthOnly() {
+			shaderTemplate.add(GL_FRAGMENT_SHADER, "stub_frag.glsl");
+			uniTextureArray.ignoreMissing = true;
+			uniShadowMap.ignoreMissing = true;
+		}
+	}
+
 	public static class Legacy extends SceneShaderProgram {
 		Legacy() {
 			shaderTemplate.add(GL_GEOMETRY_SHADER, "scene_geom.glsl");

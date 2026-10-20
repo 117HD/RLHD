@@ -136,6 +136,9 @@ public class SceneUploader implements AutoCloseable {
 	private int[] modelVertices;
 	private float[] modelProjected;
 	public int tempModelAlphaFaces = 0;
+	// Extra depth bias per face render priority in uploadTempModel, for ordering player faces per-pixel
+	@Nullable
+	public int[] playerPriorityDepthBias;
 
 	private final PooledObjectArray<ModelOverride> faceOverrides = new PooledObjectArray<>();
 	private final PooledObjectArray<Material> faceMaterials = new PooledObjectArray<>();
@@ -2160,6 +2163,17 @@ public class SceneUploader implements AutoCloseable {
 		return shouldSort;
 	}
 
+	/**
+	 * Whether a face will be uploaded to the alpha VAO. Only valid for faces kept by the last call to preprocessTempModel.
+	 */
+	public boolean isTempModelFaceAlpha(Model model, int face) {
+		int transparency = readFaceTransparency(model.getTransparency(), model.getFaceTransparencies(), face);
+		final ModelOverride faceOverride = faceOverrides.get(face);
+		if (faceOverride.modifiesAlpha)
+			transparency = 255 - faceOverride.modifyAlpha(255 - transparency);
+		return faceMaterials.get(face).hasTransparency || transparency != 0;
+	}
+
 	// temp draw
 	public void uploadTempModel(
 		PrimitiveCharArray faces,
@@ -2192,6 +2206,8 @@ public class SceneUploader implements AutoCloseable {
 		final short[] faceTextures = model.getFaceTextures();
 		final byte[] textureFaces = model.getTextureFaces();
 		final byte[] bias = model.getFaceBias();
+		final int[] priorityDepthBias = playerPriorityDepthBias;
+		final byte[] priorities = priorityDepthBias != null ? model.getFaceRenderPriorities() : null;
 		final int[] faceNormals = isShadow ? EMPTY_NORMALS : modelNormals;
 
 		final int faceCount = model.getFaceCount();
@@ -2315,8 +2331,10 @@ public class SceneUploader implements AutoCloseable {
 			if (faceOverride.modifiesAlpha)
 				transparency = 255 - faceOverride.modifyAlpha(255 - transparency);
 
-			final int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
+			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
 				hasBias ? bias[face] & 0xFF : 0;
+			if (priorities != null)
+				depthBias = min(255, depthBias + priorityDepthBias[clamp(priorities[face], 0, priorityDepthBias.length - 1)]);
 			final int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
 			final boolean hasAlpha = material.hasTransparency || transparency != 0;
 
