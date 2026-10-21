@@ -5276,6 +5276,12 @@
     ]
   },
   {
+    "name": "Callisto Exit Fix",
+    "aabbs": [
+      [ 3357, 10315, 3360, 10316 ]
+    ]
+  },
+  {
     "name": "Callisto, Vet'ion, Venenatis and Escape Caves",
     "regions": [
       13215,

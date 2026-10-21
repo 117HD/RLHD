@@ -21342,10 +21342,73 @@
       "CAVEKIT_ROCK02_LOW03",
       "CAVEKIT_ROCK02_LOW04",
       "CAVEKIT_ROCK02_LOW05",
-      "CAVEKIT_ROCK02_LOW06",
-      "WILD_CALLISTO_EXIT01"
+      "CAVEKIT_ROCK02_LOW06"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Artio/Callisto Walls and Rocks",
+    "areas": [ "Callisto Exit Fix" ],
+    "baseMaterial": "STONE_NORMALED",
+    "shiftLightness": -5,
+    "objectIds": [
+      "CAVEKIT_ROCK02_LOW04"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Artio/Callisto Walls and Rocks",
+    "areas": [ "Callisto Exit Fix" ],
+    "baseMaterial": "STONE_NORMALED",
+    "shiftLightness": -3,
+    "objectIds": [
+      "CAVEKIT_ROCK02_LOW05"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Wilderness - Artio/Callisto Exit",
+    "baseMaterial": "STONE_NORMALED",
+    "shiftLightness": -4,
+    "objectIds": [
+      "WILD_CALLISTO_EXIT01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_80"
+      },
+      {
+        "colors": "l > 100",
+        "baseMaterial": "GRAY_125"
+      },
+      {
+        "colors": "l > 35",
+        "uvType": "BOX",
+        "shiftLightness": -10,
+        "baseMaterial": "STONE_NORMALED"
+      }
+    ]
+  },
+  {
+    "description": "Wilderness - Escape caves exit cave",
+    "baseMaterial": "STONE_NORMALED",
+    "shiftLightness": -1,
+    "objectIds": [
+      "WILD_BOSS_ESCAPE_CAVE_EXIT01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_80"
+      },
+      {
+        "colors": "l == 68",
+        "baseMaterial": "GRAY_125"
+      }
+    ]
   },
   {
     "description": "Wilderness - Escape Caves - Entrance",
@@ -21353,7 +21416,13 @@
     "objectIds": [
       "WILD_CAVE_EXIT01"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "GRAY_65"
+      }
+    ]
   },
   {
     "description": "Wilderness - Prayer Training Chaos Temple - Stained Glass Window",
@@ -46775,7 +46844,6 @@
       "DECOKIT_ROCK01_JOIN02",
       "CAVEKIT_ROCK02_LOW02",
       "DECOKIT_ROCK01_MIDDLE01_DARK01",
-      "WILD_BOSS_ESCAPE_CAVE_EXIT01",
       "WILD_BOSS_ESCAPE_CAVE_EXIT02",
       "WILD_BOSS_ESCAPE_CAVE_EXIT_NOOP",
       "WILD_ESCAPECAVE_STALAGMITE01",
@@ -50805,7 +50873,6 @@
       "MURDERHIVE"
     ],
     "uvType": "BOX",
-    "upwardsNormals": false,
     "uvScale": 0.7,
     "uvOrientationX": 512
   },
@@ -65808,7 +65875,8 @@
       {
         "description": "Glass",
         "colors": "a < 255",
-        "baseMaterial": "BLANK_GLOSS",
+        "baseMaterial": "GRAY_50",
+        "shiftAlpha": -40,
         "uvType": "BOX",
         "uvScale": 0.4
       }
@@ -67038,9 +67106,10 @@
   },
   {
     "description": "Shayzien - Port Sarim - Fossil Island - Wooden - Volcano - Deposit Box",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
     "uvOrientationY": 512,
+    "undoVanillaShading": false,
     "objectIds": [
       "SARIM_DEPOSIT_BOX",
       "CLAN_MEDIEVAL_DEPOSIT_BOX",
