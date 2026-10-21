@@ -2071,6 +2071,14 @@
     "groundMaterial": "ROCKY_CAVE_FLOOR"
   },
   {
+    "name": "LUMBRIDGE_CAVES_WATER",
+    "area": "LUMBRIDGE_SWAMP_CAVES",
+    "overlayIds": [
+      7
+    ],
+    "waterType": "CAVE_WATER_SWAMP"
+  },
+  {
     "name": "GOBLIN_MAZE_FLOOR",
     "area": "GOBLIN_MAZE",
     "overlayIds": [
@@ -2079,8 +2087,14 @@
     "groundMaterial": "ROCKY_CAVE_FLOOR"
   },
   {
+    "name": "DORGESHKAAN_AGILITY_AREA_WATER",
+    "area": "DORGESHKAAN_AGILITY_AREA",
+    "overlayIds": [ 156 ],
+    "waterType": "CAVE_WATER_SWAMP"
+  },
+  {
     "name": "DORGESHKAAN_FLOOR",
-    "area": "DORGESHKAAN",
+    "area": "DORGESHKAAN_FLOOR",
     "minLightness": 14,
     "maxLightness": 20,
     "underlayIds": [
@@ -5680,6 +5694,27 @@
     ],
     "groundMaterial": "DIRT",
     "blended": false
+  },
+  {
+    "name": "Mount Karuulm Dungeon Floor - Brightness Fixes",
+    "area": "KARUULM_SLAYER_DUNGEON_PLANE_0_BRIGHTNESS_FIXES",
+    "groundMaterial": "VARIED_DIRT",
+    "uvOrientation": 256,
+    "maxLightness": 9,
+    "replacements": {
+      "Mount Karuulm Dungeon Floor": "blendingColors",
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm Dungeon Floor",
+    "area": "KARUULM_SLAYER_DUNGEON_PLANE_0",
+    "groundMaterial": "VARIED_DIRT",
+    "uvOrientation": 256,
+    "minLightness": 4,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "Mount Karuulm - Lava Pool Fix - 1",
@@ -10926,6 +10961,7 @@
     "name": "DOGNOSE_BEACH_SAND",
     "area": "DOGNOSE_ISLAND_BEACH",
     "groundMaterial": "SAND",
+    "maxLightness": 55,
     "underlayIds": [
       48,
       68,
@@ -10997,6 +11033,22 @@
     "replacements": {
       "NONE": "!textures"
     }
+  },
+  {
+    "name": "YNYSDAIL_CAVERN_FLOOR",
+    "area": "YNYSDAIL_CAVERN",
+    "underlayIds": [ 232, 233 ],
+    "groundMaterial": "PACKED_EARTH",
+    "minLightness": 8,
+    "maxLightness": 20
+  },
+  {
+    "name": "YNYSDAIL_CAVERN_WATER",
+    "area": "YNYSDAIL_CAVERN",
+    "overlayIds": [
+      96
+    ],
+    "waterType": "CAVE_WATER_MURKY"
   },
   {
     "name": "Ferox - Fix Path at Deaths Office",
@@ -11254,7 +11306,24 @@
       636
     ],
     "groundMaterial": "DIRT",
-    "minLightness": 6
+    "minLightness": 8,
+    "setHue": 1,
+    "replacements": {
+      "Vampyrium - Blood - Shore Fix - Color Blending": "blendingColors"
+    }
+  },
+  {
+    "name": "Vampyrium - Blood - Shore Fix - Color Blending",
+    "area": "VAMPYRIUM_SHORE_BLOOD_FIX",
+    "underlayIds": [
+      238
+    ],
+    "overlayIds": [
+      636
+    ],
+    "groundMaterial": "DIRT",
+    "setLightness": 13,
+    "setHue": 1
   },
   {
     "name": "Maggot King Arena - Dirt",
@@ -11341,7 +11410,9 @@
     "name": "Vampyrium - Blood",
     "area": "VAMPYRIUM",
     "overlayIds": [
-      636
+      636,
+      637,
+      638
     ],
     "waterType": "BLOOD_DARK"
   },

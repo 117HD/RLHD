@@ -14,13 +14,13 @@ public final class GenericJob extends Job {
 		GenericJob newTask = POOL.acquire();
 		newTask.context = context;
 		newTask.runnable = runnable;
-		newTask.isReleased = false;
+		newTask.resetReleased();
 
 		return newTask;
 	}
 
-	public String context;
-	public TaskRunnable runnable;
+	private String context;
+	private TaskRunnable runnable;
 
 	@Override
 	public void onRun() throws InterruptedException {

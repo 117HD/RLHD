@@ -177,6 +177,10 @@
         "type": "number",
         "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
       },
+      "shadowNormalBias": {
+        "type": "boolean",
+        "description": "Whether to offset shadow receivers along their surface normal to prevent self-shadowing. Defaults to false."
+      },
       "tzHaarRecolorType": {
         "type": "string",
         "description": "Specify a type of TzHaar recolor style to apply. Only relevant for the TzHaar area.",
@@ -286,6 +290,10 @@
         "type": "integer",
         "description": "Vertex colors with a higher alpha value value will be clamped to the specified max alpha value. Defaults to 255, where 0 is fully transparent, 255 is fully opaque."
       },
+      "heightOffset": {
+        "type": "integer",
+        "description": "Height offset to apply to the model, where negative values move the model upward."
+      },
       "materialOverrides": {
         "type": "object",
         "description": "A subset of options can be tweaked separately for specific materials of the model.",
@@ -390,6 +398,10 @@
             "shadowOpacityThreshold": {
               "type": "number",
               "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
+            },
+            "shadowNormalBias": {
+              "type": "boolean",
+              "description": "Whether to offset shadow receivers along their surface normal to prevent self-shadowing. Defaults to false."
             },
             "inheritTileColorType": {
               "type": "string",
@@ -602,6 +614,10 @@
             "shadowOpacityThreshold": {
               "type": "number",
               "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
+            },
+            "shadowNormalBias": {
+              "type": "boolean",
+              "description": "Whether to offset shadow receivers along their surface normal to prevent self-shadowing. Defaults to false."
             },
             "inheritTileColorType": {
               "type": "string",

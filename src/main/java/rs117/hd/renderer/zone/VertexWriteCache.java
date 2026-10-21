@@ -2,6 +2,7 @@ package rs117.hd.renderer.zone;
 
 import java.nio.IntBuffer;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.utils.buffer.GLMappedBufferIntWriter.ReservedView;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.collections.PooledArrayType;
 
@@ -10,6 +11,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 public final class VertexWriteCache {
 	private IntBuffer outputBuffer;
+	private int outputOffset;
 
 	private final String name;
 	private final int initialCapacity;
@@ -29,8 +31,14 @@ public final class VertexWriteCache {
 
 	public void setOutputBuffer(IntBuffer outputBuffer) {
 		this.outputBuffer = outputBuffer;
+		outputOffset = 0;
 		stagingPosition = 0;
 		stagingBuffer = PooledArrayType.INT.ensureCapacity(stagingBuffer, initialCapacity);
+	}
+
+	private void setOutputView(ReservedView view) {
+		setOutputBuffer(view.getBuffer());
+		outputOffset = view.getPositionOffsetInts();
 	}
 
 	private void release(){
@@ -57,7 +65,7 @@ public final class VertexWriteCache {
 		if (stagingPosition + 9 > stagingBuffer.length)
 			flushAndGrow();
 
-		final int textureFaceIdx = (outputBuffer.position() + stagingPosition) / 3;
+		final int textureFaceIdx = (outputOffset + outputBuffer.position() + stagingPosition) / 3;
 		final int[] stagingBuffer = this.stagingBuffer;
 		final int stagingPosition = this.stagingPosition;
 
@@ -148,13 +156,13 @@ public final class VertexWriteCache {
 		public final VertexWriteCache alphaTex = new VertexWriteCache("ALPHA_TEX", CAPACITY);
 		public boolean useAlphaBuffer;
 
-		public void setOutputBuffers(IntBuffer opaque, IntBuffer alpha, IntBuffer opaqueTex, IntBuffer alphaTex) {
-			this.opaque.setOutputBuffer(opaque);
-			this.opaqueTex.setOutputBuffer(opaqueTex);
+		public void setOutputBuffers(ReservedView opaque, ReservedView alpha, ReservedView opaqueTex, ReservedView alphaTex) {
+			this.opaque.setOutputView(opaque);
+			this.opaqueTex.setOutputView(opaqueTex);
 			useAlphaBuffer = alpha != opaque && alphaTex != opaqueTex;
 			if (useAlphaBuffer) {
-				this.alpha.setOutputBuffer(alpha);
-				this.alphaTex.setOutputBuffer(alphaTex);
+				this.alpha.setOutputView(alpha);
+				this.alphaTex.setOutputView(alphaTex);
 			} else {
 				this.alpha.setOutputBuffer(null);
 				this.alphaTex.setOutputBuffer(null);

@@ -4,6 +4,7 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.Collections;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.utils.Props;
@@ -11,6 +12,7 @@ import rs117.hd.utils.Props;
 import static rs117.hd.utils.collections.Util.quickSort;
 
 @Slf4j
+@NoArgsConstructor // Required to make Gson respect initializers
 public class Area {
 	public static final Area NONE = new Area("NONE", 0, 0, 0, 0);
 	public static final Area ALL = new Area("ALL", Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
@@ -18,7 +20,7 @@ public class Area {
 
 	public String name;
 	public boolean hideOtherAreas;
-	public boolean fillGaps = true;
+	public boolean fillGaps;
 
 	public String[] areas;
 	public int[] regions;

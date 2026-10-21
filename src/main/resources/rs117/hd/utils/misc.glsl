@@ -28,6 +28,82 @@
 
 #include <utils/constants.glsl>
 #include <utils/color_utils.glsl>
+#include <utils/hash.glsl>
+
+float saturate(float value) {
+    return clamp(value, 0.0, 1.0);
+}
+
+vec2 saturate(vec2 value) {
+    return clamp(value, vec2(0.0), vec2(1.0));
+}
+
+vec3 saturate(vec3 value) {
+    return clamp(value, vec3(0.0), vec3(1.0));
+}
+
+vec4 saturate(vec4 value) {
+    return clamp(value, vec4(0.0), vec4(1.0));
+}
+
+vec3 snap(vec3 position, float gridSpacing) {
+    position /= gridSpacing;
+    position = round(position);
+    position *= gridSpacing;
+    return position;
+}
+
+vec2 snap(vec2 position, float gridSpacing) {
+    return snap(vec3(position.x, 0.0, position.y), gridSpacing).xz;
+}
+
+float smooth_step(float edge0, float edge1, float x) {
+    float p = clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
+    float v = p * p * (3.0 - 2.0 * p); // smoothstep formula
+    return v;
+}
+
+vec3 safe_normalize(vec3 v) {
+    vec3 r = normalize(v);
+    r.x = isnan(r.x) ? 0.0 : r.x;
+    r.y = isnan(r.y) ? 0.0 : r.y;
+    r.z = isnan(r.z) ? 0.0 : r.z;
+    return r;
+}
+
+float unpackHalfFloat(uint h) {
+    uint sign = (h >> 15u) & 0x1u;
+    uint exponent = (h >> 10u) & 0x1Fu;
+    uint mantissa = h & 0x3FFu;
+
+    uint f32sign = sign << 31u;
+    uint f32;
+
+    if (exponent == 0u) {
+        if (mantissa == 0u) {
+            // Signed zero
+            f32 = f32sign;
+        } else {
+            // Subnormal half -> normalize into float32
+            exponent = 127u - 15u + 1u;
+            while ((mantissa & 0x400u) == 0u) {
+                mantissa <<= 1u;
+                exponent -= 1u;
+            }
+            mantissa &= 0x3FFu; // clear the leading 1 we just normalized out
+            f32 = f32sign | (exponent << 23u) | (mantissa << 13u);
+        }
+    } else if (exponent == 0x1Fu) {
+        // Inf / NaN
+        f32 = f32sign | 0x7F800000u | (mantissa << 13u);
+    } else {
+        // Normalized
+        uint newExponent = exponent - 15u + 127u;
+        f32 = f32sign | (newExponent << 23u) | (mantissa << 13u);
+    }
+
+    return uintBitsToFloat(f32);
+}
 
 // translates a value from a custom range into 0-1
 float translateRange(float rangeStart, float rangeEnd, float value) {
@@ -39,13 +115,57 @@ float translateRange(float rangeStart, float rangeEnd, float value) {
 float animationFrame(float animationDuration) {
     if (animationDuration == 0)
         return 0.0;
-    return mod(elapsedTime, animationDuration) / animationDuration;
+    return mod(uboGlobal.elapsedTime, animationDuration) / animationDuration;
 }
 
 vec2 animationFrame(vec2 animationDuration) {
     if (animationDuration == vec2(0))
         return vec2(0);
-    return mod(vec2(elapsedTime), vec2(animationDuration)) / animationDuration;
+    return mod(vec2(uboGlobal.elapsedTime), vec2(animationDuration)) / animationDuration;
+}
+
+// 2D Noise based on Morgan McGuire @morgan3d, under the BSD license
+// https://www.shadertoy.com/view/4dS3Wd
+float noise(in vec2 st) {
+    vec2 i = floor(st);
+    vec2 f = fract(st);
+
+    // Four corners in 2D of a tile
+    float a = hash12(i);
+    float b = hash12(i + vec2(1.0, 0.0));
+    float c = hash12(i + vec2(0.0, 1.0));
+    float d = hash12(i + vec2(1.0, 1.0));
+
+    // Smooth interpolation
+    vec2 u = smoothstep(0., 1., f);
+
+    // Mix 4 corner percentages
+    return mix(a, b, u.x) +
+        (c - a) * u.y * (1.0 - u.x) +
+        (d - b) * u.x * u.y;
+}
+
+#define POISSON_DISK_LENGTH 16
+vec2 getPoissonDisk(int idx) {
+    switch(idx) {
+        case  0: return vec2(-0.94201624,  -0.39906216);
+        case  1: return vec2( 0.94558609,  -0.76890725);
+        case  2: return vec2(-0.094184101, -0.92938870);
+        case  3: return vec2( 0.34495938,   0.29387760);
+        case  4: return vec2(-0.91588581,   0.45771432);
+        case  5: return vec2(-0.81544232,  -0.87912464);
+        case  6: return vec2(-0.38277543,   0.27676845);
+        case  7: return vec2( 0.97484398,   0.75648379);
+        case  8: return vec2( 0.44323325,  -0.97511554);
+        case  9: return vec2( 0.53742981,  -0.47373420);
+        case 10: return vec2(-0.26496911,  -0.41893023);
+        case 11: return vec2( 0.79197514,   0.19090188);
+        case 12: return vec2(-0.24188840,   0.99706507);
+        case 13: return vec2(-0.81409955,   0.91437590);
+        case 14: return vec2( 0.19984126,   0.78641367);
+        case 15: return vec2( 0.14383161,  -0.14100790);
+    }
+    return vec2(0);
 }
 
 vec3 windowsHdrCorrection(vec3 c) {
@@ -60,6 +180,30 @@ vec3 windowsHdrCorrection(vec3 c) {
     // sRGB -> linearToSrgb -> gammaToLinear -> Windows' HDR srgbToLinear -> expected (same as the SDR case)
     // https://github.com/clshortfuse/renodx (MIT license)
     return pow(linearToSrgb(c), vec3(2.2));
+}
+
+// Inputs are composited linear sRGB colors, including possible tone mapping.
+// Reduce the perceptual brightness, keeping the underlying background intact.
+vec3 reduceGlare(vec3 color, vec3 background) {
+    #if REDUCE_GLARE_INTENSITY
+        if (linearSrgbLuminance(color - background) <= 0.0)
+            return color;
+        color = saturate(color);
+        background = saturate(background);
+        float baseLuminance = linearSrgbLuminance(background);
+        float luminance = linearSrgbLuminance(color);
+        if (luminance <= baseLuminance)
+            return color;
+        float target = srgbToLinear(mix(
+            linearToSrgb(baseLuminance),
+            linearToSrgb(luminance),
+            uboGlobal.glareIntensity)
+        );
+        float amount = saturate((target - baseLuminance) / max(luminance - baseLuminance, 1e-7));
+        return mix(background, color, amount);
+    #else
+        return color;
+    #endif
 }
 
 void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
@@ -111,7 +255,6 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
         return mat3(T * invmax, B * invmax, N);
     }
 #endif
-
 vec2 rotate(vec2 p, float angle) {
     float s = sin(angle);
     float c = cos(angle);
@@ -133,107 +276,3 @@ vec3 hash23(vec2 p) {
     return fract(vec3(p.x + p.y, p.x * 1.345, p.y * 2.123));
 }
 
-vec2 hash22(vec2 p) {
-    p = fract(p * vec2(123.34, 456.21));
-    p += dot(p, p + 78.233);
-    return fract(vec2(p.x * p.y, p.x + p.y));
-}
-
-// 2D Random
-float hash(in vec2 st) {
-    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
-}
-
-// 3D Random
-float hash(in vec3 st) {
-	return fract(sin(dot(st, vec3(12.9898, 78.233, 45.164))) * 43758.5453123);
-}
-
-// 4D Random
-float hash(in vec4 st) {
-	return fract(sin(dot(st, vec4(12.9898, 78.233, 45.164, 94.673))) * 43758.5453123);
-}
-
-// 2D Noise based on Morgan McGuire @morgan3d, under the BSD license
-// https://www.shadertoy.com/view/4dS3Wd
-float noise(in vec2 st) {
-    vec2 i = floor(st);
-    vec2 f = fract(st);
-
-    // Four corners in 2D of a tile
-    float a = hash(i);
-    float b = hash(i + vec2(1.0, 0.0));
-    float c = hash(i + vec2(0.0, 1.0));
-    float d = hash(i + vec2(1.0, 1.0));
-
-    // Smooth interpolation
-    vec2 u = smoothstep(0., 1., f);
-
-    // Mix 4 corner percentages
-    return mix(a, b, u.x) +
-        (c - a) * u.y * (1.0 - u.x) +
-        (d - b) * u.x * u.y;
-}
-
-vec3 snap(vec3 position, float gridSpacing) {
-    position /= gridSpacing;
-    position = round(position);
-    position *= gridSpacing;
-    return position;
-}
-
-vec2 snap(vec2 position, float gridSpacing) {
-    return snap(vec3(position.x, 0.0, position.y), gridSpacing).xz;
-}
-
-float smooth_step(float edge0, float edge1, float x) {
-    float p = clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
-    float v = p * p * (3.0 - 2.0 * p); // smoothstep formula
-    return v;
-}
-
-vec3 safe_normalize(vec3 v) {
-    vec3 r = normalize(v);
-    r.x = isnan(r.x) ? 0.0 : r.x;
-    r.y = isnan(r.y) ? 0.0 : r.y;
-    r.z = isnan(r.z) ? 0.0 : r.z;
-    return r;
-}
-
-float saturate(float value) {
-    return clamp(value, 0.0, 1.0);
-}
-
-vec2 saturate(vec2 value) {
-    return clamp(value, vec2(0.0), vec2(1.0));
-}
-
-vec3 saturate(vec3 value) {
-    return clamp(value, vec3(0.0), vec3(1.0));
-}
-
-vec4 saturate(vec4 value) {
-    return clamp(value, vec4(0.0), vec4(1.0));
-}
-
-#define POISSON_DISK_LENGTH 16
-vec2 getPoissonDisk(int idx) {
-    switch(idx) {
-        case  0: return vec2(-0.94201624,  -0.39906216);
-        case  1: return vec2( 0.94558609,  -0.76890725);
-        case  2: return vec2(-0.094184101, -0.92938870);
-        case  3: return vec2( 0.34495938,   0.29387760);
-        case  4: return vec2(-0.91588581,   0.45771432);
-        case  5: return vec2(-0.81544232,  -0.87912464);
-        case  6: return vec2(-0.38277543,   0.27676845);
-        case  7: return vec2( 0.97484398,   0.75648379);
-        case  8: return vec2( 0.44323325,  -0.97511554);
-        case  9: return vec2( 0.53742981,  -0.47373420);
-        case 10: return vec2(-0.26496911,  -0.41893023);
-        case 11: return vec2( 0.79197514,   0.19090188);
-        case 12: return vec2(-0.24188840,   0.99706507);
-        case 13: return vec2(-0.81409955,   0.91437590);
-        case 14: return vec2( 0.19984126,   0.78641367);
-        default: return vec2( 0.14383161,  -0.14100790);
-    }
-}
