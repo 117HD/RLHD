@@ -46551,6 +46551,23 @@
     ]
   },
   {
+    "description": "TFA - Inert Guardian Light",
+    "offset": [ 0, 300, 0 ],
+    "radius": 500,
+    "strength": 17,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "npcIds": [
+      "TFA_GUARDIAN_BATTERY_ACTIVE"
+    ]
+  },
+  {
     "description": "Doom of Mokhaiotl Fire",
     "height": 40,
     "radius": 450,

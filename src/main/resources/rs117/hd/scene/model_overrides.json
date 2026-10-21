@@ -79155,19 +79155,22 @@
     ]
   },
   {
-    "description": "TFA Lobby - Grass",
-    "areas": [ "TFA_LOBBY" ],
+    "description": "TFA - Grass",
+    "areas": [ "TFA" ],
     "baseMaterial": "GRASS_BLADE",
+    "shiftLightness": 3,
     "uvType": "MODEL_XY",
-    "inheritTileColorType": "UNDERLAY",
     "flatNormals": true,
+    "undoVanillaShading": false,
     "castShadows": false,
     "upwardsNormals": true,
     "windDisplacementMode": "OBJECT",
     "objectIds": [
       "AVIUM_GRASS_1",
       "AVIUM_GRASS_2",
-      "AVIUM_GRASS_3"
+      "AVIUM_GRASS_3",
+      "AVIUM_GRASS_4",
+      "AVIUM_GRASS_6"
     ]
   },
   {
@@ -79704,7 +79707,7 @@
     ]
   },
   {
-    "description": "TFA Achive Guardian Room - Walls",
+    "description": "TFA Archive Guardian Room - Walls",
     "baseMaterial": "SMOOTH_STONE",
     "undoVanillaShading": false,
     "objectIds": [
@@ -79732,21 +79735,170 @@
       "TFA_WALLKIT_ARCHIVE01_TRANSITION02_DARKER03",
       "TFA_WALLKIT_ARCHIVE01_TRANSITION02_DARKER02",
       "TFA_WALLKIT_ARCHIVE01_ROOTS01_DARKER02",
-      "TFA_WALLKIT_ARCHIVE01_TRANSITION01_DARKER02"
+      "TFA_WALLKIT_ARCHIVE01_TRANSITION01_DARKER02",
+      "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE03",
+      "TFA_FALLOFF_GUTHIXIAN01_EDGE03",
+      "TFA_FALLOFF_GUTHIXIAN01_EDGE01",
+      "TFA_FALLOFF_GUTHIXIAN01_EDGE02",
+      "TFA_WALLKIT_ARCHIVE01_PILLAR02_FALLOFF01",
+      "TFA_WALLKIT_ARCHIVE03_WALKWAY04",
+      "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE03_2X2",
+      "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE02_M"
     ],
     "uvType": "BOX",
     "colorOverrides": [
       {
         "colors": "h == 7",
         "baseMaterial": "LIGHT_BARK",
-        "uvOrientation": 120,
         "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 16 && s == 6",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.15,
         "undoVanillaShading": false
       }
     ]
   },
   {
-    "description": "TFA Achive Guardian Room - Black Wall Filler",
+    "description": "TFA Archive Guardian Room - Walls - Undo Shading",
+    "baseMaterial": "SMOOTH_STONE_LIGHT",
+    "objectIds": [
+      "TFA_FALLOFF_GUTHIXIAN01_EDGE01_DARKER01",
+      "TFA_FALLOFF_GUTHIXIAN01_DIAG01_DARKER01",
+      "TFA_FALLOFF_GUTHIXIAN01_FILLER01_DARKER02",
+      "TFA_FALLOFF_GUTHIXIAN01_EDGE01_DARKER02",
+      "TFA_FALLOFF_GUTHIXIAN01_DIAG01_DARKER02"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Archive Guardian Room - Floor Tiles",
+    "baseMaterial": "SMOOTH_STONE_LIGHT",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_FLOORKIT_GUTHIXIAN01_CORNER01_DARK02",
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_DARK02",
+      "TFA_FLOORKIT_GUTHIXIAN01_DIAG01_DARK02",
+      "TFA_FLOORKIT_GUTHIXIAN01_DIAG01_DARK01",
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_DARK01",
+      "TFA_FLOORKIT_GUTHIXIAN01_CORNER02_DARK01",
+      "TFA_FLOORKIT_GUTHIXIAN01_CORNER01",
+      "TFA_FLOORKIT_GUTHIXIAN01_CORNER01_DARK01",
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01",
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_RAISE01",
+      "TFA_FALLOFF_GUTHIXIAN01_FILLER01",
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_DARK03",
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_DARK04",
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_DARK05"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 16 && s == 6",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.15,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Archive Guardian Room - Inert Guardian",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_DUNGEONKIT_GUTHIXIAN01_BATTERY01_BASE"
+    ],
+    "npcIds": [
+      "TFA_GUARDIAN_BATTERY_INACTIVE",
+      "TFA_GUARDIAN_BATTERY_ACTIVE",
+      "TFA_GUARDIAN_BATTERY_DESTROYED"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 16 && s == 6",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.15,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_90",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "TFA Archive Guardian Room - Guardian Origin",
+    "baseMaterial": "GRUNGE_3",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_DUNGEONKIT_GUTHIXIAN01_BASE01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 13 && s == 4",
+        "baseMaterial": "GRASS_1",
+        "uvType": "BOX",
+        "shiftSaturation": -1,
+        "shiftHue": -2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_90",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "TFA Archive Guardian Room - Mushroom",
+    "baseMaterial": "GRUNGE_3",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_GUARDIAN_MUSHROOM_ACTIVE"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "TFA Archive Guardian Room - Black Wall Filler",
     "baseMaterial": "PURE_BLACK",
     "receiveShadows": false,
     "objectIds": [
@@ -79754,9 +79906,7 @@
     ]
   },
   {
-    "description": "TFA Achive Guardian Room - Dirt Wall Filler",
-    "baseMaterial": "NONE",
-    "receiveShadows": false,
+    "description": "TFA Archive Guardian Room - Dirt Wall Filler",
     "objectIds": [
       "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01",
       "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_CORNER02",

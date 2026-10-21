@@ -11556,10 +11556,30 @@
     "groundMaterial": "DIRT"
   },
   {
-    "name": "TFA Lobby - Complex Tiles",
-    "area": "TFA_LOBBY",
-    "uvOrientation": 128,
+    "name": "TFA Archive Guardian - Grass that shouldnt blend",
+    "area": "TFA_ARCHIVE_GUARDIAN_NO_BLEND_GRASS",
+    "overlayIds": [
+      646
+    ],
+    "blended": false,
+    "groundMaterial": "GRASS_1"
+  },
+  {
+    "name": "TFA Archive Guardian - Cracks",
+    "area": "TFA_ARCHIVE_GUARDIAN",
+    "overlayIds": [
+      245,
+      648,
+      649
+    ],
+    "blended": false,
+    "groundMaterial": "PACKED_EARTH"
+  },
+  {
+    "name": "TFA - Complex Tiles",
+    "area": "TFA",
     "groundMaterial": "PACKED_EARTH",
+    "maxLightness": 35,
     "replacements": {
       "DEFAULT_DIRT": "s == 1",
       "DEFAULT_GRASS": "s != 0"
