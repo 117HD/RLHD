@@ -78,8 +78,9 @@ vec2 makeUV(vec2 uv, vec2 vertexPos, int mode) {
 }
 
 HexData buildHexData(vec2 uv, const Material material, inout HexShared hexShared, float fadeMultiplier) {
-    float scale = material.hexTilingScale * fadeMultiplier;
-    float blend = material.hexTilingBlend;
+    vec2 hexTiling = getMaterialHexTiling(material);
+    float scale = hexTiling.x * fadeMultiplier;
+    float blend = hexTiling.y;
     int mode = getMaterialHexTilingMode(material);
 
     HexData h;

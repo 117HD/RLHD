@@ -82,7 +82,7 @@ layout (location = 0) in vec3 vPosition;
                     // Scroll UVs
                     fUvw.xy += material.scrollDuration * uboGlobal.elapsedTime;
                     // Scale from the center
-                    fUvw.xy = .5 + (fUvw.xy - .5) * material.textureScale.xy;
+                    fUvw.xy = .5 + (fUvw.xy - .5) * getMaterialTextureScale(material).xy;
                 } else {
                     // All outputs must be written for Mac compatibility, even if unused
                     fUvw = vec4(0);

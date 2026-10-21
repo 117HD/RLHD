@@ -219,7 +219,12 @@ public class Material {
 		struct.ambientOcclusionMap.set(getTextureLayer(ambientOcclusionMap));
 		struct.flowMap.set(getTextureLayer(flowMap));
 		struct.shadowAlphaMap.set(getTextureLayer(shadowAlphaMap));
+
+		// Hex tiling replaces the texture scale, since the uv data is shared between them
+		boolean hexTilingEnabled = hexTilingScale > 0;
+
 		struct.flags.set(
+			(hexTilingEnabled ? 1 : 0) << 5 |
 			(hexTilingMode.ordinal() & 0x3) << 3 |
 			(overrideBaseColor ? 1 : 0) << 2 |
 			(unlit ? 1 : 0) << 1 |
@@ -230,12 +235,18 @@ public class Material {
 		struct.displacementScale.set(displacementScale);
 		struct.specularStrength.set(specularStrength);
 		struct.specularGloss.set(specularGloss);
-		struct.hexTilingScale.set(divide(1, hexTilingScale));
-		struct.hexTilingBlend.set(pow(79.4971f, 1 - saturate(hexTilingBlend))); // magic number for minimal blending without artifacts
 		struct.flowMapStrength.set(flowMapStrength);
 		struct.flowMapDuration.set(flowMapDuration);
 		struct.scrollDuration.set(scrollSpeedX, scrollSpeedY);
-		struct.textureScale.set(divide(vec(1), textureScale));
+		if (hexTilingEnabled) {
+			struct.uvData.set(
+				divide(1, hexTilingScale),
+				pow(79.4971f, 1 - saturate(hexTilingBlend)), // magic number for minimal blending without artifacts
+				0
+			);
+		} else {
+			struct.uvData.set(divide(vec(1), textureScale));
+		}
 	}
 
 	private Material resolveReference(@Nullable Material material, Map<String, Material> materials) {
