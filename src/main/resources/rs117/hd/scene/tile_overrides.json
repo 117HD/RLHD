@@ -11579,6 +11579,7 @@
     "name": "TFA - Complex Tiles",
     "area": "TFA",
     "groundMaterial": "PACKED_EARTH",
+    "shiftLightness": 1,
     "maxLightness": 35,
     "replacements": {
       "DEFAULT_DIRT": "s == 1",
