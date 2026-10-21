@@ -716,6 +716,7 @@ public class Zone implements Destructible {
 	public static final int ALPHA_DRAW_ROOF = 1;
 	public static final int ALPHA_DRAW_DISCARD_ONLY = 2;
 	public static final int ALPHA_DRAW_BLEND_ONLY = 4;
+	public static final int ALPHA_DRAW_ALL_LEVELS = 8;
 
 	private static final int DYNAMIC_VAO = 0;
 	private static final int STATIC_VAO = 1;
@@ -823,7 +824,10 @@ public class Zone implements Destructible {
 
 		for (int i = 0; i < alphaModels.size(); i++) {
 			final AlphaModel m = alphaModels.get(i);
-			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level || m.vao == -1)
+			if ((m.flags & AlphaModel.SKIP) != 0 && m.vao == -1)
+				continue;
+
+			if((flags & ALPHA_DRAW_ALL_LEVELS) == 0 && m.level != level)
 				continue;
 
 			if((flags & (ALPHA_DRAW_DISCARD_ONLY | ALPHA_DRAW_BLEND_ONLY)) != 0) {
