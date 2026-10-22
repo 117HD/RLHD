@@ -47193,6 +47193,61 @@
     ]
   },
   {
+    "description": "TFA - Smork Magic Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 250,
+    "strength": 17,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "fadeOutDuration": 200,
+    "duration": 0,
+    "range": 25,
+    "projectileIds": [
+      "VFX_SMORK_MAGE_ATTACK_PROJANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Smork Napalm Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 250,
+    "strength": 17,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "projectileIds": [
+      "VFX_SMORK_NAPALM_FIRE_PROJANIM01"
+    ]
+  },
+  {
+    "description": "TFA - TFA - Smork Napalm Attack Splash",
+    "offset": [ 0, 50, 0 ],
+    "radius": 250,
+    "strength": 12,
+    "color": [
+      252,
+      128,
+      3
+    ],
+    "type": "FLICKER",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "waitForAnimation": true,
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_SMORK_NAPALM_FIRE_SPOTANIM01"
+    ]
+  },
+  {
     "description": "Doom of Mokhaiotl Fire",
     "height": 40,
     "radius": 450,
