@@ -1298,7 +1298,7 @@
     "baseMaterial": "BARK",
     "shiftLightness": 6,
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "objectIds": [
       "NEWBIETREE",
       "NEWBIETREE2"
@@ -4875,7 +4875,7 @@
     "description": "Varrock Fountain Railing and Statues",
     "baseMaterial": "STONE_NORMALED_LIGHT",
     "uvScale": 0.75,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "objectIds": [
       "FAI_VARROCK_CENTRAL_SQUARE_STATUE01",
       "FAI_VARROCK_CENTRAL_SQUARE_STATUE01",
@@ -4889,7 +4889,7 @@
   {
     "description": "Varrock Fountain Rocks with Water",
     "baseMaterial": "STONE_NORMALED_LIGHT",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvScale": 0.75,
     "objectIds": [
       "FAI_VARROCK_CENTRAL_SQUARE01"
@@ -5767,7 +5767,7 @@
   {
     "description": "Falador - Metallic - White Knight Armor",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvType": "BOX",
     "uvScale": 0.2,
     "minLightness": 17,
@@ -5854,6 +5854,7 @@
     "baseMaterial": "MARBLE_1_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.75,
+    "shadingMode": "UNLIT",
     "objectIds": [
       "FAI_FALADOR_SARADOMIN_STATUE",
       "FAI_FALADOR_SARADOMIN_STATUE_GREY"
@@ -5865,6 +5866,7 @@
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.65,
+    "shadingMode": "UNLIT",
     "objectIds": [
       "FAI_STONE_SIGN_BOTTOM",
       "FAI_STONE_SIGN_TOP"
@@ -14069,7 +14071,7 @@
     "maxLightness": 23,
     "minLightness": 23,
     "flatNormals": true,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "objectIds": [ "TIMBER_OVERHANG" ]
   },
   {
@@ -14218,7 +14220,7 @@
     "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 512,
-    "undoVanillaShading": false
+    "shadingMode": "NONE"
   },
   {
     "description": "Decorative Armor",
@@ -14302,7 +14304,7 @@
   {
     "description": "MARBLE_STATUE_OF_KING",
     "baseMaterial": "MARBLE_1_SEMIGLOSS",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "shiftLightness": 2,
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -14948,7 +14950,7 @@
   {
     "description": "Wizard Tower - Bridge Corner Tiles",
     "baseMaterial": "SMOOTH_STONE_VERY_LIGHT",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvType": "BOX",
     "uvScale": 0.7,
     "objectIds": [
@@ -15728,7 +15730,7 @@
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX",
         "uvScale": 0.3,
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "upwardsNormals": true
       },
       {
@@ -16151,7 +16153,7 @@
         "uvType": "BOX",
         "flatNormals": true,
         "uvOrientation": 512,
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvScale": 0.75
       }
     ],
@@ -18031,7 +18033,7 @@
   },
   {
     "description": "Objects - Wooden - Crate - Don't Undo Vanilla Shading",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "FAI_VARROCK_LARGE_CRATE",
@@ -18045,7 +18047,7 @@
   },
   {
     "description": "Objects - Wooden - Small Crate - Don't Undo Vanilla Shading",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "FAI_VARROCK_SMALL_CRATES"
@@ -24219,7 +24221,7 @@
   {
     "description": "Nardah Walls Rubble",
     "baseMaterial": "STONE_NORMALED_DARK",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "objectIds": [
       "ELID_PILE_BICKS"
     ],
@@ -24454,7 +24456,7 @@
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvScale": 0.6,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "objectIds": [
       "ELID_STATUETTE_BASE",
       "ELID_STATUETTE_PLACED"
@@ -30853,7 +30855,7 @@
   {
     "description": "Sangvesti - Blood Fountain",
     "baseMaterial": "WATER_FOUNTAIN_FLAT",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "shiftLightness": -2,
     "uvType": "MODEL_XZ",
     "uvScale": 0.75,
@@ -31524,7 +31526,7 @@
     "baseMaterial": "LEAF_VEINS",
     "uvType": "MODEL_XZ",
     "windDisplacementMode": "OBJECT",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvScale": 0.25,
     "objectIds": [
       "SMALLFERN",
@@ -31776,7 +31778,7 @@
     "description": "Generic - Plank - Tables - Picnic Bench",
     "baseMaterial": "WOOD_GRAIN_3",
     "minLightness": 10,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "objectIds": [
       "FAI_VARROCK_POSH_BENCH",
       "FAI_VARROCK_FULL_BENCH"
@@ -35030,7 +35032,7 @@
     "uvType": "BOX",
     "uvScale": 0.35,
     "upwardsNormals": true,
-    "undoVanillaShading": false
+    "shadingMode": "NONE"
   },
   {
     "description": "Lumbridge - Al Kharid Crossroads Signpost",
@@ -35042,21 +35044,21 @@
     "uvType": "BOX",
     "uvScale": 0.35,
     "upwardsNormals": true,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "colorOverrides": [
       {
         "colors": "h == 10",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.2,
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       },
       {
         "colors": "h == 4 || h == 5",
         "baseMaterial": "WOOD_GRAIN_3_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.2,
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       }
     ]
   },
@@ -39259,7 +39261,7 @@
   {
     "description": "Oak Tree - Lighter",
     "baseMaterial": "BARK",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "shiftLightness": 6,
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
@@ -42772,7 +42774,7 @@
     "description": "Varrock Sewers - Bryophyta - Mossy Chest",
     "baseMaterial": "METALLIC_1",
     "shiftLightness": 6,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "objectIds": [
       "MOSSYKEY_CHEST_CLOSED",
       "MOSSYKEY_CHEST_OPEN"
@@ -42783,7 +42785,7 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvOrientation": 512,
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvScale": 0.4,
         "shiftLightness": 5
       }
@@ -49770,7 +49772,7 @@
         "description": "Metal",
         "colors": "h == 0 && s == 0 || h == 10",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       }
     ]
   },
@@ -49797,7 +49799,7 @@
         "description": "Metal",
         "colors": "h == 0 && s == 0",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "shiftLightness": 3
       }
     ]
@@ -49818,7 +49820,7 @@
         "description": "Metal",
         "colors": "h == 0 && s == 0",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       }
     ]
   },
@@ -58783,7 +58785,7 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "flatNormals": true,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "shiftLightness": 2,
     "objectIds": [
       "WALLKIT_WOODEN01_DEFAULT01",
@@ -58819,7 +58821,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "objectIds": [
       "FORTIS_DOOR_L",
       "FORTIS_DOOR_L_LOCKED",
@@ -62268,7 +62270,7 @@
     "description": "Red Reef Coral",
     "baseMaterial": "ROCK_2",
     "areas": [ "RED_REEF_UNDERWATER" ],
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvType": "BOX",
     "uvScale": 0.4,
     "objectIds": [
@@ -70426,7 +70428,7 @@
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX",
         "uvScale": 0.3,
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "upwardsNormals": true
       },
       {
@@ -83086,7 +83088,7 @@
         "description": "Rope",
         "colors": "h == 8",
         "baseMaterial": "CARPET_SUPER_LIGHT_SMOOTH",
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       },
       {
         "description": "Metal",
@@ -83245,7 +83247,7 @@
         "description": "Rope",
         "colors": "h == 8",
         "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       },
       {
         "description": "Metal",
@@ -83270,7 +83272,7 @@
         "description": "Rope",
         "colors": "h == 8",
         "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       },
       {
         "description": "Metal",
@@ -83303,7 +83305,7 @@
         "description": "Rope",
         "colors": "h == 8",
         "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       },
       {
         "description": "Metal",
@@ -83370,7 +83372,7 @@
         "description": "Rope",
         "colors": "h == 8",
         "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       },
       {
         "description": "Metal",
@@ -91904,7 +91906,7 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "flatNormals": true,
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvScale": 0.7
       },
       {
@@ -91913,7 +91915,7 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "flatNormals": true,
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvOrientation": 512,
         "uvScale": 0.7
       }
@@ -98134,7 +98136,7 @@
   {
     "description": "Spell Projectile - Trident of the Swamp",
     "baseMaterial": "GRAY_110",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "upwardsNormals": true,
     "flatNormals": true,
     "projectileIds": [
@@ -98144,7 +98146,7 @@
   {
     "description": "Spell Projectile - Normal Spellbook",
     "baseMaterial": "GRAY_90",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "projectileIds": [
       "WATERSURGE_TRAVEL",
       "WATERWAVE_TRAVEL",
@@ -98604,7 +98606,7 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "shiftLightness": 5,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "objectIds": [
       "CRATE_SANGVESTI01_DEFAULT01",
       "CRATE_SANGVESTI01_STACKED01",
@@ -98645,7 +98647,7 @@
         "colors": [ "s == 0 && l > 3" ],
         "baseMaterial": "BARK",
         "uvType": "BOX",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvScale": 0.5,
         "shiftLightness": 25
       }
@@ -99980,7 +99982,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.6,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "shiftLightness": 4,
     "colorOverrides": [
       {
@@ -99996,7 +99998,7 @@
         "description": "Legs",
         "colors": "s == 5",
         "baseMaterial": "BARK",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvType": "BOX",
         "uvScale": 0.4,
         "uvOrientation": 512,
@@ -100141,7 +100143,7 @@
         "description": "Skull",
         "colors": "h == 5 && s == 1",
         "baseMaterial": "BONE",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvType": "BOX",
         "uvScale": 0.6,
         "shiftLightness": -1
@@ -100285,7 +100287,7 @@
     "uvScale": 0.6,
     "uvOrientationY": 512,
     "shiftLightness": 2,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "colorOverrides": [
       {
         "description": "Metal",
@@ -100308,7 +100310,7 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientationY": 512,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "shiftLightness": 2,
     "colorOverrides": [
       {
@@ -100499,7 +100501,7 @@
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": 512,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "shiftLightness": 9,
     "colorOverrides": [
       {
@@ -100532,14 +100534,14 @@
     "uvScale": 0.7,
     "uvOrientation": 512,
     "shiftLightness": 4,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "flatNormals": true,
     "colorOverrides": [
       {
         "description": "Frame",
         "colors": "s == 5",
         "baseMaterial": "BARK",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvType": "BOX",
         "uvScale": 0.3,
         "uvOrientation": 313,
@@ -100592,7 +100594,7 @@
   {
     "description": "Castle Drakan - Vampyrium Chest",
     "baseMaterial": "WOOD_GRAIN_3",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvType": "BOX",
     "shiftLightness": 7,
     "uvScale": 0.7,
@@ -100707,7 +100709,7 @@
   {
     "description": "Castle Drakan - Vampyrium tables",
     "baseMaterial": "WOOD_GRAIN_3",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 512,
@@ -100726,7 +100728,7 @@
         "colors": "s >= 4",
         "baseMaterial": "BARK",
         "uvType": "BOX",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvScale": 0.4,
         "uvOrientation": 313,
         "shiftLightness": 8
@@ -100862,7 +100864,7 @@
   {
     "description": "Vampyrium - Stymphike Hunting - Trees",
     "baseMaterial": "GRUNGE_3",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "terrainVertexSnap": true,
     "objectIds": [
       "HUNTING_STYMPHIKE_TREE_LETVEK",
@@ -100873,7 +100875,7 @@
         "colors": "h == 0",
         "baseMaterial": "BARK",
         "uvType": "BOX",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvScale": 0.85,
         "shiftLightness": 10
       },
@@ -100882,7 +100884,7 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.7,
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       },
       {
         "colors": "h == 7",
@@ -100890,7 +100892,7 @@
         "uvType": "BOX",
         "uvScale": 0.2,
         "shiftLightness": -5,
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "depthBias": 50
       }
     ]
@@ -100902,7 +100904,7 @@
     "uvType": "BOX",
     "uvScale": 0.2,
     "shiftLightness": -4,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "objectIds": [
       "GHORROCK_BONES03"
     ]
@@ -100910,7 +100912,7 @@
   {
     "description": "Vampyrium - Stymphike Hunting - Grass",
     "baseMaterial": "LEAF_VEINS",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "objectIds": [
       "HUNTING_STYMPHIKE_BUSH_EMPTY",
       "HUNTING_STYMPHIKE_BUSH_SHRUB",
@@ -100921,7 +100923,7 @@
       {
         "colors": "h == 0 || h == 48",
         "baseMaterial": "GRUNGE_3",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "shiftLightness": -2
       }
     ]
@@ -100940,7 +100942,7 @@
     "description": "Vampyrium Bloodwood Trees",
     "baseMaterial": "BARK",
     "uvType": "BOX",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvScale": 0.7,
     "shiftLightness": 10,
     "objectIds": [
@@ -100958,7 +100960,7 @@
         "uvType": "BOX",
         "uvScale": 0.5,
         "uvOrientation": 900,
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       }
     ]
   },
@@ -100995,7 +100997,7 @@
     "description": "Vampyrium Trees",
     "baseMaterial": "BARK",
     "uvType": "BOX",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvScale": 0.8,
     "shiftLightness": 10,
     "objectIds": [
@@ -101046,7 +101048,7 @@
     "description": "Vampyrium Tree Stump with Axe",
     "baseMaterial": "BARK",
     "uvType": "BOX",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvScale": 0.7,
     "shiftLightness": 10,
     "objectIds": [
@@ -101057,7 +101059,7 @@
         "colors": "h == 5 || h == 0 && s == 7",
         "baseMaterial": "METALLIC_1",
         "shiftLightness": 15,
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       },
       {
         "colors": "h == 6",
@@ -101065,7 +101067,7 @@
         "uvType": "BOX",
         "uvOrientation": 512,
         "uvScale": 0.3,
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "shiftLightness": 5
       }
     ]
@@ -101073,7 +101075,7 @@
   {
     "description": "Vampyrium - Tall Vines",
     "baseMaterial": "PLANT_GRUNGE_1",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "shiftLightness": 4,
     "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "objectIds": [
@@ -101111,7 +101113,7 @@
     "description": "Vampyrium Trees - Snake rope",
     "baseMaterial": "BARK",
     "uvType": "BOX",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvScale": 0.7,
     "shiftLightness": 10,
     "objectIds": [
@@ -101132,7 +101134,7 @@
     "description": "Vampyrium Trees with webs",
     "baseMaterial": "BARK",
     "uvType": "BOX",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvScale": 0.7,
     "shiftLightness": 10,
     "objectIds": [
@@ -101176,7 +101178,7 @@
     "description": "Vampyrium Spikey Tree",
     "baseMaterial": "BARK",
     "uvType": "BOX",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvScale": 0.7,
     "shiftLightness": 10,
     "npcIds": [
@@ -101221,7 +101223,7 @@
         "colors": "h == 60 || s < 3",
         "baseMaterial": "BARK",
         "uvType": "BOX",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvScale": 0.7,
         "shiftLightness": 3,
         "shiftSaturation": -1
@@ -101254,7 +101256,7 @@
         "colors": "s == 0 && l == 2",
         "baseMaterial": "BARK",
         "uvType": "BOX",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvScale": 0.7,
         "shiftLightness": 5,
         "shiftSaturation": -1
@@ -101279,7 +101281,7 @@
     "areas": [ "VAMPYRIUM_MAGGOT_KING_TREE_FIX" ],
     "baseMaterial": "BARK",
     "uvType": "BOX",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvScale": 0.7,
     "objectIds": [
       "DARKWOOD_TREE_TRUNK02_DARK01"
@@ -101301,7 +101303,7 @@
         "colors": "h == 60 || s < 3",
         "baseMaterial": "BARK",
         "uvType": "BOX",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvScale": 0.7,
         "shiftLightness": 7,
         "shiftSaturation": -1
@@ -101337,7 +101339,7 @@
         "colors": "h == 60 || s < 3",
         "baseMaterial": "BARK",
         "uvType": "BOX",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvScale": 0.7,
         "shiftLightness": -4,
         "shiftSaturation": -1
@@ -101361,7 +101363,7 @@
     "description": "Vampyrium Trees Doorway",
     "baseMaterial": "BARK",
     "uvType": "BOX",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvScale": 0.7,
     "shiftLightness": 10,
     "objectIds": [
@@ -101386,7 +101388,7 @@
     "uvType": "BOX",
     "uvScale": 0.7,
     "shiftLightness": 5,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "objectIds": [
       "ROCKS_VOROS02_LARGE01",
       "ROCKS_VOROS02_CHUNK01",
@@ -101418,7 +101420,7 @@
     "uvType": "BOX",
     "uvScale": 0.7,
     "shiftLightness": 2,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "objectIds": [
       "VAMPYRIUM_STEPPING_STONE_SHORTCUT_PILLAR_OP",
       "VAMPYRIUM_STEPPING_STONE_SHORTCUT_PILLAR_NOOP"
@@ -101431,7 +101433,7 @@
     "uvType": "BOX",
     "uvScale": 0.7,
     "shiftLightness": 4,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "castShadows": false,
     "objectIds": [
       "VOROS_ROCKSLIDE03",
@@ -101446,7 +101448,7 @@
     "uvType": "BOX",
     "uvScale": 0.7,
     "shiftLightness": 6,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "objectIds": [
       "VOROS_CAVE01_MOUNTAIN01"
     ],
@@ -101463,7 +101465,7 @@
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvScale": 0.75,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvOrientation": 256,
     "objectIds": [
       "BRIDGEKIT_SANGVESTI01_SIDE01"
@@ -101473,7 +101475,7 @@
     "description": "Vampyrium - Sangvesti Buildings - Roof",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "doubleSidedFaces": true,
     "uvScale": 0.75,
     "uvOrientation": -256,
@@ -101485,14 +101487,14 @@
         "uvType": "BOX",
         "uvScale": 0.8,
         "shiftLightness": 7,
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvOrientationX": 512
       },
       {
         "description": "Red accents",
         "colors": "h == 0 && s >= 4",
         "baseMaterial": "WOOD_GRAIN_3",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvType": "BOX",
         "uvScale": 0.4,
         "uvOrientation": 512,
@@ -101525,7 +101527,7 @@
   {
     "description": "Vampyrium - Sangvesti Buildings - Roof Facade - Needs UV",
     "baseMaterial": "STONE_NORMALED",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvType": "BOX",
     "uvScale": 0.75,
     "uvOrientation": -256,
@@ -101536,7 +101538,7 @@
         "colors": "h == 0 && s == 2 && l < 14",
         "baseMaterial": "WOOD_GRAIN_3",
         "doubleSidedFaces": true,
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvType": "BOX",
         "uvScale": 0.8,
         "shiftLightness": 8,
@@ -101599,7 +101601,7 @@
         "uvScale": 0.4,
         "shiftLightness": 13,
         "uvOrientation": 512,
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       },
       {
         "description": "Spike",
@@ -101609,14 +101611,14 @@
         "uvType": "BOX",
         "uvScale": 0.45,
         "uvOrientation": 512,
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       }
     ]
   },
   {
     "description": "Vampyrium - Sangvesti Bridge",
     "baseMaterial": "STONE_NORMALED",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.8,
@@ -101638,13 +101640,13 @@
         "shiftSaturation": 2,
         "shiftLightness": 1,
         "uvType": "BOX",
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       },
       {
         "description": "Spike",
         "colors": "h == 0 && s > 3",
         "baseMaterial": "WOOD_GRAIN_3",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "shiftSaturation": -1,
         "shiftLightness": 2,
         "uvType": "BOX",
@@ -101657,7 +101659,7 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "shiftLightness": 6,
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       }
     ],
     "objectIds": [
@@ -101675,7 +101677,7 @@
   {
     "description": "Vampyrium - Bridge Boardwalk",
     "baseMaterial": "WOOD_GRAIN_3",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvType": "BOX",
     "uvOrientationY": 512,
     "uvScale": 0.7,
@@ -101730,7 +101732,7 @@
         "uvScale": 0.4,
         "shiftLightness": 13,
         "uvOrientation": 512,
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       },
       {
         "description": "Spike",
@@ -101740,7 +101742,7 @@
         "uvType": "BOX",
         "uvScale": 0.45,
         "uvOrientation": 512,
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       }
     ]
   },
@@ -101777,7 +101779,7 @@
   {
     "description": "Vampyrium - Sangvesti Buildings - Bridge",
     "baseMaterial": "STONE_NORMALED",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvType": "BOX",
     "uvScale": 0.75,
     "shiftLightness": 1,
@@ -101795,7 +101797,7 @@
         "baseMaterial": "BARK",
         "uvType": "BOX",
         "uvScale": 0.4,
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "shiftLightness": 7
       },
       {
@@ -101814,14 +101816,14 @@
         "uvType": "BOX",
         "uvScale": 0.45,
         "uvOrientation": 512,
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       }
     ]
   },
   {
     "description": "Vampyrium - Sangvesti Buildings - Bridge Floor",
     "baseMaterial": "SMOOTH_STONE",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvType": "BOX",
     "uvScale": 0.75,
     "shiftLightness": 4,
@@ -101840,7 +101842,7 @@
     "uvScale": 0.75,
     "shiftLightness": 8,
     "uvOrientationY": 512,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "objectIds": [
       "BRIDGEKIT_SANGVESTI01_ARCH01",
       "BRIDGEKIT_SANGVESTI01_ARCH02"
@@ -101852,7 +101854,7 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "shiftLightness": 1,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "objectIds": [
       "WALLKIT_SANGVESTI01_RUBBLE03",
       "WALLKIT_SANGVESTI01_RUBBLE04",
@@ -101981,7 +101983,7 @@
     "uvType": "BOX",
     "uvScale": 0.3,
     "uvOrientation": 512,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "shiftLightness": 5,
     "colorOverrides": [
       {
@@ -101996,7 +101998,7 @@
         "colors": "s == 4 || s == 1 || s == 2",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvScale": 0.6,
         "uvOrientation": 512,
         "shiftLightness": 4
@@ -102013,7 +102015,7 @@
       "MYQ6_STOOL01"
     ],
     "uvType": "BOX",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvScale": 0.80,
     "shiftLightness": 4
   },
@@ -102399,7 +102401,7 @@
         "description": "Planks",
         "colors": "h == 0 && s == 4",
         "baseMaterial": "BARK",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvType": "BOX",
         "uvScale": 0.3,
         "shiftLightness": 8
@@ -102408,7 +102410,7 @@
         "description": "Planks",
         "colors": "h == 0 && s > 0 && s < 7",
         "baseMaterial": "WOOD_GRAIN_3",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvType": "BOX",
         "uvScale": 0.58,
         "shiftLightness": 11
@@ -102467,7 +102469,7 @@
     "description": "Vampyrium - Sangvesti House Roof fences on stone",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvScale": 0.66,
     "uvOrientation": 256,
     "colorOverrides": [
@@ -102475,7 +102477,7 @@
         "description": "Fence",
         "colors": "s == 6",
         "baseMaterial": "METALLIC_1_SEMIGLOSS",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvType": "BOX",
         "uvScale": 0.25,
         "uvOrientation": 187,
@@ -102525,7 +102527,7 @@
   {
     "description": "Vampyrium - Sangvesti Drakan Statue",
     "baseMaterial": "SMOOTH_STONE",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "maxLightness": 27,
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -102550,7 +102552,7 @@
   {
     "description": "Vampyrium - Venator Heart Altar",
     "baseMaterial": "SMOOTH_STONE",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "shiftLightness": 3,
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -102562,7 +102564,7 @@
       {
         "colors": "s == 5",
         "baseMaterial": "GRUNGE_3",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "maxLightness": 20
       }
     ]
@@ -102570,7 +102572,7 @@
   {
     "description": "Vampyrium - Sangvesti Wall Stakes",
     "baseMaterial": "BARK",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "shiftLightness": 8,
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -102583,7 +102585,7 @@
         "description": "Wood",
         "colors": "s > 3",
         "baseMaterial": "WOOD_GRAIN_3",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvType": "BOX",
         "uvScale": 0.6,
         "shiftLightness": 9
@@ -102610,7 +102612,7 @@
         "description": "Wood grain",
         "colors": "s == 5",
         "baseMaterial": "BARK",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvType": "BOX",
         "uvScale": 0.5,
         "uvOrientation": 512,
@@ -102647,7 +102649,7 @@
   {
     "description": "Vampyrium - Sangvesti Buildings",
     "baseMaterial": "WOOD_GRAIN_3",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvType": "BOX",
     "uvScale": 0.7,
     "shiftLightness": 5,
@@ -102660,7 +102662,7 @@
         "uvType": "BOX",
         "uvScale": 0.5,
         "uvOrientation": 313,
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "shiftLightness": 8
       }
     ],
@@ -102749,7 +102751,7 @@
         "windDisplacementMode": "OBJECT",
         "shiftLightness": 2,
         "castShadows": false,
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       },
       {
         "description": "Logs",
@@ -102758,7 +102760,7 @@
         "uvType": "BOX",
         "uvScale": 0.5,
         "shiftLightness": 11,
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       }
     ],
     "objectIds": [
@@ -102771,7 +102773,7 @@
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": 512,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "shiftLightness": 10,
     "colorOverrides": [
       {
@@ -102873,14 +102875,14 @@
     "uvScale": 0.3,
     "uvOrientation": 404,
     "shiftLightness": 2,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "colorOverrides": [
       {
         "description": "Leaf",
         "colors": "h == 42 && s == 0",
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvScale": 0.25,
         "shiftLightness": 20,
         "uvOrientationX": 512
@@ -102898,14 +102900,14 @@
     "uvType": "BOX",
     "uvScale": 0.45,
     "uvOrientation": 404,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "shiftLightness": 4,
     "colorOverrides": [
       {
         "description": "Leaf",
         "colors": "h == 42 && s == 0",
         "baseMaterial": "LEAF_VEINS",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvType": "BOX",
         "uvScale": 0.25,
         "shiftLightness": 6,
@@ -102936,7 +102938,7 @@
   {
     "description": "Vampyrium - Silver Leafy plant with white stalk",
     "baseMaterial": "PLANT_GRUNGE_2",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvType": "BOX",
     "uvScale": 0.45,
     "uvOrientation": 404,
@@ -102946,7 +102948,7 @@
         "description": "Leaf",
         "colors": "h == 0 && s == 0",
         "baseMaterial": "LEAF_VEINS",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvType": "BOX",
         "uvScale": 0.25,
         "shiftLightness": 5,
@@ -102961,7 +102963,7 @@
   {
     "description": "Vampyrium - Silver Leafy plant with white stalk",
     "baseMaterial": "DIRT_1",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvType": "BOX",
     "uvScale": 0.4,
     "colorOverrides": [
@@ -102973,14 +102975,14 @@
         "uvScale": 0.075,
         "shiftLightness": 2,
         "uvOrientationX": 512,
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       },
       {
         "description": "Trunk",
         "colors": "h == 0 && s == 0 || h == 42",
         "baseMaterial": "BARK",
         "uvType": "BOX",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvScale": 0.35,
         "shiftLightness": 5
       }
@@ -102994,7 +102996,7 @@
   {
     "description": "Vampyrium - Bell flower",
     "baseMaterial": "PLANT_GRUNGE_2",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvType": "BOX",
     "uvScale": 0.2,
     "uvOrientation": 404,
@@ -103007,7 +103009,7 @@
         "uvType": "BOX",
         "uvScale": 0.25,
         "shiftLightness": 18,
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvOrientationX": 512
       }
     ],
@@ -103020,7 +103022,7 @@
     "baseMaterial": "GRUNGE_2",
     "uvType": "BOX",
     "uvScale": 0.3,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "shiftLightness": 6,
     "colorOverrides": [
       {
@@ -103031,7 +103033,7 @@
         "uvScale": 0.45,
         "uvOrientation": 42,
         "shiftLightness": 5,
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       },
       {
         "description": "Stalk",
@@ -103039,7 +103041,7 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.3,
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "shiftLightness": 6
       },
       {
@@ -103058,7 +103060,7 @@
   {
     "description": "Vampyrium - Purple grass and webbed plant",
     "baseMaterial": "LEAF_VEINS",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvType": "BOX",
     "uvScale": 0.45,
     "uvOrientation": 404,
@@ -103074,7 +103076,7 @@
     "uvType": "BOX",
     "uvScale": 0.45,
     "uvOrientation": 404,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "shiftLightness": 4,
     "colorOverrides": [
       {
@@ -103093,7 +103095,7 @@
         "uvType": "BOX",
         "uvScale": 0.45,
         "uvOrientation": 42,
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "shiftLightness": 6
       },
       {
@@ -103226,7 +103228,7 @@
     "uvScale": 0.7,
     "uvOrientation": 222,
     "shiftLightness": 2,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "colorOverrides": [
       {
         "description": "Skewer",
@@ -103254,7 +103256,7 @@
         "shiftSaturation": 2,
         "shiftLightness": 3,
         "castShadows": false,
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       }
     ],
     "objectIds": [
@@ -103270,7 +103272,7 @@
     "uvType": "BOX",
     "uvScale": 0.7,
     "shiftLightness": 10,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "colorOverrides": [
       {
         "description": "Skewer",
@@ -103313,7 +103315,7 @@
     "uvType": "BOX",
     "uvScale": 0.7,
     "shiftLightness": 10,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "objectIds": [
       "FENCE_DRAKAN01_RUINED01",
       "FENCE_DRAKAN01_RUINED02",
@@ -103335,7 +103337,7 @@
         "shiftSaturation": 2,
         "shiftLightness": 3,
         "castShadows": false,
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       },
       {
         "description": "Red covering",
@@ -103344,14 +103346,14 @@
         "uvType": "BOX",
         "uvScale": 0.5,
         "shiftLightness": 5,
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       },
       {
         "description": "Leaf",
         "colors": "h == 42 && s == 0",
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvScale": 0.25,
         "shiftLightness": 20,
         "uvOrientationX": 512
@@ -103364,7 +103366,7 @@
     "uvType": "BOX",
     "uvScale": 0.7,
     "shiftLightness": 10,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "colorOverrides": [
       {
         "description": "Grass",
@@ -103377,7 +103379,7 @@
         "shiftSaturation": 2,
         "shiftLightness": 3,
         "castShadows": false,
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       },
       {
         "description": "Red covering",
@@ -103402,7 +103404,7 @@
     "uvType": "BOX",
     "uvScale": 0.7,
     "shiftLightness": 6,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "colorOverrides": [
       {
         "description": "Grass",
@@ -103452,7 +103454,7 @@
     "baseMaterial": "CARPET",
     "uvType": "BOX",
     "uvScale": 0.7,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "shiftLightness": 12,
     "colorOverrides": [
       {
@@ -103577,7 +103579,7 @@
         "description": "Grain",
         "colors": "h == 0 && s == 2",
         "baseMaterial": "WOOD_GRAIN_3",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvType": "BOX",
         "uvScale": 0.8
       }
@@ -103837,7 +103839,7 @@
         "description": "Table contents",
         "colors": "s == 0",
         "baseMaterial": "GRUNGE_3",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvType": "MODEL_XZ",
         "shiftLightness": 4
       }
@@ -103852,7 +103854,7 @@
     "uvType": "BOX",
     "uvScale": 0.2,
     "uvOrientation": -187,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "shiftLightness": 2,
     "colorOverrides": [
       {
@@ -103868,7 +103870,7 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvOrientation": 512,
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvScale": 0.8,
         "shiftLightness": 9
       },
@@ -103891,7 +103893,7 @@
     "uvType": "BOX",
     "uvScale": 0.2,
     "uvOrientation": -187,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "colorOverrides": [
       {
         "description": "BLOOD",
@@ -104032,7 +104034,7 @@
       {
         "colors": "h == 0 && s == 3",
         "baseMaterial": "WOOD_GRAIN_3",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvType": "BOX",
         "uvScale": 0.5,
         "shiftLightness": 7
@@ -104133,7 +104135,7 @@
   {
     "description": "Vampyrium - Sugadinti Carpet",
     "baseMaterial": "CARPET",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvType": "BOX",
     "uvScale": 0.65,
     "uvOrientation": 222,
@@ -104320,14 +104322,14 @@
         "uvType": "BOX",
         "uvScale": 0.6,
         "shiftLightness": 8,
-        "undoVanillaShading": false
+        "shadingMode": "NONE"
       }
     ]
   },
   {
     "description": "Sangvesti - Bank Chest Built",
     "baseMaterial": "WOOD_GRAIN_3",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvType": "BOX",
     "shiftLightness": 5,
     "uvScale": 0.7,
@@ -104447,7 +104449,7 @@
     "description": "Maggot King Detritus",
     "uvType": "BOX",
     "baseMaterial": "GRUNGE_3",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "objectIds": [
       "CORPSE_MAGGOT_DETRITUS01",
       "CORPSE_MAGGOT_DETRITUS02",
@@ -104457,7 +104459,7 @@
       {
         "colors": "h == 2 && s == 7",
         "baseMaterial": "ABYSSAL",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "shiftLightness": -1,
         "uvType": "BOX",
         "uvScale": 0.2
@@ -104468,7 +104470,7 @@
     "description": "Maggot King Bones",
     "uvType": "BOX",
     "baseMaterial": "BONE",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "shiftLightness": 3,
     "uvScale": 0.5,
     "objectIds": [
@@ -104480,7 +104482,7 @@
     "description": "Maggot King Bone Wall",
     "uvType": "BOX",
     "baseMaterial": "BONE",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvScale": 0.5,
     "shiftLightness": 6,
     "objectIds": [
@@ -104503,7 +104505,7 @@
   {
     "description": "Maggot King Corpse Pile",
     "uvType": "BOX",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "CORPSE_MAGGOT_PILE01",
@@ -104516,7 +104518,7 @@
         "colors": "h == 2 && s > 5",
         "baseMaterial": "ABYSSAL_2",
         "shiftLightness": 4,
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvType": "BOX",
         "uvScale": 0.3
       },
@@ -104524,7 +104526,7 @@
         "colors": "h == 5 && s == 5",
         "baseMaterial": "DIRT_1",
         "shiftLightness": 6,
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvType": "BOX",
         "uvScale": 0.5
       },
@@ -104556,7 +104558,7 @@
     "baseMaterial": "GRUNGE_3",
     "shiftLightness": 2,
     "shiftSaturation": -1,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvType": "BOX",
     "uvScale": 0.5,
     "maxLightness": 25,
@@ -104717,7 +104719,7 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "shiftLightness": 3,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "objectIds": [
       "WYRMSCRAIG_SUNSTONE01"
     ],
@@ -104743,7 +104745,7 @@
         "colors": "h == 10",
         "baseMaterial": "METALLIC_1",
         "shiftLightness": 12,
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvType": "BOX",
         "uvScale": 0.15
       }
@@ -104752,7 +104754,7 @@
   {
     "description": "Wyrmscraig - Bank Chest",
     "baseMaterial": "WOOD_GRAIN",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "objectIds": [
       "WYRMSCRAIG_BANK_CHEST_BUILT"
     ],
@@ -104760,7 +104762,7 @@
       {
         "colors": "h == 10",
         "baseMaterial": "METALLIC_1",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "shiftLightness": 12,
         "uvType": "BOX",
         "uvScale": 0.15
@@ -105029,7 +105031,7 @@
   {
     "description": "Wyrmscraig - Cathedral Broken Pews - Climbable",
     "baseMaterial": "WOOD_GRAIN_3",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvType": "BOX",
     "uvScale": 0.75,
     "uvOrientationY": 512,
@@ -105051,7 +105053,7 @@
   {
     "description": "Wyrmscraig - Cathedral Broken Pews - Decorative",
     "baseMaterial": "WOOD_GRAIN_3",
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvType": "BOX",
     "uvScale": 0.75,
     "uvOrientationY": 450,
@@ -105073,7 +105075,7 @@
     "description": "Wyrmscraig - Cathedral Throne",
     "baseMaterial": "WOOD_GRAIN_3",
     "shiftLightness": 10,
-    "undoVanillaShading": false,
+    "shadingMode": "NONE",
     "uvType": "BOX",
     "objectIds": [
       "WYRMSCRAIG_CATHEDRAL_THRONE"
@@ -105090,7 +105092,7 @@
         "description": "Chains",
         "colors": "h == 0",
         "baseMaterial": "METALLIC_1_LIGHT",
-        "undoVanillaShading": false,
+        "shadingMode": "NONE",
         "uvType": "BOX",
         "uvOrientation": 512,
         "uvScale": 0.15
