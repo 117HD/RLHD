@@ -11565,8 +11565,8 @@
     "groundMaterial": "GRASS_1"
   },
   {
-    "name": "TFA Archive Guardian - Cracks",
-    "area": "TFA_ARCHIVE_GUARDIAN",
+    "name": "TFA Archive Guardian - Cracks and underneath Tile objects - Should not blend",
+    "area": "TFA",
     "overlayIds": [
       245,
       648,
@@ -11574,6 +11574,13 @@
     ],
     "blended": false,
     "groundMaterial": "PACKED_EARTH"
+  },
+  {
+    "name": "TFA - Dirt",
+    "area": "TFA",
+    "overlayIds": [ 14 ],
+    "groundMaterial": "PACKED_EARTH",
+    "maxLightness": 35
   },
   {
     "name": "TFA - Complex Tiles",

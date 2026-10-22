@@ -46547,7 +46547,110 @@
     "duration": 0,
     "range": 25,
     "objectIds": [
-      "TFA_BRAZIER_GUTHIXIAN_FLAME02"
+      "TFA_BRAZIER_GUTHIXIAN_FLAME02",
+      "TFA_BRAZIER_GUTHIXIAN_FLAME01"
+    ]
+  },
+  {
+    "description": "TFA - Floor Flames 1",
+    "offset": [ -35, 50, -35 ],
+    "radius": 150,
+    "strength": 12,
+    "color": [
+      252,
+      128,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_FIRE_ARCHIVE01_SCATTER01"
+    ]
+  },
+  {
+    "description": "TFA - Floor Flames 2",
+    "offset": [ -40, 50, -40 ],
+    "radius": 175,
+    "strength": 12,
+    "color": [
+      252,
+      128,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_FIRE_ARCHIVE01_SCATTER02"
+    ]
+  },
+  {
+    "description": "TFA - Floor Flames 3",
+    "offset": [ -40, 50, -40 ],
+    "radius": 200,
+    "strength": 12,
+    "color": [
+      252,
+      128,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_FIRE_ARCHIVE01_SCATTER03"
+    ]
+  },
+  {
+    "description": "TFA - Floor Flames 4",
+    "offset": [ 0, 50, 0 ],
+    "radius": 250,
+    "strength": 12,
+    "color": [
+      252,
+      128,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_FIRE_ARCHIVE01_SCATTER04"
+    ]
+  },
+  {
+    "description": "TFA - Floor Flames 5",
+    "offset": [ -50, 175, -60 ],
+    "radius": 220,
+    "strength": 17,
+    "color": [
+      252,
+      128,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_FIRE_ARCHIVE01_SCATTER01A"
+    ]
+  },
+  {
+    "description": "TFA - Floor Flames 6",
+    "offset": [ 20, 185, 20 ],
+    "radius": 220,
+    "strength": 17,
+    "color": [
+      252,
+      128,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_FIRE_ARCHIVE01_SCATTER02A"
     ]
   },
   {

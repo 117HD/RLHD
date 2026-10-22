@@ -3273,6 +3273,12 @@
     "groundFogEnd": -50
   },
   {
+    "area": "TFA_BORK",
+    "groundFogOpacity": 0.85,
+    "groundFogStart": -100,
+    "groundFogEnd": -400
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",

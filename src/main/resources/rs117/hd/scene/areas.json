@@ -12254,10 +12254,18 @@
     "hideOtherAreas": true
   },
   {
+    "name": "TFA_BORK",
+    "regions": [
+      16727
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "TFA",
     "areas": [
       "TFA_LOBBY",
-      "TFA_ARCHIVE_GUARDIAN"
+      "TFA_ARCHIVE_GUARDIAN",
+      "TFA_BORK"
     ],
     "hideOtherAreas": true
   },
