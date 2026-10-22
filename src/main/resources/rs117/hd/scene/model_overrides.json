@@ -17703,6 +17703,7 @@
       "MYARM_ROCK_FLOOR_03",
       "MYARM_ROCK_FLOOR_04",
       "LOTR_RUINS_FLOOR_RUBBLE_02_LVL2",
+      "LOTR_RUINS_FLOOR_RUBBLE_01_LVL1",
       "DORGESH_ROCKS_DARK1",
       "DORGESH_ROCKS_DARK4",
       "DORGESH_ROCKS_DARK5",
@@ -79727,6 +79728,11 @@
       "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE02",
       "TFA_NEXUS_SECTION_DOOR_CLOSED",
       "TFA_NEXUS_SECTION3_DOOR_EAST",
+      "TFA_NEXUS_SECTION2_DOOR_WEST",
+      "TFA_NEXUS_SECTION1_DOOR_WEST",
+      "TFA_NEXUS_SECTION3_DOOR_WEST",
+      "TFA_NEXUS_SECTION1_DOOR_EAST",
+      "TFA_NEXUS_SECTION2_DOOR_EAST",
       "TFA_RECORDS_ROOM_DOOR_LOCKED",
       "TFA_WALLKIT_ARCHIVE01_DEFAULT01_DARKER01",
       "TFA_NEXUS_OCELLUS_DOOR_CLOSED",
@@ -79745,7 +79751,10 @@
       "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE03_2X2",
       "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE02_M",
       "TFA_NEXUS_SECTION1_DOOR_EAST_SLIGHTLY_OPENED",
-      "TFA_NEXUS_SECTION1_DOOR_WEST_SLIGHTLY_OPENED"
+      "TFA_NEXUS_SECTION1_DOOR_WEST_SLIGHTLY_OPENED",
+      "TFA_WALLKIT_ARCHIVE01_ENTRY02",
+      "TFA_WALLKIT_ARCHIVE01_ENTRY01",
+      "TFA_WALLKIT_ARCHIVE01_ENTRY03"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -79798,31 +79807,19 @@
       "TFA_FLOORKIT_GUTHIXIAN01_TILE01_DARK01",
       "TFA_FLOORKIT_GUTHIXIAN01_CORNER02_DARK01",
       "TFA_FLOORKIT_GUTHIXIAN01_CORNER01",
+      "TFA_FLOORKIT_GUTHIXIAN01_FILLER01",
       "TFA_FLOORKIT_GUTHIXIAN01_CORNER01_DARK01",
       "TFA_FLOORKIT_GUTHIXIAN01_TILE01",
       "TFA_FLOORKIT_GUTHIXIAN01_TILE01_RAISE01",
       "TFA_FALLOFF_GUTHIXIAN01_FILLER01",
       "TFA_FLOORKIT_GUTHIXIAN01_TILE01_DARK03",
       "TFA_FLOORKIT_GUTHIXIAN01_TILE01_DARK04",
-      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_DARK05"
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_DARK05",
+      "TFA_FLOORKIT_GUTHIXIAN01_DIAG02",
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE02",
+      "TFA_FLOORKIT_GUTHIXIAN01_CORNER02"
     ],
-    "uvType": "BOX",
-    "colorOverrides": [
-      {
-        "colors": "h == 7",
-        "baseMaterial": "LIGHT_BARK",
-        "uvType": "BOX",
-        "shiftLightness": 2,
-        "undoVanillaShading": false
-      },
-      {
-        "colors": "h == 16 && s == 6",
-        "baseMaterial": "LEAF_VEINS",
-        "uvType": "BOX",
-        "uvScale": 0.15,
-        "undoVanillaShading": false
-      }
-    ]
+    "uvType": "BOX"
   },
   {
     "description": "TFA Archive Guardian Room - Inert Guardian",
@@ -79984,6 +79981,42 @@
         "baseMaterial": "DIRT_1",
         "uvType": "BOX",
         "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "TFA Bork Room - Rubble",
+    "baseMaterial": "SMOOTH_STONE_LIGHT",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_RUBBLE_ARCHIVE02_SMALL04",
+      "TFA_RUBBLE_ARCHIVE02_MEDIUM01_OFFSET01",
+      "TFA_RUBBLE_ARCHIVE02_SMALL02A",
+      "TFA_RUBBLE_ARCHIVE02_MEDIUM03",
+      "TFA_RUBBLE_ARCHIVE02_MEDIUM02",
+      "TFA_RUBBLE_ARCHIVE02_SMALL03",
+      "TFA_RUBBLE_ARCHIVE02_SMALL05",
+      "TFA_RUBBLE_ARCHIVE02_SMALL02",
+      "TFA_RUBBLE_ARCHIVE02_MEDIUM01",
+      "TFA_TOOLS_ARCHIVE01_HAMMER01",
+      "TFA_TOOLS_ARCHIVE01_HAMMER03",
+      "TFA_WALLKIT_ARCHIVE01_ENTRY01_6X6"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 3 && l < 11",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
       }
     ]
   },
