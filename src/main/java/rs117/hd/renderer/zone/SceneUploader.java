@@ -907,6 +907,9 @@ public class SceneUploader implements AutoCloseable {
 
 		ctx.filledTiles[tileExX][tileExY] |= (byte) (1 << tileZ);
 
+		if (!onlyWaterSurface && waterType.skipUnderwaterTerrain)
+			return;
+
 		final boolean isTileVisBelow = (settings[tileZ][tileExX][tileExY] & TILE_FLAG_VIS_BELOW) != 0;
 		int swHeight = tileHeights[tileZ][tileExX][tileExY];
 		int seHeight = tileHeights[tileZ][tileExX + 1][tileExY];
@@ -1262,6 +1265,8 @@ public class SceneUploader implements AutoCloseable {
 			WaterType waterType = proceduralGenerator.seasonalWaterType(override, textureId);
 			boolean isWater = waterType != WaterType.NONE;
 			if (onlyWaterSurface && !isWater)
+				continue;
+			if (!onlyWaterSurface && waterType.skipUnderwaterTerrain)
 				continue;
 
 			final int vertex0 = faceX[face];

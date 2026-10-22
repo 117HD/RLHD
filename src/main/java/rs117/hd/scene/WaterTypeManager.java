@@ -129,7 +129,9 @@ public class WaterTypeManager {
 				boolean indicesChanged = oldWaterTypes == null || oldWaterTypes.length != waterTypes.length;
 				if (!indicesChanged) {
 					for (int i = 0; i < waterTypes.length; i++) {
-						if (!waterTypes[i].name.equals(oldWaterTypes[i].name)) {
+						// Changing skipUnderwaterTerrain alters scene geometry, so it also requires a full reload
+						if (!waterTypes[i].name.equals(oldWaterTypes[i].name) ||
+							waterTypes[i].skipUnderwaterTerrain != oldWaterTypes[i].skipUnderwaterTerrain) {
 							indicesChanged = true;
 							break;
 						}
