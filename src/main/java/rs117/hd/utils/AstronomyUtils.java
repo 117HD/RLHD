@@ -89,6 +89,30 @@ public final class AstronomyUtils {
 	}
 
 	/**
+	 * Calculate sunrise and sunset times for a given date and location.
+	 *
+	 * @param out      output sunrise and sunset times in milliseconds since the Unix epoch
+	 * @param epochDay local date at the location, in days since the Unix epoch
+	 * @param latLong  latitude and longitude coordinates
+	 * @return {@code out}. Times are clamped to solar noon during polar night, and to solar midnight during polar day.
+	 * @see <a href="https://github.com/mourner/suncalc#sunlight-times">suncalc npm documentation</a>
+	 */
+	public static long[] getSunTimes(long[] out, long epochDay, float[] latLong) {
+		double
+			phi = rad * latLong[0],
+			lw = rad * -latLong[1],
+			ds = lw / (2 * PI) + epochDay + J1970 - J2000,
+			M = solarMeanAnomaly(ds),
+			L = eclipticLongitude(M),
+			dec = declination(L, 0),
+			noon = J2000 + ds + 0.0053 * sin(M) - 0.0069 * sin(2 * L),
+			w = hourAngle(rad * -0.833, phi, dec); // the sun's altitude at sunrise & sunset, accounting for refraction and its radius
+		out[0] = fromJulian(noon - w / (2 * PI));
+		out[1] = fromJulian(noon + w / (2 * PI));
+		return out;
+	}
+
+	/**
 	 * Calculate angles for the moon's position in the sky at a given time and location.
 	 *
 	 * @param out     output altitude, azimuth, and optionally distance and parallactic angle
@@ -163,6 +187,10 @@ public final class AstronomyUtils {
 		return (double) millis / (double) dayMs - .5 + J1970;
 	}
 
+	private static long fromJulian(double julian) {
+		return (long) ((julian + .5 - J1970) * dayMs);
+	}
+
 	private static double toDays(long millis) {
 		return toJulian(millis) - J2000;
 	}
@@ -197,6 +225,10 @@ public final class AstronomyUtils {
 
 	private static double altitude(double H, double phi, double dec) {
 		return asin(sin(phi) * sin(dec) + cos(phi) * cos(dec) * cos(H));
+	}
+
+	private static double hourAngle(double h, double phi, double dec) {
+		return acos(Math.max(-1, Math.min(1, (sin(h) - sin(phi) * sin(dec)) / (cos(phi) * cos(dec)))));
 	}
 
 	private static double astroRefraction(double h) {
