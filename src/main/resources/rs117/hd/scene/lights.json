@@ -46665,9 +46665,35 @@
     ]
   },
   {
-    "description": "Xarth - Edge Fire",
+    "description": "Xarth - Corpse Pile Fire",
     "offset": [ 0, 300, 0 ],
     "radius": 500,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE01",
+      "TFA_XARTH01_CORPSE_PILE_FIRE02",
+      "TFA_XARTH01_CORPSE_PILE_FIRE03",
+      "TFA_XARTH01_CORPSE_PILE_FIRE04",
+      "TFA_XARTH01_CORPSE_PILE_FIRE05",
+      "TFA_XARTH01_CORPSE_PILE_FIRE06",
+      "TFA_XARTH01_CORPSE_PILE_FIRE07",
+      "TFA_XARTH01_CORPSE_PILE_FIRE08"
+    ]
+  },
+  {
+    "description": "Xarth - Pillar Fire",
+    "offset": [ 0, 400, 0 ],
+    "radius": 400,
     "strength": 50,
     "color": [
       252,
@@ -46680,7 +46706,64 @@
     "fadeOutDuration": 200,
     "range": 20,
     "objectIds": [
-      "TFA_XARTH01_CORPSE_PILE_FIRE07"
+      "TFA_WALLKIT_ARCHIVE01_PILLAR02_BURNT01"
+    ]
+  },
+  {
+    "description": "Xarth Portal Orange",
+    "offset": [ 0, 400, 0 ],
+    "radius": 900,
+    "strength": 50,
+    "color": [
+      252,
+      130,
+      10
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 5,
+    "objectIds": [
+      "TFA_PORTAL_XARTH01"
+    ]
+  },
+  {
+    "description": "Xarth Portal Red Slow",
+    "offset": [ 0, 400, 0 ],
+    "radius": 700,
+    "strength": 75,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 10,
+    "objectIds": [
+      "TFA_PORTAL_XARTH01"
+    ]
+  },
+  {
+    "description": "Xarth Portal Red Fast",
+    "offset": [ 0, 400, 0 ],
+    "radius": 550,
+    "strength": 75,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 1750,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 10,
+    "objectIds": [
+      "TFA_PORTAL_XARTH01"
     ]
   },
   {

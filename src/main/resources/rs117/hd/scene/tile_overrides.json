@@ -11556,6 +11556,40 @@
     "groundMaterial": "DIRT"
   },
   {
+    "name": "TFA Archive Guardian - Desert Tank Sand",
+    "area": "TFA_XARTH_DESERT_TANK",
+    "overlayIds": [
+      318
+    ],
+    "groundMaterial": "SANDY_DIRT",
+    "uvOrientation": 256
+  },
+  {
+    "name": "TFA Archive Guardian - Tundra Tank Snow",
+    "area": "TFA_XARTH_TUNDRA_TANK",
+    "overlayIds": [
+      197
+    ],
+    "shiftLightness": 10,
+    "groundMaterial": "DIRTY_SNOW"
+  },
+  {
+    "name": "TFA Archive Guardian - Fish Tank Dirt",
+    "area": "TFA_XARTH_FISH_TANK",
+    "overlayIds": [
+      318
+    ],
+    "groundMaterial": "PACKED_EARTH"
+  },
+  {
+    "name": "TFA Archive Guardian - Fish Tank Water Fix",
+    "area": "TFA_XARTH_FISH_TANK",
+    "overlayIds": [
+      456
+    ],
+    "waterType": "TFA_FISH_TANK_WATER"
+  },
+  {
     "name": "TFA Archive Guardian - Grass that shouldnt blend",
     "area": "TFA_ARCHIVE_GUARDIAN_NO_BLEND_GRASS",
     "overlayIds": [

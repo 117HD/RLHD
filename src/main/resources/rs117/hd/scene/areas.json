@@ -12261,13 +12261,39 @@
     "hideOtherAreas": true
   },
   {
+    "name": "TFA_XARTH",
+    "regions": [
+      16726
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "TFA",
     "areas": [
       "TFA_LOBBY",
       "TFA_ARCHIVE_GUARDIAN",
-      "TFA_BORK"
+      "TFA_BORK",
+      "TFA_XARTH"
     ],
     "hideOtherAreas": true
+  },
+  {
+    "name": "TFA_XARTH_FISH_TANK",
+    "aabbs": [
+      [ 4202, 5546, 4209, 5553 ]
+    ]
+  },
+  {
+    "name": "TFA_XARTH_DESERT_TANK",
+    "aabbs": [
+      [ 4173, 5517, 4180, 5524 ]
+    ]
+  },
+  {
+    "name": "TFA_XARTH_TUNDRA_TANK",
+    "aabbs": [
+      [ 4173, 5546, 4180, 5553 ]
+    ]
   },
   {
     "name": "TFA_ARCHIVE_GUARDIAN_NO_BLEND_GRASS",
