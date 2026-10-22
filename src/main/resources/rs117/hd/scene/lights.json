@@ -46627,7 +46627,7 @@
     ]
   },
   {
-    "description": "TFA - Ezekail explosion",
+    "description": "TFA - Ezekiel Star Explosion",
     "offset": [ 0, 185, 0 ],
     "radius": 200,
     "strength": 15,
@@ -46644,7 +46644,7 @@
     ]
   },
   {
-    "description": "TFA - Ezekail lightening strike",
+    "description": "TFA - Ezekiel Lightning Strike Dodge",
     "offset": [ 0, 100, 0 ],
     "radius": 150,
     "strength": 15,
@@ -47342,7 +47342,7 @@
   {
     "description": "TFA - Smork Napalm Attack",
     "offset": [ 0, 0, 0 ],
-    "radius": 250,
+    "radius": 400,
     "strength": 17,
     "color": [
       252,
@@ -47350,6 +47350,7 @@
       3
     ],
     "type": "FLICKER",
+    "fadeOutDuration": 400,
     "duration": 0,
     "range": 25,
     "projectileIds": [
@@ -47368,8 +47369,10 @@
     ],
     "type": "FLICKER",
     "fadeInDuration": 200,
-    "fadeOutDuration": 200,
+    "fadeOutDuration": 500,
     "waitForAnimation": true,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
     "duration": 0,
     "range": 25,
     "graphicsObjectIds": [
