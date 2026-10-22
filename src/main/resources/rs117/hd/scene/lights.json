@@ -41048,10 +41048,10 @@
     "visibleFromOtherPlanes": true
   },
   {
-    "description": "VARLAMORE_TEMPLE_CRYPT_CANDLES",
-    "height": 50,
-    "radius": 200,
-    "strength": 4,
+    "description": "VARLAMORE_TEMPLE_CRYPT_CANDLES_1",
+    "offset": [ 0, 50, 0 ],
+    "radius": 150,
+    "strength": 7,
     "color": [
       252,
       148,
@@ -41061,7 +41061,42 @@
     "range": 10,
     "objectIds": [
       "DECO_CANDLES01_RED",
+      "DECO_CANDLES04_RED"
+    ],
+    "visibleFromOtherPlanes": true
+  },
+  {
+    "description": "VARLAMORE_TEMPLE_CRYPT_CANDLES_2",
+    "offset": [ 15, 50, 50 ],
+    "radius": 130,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "objectIds": [
       "DECO_CANDLES02_RED"
+    ],
+    "visibleFromOtherPlanes": true
+  },
+  {
+    "description": "VARLAMORE_TEMPLE_CRYPT_CANDLES_3",
+    "offset": [ 20, 55, -5 ],
+    "radius": 115,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "objectIds": [
+      "DECO_CANDLES05_RED",
+      "DECO_CANDLES06_RED"
     ],
     "visibleFromOtherPlanes": true
   },
@@ -46517,8 +46552,27 @@
   {
     "description": "Tormented Demon - Fire Bolt Projectile",
     "offset": [ 0, -50, 0 ],
-    "radius": 200,
-    "strength": 15,
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 600,
+    "range": 20,
+    "projectileIds": [
+      "LUC2_UNDEAD_DEMON_FIREBALL_PROJ"
+    ]
+  },
+  {
+    "description": "Xarth - Arena Fire Hazard",
+    "offset": [ 0, 100, 0 ],
+    "radius": 150,
+    "strength": 10,
     "color": [
       252,
       148,
@@ -46529,8 +46583,83 @@
     "fadeInDuration": 300,
     "fadeOutDuration": 300,
     "range": 20,
+    "objectIds": [
+      "TFA_XARTH_ARENAFIRE"
+    ]
+  },
+  {
+    "description": "Xarth - Flaming Zombie",
+    "offset": [ 0, 150, 0 ],
+    "radius": 200,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 600,
+    "range": 20,
+    "npcIds": [
+      "TFA_XARTH_CORPSE"
+    ],
+    "animationIds": [ -1 ]
+  },
+  {
+    "description": "Xarth - Fire Ball Projectile",
+    "offset": [ 0, 0, 0 ],
+    "radius": 250,
+    "strength": 18,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 1500,
+    "range": 20,
     "projectileIds": [
-      "LUC2_UNDEAD_DEMON_FIREBALL_PROJ"
+      "LUC2_UNDEAD_DEMON_FIREBALL_PROJ_BIG"
+    ]
+  },
+  {
+    "description": "TFA - Ezekail explosion",
+    "offset": [ 0, 185, 0 ],
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_EZEKIEL_STAR_EXPLOSION01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekail lightening strike",
+    "offset": [ 0, 100, 0 ],
+    "radius": 150,
+    "strength": 15,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_EZEKIEL_FINALE_IMPACT_MEDIUM01",
+      "VFX_EZEKIEL_FINALE_IMPACT_SMALL01"
     ]
   },
   {
