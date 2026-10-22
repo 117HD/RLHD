@@ -3264,19 +3264,22 @@
     "area": "Guthix Temple - Entrance",
     "groundFogOpacity": 0.85,
     "groundFogStart": 100,
-    "groundFogEnd": -200
+    "groundFogEnd": -200,
+    "instantTransition": true
   },
   {
     "area": "TFA_LOBBY",
     "groundFogOpacity": 0.85,
     "groundFogStart": 500,
-    "groundFogEnd": -50
+    "groundFogEnd": -50,
+    "instantTransition": true
   },
   {
     "area": "TFA_BORK",
     "groundFogOpacity": 0.85,
     "groundFogStart": -100,
-    "groundFogEnd": -400
+    "groundFogEnd": -400,
+    "instantTransition": true
   },
   {
     "key": "OVERWORLD",

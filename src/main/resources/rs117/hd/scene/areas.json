@@ -12268,12 +12268,20 @@
     "hideOtherAreas": true
   },
   {
+    "name": "TFA_EZEKIEL",
+    "regions": [
+      16214
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "TFA",
     "areas": [
       "TFA_LOBBY",
       "TFA_ARCHIVE_GUARDIAN",
       "TFA_BORK",
-      "TFA_XARTH"
+      "TFA_XARTH",
+      "TFA_EZEKIEL"
     ],
     "hideOtherAreas": true
   },
@@ -12296,7 +12304,7 @@
     ]
   },
   {
-    "name": "TFA_ARCHIVE_GUARDIAN_NO_BLEND_GRASS",
+    "name": "TFA_NO_BLEND_GRASS",
     "aabbs": [
       [ 4113, 5602, 4114, 5609 ],
       [ 4121, 5602, 4121, 5609 ],

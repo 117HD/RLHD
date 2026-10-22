@@ -11590,13 +11590,38 @@
     "waterType": "TFA_FISH_TANK_WATER"
   },
   {
-    "name": "TFA Archive Guardian - Grass that shouldnt blend",
-    "area": "TFA_ARCHIVE_GUARDIAN_NO_BLEND_GRASS",
+    "name": "TFA - Grass that shouldn't blend",
+    "area": "TFA_NO_BLEND_GRASS",
     "overlayIds": [
       646
     ],
     "blended": false,
     "groundMaterial": "GRASS_1"
+  },
+  {
+    "name": "TFA Ezekiel - Grass that shouldn't blend",
+    "area": "TFA_EZEKIEL",
+    "overlayIds": [
+      646
+    ],
+    "blended": false,
+    "maxLightness": 23,
+    "groundMaterial": "GRASS_1"
+  },
+  {
+    "name": "TFA Ezekiel - Tiles",
+    "area": "TFA_EZEKIEL",
+    "underlayIds": [
+      72,
+      196,
+      252,
+      253
+    ],
+    "blended": false,
+    "uvScale": 2,
+    "shiftLightness": 8,
+    "maxLightness": 40,
+    "groundMaterial": "WORN_TILES"
   },
   {
     "name": "TFA Archive Guardian - Cracks and underneath Tile objects - Should not blend",

@@ -46069,7 +46069,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "LUC2_GT_WALLKIT_SHRINE_LIGHTS"
+      "LUC2_GT_WALLKIT_SHRINE_LIGHTS",
+      "TFA_WALLKIT_EZEKIEL01_LIGHTS01"
     ]
   },
   {
@@ -47498,7 +47499,7 @@
     ]
   },
   {
-    "description": "TFA - TFA - Smork Napalm Attack Splash",
+    "description": "TFA - Smork Napalm Attack Splash",
     "offset": [ 0, 50, 0 ],
     "radius": 250,
     "strength": 12,
@@ -47517,6 +47518,36 @@
     "range": 25,
     "graphicsObjectIds": [
       "VFX_SMORK_NAPALM_FIRE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Transporter Eye Glow Right",
+    "offset": [ 20, 125, -20 ],
+    "radius": 50,
+    "strength": 7,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "TFA_BOSS_TELEPORTER"
+    ]
+  },
+  {
+    "description": "TFA - Archive Transporter Eye Glow Left",
+    "offset": [ -20, 125, -20 ],
+    "radius": 50,
+    "strength": 7,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "TFA_BOSS_TELEPORTER"
     ]
   },
   {

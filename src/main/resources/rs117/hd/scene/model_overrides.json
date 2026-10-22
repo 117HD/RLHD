@@ -78998,10 +78998,9 @@
     ]
   },
   {
-    "description": "Guthix Temple - Henge and Shrine Torch",
+    "description": "Guthix Temple - Stone Henge",
     "baseMaterial": "STONE_NORMALED_LIGHT",
     "objectIds": [
-      "LUC2_GT_WALLKIT_SHRINE_LIGHTS",
       "LUC2_GT_HENGE_PUZZLE_HENGE_01",
       "LUC2_GT_HENGE_PUZZLE_HENGE_STATIC_01",
       "LUC2_GT_HENGE_PUZZLE_HENGE_02",
@@ -79021,12 +79020,50 @@
     ]
   },
   {
+    "description": "Guthix Temple - Shrine Torch",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "LUC2_GT_WALLKIT_SHRINE_LIGHTS",
+      "TFA_WALLKIT_EZEKIEL01_LIGHTS01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 13",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_125"
+      }
+    ]
+  },
+  {
     "description": "Guthix Temple - Stone of Jas Plinth",
     "baseMaterial": "ROCK_3",
     "uvType": "BOX",
     "uvScale": 0.75,
     "objectIds": [
       "LUC2_STONE_OF_JAS_PLINTH"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 5 || h == 6 && a > 254",
+        "baseMaterial": "GRUNGE_3_LIGHT_VERY_SHINY",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
     ]
   },
   {
@@ -79749,7 +79786,7 @@
     ]
   },
   {
-    "description": "TFA Archive Guardian Room - Walls",
+    "description": "TFA - Walls with Branches and or Bark",
     "baseMaterial": "SMOOTH_STONE",
     "undoVanillaShading": false,
     "objectIds": [
@@ -79820,6 +79857,29 @@
         "uvType": "BOX",
         "shiftLightness": 8,
         "uvScale": 0.15,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Ezekiel Room - Pillar",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE01_PILLAR01_SHIELD01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 16 && s == 1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
         "undoVanillaShading": false
       }
     ]
@@ -80156,7 +80216,9 @@
       "TFA_FLOORKIT_GUTHIXIAN01_CORNER02",
       "TFA_FLOORKIT_GUTHIXIAN01_FILLER01_GREY01",
       "TFA_FLOORKIT_GUTHIXIAN01_DIAG01_GREY01",
-      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_GREY01"
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_GREY01",
+      "TFA_FLOORKIT_GUTHIXIAN01_FILLER01_DARK01",
+      "TFA_FLOORKIT_GUTHIXIAN01_DIAG01"
     ],
     "uvType": "BOX"
   },
@@ -80337,6 +80399,7 @@
       "TFA_RUBBLE_ARCHIVE02_MEDIUM03",
       "TFA_RUBBLE_ARCHIVE02_MEDIUM02",
       "TFA_RUBBLE_ARCHIVE02_SMALL03",
+      "TFA_RUBBLE_ARCHIVE02_SMALL01",
       "TFA_RUBBLE_ARCHIVE02_SMALL05",
       "TFA_RUBBLE_ARCHIVE02_SMALL02",
       "TFA_RUBBLE_ARCHIVE02_MEDIUM01",
@@ -80491,6 +80554,168 @@
         "uvType": "BOX",
         "uvScale": 0.5,
         "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Ezekiel Room - Arena Tiles",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "TFA_FLOORKIT_EZEKIEL01_TILE01_RAISEOBJ",
+      "TFA_FLOORKIT_EZEKIEL01_DIAG01_RAISEOBJ",
+      "TFA_FLOORKIT_EZEKIEL01_GUTHIX01",
+      "TFA_SKEWSTEPS_GUTHIXIAN01_EDGE01",
+      "TFA_SKEWSTEPS_GUTHIXIAN01_CORNER01",
+      "TFA_SKEWSTEPS_GUTHIXIAN01_CORNER03"
+    ]
+  },
+  {
+    "description": "TFA Ezekiel Room - Stairs",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "TFA_FLOORKIT_EZEKIEL01_TILE01_RAISEOBJ",
+      "TFA_FLOORKIT_EZEKIEL01_DIAG01_RAISEOBJ",
+      "TFA_FLOORKIT_EZEKIEL01_GUTHIX01"
+    ]
+  },
+  {
+    "description": "TFA Ezekiel - Training Dummy",
+    "baseMaterial": "BURLAP",
+    "objectIds": [
+      "TFA_TRAINING_DUMMY01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Frame",
+        "colors": "h == 7 && s != 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftLightness": -2,
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1",
+        "shiftLightness": 10,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Ezekiel - Weapon Racks",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_RACK_EZEKIEL01_WEAPON01",
+      "TFA_RACK_EZEKIEL06_WEAPON01",
+      "TFA_RACK_EZEKIEL02_WEAPON01",
+      "TFA_RACK_EZEKIEL04_WEAPON01",
+      "TFA_RACK_EZEKIEL09_WEAPON01",
+      "TFA_RACK_EZEKIEL05_WEAPON01",
+      "TFA_RACK_EZEKIEL08_WEAPON01",
+      "TFA_RACK_EZEKIEL07_WEAPON01",
+      "TFA_RACK_EZEKIEL03_WEAPON01",
+      "TFA_WEAPONS_ARCHIVE01_LEANING01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Frame",
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "minLightness": 16,
+        "uvOrientationZ": 512,
+        "uvType": "BOX",
+        "undoVanillaShading": false,
+        "uvScale": 0.65
+      },
+      {
+        "description": "Frame 2",
+        "colors": "h == 7 && s < 3",
+        "baseMaterial": "LIGHT_BARK",
+        "shiftLightness": 2,
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Ezekiel - Shields",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALL_ARCHIVE01_SHIELD01_SARODOMIN01",
+      "TFA_WALL_ARCHIVE01_SHIELD01_ZAMORAK01",
+      "TFA_WEAPON_ARCHIVE01_SHIELD01_FORINTHRY01",
+      "TFA_WEAPON_ARCHIVE01_SHIELD01_ZAMORAK01"
+    ]
+  },
+  {
+    "description": "TFA Ezekiel - Corpses",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_CORPSE_EZEKIEL01_ZAMORAK02",
+      "TFA_CORPSE_EZEKIEL01_ZAROS01",
+      "TFA_CORPSE_EZEKIEL01_KNIGHT01",
+      "TFA_CORPSE_EZEKIEL01_KNIGHT02",
+      "TFA_CORPSE_EZEKIEL01_ZAROS02",
+      "TFA_CORPSE_EZEKIEL01_ZAMORAK01",
+      "TFA_CORPSE_EZEKIEL01_FORTNITHY01",
+      "TFA_CORPSE_EZEKIEL01_SARADOMIN02",
+      "TFA_CORPSE_EZEKIEL01_BANDOS02",
+      "TFA_CORPSE_EZEKIEL01_SARADOMIN01",
+      "TFA_CORPSE_EZEKIEL01_BANDOS01",
+      "TFA_CORPSE_EZEKIEL01_FORTNITHY02",
+      "TFA_CORPSE_EZEKIEL01_GOBLIN02",
+      "TFA_CORPSE_EZEKIEL01_GOBLIN01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Bark",
+        "colors": "h == 7 && s == 2",
+        "baseMaterial": "LIGHT_BARK",
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 8 && s > 2 && s < 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "undoVanillaShading": false,
+        "uvOrientation": 240,
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "shiftLightness": 1
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 15",
+        "baseMaterial": "SMOOTH_STONE",
+        "undoVanillaShading": false,
+        "uvScale": 0.5,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s < 2 || h == 5 || h == 7 && s == 0 || h == 7 && s > 3 && s < 7 || h == 46 || h == 49 || h == 40 || h == 41 || h == 10 || h == 14 || h == 42 ",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "undoVanillaShading": false,
+        "shiftLightness": 2
+      },
+      {
+        "description": "Skin/Hair",
+        "colors": "h == 4 || h == 6 || h == 8 && s < 2 || h == 9 || h == 21 || h == 10 || h == 11 || h == 63",
+        "baseMaterial": "GRUNGE_3_LIGHT",
         "undoVanillaShading": false
       }
     ]
