@@ -71,7 +71,7 @@ void main() {
         // Scroll UVs
         fUvw.xy += material.scrollDuration * uboGlobal.elapsedTime;
         // Scale from the center
-        fUvw.xy = .5 + (fUvw.xy - .5) * material.textureScale.xy;
+        fUvw.xy = .5 + (fUvw.xy - .5) * getMaterialTextureScale(material).xy;
 
         #if SHADOW_TRANSPARENCY
             fOpacity = gOpacity[i];

@@ -28,7 +28,7 @@ public class UBOMaterials extends UniformBuffer<GLBuffer> {
 		public Property flowMapStrength = addProperty(PropertyType.Float, "flowMapStrength");
 		public Property flowMapDuration = addProperty(PropertyType.FVec2, "flowMapDuration");
 		public Property scrollDuration = addProperty(PropertyType.FVec2, "scrollDuration");
-		public Property textureScale = addProperty(PropertyType.FVec3, "textureScale");
+		public Property uvData = addProperty(PropertyType.FVec3, "uvData"); // texture scale, or hex tiling scale & blend
 	}
 
 	public MaterialStruct[] uboStructs;

@@ -31,6 +31,7 @@
 #define DISPLAY_TANGENT 0
 #define DISPLAY_SHADOWS 0
 #define DISPLAY_LIGHTING 0
+#define DISPLAY_HEX 0
 
 #include <uniforms/global.glsl>
 #include <uniforms/sky.glsl>
@@ -91,6 +92,8 @@ vec2 worldUvs(float scale) {
 #include <utils/fog.glsl>
 #include <utils/wireframe.glsl>
 #include <utils/lights.glsl>
+#include <utils/hex_tiling.glsl>
+#include <utils/layered_sample.glsl>
 
 #if DAYLIGHT_CYCLE
     #include <utils/sky.glsl>
@@ -110,21 +113,22 @@ void main() {
     vec3 viewDir = normalize(uboGlobal.cameraPos - IN.position);
     vec3 flatNormal = normalize(cross(dFdx(IN.position), dFdy(IN.position)));
 
+    int materialIdx1 = fMaterialData[0] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK;
+    int materialIdx2 = fMaterialData[1] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK;
+    int materialIdx3 = fMaterialData[2] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK;
+
     bool identicalMaterials = !isTerrain || (
-        ((fMaterialData[0] ^ fMaterialData[1] | (fMaterialData[0] ^ fMaterialData[2]))
-        >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK) == 0
+        materialIdx1 == materialIdx2 && materialIdx1 == materialIdx3
     );
     Material material1;
     if (isSquashed) {
         material1 = MAT_NONE;
         identicalMaterials = true;
     } else {
-        material1 = getMaterial(fMaterialData[0] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
+        material1 = getMaterial(materialIdx1);
     }
-    Material material2 = identicalMaterials ? material1 :
-        getMaterial(fMaterialData[1] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
-    Material material3 = identicalMaterials ? material1 :
-        getMaterial(fMaterialData[2] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
+    Material material2 = identicalMaterials ? material1 : getMaterial(materialIdx2);
+    Material material3 = identicalMaterials ? material1 : getMaterial(materialIdx3);
 
     // Water data
     int waterDepth1 = fTerrainData[0] >> 11 & 0xFFF;
@@ -182,9 +186,9 @@ void main() {
         uv3 += material3.scrollDuration * uboGlobal.elapsedTime;
 
         // Scale from the center
-        uv1 = (uv1 - .5) * material1.textureScale.xy + .5;
-        uv2 = (uv2 - .5) * material2.textureScale.xy + .5;
-        uv3 = (uv3 - .5) * material3.textureScale.xy + .5;
+        uv1 = (uv1 - .5) * getMaterialTextureScale(material1).xy + .5;
+        uv2 = (uv2 - .5) * getMaterialTextureScale(material2).xy + .5;
+        uv3 = (uv3 - .5) * getMaterialTextureScale(material3).xy + .5;
 
         // get flowMap map
         vec2 flowMapUv = uv1 - animationFrame(material1.flowMapDuration);
@@ -201,7 +205,6 @@ void main() {
         uv3 += uvFlow * flowMapStrength;
 
         // Set up tangent-space transformation matrix
-
         vec3 N;
         #if FLAT_SHADING
             N = flatNormal;
@@ -243,6 +246,31 @@ void main() {
             );
         #endif
 
+        // Build HexData, if terrain, use world space XZ, otherwise UVs
+        float hexFadeMultiplier = distance(IN.position, uboGlobal.cameraPos) < TILE_SIZE * 40 ? 1.0 : 0.0;
+        HexShared hexShared = initHexShared(IN.position.xz / TILE_SIZE);
+        HexData hex1 = buildHexData(uv1, material1, hexShared, hexFadeMultiplier);
+
+        HexData hex2 = hex1;
+        if (materialIdx1 != materialIdx2 && (uv1 != uv2 || !isHexSamplingSame(material1, material2)))
+            hex2 = buildHexData(uv2, material2, hexShared, hexFadeMultiplier);
+
+        HexData hex3 = hex1;
+        if (materialIdx1 != materialIdx3 && (uv1 != uv3 || !isHexSamplingSame(material1, material3)))
+            hex3 = buildHexData(uv3, material3, hexShared, hexFadeMultiplier);
+
+        #if DISPLAY_HEX
+            if (hexShared.valid) {
+                FragColor = vec4(
+                    debugHex(hex1) * fTexBlend.x +
+                    debugHex(hex2) * fTexBlend.y +
+                    debugHex(hex3) * fTexBlend.z,
+                    1.0
+                );
+                if (DISPLAY_HEX == 1) return; // Redundant, for syntax highlighting in IntelliJ
+            }
+        #endif
+
         vec3 hsl1 = unpackRawHsl(fAlphaBiasHsl[0]);
         vec3 hsl2 = unpackRawHsl(fAlphaBiasHsl[1]);
         vec3 hsl3 = unpackRawHsl(fAlphaBiasHsl[2]);
@@ -278,11 +306,15 @@ void main() {
         #endif
 
         // get diffuse textures
-        vec4 texColor1 = colorMap1 == -1 ? vec4(1) : texture(textureArray, vec3(uv1, colorMap1), mipBias);
-        vec4 texColor2 = identicalMaterials ? texColor1 :
-            colorMap2 == -1 ? vec4(1) : texture(textureArray, vec3(uv2, colorMap2), mipBias);
-        vec4 texColor3 = identicalMaterials ? texColor1 :
-            colorMap3 == -1 ? vec4(1) : texture(textureArray, vec3(uv3, colorMap3), mipBias);
+        vec4 texColor1, texColor2, texColor3;
+        LAYERED_SAMPLE(
+            texColor1, texColor2, texColor3,
+            colorMap1, colorMap2, colorMap3,
+            uv1, uv2, uv3,
+            hex1, hex2, hex3,
+            vec4(1)
+        );
+
         texColor1.rgb *= material1.brightness;
         texColor2.rgb *= material2.brightness;
         texColor3.rgb *= material3.brightness;
@@ -360,12 +392,11 @@ void main() {
             normals = vec3(0, -1, 0);
         } else {
             mat3 TBN = cotangent_frame(N, IN.position, IN.uv * -1.0);
-            vec3 n1 = sampleNormalMap(material1, uv1, TBN);
+            vec3 n1, n2, n3;
+            LAYERED_SAMPLE_NORMAL(n1, n2, n3, uv1, uv2, uv3);
             if (identicalMaterials) {
                 normals = normalize(n1);
             } else {
-                vec3 n2 = sampleNormalMap(material2, uv2, TBN);
-                vec3 n3 = sampleNormalMap(material3, uv3, TBN);
                 normals = normalize(n1 * fTexBlend.x + n2 * fTexBlend.y + n3 * fTexBlend.z);
             }
         }
@@ -394,15 +425,16 @@ void main() {
         // specular
         vec3 vSpecularGloss = vec3(material1.specularGloss, material2.specularGloss, material3.specularGloss);
         vec3 vSpecularStrength = vec3(material1.specularStrength, material2.specularStrength, material3.specularStrength);
-        float roughness1 = material1.roughnessMap == -1 ? 1 :
-            linearToSrgb(texture(textureArray, vec3(uv1, material1.roughnessMap)).r);
-        vSpecularStrength *= vec3(
-            roughness1,
-            identicalMaterials ? roughness1 :
-                material2.roughnessMap == -1 ? 1 : linearToSrgb(texture(textureArray, vec3(uv2, material2.roughnessMap)).r),
-            identicalMaterials ? roughness1 :
-                material3.roughnessMap == -1 ? 1 : linearToSrgb(texture(textureArray, vec3(uv3, material3.roughnessMap)).r)
+        float rough1, rough2, rough3;
+        LAYERED_SAMPLE_SCALAR(
+            rough1, rough2, rough3,
+            material1.roughnessMap, material2.roughnessMap, material3.roughnessMap,
+            uv1, uv2, uv3,
+            hex1, hex2, hex3,
+            1.0,
+            linearToSrgb
         );
+        vSpecularStrength *= vec3(rough1, rough2, rough3);
 
         // apply specular highlights to anything semi-transparent
         // this isn't always desirable but adds subtle light reflections to windows, etc.
@@ -422,16 +454,16 @@ void main() {
         // ambient light
         vec3 ambientLightOut = uboGlobal.ambientColor * uboGlobal.ambientStrength;
 
-        float aoFactor = material1.ambientOcclusionMap == -1 ? 1 :
-            texture(textureArray, vec3(uv1, material1.ambientOcclusionMap)).r;
-        if (!identicalMaterials) {
-            aoFactor =
-                fTexBlend.x * aoFactor +
-                fTexBlend.y * (material2.ambientOcclusionMap == -1 ? 1 :
-                    texture(textureArray, vec3(uv2, material2.ambientOcclusionMap)).r) +
-                fTexBlend.z * (material3.ambientOcclusionMap == -1 ? 1 :
-                    texture(textureArray, vec3(uv3, material3.ambientOcclusionMap)).r);
-        }
+        float ao1, ao2, ao3;
+        LAYERED_SAMPLE_SCALAR(
+            ao1, ao2, ao3,
+            material1.ambientOcclusionMap, material2.ambientOcclusionMap, material3.ambientOcclusionMap,
+            uv1, uv2, uv3,
+            hex1, hex2, hex3,
+            1.0,
+            IDENTITY
+        );
+        float aoFactor = fTexBlend.x * ao1 + fTexBlend.y * ao2 + fTexBlend.z * ao3;
         ambientLightOut *= aoFactor;
 
         // directional light
