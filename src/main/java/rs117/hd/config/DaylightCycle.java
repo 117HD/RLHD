@@ -9,6 +9,7 @@ public enum DaylightCycle {
 	DEFAULT("Default", null, false),
 	REAL_TIME("Real-time", null, true),
 	CUSTOM("Custom", null, true),
+	SCHEDULED("Scheduled", null, true),
 	DAWN("Dawn", "DAWN", false),
 	SUNRISE("Sunrise", "SUNRISE", false),
 	DAY("Day", "DAY", false),

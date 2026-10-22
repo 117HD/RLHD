@@ -63,6 +63,8 @@ import static rs117.hd.HdPlugin.MAX_DISTANCE;
 import static rs117.hd.HdPlugin.MAX_FOG_DEPTH;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.scene.SkyManager.DEFAULT_LATLON;
+import static rs117.hd.scene.SkyManager.DEFAULT_SUNRISE;
+import static rs117.hd.scene.SkyManager.DEFAULT_SUNSET;
 import static rs117.hd.utils.MathUtils.*;
 
 @ConfigGroup(CONFIG_GROUP)
@@ -646,6 +648,7 @@ public interface HdPluginConfig extends Config
 			"'Default' shows everyone the same sky, with one complete day passing per hour.<br>" +
 			"'Real-time' matches the Sun & Moon in the real world, for your configured latitude & longitude.<br>" +
 			"'Custom' follows the sun and moon at the configured location, respecting the Custom cycle duration.<br>" +
+			"'Scheduled' follows your local time, with the sun rising and setting at the Scheduled sunrise & sunset times.<br>" +
 			"'Dawn' shows the sky just before sunrise.<br>" +
 			"'Sunrise' shows a constant sunrise.<br>" +
 			"'Day' shows constant daytime.<br>" +
@@ -763,6 +766,30 @@ public interface HdPluginConfig extends Config
 		return 60;
 	}
 
+	String KEY_SCHEDULED_SUNRISE = "scheduledSunrise";
+	@ConfigItem(
+		keyName = KEY_SCHEDULED_SUNRISE,
+		name = "Scheduled sunrise",
+		description = "Configures when the sun rises each day in the Scheduled cycle mode, in 24-hour time.",
+		position = 8,
+		section = daylightCycleSettings
+	)
+	default String scheduledSunrise() {
+		return DEFAULT_SUNRISE.toString();
+	}
+
+	String KEY_SCHEDULED_SUNSET = "scheduledSunset";
+	@ConfigItem(
+		keyName = KEY_SCHEDULED_SUNSET,
+		name = "Scheduled sunset",
+		description = "Configures when the sun sets each day in the Scheduled cycle mode, in 24-hour time.",
+		position = 9,
+		section = daylightCycleSettings
+	)
+	default String scheduledSunset() {
+		return DEFAULT_SUNSET.toString();
+	}
+
 	String KEY_LATITUDE_DEGREES = "latitudeDegrees";
 	@Range(min = -90, max = 90)
 	@Units("°")
@@ -771,11 +798,11 @@ public interface HdPluginConfig extends Config
 		name = "Real-time latitude",
 		description =
 			"<b>Advanced setting</b>: Change the latitude coordinate for realistic sun and moon movement for a location on Earth.<br>" +
-			"Only applies to Real-time and Custom cycle modes. Defaults to New York City.<br>" +
+			"Only applies to Real-time, Custom and Scheduled cycle modes. Defaults to New York City.<br>" +
 			"For southern latitudes, use negative values. For more precise timing, you can provide<br>" +
 			"coordinates including decimals in the in-game chat with: <b>::117hd latlon &lt;latitude&gt; &lt;longitude&gt;</b><br>" +
 			"To return to using the values specified in the config panel, type: <b>::117hd latlon reset</b>",
-		position = 8,
+		position = 10,
 		section = daylightCycleSettings
 	)
 	default int latitudeDegrees() {
@@ -790,11 +817,11 @@ public interface HdPluginConfig extends Config
 		name = "Real-time longitude",
 		description =
 			"<b>Advanced setting</b>: Change the longitude coordinate for realistic sun and moon movement for a location on Earth.<br>" +
-			"Only applies to Real-time and Custom cycle modes. Defaults to New York City.<br>" +
+			"Only applies to Real-time, Custom and Scheduled cycle modes. Defaults to New York City.<br>" +
 			"For western longitudes, use negative values. For more precise timing, you can provide<br>" +
 			"coordinates including decimals in the in-game chat with: <b>::117hd latlon &lt;latitude&gt; &lt;longitude&gt;</b><br>" +
 			"To return to using the values specified in the config panel, type: <b>::117hd latlon reset</b>",
-		position = 9,
+		position = 11,
 		section = daylightCycleSettings
 	)
 	default int longitudeDegrees() {
