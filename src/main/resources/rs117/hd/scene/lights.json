@@ -46571,10 +46571,34 @@
     "animationIds": [ -1 ]
   },
   {
-    "description": "TFA - Archive Guardian Fire Beam Charge",
-    "offset": [ 0, 300, 0 ],
-    "radius": 500,
-    "strength": 1,
+    "description": "TFA - Archive Guardian Fire Beam Charge 1",
+    "offset": [ 0, 150, 200 ],
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "fixedDespawnTime": true,
+    "despawnDelay": 3250,
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 1800,
+    "fadeOutDuration": 2500,
+    "fadeInDuration": 1000,
+    "despawnWithParent": true,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam Charge 2",
+    "offset": [ 0, 800, 300 ],
+    "radius": 400,
+    "strength": 17,
     "color": [
       252,
       148,
@@ -46583,9 +46607,12 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 25,
-    "spawnDelay": 200,
-    "fadeOutDuration": 200,
-    "fadeInDuration": 2000,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3000,
+    "spawnDelay": 3000,
+    "fadeOutDuration": 500,
+    "fadeInDuration": 1000,
+    "despawnWithParent": true,
     "waitForAnimation": true,
     "graphicsObjectIds": [
       "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
@@ -46604,11 +46631,12 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 25,
-    "spawnDelay": 5200,
-    "despawnDelay": 800,
+    "spawnDelay": 5420,
+    "despawnDelay": 1400,
     "fixedDespawnTime": true,
-    "fadeOutDuration": 200,
-    "fadeInDuration": 300,
+    "fadeOutDuration": 880,
+    "fadeInDuration": 250,
+    "despawnWithParent": true,
     "waitForAnimation": true,
     "graphicsObjectIds": [
       "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
@@ -46627,11 +46655,12 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 25,
-    "spawnDelay": 5700,
-    "despawnDelay": 1200,
+    "spawnDelay": 5580,
+    "despawnDelay": 1240,
     "fixedDespawnTime": true,
-    "fadeOutDuration": 200,
-    "fadeInDuration": 300,
+    "fadeOutDuration": 880,
+    "fadeInDuration": 250,
+    "despawnWithParent": true,
     "waitForAnimation": true,
     "graphicsObjectIds": [
       "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
@@ -46641,7 +46670,7 @@
     "description": "TFA - Archive Guardian Fire Beam 3",
     "offset": [ 0, 150, 500 ],
     "radius": 250,
-    "strength": 17,
+    "strength": 18.2,
     "color": [
       252,
       148,
@@ -46650,11 +46679,12 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 25,
-    "spawnDelay": 5900,
-    "despawnDelay": 1400,
+    "spawnDelay": 5750,
+    "despawnDelay": 1070,
     "fixedDespawnTime": true,
-    "fadeOutDuration": 200,
-    "fadeInDuration": 300,
+    "fadeOutDuration": 880,
+    "fadeInDuration": 250,
+    "despawnWithParent": true,
     "waitForAnimation": true,
     "graphicsObjectIds": [
       "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
@@ -46664,7 +46694,7 @@
     "description": "TFA - Archive Guardian Fire Beam 4",
     "offset": [ 0, 150, 700 ],
     "radius": 260,
-    "strength": 17,
+    "strength": 22.7,
     "color": [
       252,
       148,
@@ -46673,11 +46703,12 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 25,
-    "spawnDelay": 6200,
-    "despawnDelay": 1600,
+    "spawnDelay": 5950,
+    "despawnDelay": 870,
     "fixedDespawnTime": true,
-    "fadeOutDuration": 200,
-    "fadeInDuration": 300,
+    "fadeOutDuration": 840,
+    "fadeInDuration": 240,
+    "despawnWithParent": true,
     "waitForAnimation": true,
     "graphicsObjectIds": [
       "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
@@ -46687,7 +46718,7 @@
     "description": "TFA - Archive Guardian Fire Beam 5",
     "offset": [ 0, 150, 900 ],
     "radius": 270,
-    "strength": 17,
+    "strength": 22.6,
     "color": [
       252,
       148,
@@ -46696,11 +46727,12 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 25,
-    "spawnDelay": 6300,
-    "despawnDelay": 1700,
+    "spawnDelay": 6110,
+    "despawnDelay": 710,
     "fixedDespawnTime": true,
-    "fadeOutDuration": 200,
-    "fadeInDuration": 300,
+    "fadeOutDuration": 810,
+    "fadeInDuration": 100,
+    "despawnWithParent": true,
     "waitForAnimation": true,
     "graphicsObjectIds": [
       "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
@@ -46710,7 +46742,7 @@
     "description": "TFA - Archive Guardian Fire Beam 6",
     "offset": [ 0, 150, 1100 ],
     "radius": 280,
-    "strength": 17,
+    "strength": 22.7,
     "color": [
       252,
       148,
@@ -46719,11 +46751,12 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 25,
-    "spawnDelay": 6400,
-    "despawnDelay": 1800,
+    "spawnDelay": 6260,
+    "despawnDelay": 560,
     "fixedDespawnTime": true,
-    "fadeOutDuration": 200,
-    "fadeInDuration": 300,
+    "fadeOutDuration": 600,
+    "fadeInDuration": 110,
+    "despawnWithParent": true,
     "waitForAnimation": true,
     "graphicsObjectIds": [
       "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
@@ -46733,7 +46766,7 @@
     "description": "TFA - Archive Guardian Fire Beam 7",
     "offset": [ 0, 150, 1300 ],
     "radius": 290,
-    "strength": 17,
+    "strength": 22.5,
     "color": [
       252,
       148,
@@ -46742,11 +46775,11 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 25,
-    "spawnDelay": 6500,
-    "despawnDelay": 1900,
+    "spawnDelay": 6350,
+    "despawnDelay": 610,
     "fixedDespawnTime": true,
-    "fadeOutDuration": 200,
-    "fadeInDuration": 300,
+    "fadeOutDuration": 610,
+    "fadeInDuration": 150,
     "waitForAnimation": true,
     "graphicsObjectIds": [
       "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
@@ -46756,7 +46789,7 @@
     "description": "TFA - Archive Guardian Fire Beam 8",
     "offset": [ 0, 150, 1500 ],
     "radius": 300,
-    "strength": 17,
+    "strength": 22.7,
     "color": [
       252,
       148,
@@ -46765,11 +46798,11 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 25,
-    "spawnDelay": 6600,
-    "despawnDelay": 2000,
+    "spawnDelay": 6390,
+    "despawnDelay": 580,
     "fixedDespawnTime": true,
-    "fadeOutDuration": 200,
-    "fadeInDuration": 300,
+    "fadeOutDuration": 560,
+    "fadeInDuration": 160,
     "waitForAnimation": true,
     "graphicsObjectIds": [
       "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
@@ -46777,9 +46810,9 @@
   },
   {
     "description": "TFA - Archive Guardian Fire Beam 9",
-    "offset": [ 0, 150, 1700 ],
+    "offset": [ -10, 150, 1700 ],
     "radius": 320,
-    "strength": 17,
+    "strength": 22.7,
     "color": [
       252,
       148,
@@ -46788,11 +46821,269 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 25,
-    "spawnDelay": 6700,
-    "despawnDelay": 2100,
+    "spawnDelay": 6410,
+    "despawnDelay": 570,
     "fixedDespawnTime": true,
-    "fadeOutDuration": 200,
-    "fadeInDuration": 300,
+    "fadeOutDuration": 560,
+    "fadeInDuration": 150,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam 10",
+    "offset": [ -20, 150, 1900 ],
+    "radius": 335,
+    "strength": 22.7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 6420,
+    "despawnDelay": 570,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 560,
+    "fadeInDuration": 150,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam 11",
+    "offset": [ -40, 150, 2100 ],
+    "radius": 350,
+    "strength": 22.7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 6450,
+    "despawnDelay": 550,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 560,
+    "fadeInDuration": 130,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam 12",
+    "offset": [ -60, 150, 2300 ],
+    "radius": 365,
+    "strength": 22.4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 6520,
+    "despawnDelay": 480,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 500,
+    "fadeInDuration": 100,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam 13",
+    "offset": [ -90, 150, 2500 ],
+    "radius": 385,
+    "strength": 22.3,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 6580,
+    "despawnDelay": 420,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 420,
+    "fadeInDuration": 100,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam 14",
+    "offset": [ -120, 150, 2700 ],
+    "radius": 405,
+    "strength": 22.4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 6630,
+    "despawnDelay": 350,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 330,
+    "fadeInDuration": 100,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam 15",
+    "offset": [ -160, 150, 2900 ],
+    "radius": 425,
+    "strength": 22.2,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 6650,
+    "despawnDelay": 330,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 100,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam Top 1",
+    "offset": [ 0, 580, 400 ],
+    "radius": 350,
+    "strength": 10.2,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 5580,
+    "despawnDelay": 1450,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 880,
+    "fadeInDuration": 250,
+    "despawnWithParent": true,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam Top 2",
+    "offset": [ 0, 500, 550 ],
+    "radius": 200,
+    "strength": 10.2,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 5750,
+    "despawnDelay": 1220,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 880,
+    "fadeInDuration": 250,
+    "despawnWithParent": true,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam Top 3",
+    "offset": [ 0, 440, 700 ],
+    "radius": 200,
+    "strength": 11,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 5950,
+    "despawnDelay": 1020,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 840,
+    "fadeInDuration": 240,
+    "despawnWithParent": true,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam Top 4",
+    "offset": [ 0, 400, 900 ],
+    "radius": 200,
+    "strength": 10.9,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 6110,
+    "despawnDelay": 860,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 810,
+    "fadeInDuration": 100,
+    "despawnWithParent": true,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam Top 5",
+    "offset": [ 0, 380, 1100 ],
+    "radius": 200,
+    "strength": 10.2,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 6260,
+    "despawnDelay": 710,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 600,
+    "fadeInDuration": 110,
+    "despawnWithParent": true,
     "waitForAnimation": true,
     "graphicsObjectIds": [
       "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"

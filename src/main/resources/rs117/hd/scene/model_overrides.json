@@ -79744,7 +79744,8 @@
       "TFA_WALLKIT_ARCHIVE03_WALKWAY04",
       "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE03_2X2",
       "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE02_M",
-      "TFA_NEXUS_SECTION1_DOOR_EAST_SLIGHTLY_OPENED"
+      "TFA_NEXUS_SECTION1_DOOR_EAST_SLIGHTLY_OPENED",
+      "TFA_NEXUS_SECTION1_DOOR_WEST_SLIGHTLY_OPENED"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -79830,15 +79831,10 @@
     "objectIds": [
       "TFA_DUNGEONKIT_GUTHIXIAN01_BATTERY01_BASE"
     ],
-    "npcIds": [
-      "TFA_GUARDIAN_BATTERY_INACTIVE",
-      "TFA_GUARDIAN_BATTERY_ACTIVE",
-      "TFA_GUARDIAN_BATTERY_DESTROYED"
-    ],
     "uvType": "BOX",
     "colorOverrides": [
       {
-        "colors": "h == 7",
+        "colors": "h == 7 || h == 8",
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "shiftLightness": 2,
@@ -79850,18 +79846,39 @@
         "uvType": "BOX",
         "uvScale": 0.15,
         "undoVanillaShading": false
-      },
+      }
+    ]
+  },
+  {
+    "description": "TFA Archive Guardian Room - Inert Guardian - Flame Holder",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "shiftLightness": 2,
+    "undoVanillaShading": false,
+    "npcIds": [
+      "TFA_GUARDIAN_BATTERY_INACTIVE",
+      "TFA_GUARDIAN_BATTERY_ACTIVE",
+      "TFA_GUARDIAN_BATTERY_DESTROYED"
+    ],
+    "colorOverrides": [
       {
         "colors": "a < 255",
         "baseMaterial": "GRAY_90",
         "upwardsNormals": true
+      },
+      {
+        "colors": "h == 16 && s == 6",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.15,
+        "undoVanillaShading": false
       }
     ]
   },
   {
     "description": "TFA Archive Guardian Room - Guardian Origin",
-    "baseMaterial": "GRUNGE_3",
-    "undoVanillaShading": false,
+    "baseMaterial": "SMOOTH_STONE",
+    "shiftLightness": 1,
     "objectIds": [
       "TFA_DUNGEONKIT_GUTHIXIAN01_BASE01"
     ],
@@ -79875,17 +79892,20 @@
         "undoVanillaShading": false
       },
       {
+        "colors": "h == 13 && s == 3",
+        "baseMaterial": "GRASS_BLADE",
+        "undoVanillaShading": false,
+        "uvType": "BOX"
+      },
+      {
         "colors": "h == 13 && s == 4",
-        "baseMaterial": "GRASS_1",
+        "baseMaterial": "GRASS_2",
+        "uvScale": 1.5,
         "uvType": "BOX",
+        "shiftLightness": 2,
         "shiftSaturation": -1,
         "shiftHue": -2,
         "undoVanillaShading": false
-      },
-      {
-        "colors": "a < 255",
-        "baseMaterial": "GRAY_90",
-        "upwardsNormals": true
       }
     ]
   },
