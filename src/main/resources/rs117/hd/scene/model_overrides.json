@@ -79743,7 +79743,8 @@
       "TFA_WALLKIT_ARCHIVE01_PILLAR02_FALLOFF01",
       "TFA_WALLKIT_ARCHIVE03_WALKWAY04",
       "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE03_2X2",
-      "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE02_M"
+      "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE02_M",
+      "TFA_NEXUS_SECTION1_DOOR_EAST_SLIGHTLY_OPENED"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -79764,7 +79765,7 @@
     ]
   },
   {
-    "description": "TFA Archive Guardian Room - Walls - Undo Shading",
+    "description": "TFA Archive Guardian Room - Walls - Undo Vanilla Shading",
     "baseMaterial": "SMOOTH_STONE_LIGHT",
     "objectIds": [
       "TFA_FALLOFF_GUTHIXIAN01_EDGE01_DARKER01",
@@ -79890,10 +79891,22 @@
   },
   {
     "description": "TFA Archive Guardian Room - Mushroom",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "NONE",
     "undoVanillaShading": false,
     "objectIds": [
-      "TFA_GUARDIAN_MUSHROOM_ACTIVE"
+      "TFA_GUARDIAN_MUSHROOM_DESPAWN",
+      "TFA_GUARDIAN_MUSHROOM_ACTIVE",
+      "TFA_GUARDIAN_MUSHROOM_SPAWN"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "TFA Archive Guardian Room - Animated Vine",
+    "baseMaterial": "NONE",
+    "minLightness": 16,
+    "undoVanillaShading": false,
+    "npcIds": [
+      "ARCHIVE_GUARDIAN_TENTACLE"
     ],
     "uvType": "BOX"
   },
