@@ -8,6 +8,8 @@ import static rs117.hd.HdPlugin.TEXTURE_UNIT_NEBULA_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TERRAIN_SHADOW_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILED_LIGHTING_MAP;
+import static rs117.hd.renderer.zone.ZoneRenderer.OIT_BIN_COUNT;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_OIT_FIRST_LAYER;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 
 public class SceneShaderProgram extends ShaderProgram {
@@ -27,11 +29,14 @@ public class SceneShaderProgram extends ShaderProgram {
 		uniNebulaMap.ignoreMissing = true;
 	}
 
-	@Override
-	public void compile(ShaderIncludes includes) throws ShaderException, IOException {
-		super.compile(includes.copy().define("WATER_PASS", this instanceof Water));
+	protected boolean isWater() {
+		return this instanceof Water;
 	}
 
+	@Override
+	public void compile(ShaderIncludes includes) throws ShaderException, IOException {
+		super.compile(includes.copy().define("WATER_PASS", isWater()));
+	}
 	@Override
 	protected void initialize() {
 		uniTextureArray.set(TEXTURE_UNIT_GAME);
@@ -43,6 +48,71 @@ public class SceneShaderProgram extends ShaderProgram {
 	}
 
 	public static class Water extends SceneShaderProgram {}
+
+	public static class Opaque extends SceneShaderProgram {
+		Opaque() { shaderTemplate.add(GL_FRAGMENT_SHADER, "scene_frag_opaque.glsl"); }
+	}
+
+	public static class TransparentOIT extends SceneShaderProgram {
+		protected final UniformTexture uniAlphaFirstLastDepth = addUniformTexture("alphaFirstLastDepth");
+
+		TransparentOIT() {
+			shaderTemplate.add(GL_FRAGMENT_SHADER, "scene_frag_oit.glsl");
+		}
+
+		@Override
+		protected void initialize() {
+			super.initialize();
+			uniAlphaFirstLastDepth.set(TEXTURE_UNIT_OIT_FIRST_LAYER);
+		}
+
+		@Override
+		public void compile(ShaderIncludes includes) throws ShaderException, IOException {
+			super.compile(includes.copy()
+				.addInclude("OIT_MRT_OUTPUTS", this::generateOitMrtOutputs)
+				.addInclude("OIT_MRT_INIT", this::generateOitMrtInit)
+				.addInclude("OIT_MRT_WRITE", this::generateOitMrtWrite));
+		}
+
+		private String generateOitMrtOutputs() {
+			StringBuilder sb = new StringBuilder();
+			for (int k = 0; k < OIT_BIN_COUNT; k++) {
+				sb.append("layout(location = ").append(k).append(") out vec4 colorAccum").append(k).append(";\n");
+			}
+			return sb.toString();
+		}
+
+		private String generateOitMrtInit() {
+			StringBuilder sb = new StringBuilder();
+			for (int k = 0; k < OIT_BIN_COUNT; k++)
+				sb.append("colorAccum").append(k).append(" = vec4(0.0);\n");
+			return sb.toString();
+		}
+
+		private String generateOitMrtWrite() {
+			StringBuilder sb = new StringBuilder();
+			for (int k = 0; k < OIT_BIN_COUNT; k++) {
+				sb
+					.append("if (k == ").append(k).append(") ")
+					.append("colorAccum").append(k)
+					.append(" = vec4(outputColor.rgb * outputColor.a * bw, outputColor.a * bw);\n");
+			}
+			return sb.toString();
+		}
+
+		public static class Water extends TransparentOIT {
+			@Override
+			protected boolean isWater() {
+				return true;
+			}
+		}
+	}
+
+	public static class AlphaDiscard extends SceneShaderProgram {
+		AlphaDiscard() {
+			shaderTemplate.add(GL_FRAGMENT_SHADER, "scene_frag_alpha_discard.glsl");
+		}
+	}
 
 	public static class Legacy extends SceneShaderProgram {
 		Legacy() {

@@ -84,12 +84,17 @@ import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
-import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.opengl.Utils.checkGLErrors;
+import static rs117.hd.renderer.zone.WorldViewContext.VAO_ALPHA;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PRESCENE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
+import static rs117.hd.renderer.zone.Zone.ALPHA_DRAW_ALL_LEVELS;
+import static rs117.hd.renderer.zone.Zone.ALPHA_DRAW_BLEND_ONLY;
+import static rs117.hd.renderer.zone.Zone.ALPHA_DRAW_DISCARD_ONLY;
+import static rs117.hd.renderer.zone.Zone.ALPHA_DRAW_ROOF;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -98,8 +103,14 @@ public class ZoneRenderer implements Renderer {
 	public static final int FRAMES_IN_FLIGHT = 3;
 	private static final long FENCE_SYNC_TIMEOUT_NS = SECONDS.toNanos(1);
 
+	public static final int OIT_BIN_COUNT = 4;
+
 	private static int TEXTURE_UNIT_COUNT = HdPlugin.TEXTURE_UNIT_COUNT;
 	public static final int TEXTURE_UNIT_TEXTURED_FACES = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_OIT_FIRST_LAYER = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_OIT_NET_COVERAGE = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_OIT_COLOR_ACCUM = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_OIT_FARTHEST_LAYER = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
 	public static final int UNIFORM_BLOCK_WORLD_VIEWS = UNIFORM_BLOCK_COUNT++;
@@ -150,6 +161,9 @@ public class ZoneRenderer implements Renderer {
 	private SceneShaderProgram.Water waterProgram;
 
 	@Inject
+	private SceneShaderProgram.Opaque sceneOpaqueProgram;
+
+	@Inject
 	private ShadowShaderProgram.Fast fastShadowProgram;
 
 	@Inject
@@ -157,6 +171,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private TerrainShadowShaderProgram terrainShadowProgram;
+
+	@Inject
+	private OitRenderer oitRenderer;
 
 	@Inject
 	private JobSystem jobSystem;
@@ -175,7 +192,7 @@ public class ZoneRenderer implements Renderer {
 	public final CommandBuffer directionalCmd = new CommandBuffer("Directional");
 	public final CommandBuffer terrainShadowCmd = new CommandBuffer("TerrainShadow");
 
-	private GLBuffer indirectDrawCmds;
+	public GLBuffer indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
 
 	public static GLBuffer.EBO eboAlpha;
@@ -231,6 +248,7 @@ public class ZoneRenderer implements Renderer {
 		modelStreamingManager.initialize();
 
 		skyRenderer.initialize();
+		oitRenderer.initialize();
 
 		// Force updates that only run when the cameras change
 		sceneCamera.setDirty();
@@ -321,6 +339,7 @@ public class ZoneRenderer implements Renderer {
 	public void addShaderIncludes(ShaderIncludes includes) {
 		includes
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS)
+			.define("OIT_BIN_COUNT", OIT_BIN_COUNT)
 			.addInclude(
 				"WORLD_VIEW_GETTER",
 				() -> plugin.generateGetter("WorldView", "uboWorldViews.Array", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS)
@@ -332,9 +351,11 @@ public class ZoneRenderer implements Renderer {
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
 		sceneProgram.compile(includes);
 		waterProgram.compile(includes);
+		sceneOpaqueProgram.compile(includes);
 		fastShadowProgram.compile(includes);
 		detailedShadowProgram.compile(includes);
 		terrainShadowProgram.compile(includes);
+		oitRenderer.initializeShaders(includes);
 		skyRenderer.initializeShaders(includes);
 	}
 
@@ -342,9 +363,11 @@ public class ZoneRenderer implements Renderer {
 	public void destroyShaders() {
 		sceneProgram.destroy();
 		waterProgram.destroy();
+		sceneOpaqueProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
 		terrainShadowProgram.destroy();
+		oitRenderer.destroyShaders();
 		skyRenderer.destroyShaders();
 	}
 
@@ -375,6 +398,8 @@ public class ZoneRenderer implements Renderer {
 		if (indirectDrawCmdsStaging != null)
 			indirectDrawCmdsStaging.destroy();
 		indirectDrawCmdsStaging = null;
+
+		oitRenderer.destroyFBO();
 	}
 
 	@Override
@@ -424,12 +449,16 @@ public class ZoneRenderer implements Renderer {
 
 			ctx.completeInvalidation();
 
-			int offset = ctx.sceneContext.sceneOffset >> 3;
-			for (int zx = 0; zx < ctx.sizeX; ++zx)
-				for (int zz = 0; zz < ctx.sizeZ; ++zz)
-					ctx.zones[zx][zz].multizoneLocs(ctx.sceneContext, zx - offset, zz - offset, sceneCamera, ctx.zones);
+			if(!plugin.configUseOIT) {
+				int offset = ctx.sceneContext.sceneOffset >> 3;
+				for (int zx = 0; zx < ctx.sizeX; ++zx)
+					for (int zz = 0; zz < ctx.sizeZ; ++zz)
+						ctx.zones[zx][zz].multizoneLocs(ctx.sceneContext, zx - offset, zz - offset, sceneCamera, ctx.zones);
 
-			ctx.sortStaticAlphaModels(sceneCamera);
+				ctx.sortStaticAlphaModels(sceneCamera);
+			} else {
+				oitRenderer.preSceneDraw(ctx, isTopLevel);
+			}
 
 			ctx.map();
 
@@ -481,7 +510,8 @@ public class ZoneRenderer implements Renderer {
 
 		waitForFrameFence();
 
-		plugin.updateSceneFbo();
+		boolean sceneResized = plugin.updateSceneFbo();
+		oitRenderer.updateFBO(sceneResized);
 
 		if (!sceneManager.isTopLevelValid() || plugin.sceneViewport == null)
 			return;
@@ -712,8 +742,11 @@ public class ZoneRenderer implements Renderer {
 		gapFillerCmd.reset();
 		renderState.reset();
 
-		eboAlpha.orphan();
-		eboAlphaWriter.map(true);
+		if(!plugin.configUseOIT) {
+			// OIT Doesn't use Elements Drawing since it doesn't need to sort the face indicies
+			eboAlpha.orphan();
+			eboAlphaWriter.map(true);
+		}
 
 		checkGLErrors();
 	}
@@ -926,12 +959,9 @@ public class ZoneRenderer implements Renderer {
 
 	private void scenePass() {
 		frameTimer.begin(Timer.DRAW_SCENE);
+		renderState.disable.set(GL_STENCIL_TEST);
 		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
-		if (plugin.msaaSamples > 1) {
-			renderState.enable.set(GL_MULTISAMPLE);
-		} else {
-			renderState.disable.set(GL_MULTISAMPLE);
-		}
+		renderState.toggle(GL_MULTISAMPLE, plugin.msaaSamples > 1);
 		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
 		if (SUPPORTS_INDIRECT_DRAW)
 			renderState.ido.set(indirectDrawCmds.id);
@@ -945,6 +975,7 @@ public class ZoneRenderer implements Renderer {
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+		renderState.toggle(GL_BLEND, !plugin.configUseOIT);
 
 		sceneProgram.use();
 
@@ -955,6 +986,9 @@ public class ZoneRenderer implements Renderer {
 			glDepthRange(0, 1);
 		}
 
+		if (plugin.configUseOIT)
+			sceneOpaqueProgram.use();
+		else
 		sceneCmd.execute(renderState);
 
 		frameTimer.end(Timer.RENDER_SCENE_AND_SKY);
@@ -962,9 +996,9 @@ public class ZoneRenderer implements Renderer {
 		glBindVertexArray(0);
 
 		// Done rendering the scene
-		renderState.disable.set(GL_BLEND);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.disable.set(GL_DEPTH_TEST);
+		renderState.disable.set(GL_BLEND);
 		renderState.apply();
 
 		frameTimer.end(Timer.DRAW_SCENE);
@@ -1015,6 +1049,12 @@ public class ZoneRenderer implements Renderer {
 				if (plugin.enableDetailedTimers)
 					frameTimer.end(Timer.VISIBILITY_CHECK);
 				return zone.inShadowFrustum = true;
+			}
+
+			if (plugin.configUseOIT) {
+				// when using OIT we don't need to multi loc unless the zone isn't visible
+				int offset = ctx.sceneContext.sceneOffset >> 3;
+				zone.multizoneLocs(ctx.sceneContext, zx - offset, zz - offset, sceneCamera, ctx.zones);
 			}
 
 			zone.inShadowFrustum =
@@ -1106,13 +1146,18 @@ public class ZoneRenderer implements Renderer {
 				return;
 
 			frameTimer.begin(Timer.DRAW_ZONE_ALPHA);
-			sceneCmd.Enable(GL_BLEND);
+			if(!plugin.configUseOIT)
+				sceneCmd.Enable(GL_BLEND);
 
 			final boolean renderWater = z.inSceneFrustum && ctx.minLevel == 0 && level == 0 && z.hasWater;
 			if (renderWater) {
-				sceneCmd.SetShader(waterProgram);
-				z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
-				sceneCmd.SetShader(sceneProgram);
+				if (plugin.configUseOIT) {
+					z.renderOpaqueLevel(oitRenderer.waterCmd, Zone.LEVEL_WATER_SURFACE);
+				} else {
+					sceneCmd.SetShader(waterProgram);
+					z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
+					sceneCmd.SetShader(sceneProgram);
+				}
 			}
 
 			modelStreamingManager.ensureAsyncUploadsComplete(z);
@@ -1120,22 +1165,34 @@ public class ZoneRenderer implements Renderer {
 			final boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
 			if (hasAlpha) {
 				final int offset = ctx.sceneContext.sceneOffset >> 3;
+				final int zoneX = zx - offset;
+				final int zoneZ = zz - offset;
 				// Only sort if the alpha will be directly visible, since shadows don't require sorting
-				if (level == 0 && (!sceneManager.isRoot(ctx) || z.inSceneFrustum))
-					z.alphaSort(zx - offset, zz - offset, sceneCamera);
+				if(level == 0) {
+					if (!sceneManager.isRoot(ctx) || z.inSceneFrustum)
+						z.alphaSort(zoneX, zoneZ, sceneCamera, plugin.configUseOIT);
 
-				if (skyRenderer.castsShadows && !ctx.isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
-					directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
-					z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, shouldDrawRoofShadows);
+					if (skyRenderer.castsShadows && !ctx.isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
+						directionalCmd.SetShader(
+							plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
+						z.renderAlphaModels(directionalCmd, zoneX, zoneZ, level, ctx, ALPHA_DRAW_ALL_LEVELS | (shouldDrawRoofShadows ? ALPHA_DRAW_ROOF : 0));
+					}
+
+					if (plugin.configUseOIT && (!sceneManager.isRoot(ctx) || z.inSceneFrustum)) {
+						// OIT is a Composite pass, so we don't need to sort alpha models or even write depth
+						// However Alpha Discard needs to be drawn as part of the Scene Pass since Opaque faces break OIT
+						z.renderAlphaModels(oitRenderer.transparentCmd, zoneX, zoneZ, level, ctx, ALPHA_DRAW_BLEND_ONLY | ALPHA_DRAW_ALL_LEVELS);
+						z.renderAlphaModels(oitRenderer.alphaDiscardCmd, zoneX, zoneZ, level, ctx, ALPHA_DRAW_DISCARD_ONLY | ALPHA_DRAW_ALL_LEVELS);
+					}
 				}
 
-				if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
+				if (!plugin.configUseOIT && (!sceneManager.isRoot(ctx) || z.inSceneFrustum)) {
 					if (!sceneManager.isRoot(ctx) || renderWater) {
 						// Alpha is currently drawn with depth writes & depth testing enabled, and as such, alpha models and the water plane
 						// can Z-fight depending on draw order. To avoid alpha models above water causing the water surface to fail its
 						// depth test, we disable depth writes for alpha models and rely on correct back to front ordering of the zones
 						sceneCmd.DepthMask(false);
-						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
+						z.renderSortedAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
 						sceneCmd.DepthMask(true);
 					} else {
 						// Draw alpha models in two passes, first blending colors correctly, then writing depth for subsequent opaque models
@@ -1144,12 +1201,12 @@ public class ZoneRenderer implements Renderer {
 						// Write color without depth writes
 						sceneCmd.DepthMask(false);
 						sceneCmd.ColorMask(true, true, true, true);
-						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
+						z.renderSortedAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
 
 						// Write depth without color
 						sceneCmd.DepthMask(true);
 						sceneCmd.ColorMask(false, false, false, false);
-						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, true, false);
+						z.renderSortedAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, true, false);
 
 						// Restore color writes
 						sceneCmd.ColorMask(true, true, true, true);
@@ -1217,6 +1274,9 @@ public class ZoneRenderer implements Renderer {
 						// Draw shadow-only models
 						ctx.drawAll(VAO_SHADOW, ctx.vaoDirectionalCmd);
 					}
+
+					if(plugin.configUseOIT) // Draw all alpha-models regardless of order when using OIT
+						ctx.drawAll(VAO_ALPHA, oitRenderer.transparentCmd);
 
 					// Draw players with sorted alpha, without writing depth
 					ctx.vaoSceneCmd.DepthMask(false);
@@ -1318,6 +1378,8 @@ public class ZoneRenderer implements Renderer {
 				tiledLightingPass();
 				directionalShadowPass();
 				scenePass();
+				if(plugin.configUseOIT)
+					oitRenderer.render(renderState);
 			}
 
 			if (sceneFboValid && plugin.sceneResolution != null && plugin.sceneViewport != null) {
@@ -1336,7 +1398,7 @@ public class ZoneRenderer implements Renderer {
 				// Blit from the resolved FBO to the default FBO
 				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
 
-				if (APPLE && !client.isResized()) {
+				if (APPLE) {
 					// On macOS, we need to ensure that the alpha channel is opaque to prevent whatever
 					// is beneath from leaking through. In fixed mode, the MSAA resolve alone is not
 					// sufficient, since the viewport only covers part of the screen.
