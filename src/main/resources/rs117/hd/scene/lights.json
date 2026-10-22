@@ -46608,7 +46608,26 @@
     "animationIds": [ -1 ]
   },
   {
-    "description": "Xarth - Fire Ball Projectile",
+    "description": "Tormented Demon - Fire Ball Projectile",
+    "offset": [ 0, 25, 0 ],
+    "radius": 220,
+    "strength": 18,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 600,
+    "range": 20,
+    "projectileIds": [
+      "LUC2_UNDEAD_DEMON_FIREBALL_LARGE_PROJ"
+    ]
+  },
+  {
+    "description": "Xarth - Fire Bolt Projectile",
     "offset": [ 0, 0, 0 ],
     "radius": 250,
     "strength": 18,
@@ -46620,10 +46639,48 @@
     "type": "FLICKER",
     "duration": 0,
     "fadeInDuration": 300,
-    "fadeOutDuration": 1500,
+    "fadeOutDuration": 200,
     "range": 20,
     "projectileIds": [
       "LUC2_UNDEAD_DEMON_FIREBALL_PROJ_BIG"
+    ]
+  },
+  {
+    "description": "Xarth - Fire Bolt Projectile",
+    "offset": [ 0, 0, 0 ],
+    "radius": 200,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "projectileIds": [
+      "VFX_XARTH_ATTACK_RANGED_PROJECTILE_01"
+    ]
+  },
+  {
+    "description": "Xarth - Edge Fire",
+    "offset": [ 0, 300, 0 ],
+    "radius": 500,
+    "strength": 50,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE07"
     ]
   },
   {

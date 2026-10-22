@@ -79387,6 +79387,13 @@
         "colors": "h == 7",
         "baseMaterial": "METALLIC_1_SMOOTH_LIGHT",
         "undoVanillaShading": false
+      },
+      {
+        "description": "Cloth",
+        "colors": "h == 16",
+        "uvType": "BOX",
+        "baseMaterial": "CARPET_LIGHT",
+        "undoVanillaShading": false
       }
     ]
   },
@@ -79812,6 +79819,54 @@
     ]
   },
   {
+    "description": "TFA Dreadnoth Room - Pillar",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALLKIT_SOULPRISON01_PILLAR01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 2 || h == 7 && s > 1",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Dreadnoth Room - Corpse/Robes",
+    "baseMaterial": "CARPET_LIGHT",
+    "maxLightness": 33,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_SOULPRISON_CORPSE01",
+      "TFA_SOULPRISON_CORPSE02",
+      "TFA_SOULPRISON_CORPSE03",
+      "TFA_SOULPRISON_CORPSE05"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "TFA Dreadnoth Room - Corpse with Legs",
+    "baseMaterial": "CARPET_LIGHT",
+    "maxLightness": 33,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_SOULPRISON_CORPSE04"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "GRUNGE_3",
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
     "description": "TFA Bork Room - Walls - Damaged",
     "baseMaterial": "SMOOTH_STONE",
     "undoVanillaShading": false,
@@ -79868,6 +79923,26 @@
       "TFA_FALLOFF_GUTHIXIAN01_CORNER01",
       "TFA_FALLOFF_GUTHIXIAN01_END01",
       "TFA_FALLOFF_GUTHIXIAN01_DIAG02"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "minLightness": 10,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Dreadnoth Room - Walls - Undo Vanilla Shading",
+    "baseMaterial": "SMOOTH_STONE_LIGHT",
+    "objectIds": [
+      "TFA_FALLOFF_SOULPRISON01_EDGE03",
+      "TFA_FALLOFF_SOULPRISON01_EDGE02",
+      "TFA_FALLOFF_SOULPRISON01_EDGE01"
     ],
     "uvType": "BOX",
     "colorOverrides": [
