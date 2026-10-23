@@ -46727,6 +46727,7 @@
     "duration": 0,
     "fadeInDuration": 150,
     "fadeOutDuration": 600,
+    "despawnWithParent": true,
     "range": 20,
     "npcIds": [
       "TFA_XARTH_CORPSE"

@@ -79652,12 +79652,13 @@
     "uvScale": 0.4,
     "undoVanillaShading": false,
     "objectIds": [
-      "TFA_BRAZIER_ARCHIVE01_DEFAULT02"
+      "TFA_BRAZIER_ARCHIVE01_DEFAULT02",
+      "TFA_BRAZIER_GUTHIXIAN01_FINAL01"
     ],
     "colorOverrides": [
       {
         "description": "Paint",
-        "colors": "h == 8 || h == 16",
+        "colors": "h == 6 || h == 8 || h == 16",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
         "uvScale": 0.3,
@@ -79915,7 +79916,12 @@
       "TFA_WALLKIT_SOULPRISON01_PORTAL01",
       "TFA_WALLKIT_ARCHIVE01_PILLAR02_GREY01",
       "TFA_WALLKIT_ARCHIVE01_PILLAR02_FALLOFF02",
-      "TFA_WALLKIT_ARCHIVE01_PILLAR02_FALLOFF03"
+      "TFA_WALLKIT_ARCHIVE01_PILLAR02_FALLOFF03",
+      "TFA_OCELLUS_PLATFORM_JUMP_OUTER_NORTH",
+      "TFA_OCELLUS_PLATFORM_JUMP_MIDDLE",
+      "TFA_OCELLUS_PLATFORM_JUMP_OUTER_SOUTH",
+      "TFA_OCELLUS_PLATFORM_JUMP_OUTER_EAST",
+      "TFA_OCELLUS_PLATFORM_JUMP_OUTER_WEST"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -79937,8 +79943,9 @@
     ]
   },
   {
-    "description": "TFA - Huge Skill Walls with Bark",
+    "description": "TFA - Huge Skull Walls with Bark",
     "baseMaterial": "SMOOTH_STONE",
+    "castShadows": false,
     "uvOrientation": 256,
     "uvScale": 2,
     "objectIds": [
@@ -79991,16 +79998,33 @@
     ]
   },
   {
-    "description": "TFA - Boss Teleporter",
+    "description": "TFA - Final Boss Platform",
     "baseMaterial": "SMOOTH_STONE",
+    "uvOrientation": 256,
     "undoVanillaShading": false,
+    "uvScale": 2,
     "objectIds": [
-      "TFA_BOSS_TELEPORTER"
+      "TFA_DUNGEONKIT_GUTHIXIAN03_BRIDGE01",
+      "TFA_WALLKIT_ARCHIVE03_SLICE01_M",
+      "TFA_WALLKIT_ARCHIVE03_SLICE01",
+      "TFA_WALLKIT_ARCHIVE03_SLICE01_OFFSET",
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT01",
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT02",
+      "TFA_WALLKIT_ARCHIVE03_ENTRANCE01",
+      "TFA_WALLKIT_ARCHIVE03_CENTER01",
+      "TFA_WALLKIT_ARCHIVE03_CENTER01_BLOCKWALK",
+      "TFA_WALLKIT_ARCHIVE03_ENTRANCE02_CLOSED",
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_01",
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_02",
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_03",
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_04"
     ],
+    "uvType": "BOX",
     "colorOverrides": [
       {
-        "colors": "h < 10",
+        "colors": "h == 7",
         "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
         "shiftLightness": 2,
         "undoVanillaShading": false
       },
@@ -80010,6 +80034,30 @@
         "uvType": "BOX",
         "shiftLightness": 8,
         "uvScale": 0.15,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK",
+        "uvType": "BOX",
+        "shiftLightness": 8,
+        "uvScale": 0.15,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA - Boss Teleporter",
+    "baseMaterial": "GRUNGE_3",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_BOSS_TELEPORTER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 10",
+        "baseMaterial": "LIGHT_BARK",
+        "shiftLightness": 2,
         "undoVanillaShading": false
       }
     ]
