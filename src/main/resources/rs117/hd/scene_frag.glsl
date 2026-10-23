@@ -266,7 +266,7 @@ void main() {
         baseColor3.rgb = srgbToLinear(hslToSrgb(baseColor3.xyz));
 
         if (isSquashed)
-            baseColor1 = baseColor2 = baseColor3 = baseColor1 * .4;
+            baseColor1.rgb = baseColor2.rgb = baseColor3.rgb = baseColor1.rgb * .4;
 
         #if DISPLAY_BASE_COLOR
         if (DISPLAY_BASE_COLOR == 1) { // Redundant, used for syntax highlighting in IntelliJ

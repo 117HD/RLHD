@@ -34856,14 +34856,15 @@
     "height": 140,
     "radius": 180,
     "strength": 12,
+    "nightMultiplier": 3,
     "color": [
       255,
-      255,
+      200,
       15
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 10,
+    "range": 15,
     "objectIds": [
       "WILD_FALLOFF_CRATER"
     ]
@@ -34872,15 +34873,16 @@
     "description": "FOSSIL_ISLAND_LAVA_VENT_SMALL",
     "height": 90,
     "radius": 100,
-    "strength": 6,
+    "strength": 8,
+    "nightMultiplier": 3,
     "color": [
       255,
-      255,
+      200,
       15
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 10,
+    "range": 20,
     "objectIds": [
       "WILD_FALLOFF_CRATER_SMALL"
     ]
@@ -50725,7 +50727,8 @@
     "range": 30,
     "objectIds": [
       "MYQ6_HIDEOUT_SHRINE_VIS_NOOP",
-      "MYQ6_HIDEOUT_SHRINE_VIS"
+      "MYQ6_HIDEOUT_SHRINE_VIS",
+      "MYQ6_PUB_SHRINE_VIS"
     ]
   },
   {
@@ -50743,7 +50746,8 @@
     "range": 30,
     "objectIds": [
       "MYQ6_HIDEOUT_SHRINE_VIS_NOOP",
-      "MYQ6_HIDEOUT_SHRINE_VIS"
+      "MYQ6_HIDEOUT_SHRINE_VIS",
+      "MYQ6_PUB_SHRINE_VIS"
     ]
   },
   {
@@ -50761,7 +50765,8 @@
     "range": 30,
     "objectIds": [
       "MYQ6_HIDEOUT_SHRINE_VIS_NOOP",
-      "MYQ6_HIDEOUT_SHRINE_VIS"
+      "MYQ6_HIDEOUT_SHRINE_VIS",
+      "MYQ6_PUB_SHRINE_VIS"
     ]
   },
   {
@@ -50779,7 +50784,8 @@
     "range": 30,
     "objectIds": [
       "MYQ6_HIDEOUT_SHRINE_VIS_NOOP",
-      "MYQ6_HIDEOUT_SHRINE_VIS"
+      "MYQ6_HIDEOUT_SHRINE_VIS",
+      "MYQ6_PUB_SHRINE_VIS"
     ]
   },
   {

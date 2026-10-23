@@ -208,7 +208,7 @@ public class SceneUploader implements AutoCloseable {
 			ctx.fillGaps &&
 			zone.sizeO > 0 &&
 			ctx.sceneBase != null &&
-			(ctx.currentArea == null || ctx.currentArea.fillGaps);
+			(ctx.currentArea != null && ctx.currentArea.fillGaps);
 		if (shouldFillGaps)
 			estimateZoneGapFillers(ctx, zone, mzx, mzz);
 	}

@@ -150,9 +150,6 @@ public class ZoneRenderer implements Renderer {
 	private SceneShaderProgram.Water waterProgram;
 
 	@Inject
-	private SceneShaderProgram.GapFiller gapFillerProgram;
-
-	@Inject
 	private ShadowShaderProgram.Fast fastShadowProgram;
 
 	@Inject
@@ -335,7 +332,6 @@ public class ZoneRenderer implements Renderer {
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
 		sceneProgram.compile(includes);
 		waterProgram.compile(includes);
-		gapFillerProgram.compile(includes);
 		fastShadowProgram.compile(includes);
 		detailedShadowProgram.compile(includes);
 		terrainShadowProgram.compile(includes);
@@ -346,7 +342,6 @@ public class ZoneRenderer implements Renderer {
 	public void destroyShaders() {
 		sceneProgram.destroy();
 		waterProgram.destroy();
-		gapFillerProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
 		terrainShadowProgram.destroy();
@@ -951,12 +946,15 @@ public class ZoneRenderer implements Renderer {
 		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
+		sceneProgram.use();
+
 		if (!gapFillerCmd.isEmpty()) {
-			gapFillerProgram.use();
+			// Render gap fillers just above depth 0, which we reserve for rendering the sky later
+			glDepthRange(Float.MIN_NORMAL, Float.MIN_NORMAL);
 			gapFillerCmd.execute(renderState);
+			glDepthRange(0, 1);
 		}
 
-		sceneProgram.use();
 		sceneCmd.execute(renderState);
 
 		frameTimer.end(Timer.RENDER_SCENE_AND_SKY);
