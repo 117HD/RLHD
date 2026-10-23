@@ -279,7 +279,7 @@ public class LightManager {
 						if (anim != null)
 							animationId = anim.getId();
 					}
-					parentExists = light.def.animationIds.contains(animationId);
+					parentExists = light.def.matchesAnimation(animationId);
 				}
 			} else if (light.projectile != null) {
 				light.origin[0] = (int) light.projectile.getX();
@@ -292,9 +292,9 @@ public class LightManager {
 					if (light.animationSpecific) {
 						if (light.def.waitForAnimation && gameCycle < light.projectile.getStartCycle()) {
 							parentExists = false;
-						} else if (!light.def.animationIds.isEmpty()) {
+						} else if (light.def.hasAnimationFilter()) {
 							var animation = light.projectile.getAnimation();
-							parentExists = animation != null && light.def.animationIds.contains(animation.getId());
+							parentExists = light.def.matchesAnimation(animation == null ? -1 : animation.getId());
 						}
 					}
 					light.orientation = light.projectile.getOrientation();
@@ -308,9 +308,9 @@ public class LightManager {
 				} else if (light.animationSpecific) {
 					if (light.def.waitForAnimation && gameCycle < light.graphicsObject.getStartCycle()) {
 						parentExists = false;
-					} else if (!light.def.animationIds.isEmpty()) {
+					} else if (light.def.hasAnimationFilter()) {
 						var animation = light.graphicsObject.getAnimation();
-						parentExists = animation != null && light.def.animationIds.contains(animation.getId());
+						parentExists = light.def.matchesAnimation(animation == null ? -1 : animation.getId());
 					}
 				}
 			} else if (light.actor != null && !light.markedForRemoval) {
@@ -340,7 +340,7 @@ public class LightManager {
 								}
 							}
 						} else {
-							parentExists = light.def.animationIds.contains(light.actor.getAnimation());
+							parentExists = light.def.matchesAnimation(light.actor.getAnimation());
 						}
 					}
 

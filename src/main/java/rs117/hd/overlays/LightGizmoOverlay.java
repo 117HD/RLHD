@@ -241,7 +241,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 			if (hideInvisibleLights && l.hiddenByPlane)
 				continue;
 
-			if (hideAnimLights && !l.def.animationIds.isEmpty() && !l.parentExists)
+			if (hideAnimLights && l.def.hasAnimationFilter() && !l.parentExists)
 				continue;
 
 			boolean isHovered = !hovers.isEmpty() && hovers.get(0) == l;

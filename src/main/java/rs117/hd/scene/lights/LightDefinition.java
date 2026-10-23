@@ -59,6 +59,18 @@ public class LightDefinition {
 	public HashSet<Integer> graphicsObjectIds = new HashSet<>();
 	@JsonAdapter(GamevalManager.AnimationAdapter.class)
 	public HashSet<Integer> animationIds = new HashSet<>();
+	@JsonAdapter(GamevalManager.AnimationAdapter.class)
+	public HashSet<Integer> excludeAnimationIds = new HashSet<>();
+
+	public boolean hasAnimationFilter() {
+		return !animationIds.isEmpty() || !excludeAnimationIds.isEmpty();
+	}
+
+	public boolean matchesAnimation(int animationId) {
+		if (excludeAnimationIds.contains(animationId))
+			return false;
+		return animationIds.isEmpty() ? !excludeAnimationIds.isEmpty() : animationIds.contains(animationId);
+	}
 
 	public void normalize() {
 		if (description == null)
