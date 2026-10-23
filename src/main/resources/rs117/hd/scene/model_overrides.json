@@ -79943,6 +79943,53 @@
     ]
   },
   {
+    "description": "TFA Moia - Dead Walls with Branches and or Bark",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALLKIT_MOIA01_DEFAULT02",
+      "TFA_WALLKIT_MOIA01_DEFAULT01",
+      "TFA_WALLKIT_ARCHIVE01_SKELETON01",
+      "TFA_WALLKIT_MOIA01_PILLAR01_M",
+      "TFA_WALLKIT_ARCHIVE01_MOIA01_PILLAR01",
+      "TFA_WALLKIT_ARCHIVE01_SKELETON02",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_MOIA01_TRANSITION01",
+      "TFA_WALLKIT_ARCHIVE01_MOIA01_ROOTS02",
+      "TFA_WALLKIT_ARCHIVE01_MOIA01_TRANSITION01",
+      "TFA_WALLKIT_ARCHIVE01_MOIA01_TRANSITION02",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_MOIA01_TRANSITION02",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_MOIA01_CORNER01",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_MOIA01",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_MOIA01_CORNER02",
+      "TFA_WALLKIT_MOIA01_TRUNKS01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 16 && s == 6",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "shiftLightness": 8,
+        "uvScale": 0.15,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
     "description": "TFA - Huge Skull Walls with Bark",
     "baseMaterial": "SMOOTH_STONE",
     "castShadows": false,
