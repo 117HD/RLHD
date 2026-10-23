@@ -80001,7 +80001,9 @@
     "description": "TFA - Final Boss Platform",
     "baseMaterial": "SMOOTH_STONE",
     "uvOrientation": 256,
+    "shiftLightness": 8,
     "undoVanillaShading": false,
+    "upwardsNormals": true,
     "uvScale": 2,
     "objectIds": [
       "TFA_DUNGEONKIT_GUTHIXIAN03_BRIDGE01",
@@ -80017,7 +80019,19 @@
       "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_01",
       "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_02",
       "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_03",
-      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_04"
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_04",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_SE_03",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_SE_02",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_SE_01",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_NE_03",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_NE_02",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_NE_01",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_NW_03",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_NW_02",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_NW_01",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_SW_03",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_SW_02",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_SW_01"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -80029,11 +80043,9 @@
         "undoVanillaShading": false
       },
       {
-        "colors": "h == 16 && s == 6",
-        "baseMaterial": "LEAF_VEINS",
+        "colors": "h == 12",
+        "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
-        "shiftLightness": 8,
-        "uvScale": 0.15,
         "undoVanillaShading": false
       },
       {
@@ -80045,6 +80057,23 @@
         "undoVanillaShading": false
       }
     ]
+  },
+  {
+    "description": "TFA - Final Boss Censers",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "undoVanillaShading": false,
+    "uvScale": 0.15,
+    "objectIds": [
+      "TFA_OCELLUS_ARTIFACT_SPEC_INACTIVE",
+      "TFA_OCELLUS_ARTIFACT_HEAL_INACTIVE",
+      "TFA_OCELLUS_ARTIFACT_SPEC",
+      "TFA_OCELLUS_ARTIFACT_HEAL",
+      "TFA_OCELLUS_ARTIFACT_DAMAGE_MELEE",
+      "TFA_OCELLUS_ARTIFACT_DAMAGE_RANGED",
+      "TFA_OCELLUS_ARTIFACT_DAMAGE_MELEE_INACTIVE",
+      "TFA_OCELLUS_ARTIFACT_DAMAGE_RANGED_INACTIVE"
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "TFA - Boss Teleporter",

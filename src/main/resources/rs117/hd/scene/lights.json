@@ -46912,6 +46912,57 @@
     ]
   },
   {
+    "description": "TFA - Occ orange portal",
+    "offset": [ 0, 100, 0 ],
+    "radius": 120,
+    "strength": 20,
+    "color": [
+      252,
+      200,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_OCELLUS_QUADRANT_WALL_INACTIVE"
+    ]
+  },
+  {
+    "description": "TFA - Occ purple portal",
+    "offset": [ 0, 100, 0 ],
+    "radius": 120,
+    "strength": 25,
+    "color": [
+      255,
+      0,
+      230
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_OCELLUS_QUADRANT_WALL_ACTIVE"
+    ]
+  },
+  {
+    "description": "TFA - Occ purple proj",
+    "offset": [ 0, 185, 0 ],
+    "radius": 250,
+    "strength": 50,
+    "color": [
+      255,
+      0,
+      230
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_PORTAL_PROJECTILE"
+    ]
+  },
+  {
     "description": "TFA - Pink Relic Glow",
     "offset": [ 0, 185, 0 ],
     "radius": 250,
