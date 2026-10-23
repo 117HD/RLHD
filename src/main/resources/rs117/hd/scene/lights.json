@@ -46588,7 +46588,8 @@
     "range": 20,
     "npcIds": [
       "TFA_XARTH"
-    ]
+    ],
+    "excludeAnimationIds": [ "XARTH_DEATH_01" ]
   },
   {
     "description": "Xarth - Top 2",
@@ -46607,12 +46608,13 @@
     "range": 20,
     "npcIds": [
       "TFA_XARTH"
-    ]
+    ],
+    "excludeAnimationIds": [ "XARTH_DEATH_01" ]
   },
   {
     "description": "Xarth - Main",
     "offset": [ 0, 150, -50 ],
-    "radius": 500,
+    "radius": 375,
     "strength": 25,
     "color": [
       252,
@@ -46622,11 +46624,12 @@
     "type": "FLICKER",
     "duration": 0,
     "fadeInDuration": 300,
-    "fadeOutDuration": 200,
+    "fadeOutDuration": 3000,
     "range": 20,
     "npcIds": [
       "TFA_XARTH"
-    ]
+    ],
+    "excludeAnimationIds": [ "XARTH_DEATH_01" ]
   },
   {
     "description": "Xarth - Feet 1",
@@ -46641,11 +46644,12 @@
     "type": "FLICKER",
     "duration": 0,
     "fadeInDuration": 300,
-    "fadeOutDuration": 200,
+    "fadeOutDuration": 3000,
     "range": 20,
     "npcIds": [
       "TFA_XARTH"
-    ]
+    ],
+    "excludeAnimationIds": [ "XARTH_DEATH_01" ]
   },
   {
     "description": "Xarth - Feet 2",
@@ -46660,21 +46664,22 @@
     "type": "FLICKER",
     "duration": 0,
     "fadeInDuration": 300,
-    "fadeOutDuration": 200,
+    "fadeOutDuration": 3000,
     "range": 20,
     "npcIds": [
       "TFA_XARTH"
-    ]
+    ],
+    "excludeAnimationIds": [ "XARTH_DEATH_01" ]
   },
   {
     "description": "Xarth - Flame Stomp",
     "areas": [ "TFA_XARTH" ],
     "height": 40,
-    "radius": 300,
-    "strength": 15,
+    "radius": 250,
+    "strength": 10,
     "waitForAnimation": true,
     "fixedDespawnTime": true,
-    "despawnDelay": 700,
+    "despawnDelay": 750,
     "fadeOutDuration": 300,
     "fadeInDuration": 200,
     "color": [

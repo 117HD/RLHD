@@ -79547,7 +79547,8 @@
     "objectIds": [
       "TFA_OUT_OF_RAID_SCOREBOARD",
       "TFA_IN_RAID_SCOREBOARD_BROKEN",
-      "TFA_LOBBY_CHAIR_STUMP01_DEFAULT01"
+      "TFA_LOBBY_CHAIR_STUMP01_DEFAULT01",
+      "TFA_TABLE_NEXUS01_RUNES01"
     ],
     "colorOverrides": [
       {
@@ -79561,7 +79562,7 @@
       },
       {
         "description": "Books, Parchment",
-        "colors": "h == 6 || h == 7 || h >= 13",
+        "colors": "h == 6 || h == 7 || h >= 13 || h == 4",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
         "uvScale": 0.3,
@@ -79882,6 +79883,8 @@
       "TFA_NEXUS_SECTION3_DOOR_WEST",
       "TFA_NEXUS_SECTION1_DOOR_EAST",
       "TFA_NEXUS_SECTION2_DOOR_EAST",
+      "TFA_NEXUS_SECTION1_DOOR_EAST_SLIGHTLY_OPENED",
+      "TFA_NEXUS_SECTION1_DOOR_WEST_SLIGHTLY_OPENED",
       "TFA_NEXUS_SECTION3_DOOR_EAST_SLIGHTLY_OPENED",
       "TFA_NEXUS_SECTION3_DOOR_WEST_SLIGHTLY_OPENED",
       "TFA_NEXUS_SECTION2_DOOR_WEST_SLIGHTLY_OPENED",
@@ -79901,11 +79904,6 @@
       "TFA_WALLKIT_ARCHIVE01_TRANSITION01_DARKER02",
       "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE03",
       "TFA_WALLKIT_ARCHIVE01_PILLAR02_FALLOFF01",
-      "TFA_WALLKIT_ARCHIVE03_WALKWAY04",
-      "TFA_WALLKIT_ARCHIVE03_WALKWAY01",
-      "TFA_WALLKIT_ARCHIVE03_WALKWAY05",
-      "TFA_WALLKIT_ARCHIVE03_WALKWAY03",
-      "TFA_WALLKIT_ARCHIVE03_WALKWAY02",
       "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE03_2X2",
       "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE02_M",
       "TFA_NEXUS_SECTION1_DOOR_EAST_SLIGHTLY_OPENED",
@@ -79925,6 +79923,84 @@
         "colors": "h == 7",
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 16 && s == 6",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "shiftLightness": 8,
+        "uvScale": 0.15,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA - Huge Skill Walls with Bark",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvOrientation": 256,
+    "uvScale": 2,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE02_SKULL02",
+      "TFA_WALLKIT_ARCHIVE02_SKULL01",
+      "TFA_WALLKIT_ARCHIVE02_FILLER01",
+      "TFA_WALLKIT_ARCHIVE02_FILLER01_M",
+      "TFA_WALLKIT_ARCHIVE02_WALKWAY02",
+      "TFA_WALLKIT_ARCHIVE02_WALKWAY01",
+      "TFA_WALLKIT_ARCHIVE02_CORNER00",
+      "TFA_WALLKIT_ARCHIVE02_WALKWAY00",
+      "TFA_WALLKIT_ARCHIVE02_PILLAR04",
+      "TFA_WALLKIT_ARCHIVE02_PILLAR03",
+      "TFA_WALLKIT_ARCHIVE02_PILLAR01",
+      "TFA_WALLKIT_ARCHIVE02_PILLAR00",
+      "TFA_WALLKIT_ARCHIVE02_FILLER00_M",
+      "TFA_WALLKIT_ARCHIVE02_STRAIGHT00",
+      "TFA_WALLKIT_ARCHIVE02_FILLER00",
+      "TFA_WALLKIT_ARCHIVE03_WALKWAY04",
+      "TFA_WALLKIT_ARCHIVE03_WALKWAY01",
+      "TFA_WALLKIT_ARCHIVE03_WALKWAY05",
+      "TFA_WALLKIT_ARCHIVE03_WALKWAY03",
+      "TFA_WALLKIT_ARCHIVE03_WALKWAY02"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 16 && s == 6",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "shiftLightness": 8,
+        "uvScale": 0.15,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK",
+        "uvType": "BOX",
+        "shiftLightness": 8,
+        "uvScale": 0.15,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA - Boss Teleporter",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_BOSS_TELEPORTER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 10",
+        "baseMaterial": "LIGHT_BARK",
         "shiftLightness": 2,
         "undoVanillaShading": false
       },
@@ -79978,7 +80054,8 @@
       "TFA_WALLKIT_ARCHIVE02_VINES00",
       "TFA_WALLKIT_ARCHIVE02_VINES03",
       "TFA_WALLKIT_ARCHIVE02_VINES02",
-      "TFA_WALLKIT_ARCHIVE02_VINES01"
+      "TFA_WALLKIT_ARCHIVE02_VINES01",
+      "TFA_WALLKIT_ARCHIVE02_VINES00_SMALL"
     ],
     "colorOverrides": [
       {
@@ -80036,19 +80113,10 @@
     ]
   },
   {
-    "description": "TFA Dreadnoth Room - Jelly Minion",
+    "description": "TFA Dreadnoth Room - Jelly Range Attack",
     "undoVanillaShading": false,
-    "shiftSaturation": 1,
-    "npcIds": [
-      "TFA_JELLY_MINION"
-    ]
-  },
-  {
-    "description": "TFA Dreadnoth Room - Jelly Minion",
-    "undoVanillaShading": false,
-    "minLightness": 20,
-    "shiftLightness": 2,
-    "shiftSaturation": 1,
+    "minLightness": 30,
+    "shiftLightness": 10,
     "projectileIds": [
       "VFX_DREADNOTH_RANGED_PROJ01"
     ]
@@ -80378,7 +80446,6 @@
   {
     "description": "TFA Archive Guardian Room - Floor Tiles",
     "baseMaterial": "SMOOTH_STONE_LIGHT",
-    "undoVanillaShading": false,
     "objectIds": [
       "TFA_FLOORKIT_GUTHIXIAN01_CORNER01_DARK02",
       "TFA_FLOORKIT_GUTHIXIAN01_TILE01_DARK02",
@@ -80519,7 +80586,8 @@
     "baseMaterial": "PURE_BLACK",
     "receiveShadows": false,
     "objectIds": [
-      "TFA_WALLKIT_ARCHIVE01_WALLTOP01"
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP01",
+      "TFA_WALLKIT_ARCHIVE02_TOP01"
     ]
   },
   {
@@ -80574,8 +80642,7 @@
   {
     "description": "TFA Bork Room - Smorks Range Attack",
     "undoVanillaShading": false,
-    "shiftLightness": -2,
-    "graphicsObjectIds": [
+    "projectileIds": [
       "VFX_SMORK_RANGE_ATTACK_PROJANIM01"
     ]
   },
@@ -80859,7 +80926,13 @@
       "TFA_CORPSE_EZEKIEL01_BANDOS01",
       "TFA_CORPSE_EZEKIEL01_FORTNITHY02",
       "TFA_CORPSE_EZEKIEL01_GOBLIN02",
-      "TFA_CORPSE_EZEKIEL01_GOBLIN01"
+      "TFA_CORPSE_SARADOMIN01_DARK01",
+      "TFA_CORPSE_SARADOMIN02_DARK01",
+      "TFA_CORPSE_EZEKIEL01_GOBLIN01",
+      "TFA_CORPSE_ZAMORAK01_DARK01",
+      "TFA_CORPSE_ZAMORAK02_DARK01",
+      "TFA_CORPSE_GOBLIN01_DARK01",
+      "TFA_CORPSE_GOBLIN02_DARK02"
     ],
     "colorOverrides": [
       {
