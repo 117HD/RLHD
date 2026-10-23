@@ -19322,7 +19322,8 @@
     "npcIds": [
       "THRALL_IMP_MELEE_LESSER",
       "THRALL_IMP_MELEE_SUPERIOR",
-      "THRALL_IMP_MELEE_GREATER"
+      "THRALL_IMP_MELEE_GREATER",
+      "TFA_DAGONHAI_DEMON"
     ]
   },
   {
@@ -46912,7 +46913,24 @@
     ]
   },
   {
-    "description": "TFA - Occ orange portal",
+    "description": "TFA - Ocellus Fire Shard",
+    "offset": [ 0, 100, 0 ],
+    "radius": 120,
+    "strength": 20,
+    "color": [
+      252,
+      70,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "projectileIds": [
+
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Orange Portal",
     "offset": [ 0, 100, 0 ],
     "radius": 120,
     "strength": 20,
@@ -46929,10 +46947,10 @@
     ]
   },
   {
-    "description": "TFA - Occ purple portal",
+    "description": "TFA - Ocellus Purple Portal",
     "offset": [ 0, 100, 0 ],
-    "radius": 120,
-    "strength": 25,
+    "radius": 140,
+    "strength": 20,
     "color": [
       255,
       0,
@@ -46946,10 +46964,10 @@
     ]
   },
   {
-    "description": "TFA - Occ purple proj",
-    "offset": [ 0, 185, 0 ],
-    "radius": 250,
-    "strength": 50,
+    "description": "TFA - Ocellus Purple Portal Projectile",
+    "offset": [ 0, 100, 0 ],
+    "radius": 225,
+    "strength": 10,
     "color": [
       255,
       0,
@@ -46958,7 +46976,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 25,
-    "graphicsObjectIds": [
+    "projectileIds": [
       "VFX_OCELLUS_PORTAL_PROJECTILE"
     ]
   },
@@ -46977,6 +46995,74 @@
     "range": 10,
     "objectIds": [
       "TFA_DAGONHAI_BOOK01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Pot",
+    "offset": [ 0, 125, 0 ],
+    "radius": 850,
+    "strength": 20,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "PULSE",
+    "duration": 5000,
+    "range": 10,
+    "npcIds": [
+      "TFA_DAGONHAI_FOCUS"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Fireball",
+    "offset": [ 0, 0, 0 ],
+    "radius": 250,
+    "strength": 20,
+    "color": [
+      252,
+      70,
+      3
+    ],
+    "type": "PULSE",
+    "duration": 5000,
+    "range": 10,
+    "graphicsObjectIds": [
+      "VFX_DAGONHAI_CAULDRON_ATTACK_ZAMORAK_PROJANIM_01"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Fireball - Impact 1",
+    "offset": [ 0, 50, 0 ],
+    "radius": 125,
+    "strength": 20,
+    "color": [
+      252,
+      70,
+      3
+    ],
+    "type": "PULSE",
+    "duration": 5000,
+    "range": 10,
+    "graphicsObjectIds": [
+      "VFX_DAGONHAI_CAULDRON_ATTACK_ZAMORAK_AOE_IDLE_00"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Purple Portal",
+    "offset": [ 0, 150, 0 ],
+    "radius": 250,
+    "strength": 20,
+    "color": [
+      252,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 5000,
+    "range": 10,
+    "npcIds": [
+      "TFA_DAGONHAI_RIFT"
     ]
   },
   {
@@ -47031,10 +47117,12 @@
     ]
   },
   {
-    "description": "TFA - Ezekiel Star Explosion",
+    "description": "TFA - Ezekiel Star Explosion 1",
     "offset": [ 0, 185, 0 ],
-    "radius": 200,
+    "radius": 175,
     "strength": 15,
+    "despawnDelay": 1000,
+    "fixedDespawnTime": true,
     "color": [
       252,
       148,
@@ -47042,9 +47130,32 @@
     ],
     "type": "FLICKER",
     "duration": 0,
+    "spawnDelay": 150,
+    "waitForAnimation": true,
     "range": 25,
     "graphicsObjectIds": [
       "VFX_EZEKIEL_STAR_EXPLOSION01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Star Explosion 2",
+    "offset": [ 0, 185, 0 ],
+    "radius": 175,
+    "strength": 15,
+    "despawnDelay": 2000,
+    "fixedDespawnTime": true,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "spawnDelay": 650,
+    "waitForAnimation": true,
+    "range": 25,
+    "graphicsObjectIds": [
+
     ]
   },
   {
@@ -47064,6 +47175,23 @@
     "graphicsObjectIds": [
       "VFX_EZEKIEL_FINALE_IMPACT_MEDIUM01",
       "VFX_EZEKIEL_FINALE_IMPACT_SMALL01"
+    ]
+  },
+  {
+    "description": "TFA - Moia Zombie",
+    "offset": [ 0, 185, 0 ],
+    "radius": 160,
+    "strength": 15,
+    "color": [
+      252,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "npcIds": [
+      "TFA_MOIA_MINION"
     ]
   },
   {
