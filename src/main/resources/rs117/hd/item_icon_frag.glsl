@@ -7,12 +7,9 @@ uniform sampler2DArray itemIconSurroundings;
 uniform sampler2DArray itemBackgrounds;
 uniform sampler2D uiTexture;
 
+#include <scaling/ui_scaling.glsl>
 #include <utils/color_blindness.glsl>
 #include <utils/misc.glsl>
-
-#if UI_SCALING_MODE == UI_SCALING_MODE_HYBRID
-    #include <scaling/hybrid.glsl>
-#endif
 
 const ivec2 ICON_SIZE = ivec2(36, 32);
 
@@ -53,11 +50,9 @@ vec4 otherOverlays(vec2 gridUv, float item, float shadow) {
 
 void main() {
     vec2 uiUv = vec2(gl_FragCoord.x / uboUi.targetDimensions.x, 1 - gl_FragCoord.y / uboUi.targetDimensions.y);
-    #if UI_SCALING_MODE == UI_SCALING_MODE_HYBRID
-        float ui = textureHybrid(uiTexture, uiUv).a;
-    #else
-        float ui = texture(uiTexture, uiUv).a;
-    #endif
+    // Sampled like the UI pass, since scaling like xBR blends in the alpha of neighboring pixels too,
+    // and clamped like the UI pass's output is, since cubic scaling overshoots
+    float ui = clamp(textureUi(uiTexture, uiUv).a, 0, 1);
 
     vec2 grid = vec2(gridSize());
     vec2 gridUv = (fUv * vec2(ICON_SIZE) + (grid - vec2(ICON_SIZE)) / 2) / grid;
