@@ -78683,9 +78683,10 @@
       {
         "colors": "s == 7",
         "undoVanillaShading": false,
-        "shiftLightness": 1,
         "baseMaterial": "ROCK_3_LIGHT",
         "uvType": "BOX",
+        "shiftLightness": 1,
+        "shiftSaturation": -2,
         "castShadows": false
       }
     ]
