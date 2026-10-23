@@ -12288,6 +12288,13 @@
     "hideOtherAreas": true
   },
   {
+    "name": "TFA_OCELLUS",
+    "regions": [
+      16472
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "TFA",
     "areas": [
       "TFA_LOBBY",

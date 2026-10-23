@@ -79423,7 +79423,8 @@
     "uvScale": 0.5,
     "objectIds": [
       "TFA_CHEST_NEXUS01_SUPPLY01",
-      "TFA_REWARDS_CHEST_LOBBY_CLOSED"
+      "TFA_REWARDS_CHEST_LOBBY_CLOSED",
+      "TFA_WHEELBARROW_NEXUS01_SUPPLY01"
     ],
     "colorOverrides": [
       {
@@ -79545,6 +79546,7 @@
     "undoVanillaShading": false,
     "objectIds": [
       "TFA_OUT_OF_RAID_SCOREBOARD",
+      "TFA_IN_RAID_SCOREBOARD_BROKEN",
       "TFA_LOBBY_CHAIR_STUMP01_DEFAULT01"
     ],
     "colorOverrides": [
@@ -79900,6 +79902,10 @@
       "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE03",
       "TFA_WALLKIT_ARCHIVE01_PILLAR02_FALLOFF01",
       "TFA_WALLKIT_ARCHIVE03_WALKWAY04",
+      "TFA_WALLKIT_ARCHIVE03_WALKWAY01",
+      "TFA_WALLKIT_ARCHIVE03_WALKWAY05",
+      "TFA_WALLKIT_ARCHIVE03_WALKWAY03",
+      "TFA_WALLKIT_ARCHIVE03_WALKWAY02",
       "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE03_2X2",
       "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE02_M",
       "TFA_NEXUS_SECTION1_DOOR_EAST_SLIGHTLY_OPENED",
@@ -79909,7 +79915,9 @@
       "TFA_WALLKIT_ARCHIVE01_ENTRY03",
       "TFA_WALLKIT_ARCHIVE01_DAMAGED02",
       "TFA_WALLKIT_SOULPRISON01_PORTAL01",
-      "TFA_WALLKIT_ARCHIVE01_PILLAR02_GREY01"
+      "TFA_WALLKIT_ARCHIVE01_PILLAR02_GREY01",
+      "TFA_WALLKIT_ARCHIVE01_PILLAR02_FALLOFF02",
+      "TFA_WALLKIT_ARCHIVE01_PILLAR02_FALLOFF03"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -79928,6 +79936,80 @@
         "uvScale": 0.15,
         "undoVanillaShading": false
       }
+    ]
+  },
+  {
+    "description": "TFA - Relic Display Plinth",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_DISPLAY_PLINTH02_GUTHIXIAN01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 16 && s == 7",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "shiftLightness": 8,
+        "uvScale": 0.15,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA - Branches Only",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "shiftLightness": 4,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE02_VINES02_SMALL",
+      "TFA_WALLKIT_ARCHIVE02_VINES00_SMALL_M",
+      "TFA_WALLKIT_ARCHIVE02_VINES01_SMALL",
+      "TFA_WALLKIT_ARCHIVE02_VINES03_SMALL",
+      "TFA_WALLKIT_ARCHIVE02_VINES00",
+      "TFA_WALLKIT_ARCHIVE02_VINES03",
+      "TFA_WALLKIT_ARCHIVE02_VINES02",
+      "TFA_WALLKIT_ARCHIVE02_VINES01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 16 && s == 7",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "shiftLightness": 8,
+        "uvScale": 0.15,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA - Artifact",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_ARTEFACT_GUTHIXIAN01",
+      "TFA_ARTEFACT_GUTHIXIAN02",
+      "TFA_ARTEFACT_GUTHIXIAN03",
+      "TFA_ARTEFACT_GUTHIXIAN04",
+      "TFA_ARTEFACT_GUTHIXIAN05"
+    ]
+  },
+  {
+    "description": "TFA - Artifact - Upwards Normals",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "upwardsNormals": true,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_ARTEFACT_GUTHIXIAN06"
     ]
   },
   {
@@ -79951,6 +80033,24 @@
         "uvType": "BOX",
         "undoVanillaShading": false
       }
+    ]
+  },
+  {
+    "description": "TFA Dreadnoth Room - Jelly Minion",
+    "undoVanillaShading": false,
+    "shiftSaturation": 1,
+    "npcIds": [
+      "TFA_JELLY_MINION"
+    ]
+  },
+  {
+    "description": "TFA Dreadnoth Room - Jelly Minion",
+    "undoVanillaShading": false,
+    "minLightness": 20,
+    "shiftLightness": 2,
+    "shiftSaturation": 1,
+    "projectileIds": [
+      "VFX_DREADNOTH_RANGED_PROJ01"
     ]
   },
   {
@@ -80310,7 +80410,8 @@
     "baseMaterial": "SMOOTH_STONE",
     "undoVanillaShading": false,
     "objectIds": [
-      "TFA_DUNGEONKIT_GUTHIXIAN01_BATTERY01_BASE"
+      "TFA_DUNGEONKIT_GUTHIXIAN01_BATTERY01_BASE",
+      "TFA_CORPSE_GUARDIAN01"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -80468,6 +80569,14 @@
         "uvType": "BOX",
         "uvScale": 0.7
       }
+    ]
+  },
+  {
+    "description": "TFA Bork Room - Smorks Range Attack",
+    "undoVanillaShading": false,
+    "shiftLightness": -2,
+    "graphicsObjectIds": [
+      "VFX_SMORK_RANGE_ATTACK_PROJANIM01"
     ]
   },
   {

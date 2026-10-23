@@ -3275,6 +3275,13 @@
     "instantTransition": true
   },
   {
+    "area": "TFA_ARCHIVE_GUARDIAN",
+    "groundFogOpacity": 0.85,
+    "groundFogStart": 500,
+    "groundFogEnd": -50,
+    "instantTransition": true
+  },
+  {
     "area": "TFA_BORK",
     "groundFogOpacity": 0.85,
     "groundFogStart": -100,
@@ -3286,6 +3293,13 @@
     "groundFogOpacity": 0.85,
     "groundFogStart": -100,
     "groundFogEnd": -400,
+    "instantTransition": true
+  },
+  {
+    "area": "TFA_OCELLUS",
+    "groundFogOpacity": 0.85,
+    "groundFogStart": 500,
+    "groundFogEnd": -50,
     "instantTransition": true
   },
   {

@@ -46572,6 +46572,124 @@
     ]
   },
   {
+    "description": "Xarth - Top 1",
+    "offset": [ 0, 650, -100 ],
+    "radius": 425,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "npcIds": [
+      "TFA_XARTH"
+    ]
+  },
+  {
+    "description": "Xarth - Top 2",
+    "offset": [ 0, 650, 100 ],
+    "radius": 425,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "npcIds": [
+      "TFA_XARTH"
+    ]
+  },
+  {
+    "description": "Xarth - Main",
+    "offset": [ 0, 150, -50 ],
+    "radius": 500,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "npcIds": [
+      "TFA_XARTH"
+    ]
+  },
+  {
+    "description": "Xarth - Feet 1",
+    "offset": [ 50, 75, 75 ],
+    "radius": 425,
+    "strength": 30,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "npcIds": [
+      "TFA_XARTH"
+    ]
+  },
+  {
+    "description": "Xarth - Feet 2",
+    "offset": [ -50, 75, 75 ],
+    "radius": 225,
+    "strength": 30,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "npcIds": [
+      "TFA_XARTH"
+    ]
+  },
+  {
+    "description": "Xarth - Flame Stomp",
+    "areas": [ "TFA_XARTH" ],
+    "height": 40,
+    "radius": 300,
+    "strength": 15,
+    "waitForAnimation": true,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [
+      "VFX_VMQ4_ENNIUS_FIRE_EXPLOSION"
+    ]
+  },
+  {
     "description": "Xarth - Arena Fire Hazard",
     "offset": [ 0, 100, 0 ],
     "radius": 150,
@@ -46768,6 +46886,74 @@
     "range": 10,
     "objectIds": [
       "TFA_PORTAL_XARTH01"
+    ]
+  },
+  {
+    "description": "TFA - Red Relic Glow",
+    "offset": [ 0, 185, 0 ],
+    "radius": 250,
+    "strength": 50,
+    "color": [
+      252,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_ARTEFACT_GUTHIXIAN02"
+    ]
+  },
+  {
+    "description": "TFA - Pink Relic Glow",
+    "offset": [ 0, 185, 0 ],
+    "radius": 250,
+    "strength": 50,
+    "color": [
+      252,
+      0,
+      100
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_ARTEFACT_GUTHIXIAN03"
+    ]
+  },
+  {
+    "description": "TFA - Blue Relic Glow 1",
+    "offset": [ 0, 195, 0 ],
+    "radius": 450,
+    "strength": 15,
+    "color": [
+      100,
+      100,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "TFA_ARTEFACT_GUTHIXIAN06"
+    ]
+  },
+  {
+    "description": "TFA - Blue Relic Glow 2",
+    "offset": [ 0, 150, 0 ],
+    "radius": 350,
+    "strength": 35,
+    "color": [
+      100,
+      100,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "TFA_ARTEFACT_GUTHIXIAN06"
     ]
   },
   {
