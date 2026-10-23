@@ -78657,17 +78657,44 @@
       "LUC2_GT_CHASM_02",
       "LUC2_GT_CHASM_01",
       "LUC2_GT_CHASM_01_BLEND_MIRROR",
-      "LUC2_GT_CHASM_01_BLEND"
+      "LUC2_GT_CHASM_01_BLEND",
+      "LUC2_GT_WALLKIT_CHASM_01_BLEND",
+      "LUC2_GT_WALLKIT_CHASM_01"
     ],
     "uvType": "BOX",
-    "castShadows": false
+    "castShadows": false,
+    "colorOverrides": [
+      {
+        "colors": "s == 1",
+        "undoVanillaShading": false,
+        "shiftLightness": 3,
+        "baseMaterial": "ROCK_3_LIGHT",
+        "uvType": "BOX",
+        "castShadows": false
+      },
+      {
+        "colors": "s == 2",
+        "undoVanillaShading": false,
+        "shiftLightness": 3,
+        "baseMaterial": "ROCK_3_LIGHT",
+        "uvType": "BOX",
+        "castShadows": false
+      },
+      {
+        "colors": "s == 7",
+        "undoVanillaShading": false,
+        "shiftLightness": 1,
+        "baseMaterial": "ROCK_3_LIGHT",
+        "uvType": "BOX",
+        "castShadows": false
+      }
+    ]
   },
   {
     "description": "Guthix Temple - Cave Walls and Misc Stone - Bottom",
     "baseMaterial": "ROCK_3_LIGHT",
     "objectIds": [
       "LUC2_GT_WALLKIT_CHASM_01_BLEND_MIRROR",
-      "LUC2_GT_WALLKIT_CHASM_01",
       "LUC2_GT_WALLKIT_LEVEL1_01",
       "LUC2_GT_WALLKIT_LEVEL0_02",
       "LUC2_GT_WALLKIT_LEVEL0_01",
@@ -78676,7 +78703,6 @@
       "LUC2_RAID_ENTRY2",
       "LUC2_GT_TEMPLE_WALL_CLIMB2",
       "LUC2_GT_TEMPLE_WALL_CLIMB1",
-      "LUC2_GT_WALLKIT_CHASM_01_BLEND",
       "LUC2_GT_GIANT_SKULL_BOTTOM",
       "LUC2_GT_GIANT_SKULL_TOP",
       "LUC2_GT_MAIN_SKULL_TENDRIL_BOTTOML",
