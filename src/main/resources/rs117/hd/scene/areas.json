@@ -12275,6 +12275,13 @@
     "hideOtherAreas": true
   },
   {
+    "name": "TFA_DREADNOTH",
+    "regions": [
+      16728
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "TFA",
     "areas": [
       "TFA_LOBBY",

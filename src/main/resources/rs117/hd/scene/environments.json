@@ -3282,6 +3282,13 @@
     "instantTransition": true
   },
   {
+    "area": "TFA_DREADNOTH",
+    "groundFogOpacity": 0.85,
+    "groundFogStart": -100,
+    "groundFogEnd": -400,
+    "instantTransition": true
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",

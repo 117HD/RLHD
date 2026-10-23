@@ -46624,7 +46624,8 @@
     "fadeOutDuration": 600,
     "range": 20,
     "projectileIds": [
-      "LUC2_UNDEAD_DEMON_FIREBALL_LARGE_PROJ"
+      "LUC2_UNDEAD_DEMON_FIREBALL_LARGE_PROJ",
+      "VFX_XARTH_AOE_PROJANIM_01"
     ]
   },
   {
@@ -46647,10 +46648,10 @@
     ]
   },
   {
-    "description": "Xarth - Fire Bolt Projectile",
+    "description": "Xarth - Spike Projectile",
     "offset": [ 0, 0, 0 ],
     "radius": 200,
-    "strength": 7,
+    "strength": 9,
     "color": [
       252,
       148,
@@ -47463,7 +47464,7 @@
     ]
   },
   {
-    "description": "TFA - Smork Magic Attack",
+    "description": "TFA - Smorks Magic Attack",
     "offset": [ 0, 0, 0 ],
     "radius": 250,
     "strength": 17,
@@ -47481,9 +47482,9 @@
     ]
   },
   {
-    "description": "TFA - Smork Napalm Attack",
+    "description": "TFA - Smorks Napalm Attack",
     "offset": [ 0, 0, 0 ],
-    "radius": 400,
+    "radius": 300,
     "strength": 17,
     "color": [
       252,
@@ -47499,7 +47500,7 @@
     ]
   },
   {
-    "description": "TFA - Smork Napalm Attack Splash",
+    "description": "TFA - Smorks Napalm Attack Splash",
     "offset": [ 0, 50, 0 ],
     "radius": 250,
     "strength": 12,

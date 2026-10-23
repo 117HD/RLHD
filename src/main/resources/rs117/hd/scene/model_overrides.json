@@ -80178,12 +80178,26 @@
     "objectIds": [
       "TFA_FALLOFF_SOULPRISON01_EDGE03",
       "TFA_FALLOFF_SOULPRISON01_EDGE02",
-      "TFA_FALLOFF_SOULPRISON01_EDGE01"
+      "TFA_FALLOFF_SOULPRISON01_EDGE01",
+      "TFA_FALLOFF_SOULPRISON01_DIAG01",
+      "TFA_FALLOFF_SOULPRISON01_FILLER01_SLIME",
+      "TFA_FALLOFF_SOULPRISON01_DIAG02",
+      "TFA_FALLOFF_SOULPRISON01_DIAG03_TWISTED",
+      "TFA_FALLOFF_SOULPRISON01_EDGE01_TWISTED",
+      "TFA_FALLOFF_SOULPRISON01_EDGE02_TWISTED"
     ],
     "uvType": "BOX",
     "colorOverrides": [
       {
-        "colors": "h == 7",
+        "colors": "h == 0 || h == 1",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "uvScale": 0.7,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 61",
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "shiftLightness": 2,
