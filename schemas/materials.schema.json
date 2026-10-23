@@ -58,6 +58,10 @@
         "type": "boolean",
         "description": "Whether triangles should be visible when viewed from either side. Defaults to false."
       },
+      "seasonalFoliage": {
+        "type": "boolean",
+        "description": "Enable this when the seasonal foliage option is enabled, even if model textures are disabled."
+      },
       "overrideBaseColor": {
         "type": "boolean",
         "description": "Whether the material's color texture should override the colors of the underlying model."

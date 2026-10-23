@@ -3529,6 +3529,7 @@
   },
   {
     "name": "AUTUMN_LEAVES_YELLOW_SIDE",
+    "seasonalFoliage": true,
     "hasTransparency": true,
     "doubleSidedFaces": true,
     "textureScale": [
@@ -3543,6 +3544,7 @@
   },
   {
     "name": "AUTUMN_LEAVES_YELLOW_TOP",
+    "seasonalFoliage": true,
     "hasTransparency": true,
     "doubleSidedFaces": true,
     "textureScale": [
@@ -3557,6 +3559,7 @@
   },
   {
     "name": "AUTUMN_LEAVES_ORANGE_SIDE",
+    "seasonalFoliage": true,
     "hasTransparency": true,
     "doubleSidedFaces": true,
     "textureScale": [
@@ -3571,6 +3574,7 @@
   },
   {
     "name": "AUTUMN_LEAVES_ORANGE_SIDE_ALT",
+    "seasonalFoliage": true,
     "hasTransparency": true,
     "doubleSidedFaces": true,
     "textureScale": [
@@ -3585,6 +3589,7 @@
   },
   {
     "name": "AUTUMN_LEAVES_ORANGE_TOP",
+    "seasonalFoliage": true,
     "hasTransparency": true,
     "doubleSidedFaces": true,
     "textureScale": [
@@ -3600,6 +3605,7 @@
   },
   {
     "name": "AUTUMN_LEAVES_RED_SIDE",
+    "seasonalFoliage": true,
     "hasTransparency": true,
     "doubleSidedFaces": true,
     "textureScale": [
@@ -3614,6 +3620,7 @@
   },
   {
     "name": "AUTUMN_LEAVES_RED_TOP",
+    "seasonalFoliage": true,
     "hasTransparency": true,
     "doubleSidedFaces": true,
     "textureScale": [
@@ -3628,6 +3635,7 @@
   },
   {
     "name": "AUTUMN_WILLOW_LEAVES",
+    "seasonalFoliage": true,
     "hasTransparency": true,
     "doubleSidedFaces": true,
     "textureScale": [
@@ -3642,6 +3650,7 @@
   },
   {
     "name": "WINTER_WILLOW_LEAVES",
+    "seasonalFoliage": true,
     "hasTransparency": true,
     "doubleSidedFaces": true,
     "textureScale": [
@@ -3656,6 +3665,7 @@
   },
   {
     "name": "WINTER_MAPLE_LEAVES",
+    "seasonalFoliage": true,
     "hasTransparency": true,
     "doubleSidedFaces": true,
     "textureScale": [
@@ -3670,6 +3680,7 @@
   },
   {
     "name": "WINTER_LEAVES_SIDE",
+    "seasonalFoliage": true,
     "hasTransparency": true,
     "doubleSidedFaces": true,
     "shadowAlphaMap": "LEAF_A_2",
@@ -3688,6 +3699,7 @@
   },
   {
     "name": "WINTER_LEAVES_SIDE_ALT",
+    "seasonalFoliage": true,
     "hasTransparency": true,
     "doubleSidedFaces": true,
     "shadowAlphaMap": "LEAF_A_2",
@@ -3703,6 +3715,7 @@
   },
   {
     "name": "WINTER_LEAVES_TOP",
+    "seasonalFoliage": true,
     "hasTransparency": true,
     "doubleSidedFaces": true,
     "materialsToReplace": [
@@ -3716,6 +3729,7 @@
   },
   {
     "name": "WINTER_LEAVES_DISEASED",
+    "seasonalFoliage": true,
     "hasTransparency": true,
     "doubleSidedFaces": true,
     "textureScale": [

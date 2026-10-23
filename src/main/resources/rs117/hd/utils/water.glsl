@@ -30,7 +30,12 @@
 #include <utils/constants.glsl>
 #include <utils/lights.glsl>
 #include <utils/misc.glsl>
-#include <utils/sky_sampling.glsl>
+
+#if WATER_PASS || LEGACY_RENDERER
+
+#if DAYLIGHT_CYCLE
+    #include <utils/sky_sampling.glsl>
+#endif
 
 vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     WaterType waterType = getWaterType(waterTypeIndex);
@@ -99,14 +104,16 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     // directional light specular
     vec3 lightSpecularOut = vec3(0);
     #if WATER_SPECULAR_REFLECTIONS
+        #if DAYLIGHT_CYCLE
         if (!uboSky.enabled)
-            lightSpecularOut = lightColor * specular(IN.texBlend, viewDir, reflect(-uboGlobal.lightDir, normals), vSpecularGloss, vSpecularStrength);
+        #endif
+            lightSpecularOut = lightColor * specular(fTexBlend, viewDir, reflect(-uboGlobal.lightDir, normals), vSpecularGloss, vSpecularStrength);
     #endif
 
     // point lights
     vec3 pointLightsOut = vec3(0);
     vec3 pointLightsSpecularOut = vec3(0);
-    calculateLighting(IN.position, normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength,
+    calculateLighting(IN.position, normals, viewDir, fTexBlend, vSpecularGloss, vSpecularStrength,
         0.0, pointLightsOut, pointLightsSpecularOut);
 
     // sky light
@@ -132,11 +139,14 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     float fresnel = 1.0 - clamp(viewDotNormals, 0.0, 1.0);
     float finalFresnel = clamp(mix(baseOpacity, 1.0, fresnel * 1.2), 0.0, 1.0);
     vec3 surfaceColor = vec3(0);
+    #if DAYLIGHT_CYCLE && WATER_SPECULAR_REFLECTIONS
     vec3 celestialReflection = vec3(0);
+    #endif
     #if REDUCE_GLARE_INTENSITY
         vec3 surfaceWithoutGlare;
     #endif
 
+    #if DAYLIGHT_CYCLE
     if (uboSky.enabled) {
         vec3 n = normals;
         n.y *= 0.16;
@@ -191,20 +201,24 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
                 sky.moon * uboSky.moonReflectionVisibility *
                     (moonOwnsShadowMap ? 1.0 - reflectionShadow * uboSky.moonShadowVisibility : 1.0);
         #endif
-    } else if (finalFresnel < 0.5) {
+    } else
+    #endif
+    if (finalFresnel < 0.5) {
         surfaceColor = mix(uboGlobal.waterColorDark, uboGlobal.waterColorMid, finalFresnel * 2);
     } else {
         surfaceColor = mix(uboGlobal.waterColorMid, uboGlobal.waterColorLight, (finalFresnel - 0.5) * 2);
     }
 
     #if REDUCE_GLARE_INTENSITY
+        #if DAYLIGHT_CYCLE
         if (!uboSky.enabled)
+        #endif
             surfaceWithoutGlare = surfaceColor;
         vec4 waterWithoutGlare;
     #endif
 
     vec4 water;
-    float shoreLineMask = 1 - dot(IN.texBlend, (fAlphaBiasHsl & 127) / 127.f);
+    float shoreLineMask = 1 - dot(fTexBlend, (fAlphaBiasHsl & 127) / 127.f);
     float foamAmount = min(shoreLineMask, 0.8);
     foamAmount = clamp(pow(1.0 - ((1.0 - foamAmount) / 0.7), 3), 0.0, 1.0) * waterType.hasFoam;
     float opacityFresnel = max(finalFresnel, 1.0 - dot(viewDir, vec3(0, -1, 0)));
@@ -269,7 +283,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         #endif
     }
 
-    #if WATER_SPECULAR_REFLECTIONS
+    #if DAYLIGHT_CYCLE && WATER_SPECULAR_REFLECTIONS
         if (uboSky.enabled) {
             float reflectionLuminance = linearSrgbLuminance(celestialReflection);
             if (reflectionLuminance > 0.0) {
@@ -297,6 +311,8 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     #endif
     return water;
 }
+
+#endif // WATER_PASS || LEGACY_RENDERER
 
 void sampleUnderwater(inout vec3 outputColor, WaterType waterType, float depth, float lightDotNormals) {
     // underwater terrain

@@ -38,10 +38,8 @@
 #include <uniforms/materials.glsl>
 #include <uniforms/water_types.glsl>
 
-#include <utils/sky_fog.glsl>
-#include <utils/hash.glsl>
-
 #include MATERIAL_CONSTANTS
+#include WATER_PASS
 
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
@@ -61,16 +59,17 @@ flat in ivec3 fAlphaBiasHsl;
 flat in ivec3 fMaterialData;
 flat in ivec3 fTerrainData;
 
+#if CENTROID_QUALIFIER
+    // Prevent negative components due to MSAA
+    centroid in vec3 fTexBlend;
+#else
+    in vec3 fTexBlend;
+#endif
+
 in FragmentData {
     vec3 position;
     vec2 uv;
     vec3 normal;
-    #if CENTROID_QUALIFIER
-        // Prevent negative components due to MSAA
-        centroid in vec3 texBlend;
-    #else
-        vec3 texBlend;
-    #endif
 } IN;
 
 out vec4 FragColor;
@@ -79,6 +78,7 @@ vec2 worldUvs(float scale) {
     return -(uboGlobal.sceneBase + IN.position.xz) / (128 * scale);
 }
 
+#include <utils/hash.glsl>
 #include <utils/constants.glsl>
 #include <utils/misc.glsl>
 #include <utils/output_transform.glsl>
@@ -91,7 +91,11 @@ vec2 worldUvs(float scale) {
 #include <utils/fog.glsl>
 #include <utils/wireframe.glsl>
 #include <utils/lights.glsl>
-#include <utils/sky.glsl>
+
+#if DAYLIGHT_CYCLE
+    #include <utils/sky.glsl>
+#endif
+
 #include <utils/water.glsl>
 
 void main() {
@@ -127,9 +131,9 @@ void main() {
     int waterDepth2 = fTerrainData[1] >> 11 & 0xFFF;
     int waterDepth3 = fTerrainData[2] >> 11 & 0xFFF;
     float waterDepth =
-        waterDepth1 * IN.texBlend.x +
-        waterDepth2 * IN.texBlend.y +
-        waterDepth3 * IN.texBlend.z;
+        waterDepth1 * fTexBlend.x +
+        waterDepth2 * fTexBlend.y +
+        waterDepth3 * fTexBlend.z;
     int waterTypeIndex = isTerrain ? fTerrainData[0] >> 3 & 0xFF : 0;
     WaterType waterType = getWaterType(waterTypeIndex);
 
@@ -142,13 +146,23 @@ void main() {
     int flowMap = material1.flowMap;
 
     bool isUnderwater = waterDepth != 0;
-    bool isWater = waterTypeIndex > 0 && !isUnderwater;
+    #if LEGACY_RENDERER
+        bool isWater = waterTypeIndex > 0 && !isUnderwater;
+    #else
+        const bool isWater = WATER_PASS != 0;
+    #endif
 
     vec4 outputColor = vec4(1);
 
+    #if WATER_PASS
+        outputColor = sampleWater(waterTypeIndex, viewDir);
+    #else
+    #if LEGACY_RENDERER
     if (isWater) {
         outputColor = sampleWater(waterTypeIndex, viewDir);
-    } else {
+    } else
+    #endif
+    {
         vec2 blendedUv = IN.uv;
 
         float mipBias = 0;
@@ -198,7 +212,7 @@ void main() {
             N = vec3(0, -1, 0);
 
         #if DISPLAY_UV
-            FragColor = vec4(fract(uv1 * IN.texBlend.x + uv2 * IN.texBlend.y + uv3 * IN.texBlend.z), 0.0, 1.0);
+            FragColor = vec4(fract(uv1 * fTexBlend.x + uv2 * fTexBlend.y + uv3 * fTexBlend.z), 0.0, 1.0);
             if (DISPLAY_UV == 1) // Redundant, for syntax highlighting in IntelliJ
                 return;
         #endif
@@ -222,7 +236,7 @@ void main() {
                 uv1, uv2, uv3,
                 material1, material2, material3,
                 identicalMaterials,
-                IN.texBlend,
+                fTexBlend,
                 flatNormal,
                 N,
                 viewDir
@@ -252,11 +266,11 @@ void main() {
         baseColor3.rgb = srgbToLinear(hslToSrgb(baseColor3.xyz));
 
         if (isSquashed)
-            baseColor1 = baseColor2 = baseColor3 = baseColor1 * .4;
+            baseColor1.rgb = baseColor2.rgb = baseColor3.rgb = baseColor1.rgb * .4;
 
         #if DISPLAY_BASE_COLOR
         if (DISPLAY_BASE_COLOR == 1) { // Redundant, used for syntax highlighting in IntelliJ
-            outputColor = baseColor1 * IN.texBlend.x + baseColor2 * IN.texBlend.y + baseColor3 * IN.texBlend.z;
+            outputColor = baseColor1 * fTexBlend.x + baseColor2 * fTexBlend.y + baseColor3 * fTexBlend.z;
             outputColor.rgb = linearToSrgb(outputColor.rgb);
             FragColor = outputColor;
             return;
@@ -283,15 +297,15 @@ void main() {
         int underlayCount = isUnderlay[0] + isUnderlay[1] + isUnderlay[2];
 
         // calculate blend amounts for overlay and underlay vertices
-        vec3 underlayBlend = IN.texBlend * isUnderlay;
-        vec3 overlayBlend = IN.texBlend * isOverlay;
+        vec3 underlayBlend = fTexBlend * isUnderlay;
+        vec3 overlayBlend = fTexBlend * isOverlay;
 
         if (underlayCount == 0 || overlayCount == 0) {
             // if a tile has all overlay or underlay vertices,
             // use the default blend
 
-            underlayBlend = IN.texBlend;
-            overlayBlend = IN.texBlend;
+            underlayBlend = fTexBlend;
+            overlayBlend = fTexBlend;
         } else {
             // if there's a mix of overlay and underlay vertices,
             // calculate custom blends for each 'layer'
@@ -330,7 +344,7 @@ void main() {
                 invert = false;
             }
 
-            float result = dot(IN.texBlend, isPrimary);
+            float result = dot(fTexBlend, isPrimary);
             if (invert)
                 result = 1 - result;
 
@@ -352,7 +366,7 @@ void main() {
             } else {
                 vec3 n2 = sampleNormalMap(material2, uv2, TBN);
                 vec3 n3 = sampleNormalMap(material3, uv3, TBN);
-                normals = normalize(n1 * IN.texBlend.x + n2 * IN.texBlend.y + n3 * IN.texBlend.z);
+                normals = normalize(n1 * fTexBlend.x + n2 * fTexBlend.y + n3 * fTexBlend.z);
             }
         }
 
@@ -400,7 +414,7 @@ void main() {
                 clamp((1 - baseColor3.a) * 2, 0, 1)
             );
         }
-        float combinedSpecularStrength = dot(vSpecularStrength, IN.texBlend);
+        float combinedSpecularStrength = dot(vSpecularStrength, fTexBlend);
 
 
         // calculate lighting
@@ -412,10 +426,10 @@ void main() {
             texture(textureArray, vec3(uv1, material1.ambientOcclusionMap)).r;
         if (!identicalMaterials) {
             aoFactor =
-                IN.texBlend.x * aoFactor +
-                IN.texBlend.y * (material2.ambientOcclusionMap == -1 ? 1 :
+                fTexBlend.x * aoFactor +
+                fTexBlend.y * (material2.ambientOcclusionMap == -1 ? 1 :
                     texture(textureArray, vec3(uv2, material2.ambientOcclusionMap)).r) +
-                IN.texBlend.z * (material3.ambientOcclusionMap == -1 ? 1 :
+                fTexBlend.z * (material3.ambientOcclusionMap == -1 ? 1 :
                     texture(textureArray, vec3(uv3, material3.ambientOcclusionMap)).r);
         }
         ambientLightOut *= aoFactor;
@@ -448,13 +462,13 @@ void main() {
 
         // directional light specular
         vec3 lightReflectDir = reflect(-uboGlobal.lightDir, normals);
-        vec3 lightSpecularOut = lightColor * specular(IN.texBlend, viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength);
+        vec3 lightSpecularOut = lightColor * specular(fTexBlend, viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength);
 
         // point lights
         vec3 pointLightsOut = vec3(0);
         vec3 pointLightsSpecularOut = vec3(0);
         float subsurface = material1.subsurface;
-        calculateLighting(IN.position, normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength,
+        calculateLighting(IN.position, normals, viewDir, fTexBlend, vSpecularGloss, vSpecularStrength,
             subsurface, pointLightsOut, pointLightsSpecularOut);
 
         // sky light
@@ -498,7 +512,7 @@ void main() {
                 return;
         #endif
 
-        float unlit = dot(IN.texBlend, vec3(
+        float unlit = dot(fTexBlend, vec3(
             getMaterialIsUnlit(material1),
             getMaterialIsUnlit(material2),
             getMaterialIsUnlit(material3)
@@ -519,6 +533,7 @@ void main() {
             sampleUnderwater(outputColor.rgb, waterType, waterDepth, lightDotNormals);
         }
     }
+    #endif // WATER_PASS
 
     #if LEGACY_RENDERER
         vec2 tiledist = abs(floor(IN.position.xz / 128) - floor(uboGlobal.cameraPos.xz / 128));
@@ -542,6 +557,7 @@ void main() {
         float groundFog = 1.0 - clamp((IN.position.y - uboGlobal.groundFogStart) / (uboGlobal.groundFogEnd - uboGlobal.groundFogStart), 0.0, 1.0);
         groundFog = mix(0.0, uboGlobal.groundFogOpacity, groundFog);
         groundFog *= clamp(distance / closeFadeDistance, 0.0, 1.0);
+        #if DAYLIGHT_CYCLE
         float nightFogBlend = 0.0;
 
         // Scale optical depth, with lighter haze at night. Apply before water coverage too.
@@ -549,6 +565,7 @@ void main() {
             nightFogBlend = 1.0 - smoothstep(sin(radians(-6.0)), 0.0, uboSky.sunDir.y);
             groundFog = 1.0 - pow(1.0 - clamp(groundFog, 0.0, 1.0), mix(0.88, 0.352, nightFogBlend));
         }
+        #endif
 
         // multiply the visibility of each fog
         float fogAmount = calculateFogAmount(IN.position);
@@ -558,6 +575,7 @@ void main() {
             outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
         }
 
+        #if DAYLIGHT_CYCLE
         if (uboSky.enabled) {
             if (combinedFog > 1e-4) {
                 vec3 fogViewDir = normalize(IN.position - uboGlobal.cameraPos);
@@ -576,7 +594,9 @@ void main() {
                 if (fogAmount > 1e-4)
                     outputColor.rgb = mix(outputColor.rgb, linearToSrgb(distanceFogColor), fogAmount);
             }
-        } else {
+        } else
+        #endif
+        {
             outputColor.rgb = mix(outputColor.rgb, linearToSrgb(uboGlobal.fogColor), combinedFog);
         }
     }

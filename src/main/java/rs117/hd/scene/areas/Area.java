@@ -20,7 +20,7 @@ public class Area {
 
 	public String name;
 	public boolean hideOtherAreas;
-	public boolean fillGaps = true;
+	public boolean fillGaps;
 
 	public String[] areas;
 	public int[] regions;

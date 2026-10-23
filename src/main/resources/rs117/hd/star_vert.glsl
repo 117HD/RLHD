@@ -157,7 +157,7 @@ void main() {
     #if POINT_SPRITES
         gl_PointSize = visibility > 0.001 ? sizePixels : 0.0;
     #else
-        clip.xy += corners[gl_VertexID] * sizePixels / vec2(sceneResolution) * clip.w;
+        clip.xy += corners[gl_VertexID] * sizePixels / vec2(uboGlobal.sceneResolution) * clip.w;
         gl_Position = visibility > 0.001 ? clip : vec4(2.0, 2.0, 2.0, 1.0);
     #endif
 }

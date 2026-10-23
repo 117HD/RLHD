@@ -147,7 +147,7 @@ public class ZoneRenderer implements Renderer {
 	private SceneShaderProgram sceneProgram;
 
 	@Inject
-	private SceneShaderProgram.GapFiller gapFillerProgram;
+	private SceneShaderProgram.Water waterProgram;
 
 	@Inject
 	private ShadowShaderProgram.Fast fastShadowProgram;
@@ -261,6 +261,7 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void waitForFrameFence() {
+		// Drain existing fences even if synchronization has been disabled
 		final int slot = plugin.frame % FRAMES_IN_FLIGHT;
 		final long fence = frameFences[slot];
 		if (fence == 0)
@@ -330,7 +331,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
 		sceneProgram.compile(includes);
-		gapFillerProgram.compile(includes);
+		waterProgram.compile(includes);
 		fastShadowProgram.compile(includes);
 		detailedShadowProgram.compile(includes);
 		terrainShadowProgram.compile(includes);
@@ -340,7 +341,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void destroyShaders() {
 		sceneProgram.destroy();
-		gapFillerProgram.destroy();
+		waterProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
 		terrainShadowProgram.destroy();
@@ -945,12 +946,15 @@ public class ZoneRenderer implements Renderer {
 		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
+		sceneProgram.use();
+
 		if (!gapFillerCmd.isEmpty()) {
-			gapFillerProgram.use();
+			// Render gap fillers just above depth 0, which we reserve for rendering the sky later
+			glDepthRange(Float.MIN_NORMAL, Float.MIN_NORMAL);
 			gapFillerCmd.execute(renderState);
+			glDepthRange(0, 1);
 		}
 
-		sceneProgram.use();
 		sceneCmd.execute(renderState);
 
 		frameTimer.end(Timer.RENDER_SCENE_AND_SKY);
@@ -1053,12 +1057,14 @@ public class ZoneRenderer implements Renderer {
 				return;
 
 			frameTimer.begin(Timer.DRAW_ZONE_OPAQUE);
+			boolean renderGroundLevel = ctx.minLevel == 0;
 			if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
 				sceneCmd.Disable(GL_BLEND);
-				z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_TERRAIN);
+				if (renderGroundLevel)
+					z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_TERRAIN);
 				z.renderOpaque(sceneCmd, ctx, false);
 
-				if (z.hasGapFiller)
+				if (renderGroundLevel && z.hasGapFiller)
 					z.renderOpaqueLevel(gapFillerCmd, Zone.LEVEL_GAP_FILLER);
 			}
 
@@ -1068,7 +1074,7 @@ public class ZoneRenderer implements Renderer {
 					z.renderOpaque(directionalCmd, ctx, shouldDrawRoofShadows);
 				}
 
-				if (plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0)
+				if (renderGroundLevel && plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0)
 					z.renderOpaqueLevel(terrainShadowCmd, Zone.LEVEL_TERRAIN);
 			}
 			frameTimer.end(Timer.DRAW_ZONE_OPAQUE);
@@ -1102,9 +1108,12 @@ public class ZoneRenderer implements Renderer {
 			frameTimer.begin(Timer.DRAW_ZONE_ALPHA);
 			sceneCmd.Enable(GL_BLEND);
 
-			final boolean renderWater = z.inSceneFrustum && level == 0 && z.hasWater;
-			if (renderWater)
+			final boolean renderWater = z.inSceneFrustum && ctx.minLevel == 0 && level == 0 && z.hasWater;
+			if (renderWater) {
+				sceneCmd.SetShader(waterProgram);
 				z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
+				sceneCmd.SetShader(sceneProgram);
+			}
 
 			modelStreamingManager.ensureAsyncUploadsComplete(z);
 
@@ -1362,17 +1371,19 @@ public class ZoneRenderer implements Renderer {
 			frameTimer.end(Timer.RENDER_FRAME);
 
 			try {
-				final int slot = plugin.frame % FRAMES_IN_FLIGHT;
-				assert frameFences[slot] == 0 : "Frame fence already set, this should never happen";
-				frameFences[slot] = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
-				if (frameFences[slot] == 0) {
-					fenceCreationFailureCount++;
-					long now = System.currentTimeMillis();
-					if (fenceCreationFailureCount == 1 || now - lastFenceCreationWarningMs >= 1000) {
-						log.warn("Unable to create frame fence, count {}. Falling back to glFinish...", fenceCreationFailureCount);
-						lastFenceCreationWarningMs = now;
+				if (plugin.configFrameSynchronization) {
+					final int slot = plugin.frame % FRAMES_IN_FLIGHT;
+					assert frameFences[slot] == 0 : "Frame fence already set, this should never happen";
+					frameFences[slot] = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+					if (frameFences[slot] == 0) {
+						fenceCreationFailureCount++;
+						long now = System.currentTimeMillis();
+						if (fenceCreationFailureCount == 1 || now - lastFenceCreationWarningMs >= 1000) {
+							log.warn("Unable to create frame fence, count {}. Falling back to glFinish...", fenceCreationFailureCount);
+							lastFenceCreationWarningMs = now;
+						}
+						glFinish();
 					}
-					glFinish();
 				}
 
 				frameTimer.begin(Timer.SWAP_BUFFERS);
