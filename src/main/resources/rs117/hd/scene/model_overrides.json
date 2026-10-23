@@ -79886,6 +79886,28 @@
     ]
   },
   {
+    "description": "TFA - Loot Room Platform",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALLKIT_GUTHIXLOOT01_PLATFORM01",
+      "TFA_WALLKIT_GUTHIXLOOT01_PLATFORM02",
+      "TFA_WALLKIT_GUTHIXLOOT01_PLATFORM03",
+      "TFA_WALLKIT_GUTHIXLOOT01_PLATFORM04"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 7",
+        "baseMaterial": "GRASS_1",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
     "description": "TFA - Walls with Branches and or Bark",
     "baseMaterial": "SMOOTH_STONE",
     "undoVanillaShading": false,
@@ -79912,6 +79934,12 @@
       "TFA_NEXUS_SECTION3_DOOR_WEST",
       "TFA_NEXUS_SECTION1_DOOR_EAST",
       "TFA_NEXUS_SECTION2_DOOR_EAST",
+      "TFA_NEXUS_SECTION1_DOOR_WEST_SLIGHTLY",
+      "TFA_NEXUS_SECTION1_DOOR_EAST_SLIGHTLY",
+      "TFA_NEXUS_SECTION2_DOOR_WEST_SLIGHTLY",
+      "TFA_NEXUS_SECTION2_DOOR_EAST_SLIGHTLY",
+      "TFA_NEXUS_SECTION3_DOOR_WEST_SLIGHTLY",
+      "TFA_NEXUS_SECTION3_DOOR_EAST_SLIGHTLY",
       "TFA_NEXUS_SECTION1_DOOR_EAST_SLIGHTLY_OPENED",
       "TFA_NEXUS_SECTION1_DOOR_WEST_SLIGHTLY_OPENED",
       "TFA_NEXUS_SECTION3_DOOR_EAST_SLIGHTLY_OPENED",

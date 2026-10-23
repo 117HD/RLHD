@@ -12302,6 +12302,13 @@
     "hideOtherAreas": true
   },
   {
+    "name": "TFA_REWARD_ROOM",
+    "regions": [
+      16474
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "TFA",
     "areas": [
       "TFA_LOBBY",
@@ -13191,6 +13198,7 @@
   {
     "name": "MAINLAND_EXTENSIONS",
     "areas": [
+      "TFA_REWARD_ROOM",
       "FISHING_TRAWLER",
       "MISTHALIN_MYSTERY_MANOR_REGION",
       "VAMPYRIUM",

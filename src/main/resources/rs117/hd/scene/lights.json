@@ -45031,6 +45031,51 @@
     ]
   },
   {
+    "description": "Scythe of Vitur swing & Dragon Halberd special attack - Blue/Holy",
+    "offset": [ 0, 0, 0 ],
+    "radius": 250,
+    "waitForAnimation": true,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 890,
+    "strength": 10,
+    "color": [
+      40,
+      40,
+      255
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 300,
+    "graphicsObjectIds": [
+      "DRAGON_HALBERD_SPECIAL_WEST_BLUE",
+      "DRAGON_HALBERD_SPECIAL_NORTH_BLUE",
+      "DRAGON_HALBERD_SPECIAL_SOUTH_BLUE",
+      "DRAGON_HALBERD_SPECIAL_EAST_BLUE"
+    ]
+  },
+  {
+    "description": "Scythe of Vitur swing & Dragon Halberd special attack - Dark Red/Sanguine",
+    "offset": [ 0, 0, 0 ],
+    "radius": 250,
+    "waitForAnimation": true,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 890,
+    "strength": 10,
+    "color": [
+      130,
+      130,
+      255
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 300,
+    "graphicsObjectIds": [
+
+    ]
+  },
+  {
     "description": "Voidwaker Special Attack Lightning - Highlight",
     "offset": [ 0, 75, 125 ],
     "radius": 90,
@@ -46957,7 +47002,6 @@
     "offset": [ 0, 100, 0 ],
     "radius": 120,
     "strength": 20,
-    "fadeInDuration": 200,
     "color": [
       252,
       200,
@@ -46966,10 +47010,11 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 25,
+    "despawnWithParent": true,
     "objectIds": [
       "TFA_OCELLUS_QUADRANT_WALL_INACTIVE"
     ],
-    "animationIds": [ -1 ]
+    "animationIds": [ "VFX_OCELLUS_P2_PORTAL_IDLE" ]
   },
   {
     "description": "TFA - Ocellus Purple Portal",
@@ -46984,10 +47029,11 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 25,
+    "despawnWithParent": true,
     "objectIds": [
       "TFA_OCELLUS_QUADRANT_WALL_ACTIVE"
     ],
-    "animationIds": [ -1 ]
+    "animationIds": [ "VFX_OCELLUS_P2_PORTAL_IDLE" ]
   },
   {
     "description": "TFA - Ocellus Purple Floor Aoe",
@@ -47044,7 +47090,7 @@
   {
     "description": "Dagon'hai Imp - Despawn",
     "height": 30,
-    "radius": 125,
+    "radius": 150,
     "strength": 10,
     "color": [
       252,
@@ -47055,9 +47101,9 @@
     "duration": 0,
     "range": 10,
     "fadeInDuration": 200,
-    "fadeOutDuration": 600,
+    "fadeOutDuration": 300,
     "fixedDespawnTime": true,
-    "despawnDelay": 500,
+    "despawnDelay": 700,
     "npcIds": [
       "TFA_DAGONHAI_DEMON"
     ],
@@ -47108,6 +47154,7 @@
     ],
     "type": "FLICKER",
     "range": 10,
+    "fadeOutDuration": 200,
     "graphicsObjectIds": [
       "VFX_DAGONHAI_CAULDRON_ATTACK_ZAMORAK_PROJANIM_01"
     ]
@@ -47117,6 +47164,8 @@
     "offset": [ 0, 50, 0 ],
     "radius": 125,
     "strength": 20,
+    "fadeOutDuration": 200,
+    "fadeInDuration": 200,
     "color": [
       252,
       70,
@@ -47131,17 +47180,19 @@
     ]
   },
   {
-    "description": "TFA Dagon'hai Fireball - Impact",
+    "description": "TFA Dagon'hai Fireball - Impact End",
     "offset": [ 0, 50, 0 ],
     "radius": 175,
     "strength": 20,
+    "fadeOutDuration": 200,
+    "fadeInDuration": 400,
     "color": [
       252,
       70,
       3
     ],
     "type": "FLICKER",
-    "range": 10,
+    "range": 20,
     "graphicsObjectIds": [
       "VFX_DAGONHAI_CAULDRON_ATTACK_ZAMORAK_AOE_ATTACK_01"
     ]
@@ -47219,7 +47270,8 @@
     "offset": [ 0, 185, 0 ],
     "radius": 175,
     "strength": 15,
-    "despawnDelay": 900,
+    "despawnDelay": 1100,
+    "fadeOutDuration": 400,
     "fixedDespawnTime": true,
     "color": [
       252,
@@ -47228,7 +47280,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "spawnDelay": 150,
+    "spawnDelay": 50,
     "waitForAnimation": true,
     "range": 25,
     "graphicsObjectIds": [
@@ -47249,11 +47301,11 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "spawnDelay": 850,
+    "spawnDelay": 1300,
     "waitForAnimation": true,
     "range": 25,
     "graphicsObjectIds": [
-
+      "VFX_EZEKIEL_STAR_EXPLOSION01"
     ]
   },
   {

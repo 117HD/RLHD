@@ -3308,6 +3308,23 @@
     "groundFogEnd": -250
   },
   {
+    "area": "TFA_REWARD_ROOM",
+    "sky": {
+      "parent": "VOID",
+      "moonVisibility": 0,
+      "nebulaVisibility": 0,
+      "horizonWidth": 25,
+      "profile": {
+        "horizon": [
+          {
+            "altitude": 0,
+            "color": "#01000A"
+          }
+        ]
+      }
+    }
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",
