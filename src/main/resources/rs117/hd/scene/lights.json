@@ -46963,6 +46963,23 @@
     ]
   },
   {
+    "description": "TFA Dagon'hai Book Glow Large",
+    "offset": [ 0, 350, 0 ],
+    "radius": 850,
+    "strength": 20,
+    "color": [
+      100,
+      255,
+      100
+    ],
+    "type": "PULSE",
+    "duration": 5000,
+    "range": 10,
+    "objectIds": [
+      "TFA_DAGONHAI_BOOK01_DEFAULT01"
+    ]
+  },
+  {
     "description": "TFA - Pink Relic Glow",
     "offset": [ 0, 185, 0 ],
     "radius": 250,

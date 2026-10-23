@@ -11609,6 +11609,16 @@
     "groundMaterial": "GRASS_1"
   },
   {
+    "name": "TFA Dagon'hai - Dirt that shouldn't blend",
+    "area": "TFA_DAGONHAI",
+    "overlayIds": [
+      11
+    ],
+    "blended": false,
+    "maxLightness": 23,
+    "groundMaterial": "PACKED_EARTH"
+  },
+  {
     "name": "TFA Ezekiel - Tiles",
     "area": "TFA_EZEKIEL",
     "underlayIds": [
@@ -11622,6 +11632,16 @@
     "shiftLightness": 8,
     "maxLightness": 40,
     "groundMaterial": "WORN_TILES"
+  },
+  {
+    "name": "TFA Dagon'hai - Blend all - Override below",
+    "area": "TFA_DAGONHAI",
+    "overlayIds": [
+      245,
+      648,
+      649
+    ],
+    "groundMaterial": "PACKED_EARTH"
   },
   {
     "name": "TFA Archive Guardian - Cracks and underneath Tile objects - Should not blend",

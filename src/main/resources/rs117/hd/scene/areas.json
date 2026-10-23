@@ -12274,6 +12274,13 @@
     "hideOtherAreas": true
   },
   {
+    "name": "TFA_DAGONHAI",
+    "regions": [
+      16215
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "TFA_EZEKIEL",
     "regions": [
       16214
@@ -12301,7 +12308,8 @@
       "TFA_ARCHIVE_GUARDIAN",
       "TFA_BORK",
       "TFA_XARTH",
-      "TFA_EZEKIEL"
+      "TFA_EZEKIEL",
+      "TFA_DAGONHAI"
     ],
     "hideOtherAreas": true
   },

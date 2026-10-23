@@ -3295,6 +3295,13 @@
     "instantTransition": true
   },
   {
+    "area": "TFA_DAGONHAI",
+    "groundFogOpacity": 0.85,
+    "groundFogStart": -100,
+    "groundFogEnd": -500,
+    "instantTransition": true
+  },
+  {
     "area": "TFA_OCELLUS",
     "groundFogOpacity": 0.85,
     "groundFogStart": 500,

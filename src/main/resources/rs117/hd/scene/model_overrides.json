@@ -79863,6 +79863,7 @@
     "baseMaterial": "SMOOTH_STONE",
     "undoVanillaShading": false,
     "objectIds": [
+      "TFA_WALLKIT_ARCHIVE01_DEFAULT01_BLACKOUT01",
       "TFA_WALLKIT_ARCHIVE01_DEFAULT01_DARKER03",
       "TFA_WALLKIT_ARCHIVE01_DEFAULT01_DARKER02",
       "TFA_WALLKIT_ARCHIVE01_DEFAULT01_DARKER04",
@@ -79940,6 +79941,118 @@
         "uvScale": 0.15,
         "undoVanillaShading": false
       }
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai - Book Plinth with Force Field",
+    "baseMaterial": "NONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_DAGONHAI_BOOK01_DEFAULT01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 21 && a == 255",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 7 || h == 8",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai - Wall with Bookcase",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE01_BOOKS04",
+      "TFA_WALLKIT_ARCHIVE01_BOOKS03",
+      "TFA_WALLKIT_ARCHIVE01_BOOKS01",
+      "TFA_WALLKIT_ARCHIVE01_BOOKS02"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 12 || h == 21 && s == 3 || h >= 23 || h == 10 || h == 7 && s == 1 || h == 8 && s == 1",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "shiftLightness": -4,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai - Table with Books or Paper",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_TABLE_ARCHIVE01_BOOKS01",
+      "TFA_TABLE_ARCHIVE01_BOOKS02",
+      "TFA_TABLE_ARCHIVE01_BOOKS03",
+      "TFA_TABLE_ARCHIVE01_BOOKS04",
+      "TFA_TABLE_ARCHIVE01_BOOKS07",
+      "TFA_TABLE_ARCHIVE01_BOOKS06",
+      "TFA_TABLE_ARCHIVE01_BOOKS05"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 12 || h == 21 && s == 3 || h >= 23 || h == 10 || h == 7 && s == 1 || h == 8 && s == 1",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "shiftLightness": -4,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 5 || h == 8 || h == 7 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientationY": 512,
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "shiftLightness": 5,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai - Fallen Books and Paper",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "shiftLightness": 2,
+    "objectIds": [
+      "TFA_BOOK_ARCHIVE01_FALLEN02",
+      "TFA_BOOK_ARCHIVE01_FALLEN04",
+      "TFA_BOOK_ARCHIVE01_PAPER01",
+      "TFA_BOOK_ARCHIVE01_FALLEN01",
+      "TFA_BOOK_ARCHIVE01_FALLEN02B",
+      "TFA_BOOK_ARCHIVE01_PAPER02",
+      "TFA_BOOK_ARCHIVE01_FALLEN03B",
+      "TFA_BOOK_ARCHIVE01_FALLEN05",
+      "TFA_BOOK_ARCHIVE01_FALLEN01B",
+      "TFA_BOOK_ARCHIVE01_FALLEN05B",
+      "TFA_BOOK_ARCHIVE01_FALLEN03"
     ]
   },
   {
@@ -80511,6 +80624,7 @@
       "TFA_FALLOFF_GUTHIXIAN01_FILLER01_DARKER02",
       "TFA_FALLOFF_GUTHIXIAN01_EDGE01_DARKER02",
       "TFA_FALLOFF_GUTHIXIAN01_DIAG01_DARKER02",
+      "TFA_FALLOFF_GUTHIXIAN01_EDGE01_DARKER03",
       "TFA_FALLOFF_GUTHIXIAN01_EDGE03",
       "TFA_FALLOFF_GUTHIXIAN01_EDGE01",
       "TFA_FALLOFF_GUTHIXIAN01_EDGE02",
@@ -80592,7 +80706,8 @@
       "TFA_FLOORKIT_GUTHIXIAN01_DIAG01_GREY01",
       "TFA_FLOORKIT_GUTHIXIAN01_TILE01_GREY01",
       "TFA_FLOORKIT_GUTHIXIAN01_FILLER01_DARK01",
-      "TFA_FLOORKIT_GUTHIXIAN01_DIAG01"
+      "TFA_FLOORKIT_GUTHIXIAN01_DIAG01",
+      "TFA_FLOORKIT_GUTHIXIAN01_DIAG01_OFFSET"
     ],
     "uvType": "BOX"
   },
