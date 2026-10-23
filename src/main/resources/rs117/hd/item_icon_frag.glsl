@@ -35,9 +35,8 @@ vec4 iconAt(vec2 gridUv) {
     return icon;
 }
 
-vec4 otherOverlays(vec2 gridUv, float item, float shadow) {
+vec4 otherOverlays(vec2 gridUv, ivec2 pixel, float item, float shadow) {
     vec4 elsewhere = vec4(0);
-    ivec2 pixel = ivec2(floor(gridUv * vec2(gridSize())));
     if (all(greaterThanEqual(pixel, ivec2(0))) && all(lessThan(pixel, gridSize())))
         elsewhere = texelFetch(itemBackgrounds, ivec3(pixel, fLayers.y + 1), 0);
 
@@ -55,23 +54,30 @@ void main() {
     float ui = clamp(textureUi(uiTexture, uiUv).a, 0, 1);
 
     vec2 grid = vec2(gridSize());
-    vec2 gridUv = (fUv * vec2(ICON_SIZE) + (grid - vec2(ICON_SIZE)) / 2) / grid;
+    vec2 gridPosition = fUv * vec2(ICON_SIZE) + (grid - vec2(ICON_SIZE)) / 2;
+    vec2 gridUv = gridPosition / grid;
     vec2 gamePixel = 1 / grid;
+    // The interface pixel is found from the screen position, alike for every item, so items next to each other meet exactly,
+    // even where the screen's pixels lie right on the edge between two of the interface's
+    vec2 uiPosition = uiUv * vec2(uboUi.sourceDimensions);
+    ivec2 uiPixel = ivec2(floor(uiPosition));
+    ivec2 pixel = uiPixel - ivec2(round(uiPosition - gridPosition));
 
     vec4 icon = iconAt(gridUv);
     float iconShadow = iconAt(gridUv - gamePixel).a;
-    vec4 overlays = otherOverlays(gridUv, icon.a, iconShadow);
+    vec4 overlays = otherOverlays(gridUv, pixel, icon.a, iconShadow);
     icon *= fOpacity;
-    vec4 background = texture(itemBackgrounds, vec3(gridUv, fLayers.y));
+    vec4 background = texelFetch(itemBackgrounds, ivec3(clamp(pixel, ivec2(0), gridSize() - 1), fLayers.y), 0);
     // Only fill in what the stretched interface lets through, and around the item only what the interface covers,
     // since items next to it fill in their own cut out backgrounds
     float covered = background.a;
-    if (any(lessThan(gridUv, vec2(0))) || any(greaterThanEqual(gridUv, vec2(1))))
-        covered = min(covered, texelFetch(uiTexture, ivec2(uiUv * vec2(uboUi.sourceDimensions)), 0).a);
+    if (any(lessThan(pixel, ivec2(0))) || any(greaterThanEqual(pixel, gridSize())))
+        covered = min(covered, texelFetch(uiTexture, uiPixel, 0).a);
     background *= covered > ui ? (covered - ui) / (background.a * (1 - ui)) : 0;
 
+    // A see-through shadow, like the dragged item's, shades by its alpha
     float shadow = iconShadow * fShadow.a;
-    background = fShadow * shadow + background * (1 - shadow);
+    background = vec4(fShadow.rgb, 1) * shadow + background * (1 - shadow);
 
     vec4 c = icon + background * (1 - icon.a);
     c = overlays + c * (1 - overlays.a);

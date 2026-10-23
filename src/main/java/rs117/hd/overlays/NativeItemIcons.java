@@ -32,7 +32,6 @@ import net.runelite.api.*;
 import net.runelite.api.events.BeforeRender;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.WidgetLoaded;
-import net.runelite.api.gameval.InterfaceID;
 import net.runelite.api.gameval.InventoryID;
 import net.runelite.api.widgets.ItemQuantityMode;
 import net.runelite.api.widgets.Widget;
@@ -128,6 +127,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		final boolean[] shadow = new boolean[GRID_SIZE];
 		final boolean[] stackSize = new boolean[GRID_SIZE];
 		final boolean[] outline = new boolean[GRID_SIZE];
+		final int[] stack = new int[GRID_SIZE];
 		final int[] pixels;
 		int modelItemId = -1;
 		final long key;
@@ -140,6 +140,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 					int i = y * ICON_WIDTH + x;
 					this.item[grid(x, y)] = item[i] != 0;
 					stackSize[grid(x, y)] = withStackSize[i] != item[i];
+					stack[grid(x, y)] = stackSize[grid(x, y)] ? withStackSize[i] : 0;
 				}
 			}
 			for (int y = 0; y < ICON_HEIGHT; y++) {
@@ -175,6 +176,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		int iconLayer;
 		float opacity;
 		int border;
+		int shadow;
 	}
 
 	// What's behind an item and what other overlays draw over it rarely change, so they're only worked out again when they do
@@ -269,6 +271,12 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 		@Override
 		public Dimension render(Graphics2D graphics) {
+			// Handed over only before the game drew it, so it's taken out once everything is drawn
+			if (draggedWaiting != null && takeOut(draggedWaiting)) {
+				draggedTakenOut = draggedWaiting.getWidget();
+				cutOut(draggedWaiting);
+			}
+			draggedWaiting = null;
 			var buffer = client.getBufferProvider();
 			for (var item : draggedCuts)
 				drawDraggedItem(buffer.getPixels(), buffer.getWidth(), item);
@@ -279,7 +287,6 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 	private static final int SHOWN = 1;
 	private static final int CLIPPED = 2;
-	private static final int BANK_SHADOW = 0x333333;
 	private static final Icon PENDING = new Icon();
 	private static final GameIcon UNKNOWN = new GameIcon(-1, 0, new int[ICON_WIDTH * ICON_HEIGHT], new int[ICON_WIDTH * ICON_HEIGHT]);
 	// Drawn over an item, with nothing behind it
@@ -362,7 +369,14 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private int heldWidth;
 	private int heldHeight;
 	private boolean interfacesDrawn;
+	// The dragged item, once handed over after the game drew it and it's taken out again
 	private Widget draggedTakenOut;
+	private boolean draggedCut;
+	private boolean draggedPassed;
+	@Nullable
+	private WidgetItem draggedWaiting;
+	private final Map<Integer, Integer> itemShadows = new HashMap<>();
+	private final int[] under = new int[GRID_SIZE];
 	private final ArrayDeque<Integer> freeSlotLayers = new ArrayDeque<>();
 	private final FloatBuffer vertices = BufferUtils.createFloatBuffer(MAX_ITEMS * FLOATS_PER_ITEM);
 	private final boolean[] known = new boolean[GRID_SIZE];
@@ -469,6 +483,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		stackModels.clear();
 		stackModelSearches.clear();
 		slots.clear();
+		itemShadows.clear();
 		heldCount = 0;
 		containers.clear();
 		newItemLayers.clear();
@@ -505,6 +520,10 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		}
 		newItemsThisFrame = 0;
 		interfacesDrawn = false;
+		draggedTakenOut = null;
+		draggedCut = false;
+		draggedPassed = false;
+		draggedWaiting = null;
 		itemCount = 0;
 		vertices.clear();
 		cutThisFrame.clear();
@@ -581,7 +600,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			return;
 
 		if (isDragged(widgetItem)) {
-			draggedItems.add(widgetItem);
+			if (widgetItem.getWidget() == draggedTakenOut)
+				draggedItems.add(widgetItem);
 		} else {
 			cutOut(widgetItem);
 		}
@@ -599,13 +619,6 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 	private boolean isDragged(WidgetItem widgetItem) {
 		return widgetItem.getWidget() == client.getDraggedWidget();
-	}
-
-	// The bank draws its dragged item in place, so what's drawn after it is drawn over it, like with any other item
-	private static boolean isDrawnInPlace(Widget widget) {
-		int group = WidgetUtil.componentToInterface(widget.getId());
-		return group == WidgetUtil.componentToInterface(InterfaceID.Bankmain.ITEMS) ||
-			group == WidgetUtil.componentToInterface(InterfaceID.SharedBank.ITEMS);
 	}
 
 	// Items of a layer drawn after another's are drawn over its items, like the rune pouch's runes to pick over its loadouts
@@ -626,84 +639,83 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		}
 	}
 
-	// What the bank drew its dragged item over, from how it's half see-through over it, so items under it are cut out without it
+	// The game draws the dragged item half see-through over its interface once the rest of it is drawn, after the hooks of its layers
+	// but before its interface's. It's taken out again before anything under it is cut out, so what's under it is cut out as it is.
 	private void takeOutDraggedItem() {
-		draggedTakenOut = null;
-		var widgetItems = overlayManager.getWidgetItems();
+		if (draggedTakenOut != null)
+			return;
 		WidgetItem dragged = null;
-		for (var widgetItem : widgetItems)
-			if (isDragged(widgetItem) && isDrawnInPlace(widgetItem.getWidget()))
+		for (var widgetItem : overlayManager.getWidgetItems())
+			if (isDragged(widgetItem) && isHooked(widgetItem.getWidget()))
 				dragged = widgetItem;
-		// Without a native icon to draw instead, the game's stays
-		var icon = dragged == null ? null : findIcon(dragged);
-		if (icon == null || icon.layer == -1 || itemCount == MAX_ITEMS)
+		if (dragged == null)
 			return;
-
-		var widget = dragged.getWidget();
-		var bounds = dragged.getDraggingCanvasBounds() != null ? dragged.getDraggingCanvasBounds() : dragged.getCanvasBounds();
-		var gameIcon = getGameIcon(dragged.getId(), dragged.getQuantity(), widget.getItemQuantityMode(), widget.getBorderType(), true);
-		// The bank reports its items twice
-		if (gameIcon == null || gameIcon == UNKNOWN || cutThisFrame.contains(bounds))
+		if (!draggedPassed && getDrawHooks().contains(dragged.getWidget().getParentId())) {
+			draggedPassed = true;
+			draggedWaiting = dragged;
 			return;
-
-		// Items drawn after it are drawn over it
-		var over = new ArrayList<WidgetItem>();
-		for (var widgetItem : widgetItems) {
-			if (widgetItem != dragged && widgetItem.getWidget().getParentId() == widget.getParentId() &&
-				widgetItem.getWidget().getIndex() > widget.getIndex() && widgetItem.getCanvasBounds().intersects(bounds))
-				over.add(widgetItem);
 		}
-
-		var buffer = client.getBufferProvider();
-		int[] pixels = buffer.getPixels();
-		int width = buffer.getWidth();
-		var area = bounds.intersection(widget.getParent().getBounds()).intersection(new Rectangle(width, buffer.getHeight()));
-		int opaque = 0, same = 0;
-		for (int y = area.y; y < area.y + area.height; y++) {
-			for (int x = area.x; x < area.x + area.width; x++) {
-				int pixel = gameIcon.pixels[(y - bounds.y) * ICON_WIDTH + x - bounds.x];
-				if (pixel == 0)
-					continue;
-				opaque++;
-				if (((pixels[y * width + x] ^ pixel) & 0xFFFFFF) == 0)
-					same++;
-			}
-		}
-		// Not drawn see-through, like the frame it's let go
-		if (same * 2 > opaque)
-			return;
-
-		// The bank draws its items with a shadow, which is taken out too
-		for (int y = area.y; y < area.y + area.height; y++) {
-			for (int x = area.x; x < area.x + area.width; x++) {
-				int g = GameIcon.grid(x - bounds.x, y - bounds.y);
-				int pixel = gameIcon.stackSize[g] ? 0 : gameIcon.item[g] ? gameIcon.pixels[(y - bounds.y) * ICON_WIDTH + x - bounds.x] :
-					gameIcon.shadow[g] ? BANK_SHADOW : 0;
-				if (pixel == 0 || isDrawnOver(over, x, y))
-					continue;
-				int i = y * width + x;
-				int drawn = pixels[i];
-				int under = drawn & 0xFF000000;
-				for (int shift = 0; shift < 24; shift += 8)
-					under |= max(0, min(255, 2 * (drawn >> shift & 0xFF) - (pixel >> shift & 0xFF))) << shift;
-				pixels[i] = under;
-			}
-		}
-		draggedTakenOut = widget;
+		draggedWaiting = null;
+		if (takeOut(dragged))
+			draggedTakenOut = dragged.getWidget();
 	}
 
-	private boolean isDrawnOver(List<WidgetItem> over, int x, int y) {
-		for (var widgetItem : over) {
-			var bounds = widgetItem.getCanvasBounds();
-			if (!bounds.contains(x, y))
-				continue;
-			var widget = widgetItem.getWidget();
-			var gameIcon = getGameIcon(widgetItem.getId(), widgetItem.getQuantity(), widget.getItemQuantityMode(), widget.getBorderType(), true);
-			int g = GameIcon.grid(x - bounds.x, y - bounds.y);
-			if (gameIcon == null || gameIcon == UNKNOWN || gameIcon.item[g] || gameIcon.shadow[g] || gameIcon.stackSize[g])
-				return true;
+	private boolean takeOut(WidgetItem dragged) {
+		var icon = findIcon(dragged);
+		if (icon == null || icon.layer == -1 || itemCount == MAX_ITEMS)
+			return false;
+		var widget = dragged.getWidget();
+		var gameIcon = getGameIcon(dragged.getId(), dragged.getQuantity(), widget.getItemQuantityMode(), widget.getBorderType(), true);
+		if (gameIcon == null || gameIcon == UNKNOWN)
+			return false;
+		var buffer = client.getBufferProvider();
+		var bounds = draggedBounds(dragged);
+		var visible = bounds.intersection(widget.getParent().getBounds()).intersection(new Rectangle(buffer.getWidth(), buffer.getHeight()));
+		return !visible.isEmpty() && takeOut(buffer.getPixels(), buffer.getWidth(), bounds, visible, gameIcon, itemShadows.getOrDefault(widget.getParentId(), 0));
+	}
+
+	// Each color is drawn as (item + under) / 2 and the alpha as 128 + under / 2, so what's under it is worked out exactly,
+	// unless it isn't drawn there after all, like before the game drew it
+	private boolean takeOut(int[] pixels, int width, Rectangle bounds, Rectangle visible, GameIcon gameIcon, int shadow) {
+		int drawn = 0, notDrawn = 0;
+		for (int y = visible.y; y < visible.y + visible.height; y++) {
+			for (int x = visible.x; x < visible.x + visible.width; x++) {
+				int g = GameIcon.grid(x - bounds.x, y - bounds.y);
+				int color = gameIcon.stackSize[g] ? gameIcon.stack[g] : gameIcon.item[g] ? gameIcon.pixels[(y - bounds.y) * ICON_WIDTH + x - bounds.x] :
+					gameIcon.shadow[g] ? shadow : 0;
+				if (color == 0)
+					continue;
+				drawn++;
+				int pixel = pixels[y * width + x];
+				int alpha = pixel >>> 24;
+				int underAlpha = alpha > 128 ? 2 * (alpha - 128) + 1 : 0;
+				boolean taken = alpha >= 128;
+				int result = underAlpha << 24;
+				for (int shift = 0; shift < 24; shift += 8) {
+					int c = 2 * (pixel >> shift & 0xFF) - (color >> shift & 0xFF);
+					taken &= c >= -1 && c <= underAlpha + 1;
+					result |= clamp(c, 0, underAlpha) << shift;
+				}
+				if (!taken)
+					notDrawn++;
+				under[g] = taken ? result : pixel;
+			}
 		}
-		return false;
+		if (drawn == 0 || notDrawn * 8 > drawn)
+			return false;
+
+		for (int y = visible.y; y < visible.y + visible.height; y++) {
+			for (int x = visible.x; x < visible.x + visible.width; x++) {
+				int g = GameIcon.grid(x - bounds.x, y - bounds.y);
+				if (gameIcon.stackSize[g] || gameIcon.item[g] || gameIcon.shadow[g] && shadow != 0)
+					pixels[y * width + x] = under[g];
+			}
+		}
+		return true;
+	}
+
+	private static Rectangle draggedBounds(WidgetItem widgetItem) {
+		return widgetItem.getDraggingCanvasBounds() != null ? widgetItem.getDraggingCanvasBounds() : widgetItem.getCanvasBounds();
 	}
 
 	// Layers only show their children within their own bounds, and their parents'
@@ -726,26 +738,32 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 		var widget = widgetItem.getWidget();
 		boolean dragged = isDragged(widgetItem);
-		var bounds = widgetItem.getDraggingCanvasBounds() != null ? widgetItem.getDraggingCanvasBounds() : widgetItem.getCanvasBounds();
+		var bounds = draggedBounds(widgetItem);
 		var gameIcon = getGameIcon(widgetItem.getId(), widgetItem.getQuantity(), widget.getItemQuantityMode(), widget.getBorderType(), true);
 		// Some interfaces report their items twice
-		if (cutThisFrame.contains(bounds))
+		if (dragged ? draggedCut : cutThisFrame.contains(bounds))
 			return;
 
 		var buffer = client.getBufferProvider();
 		var around = new Rectangle(bounds.x - MARGIN, bounds.y - MARGIN, GRID_WIDTH, GRID_HEIGHT)
 			.intersection(new Rectangle(buffer.getWidth(), buffer.getHeight()));
-		putBackMargins(buffer.getPixels(), buffer.getWidth(), around, true);
+		// A dragged item is drawn over other items, which keep their own edges
+		if (!dragged)
+			putBackMargins(buffer.getPixels(), buffer.getWidth(), around, true);
 		// The parents can still be where they were a frame ago, like when an interface is shown or scrolled,
 		// so where the game drew the item tells how far it's clipped, unless it's see-through or a dragged item is drawn over it
 		var visible = dragged ? bounds.intersection(widget.getParent().getBounds()) : coveredItems.contains(widgetItem) ? new Rectangle() :
 			widget.getOpacity() == 0 && client.getDraggedWidget() == null ? shownArea(gameIcon, bounds) :
 			bounds.intersection(visibleArea(widget));
 		if (visible.isEmpty()) {
-			putBackMargins(buffer.getPixels(), buffer.getWidth(), around, false);
+			if (!dragged)
+				putBackMargins(buffer.getPixels(), buffer.getWidth(), around, false);
 			return;
 		}
-		cutThisFrame.add(bounds);
+		if (dragged)
+			draggedCut = true;
+		else
+			cutThisFrame.add(bounds);
 		icon.frame = frame;
 
 		// Partly visible items stay clipped like the interface clips them
@@ -753,28 +771,29 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 		// The game draws dragged items half transparent
 		float opacity = (dragged ? 128 : 256 - widget.getOpacity()) / 256f;
-		long slotKey = GameIcon.hash(gameIcon.key, bounds.x, bounds.y, drawn.x, drawn.y, drawn.width, drawn.height);
+		long slotKey = GameIcon.hash(gameIcon.key, bounds.x, bounds.y, drawn.x, drawn.y, drawn.width, drawn.height, dragged ? 1 : 0);
 		var slot = slots.get(slotKey);
 		if (slot == null) {
 			slot = new Slot(freeSlotLayers.pop());
 			slots.put(slotKey, slot);
 		}
 		slot.frame = frame;
-		boolean takenOut = widget == draggedTakenOut;
-		cutOut(buffer.getPixels(), buffer.getWidth(), bounds, drawn, gameIcon, slot, takenOut);
-		boolean draggedLast = dragged && !isDrawnInPlace(widget);
-		var cutItem = new CutItem(draggedLast ? -1 : itemCount, bounds, drawn, gameIcon, slot);
+		cutOut(buffer.getPixels(), buffer.getWidth(), bounds, drawn, gameIcon, slot, dragged);
+		var cutItem = new CutItem(dragged ? -1 : itemCount, bounds, drawn, gameIcon, slot);
 		uncaptured.add(cutItem);
-		if (draggedLast) {
+		if (dragged) {
 			cutItem.iconLayer = icon.layer;
 			cutItem.opacity = opacity;
 			cutItem.border = widget.getBorderType();
+			cutItem.shadow = itemShadows.getOrDefault(widget.getParentId(), 0);
 			draggedCuts.add(cutItem);
 			return;
 		}
+		// The game shades the items of a layer alike, which the dragged one is drawn with too
+		if (slot.shadow != 0)
+			itemShadows.put(widget.getParentId(), slot.shadow & 0xFFFFFF);
 		itemSlots[itemCount] = slot;
-		// The shadow taken out with it is drawn see-through like it
-		putQuad(bounds, drawn, icon.layer, slot.layer, opacity, widget.getBorderType(), takenOut ? BANK_SHADOW | 0x80000000 : slot.shadow);
+		putQuad(bounds, drawn, icon.layer, slot.layer, opacity, widget.getBorderType(), slot.shadow);
 	}
 
 	// Items cut out just before took the edge of this one with them, like where the rune pouch's stack sizes start,
@@ -1389,6 +1408,10 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		return round(GRID_HEIGHT * scaleY);
 	}
 
+	private static int halfSeeThrough(int color) {
+		return 128 << 24 | (color >> 16 & 0xFF) / 2 << 16 | (color >> 8 & 0xFF) / 2 << 8 | (color & 0xFF) / 2;
+	}
+
 	private static void uploadSlotLayer(int layer, int[] pixels) {
 		glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, layer, GRID_WIDTH, GRID_HEIGHT, 1, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, pixels);
 	}
@@ -1414,6 +1437,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			System.arraycopy(slot.cut, GameIcon.grid(drawn.x - bounds.x, y - bounds.y), pixels, y * width + drawn.x, drawn.width);
 	}
 
+	// What's under an item that's taken out is known all over, and its stack size is drawn half see-through over the native one
 	private void paintOver(int[] pixels, int width, Rectangle bounds, Rectangle drawn, GameIcon gameIcon, Slot slot, boolean takenOut) {
 		int[] background = slot.background;
 		Arrays.fill(background, 0);
@@ -1423,9 +1447,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				int g = GameIcon.grid(x - bounds.x, y - bounds.y);
 				int pixel = pixels[y * width + x];
 				background[g] = slot.behind[g] = pixel;
-				slot.cut[g] = gameIcon.stackSize[g] ? pixel : 0;
-				// What's under an item that's already taken out is known
-				known[g] = !gameIcon.stackSize[g] && (!gameIcon.item[g] || takenOut);
+				slot.cut[g] = !gameIcon.stackSize[g] ? 0 : takenOut ? halfSeeThrough(gameIcon.stack[g]) : pixel;
+				known[g] = takenOut || !gameIcon.item[g] && !gameIcon.stackSize[g];
 			}
 		}
 
@@ -1446,7 +1469,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				shadow = shadeColors[i];
 			}
 		}
-		if (mostShaded < shaded * .8f)
+		if (mostShaded < shaded * .8f || takenOut)
 			shadow = 0;
 		if (shadow != 0)
 			for (int g = 0; g < GRID_SIZE; g++)
@@ -1739,26 +1762,15 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		return covered >= MIN_SHAPE_COVERAGE * pixels ? color : 0;
 	}
 
-	// The game's icon is taken out again, and the native one drawn over the other items
+	// The native one is drawn over the other items, with its shadow see-through like the rest of it
 	private void drawDraggedItem(int[] pixels, int width, CutItem item) {
-		int shadow = 0;
-		for (int y = item.drawn.y; y < item.drawn.y + item.drawn.height; y++) {
-			for (int x = item.drawn.x; x < item.drawn.x + item.drawn.width; x++) {
-				int i = y * width + x;
-				int g = GameIcon.grid(x - item.bounds.x, y - item.bounds.y);
-				if (item.gameIcon.stackSize[g])
-					continue;
-				if (item.gameIcon.shadow[g])
-					shadow = pixels[i];
-				pixels[i] = 0;
-			}
-		}
 		if (itemCount == MAX_ITEMS)
 			return;
 
 		var slot = item.slot;
 		int index = itemCount;
 		itemSlots[index] = slot;
+		int shadow = item.shadow == 0 ? 0 : round(item.opacity * 255) << 24 | item.shadow;
 		putQuad(item.bounds, item.drawn, item.iconLayer, slot.layer, item.opacity, item.border, shadow);
 		if (!slot.overlaid)
 			return;
