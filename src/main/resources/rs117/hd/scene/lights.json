@@ -19770,6 +19770,26 @@
     ]
   },
   {
+    "description": "Nightmare of Ashihama - Magic Projectile Impact",
+    "offset": [ 0, 100, 0 ],
+    "radius": 275,
+    "strength": 10,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 900,
+    "waitForAnimation": true,
+    "color": [
+      255,
+      0,
+      166
+    ],
+    "type": "PULSE",
+    "duration": 1750,
+    "range": 20,
+    "graphicsObjectIds": [ "NIGHTMARE_MAGIC_IMPACT" ]
+  },
+  {
     "description": "Nightmare of Ashihama - Magic Projectile",
     "offset": [ 0, -50, 0 ],
     "radius": 250,

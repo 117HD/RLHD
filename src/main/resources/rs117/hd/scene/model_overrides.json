@@ -64298,6 +64298,23 @@
     ]
   },
   {
+    "description": "Nightmare of Ashihama - Nightmare Rift",
+    "shiftAlpha": 40,
+    "graphicsObjectIds": [
+      "NIGHTMARE_RIFT"
+    ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Mushroom",
+    "undoVanillaShading": false,
+    "upwardsNormals": true,
+    "baseMaterial": "GRAY_125",
+    "objectIds": [
+      "NIGHTMARE_SPORES_INITIAL",
+      "NIGHTMARE_SPORES"
+    ]
+  },
+  {
     "description": "Nightmare of Ashihama - Arena Floor",
     "baseMaterial": "CARPET_LIGHT",
     "uvType": "MODEL_XZ",
@@ -64503,7 +64520,8 @@
       },
       {
         "colors": "h == 0 || h == 17 && s == 7",
-        "baseMaterial": "NONE"
+        "baseMaterial": "NONE",
+        "castShadows": false
       }
     ]
   },
