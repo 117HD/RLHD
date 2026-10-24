@@ -45003,7 +45003,11 @@
       "DRAGON_HALBERD_SPECIAL_WEST_RED",
       "DRAGON_HALBERD_SPECIAL_NORTH_RED",
       "DRAGON_HALBERD_SPECIAL_SOUTH_RED",
-      "DRAGON_HALBERD_SPECIAL_EAST_RED"
+      "DRAGON_HALBERD_SPECIAL_EAST_RED",
+      "DRAGON_HALBERD_SPECIAL_WEST_DARKRED",
+      "DRAGON_HALBERD_SPECIAL_EAST_DARKRED",
+      "DRAGON_HALBERD_SPECIAL_NORTH_DARKRED",
+      "DRAGON_HALBERD_SPECIAL_SOUTH_DARKRED"
     ]
   },
   {
@@ -45052,27 +45056,6 @@
       "DRAGON_HALBERD_SPECIAL_NORTH_BLUE",
       "DRAGON_HALBERD_SPECIAL_SOUTH_BLUE",
       "DRAGON_HALBERD_SPECIAL_EAST_BLUE"
-    ]
-  },
-  {
-    "description": "Scythe of Vitur swing & Dragon Halberd special attack - Dark Red/Sanguine",
-    "offset": [ 0, 0, 0 ],
-    "radius": 250,
-    "waitForAnimation": true,
-    "spawnDelay": 250,
-    "fixedDespawnTime": true,
-    "despawnDelay": 890,
-    "strength": 10,
-    "color": [
-      130,
-      130,
-      255
-    ],
-    "type": "STATIC",
-    "fadeInDuration": 100,
-    "fadeOutDuration": 300,
-    "graphicsObjectIds": [
-
     ]
   },
   {
@@ -46862,6 +46845,82 @@
     ]
   },
   {
+    "description": "Xarth - Corpse Pile Fire 01, 1",
+    "offset": [ 50, 250, -60 ],
+    "radius": 300,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE01"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 01, 2",
+    "offset": [ 700, 250, 60 ],
+    "radius": 300,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE01"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 01, 3",
+    "offset": [ -250, 350, 100 ],
+    "radius": 400,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE01"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 01, 4",
+    "offset": [ -800, 275, 200 ],
+    "radius": 400,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE01"
+    ]
+  },
+  {
     "description": "Xarth - Corpse Pile Fire",
     "offset": [ 0, 300, 0 ],
     "radius": 500,
@@ -46877,7 +46936,6 @@
     "fadeOutDuration": 200,
     "range": 20,
     "objectIds": [
-      "TFA_XARTH01_CORPSE_PILE_FIRE01",
       "TFA_XARTH01_CORPSE_PILE_FIRE02",
       "TFA_XARTH01_CORPSE_PILE_FIRE03",
       "TFA_XARTH01_CORPSE_PILE_FIRE04",

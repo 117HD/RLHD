@@ -79887,7 +79887,7 @@
   },
   {
     "description": "TFA - Loot Room Platform",
-    "baseMaterial": "SMOOTH_STONE",
+    "baseMaterial": "ROCK_3",
     "undoVanillaShading": false,
     "objectIds": [
       "TFA_WALLKIT_GUTHIXLOOT01_PLATFORM01",
@@ -79896,13 +79896,40 @@
       "TFA_WALLKIT_GUTHIXLOOT01_PLATFORM04"
     ],
     "uvType": "BOX",
+    "uvScale": 0.5,
     "colorOverrides": [
       {
         "description": "Grass",
-        "colors": "h == 7",
-        "baseMaterial": "GRASS_1",
+        "colors": "h == 43",
+        "baseMaterial": "NONE",
+        "castShadows": false,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Grass",
+        "colors": "s < 2",
+        "baseMaterial": "SMOOTH_STONE",
+        "undoVanillaShading": false,
         "uvType": "BOX",
-        "shiftLightness": 2,
+        "uvScale": 2
+      }
+    ]
+  },
+  {
+    "description": "TFA - Loot Room Platform - Trees",
+    "baseMaterial": "ROCK_3",
+    "undoVanillaShading": false,
+    "objectIds": [
+
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h == 43",
+        "baseMaterial": "NONE",
+        "castShadows": false,
         "undoVanillaShading": false
       }
     ]
