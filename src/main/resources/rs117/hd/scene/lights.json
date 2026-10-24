@@ -47270,8 +47270,8 @@
     "offset": [ 0, 185, 0 ],
     "radius": 175,
     "strength": 15,
-    "despawnDelay": 1100,
-    "fadeOutDuration": 400,
+    "despawnDelay": 900,
+    "fadeOutDuration": 300,
     "fixedDespawnTime": true,
     "color": [
       252,
@@ -47292,7 +47292,9 @@
     "offset": [ 0, 185, 0 ],
     "radius": 175,
     "strength": 15,
-    "despawnDelay": 2000,
+    "spawnDelay": 1200,
+    "despawnDelay": 900,
+    "fadeOutDuration": 300,
     "fixedDespawnTime": true,
     "color": [
       252,
@@ -47301,7 +47303,6 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "spawnDelay": 1300,
     "waitForAnimation": true,
     "range": 25,
     "graphicsObjectIds": [
