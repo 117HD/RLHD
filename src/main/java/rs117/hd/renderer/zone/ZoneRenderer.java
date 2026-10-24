@@ -1007,9 +1007,16 @@ public class ZoneRenderer implements Renderer {
 				minY -= ProceduralGenerator.MAX_DEPTH;
 			}
 
+			// Include some padding in case dynamic objects extend beyond the zone's static bounds
 			final int PADDING = 4 * LOCAL_TILE_SIZE;
-			zone.inSceneFrustum = sceneCamera.intersectsAABB(
-				minX - PADDING, minY, minZ - PADDING, maxX + PADDING, maxY, maxZ + PADDING);
+			maxX = max(maxX + PADDING, minX + zone.maxX);
+			maxZ = max(maxZ + PADDING, minZ + zone.maxZ);
+			minX += min(-PADDING, zone.minX);
+			minZ += min(-PADDING, zone.minZ);
+			minY = min(minY, zone.minY);
+			maxY = max(maxY, zone.maxY);
+
+			zone.inSceneFrustum = sceneCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
 
 			if (zone.inSceneFrustum) {
 				if (plugin.enableDetailedTimers)
@@ -1019,14 +1026,8 @@ public class ZoneRenderer implements Renderer {
 
 			zone.inShadowFrustum =
 				plugin.configShadowsEnabled &&
-				directionalCamera.intersectsAABB(
-					minX - PADDING, minY - PADDING, minZ - PADDING,
-					maxX + PADDING, maxY + PADDING, maxZ + PADDING
-				) &&
-				directionalShadowCasterVolume.intersectsAABB(
-					minX - PADDING, minY - PADDING, minZ - PADDING,
-					maxX + PADDING, maxY + PADDING, maxZ + PADDING
-				);
+				directionalCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ) &&
+				directionalShadowCasterVolume.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
 
 			if (plugin.enableDetailedTimers)
 				frameTimer.end(Timer.VISIBILITY_CHECK);

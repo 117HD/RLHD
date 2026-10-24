@@ -279,7 +279,7 @@ public class LightManager {
 						if (anim != null)
 							animationId = anim.getId();
 					}
-					parentExists = light.def.matchesAnimation(animationId);
+					parentExists = light.def.matchesAnimation(animationId, animationId != -1);
 				}
 			} else if (light.projectile != null) {
 				light.origin[0] = (int) light.projectile.getX();
@@ -290,12 +290,11 @@ public class LightManager {
 					light.markedForRemoval = true;
 				} else {
 					if (light.animationSpecific) {
-						if (light.def.waitForAnimation && gameCycle < light.projectile.getStartCycle()) {
-							parentExists = false;
-						} else if (light.def.hasAnimationFilter()) {
-							var animation = light.projectile.getAnimation();
-							parentExists = light.def.matchesAnimation(animation == null ? -1 : animation.getId());
-						}
+						var animation = light.projectile.getAnimation();
+						parentExists = light.def.matchesAnimation(
+							animation == null ? -1 : animation.getId(),
+							gameCycle >= light.projectile.getStartCycle()
+						);
 					}
 					light.orientation = light.projectile.getOrientation();
 				}
@@ -306,12 +305,11 @@ public class LightManager {
 				if (light.graphicsObject.finished()) {
 					light.markedForRemoval = true;
 				} else if (light.animationSpecific) {
-					if (light.def.waitForAnimation && gameCycle < light.graphicsObject.getStartCycle()) {
-						parentExists = false;
-					} else if (light.def.hasAnimationFilter()) {
-						var animation = light.graphicsObject.getAnimation();
-						parentExists = light.def.matchesAnimation(animation == null ? -1 : animation.getId());
-					}
+					var animation = light.graphicsObject.getAnimation();
+					parentExists = light.def.matchesAnimation(
+						animation == null ? -1 : animation.getId(),
+						gameCycle >= light.graphicsObject.getStartCycle()
+					);
 				}
 			} else if (light.actor != null && !light.markedForRemoval) {
 				if (light.actor instanceof NPC && light.actor != vw.npcs().byIndex(((NPC) light.actor).getIndex()) ||
@@ -340,7 +338,8 @@ public class LightManager {
 								}
 							}
 						} else {
-							parentExists = light.def.matchesAnimation(light.actor.getAnimation());
+							int animationId = light.actor.getAnimation();
+							parentExists = light.def.matchesAnimation(animationId, animationId != -1);
 						}
 					}
 

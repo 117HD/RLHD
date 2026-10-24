@@ -149,7 +149,7 @@
       },
       "waitForAnimation": {
         "type": "boolean",
-        "description": "Whether the light should spawn only when an animation starts playing. Only works for `GraphicsObject`s and `Projectile`s. Defaults to false."
+        "description": "Whether the light should spawn only when an animation starts playing. `animationIds` and `excludeAnimationIds` are respected. Defaults to false."
       },
       "nightMultiplier": {
         "type": "number",

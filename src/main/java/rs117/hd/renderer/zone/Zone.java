@@ -30,6 +30,7 @@ import rs117.hd.utils.collections.IntHashSet;
 import rs117.hd.utils.collections.PooledArrayType;
 
 import static net.runelite.api.Constants.*;
+import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.SUPPORTS_MULTI_INDIRECT_DRAW;
@@ -92,6 +93,11 @@ public class Zone implements Destructible {
 	public boolean inSceneFrustum = true; // whether the zone is visible to the scene camera
 	public boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
 	public boolean isFirstLoadingAttempt = true;
+
+	// Zone-relative bounds
+	int minX, maxX = CHUNK_SIZE * LOCAL_TILE_SIZE;
+	int minY = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE;
+	int minZ, maxZ = CHUNK_SIZE * LOCAL_TILE_SIZE;
 
 	public IntHashSet animatedDynamicObjectIds = new IntHashSet();
 
