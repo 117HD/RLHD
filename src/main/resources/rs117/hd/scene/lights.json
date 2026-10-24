@@ -46998,6 +46998,47 @@
     ]
   },
   {
+    "description": "TFA - Ocellus Orange Portal Spawn",
+    "offset": [ 0, 100, 0 ],
+    "radius": 120,
+    "strength": 20,
+    "color": [
+      252,
+      200,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 200,
+    "fadeInDuration": 300,
+    "objectIds": [
+      "TFA_OCELLUS_QUADRANT_WALL_INACTIVE"
+    ],
+    "animationIds": [ "VFX_OCELLUS_P2_PORTAL_SPAWN" ]
+  },
+  {
+    "description": "TFA - Ocellus Orange Portal Despawn",
+    "offset": [ 0, 100, 0 ],
+    "radius": 120,
+    "strength": 20,
+    "color": [
+      252,
+      200,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "despawnDelay": 600,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 300,
+    "objectIds": [
+      "TFA_OCELLUS_QUADRANT_WALL_INACTIVE"
+    ],
+    "animationIds": [ "VFX_OCELLUS_P2_PORTAL_DESPAWN" ]
+  },
+  {
     "description": "TFA - Ocellus Orange Portal",
     "offset": [ 0, 100, 0 ],
     "radius": 120,
