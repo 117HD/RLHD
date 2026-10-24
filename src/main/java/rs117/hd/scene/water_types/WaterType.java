@@ -45,6 +45,7 @@ public class WaterType {
 	private boolean hasFoam = true;
 	private float duration = 1;
 	public int fishingSpotRecolor = -1;
+	public boolean skipUnderwaterTerrain = false;
 
 	public transient int index;
 

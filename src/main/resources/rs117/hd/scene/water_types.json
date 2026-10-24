@@ -333,6 +333,20 @@
     ]
   },
   {
+    "name": "TFA_FISH_TANK_WATER",
+    "skipUnderwaterTerrain": true,
+    "specularStrength": 0.5,
+    "specularGloss": 100.0,
+    "normalStrength": 0.2,
+    "baseOpacity": 0.8,
+    "fresnelAmount": 0.1,
+    "surfaceColor": [
+      12.17,
+      12.07,
+      16.99
+    ]
+  },
+  {
     "name": "WATER_OPEN",
     "material": "WATER_OPEN",
     "surfaceColor": "#597291",

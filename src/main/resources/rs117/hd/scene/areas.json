@@ -388,6 +388,12 @@
     ]
   },
   {
+    "name": "LUMBRIDGE_SWAMP_CAVES_FLOATING_TERRAIN_FIX",
+    "aabbs": [
+      [ 3205, 9536, 3240, 9539, 3 ]
+    ]
+  },
+  {
     "name": "Lumbridge Watermill Basement",
     "aabbs": [
       [ 3203, 9664, 3250, 9708 ],
@@ -12240,6 +12246,130 @@
     "hideOtherAreas": true
   },
   {
+    "name": "TFA_LOBBY",
+    "regions": [
+      16470
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TFA_ARCHIVE_GUARDIAN",
+    "regions": [
+      16471
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TFA_BORK",
+    "regions": [
+      16727
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TFA_XARTH",
+    "regions": [
+      16726
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TFA_DAGONHAI",
+    "regions": [
+      16215
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TFA_EZEKIEL",
+    "regions": [
+      16214
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TFA_DREADNOTH",
+    "regions": [
+      16728
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TFA_OCELLUS",
+    "regions": [
+      16472
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TFA_REWARD_ROOM",
+    "regions": [
+      16474
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TFA",
+    "areas": [
+      "TFA_LOBBY",
+      "TFA_ARCHIVE_GUARDIAN",
+      "TFA_BORK",
+      "TFA_XARTH",
+      "TFA_EZEKIEL",
+      "TFA_DAGONHAI"
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "TFA_XARTH_FISH_TANK",
+    "aabbs": [
+      [ 4202, 5546, 4209, 5553 ]
+    ]
+  },
+  {
+    "name": "TFA_XARTH_DESERT_TANK",
+    "aabbs": [
+      [ 4173, 5517, 4180, 5524 ]
+    ]
+  },
+  {
+    "name": "TFA_XARTH_TUNDRA_TANK",
+    "aabbs": [
+      [ 4173, 5546, 4180, 5553 ]
+    ]
+  },
+  {
+    "name": "TFA_NO_BLEND_GRASS",
+    "aabbs": [
+      [ 4113, 5602, 4114, 5609 ],
+      [ 4121, 5602, 4121, 5609 ],
+      [ 4114, 5615, 4114, 5619 ],
+      [ 4118, 5620, 4121, 5622 ],
+      [ 4121, 5615, 4121, 5619 ],
+      [ 4133, 5615, 4133, 5619 ],
+      [ 4133, 5620, 4136, 5622 ],
+      [ 4140, 5615, 4140, 5619 ],
+      [ 4140, 5602, 4141, 5609 ],
+      [ 4133, 5602, 4133, 5608 ],
+      [ 4133, 5589, 4133, 5596 ],
+      [ 4140, 5589, 4141, 5596 ],
+      [ 4113, 5589, 4114, 5596 ],
+      [ 4121, 5589, 4121, 5596 ],
+      [ 4114, 5579, 4114, 5583 ],
+      [ 4121, 5579, 4121, 5583 ],
+      [ 4117, 5576, 4121, 5578 ],
+      [ 4122, 5569, 4124, 5577 ],
+      [ 4130, 5569, 4131, 5577 ],
+      [ 4133, 5579, 4133, 5583 ],
+      [ 4133, 5577, 4137, 5578 ],
+      [ 4140, 5579, 4140, 5583 ],
+      [ 4115, 5579, 4117, 5581 ],
+      [ 4137, 5579, 4139, 5581 ],
+      [ 4137, 5617, 4139, 5620 ],
+      [ 4115, 5617, 4117, 5620 ]
+    ]
+  },
+  {
     "name": "Doom of Mokhaiotl - Arena Torch Brightness",
     "aabbs": [
       [ 1298, 9564, 1324, 9586 ]
@@ -13068,6 +13198,7 @@
   {
     "name": "MAINLAND_EXTENSIONS",
     "areas": [
+      "TFA_REWARD_ROOM",
       "FISHING_TRAWLER",
       "MISTHALIN_MYSTERY_MANOR_REGION",
       "VAMPYRIUM",
