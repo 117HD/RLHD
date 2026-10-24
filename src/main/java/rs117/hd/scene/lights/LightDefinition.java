@@ -36,6 +36,7 @@ public class LightDefinition {
 	public int renderableIndex = -1;
 	public boolean waitForAnimation;
 	public float nightMultiplier = 1;
+	public float specularMultiplier = 1;
 	@Nullable
 	@JsonAdapter(LightSchedule.Adapter.class)
 	public LightSchedule schedule;

@@ -49582,6 +49582,85 @@
     ]
   },
   {
+    "description": "Sailing - Cursed Waters - Ghosts - 1x1",
+    "height": 100,
+    "radius": 300,
+    "strength": 3,
+    "color": [
+      210,
+      70,
+      200
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 20,
+    "nightMultiplier": 1.5,
+    "specularMultiplier": 0,
+    "objectIds": [
+      "SAILING_HAZARDOUS_WATER_CURSED_1X1_01",
+      "SAILING_HAZARDOUS_WATER_CURSED_1X1_02"
+    ]
+  },
+  {
+    "description": "Sailing - Cursed Waters - Ghosts - 2x2",
+    "height": 150,
+    "radius": 450,
+    "strength": 5,
+    "color": [
+      210,
+      70,
+      200
+    ],
+    "type": "PULSE",
+    "duration": 2800,
+    "range": 20,
+    "nightMultiplier": 1.5,
+    "specularMultiplier": 0,
+    "objectIds": [
+      "SAILING_HAZARDOUS_WATER_CURSED_2X2_01",
+      "SAILING_HAZARDOUS_WATER_CURSED_2X2_02"
+    ]
+  },
+  {
+    "description": "Sailing - Cursed Waters - Ghosts - 3x3",
+    "height": 175,
+    "radius": 600,
+    "strength": 7,
+    "color": [
+      210,
+      70,
+      200
+    ],
+    "type": "PULSE",
+    "duration": 3100,
+    "range": 20,
+    "nightMultiplier": 1.5,
+    "specularMultiplier": 0,
+    "objectIds": [
+      "SAILING_HAZARDOUS_WATER_CURSED_3X3_01",
+      "SAILING_HAZARDOUS_WATER_CURSED_3X3_02"
+    ]
+  },
+  {
+    "description": "Sailing - Cursed Waters - Ghosts - 6x3",
+    "height": 200,
+    "radius": 750,
+    "strength": 9,
+    "color": [
+      210,
+      70,
+      200
+    ],
+    "type": "PULSE",
+    "duration": 3400,
+    "range": 20,
+    "nightMultiplier": 1.5,
+    "specularMultiplier": 0,
+    "objectIds": [
+      "SAILING_HAZARDOUS_WATER_CURSED_6X3_01"
+    ]
+  },
+  {
     "description": "Sailing - Crystal Extractor - Ready",
     "height": 175,
     "radius": 150,
