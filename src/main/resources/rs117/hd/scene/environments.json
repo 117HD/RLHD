@@ -2126,7 +2126,33 @@
       80,
       190
     ],
-    "fogDepth": 37
+    "fogDepth": 33,
+    "sky":{
+      "parent": "NIGHT",
+      "customGradient": true,
+      "starHorizonHeight": 0.75,
+      "hideMoon": false,
+      "moonSizeMult": 1.4,
+      "moonAngles": [
+        22.6,
+        89.75
+      ],
+      "forceMoonPhase": "FULL_MOON",
+      "moonDiskColor": "#A25D96",
+      "horizonWidth": 35,
+      "profile": {
+        "horizon": [
+          {
+            "altitude": 0,
+            "color": "#0A0015"
+          }
+        ]
+      },
+      "nightAmbientColor": "#A371FF",
+      "nightAmbientStrength": 2.5,
+      "nightDirectionalColor": "#DBDBDB",
+      "nightDirectionalStrength": 2
+    }
   },
   {
     "area": "SISTERHOOD_SANCTUARY",
