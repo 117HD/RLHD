@@ -79893,7 +79893,11 @@
       "TFA_WALLKIT_GUTHIXLOOT01_PLATFORM01",
       "TFA_WALLKIT_GUTHIXLOOT01_PLATFORM02",
       "TFA_WALLKIT_GUTHIXLOOT01_PLATFORM03",
-      "TFA_WALLKIT_GUTHIXLOOT01_PLATFORM04"
+      "TFA_WALLKIT_GUTHIXLOOT01_PLATFORM04",
+      "TFA_WALLKIT_GUTHIXLOOT01_WALKWAY01",
+      "TFA_WALLKIT_GUTHIXLOOT01_WALKWAY02",
+      "TFA_WALLKIT_GUTHIXLOOT01_WALKWAY03",
+      "TFA_WALLKIT_GUTHIXLOOT01_RAMP01"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -79917,19 +79921,48 @@
   },
   {
     "description": "TFA - Loot Room Platform - Trees",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "LIGHT_BARK",
     "undoVanillaShading": false,
     "objectIds": [
-
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES01",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES02",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES03",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES04",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES05",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES06",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES07"
     ],
     "uvType": "BOX",
-    "uvScale": 0.5,
     "colorOverrides": [
       {
         "description": "Leaves",
         "colors": "h == 43",
         "baseMaterial": "NONE",
-        "castShadows": false,
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA - Loot Room Platform - Walkway",
+    "baseMaterial": "LIGHT_BARK",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES01",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES02",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES03",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES04",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES05",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES06",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES07"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h == 43",
+        "baseMaterial": "NONE",
+        "shiftLightness": 2,
         "undoVanillaShading": false
       }
     ]
