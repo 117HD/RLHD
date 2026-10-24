@@ -2226,6 +2226,12 @@
     ]
   },
   {
+    "name": "ASGARNIA_ICE_DUNGEON_PLANE_1",
+    "aabbs": [
+      [ 2882, 9536, 3085, 9599, 1 ]
+    ]
+  },
+  {
     "name": "ASGARNIA_ICE_DUNGEON",
     "aabbs": [
       [ 2882, 9536, 3085, 9599 ]
