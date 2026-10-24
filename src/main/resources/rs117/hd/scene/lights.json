@@ -47380,6 +47380,61 @@
     "animationIds": [ "VFX_OCELLUS_P2_PORTAL_IDLE" ]
   },
   {
+    "description": "TFA - Ocellus Safe Teleport Orange Portal Spawn",
+    "offset": [ 0, 100, 0 ],
+    "radius": 140,
+    "strength": 20,
+    "color": [
+      252,
+      200,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "fadeInDuration": 300,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P2_SAFE_PORTAL_SPAWN"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Safe Teleport Orange Portal Despawn",
+    "offset": [ 0, 100, 0 ],
+    "radius": 140,
+    "strength": 20,
+    "color": [
+      252,
+      200,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "fixedDespawnTime": true,
+    "despawnDelay": 300,
+    "fadeOutDuration": 300,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P2_SAFE_PORTAL_DESPAWN"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Safe Teleport Orange Portal",
+    "offset": [ 0, 100, 0 ],
+    "radius": 140,
+    "strength": 20,
+    "color": [
+      252,
+      200,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P2_SAFE_PORTAL_IDLE"
+    ]
+  },
+  {
     "description": "TFA - Ocellus Purple Floor Aoe",
     "offset": [ 0, 100, 0 ],
     "radius": 140,
@@ -47392,6 +47447,11 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 25,
+    "spawnDelay": 200,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100,
+    "despawnDelay": 3200,
+    "fixedDespawnTime": true,
     "graphicsObjectIds": [
       "VFX_OCELLUS_P2_AOE_DODGE"
     ]
