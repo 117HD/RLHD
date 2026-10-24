@@ -1,7 +1,5 @@
 package rs117.hd.renderer.zone;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.utils.DestructibleHandler;
@@ -47,6 +45,9 @@ public final class ZoneUploadJob extends Job {
 				if (shouldUnmap)
 					invokeClientCallback(zoneBeingUploaded::unmap);
 			}
+			// Ensure sensible bounds in empty zones
+			if (zoneBeingUploaded.minY == Integer.MAX_VALUE)
+				zoneBeingUploaded.minY = zoneBeingUploaded.maxY = 0;
 			zoneBeingUploaded.initialized = true;
 		}
 	}

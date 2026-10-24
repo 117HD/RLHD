@@ -214,6 +214,11 @@ public class SceneUploader implements AutoCloseable {
 	}
 
 	public void uploadZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) throws InterruptedException {
+		zone.minX = zone.minZ = 0;
+		zone.maxX = zone.maxZ = CHUNK_SIZE * LOCAL_TILE_SIZE;
+		zone.minY = Integer.MAX_VALUE;
+		zone.maxY = Integer.MIN_VALUE;
+
 		var vb = zone.vboO != null ? zoneVboO.setBuffer(zone.vboO.mapped()) : null;
 		var ab = zone.vboA != null ? zoneVboA.setBuffer(zone.vboA.mapped()) : null;
 		var fb = zone.tboF != null ? zoneTboF.setBuffer(zone.tboF.mapped()) : null;
@@ -533,6 +538,7 @@ public class SceneUploader implements AutoCloseable {
 		if (paint != null && drawTile && !onlyRenderables) {
 			uploadTilePaint(
 				ctx,
+				zone,
 				t,
 				paint,
 				onlyWaterSurface,
@@ -545,7 +551,7 @@ public class SceneUploader implements AutoCloseable {
 
 		SceneTileModel model = t.getSceneTileModel();
 		if (model != null && drawTile && !onlyRenderables)
-			uploadTileModel(ctx, t, model, onlyWaterSurface, tileExX, tileExY, tileZ, basex, basez, vertexBuffer, textureBuffer);
+			uploadTileModel(ctx, zone, t, model, onlyWaterSurface, tileExX, tileExY, tileZ, basex, basez, vertexBuffer, textureBuffer);
 
 		if (!onlyWaterSurface && !onlyTiles)
 			uploadZoneTileRenderables(ctx, zone, t, tileExX, tileExY, tileZ, vertexBuffer, alphaBuffer, textureBuffer);
@@ -809,7 +815,7 @@ public class SceneUploader implements AutoCloseable {
 		int alphaStart = alphaBuffer != null ? alphaBuffer.position() : 0;
 		try {
 			uploadStaticModel(
-				ctx, tile, model, modelOverride, uuid,
+				ctx, zone, tile, model, modelOverride, uuid,
 				preOrientation, orient,
 				x - basex, y, z - basez,
 				tileExX, tileExY, tileZ,
@@ -879,6 +885,7 @@ public class SceneUploader implements AutoCloseable {
 	@SuppressWarnings({ "UnnecessaryLocalVariable" })
 	private void uploadTilePaint(
 		ZoneSceneContext ctx,
+		Zone zone,
 		Tile tile,
 		SceneTilePaint paint,
 		boolean onlyWaterSurface,
@@ -1071,6 +1078,9 @@ public class SceneUploader implements AutoCloseable {
 		neHeight -= override.heightOffset;
 		nwHeight -= override.heightOffset;
 
+		zone.minY = min(zone.minY, min(min(swHeight, seHeight), min(neHeight, nwHeight)));
+		zone.maxY = max(zone.maxY, max(max(swHeight, seHeight), max(neHeight, nwHeight)));
+
 		int swMaterialData = swMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, swVertexIsOverlay);
 		int seMaterialData = seMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, seVertexIsOverlay);
 		int nwMaterialData = nwMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, nwVertexIsOverlay);
@@ -1197,6 +1207,7 @@ public class SceneUploader implements AutoCloseable {
 
 	private void uploadTileModel(
 		ZoneSceneContext ctx,
+		Zone zone,
 		Tile tile,
 		SceneTileModel model,
 		boolean onlyWaterSurface,
@@ -1430,6 +1441,9 @@ public class SceneUploader implements AutoCloseable {
 			ly1 -= override.heightOffset;
 			ly2 -= override.heightOffset;
 
+			zone.minY = min(zone.minY, min(ly0, min(ly1, ly2)));
+			zone.maxY = max(zone.maxY, max(ly0, max(ly1, ly2)));
+
 			int materialDataA = materialA.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexAIsOverlay);
 			int materialDataB = materialB.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexBIsOverlay);
 			int materialDataC = materialC.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexCIsOverlay);
@@ -1518,6 +1532,7 @@ public class SceneUploader implements AutoCloseable {
 	// scene upload
 	private int uploadStaticModel(
 		ZoneSceneContext ctx,
+		Zone zone,
 		Tile tile,
 		Model model,
 		ModelOverride modelOverride,
@@ -1609,6 +1624,13 @@ public class SceneUploader implements AutoCloseable {
 				float blend = divide(heightFrac, modelOverride.terrainVertexSnapThreshold);
 				vy = (int) mix(h, vy, blend);
 			}
+
+			zone.minX = min(zone.minX, vx);
+			zone.minY = min(zone.minY, vy);
+			zone.minZ = min(zone.minZ, vz);
+			zone.maxX = max(zone.maxX, vx);
+			zone.maxY = max(zone.maxY, vy);
+			zone.maxZ = max(zone.maxZ, vz);
 
 			modelVertices[vertexOffset++] = vx;
 			modelVertices[vertexOffset++] = vy;
