@@ -37994,8 +37994,7 @@
   },
   {
     "description": "CAVE_WALL_LANTERN",
-    "height": 150,
-    "alignment": "FRONT",
+    "offset": [ -8.0, 122.0, 49.0 ],
     "radius": 500,
     "strength": 7,
     "color": [
@@ -38007,7 +38006,8 @@
     "duration": 600,
     "range": 3,
     "objectIds": [
-      "SUROK_TUNNEL_WALL_LAMP"
+      "SUROK_TUNNEL_WALL_LAMP",
+      "POG_CAVE_MINE_WALL_LAMP"
     ]
   },
   {
