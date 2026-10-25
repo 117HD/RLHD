@@ -28,8 +28,11 @@ package rs117.hd;
 
 import com.google.gson.Gson;
 import com.google.inject.Binder;
+import com.google.inject.Injector;
 import com.google.inject.Provider;
 import com.google.inject.Provides;
+import com.google.inject.Key;
+import com.google.inject.Module;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
@@ -59,6 +62,7 @@ import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
@@ -536,6 +540,29 @@ public class HdPlugin extends Plugin {
 			}
 		}
 	}
+
+	@Override
+	protected Module getPublicModule() {
+		if (!Props.DEVELOPMENT)
+			return null;
+
+		Injector parent = injector.getParent();
+		return binder -> {
+			for (var binding : injector.getAllBindings().values()) {
+				var key = binding.getKey();
+				if (parent.getExistingBinding(key) != null)
+					continue;
+
+				var rawType = key.getTypeLiteral().getRawType();
+				if (!rawType.getName().startsWith("rs117.hd.") || Config.class.isAssignableFrom(rawType))
+					continue;
+				expose(binder, key, binding.getProvider());
+			}
+		};
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private static void expose(Binder binder, Key key, Provider provider) { binder.bind(key).toProvider(provider); }
 
 	@Override
 	protected void startUp() {
