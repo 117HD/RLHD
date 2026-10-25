@@ -474,9 +474,7 @@ public class HdPlugin extends Plugin {
 	private boolean isActive;
 	private boolean lwjglInitialized;
 	public boolean hasLoggedIn;
-	public boolean redrawPreviousFrame;
 	public boolean justChangedArea;
-	public Scene skipScene;
 	public int gpuFlags;
 
 	public final ConcurrentHashMap.KeySetView<String, ?> pendingConfigChanges = ConcurrentHashMap.newKeySet();
@@ -761,8 +759,6 @@ public class HdPlugin extends Plugin {
 				npcDisplacementCache.initialize();
 
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
-				redrawPreviousFrame = false;
-				skipScene = null;
 
 				// Force the client to reload the scene since we're changing GPU flags, and to restore any removed tiles
 				if (client.getGameState() == GameState.LOGGED_IN)
@@ -928,8 +924,8 @@ public class HdPlugin extends Plugin {
 	public void toggleFreezeFrame() {
 		clientThread.invoke(() -> {
 			enableFreezeFrame = !enableFreezeFrame;
-			if (enableFreezeFrame)
-				redrawPreviousFrame = true;
+			if (!enableFreezeFrame)
+				processPendingConfigChanges();
 		});
 	}
 
@@ -1910,7 +1906,7 @@ public class HdPlugin extends Plugin {
 
 	public void processPendingConfigChanges() {
 		clientThread.invoke(() -> {
-			if (pendingConfigChanges.isEmpty())
+			if (enableFreezeFrame || pendingConfigChanges.isEmpty())
 				return;
 
 			try {
@@ -2212,9 +2208,6 @@ public class HdPlugin extends Plugin {
 	@Subscribe
 	public void onClientTick(ClientTick clientTick) {
 		elapsedClientTime += 1 / 50f;
-
-		if (!enableFreezeFrame && skipScene != client.getScene())
-			redrawPreviousFrame = false;
 	}
 
 	@Subscribe
