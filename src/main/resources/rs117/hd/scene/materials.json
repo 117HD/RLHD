@@ -1125,6 +1125,10 @@
     "doubleSidedFaces": true
   },
   {
+    "name": "TFA_VOID",
+    "vanillaTextureIndex": 215
+  },
+  {
     "name": "GLASS_1",
     "parent": "NONE",
     "subsurface": 1
