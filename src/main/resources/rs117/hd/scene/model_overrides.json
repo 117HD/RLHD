@@ -80534,7 +80534,9 @@
       "TFA_WALLKIT_XARTH01_DEFAULT01",
       "TFA_WALLKIT_XARTH01_TRANSITION02",
       "TFA_WALLKIT_XARTH01_TRANSITION01",
-      "TFA_WALLKIT_XARTH01_VIVARIUM01_ENTRANCE01"
+      "TFA_WALLKIT_XARTH01_VIVARIUM01_ENTRANCE01",
+      "TFA_WALLKIT_XARTH01_PILLAR01_M",
+      "TFA_WALLKIT_XARTH01_PILLAR01"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -80565,8 +80567,10 @@
       "TFA_WALLKIT_XARTH01_TRUNKS01_BURNT01",
       "TFA_WALLKIT_XARTH01_TRANSITION01_BURNT01",
       "TFA_WALLKIT_ARCHIVE01_PILLAR02_BURNT01",
+      "TFA_WALLKIT_XARTH01_PILLAR01_BURNT01",
       "TFA_XARTH_RUBBLE_1",
-      "TFA_XARTH_RUBBLE_2"
+      "TFA_XARTH_RUBBLE_2",
+      "TFA_XARTH_RUBBLE_3"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -80640,7 +80644,7 @@
   },
   {
     "description": "TFA Xarth Room - Corpse Pile Fire",
-    "baseMaterial": "GRAY_75",
+    "baseMaterial": "GRAY_90",
     "upwardsNormals": true,
     "objectIds": [
       "TFA_XARTH01_CORPSE_PILE_FIRE01",

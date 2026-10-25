@@ -46846,7 +46846,7 @@
   },
   {
     "description": "Xarth - Corpse Pile Fire 01, 1",
-    "offset": [ 50, 250, -60 ],
+    "offset": [ -50, 250, 60 ],
     "radius": 300,
     "strength": 25,
     "color": [
@@ -46860,12 +46860,13 @@
     "fadeOutDuration": 200,
     "range": 20,
     "objectIds": [
-      "TFA_XARTH01_CORPSE_PILE_FIRE01"
+      "TFA_XARTH01_CORPSE_PILE_FIRE01",
+      "TFA_XARTH01_CORPSE_PILE_FIRE03"
     ]
   },
   {
     "description": "Xarth - Corpse Pile Fire 01, 2",
-    "offset": [ 700, 250, 60 ],
+    "offset": [ -700, 250, -60 ],
     "radius": 300,
     "strength": 25,
     "color": [
@@ -46884,7 +46885,7 @@
   },
   {
     "description": "Xarth - Corpse Pile Fire 01, 3",
-    "offset": [ -250, 350, 100 ],
+    "offset": [ 250, 350, -100 ],
     "radius": 400,
     "strength": 25,
     "color": [
@@ -46898,12 +46899,53 @@
     "fadeOutDuration": 200,
     "range": 20,
     "objectIds": [
-      "TFA_XARTH01_CORPSE_PILE_FIRE01"
+      "TFA_XARTH01_CORPSE_PILE_FIRE01",
+      "TFA_XARTH01_CORPSE_PILE_FIRE03"
     ]
   },
   {
     "description": "Xarth - Corpse Pile Fire 01, 4",
-    "offset": [ -800, 275, 200 ],
+    "offset": [ 650, 310, -220 ],
+    "radius": 300,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE01",
+      "TFA_XARTH01_CORPSE_PILE_FIRE03"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 01, 5",
+    "offset": [ 950, 200, -180 ],
+    "radius": 300,
+    "strength": 20,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE01",
+      "TFA_XARTH01_CORPSE_PILE_FIRE03"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 02, 1",
+    "offset": [ 100, 380, 200 ],
     "radius": 400,
     "strength": 25,
     "color": [
@@ -46917,12 +46959,88 @@
     "fadeOutDuration": 200,
     "range": 20,
     "objectIds": [
-      "TFA_XARTH01_CORPSE_PILE_FIRE01"
+      "TFA_XARTH01_CORPSE_PILE_FIRE02"
     ]
   },
   {
-    "description": "Xarth - Corpse Pile Fire",
-    "offset": [ 0, 300, 0 ],
+    "description": "Xarth - Corpse Pile Fire 02, 2",
+    "offset": [ 0, 350, -400 ],
+    "radius": 400,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE02"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 02, 3",
+    "offset": [ 100, 220, -50 ],
+    "radius": 300,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE02"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 03, 1",
+    "offset": [ -400, 320, -100 ],
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE03"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 03, 2",
+    "offset": [ 0, 220, -300 ],
+    "radius": 250,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE03"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 04, 1",
+    "offset": [ 100, 340, -350 ],
     "radius": 500,
     "strength": 25,
     "color": [
@@ -46936,12 +47054,139 @@
     "fadeOutDuration": 200,
     "range": 20,
     "objectIds": [
-      "TFA_XARTH01_CORPSE_PILE_FIRE02",
-      "TFA_XARTH01_CORPSE_PILE_FIRE03",
-      "TFA_XARTH01_CORPSE_PILE_FIRE04",
-      "TFA_XARTH01_CORPSE_PILE_FIRE05",
-      "TFA_XARTH01_CORPSE_PILE_FIRE06",
-      "TFA_XARTH01_CORPSE_PILE_FIRE07",
+      "TFA_XARTH01_CORPSE_PILE_FIRE04"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 04, 2",
+    "offset": [ 100, 340, -950 ],
+    "radius": 500,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE04"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 04, 3",
+    "offset": [ 100, 270, 450 ],
+    "radius": 500,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE04"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 05",
+    "offset": [ 100, 360, 200 ],
+    "radius": 500,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE05"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 06",
+    "offset": [ 100, 280, 200 ],
+    "radius": 400,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE06"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 07, 1",
+    "offset": [ 0, 200, 50 ],
+    "radius": 500,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE07"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 07, 2",
+    "offset": [ 0, 230, -350 ],
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE07"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 08",
+    "offset": [ 250, 300, 200 ],
+    "radius": 500,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
       "TFA_XARTH01_CORPSE_PILE_FIRE08"
     ]
   },
