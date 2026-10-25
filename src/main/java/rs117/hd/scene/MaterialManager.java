@@ -375,6 +375,10 @@ public class MaterialManager {
 
 		uploadTextures();
 
+		// Update Alpha Discard now that textures are uploaded
+		for (var mat : MATERIALS)
+			mat.alphaDiscard |= mat.resolveTextureOwner().alphaDiscard;
+
 		boolean materialOrderChanged = true;
 		// TODO: Fix material loading issues with profile switching
 //		if (uboMaterials != null && uboMaterials.materials.length == MATERIALS.length) {
@@ -446,6 +450,7 @@ public class MaterialManager {
 			if (image == null)
 				continue;
 
+			material.alphaDiscard |= textureManager.isAlphasMaskTexture(material.getTextureName(), material.vanillaTextureIndex);
 			try {
 				if (!uploadedAnything) {
 					glActiveTexture(TEXTURE_UNIT_GAME);
