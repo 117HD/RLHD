@@ -80644,7 +80644,7 @@
   },
   {
     "description": "TFA Xarth Room - Corpse Pile Fire",
-    "baseMaterial": "GRAY_90",
+    "baseMaterial": "GRAY_80",
     "upwardsNormals": true,
     "objectIds": [
       "TFA_XARTH01_CORPSE_PILE_FIRE01",

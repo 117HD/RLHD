@@ -46727,7 +46727,7 @@
     "description": "Xarth - Flame Stomp",
     "areas": [ "TFA_XARTH" ],
     "height": 40,
-    "radius": 250,
+    "radius": 275,
     "strength": 10,
     "waitForAnimation": true,
     "fixedDespawnTime": true,
@@ -46787,7 +46787,7 @@
     "animationIds": [ -1 ]
   },
   {
-    "description": "Tormented Demon - Fire Ball Projectile",
+    "description": "Xarth - Fire Ball Projectile",
     "offset": [ 0, 25, 0 ],
     "radius": 220,
     "strength": 18,
