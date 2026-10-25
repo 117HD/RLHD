@@ -193,7 +193,7 @@ public class HdPlugin extends Plugin {
 	public static final int UNIFORM_BLOCK_UI = UNIFORM_BLOCK_COUNT++;
 
 	public static final float NEAR_PLANE = 50;
-	public static final int MAX_FACE_COUNT = 6144;
+	public static final int MAX_FACE_COUNT = 8192;
 	public static final int MAX_DISTANCE = EXTENDED_SCENE_SIZE;
 	public static final int MAX_FOG_DEPTH = 100;
 	public static final int TILED_LIGHTING_TILE_SIZE = 16;

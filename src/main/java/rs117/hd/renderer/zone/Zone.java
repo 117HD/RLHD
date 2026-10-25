@@ -585,7 +585,8 @@ public class Zone implements Destructible {
 
 		Arrays.fill(doubleSidedBitSet, 0, bucketCapacity, 0);
 
-		final Material baseMaterial = modelOverride.baseMaterial;
+		final Material baseMaterial = modelOverride.material;
+		final ModelOverride[] faceOverrides = modelOverride.faceOverrides;
 		final Material textureMaterial = modelOverride.textureMaterial;
 
 		int radius = 0;
@@ -595,41 +596,48 @@ public class Zone implements Destructible {
 			if (color3[f] == -2)
 				continue;
 
-			// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
-			if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, f))
-				continue;
-
-			Material material = baseMaterial;
-			ModelOverride faceOverride = modelOverride;
-
 			int transparency = SceneUploader.readFaceTransparency(model.getTransparency(), transparencies, f);
 			if (transparency == 255)
 				continue;
 
+			Material material = baseMaterial;
+			ModelOverride faceOverride = modelOverride;
+			if (faceOverrides != null && f < faceOverrides.length) {
+				faceOverride = faceOverrides[f];
+				material = faceOverride.material;
+			}
 			int textureId = faceTextures != null ? faceTextures[f] : -1;
-			if (textureId != -1) {
-				if (modelOverride.textureMaterial != Material.NONE) {
-					material = textureMaterial;
-				} else {
-					material = materialManager.fromVanillaTexture(textureId);
-					if (modelOverride.materialOverrides != null) {
-						var override = modelOverride.materialOverrides.get(material);
-						if (override != null) {
-							faceOverride = override;
-							material = override.textureMaterial;
+			if (faceOverride == modelOverride) {
+				if (textureId != -1) {
+					if (modelOverride.textureMaterial != Material.NONE) {
+						material = textureMaterial;
+					} else {
+						material = materialManager.fromVanillaTexture(textureId);
+						if (modelOverride.materialOverrides != null) {
+							var override = modelOverride.materialOverrides.get(material);
+							if (override != null) {
+								faceOverride = override;
+								material = override.textureMaterial;
+							}
 						}
 					}
-				}
-			} else if (modelOverride.colorOverrides != null) {
-				final int ahsl = (0xFF - transparency) << 16 | (unlitColor != null ? unlitColor[f] & 0xFFFF : color1[f]);
-				final var override = modelOverride.testColorOverrides(ahsl);
-				if (override != null) {
-					faceOverride = override;
-					material = override.baseMaterial;
+				} else if (modelOverride.colorOverrides != null) {
+					final int ahsl = (0xFF - transparency) << 16 | (unlitColor != null ? unlitColor[f] & 0xFFFF : color1[f]);
+					final var override = modelOverride.testColorOverrides(ahsl);
+					if (override != null) {
+						faceOverride = override;
+						material = override.material;
+					}
 				}
 			}
 
 			if (faceOverride.hide)
+				continue;
+
+			if (textureId == -1 &&
+				plugin.configHideFakeShadows &&
+				faceOverride.hideVanillaShadows &&
+				HDUtils.isBakedGroundShading(model, f))
 				continue;
 
 			if (faceOverride.modifiesAlpha)
