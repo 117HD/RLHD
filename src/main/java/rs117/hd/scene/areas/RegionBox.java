@@ -116,18 +116,22 @@ public class RegionBox {
 
 			out.beginArray();
 			for (RegionBox box : aabbs) {
-				// Compact JSON array
+				out.beginArray();
 				if (box.fromPlane == 0 && box.toPlane == MAX_Z - 1) {
-					if (box.from == box.to) {
-						out.jsonValue(String.format("[ %d ]", box.from));
-					} else {
-						out.jsonValue(String.format("[ %d, %d ]", box.from, box.to));
-					}
+					out.value(box.from);
+					if (box.from != box.to)
+						out.value(box.to);
 				} else if (box.fromPlane == box.toPlane) {
-					out.jsonValue(String.format("[ %d, %d, %d ]", box.from, box.to, box.fromPlane));
+					out.value(box.from);
+					out.value(box.to);
+					out.value(box.fromPlane);
 				} else {
-					out.jsonValue(String.format("[ %d, %d, %d, %d ]", box.from, box.to, box.fromPlane, box.toPlane));
+					out.value(box.from);
+					out.value(box.to);
+					out.value(box.fromPlane);
+					out.value(box.toPlane);
 				}
+				out.endArray();
 			}
 			out.endArray();
 		}

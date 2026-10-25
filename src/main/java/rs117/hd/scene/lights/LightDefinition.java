@@ -8,7 +8,9 @@ import javax.annotation.Nullable;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.utils.ColorUtils;
+import rs117.hd.utils.GsonUtils;
 
+@GsonUtils.ExcludeDefaults
 public class LightDefinition {
 	public String description;
 	@Nullable

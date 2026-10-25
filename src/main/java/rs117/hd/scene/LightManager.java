@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -57,6 +58,7 @@ import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.LightDefinition;
 import rs117.hd.scene.lights.LightType;
+import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.Props;
@@ -113,6 +115,9 @@ public class LightManager {
 	private int currentPlane;
 	private final Renderable[] imposterRenderables = new Renderable[2];
 	private final LightingSample outdoorLightingSample = new LightingSample();
+	private final AtomicBoolean suppressNextFileWatchReload = new AtomicBoolean();
+	private FileWatcher.UnregisterCallback fileWatcher;
+	private volatile LightDefinition[] lightDefinitions;
 
 	public void loadConfig(Gson gson, ResourcePath path) {
 		LightDefinition[] lights;
@@ -128,6 +133,7 @@ public class LightManager {
 		}
 
 		clientThread.invoke(() -> {
+			lightDefinitions = lights;
 			WORLD_LIGHTS.clear();
 			NPC_LIGHTS.clear();
 			OBJECT_LIGHTS.clear();
@@ -166,18 +172,57 @@ public class LightManager {
 	}
 
 	public void startUp() {
-		LIGHTS_PATH.watch(path -> loadConfig(plugin.getGson(), path));
+		fileWatcher = LIGHTS_PATH.watch(path -> {
+			if (suppressNextFileWatchReload.compareAndSet(true, false))
+				return;
+			loadConfig(plugin.getGson(), path);
+		});
 		eventBus.register(this);
 	}
 
 	public void shutDown() {
+		if (fileWatcher != null)
+			fileWatcher.unregister();
+		fileWatcher = null;
 		WORLD_LIGHTS.clear();
 		NPC_LIGHTS.clear();
 		OBJECT_LIGHTS.clear();
 		PROJECTILE_LIGHTS.clear();
 		GRAPHICS_OBJECT_LIGHTS.clear();
+		lightDefinitions = null;
 
 		eventBus.unregister(this);
+	}
+
+	public void apply() {
+		assert client.isClientThread();
+		reloadLights = true;
+	}
+
+	public void save() throws IOException {
+		if (!LIGHTS_PATH.isFileSystemResource())
+			throw new IOException("Lights are loaded from a classpath resource; set rlhd.lights-path to a writable file to save.");
+
+		LightDefinition[] source = lightDefinitions;
+		if (source == null)
+			throw new IOException("Light definitions have not been loaded yet.");
+
+		Gson gson = plugin.getGson();
+		LightDefinition[] definitions = gson.fromJson(gson.toJson(source), LightDefinition[].class);
+		for (LightDefinition definition : definitions) {
+			if (definition.offset != null && definition.offset.length == 3)
+				definition.offset[1] *= -1;
+		}
+
+		String json = gson.toJson(definitions);
+		LIGHTS_PATH.mkdirs();
+		suppressNextFileWatchReload.set(true);
+		try (var writer = LIGHTS_PATH.toWriter()) {
+			writer.write(json);
+		} catch (IOException | RuntimeException ex) {
+			suppressNextFileWatchReload.set(false);
+			throw ex;
+		}
 	}
 
 	public void update(@Nonnull SceneContext sceneContext, int[] cameraShift, float[][] cameraFrustum) {

@@ -21,6 +21,7 @@ import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.Props;
+import rs117.hd.utils.GsonUtils;
 
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.utils.ExpressionParser.asExpression;
@@ -32,6 +33,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Accessors(fluent = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@GsonUtils.ExcludeDefaults
 public class ModelOverride
 {
 	public static final ModelOverride NONE = new ModelOverride(true);
@@ -450,6 +452,18 @@ public class ModelOverride
 		return combinedPredicate;
 	}
 
+	public void updateColors(JsonElement value) {
+		AhslPredicate condition = parseAhslConditions(value);
+		colors = value;
+		ahslCondition = condition;
+		cachedColorOverrideAhsl = -1;
+	}
+
+	public void replaceColorOverrides(ModelOverride[] overrides) {
+		colorOverrides = overrides;
+		cachedColorOverrideAhsl = -1;
+	}
+
 	public void computeModelUvw(float[] out, int i, float x, float y, float z, int orientation) {
 		float rad, cos, sin;
 		float temp;
@@ -738,16 +752,34 @@ public class ModelOverride
 
 	@Nullable
 	public final ModelOverride testColorOverrides(int ahsl) {
+		if (colorOverrides == null || colorOverrides.length == 0)
+			return null;
+
 		ModelOverride override = null;
 		final long packedAhl = cachedColorOverrideAhsl;
-		if (packedAhl != -1 && ahsl == (int) packedAhl)
-			override = colorOverrides[(int) (packedAhl >> 32)];
+		if (packedAhl != -1 && ahsl == (int) packedAhl) {
+			int index = (int) (packedAhl >> 32);
+			if (index >= 0 && index < colorOverrides.length) {
+				ModelOverride cached = colorOverrides[index];
+				if (cached != null && cached.ahslCondition != null && cached.ahslCondition.test(ahsl)) {
+					for (int i = 0; i < index; ++i) {
+						ModelOverride earlier = colorOverrides[i];
+						if (earlier != null && earlier.ahslCondition != null && earlier.ahslCondition.test(ahsl)) {
+							cachedColorOverrideAhsl = ahsl | (long) i << 32;
+							override = earlier;
+							break;
+						}
+					}
+					if (override == null) override = cached;
+				}
+			}
+		}
 
 		if (override == null) {
 			final int len = colorOverrides.length;
 			for (int i = 0; i < len; ++i) {
 				final var inner = colorOverrides[i];
-				if (inner.ahslCondition.test(ahsl)) {
+				if (inner != null && inner.ahslCondition != null && inner.ahslCondition.test(ahsl)) {
 					cachedColorOverrideAhsl = ahsl | (long) i << 32;
 					override = inner;
 					break;

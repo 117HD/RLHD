@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -52,12 +53,17 @@ public class TileOverrideManager {
 	private SceneManager sceneManager;
 
 	private FileWatcher.UnregisterCallback fileWatcher;
+	private final AtomicBoolean suppressNextFileWatchReload = new AtomicBoolean();
 	private boolean trackReplacements;
 	private List<TileOverride> anyMatchOverrides;
 	private Int2ObjectHashMap<List<TileOverride>> idMatchOverrides;
 
 	public void startUp() {
-		fileWatcher = TILE_OVERRIDES_PATH.watch((path, first) -> clientThread.invoke(() -> reload(first)));
+		fileWatcher = TILE_OVERRIDES_PATH.watch((path, first) -> {
+			if (!first && suppressNextFileWatchReload.compareAndSet(true, false))
+				return;
+			clientThread.invoke(() -> reload(first));
+		});
 	}
 
 	public void shutDown() {
@@ -217,6 +223,29 @@ public class TileOverrideManager {
 			if (plugin.isActive())
 				reload(false);
 		});
+	}
+
+	public void save() throws IOException {
+		if (!TILE_OVERRIDES_PATH.isFileSystemResource())
+			throw new IOException("Tile overrides are loaded from a classpath resource; set rlhd.tile-overrides-path to a writable file to save.");
+		if (OVERRIDES == null)
+			throw new IOException("Tile overrides have not been loaded yet.");
+
+		TileOverride[] definitions = new TileOverride[OVERRIDES.length];
+		for (int i = 0; i < OVERRIDES.length; i++) {
+			TileOverride override = OVERRIDES[i];
+			definitions[i] = plugin.getGson().fromJson(plugin.getGson().toJson(override), TileOverride.class);
+			definitions[i].uvScale = 1 / definitions[i].uvScale;
+		}
+		String json = plugin.getGson().toJson(definitions);
+		TILE_OVERRIDES_PATH.mkdirs();
+		suppressNextFileWatchReload.set(true);
+		try (var writer = TILE_OVERRIDES_PATH.toWriter()) {
+			writer.write(json);
+		} catch (IOException | RuntimeException ex) {
+			suppressNextFileWatchReload.set(false);
+			throw ex;
+		}
 	}
 
 	@Nonnull

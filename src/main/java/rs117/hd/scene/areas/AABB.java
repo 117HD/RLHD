@@ -318,20 +318,18 @@ public class AABB {
 
 			out.beginArray();
 			for (AABB aabb : aabbs) {
-				// Compact JSON array
-				StringBuilder sb = new StringBuilder();
-				sb.append("[ ").append(aabb.minX);
-				sb.append(", ").append(aabb.minY);
+				out.beginArray();
+				out.value(aabb.minX);
+				out.value(aabb.minY);
 				if (aabb.hasZ())
-					sb.append(", ").append(aabb.minZ);
+					out.value(aabb.minZ);
 				if (aabb.isVolume()) {
-					sb.append(", ").append(aabb.maxX);
-					sb.append(", ").append(aabb.maxY);
+					out.value(aabb.maxX);
+					out.value(aabb.maxY);
 					if (aabb.hasZ())
-						sb.append(", ").append(aabb.maxZ);
+						out.value(aabb.maxZ);
 				}
-				sb.append(" ]");
-				out.jsonValue(sb.toString());
+				out.endArray();
 			}
 			out.endArray();
 		}
