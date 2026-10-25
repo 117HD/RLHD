@@ -5,6 +5,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,8 +46,11 @@ import static rs117.hd.utils.ResourcePath.path;
 public class SkyManager {
 	public static Map<String, SkyConfiguration> PRESETS = Map.of();
 	public static final float[] DEFAULT_LATLON = { 40.7128f, -74.0060f }; // New York City
+	public static final LocalTime DEFAULT_SUNRISE = LocalTime.of(6, 0);
+	public static final LocalTime DEFAULT_SUNSET = LocalTime.of(18, 0);
 
 	private static final String DEFAULT_PRESET_NAME = "GIELINOR";
+	private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("H:mm");
 	private static final ResourcePath SKY_PRESETS_PATH = Props
 		.getFile("rlhd.sky-presets-path", () -> path(SkyManager.class, "sky_presets.json"));
 
@@ -83,6 +91,8 @@ public class SkyManager {
 	private MoonPhase configMoonPhase;
 	private MoonBehavior configMoonBehavior;
 	private float configCycleDuration;
+	private LocalTime configSunrise;
+	private LocalTime configSunset;
 	private final float[] configLatLon = new float[2];
 
 	private long frameUtcMillis;
@@ -207,6 +217,8 @@ public class SkyManager {
 		configMoonBehavior = config.moonBehavior();
 		configMoonPhase = configMoonBehavior == MoonBehavior.DISABLED ? MoonPhase.FIRST_QUARTER : config.moonPhase();
 		configCycleDuration = max(1e-6f, (float) config.customCycleDurationMinutes());
+		configSunrise = parseTime(config.scheduledSunrise(), DEFAULT_SUNRISE);
+		configSunset = parseTime(config.scheduledSunset(), DEFAULT_SUNSET);
 
 		String latLonString = config.preciseLatLon();
 		float[] latLon = HDUtils.parseLatLon(latLonString);
@@ -216,6 +228,15 @@ public class SkyManager {
 			latLon = vec(config.latitudeDegrees(), config.longitudeDegrees());
 		}
 		copyTo(configLatLon, latLon);
+	}
+
+	private static LocalTime parseTime(String time, LocalTime fallback) {
+		try {
+			return LocalTime.parse(time.trim(), TIME_FORMAT);
+		} catch (DateTimeParseException ex) {
+			log.warn("Ignoring invalid time: {}", time);
+			return fallback;
+		}
 	}
 
 	public boolean isCycleDisabled() {
@@ -377,9 +398,35 @@ public class SkyManager {
 			case CUSTOM:
 				float timeOfDay = (float) fract(customCycleElapsedDays);
 				return customCycleStartMillis + floor(customCycleElapsedDays) * DAY_MS + (long) (timeOfDay * DAY_MS);
+			case SCHEDULED:
+				return resolveScheduledUtcMillis();
 			default:
 				return frameUtcMillis * (DAY_MS / HOUR_MS); // One simulated day per real hour
 		}
+	}
+
+	private long resolveScheduledUtcMillis() {
+		ZoneId zone = ZoneId.systemDefault();
+		LocalDate date = LocalDate.ofInstant(Instant.ofEpochMilli(frameUtcMillis), zone);
+		if (frameUtcMillis < toEpochMilli(date, configSunrise, zone))
+			date = date.minusDays(1);
+		long sunrise = toEpochMilli(date, configSunrise, zone);
+		long sunset = toEpochMilli(configSunset.isAfter(configSunrise) ? date : date.plusDays(1), configSunset, zone);
+		// Stretch the scheduled day & night over the sun's day & night at the configured location
+		long[] sunTimes = AstronomyUtils.getSunTimes(new long[2], date.toEpochDay(), configLatLon);
+		if (frameUtcMillis < sunset)
+			return remap(frameUtcMillis, sunrise, sunset, sunTimes[0], sunTimes[1]);
+		long nextSunrise = toEpochMilli(date.plusDays(1), configSunrise, zone);
+		long[] nextSunTimes = AstronomyUtils.getSunTimes(new long[2], date.toEpochDay() + 1, configLatLon);
+		return remap(frameUtcMillis, sunset, nextSunrise, sunTimes[1], nextSunTimes[0]);
+	}
+
+	private static long toEpochMilli(LocalDate date, LocalTime time, ZoneId zone) {
+		return date.atTime(time).atZone(zone).toInstant().toEpochMilli();
+	}
+
+	private static long remap(long value, long fromStart, long fromEnd, long toStart, long toEnd) {
+		return toStart + (long) ((double) (value - fromStart) / (fromEnd - fromStart) * (toEnd - toStart));
 	}
 
 	private static void interpolateDirection(float[] out, float[] from, float[] to, float t) {
