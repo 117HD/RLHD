@@ -45,7 +45,6 @@ tasks.withType(JavaCompile).configureEach {
 tasks.register('run', JavaExec) {
 	classpath = sourceSets.test.runtimeClasspath
 	mainClass = pluginMainClass
-	workingDir = project.projectDir
 
 	jvmArgs "-ea", "-Xmx768M", "--add-opens=java.desktop/com.apple.eawt=ALL-UNNAMED"
 	args "--developer-mode", "--debug", "--disable-telemetry"

@@ -542,29 +542,6 @@ public class HdPlugin extends Plugin {
 	}
 
 	@Override
-	protected Module getPublicModule() {
-		if (!Props.DEVELOPMENT)
-			return null;
-
-		Injector parent = injector.getParent();
-		return binder -> {
-			for (var binding : injector.getAllBindings().values()) {
-				var key = binding.getKey();
-				if (parent.getExistingBinding(key) != null)
-					continue;
-
-				var rawType = key.getTypeLiteral().getRawType();
-				if (!rawType.getName().startsWith("rs117.hd.") || Config.class.isAssignableFrom(rawType))
-					continue;
-				expose(binder, key, binding.getProvider());
-			}
-		};
-	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private static void expose(Binder binder, Key key, Provider provider) { binder.bind(key).toProvider(provider); }
-
-	@Override
 	protected void startUp() {
 		// Lazily inject members into our singletons
 		for (var clazz : LAZY_SINGLETONS)
