@@ -31,6 +31,7 @@ import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.collections.PrimitiveCharArray;
 
+import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.renderer.zone.Zone.VERT_SIZE;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -38,7 +39,6 @@ import static rs117.hd.utils.MathUtils.*;
 public final class FacePrioritySorter implements AutoCloseable {
 	public static ConcurrentPool<FacePrioritySorter> POOL;
 
-	public static final int MAX_FACE_COUNT = 8192;
 	private static final int MAX_DIAMETER = 6000;
 	private static final int MAX_FACES_PER_PRIORITY = 4000;
 	private static final int PRIORITY_COUNT = 12;

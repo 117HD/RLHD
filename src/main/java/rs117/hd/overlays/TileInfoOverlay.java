@@ -20,9 +20,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
@@ -673,6 +675,21 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			lines.add("Wall Type: " + ObjectType.fromConfig(wallObject.getConfig()));
 		}
 
+		Set<Renderable> shownSpotanims = Collections.newSetFromMap(new IdentityHashMap<>());
+		var worldView = client.getTopLevelWorldView();
+		for (var player : worldView.players()) {
+			var lp = player.getLocalLocation();
+			if (lp.getSceneX() == tileX && lp.getSceneY() == tileY)
+				addActorSpotanims(lines, shownSpotanims, player);
+		}
+		for (var npc : worldView.npcs()) {
+			var lp = npc.getLocalLocation();
+			int size = npc.getComposition().getSize() / 2;
+			if (lp.getSceneX() - size <= tileX && tileX <= lp.getSceneX() + size &&
+				lp.getSceneY() - size <= tileY && tileY <= lp.getSceneY() + size)
+				addActorSpotanims(lines, shownSpotanims, npc);
+		}
+
 		GameObject[] gameObjects = tile.getGameObjects();
 		for (GameObject gameObject : gameObjects) {
 			if (gameObject == null)
@@ -682,6 +699,18 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			int faceCount = 0;
 			String id = "";
 			var renderable = gameObject.getRenderable();
+			if (shownSpotanims.contains(renderable))
+				continue;
+			if (renderable instanceof ActorSpotAnim) {
+				addActorSpotanim(lines, (ActorSpotAnim) renderable, null);
+				shownSpotanims.add(renderable);
+				continue;
+			}
+			if (renderable instanceof GraphicsObject) {
+				addGraphicsObject(lines, (GraphicsObject) renderable);
+				shownSpotanims.add(renderable);
+				continue;
+			}
 			if (renderable != null) {
 				Model model = renderable instanceof Model ? (Model) renderable : renderable.getModel();
 				if (model != null)
@@ -718,24 +747,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				getModelInfo(renderable)
 			));
 
-			if (renderable instanceof Actor) {
-				Actor actor = (Actor) renderable;
-				StringBuilder sb = new StringBuilder();
-				String separator = "";
-				for (var spotanim : actor.getSpotAnims()) {
-					sb
-						.append(separator)
-						.append(gamevals.getSpotanimName(spotanim.getId()))
-						.append(" (").append(spotanim.getId()).append(")")
-						.append(" frame=").append(spotanim.getFrame())
-						.append(" cycle=").append(client.getGameCycle() - spotanim.getStartCycle());
-					separator = "\n\t";
-				}
-				if (sb.length() > 0)
-					lines.add("Spotanims: " + sb);
-			} else {
+			if (!(renderable instanceof Actor))
 				lines.add("Object Type: " + ObjectType.fromConfig(gameObject.getConfig()));
-			}
 		}
 
 		for (var npc : client.getTopLevelWorldView().npcs()) {
@@ -760,21 +773,11 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		}
 
 		for (GraphicsObject graphicsObject : client.getGraphicsObjects()) {
+			if (shownSpotanims.contains(graphicsObject))
+				continue;
 			var lp = graphicsObject.getLocation();
-			if (lp.getSceneX() == tileX && lp.getSceneY() == tileY) {
-				var name = gamevals.getSpotanimName(graphicsObject.getId());
-				var anim = graphicsObject.getAnimation();
-				hoveredGamevals.add(name);
-				lines.add(String.format(
-					"Graphics Object: %s (%d) anim=%d frame=%d cycle=%d%s",
-					name,
-					graphicsObject.getId(),
-					anim == null ? -1 : anim.getId(),
-					graphicsObject.getAnimationFrame(),
-					client.getGameCycle() - graphicsObject.getStartCycle(),
-					getModelInfo(graphicsObject)
-				));
-			}
+			if (lp.getSceneX() == tileX && lp.getSceneY() == tileY)
+				addGraphicsObject(lines, graphicsObject);
 		}
 
 		if (tile.getBridge() != null)
@@ -929,6 +932,44 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		}
 
 		return ModelHash.getUuidId(ModelHash.generateUuid(client, object.getHash(), renderable));
+	}
+
+	private void addActorSpotanims(List<String> lines, Set<Renderable> shownSpotanims, Actor actor) {
+		for (var spotanim : actor.getSpotAnims()) {
+			if (shownSpotanims.contains(spotanim))
+				continue;
+			addActorSpotanim(lines, spotanim, actor);
+			shownSpotanims.add(spotanim);
+		}
+	}
+
+	private void addActorSpotanim(List<String> lines, ActorSpotAnim spotanim, @Nullable Actor actor) {
+		var name = gamevals.getSpotanimName(spotanim.getId());
+		hoveredGamevals.add(name);
+		lines.add(String.format(
+			"ActorSpotAnim: %s (%d)%s frame=%d cycle=%d%s",
+			name,
+			spotanim.getId(),
+			actor == null ? "" : " actor=" + actor.getName(),
+			spotanim.getFrame(),
+			client.getGameCycle() - spotanim.getStartCycle(),
+			getModelInfo(spotanim)
+		));
+	}
+
+	private void addGraphicsObject(List<String> lines, GraphicsObject graphicsObject) {
+		var name = gamevals.getSpotanimName(graphicsObject.getId());
+		var anim = graphicsObject.getAnimation();
+		hoveredGamevals.add(name);
+		lines.add(String.format(
+			"GraphicsObject: %s (%d) anim=%d frame=%d cycle=%d%s",
+			name,
+			graphicsObject.getId(),
+			anim == null ? -1 : anim.getId(),
+			graphicsObject.getAnimationFrame(),
+			client.getGameCycle() - graphicsObject.getStartCycle(),
+			getModelInfo(graphicsObject)
+		));
 	}
 
 	private String getModelInfo(Renderable r) {

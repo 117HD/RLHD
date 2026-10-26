@@ -762,8 +762,17 @@ public class LightManager {
 	}
 
 	public void unloadWorldViewLights(SceneContext source) {
+		if (plugin.enableFreezeFrame) {
+			int removedVisibleLights = 0;
+			for (int i = 0; i < numVisibleLights; i++)
+				if (lights.get(i).sceneContext == source)
+					removedVisibleLights++;
+			numVisibleLights -= removedVisibleLights;
+		} else {
+			numVisibleLights = 0;
+		}
+
 		lights.removeIf(light -> light.sceneContext == source);
-		numVisibleLights = 0;
 	}
 
 	public void clearSceneLights() {
@@ -784,7 +793,8 @@ public class LightManager {
 		}
 		for (Player player : view.players())
 			addSpotanimLights(player, source);
-		numVisibleLights = 0;
+		if (!plugin.enableFreezeFrame)
+			numVisibleLights = 0;
 	}
 
 	private void removeLightIf(Predicate<Light> predicate) {
@@ -841,8 +851,19 @@ public class LightManager {
 	private void addNpcLights(NPC npc, @Nullable SceneContext ctx) {
 		if (ctx == null)
 			return;
-		if (!npc.getWorldView().isTopLevel())
+		if (!npc.getWorldView().isTopLevel()) {
+			if (plugin.enableFreezeFrame) {
+				int removedVisibleLights = 0;
+				for (int i = 0; i < numVisibleLights; i++) {
+					Light light = lights.get(i);
+					if (light.actor == npc && light.markedForRemoval)
+						removedVisibleLights++;
+				}
+				numVisibleLights -= removedVisibleLights;
+			}
+
 			lights.removeIf(light -> light.actor == npc && light.markedForRemoval);
+		}
 
 		int uuid = ModelHash.packUuid(ModelHash.TYPE_NPC, npc.getId());
 		int[] worldPos = ctx.localToWorld(npc.getLocalLocation(), npc.getWorldView().getPlane());
