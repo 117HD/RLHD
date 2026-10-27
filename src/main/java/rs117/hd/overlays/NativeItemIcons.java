@@ -129,20 +129,27 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		final boolean[] outline = new boolean[GRID_SIZE];
 		final int[] stack = new int[GRID_SIZE];
 		final int[] pixels;
+		// Animated textures change the colors of an icon from one moment the game draws it to the next
+		final boolean animated;
 		int modelItemId = -1;
 		final long key;
 
-		GameIcon(int itemId, int border, int[] item, int[] withStackSize) {
+		GameIcon(int itemId, int border, int[] item, int[] withStackSize, boolean animated) {
 			pixels = item;
-			key = hash(hash(0xCBF29CE484222325L, itemId, border), item);
+			this.animated = animated;
+			int[] shape = animated ? new int[item.length] : item;
 			for (int y = 0; y < ICON_HEIGHT; y++) {
 				for (int x = 0; x < ICON_WIDTH; x++) {
 					int i = y * ICON_WIDTH + x;
+					if (animated)
+						shape[i] = item[i] == 0 ? 0 : 1;
 					this.item[grid(x, y)] = item[i] != 0;
 					stackSize[grid(x, y)] = withStackSize[i] != item[i];
 					stack[grid(x, y)] = stackSize[grid(x, y)] ? withStackSize[i] : 0;
 				}
 			}
+			// Only its shape tells an animated icon apart, or it would be drawn again each time it's looked up
+			key = hash(hash(0xCBF29CE484222325L, itemId, border), shape);
 			for (int y = 0; y < ICON_HEIGHT; y++) {
 				for (int x = 0; x < ICON_WIDTH; x++) {
 					int g = grid(x, y);
@@ -288,7 +295,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private static final int SHOWN = 1;
 	private static final int CLIPPED = 2;
 	private static final Icon PENDING = new Icon();
-	private static final GameIcon UNKNOWN = new GameIcon(-1, 0, new int[ICON_WIDTH * ICON_HEIGHT], new int[ICON_WIDTH * ICON_HEIGHT]);
+	private static final GameIcon UNKNOWN = new GameIcon(-1, 0, new int[ICON_WIDTH * ICON_HEIGHT], new int[ICON_WIDTH * ICON_HEIGHT], false);
 	// Drawn over an item, with nothing behind it
 	private static final Slot NO_SLOT = new Slot(MAX_SLOTS * LAYERS_PER_ITEM);
 
@@ -341,6 +348,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			return size() > MAX_GAME_ICONS;
 		}
 	};
+	private final Map<Integer, Boolean> animatedItems = new HashMap<>();
 	private final Map<Long, Integer> stackModels = new HashMap<>();
 	private final Map<Long, Integer> stackModelSearches = new HashMap<>();
 	private final Map<Integer, Item[]> containers = new HashMap<>();
@@ -350,6 +358,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	// Layers of other interfaces, whose items are cut out right after them
 	private final Set<Integer> itemLayers = new HashSet<>();
 	private final Set<Integer> newItemLayers = new HashSet<>();
+	private final Map<Integer, Boolean> drawnOnByOthers = new HashMap<>();
 	private final Map<Widget, Rectangle> visibleAreas = new IdentityHashMap<>();
 
 	private int frame;
@@ -480,6 +489,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 		icons.clear();
 		gameIcons.clear();
+		animatedItems.clear();
 		stackModels.clear();
 		stackModelSearches.clear();
 		slots.clear();
@@ -527,6 +537,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		itemCount = 0;
 		vertices.clear();
 		cutThisFrame.clear();
+		drawnOnByOthers.clear();
 		visibleAreas.clear();
 		uncaptured.clear();
 		draggedItems.clear();
@@ -607,14 +618,21 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		}
 	}
 
-	// Items are cut out right after their own layer, before the interface can draw over them, except where other item overlays draw
+	// Items are cut out right after their own layer, before the interface can draw over them, except where other overlays draw,
+	// like the outlines of tagged items in the CoX storage, which can only be taken over once they're drawn
 	private boolean isHooked(Widget widget) {
 		int layerId = widget.getParentId();
-		if (layerId == -1 || itemLayers.contains(layerId) || standardHooks.contains(layerId) ||
-			standardHooks.contains(WidgetUtil.componentToInterface(widget.getId()) << 16 | 0xFFFF))
+		int interfaceHook = WidgetUtil.componentToInterface(widget.getId()) << 16 | 0xFFFF;
+		if (layerId == -1 || itemLayers.contains(layerId) || standardHooks.contains(layerId) || standardHooks.contains(interfaceHook) ||
+			isDrawnOnByOthers(interfaceHook))
 			return true;
 		newItemLayers.add(layerId);
 		return false;
+	}
+
+	private boolean isDrawnOnByOthers(int interfaceHook) {
+		return drawnOnByOthers.computeIfAbsent(interfaceHook, hook -> overlayManager.anyMatch(overlay ->
+			overlay != this && overlay != overlayCapture && overlay.getDrawHooks().contains(hook)));
 	}
 
 	private boolean isDragged(WidgetItem widgetItem) {
@@ -671,18 +689,23 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		var buffer = client.getBufferProvider();
 		var bounds = draggedBounds(dragged);
 		var visible = bounds.intersection(widget.getParent().getBounds()).intersection(new Rectangle(buffer.getWidth(), buffer.getHeight()));
-		return !visible.isEmpty() && takeOut(buffer.getPixels(), buffer.getWidth(), bounds, visible, gameIcon, itemShadows.getOrDefault(widget.getParentId(), 0));
+		if (visible.isEmpty())
+			return false;
+		int shadow = itemShadows.getOrDefault(widget.getParentId(), 0);
+		// An animated icon is taken out as the game drew it, which it keeps until it draws it again
+		var drawnIcon = !gameIcon.animated ? null : client.createItemSprite(dragged.getId(), dragged.getQuantity(), widget.getBorderType(), shadow,
+			widget.getItemQuantityMode(), false, Constants.CLIENT_DEFAULT_ZOOM);
+		return takeOut(buffer.getPixels(), buffer.getWidth(), bounds, visible, gameIcon, shadow, drawnIcon == null ? null : drawnIcon.getPixels());
 	}
 
 	// Each color is drawn as (item + under) / 2 and the alpha as 128 + under / 2, so what's under it is worked out exactly,
 	// unless it isn't drawn there after all, like before the game drew it
-	private boolean takeOut(int[] pixels, int width, Rectangle bounds, Rectangle visible, GameIcon gameIcon, int shadow) {
+	private boolean takeOut(int[] pixels, int width, Rectangle bounds, Rectangle visible, GameIcon gameIcon, int shadow, @Nullable int[] drawnIcon) {
 		int drawn = 0, notDrawn = 0;
 		for (int y = visible.y; y < visible.y + visible.height; y++) {
 			for (int x = visible.x; x < visible.x + visible.width; x++) {
 				int g = GameIcon.grid(x - bounds.x, y - bounds.y);
-				int color = gameIcon.stackSize[g] ? gameIcon.stack[g] : gameIcon.item[g] ? gameIcon.pixels[(y - bounds.y) * ICON_WIDTH + x - bounds.x] :
-					gameIcon.shadow[g] ? shadow : 0;
+				int color = drawnColor(gameIcon, shadow, drawnIcon, x - bounds.x, y - bounds.y);
 				if (color == 0)
 					continue;
 				drawn++;
@@ -704,14 +727,17 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		if (drawn == 0 || notDrawn * 8 > drawn)
 			return false;
 
-		for (int y = visible.y; y < visible.y + visible.height; y++) {
-			for (int x = visible.x; x < visible.x + visible.width; x++) {
-				int g = GameIcon.grid(x - bounds.x, y - bounds.y);
-				if (gameIcon.stackSize[g] || gameIcon.item[g] || gameIcon.shadow[g] && shadow != 0)
-					pixels[y * width + x] = under[g];
-			}
-		}
+		for (int y = visible.y; y < visible.y + visible.height; y++)
+			for (int x = visible.x; x < visible.x + visible.width; x++)
+				if (drawnColor(gameIcon, shadow, drawnIcon, x - bounds.x, y - bounds.y) != 0)
+					pixels[y * width + x] = under[GameIcon.grid(x - bounds.x, y - bounds.y)];
 		return true;
+	}
+
+	private static int drawnColor(GameIcon gameIcon, int shadow, @Nullable int[] drawnIcon, int x, int y) {
+		int g = GameIcon.grid(x, y);
+		return drawnIcon != null ? drawnIcon[y * ICON_WIDTH + x] : gameIcon.stackSize[g] ? gameIcon.stack[g] :
+			gameIcon.item[g] ? gameIcon.pixels[y * ICON_WIDTH + x] : gameIcon.shadow[g] ? shadow : 0;
 	}
 
 	private static Rectangle draggedBounds(WidgetItem widgetItem) {
@@ -750,10 +776,10 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		// A dragged item is drawn over other items, which keep their own edges
 		if (!dragged)
 			putBackMargins(buffer.getPixels(), buffer.getWidth(), around, true);
-		// The parents can still be where they were a frame ago, like when an interface is shown or scrolled,
-		// so where the game drew the item tells how far it's clipped, unless it's see-through or a dragged item is drawn over it
+		// The parents can still be where they were a frame ago, like when an interface is shown or scrolled, so where the game
+		// drew the item tells how far it's clipped, unless it's see-through, animated, or a dragged item is drawn over it
 		var visible = dragged ? bounds.intersection(widget.getParent().getBounds()) : coveredItems.contains(widgetItem) ? new Rectangle() :
-			widget.getOpacity() == 0 && client.getDraggedWidget() == null ? shownArea(gameIcon, bounds) :
+			widget.getOpacity() == 0 && !gameIcon.animated && client.getDraggedWidget() == null ? shownArea(gameIcon, bounds) :
 			bounds.intersection(visibleArea(widget));
 		if (visible.isEmpty()) {
 			if (!dragged)
@@ -1019,18 +1045,46 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		int[] withStackSize = item == null || quantityMode == ItemQuantityMode.NEVER ? item :
 			gamePixels(itemId, quantity, border, quantityMode, false);
 		if (withStackSize != null)
-			gameIcon = new GameIcon(itemId, border, item, withStackSize);
+			gameIcon = new GameIcon(itemId, border, item, withStackSize, isAnimated(itemId));
 		gameIcons.put(key, gameIcon);
 		return gameIcon;
 	}
 
-	// Stacks like coins and arrows show the model of an unnamed item, which the API does not expose
+	private boolean isAnimated(int itemId) {
+		return animatedItems.computeIfAbsent(itemId, id -> {
+			var item = client.getItemDefinition(id);
+			// Notes show the noted item on their paper
+			if (item.getNote() != -1)
+				item = client.getItemDefinition(item.getLinkedNoteId());
+			var data = client.loadModelData(item.getInventoryModel());
+			short[] faceTextures = data == null ? null : data.getFaceTextures();
+			if (faceTextures == null)
+				return false;
+			short[] find = item.getTextureToReplace();
+			short[] replace = item.getTextureToReplaceWith();
+			var textures = client.getTextureProvider().getTextures();
+			for (short texture : faceTextures) {
+				for (int i = 0; find != null && i < find.length; i++) {
+					if (texture == find[i]) {
+						texture = replace[i];
+						break;
+					}
+				}
+				if (texture >= 0 && texture < textures.length && textures[texture] != null &&
+					textures[texture].getAnimationDirection() != 0 && textures[texture].getAnimationSpeed() != 0)
+					return true;
+			}
+			return false;
+		});
+	}
+
+	// Stacks like coins and arrows show the model of an unnamed item, which the API does not expose. None of them is animated.
 	private int findModelItem(int itemId, int quantity, int border, GameIcon gameIcon) {
 		if (gameIcon.modelItemId == -1) {
 			var definition = client.getItemDefinition(itemId);
 			if (definition.getPlaceholderTemplateId() != -1)
 				gameIcon.modelItemId = definition.getPlaceholderId();
-			else if (quantity == 1 || Arrays.equals(gameIcon.pixels, gamePixels(itemId, 1, border, ItemQuantityMode.NEVER, false)))
+			else if (quantity == 1 || gameIcon.animated || Arrays.equals(gameIcon.pixels, gamePixels(itemId, 1, border, ItemQuantityMode.NEVER, false)))
 				gameIcon.modelItemId = itemId;
 			else
 				return findStackModel(itemId, border, gameIcon.pixels);
@@ -1574,8 +1628,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			}
 			// Fills and outlines, like those of Inventory Tags, are redrawn to fit the native icon. Fills cover the shadow too.
 			var gameIcon = item.gameIcon;
-			int fill = slot.fill = shapeColor(gameIcon.item, gameIcon.shadow);
-			int outline = slot.outline = shapeColor(gameIcon.outline, gameIcon.shadow);
+			int fill = slot.fill = shapeColor(gameIcon.item, gameIcon.shadow, slot.cut);
+			int outline = slot.outline = shapeColor(gameIcon.outline, gameIcon.shadow, slot.cut);
 			for (int g = 0; g < GRID_SIZE; g++) {
 				boolean redrawn =
 					fill != 0 && (gameIcon.item[g] && overlays[g] == fill || gameIcon.shadow[g]) ||
@@ -1737,7 +1791,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		return icon.failed ? null : icon;
 	}
 
-	private int shapeColor(boolean[] shape, boolean[] shared) {
+	// Parts of the shape can be hidden by what's drawn over it after, like the charges Item Charges writes over the outline
+	private int shapeColor(boolean[] shape, boolean[] shared, int[] under) {
 		// Boyer-Moore majority vote
 		int color = 0, lead = 0, pixels = 0;
 		for (int g = 0; g < GRID_SIZE; g++) {
@@ -1751,15 +1806,20 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		if (color == 0)
 			return 0;
 
-		int covered = 0;
+		int covered = 0, hidden = 0;
 		for (int g = 0; g < GRID_SIZE; g++) {
-			if (!captured[g] || overlays[g] != color || shared[g])
+			if (!captured[g] || shared[g])
 				continue;
+			if (overlays[g] != color) {
+				if (shape[g] && overlays[g] != under[g])
+					hidden++;
+				continue;
+			}
 			if (!shape[g])
 				return 0;
 			covered++;
 		}
-		return covered >= MIN_SHAPE_COVERAGE * pixels ? color : 0;
+		return covered * 2 >= pixels && covered >= MIN_SHAPE_COVERAGE * (pixels - hidden) ? color : 0;
 	}
 
 	// The native one is drawn over the other items, with its shadow see-through like the rest of it
