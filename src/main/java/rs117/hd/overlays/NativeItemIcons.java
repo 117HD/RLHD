@@ -334,9 +334,9 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 	private float scaleX;
 	private float scaleY;
-	private float newScaleX;
-	private float newScaleY;
-	private long newScaleSince;
+	private float shownScaleX;
+	private float shownScaleY;
+	private long shownScaleSince;
 	private double brightness;
 	private Filepath cacheFolder;
 	private ItemIconCache cache;
@@ -509,7 +509,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		visibleAreas.clear();
 		remembered = null;
 		account = -1;
-		scaleX = scaleY = newScaleX = newScaleY = 0;
+		scaleX = scaleY = shownScaleX = shownScaleY = 0;
 	}
 
 	@Subscribe
@@ -949,7 +949,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	@Nullable
 	private Icon findIcon(WidgetItem widgetItem) {
 		var bounds = widgetItem.getCanvasBounds();
-		if (scaleX * scaleY <= 1 || bounds.width != ICON_WIDTH || bounds.height != ICON_HEIGHT)
+		if (min(scaleX * scaleY, shownScaleX * shownScaleY) <= 1 || bounds.width != ICON_WIDTH || bounds.height != ICON_HEIGHT)
 			return null;
 
 		var widget = widgetItem.getWidget();
@@ -1361,23 +1361,28 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		// Rounded, so small window resizes don't invalidate the icons kept on disk
 		float roundedScaleX = round(8f * actualUiResolution[0] / uiResolution[0]) / 8f;
 		float roundedScaleY = round(8f * actualUiResolution[1] / uiResolution[1]) / 8f;
-		if (roundedScaleX != newScaleX || roundedScaleY != newScaleY) {
-			newScaleX = roundedScaleX;
-			newScaleY = roundedScaleY;
-			newScaleSince = System.currentTimeMillis();
+		if (roundedScaleX != shownScaleX || roundedScaleY != shownScaleY) {
+			shownScaleX = roundedScaleX;
+			shownScaleY = roundedScaleY;
+			shownScaleSince = System.currentTimeMillis();
 		}
 		// Only once a new scale is kept for a moment, so passing sizes don't each fill a cache,
 		// and not on the login screen, which is scaled differently and has no items
-		boolean scaleSettled = cache == null || System.currentTimeMillis() - newScaleSince >= SCALE_SETTLE_MS;
+		boolean scaleSettled = scaleX == 0 || System.currentTimeMillis() - shownScaleSince >= SCALE_SETTLE_MS;
 		boolean loggedIn = client.getGameState().getState() >= GameState.LOADING.getState();
 		// The same brightness reads as 0.8 before logging in and as a float after
 		double newBrightness = (float) client.getTextureProvider().getBrightness();
-		if (loggedIn && (scaleSettled && (newScaleX != scaleX || newScaleY != scaleY) || newBrightness != brightness)) {
+		// Icons are drawn at the largest scale shown so far and shrunk to fit, so only a screen larger than that draws them again
+		boolean grown = scaleSettled && (shownScaleX > scaleX || shownScaleY > scaleY);
+		if (loggedIn && (grown || newBrightness != brightness)) {
 			// The game's icons depend on the brightness too
 			if (newBrightness != brightness)
 				gameIcons.clear();
-			scaleX = newScaleX;
-			scaleY = newScaleY;
+			float[] drawn = scaleX == 0 || newBrightness != brightness ?
+				ItemIconCache.largestScale(cacheFolder, newBrightness) :
+				new float[] { scaleX, scaleY };
+			scaleX = max(shownScaleX, drawn[0]);
+			scaleY = max(shownScaleY, drawn[1]);
 			brightness = newBrightness;
 			remember();
 			cache = new ItemIconCache(cacheFolder, scaleX, scaleY, brightness, iconWidth(), iconHeight());
@@ -1405,7 +1410,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			clearIcons();
 		}
 
-		if (scaleX * scaleY > 1) {
+		if (min(scaleX * scaleY, shownScaleX * shownScaleY) > 1) {
 			loadRemembered();
 			prepareIcons();
 		}

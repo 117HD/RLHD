@@ -9,6 +9,7 @@ import java.nio.file.attribute.FileTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
@@ -161,6 +162,31 @@ class ItemIconCache {
 		} catch (IOException ex) {
 			log.debug("Unable to remove unused item icons:", ex);
 		}
+	}
+
+	// The largest scale icons were drawn at before, with this brightness, so smaller ones can be shrunk from it
+	static float[] largestScale(Filepath root, double brightness) {
+		float[] largest = { 0, 0 };
+		if (!root.isDirectory())
+			return largest;
+
+		var pattern = Pattern.compile(String.format(Locale.ROOT, "v%d-([0-9.]+)x([0-9.]+)-%s", VERSION, Pattern.quote(String.format(Locale.ROOT, "%.3f", brightness))));
+		try (var list = root.walk(1)) {
+			for (var folder : (Iterable<Filepath>) list::iterator) {
+				var matcher = pattern.matcher(folder.getFileName());
+				if (folder.equals(root) || !matcher.matches())
+					continue;
+				float scaleX = Float.parseFloat(matcher.group(1));
+				float scaleY = Float.parseFloat(matcher.group(2));
+				if (scaleX * scaleY > largest[0] * largest[1]) {
+					largest[0] = scaleX;
+					largest[1] = scaleY;
+				}
+			}
+		} catch (IOException | NumberFormatException ex) {
+			log.debug("Unable to look for item icons drawn before:", ex);
+		}
+		return largest;
 	}
 
 	private static FileTime lastModified(Filepath folder) {
