@@ -69,11 +69,16 @@ void main() {
     icon *= fOpacity;
     vec4 background = texelFetch(itemBackgrounds, ivec3(clamp(pixel, ivec2(0), gridSize() - 1), fLayers.y), 0);
     // Only fill in what the stretched interface lets through, and around the item only what the interface covers,
-    // since items next to it fill in their own cut out backgrounds
+    // since items next to it fill in their own cut out backgrounds. Within the item's own cut out area, what the
+    // interface holds was drawn over the item afterwards, like Inventory Grid's slots, so the background stays under it.
     float covered = background.a;
+    float drawnOver = 0;
     if (any(lessThan(pixel, ivec2(0))) || any(greaterThanEqual(pixel, gridSize())))
         covered = min(covered, texelFetch(uiTexture, uiPixel, 0).a);
-    background *= covered > ui ? (covered - ui) / (background.a * (1 - ui)) : 0;
+    else
+        drawnOver = texelFetch(uiTexture, uiPixel, 0).a;
+    float shown = drawnOver + covered * (1 - drawnOver);
+    background *= covered > 0 && shown > ui ? (shown - ui) / (background.a * (1 - ui)) : 0;
 
     // A see-through shadow, like the dragged item's, shades by its alpha
     float shadow = iconShadow * fShadow.a;
