@@ -47580,22 +47580,25 @@
     "graphicsObjectIds": [
       "VFX_DAGONHAI_CAULDRON_ATTACK_ZAMORAK_AOE_IDLE_00",
       "VFX_DAGONHAI_CAULDRON_ATTACK_ZAMORAK_AOE_IDLE_01",
-      "VFX_DAGONHAI_CAULDRON_ATTACK_ZAMORAK_AOE_IDLE_02"
+      "VFX_DAGONHAI_CAULDRON_ATTACK_ZAMORAK_AOE_IDLE_02",
+      "VFX_DAGONHAI_CAULDRON_ATTACK_ZAMORAK_AOE_IDLE_03"
     ]
   },
   {
     "description": "TFA Dagon'hai Fireball - Impact End",
-    "offset": [ 0, 50, 0 ],
-    "radius": 175,
+    "offset": [ 0, 200, 0 ],
+    "radius": 220,
     "strength": 20,
-    "fadeOutDuration": 200,
-    "fadeInDuration": 400,
+    "fadeOutDuration": 600,
+    "fadeInDuration": 200,
     "color": [
       252,
       70,
       3
     ],
     "type": "FLICKER",
+    "fixedDespawnTime": true,
+    "despawnDelay": 1100,
     "range": 20,
     "graphicsObjectIds": [
       "VFX_DAGONHAI_CAULDRON_ATTACK_ZAMORAK_AOE_ATTACK_01"
@@ -47616,6 +47619,153 @@
     "range": 10,
     "npcIds": [
       "TFA_DAGONHAI_RIFT"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Lightning Strike Dodge",
+    "offset": [ 0, 100, 0 ],
+    "radius": 135,
+    "strength": 15,
+    "color": [
+      0,
+      230,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "range": 25,
+    "fixedDespawnTime": true,
+    "despawnDelay": 550,
+    "graphicsObjectIds": [
+      "TFA_DAGONHAI_SARADOMIN_DAMAGE_LIGHTNING"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Lightning Strike Telegraph",
+    "offset": [ 0, 100, 0 ],
+    "radius": 100,
+    "strength": 25,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "fadeInDuration": 700,
+    "range": 10,
+    "graphicsObjectIds": [
+      "TFA_DAGONHAI_SARADOMIN_DAMAGE_TELEGRAPH_150"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Lightning Strike Heal",
+    "offset": [ 0, 100, 0 ],
+    "radius": 135,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "range": 25,
+    "fadeOutDuration": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "graphicsObjectIds": [
+      "TFA_DAGONHAI_SARADOMIN_HEAL_LIGHTNING"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Lightning Strike Heal Impact",
+    "offset": [ 0, 100, 0 ],
+    "radius": 135,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "fadeInDuration": 200,
+    "range": 5,
+    "fadeOutDuration": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "graphicsObjectIds": [
+      "TFA_DAGONHAI_SARADOMIN_HEAL_IMPACT"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Lightning Strike Heal Telegraph",
+    "offset": [ 0, 100, 0 ],
+    "radius": 100,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "fadeInDuration": 700,
+    "range": 25,
+    "graphicsObjectIds": [
+      "TFA_DAGONHAI_SARADOMIN_HEAL_TELEGRAPH_180",
+      "TFA_DAGONHAI_SARADOMIN_HEAL_TELEGRAPH_150"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Lightning Strike Strength Boost 1",
+    "offset": [ 0, 100, 0 ],
+    "radius": 115,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "range": 5,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2300,
+    "graphicsObjectIds": [
+      "TFA_DAGONHAI_DEMONIC_STRENGTH_TELEGRAPH"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Lightning Strike Strength Boost 2",
+    "offset": [ 0, 100, 0 ],
+    "radius": 150,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 200,
+    "waitForAnimation": true,
+    "range": 25,
+    "fadeOutDuration": 300,
+    "spawnDelay": 2100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1300,
+    "graphicsObjectIds": [
+      "TFA_DAGONHAI_DEMONIC_STRENGTH_TELEGRAPH"
     ]
   },
   {
