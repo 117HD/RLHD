@@ -187,6 +187,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		float opacity;
 		int border;
 		int shadow;
+		// Something is drawn over it, which it takes out of the interface once every item has looked
+		boolean overlaid;
 	}
 
 	// What's behind an item and what other overlays draw over it rarely change, so they're only worked out again when they do
@@ -200,6 +202,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		final int[] elsewhere = new int[GRID_SIZE];
 		final int[] shown = new int[GRID_SIZE];
 		final boolean[] taken = new boolean[GRID_SIZE];
+		final boolean[] others = new boolean[GRID_SIZE];
 		final List<RuneMatch> runes = new ArrayList<>();
 		List<RuneImage> runeImages;
 		boolean kept;
@@ -263,6 +266,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			var buffer = client.getBufferProvider();
 			for (var item : uncaptured)
 				captureOverlays(buffer.getPixels(), buffer.getWidth(), item);
+			for (var item : uncaptured)
+				takeOverlays(buffer.getPixels(), buffer.getWidth(), item);
 			uncaptured.clear();
 			return null;
 		}
@@ -397,6 +402,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private final int[] alphaCounts = new int[256];
 	private final int[] overlays = new int[GRID_SIZE];
 	private final boolean[] captured = new boolean[GRID_SIZE];
+	private final boolean[] others = new boolean[GRID_SIZE];
 	private final boolean[] runePixels = new boolean[GRID_SIZE];
 	private final int[] shownRows = new int[ICON_HEIGHT];
 	private final int[] shownColumns = new int[ICON_WIDTH];
@@ -1641,6 +1647,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private void captureOverlays(int[] pixels, int width, CutItem item) {
 		// Nothing was drawn over the item while its pixels are still as they were cut out
 		var slot = item.slot;
+		item.overlaid = false;
 		boolean overlaid = false;
 		for (int y = item.drawn.y; !overlaid && y < item.drawn.y + item.drawn.height; y++) {
 			int i = y * width + item.drawn.x;
@@ -1669,11 +1676,14 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		// The game draws the dragged item over the rest of the interface once it's drawn, so everything over it, and over
 		// what it's dragged over, is drawn with the native icons
 		boolean takeAll = draggedCuts.contains(item) || isDraggedOver(item);
+		findOthersShapes(item);
 		if (runeImages == null && active)
 			loadRuneImages();
 		var images = runeImages;
-		if (!Arrays.equals(overlays, slot.overlays) || takeAll != slot.takeAll || images != slot.runeImages) {
+		if (!Arrays.equals(overlays, slot.overlays) || !Arrays.equals(others, slot.others) || takeAll != slot.takeAll ||
+			images != slot.runeImages) {
 			System.arraycopy(overlays, 0, slot.overlays, 0, GRID_SIZE);
+			System.arraycopy(others, 0, slot.others, 0, GRID_SIZE);
 			slot.takeAll = takeAll;
 			slot.runeImages = images;
 			findRunes(slot, images);
@@ -1693,12 +1703,19 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				boolean redrawn =
 					fill != 0 && (gameIcon.item[g] && overlays[g] == fill || gameIcon.shadow[g]) ||
 					outline != 0 && gameIcon.outline[g] && overlays[g] == outline;
-				slot.taken[g] = captured[g] && (redrawn || takeAll);
-				slot.elsewhere[g] = takeAll && captured[g] && !redrawn && !runePixels[g] ? overlays[g] : 0;
+				slot.taken[g] = captured[g] && !others[g] && (redrawn || takeAll);
+				slot.elsewhere[g] = takeAll && captured[g] && !others[g] && !redrawn && !runePixels[g] ? overlays[g] : 0;
 			}
 			slot.overlaysChanged = true;
 		}
+		item.overlaid = true;
+	}
 
+	// Only once every item has looked at what's drawn over it, as their areas can overlap
+	private void takeOverlays(int[] pixels, int width, CutItem item) {
+		if (!item.overlaid)
+			return;
+		var slot = item.slot;
 		// Everything else stays in the interface, drawn over the native icon and scaled like the rest of it
 		for (int y = item.drawn.y; y < item.drawn.y + item.drawn.height; y++) {
 			for (int x = item.drawn.x; x < item.drawn.x + item.drawn.width; x++) {
@@ -1714,6 +1731,29 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			drawRune(pixels, width, item, rune, 1);
 		setColor(item.index, FILL_OFFSET, slot.fill);
 		setColor(item.index, OUTLINE_OFFSET, slot.outline);
+	}
+
+	// What's drawn over this item that belongs to others reaching into it, like a neighbour when an item is dragged next to it:
+	// their outlines, which are drawn over all items, the parts of the items drawn after this one, which are drawn over it
+	// (the dragged one over all), and the rest of the ones drawn before it, around its own shape
+	private void findOthersShapes(CutItem item) {
+		Arrays.fill(others, false);
+		var gameIcon = item.gameIcon;
+		for (var other : uncaptured) {
+			if (other == item || !other.drawn.intersects(item.drawn))
+				continue;
+			boolean over = other.index == -1 || item.index != -1 && other.index > item.index;
+			var overlap = other.drawn.intersection(item.drawn);
+			for (int y = overlap.y; y < overlap.y + overlap.height; y++) {
+				for (int x = overlap.x; x < overlap.x + overlap.width; x++) {
+					int og = GameIcon.grid(x - other.bounds.x, y - other.bounds.y);
+					int g = GameIcon.grid(x - item.bounds.x, y - item.bounds.y);
+					if (gameIcon.outline[g] || !other.gameIcon.item[og] && !other.gameIcon.outline[og])
+						continue;
+					others[g] |= other.gameIcon.outline[og] || over || !gameIcon.item[g] && !gameIcon.shadow[g];
+				}
+			}
+		}
 	}
 
 	private boolean isDraggedOver(CutItem item) {
@@ -1850,12 +1890,13 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		return icon.failed ? null : icon;
 	}
 
-	// Parts of the shape can be hidden by what's drawn over it after, like the charges Item Charges writes over the outline
+	// Parts of the shape can be hidden by what's drawn over it after, like the charges Item Charges writes over the outline,
+	// and another item's shape can reach into it, with its own tag
 	private int shapeColor(boolean[] shape, boolean[] shared, int[] under) {
 		// Boyer-Moore majority vote
 		int color = 0, lead = 0, pixels = 0;
 		for (int g = 0; g < GRID_SIZE; g++) {
-			if (!captured[g] || !shape[g] || shared[g])
+			if (!captured[g] || !shape[g] || shared[g] || others[g])
 				continue;
 			pixels++;
 			if (lead == 0)
@@ -1867,7 +1908,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 		int covered = 0, hidden = 0;
 		for (int g = 0; g < GRID_SIZE; g++) {
-			if (!captured[g] || shared[g])
+			if (!captured[g] || shared[g] || others[g])
 				continue;
 			if (overlays[g] != color) {
 				if (shape[g] && overlays[g] != under[g])
