@@ -131,6 +131,9 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		final int[] pixels;
 		// Animated textures change the colors of an icon from one moment the game draws it to the next
 		final boolean animated;
+		// How the game shows an animated one
+		@Nullable
+		SpritePixels shown;
 		int modelItemId = -1;
 		final long key;
 
@@ -683,29 +686,24 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		if (icon == null || icon.layer == -1 || itemCount == MAX_ITEMS)
 			return false;
 		var widget = dragged.getWidget();
-		var gameIcon = getGameIcon(dragged.getId(), dragged.getQuantity(), widget.getItemQuantityMode(), widget.getBorderType(), true);
+		int shadow = itemShadows.getOrDefault(widget.getParentId(), 0);
+		var gameIcon = getGameIcon(dragged.getId(), dragged.getQuantity(), widget.getItemQuantityMode(), widget.getBorderType(), shadow, true);
 		if (gameIcon == null || gameIcon == UNKNOWN)
 			return false;
 		var buffer = client.getBufferProvider();
 		var bounds = draggedBounds(dragged);
 		var visible = bounds.intersection(widget.getParent().getBounds()).intersection(new Rectangle(buffer.getWidth(), buffer.getHeight()));
-		if (visible.isEmpty())
-			return false;
-		int shadow = itemShadows.getOrDefault(widget.getParentId(), 0);
-		// An animated icon is taken out as the game drew it, which it keeps until it draws it again
-		var drawnIcon = !gameIcon.animated ? null : client.createItemSprite(dragged.getId(), dragged.getQuantity(), widget.getBorderType(), shadow,
-			widget.getItemQuantityMode(), false, Constants.CLIENT_DEFAULT_ZOOM);
-		return takeOut(buffer.getPixels(), buffer.getWidth(), bounds, visible, gameIcon, shadow, drawnIcon == null ? null : drawnIcon.getPixels());
+		return !visible.isEmpty() && takeOut(buffer.getPixels(), buffer.getWidth(), bounds, visible, gameIcon, shadow);
 	}
 
 	// Each color is drawn as (item + under) / 2 and the alpha as 128 + under / 2, so what's under it is worked out exactly,
 	// unless it isn't drawn there after all, like before the game drew it
-	private boolean takeOut(int[] pixels, int width, Rectangle bounds, Rectangle visible, GameIcon gameIcon, int shadow, @Nullable int[] drawnIcon) {
+	private boolean takeOut(int[] pixels, int width, Rectangle bounds, Rectangle visible, GameIcon gameIcon, int shadow) {
 		int drawn = 0, notDrawn = 0;
 		for (int y = visible.y; y < visible.y + visible.height; y++) {
 			for (int x = visible.x; x < visible.x + visible.width; x++) {
 				int g = GameIcon.grid(x - bounds.x, y - bounds.y);
-				int color = drawnColor(gameIcon, shadow, drawnIcon, x - bounds.x, y - bounds.y);
+				int color = drawnColor(gameIcon, shadow, x - bounds.x, y - bounds.y);
 				if (color == 0)
 					continue;
 				drawn++;
@@ -729,15 +727,14 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 		for (int y = visible.y; y < visible.y + visible.height; y++)
 			for (int x = visible.x; x < visible.x + visible.width; x++)
-				if (drawnColor(gameIcon, shadow, drawnIcon, x - bounds.x, y - bounds.y) != 0)
+				if (drawnColor(gameIcon, shadow, x - bounds.x, y - bounds.y) != 0)
 					pixels[y * width + x] = under[GameIcon.grid(x - bounds.x, y - bounds.y)];
 		return true;
 	}
 
-	private static int drawnColor(GameIcon gameIcon, int shadow, @Nullable int[] drawnIcon, int x, int y) {
+	private static int drawnColor(GameIcon gameIcon, int shadow, int x, int y) {
 		int g = GameIcon.grid(x, y);
-		return drawnIcon != null ? drawnIcon[y * ICON_WIDTH + x] : gameIcon.stackSize[g] ? gameIcon.stack[g] :
-			gameIcon.item[g] ? gameIcon.pixels[y * ICON_WIDTH + x] : gameIcon.shadow[g] ? shadow : 0;
+		return gameIcon.stackSize[g] ? gameIcon.stack[g] : gameIcon.item[g] ? gameIcon.pixels[y * ICON_WIDTH + x] : gameIcon.shadow[g] ? shadow : 0;
 	}
 
 	private static Rectangle draggedBounds(WidgetItem widgetItem) {
@@ -765,7 +762,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		var widget = widgetItem.getWidget();
 		boolean dragged = isDragged(widgetItem);
 		var bounds = draggedBounds(widgetItem);
-		var gameIcon = getGameIcon(widgetItem.getId(), widgetItem.getQuantity(), widget.getItemQuantityMode(), widget.getBorderType(), true);
+		var gameIcon = getGameIcon(widgetItem.getId(), widgetItem.getQuantity(), widget.getItemQuantityMode(), widget.getBorderType(),
+			itemShadows.getOrDefault(widget.getParentId(), 0), true);
 		// Some interfaces report their items twice
 		if (dragged ? draggedCut : cutThisFrame.contains(bounds))
 			return;
@@ -950,12 +948,13 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 		var widget = widgetItem.getWidget();
 		// Selected items use the normal icon, and the shader adds their white border
-		return findIcon(widgetItem.getId(), widgetItem.getQuantity(), widget.getItemQuantityMode(), min(widget.getBorderType(), 1), true);
+		return findIcon(widgetItem.getId(), widgetItem.getQuantity(), widget.getItemQuantityMode(), min(widget.getBorderType(), 1),
+			itemShadows.getOrDefault(widget.getParentId(), 0), true);
 	}
 
 	@Nullable
-	private Icon findIcon(int itemId, int quantity, int quantityMode, int border, boolean visible) {
-		var gameIcon = getGameIcon(itemId, quantity, quantityMode, border, visible);
+	private Icon findIcon(int itemId, int quantity, int quantityMode, int border, int shadow, boolean visible) {
+		var gameIcon = getGameIcon(itemId, quantity, quantityMode, border, shadow, visible);
 		if (gameIcon == UNKNOWN)
 			return PENDING;
 		if (gameIcon == null)
@@ -1006,7 +1005,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			for (var item : items) {
 				if (item.getId() == -1)
 					continue;
-				var icon = findIcon(item.getId(), item.getQuantity(), ItemQuantityMode.NEVER, 1, false);
+				var icon = findIcon(item.getId(), item.getQuantity(), ItemQuantityMode.NEVER, 1, 0, false);
 				if (icon != null && icon != PENDING)
 					icon.frame = frame;
 			}
@@ -1021,7 +1020,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 					return;
 				if (item.getId() == -1)
 					continue;
-				var icon = findIcon(item.getId(), item.getQuantity(), ItemQuantityMode.NEVER, 1, false);
+				var icon = findIcon(item.getId(), item.getQuantity(), ItemQuantityMode.NEVER, 1, 0, false);
 				// A stack whose model is still being looked for doesn't hold up the rest
 				if (icon == PENDING && newItemsThisFrame >= MAX_NEW_ITEMS_PER_FRAME)
 					return;
@@ -1032,22 +1031,82 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	}
 
 	@Nullable
-	private GameIcon getGameIcon(int itemId, int quantity, int quantityMode, int border, boolean visible) {
+	private GameIcon getGameIcon(int itemId, int quantity, int quantityMode, int border, int shadow, boolean visible) {
 		long key = (long) quantity << 24 | (long) itemId << 4 | quantityMode << 2 | border;
+		// Animated textures move on each time the game draws an icon, but the icon it shows stays as it was drawn until it's drawn again.
+		// So that's the one used, which the game keeps per shadow, and hands out again as long as it has it.
+		boolean animated = isAnimated(itemId);
+		var shown = !animated ? null : client.createItemSprite(itemId, quantity, border, shadow, quantityMode, false, Constants.CLIENT_DEFAULT_ZOOM);
+		if (animated)
+			key = GameIcon.hash(key, shadow);
 		var cached = gameIcons.get(key);
-		if (cached != null || gameIcons.containsKey(key))
+		if ((cached != null || gameIcons.containsKey(key)) && (cached == null || cached.shown == shown))
 			return cached;
 		if (!lookInto(visible))
 			return UNKNOWN;
 
 		GameIcon gameIcon = null;
-		int[] item = gamePixels(itemId, quantity, border, ItemQuantityMode.NEVER, false);
-		int[] withStackSize = item == null || quantityMode == ItemQuantityMode.NEVER ? item :
-			gamePixels(itemId, quantity, border, quantityMode, false);
-		if (withStackSize != null)
-			gameIcon = new GameIcon(itemId, border, item, withStackSize, isAnimated(itemId));
+		if (shown != null) {
+			int[] withStackSize = withoutShadow(shown.getPixels(), shadow);
+			// Drawn again, the item would have its textures elsewhere, so only the stack size's own colors tell it apart
+			int[] item = !showsStackSize(itemId, quantity, quantityMode) ? withStackSize :
+				withoutStackSize(withStackSize, gamePixels(itemId, quantity, border, ItemQuantityMode.NEVER, false));
+			if (item != null) {
+				gameIcon = new GameIcon(itemId, border, item, withStackSize, true);
+				gameIcon.shown = shown;
+			}
+		} else if (!animated) {
+			int[] item = gamePixels(itemId, quantity, border, ItemQuantityMode.NEVER, false);
+			int[] withStackSize = item == null || quantityMode == ItemQuantityMode.NEVER ? item :
+				gamePixels(itemId, quantity, border, quantityMode, false);
+			if (withStackSize != null)
+				gameIcon = new GameIcon(itemId, border, item, withStackSize, false);
+		}
 		gameIcons.put(key, gameIcon);
 		return gameIcon;
+	}
+
+	// The game shades the empty pixels below and right of the item
+	static int[] withoutShadow(int[] shown, int shadow) {
+		int[] pixels = shown.clone();
+		for (int y = ICON_HEIGHT - 1; y > 0 && shadow != 0; y--) {
+			for (int x = ICON_WIDTH - 1; x > 0; x--) {
+				int i = y * ICON_WIDTH + x;
+				int upLeft = shown[i - ICON_WIDTH - 1];
+				if ((shown[i] & 0xFFFFFF) == shadow && upLeft != 0 && (upLeft & 0xFFFFFF) != shadow)
+					pixels[i] = 0;
+			}
+		}
+		return pixels;
+	}
+
+	// Like the game decides it
+	private boolean showsStackSize(int itemId, int quantity, int quantityMode) {
+		if (quantity == -1)
+			return false;
+		if (quantityMode == ItemQuantityMode.STACKABLE && quantity != 1)
+			return true;
+		return quantityMode == ItemQuantityMode.ALWAYS || quantityMode == ItemQuantityMode.STACKABLE && client.getItemDefinition(itemId).isStackable();
+	}
+
+	// The game writes the stack size in yellow, white or green, with a black shadow a pixel down and right, over the item.
+	// What's under it is the item looked up without it, or if that's the same color, any other, so it's still told apart.
+	@Nullable
+	static int[] withoutStackSize(int[] withStackSize, @Nullable int[] plain) {
+		if (plain == null)
+			return null;
+		boolean[] text = new boolean[withStackSize.length];
+		for (int i = 0; i < text.length; i++) {
+			int color = withStackSize[i] & 0xFFFFFF;
+			text[i] = (color == 0xFFFF00 || color == 0xFFFFFF || color == 0x00FF80) && color != (plain[i] & 0xFFFFFF);
+		}
+		int[] item = withStackSize.clone();
+		for (int i = 0; i < item.length; i++) {
+			boolean textShadow = (withStackSize[i] & 0xFFFFFF) == 1 && i % ICON_WIDTH > 0 && i >= ICON_WIDTH && text[i - ICON_WIDTH - 1];
+			if (text[i] || textShadow)
+				item[i] = plain[i] != withStackSize[i] ? plain[i] : withStackSize[i] == 1 ? 2 : 1;
+		}
+		return item;
 	}
 
 	private boolean isAnimated(int itemId) {
