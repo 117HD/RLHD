@@ -47733,6 +47733,27 @@
     ]
   },
   {
+    "description": "TFA - Ezekiel Lightning Strike On Swords",
+    "offset": [ 0, 100, 0 ],
+    "radius": 135,
+    "strength": 15,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_EZEKIEL_SWORD_TELEGRAPH01",
+      "VFX_EZEKIEL_SWORD_TELEGRAPH02",
+      "VFX_EZEKIEL_SWORD_TELEGRAPH03",
+      "VFX_EZEKIEL_SWORD_TELEGRAPH04"
+    ]
+  },
+  {
     "description": "TFA - Moia Zombie",
     "offset": [ 0, 185, 0 ],
     "radius": 160,
