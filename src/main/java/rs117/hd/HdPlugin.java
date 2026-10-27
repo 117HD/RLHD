@@ -422,6 +422,7 @@ public class HdPlugin extends Plugin {
 	public boolean configProjectileLights;
 	public boolean configNpcLights;
 	public boolean configPetLights;
+	public boolean configThrallLights;
 	public boolean configSpotanimLights;
 	public boolean configObjectLights;
 	public boolean configHideFakeShadows;
@@ -1808,6 +1809,7 @@ public class HdPlugin extends Plugin {
 		configProjectileLights = config.projectileLights();
 		configNpcLights = config.npcLights();
 		configPetLights = config.petLights();
+		configThrallLights = config.thrallLights();
 		configSpotanimLights = config.spotanimLights();
 		configObjectLights = config.objectLights();
 		configVanillaShadowMode = config.vanillaShadowMode();
