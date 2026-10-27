@@ -47436,9 +47436,9 @@
   },
   {
     "description": "TFA - Ocellus Purple Floor Aoe",
-    "offset": [ 0, 100, 0 ],
-    "radius": 140,
-    "strength": 20,
+    "offset": [ 0, 25, 0 ],
+    "radius": 120,
+    "strength": 15,
     "color": [
       255,
       0,
@@ -47670,6 +47670,72 @@
     ]
   },
   {
+    "description": "TFA - Ezekiel Star Heal Cast 1",
+    "offset": [ -20, 100, 50 ],
+    "radius": 85,
+    "strength": 15,
+    "despawnDelay": 400,
+    "fadeOutDuration": 800,
+    "fixedDespawnTime": true,
+    "color": [
+      252,
+      200,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "spawnDelay": 50,
+    "waitForAnimation": true,
+    "range": 25,
+    "graphicsObjectIds": [
+      "EZEKIEL_HEAL_SPOTANIM_VFX01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Star Heal Cast 2",
+    "offset": [ 35, 100, 50 ],
+    "radius": 85,
+    "strength": 15,
+    "despawnDelay": 800,
+    "fadeOutDuration": 800,
+    "fixedDespawnTime": true,
+    "color": [
+      252,
+      200,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "spawnDelay": 300,
+    "waitForAnimation": true,
+    "range": 25,
+    "graphicsObjectIds": [
+      "EZEKIEL_HEAL_SPOTANIM_VFX01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Star Explosion Cast",
+    "offset": [ -20, 100, 75 ],
+    "radius": 200,
+    "strength": 15,
+    "despawnDelay": 800,
+    "fadeOutDuration": 300,
+    "fixedDespawnTime": true,
+    "color": [
+      252,
+      200,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "spawnDelay": 1550,
+    "waitForAnimation": true,
+    "range": 25,
+    "graphicsObjectIds": [
+      "EZEKIEL_SPECIAL_CRACK_VFX01"
+    ]
+  },
+  {
     "description": "TFA - Ezekiel Star Explosion 1",
     "offset": [ 0, 185, 0 ],
     "radius": 175,
@@ -47727,9 +47793,12 @@
     "duration": 0,
     "waitForAnimation": true,
     "range": 25,
+    "fixedDespawnTime": true,
+    "despawnDelay": 550,
     "graphicsObjectIds": [
       "VFX_EZEKIEL_FINALE_IMPACT_MEDIUM01",
-      "VFX_EZEKIEL_FINALE_IMPACT_SMALL01"
+      "VFX_EZEKIEL_FINALE_IMPACT_SMALL01",
+      "VFX_EZEKIEL_FINALE_IMPACT_LARGE01"
     ]
   },
   {
