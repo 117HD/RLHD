@@ -47672,11 +47672,13 @@
   {
     "description": "TFA - Ezekiel Star Heal Cast 1",
     "offset": [ -20, 100, 50 ],
-    "radius": 85,
+    "radius": 95,
     "strength": 15,
-    "despawnDelay": 400,
+    "fadeInDuration": 200,
+    "despawnDelay": 500,
     "fadeOutDuration": 800,
-    "fixedDespawnTime": true,
+	"fadeOverlap": true,
+	"fixedDespawnTime": true,
     "color": [
       252,
       200,
@@ -47684,7 +47686,8 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "spawnDelay": 50,
+
+    "spawnDelay": 150,
     "waitForAnimation": true,
     "range": 25,
     "graphicsObjectIds": [
@@ -47694,11 +47697,13 @@
   {
     "description": "TFA - Ezekiel Star Heal Cast 2",
     "offset": [ 35, 100, 50 ],
-    "radius": 85,
+    "radius": 105,
     "strength": 15,
-    "despawnDelay": 800,
+    "despawnDelay": 700,
     "fadeOutDuration": 800,
+    "fadeInDuration": 200,
     "fixedDespawnTime": true,
+    "fadeOverlap": true,
     "color": [
       252,
       200,
@@ -47706,7 +47711,54 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "spawnDelay": 300,
+    "spawnDelay": 350,
+    "waitForAnimation": true,
+    "range": 25,
+    "graphicsObjectIds": [
+      "EZEKIEL_HEAL_SPOTANIM_VFX01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Star Heal Cast 3",
+    "offset": [ -25, 250, 25 ],
+    "radius": 230,
+    "strength": 25,
+    "despawnDelay": 700,
+    "fadeOutDuration": 800,
+    "fadeInDuration": 200,
+    "fixedDespawnTime": true,
+    "fadeOverlap": true,
+    "color": [
+      252,
+      200,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "spawnDelay": 550,
+    "waitForAnimation": true,
+    "range": 25,
+    "graphicsObjectIds": [
+      "EZEKIEL_HEAL_SPOTANIM_VFX01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Star Heal Cast 4",
+    "offset": [ 0, 100, 0 ],
+    "radius": 125,
+    "strength": 15,
+    "despawnDelay": 800,
+    "fadeOutDuration": 300,
+    "fixedDespawnTime": true,
+    "fadeOverlap": true,
+    "color": [
+      252,
+      200,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "spawnDelay": 750,
     "waitForAnimation": true,
     "range": 25,
     "graphicsObjectIds": [
@@ -47799,6 +47851,117 @@
       "VFX_EZEKIEL_FINALE_IMPACT_MEDIUM01",
       "VFX_EZEKIEL_FINALE_IMPACT_SMALL01",
       "VFX_EZEKIEL_FINALE_IMPACT_LARGE01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Lightning Magic Attack Cast 1",
+    "offset": [ 0, 150, 25 ],
+    "radius": 170,
+    "strength": 15,
+    "fadeInDuration": 500,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "range": 25,
+    "fixedDespawnTime": true,
+    "despawnDelay": 550,
+    "graphicsObjectIds": [
+      "EZEKIEL_MAGIC_ATTACK_VFX01",
+      "VFX_EZEKIEL_FINALE_CAST01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Lightning Magic Attack Cast 2",
+    "offset": [ 0, 300, 0 ],
+    "radius": 320,
+    "strength": 25,
+    "fadeInDuration": 200,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "range": 25,
+    "spawnDelay": 700,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 500,
+    "despawnDelay": 750,
+    "graphicsObjectIds": [
+      "EZEKIEL_MAGIC_ATTACK_VFX01",
+      "VFX_EZEKIEL_FINALE_CAST01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Lightning Magic Attack Cast 3",
+    "offset": [ 0, 300, 0 ],
+    "radius": 450,
+    "strength": 25,
+    "fadeInDuration": 100,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "duration": 0,
+    "waitForAnimation": true,
+    "range": 25,
+    "spawnDelay": 50,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 500,
+    "despawnDelay": 750,
+    "graphicsObjectIds": [
+      "VFX_EZEKIEL_FINALE_CAST_LOOP01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Lightning Magic Attack Windup",
+    "offset": [ 0, 100, 0 ],
+    "radius": 135,
+    "strength": 5,
+    "fadeInDuration": 500,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "range": 25,
+    "fixedDespawnTime": true,
+    "despawnDelay": 550,
+    "graphicsObjectIds": [
+      "EZEKIEL_MAGIC_ATTACK_IMPACT_VFX01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Lightning Magic Attack Hit",
+    "offset": [ 0, 100, 0 ],
+    "radius": 150,
+    "strength": 15,
+    "fadeOutDuration": 300,
+    "color": [
+      50,
+      150,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "spawnDelay": 600,
+    "waitForAnimation": true,
+    "range": 40,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "graphicsObjectIds": [
+      "EZEKIEL_MAGIC_ATTACK_IMPACT_VFX01"
     ]
   },
   {
