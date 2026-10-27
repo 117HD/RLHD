@@ -206,6 +206,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		final List<RuneMatch> runes = new ArrayList<>();
 		List<RuneImage> runeImages;
 		boolean kept;
+		// How opaque the game draws its item, out of 256, like the bank's slot locks at 156
+		int itemAlpha = 256;
 		boolean overlaid;
 		boolean takeAll;
 		boolean backgroundChanged;
@@ -808,6 +810,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			slots.put(slotKey, slot);
 		}
 		slot.frame = frame;
+		slot.itemAlpha = dragged ? 256 : 256 - widget.getOpacity();
 		cutOut(buffer.getPixels(), buffer.getWidth(), bounds, drawn, gameIcon, slot, dragged);
 		var cutItem = new CutItem(dragged ? -1 : itemCount, bounds, drawn, gameIcon, slot);
 		uncaptured.add(cutItem);
@@ -1561,6 +1564,24 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			System.arraycopy(slot.cut, GameIcon.grid(drawn.x - bounds.x, y - bounds.y), pixels, y * width + drawn.x, drawn.width);
 	}
 
+	// The game draws an item at an alpha out of 256 as color = (item * alpha + under * (256 - alpha)) >> 8 and
+	// alpha = alpha + (under alpha * (256 - alpha) >> 8), or -1 where the pixel doesn't fit that
+	private static int unblend(int pixel, int item, int alpha) {
+		int rest = 256 - alpha;
+		int underAlpha = Math.round(((pixel >>> 24) - alpha) * 256f / rest);
+		if (underAlpha < -2 || underAlpha > 257)
+			return -1;
+		underAlpha = clamp(underAlpha, 0, 255);
+		int result = underAlpha << 24;
+		for (int shift = 0; shift < 24; shift += 8) {
+			int c = Math.round(((pixel >> shift & 0xFF) * 256f - (item >> shift & 0xFF) * alpha) / rest);
+			if (c < -3 || c > underAlpha + 3)
+				return -1;
+			result |= clamp(c, 0, underAlpha) << shift;
+		}
+		return result;
+	}
+
 	// What's under an item that's taken out is known all over, and its stack size is drawn half see-through over the native one
 	private void paintOver(int[] pixels, int width, Rectangle bounds, Rectangle drawn, GameIcon gameIcon, Slot slot, boolean takenOut) {
 		int[] background = slot.background;
@@ -1573,6 +1594,14 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				background[g] = slot.behind[g] = pixel;
 				slot.cut[g] = !gameIcon.stackSize[g] ? 0 : takenOut ? halfSeeThrough(gameIcon.stack[g]) : pixel;
 				known[g] = takenOut || !gameIcon.item[g] && !gameIcon.stackSize[g];
+				// Through a see-through item what's under it shows, which the native one is drawn over just as see-through
+				if (!known[g] && !gameIcon.stackSize[g] && slot.itemAlpha < 256) {
+					int under = unblend(pixel, gameIcon.pixels[(y - bounds.y) * ICON_WIDTH + x - bounds.x], slot.itemAlpha);
+					if (under != -1) {
+						background[g] = under;
+						known[g] = true;
+					}
+				}
 			}
 		}
 
@@ -1593,7 +1622,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				shadow = shadeColors[i];
 			}
 		}
-		if (mostShaded < shaded * .8f || takenOut)
+		// A see-through item's shadow is just as see-through, with a colour that isn't known, so it stays as the game drew it
+		if (mostShaded < shaded * .8f || takenOut || slot.itemAlpha < 256)
 			shadow = 0;
 		if (shadow != 0)
 			for (int g = 0; g < GRID_SIZE; g++)
