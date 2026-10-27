@@ -87,7 +87,7 @@ public class ModelHasher {
 		}
 
 		vertexHash = calculateVertexCacheHash(modelOverride);
-		normalHash = calculateNormalCacheHash();
+		normalHash = calculateNormalCacheHash(modelOverride);
 		uvHash = calculateUvCacheHash(preOrientation, modelOverride);
 		batchHash = vertexHash;
 		batchHash = batchHash * 31 + normalHash;
@@ -116,7 +116,7 @@ public class ModelHasher {
 		return h;
 	}
 
-	private long calculateNormalCacheHash() {
+	private long calculateNormalCacheHash(ModelOverride modelOverride) {
 		long h = faceCount;
 		h = h * 31L + faceIndicesOneHash;
 		h = h * 31L + faceIndicesTwoHash;
@@ -124,14 +124,23 @@ public class ModelHasher {
 		h = h * 31L + fastHash(model.getVertexNormalsX());
 		h = h * 31L + fastHash(model.getVertexNormalsY());
 		h = h * 31L + fastHash(model.getVertexNormalsZ());
+		h = h * 31L + modelOverride.hashCode();
+		if (!plugin.configPreserveVanillaNormals)
+			h = h * 31L + fastHash(model.getFaceColors3());
 		return h;
 	}
 
 	private long calculateUvCacheHash(int orientation, ModelOverride modelOverride) {
+		boolean hasFaceOverrides = modelOverride.faceOverrides != null;
 		long h = faceCount;
-		h = h * 31L + (modelOverride.uvType == UvType.VANILLA || modelOverride.retainVanillaUvs ? textureTrianglesHash : 0);
-		h = h * 31L + (modelOverride.uvType.orientationDependent ? orientation : 0);
-		h = h * 31L + (modelOverride.uvType == UvType.BOX ? vertexHash : 0);
+		h = h * 31L + (
+			hasFaceOverrides ||
+			modelOverride.uvType == UvType.VANILLA ||
+			modelOverride.retainVanillaUvs ?
+				textureTrianglesHash : 0
+		);
+		h = h * 31L + (hasFaceOverrides || modelOverride.uvType.orientationDependent ? orientation : 0);
+		h = h * 31L + (hasFaceOverrides || modelOverride.uvType == UvType.BOX ? vertexHash : 0);
 		h = h * 31L + modelOverride.hashCode();
 		h = h * 31L + faceTexturesHash;
 		return h;

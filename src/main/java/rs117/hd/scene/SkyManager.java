@@ -88,7 +88,7 @@ public class SkyManager {
 	private long frameUtcMillis;
 	private long lastDirectionalCameraUpdateMillis;
 
-	private double customCycleElapsedDays = .35f;
+	private double customCycleElapsedDays;
 	private long customCycleStartMillis;
 
 	private boolean isSunDescending;
@@ -235,8 +235,14 @@ public class SkyManager {
 		}
 
 		if (configCycle == DaylightCycle.CUSTOM) {
-			if (customCycleStartMillis == 0)
-				customCycleStartMillis = Instant.ofEpochMilli(frameUtcMillis).truncatedTo(ChronoUnit.DAYS).toEpochMilli();
+			if (customCycleStartMillis == 0) {
+				customCycleStartMillis = Instant
+					.ofEpochMilli(frameUtcMillis)
+					.truncatedTo(ChronoUnit.DAYS)
+					.toEpochMilli();
+				// Start the custom cycle at 11 AM local mean solar time
+				customCycleElapsedDays = 11 / 24.0 - configLatLon[1] / 360.0;
+			}
 			customCycleElapsedDays += plugin.deltaTimeMs / (configCycleDuration * MINUTE_MS);
 		}
 

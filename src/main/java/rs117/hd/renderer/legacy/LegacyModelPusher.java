@@ -187,13 +187,15 @@ public class LegacyModelPusher {
 			model.getTexIndices3() != null &&
 			model.getTextureFaces() != null;
 
-		Material baseMaterial = modelOverride.baseMaterial;
+		Material baseMaterial = modelOverride.material;
 		Material textureMaterial = modelOverride.textureMaterial;
 
 		boolean skipUVs =
 			!isVanillaTextured &&
 			baseMaterial.packMaterialData(modelOverride, UvType.GEOMETRY, false) == 0 &&
-			modelOverride.colorOverrides == null;
+			modelOverride.colorOverrides == null &&
+			modelOverride.uvs == null &&
+			modelOverride.faceOverrides == null;
 
 		// ensure capacity upfront
 		sceneContext.stagingBufferVertices.ensureCapacity(bufferSize);
@@ -312,42 +314,46 @@ public class LegacyModelPusher {
 			if (plugin.enableDetailedTimers)
 				frameTimer.begin(Timer.MODEL_PUSHING_UV);
 
+			final boolean customUvs = modelOverride.hasCustomUvs(model);
+			final ModelOverride[] faceOverrides = modelOverride.faceOverrides;
 			int[] faceColors = model.getFaceColors1();
 			byte[] faceTransparencies = model.getFaceTransparencies();
 			for (int face = 0; face < faceCount; face++) {
 				short textureId = isVanillaTextured ? faceTextures[face] : -1;
 				UvType uvType = UvType.GEOMETRY;
-				Material material = baseMaterial;
 				ModelOverride faceOverride = modelOverride;
-
-				if (textureId != -1) {
-					uvType = UvType.VANILLA;
-					if (textureMaterial != Material.NONE) {
-						material = textureMaterial;
-					} else {
-						material = materialManager.fromVanillaTexture(textureId);
-						if (modelOverride.materialOverrides != null) {
-							var override = modelOverride.materialOverrides.get(material);
-							if (override != null) {
+				Material material = baseMaterial;
+				if (faceOverrides != null && face < faceOverrides.length) {
+					faceOverride = faceOverrides[face];
+					material = faceOverride.material;
+				}
+				if (faceOverride == modelOverride) {
+					if (textureId != -1) {
+						uvType = UvType.VANILLA;
+						if (textureMaterial != Material.NONE) {
+							material = textureMaterial;
+						} else {
+							material = materialManager.fromVanillaTexture(textureId);
+							if (modelOverride.materialOverrides != null) {
+								var override = modelOverride.materialOverrides.get(material);
+								if (override != null) {
+									faceOverride = override;
+									material = faceOverride.textureMaterial;
+								}
+							}
+						}
+					} else if (modelOverride.colorOverrides != null && (cacheUvData || !needsCaching)) {
+						// Color overrides are heavy. Only apply them if the UVs will be cached or don't need caching
+						int ahsl = (faceTransparencies == null ? 0xFF : 0xFF - (faceTransparencies[face] & 0xFF)) << 16 | faceColors[face];
+						for (var override : modelOverride.colorOverrides) {
+							if (override.ahslCondition.test(ahsl)) {
 								faceOverride = override;
-								material = faceOverride.textureMaterial;
+								material = faceOverride.material;
+								break;
 							}
 						}
 					}
-				} else if (modelOverride.colorOverrides != null && (cacheUvData || !needsCaching)) {
-					// Color overrides are heavy. Only apply them if the UVs will be cached or don't need caching
-					int ahsl = (faceTransparencies == null ? 0xFF : 0xFF - (faceTransparencies[face] & 0xFF)) << 16 | faceColors[face];
-					for (var override : modelOverride.colorOverrides) {
-						if (override.ahslCondition.test(ahsl)) {
-							faceOverride = override;
-							material = faceOverride.baseMaterial;
-							break;
-						}
-					}
 				}
-
-				if (faceOverride.hide)
-					continue;
 
 				if (material != Material.NONE) {
 					uvType = faceOverride.uvType;
@@ -355,13 +361,18 @@ public class LegacyModelPusher {
 						uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 				}
 
-				int materialData = material.packMaterialData(faceOverride, uvType, false);
-
 				final float[] uvData = sceneContext.modelFaceUvs;
+				if (customUvs) {
+					modelOverride.fillCustomUvs(uvData, face);
+					uvType = UvType.GEOMETRY;
+				}
+				int materialData = faceOverride.hide ? 0 : material.packMaterialData(faceOverride, uvType, false);
+
 				if (materialData == 0) {
 					Arrays.fill(uvData, 0);
 				} else {
-					faceOverride.fillUvsForFace(uvData, model, preOrientation, uvType, face, sceneContext.modelFaceNormals);
+					if (!customUvs)
+						faceOverride.fillUvsForFace(uvData, model, preOrientation, uvType, face, sceneContext.modelFaceNormals);
 					uvData[3] = uvData[7] = uvData[11] = Float.intBitsToFloat(materialData);
 				}
 
@@ -388,6 +399,9 @@ public class LegacyModelPusher {
 	}
 
 	private void getNormalDataForFace(LegacySceneContext sceneContext, Model model, @Nonnull ModelOverride modelOverride, int face) {
+		if (modelOverride.faceOverrides != null && face < modelOverride.faceOverrides.length)
+			modelOverride = modelOverride.faceOverrides[face];
+
 		assert packTerrainData(false, 0, WaterType.NONE, 0) == 0;
 		if (modelOverride.flatNormals || !plugin.configPreserveVanillaNormals && model.getFaceColors3()[face] == -1) {
 			Arrays.fill(sceneContext.modelFaceNormals, 0);
@@ -431,8 +445,11 @@ public class LegacyModelPusher {
 		@Nonnull ModelOverride modelOverride,
 		int face
 	) {
-		if (model.getFaceColors3()[face] == -2)
-			return ZEROED_INTS; // Hide the face
+		if (modelOverride.faceOverrides != null && face < modelOverride.faceOverrides.length)
+			modelOverride = modelOverride.faceOverrides[face];
+
+		if (model.getFaceColors3()[face] == -2 || modelOverride.hide)
+			return ZEROED_INTS;
 
 		// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
 		if (plugin.configHideFakeShadows && HDUtils.isBakedGroundShading(model, face)) {
@@ -473,7 +490,7 @@ public class LegacyModelPusher {
 		if (facePriorities != null)
 			packedAlphaPriorityFlags |= (facePriorities[face] & 0xF) << 16;
 
-		if (isTextured) {
+		if (isTextured || modelOverride.material.vanillaTextureIndex != -1) {
 			// Without overriding the color for textured faces, vanilla shading remains pretty noticeable even after
 			// the approximate reversal above. Ardougne rooftops is a good example, where vanilla shading results in a
 			// weird-looking tint. The brightness clamp afterward is required to reduce the over-exposure introduced.

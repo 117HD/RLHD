@@ -4,718 +4,397 @@
   "title": "Model Overrides",
   "type": "array",
   "items": {
-    "type": "object",
-    "additionalProperties": false,
-    "required": [ "description" ],
-    "properties": {
-      "description": {
-        "type": "string",
-        "description": "Description of which objects the properties apply to."
-      },
-      "seasonalTheme": {
-        "type": "string",
-        "description": "Which seasonal theme the model override should be active for, or null for all. Defaults to null.",
-        "enum": [
-          "SUMMER",
-          "AUTUMN",
-          "WINTER"
-        ]
-      },
-      "areas": {
-        "type": "array",
-        "description": "An array of bounding boxes and/or area enums specifying which areas the override should be limited to.",
-        "items": {
-          "$ref": "aabb.schema.json"
-        }
-      },
-      "npcIds": {
-        "type": "array",
-        "description": "A set of NPC gameval names which the override should apply to.",
-        "items": {
-          "type": "string"
-        }
-      },
-      "objectIds": {
-        "type": "array",
-        "description": "A set of object gameval names which the override should apply to.",
-        "items": {
-          "type": "string"
-        }
-      },
-      "projectileIds": {
-        "type": "array",
-        "description": "A set of projectile gameval names which the override should apply to.",
-        "items": {
-          "type": "string"
-        }
-      },
-      "graphicsObjectIds": {
-        "type": "array",
-        "description": "A set of graphics object gameval names which the override should apply to.",
-        "items": {
-          "type": "string"
-        }
-      },
-      "baseMaterial": {
-        "type": "string",
-        "description": "Case-sensitive name of the material to apply to untextured faces."
-      },
-      "textureMaterial": {
-        "type": "string",
-        "description": "Case-sensitive name of the material to apply to textured faces."
-      },
-      "uvType": {
-        "type": "string",
-        "description": "What to base UV coordinates on for object texturing. Defaults to GEOMETRY.",
-        "enum": [
-          "VANILLA",
-          "GEOMETRY",
-          "MODEL_XY",
-          "MODEL_XY_MIRROR_A",
-          "MODEL_XY_MIRROR_B",
-          "MODEL_XZ",
-          "MODEL_XZ_MIRROR_A",
-          "MODEL_XZ_MIRROR_B",
-          "MODEL_YZ",
-          "MODEL_YZ_MIRROR_A",
-          "MODEL_YZ_MIRROR_B",
-          "WORLD_XY",
-          "WORLD_XZ",
-          "WORLD_YZ",
-          "BOX"
-        ]
-      },
-      "uvScale": {
-        "type": "number",
-        "description": "A scaling factor to apply to UV coordinates. Defaults to 1."
-      },
-      "uvOrientation": {
-        "type": "integer",
-        "description": "Extra rotation to apply to UVs with 2048 corresponding to a complete rotation. Defaults to 0."
-      },
-      "uvOrientationX": {
-        "type": "integer",
-        "description": "Rotation around the X axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
-      },
-      "uvOrientationY": {
-        "type": "integer",
-        "description": "Rotation around the Y axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
-      },
-      "uvOrientationZ": {
-        "type": "integer",
-        "description": "Rotation around the Z axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
-      },
-      "rotate": {
-        "type": "integer",
-        "description": "Counter-clockwise rotation around the up-axis in degrees, where only 0, 90, 180 and 270 are allowed. Defaults to 0. Only works for static scene models."
-      },
-      "hide": {
-        "type": "boolean",
-        "description": "Whether models this override applies to should be hidden. Defaults to false."
-      },
-      "disableDetailCulling": {
-        "type": "boolean",
-        "description": "Whether the model should render regardless of the detail distance setting. Defaults to false."
-      },
-      "retainVanillaUvs": {
-        "type": "boolean",
-        "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."
-      },
-      "forceMaterialChanges": {
-        "type": "boolean",
-        "description": "Apply the override even when model textures are disabled in the config. Defaults to false."
-      },
-      "flatNormals": {
-        "type": "boolean",
-        "description": "Whether flat normals should be used instead of smooth normals. Defaults to false."
-      },
-      "upwardsNormals": {
-        "type": "boolean",
-        "description": "Whether normals should always point directly up. Defaults to false."
-      },
-      "hideVanillaShadows": {
-        "type": "boolean",
-        "description": "Whether the model has fake shadows which should be removed. Defaults to false."
-      },
-      "retainVanillaShadowsInPvm": {
-        "type": "boolean",
-        "description": "Whether the model has fake shadows which are potentially useful for PvM. Defaults to false."
-      },
-      "hideHdShadowsInPvm": {
-        "type": "boolean",
-        "description": "Whether shadow casting should be disabled when Vanilla Shadows is set to 'Prefer in PvM'. Defaults to false."
-      },
-      "castShadows": {
-        "type": "boolean",
-        "description": "Whether the model cast shadows. Defaults to true."
-      },
-      "receiveShadows": {
-        "type": "boolean",
-        "description": "Whether the model receive shadows cast by other objects. Defaults to true."
-      },
-      "doubleSidedFaces": {
-        "type": "boolean",
-        "description": "Whether triangles should be visible when viewed from either side. Defaults to false."
-      },
-      "terrainVertexSnap": {
-        "type": "boolean",
-        "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
-      },
-      "terrainVertexSnapThreshold": {
-        "type": "number",
-        "description": "The fraction along the models height defining the region of which vertices blend to the terrain surface. Defaults to 0.125."
-      },
-      "undoVanillaShading": {
-        "type": "boolean",
-        "description": "Whether the model should undo the baked phong shading in the vertex colours. Defaults to true."
-      },
-      "hideAsWaterEffect": {
-        "type": "boolean",
-        "description": "Whether the model should be hidden when \"Hide vanilla water ripples\" is enabled. Defaults to false."
-      },
-      "shadowOpacityThreshold": {
-        "type": "number",
-        "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
-      },
-      "shadowNormalBias": {
-        "type": "boolean",
-        "description": "Whether to offset shadow receivers along their surface normal to prevent self-shadowing. Defaults to false."
-      },
-      "tzHaarRecolorType": {
-        "type": "string",
-        "description": "Specify a type of TzHaar recolor style to apply. Only relevant for the TzHaar area.",
-        "enum": [ "NONE", "GRADIENT", "HUE_SHIFT" ]
-      },
-      "inheritTileColorType": {
-        "type": "string",
-        "description": "Whether to inherit color from the overlay or underlay of the tile beneath. Defaults to NONE.",
-        "enum": [ "NONE", "OVERLAY", "UNDERLAY" ]
-      },
-      "hideInAreas": {
-        "type": "array",
-        "description": "An array of bounding boxes and/or area enums specifying where the model should be hidden.",
-        "items": {
-          "$ref": "aabb.schema.json"
-        }
-      },
-      "windDisplacementMode": {
-        "type": "string",
-        "description": "What type of wind displacement should be applied to the model. Defaults to DISABLED.",
-        "enum": [
-          "DISABLED",
-          "OBJECT",
-          "OBJECT_NO_GROUND_DISPLACEMENT",
-          "VERTEX",
-          "VERTEX_WITH_HEMISPHERE_BLEND",
-          "VERTEX_JIGGLE"
-        ]
-      },
-      "windDisplacementModifier": {
-        "type": "integer",
-        "description": "Modifier value between -3 and 3 to control how strongly wind should displace the model."
-      },
-      "invertDisplacementStrength": {
-        "type": "boolean",
-        "description": "Will invert the strength blend applied to the model, where vertices near the top will be effected less."
-      },
-      "depthBias": {
-        "type": "integer",
-        "description": "Specify our own depth bias, replacing the bias set by Jagex. Between 0-255."
-      },
-      "disablePrioritySorting": {
-        "type": "boolean",
-        "description": "Disable priority sorting, instead sorting solely based on distance. Useful for new models where Jagex provide incorrect priorities."
-      },
-      "setHue": {
-        "type": "integer",
-        "description": "Force a specific hue."
-      },
-      "shiftHue": {
-        "type": "integer",
-        "description": "Add or subtract from hue within the range defined by minHue and maxHue. Defaults to 0."
-      },
-      "minHue": {
-        "type": "integer",
-        "description": "Vertex colors with a lower hue value will be clamped to the specified min hue. Defaults to 0."
-      },
-      "maxHue": {
-        "type": "integer",
-        "description": "Vertex colors with a higher hue value will be clamped to the specified max hue. Defaults to 63."
-      },
-      "setSaturation": {
-        "type": "integer",
-        "description": "Force a specific saturation."
-      },
-      "shiftSaturation": {
-        "type": "integer",
-        "description": "Add or subtract from saturation within the range defined by minSaturation and maxSaturation. Defaults to 0."
-      },
-      "minSaturation": {
-        "type": "integer",
-        "description": "Vertex colors with a lower saturation value will be clamped to the specified min saturation. Defaults to 0."
-      },
-      "maxSaturation": {
-        "type": "integer",
-        "description": "Vertex colors with a higher saturation value will be clamped to the specified max saturation. Defaults to 7."
-      },
-      "setLightness": {
-        "type": "integer",
-        "description": "Force a specific lightness."
-      },
-      "shiftLightness": {
-        "type": "integer",
-        "description": "Add or subtract from lightness within the range defined by minLightness and maxLightness. Defaults to 0."
-      },
-      "minLightness": {
-        "type": "integer",
-        "description": "Vertex colors with a lower lightness value will be clamped to the specified min lightness. Defaults to 0."
-      },
-      "maxLightness": {
-        "type": "integer",
-        "description": "Vertex colors with a higher lightness value will be clamped to the specified max lightness. Defaults to 127."
-      },
-      "setAlpha": {
-        "type": "integer",
-        "description": "Force a specific alpha value, where 0 is fully transparent, 255 is fully opaque."
-      },
-      "shiftAlpha": {
-        "type": "integer",
-        "description": "Add or subtract from alpha value within the range defined by minAlpha and maxAlpha. Defaults to 0, where 0 is fully transparent, 255 is fully opaque."
-      },
-      "minAlpha": {
-        "type": "integer",
-        "description": "Vertex colors with a lower alpha value value will be clamped to the specified min alpha value. Defaults to 0, where 0 is fully transparent, 255 is fully opaque."
-      },
-      "maxAlpha": {
-        "type": "integer",
-        "description": "Vertex colors with a higher alpha value value will be clamped to the specified max alpha value. Defaults to 255, where 0 is fully transparent, 255 is fully opaque."
-      },
-      "heightOffset": {
-        "type": "integer",
-        "description": "Height offset to apply to the model, where negative values move the model upward."
-      },
-      "materialOverrides": {
-        "type": "object",
-        "description": "A subset of options can be tweaked separately for specific materials of the model.",
-        "additionalProperties": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [ "textureMaterial" ],
-          "properties": {
-            "description": {
-              "type": "string",
-              "description": "Description of which part of the object these properties apply to."
-            },
-            "textureMaterial": {
-              "type": "string",
-              "description": "Case-sensitive name of the material to apply to faces with this texture."
-            },
-            "uvType": {
-              "type": "string",
-              "description": "What to base UV coordinates on for object texturing. Defaults to GEOMETRY.",
-              "enum": [
-                "VANILLA",
-                "GEOMETRY",
-                "MODEL_XY",
-                "MODEL_XY_MIRROR_A",
-                "MODEL_XY_MIRROR_B",
-                "MODEL_XZ",
-                "MODEL_XZ_MIRROR_A",
-                "MODEL_XZ_MIRROR_B",
-                "MODEL_YZ",
-                "MODEL_YZ_MIRROR_A",
-                "MODEL_YZ_MIRROR_B",
-                "WORLD_XY",
-                "WORLD_XZ",
-                "WORLD_YZ",
-                "BOX"
-              ]
-            },
-            "uvScale": {
-              "type": "number",
-              "description": "A scaling factor to apply to UV coordinates. Defaults to 1."
-            },
-            "uvOrientation": {
-              "type": "integer",
-              "description": "Extra rotation to apply to UVs with 2048 corresponding to a complete rotation. Defaults to 0."
-            },
-            "uvOrientationX": {
-              "type": "integer",
-              "description": "Rotation around the X axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
-            },
-            "uvOrientationY": {
-              "type": "integer",
-              "description": "Rotation around the Y axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
-            },
-            "uvOrientationZ": {
-              "type": "integer",
-              "description": "Rotation around the Z axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
-            },
-            "hide": {
-              "type": "boolean",
-              "description": "Whether faces this override applies to should be hidden. Defaults to false."
-            },
-            "retainVanillaUvs": {
-              "type": "boolean",
-              "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."
-            },
-            "flatNormals": {
-              "type": "boolean",
-              "description": "Whether flat normals should be used instead of smooth normals. Defaults to false."
-            },
-            "upwardsNormals": {
-              "type": "boolean",
-              "description": "Whether normals should always point directly up. Defaults to false."
-            },
-            "castShadows": {
-              "type": "boolean",
-              "description": "Whether the model cast shadows. Defaults to true."
-            },
-            "receiveShadows": {
-              "type": "boolean",
-              "description": "Whether the model receive shadows cast by other objects. Defaults to true."
-            },
-            "doubleSidedFaces": {
-              "type": "boolean",
-              "description": "Whether triangles should be visible when viewed from either side. Defaults to false."
-            },
-            "terrainVertexSnap": {
-              "type": "boolean",
-              "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
-            },
-            "terrainVertexSnapThreshold": {
-              "type": "number",
-              "description": "The fraction along the models height defining the region of which vertices blend to the terrain surface. Defaults to 0.125."
-            },
-            "undoVanillaShading": {
-              "type": "boolean",
-              "description": "Whether the model should undo the baked phong shading in the vertex colours. Defaults to true."
-            },
-            "hideAsWaterEffect": {
-              "type": "boolean",
-              "description": "Whether the faces should be hidden when \"Hide vanilla water ripples\" is enabled. Defaults to false."
-            },
-            "shadowOpacityThreshold": {
-              "type": "number",
-              "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
-            },
-            "shadowNormalBias": {
-              "type": "boolean",
-              "description": "Whether to offset shadow receivers along their surface normal to prevent self-shadowing. Defaults to false."
-            },
-            "inheritTileColorType": {
-              "type": "string",
-              "description": "Whether to inherit color from the overlay or underlay of the tile beneath. Defaults to NONE.",
-              "enum": [ "NONE", "OVERLAY", "UNDERLAY" ]
-            },
-            "windDisplacementMode": {
-              "type": "string",
-              "description": "What type of wind displacement should be applied to the model. Defaults to DISABLED.",
-              "enum": [
-                "DISABLED",
-                "OBJECT",
-                "OBJECT_NO_GROUND_DISPLACEMENT",
-                "VERTEX",
-                "VERTEX_WITH_HEMISPHERE_BLEND",
-                "VERTEX_JIGGLE"
-              ]
-            },
-            "windDisplacementModifier": {
-              "type": "integer",
-              "description": "Modifier value between -3 and 3 to control how strongly wind should displace the model."
-            },
-            "invertDisplacementStrength": {
-              "type": "boolean",
-              "description": "Will invert the strength blend applied to the model, where vertices near the top will be effected less."
-            },
-            "depthBias": {
-              "type": "integer",
-              "description": "Specify our own depth bias, replacing the bias set by Jagex. Between 0-255."
-            },
-            "disablePrioritySorting": {
-              "type": "boolean",
-              "description": "Disable priority sorting, instead sorting solely based on distance. Useful for new models where Jagex provide incorrect priorities."
-            },
-            "setHue": {
-              "type": "integer",
-              "description": "Force a specific hue."
-            },
-            "shiftHue": {
-              "type": "integer",
-              "description": "Add or subtract from hue within the range defined by minHue and maxHue. Defaults to 0."
-            },
-            "minHue": {
-              "type": "integer",
-              "description": "Vertex colors with a lower hue value will be clamped to the specified min hue. Defaults to 0."
-            },
-            "maxHue": {
-              "type": "integer",
-              "description": "Vertex colors with a higher hue value will be clamped to the specified max hue. Defaults to 63."
-            },
-            "setSaturation": {
-              "type": "integer",
-              "description": "Force a specific saturation."
-            },
-            "shiftSaturation": {
-              "type": "integer",
-              "description": "Add or subtract from saturation within the range defined by minSaturation and maxSaturation. Defaults to 0."
-            },
-            "minSaturation": {
-              "type": "integer",
-              "description": "Vertex colors with a lower saturation value will be clamped to the specified min saturation. Defaults to 0."
-            },
-            "maxSaturation": {
-              "type": "integer",
-              "description": "Vertex colors with a higher saturation value will be clamped to the specified max saturation. Defaults to 7."
-            },
-            "setLightness": {
-              "type": "integer",
-              "description": "Force a specific lightness."
-            },
-            "shiftLightness": {
-              "type": "integer",
-              "description": "Add or subtract from lightness within the range defined by minLightness and maxLightness. Defaults to 0."
-            },
-            "minLightness": {
-              "type": "integer",
-              "description": "Vertex colors with a lower lightness value will be clamped to the specified min lightness. Defaults to 0."
-            },
-            "maxLightness": {
-              "type": "integer",
-              "description": "Vertex colors with a higher lightness value will be clamped to the specified max lightness. Defaults to 127."
-            },
-            "setAlpha": {
-              "type": "integer",
-              "description": "Force a specific alpha value, where 0 is fully transparent, 255 is fully opaque."
-            },
-            "shiftAlpha": {
-              "type": "integer",
-              "description": "Add or subtract from alpha value within the range defined by minAlpha and maxAlpha. Defaults to 0, where 0 is fully transparent, 255 is fully opaque."
-            },
-            "minAlpha": {
-              "type": "integer",
-              "description": "Vertex colors with a lower alpha value value will be clamped to the specified min alpha value. Defaults to 0, where 0 is fully transparent, 255 is fully opaque."
-            },
-            "maxAlpha": {
-              "type": "integer",
-              "description": "Vertex colors with a higher alpha value value will be clamped to the specified max alpha value. Defaults to 255, where 0 is fully transparent, 255 is fully opaque."
-            }
+    "$ref": "#/$defs/modelOverride",
+    "required": [
+      "description"
+    ]
+  },
+  "$defs": {
+    "modelOverride": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Description of which objects the properties apply to."
+        },
+        "seasonalTheme": {
+          "type": "string",
+          "description": "Which seasonal theme the model override should be active for, or null for all. Defaults to null.",
+          "enum": [
+            "SUMMER",
+            "AUTUMN",
+            "WINTER"
+          ]
+        },
+        "areas": {
+          "type": "array",
+          "description": "An array of bounding boxes and/or area enums specifying which areas the override should be limited to.",
+          "items": {
+            "$ref": "aabb.schema.json"
           }
-        }
-      },
-      "colorOverrides": {
-        "description": "A subset of options can be tweaked separately for a specific set of colors of the model.",
-        "type": "array",
-        "items": {
+        },
+        "npcIds": {
+          "type": "array",
+          "description": "A set of NPC gameval names which the override should apply to.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "objectIds": {
+          "type": "array",
+          "description": "A set of object gameval names which the override should apply to.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "projectileIds": {
+          "type": "array",
+          "description": "A set of projectile gameval names which the override should apply to.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "graphicsObjectIds": {
+          "type": "array",
+          "description": "A set of graphics object gameval names which the override should apply to.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "material": {
+          "type": "string",
+          "description": "Case-sensitive name of the material to apply to untextured faces."
+        },
+        "baseMaterial": {
+          "$ref": "#/$defs/modelOverride/properties/material",
+          "description": "Old alternative name for the `material` option."
+        },
+        "textureMaterial": {
+          "type": "string",
+          "description": "Case-sensitive name of the material to apply to textured faces."
+        },
+        "model": {
+          "type": "string",
+          "deprecated": true,
+          "description": "Development-only field, specifying the filename of a model to load UV mapping & face overrides from. Should not be committed."
+        },
+        "uvs": {
+          "type": "array",
+          "description": "Custom UVs for the whole model: [u1, v1, u2, v2, ...]. Requires 6 coordinates per face, and the face count must match the model's face count exactly.",
+          "minItems": 6,
+          "items": {
+            "type": "number"
+          }
+        },
+        "materials": {
+          "type": "array",
+          "description": "Overrides for specific faces listed in the `faces` field. Unspecified faces fall back to the parent override.",
+          "items": {
+            "$ref": "#/$defs/modelOverride",
+            "required": [
+              "faces"
+            ]
+          }
+        },
+        "uvType": {
+          "type": "string",
+          "description": "What to base UV coordinates on for object texturing. Defaults to GEOMETRY.",
+          "enum": [
+            "VANILLA",
+            "GEOMETRY",
+            "MODEL_XY",
+            "MODEL_XY_MIRROR_A",
+            "MODEL_XY_MIRROR_B",
+            "MODEL_XZ",
+            "MODEL_XZ_MIRROR_A",
+            "MODEL_XZ_MIRROR_B",
+            "MODEL_YZ",
+            "MODEL_YZ_MIRROR_A",
+            "MODEL_YZ_MIRROR_B",
+            "WORLD_XY",
+            "WORLD_XZ",
+            "WORLD_YZ",
+            "BOX"
+          ]
+        },
+        "uvScale": {
+          "type": "number",
+          "description": "A scaling factor to apply to UV coordinates. Defaults to 1."
+        },
+        "uvOrientation": {
+          "type": "integer",
+          "description": "Extra rotation to apply to UVs with 2048 corresponding to a complete rotation. Defaults to 0."
+        },
+        "uvOrientationX": {
+          "type": "integer",
+          "description": "Rotation around the X axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
+        },
+        "uvOrientationY": {
+          "type": "integer",
+          "description": "Rotation around the Y axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
+        },
+        "uvOrientationZ": {
+          "type": "integer",
+          "description": "Rotation around the Z axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
+        },
+        "rotate": {
+          "type": "integer",
+          "description": "Counter-clockwise rotation around the up-axis in degrees, where only 0, 90, 180 and 270 are allowed. Defaults to 0. Only works for static scene models."
+        },
+        "hide": {
+          "type": "boolean",
+          "description": "Whether models this override applies to should be hidden. Defaults to false."
+        },
+        "disableDetailCulling": {
+          "type": "boolean",
+          "description": "Whether the model should render regardless of the detail distance setting. Defaults to false."
+        },
+        "retainVanillaUvs": {
+          "type": "boolean",
+          "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."
+        },
+        "forceMaterialChanges": {
+          "type": "boolean",
+          "description": "Apply the override even when model textures are disabled in the config. Defaults to false."
+        },
+        "flatNormals": {
+          "type": "boolean",
+          "description": "Whether flat normals should be used instead of smooth normals. Defaults to false."
+        },
+        "upwardsNormals": {
+          "type": "boolean",
+          "description": "Whether normals should always point directly up. Defaults to false."
+        },
+        "hideVanillaShadows": {
+          "type": "boolean",
+          "description": "Whether the model has fake shadows which should be removed. Defaults to false."
+        },
+        "retainVanillaShadowsInPvm": {
+          "type": "boolean",
+          "description": "Whether the model has fake shadows which are potentially useful for PvM. Defaults to false."
+        },
+        "hideHdShadowsInPvm": {
+          "type": "boolean",
+          "description": "Whether shadow casting should be disabled when Vanilla Shadows is set to 'Prefer in PvM'. Defaults to false."
+        },
+        "castShadows": {
+          "type": "boolean",
+          "description": "Whether the model cast shadows. Defaults to true."
+        },
+        "receiveShadows": {
+          "type": "boolean",
+          "description": "Whether the model receive shadows cast by other objects. Defaults to true."
+        },
+        "doubleSidedFaces": {
+          "type": "boolean",
+          "description": "Whether triangles should be visible when viewed from either side. Defaults to false."
+        },
+        "terrainVertexSnap": {
+          "type": "boolean",
+          "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
+        },
+        "terrainVertexSnapThreshold": {
+          "type": "number",
+          "description": "The fraction along the models height defining the region of which vertices blend to the terrain surface. Defaults to 0.125."
+        },
+        "undoVanillaShading": {
+          "type": "boolean",
+          "description": "Whether the model should undo the baked phong shading in the vertex colours. Defaults to true."
+        },
+        "hideAsWaterEffect": {
+          "type": "boolean",
+          "description": "Whether the model should be hidden when \"Hide vanilla water ripples\" is enabled. Defaults to false."
+        },
+        "shadowOpacityThreshold": {
+          "type": "number",
+          "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
+        },
+        "shadowNormalBias": {
+          "type": "boolean",
+          "description": "Whether to offset shadow receivers along their surface normal to prevent self-shadowing. Defaults to false."
+        },
+        "tzHaarRecolorType": {
+          "type": "string",
+          "description": "Specify a type of TzHaar recolor style to apply. Only relevant for the TzHaar area.",
+          "enum": [
+            "NONE",
+            "GRADIENT",
+            "HUE_SHIFT"
+          ]
+        },
+        "inheritTileColorType": {
+          "type": "string",
+          "description": "Whether to inherit color from the overlay or underlay of the tile beneath. Defaults to NONE.",
+          "enum": [
+            "NONE",
+            "OVERLAY",
+            "UNDERLAY"
+          ]
+        },
+        "hideInAreas": {
+          "type": "array",
+          "description": "An array of bounding boxes and/or area enums specifying where the model should be hidden.",
+          "items": {
+            "$ref": "aabb.schema.json"
+          }
+        },
+        "windDisplacementMode": {
+          "type": "string",
+          "description": "What type of wind displacement should be applied to the model. Defaults to DISABLED.",
+          "enum": [
+            "DISABLED",
+            "OBJECT",
+            "OBJECT_NO_GROUND_DISPLACEMENT",
+            "VERTEX",
+            "VERTEX_WITH_HEMISPHERE_BLEND",
+            "VERTEX_JIGGLE"
+          ]
+        },
+        "windDisplacementModifier": {
+          "type": "integer",
+          "description": "Modifier value between -3 and 3 to control how strongly wind should displace the model."
+        },
+        "invertDisplacementStrength": {
+          "type": "boolean",
+          "description": "Will invert the strength blend applied to the model, where vertices near the top will be effected less."
+        },
+        "depthBias": {
+          "type": "integer",
+          "description": "Specify our own depth bias, replacing the bias set by Jagex. Between 0-255."
+        },
+        "disablePrioritySorting": {
+          "type": "boolean",
+          "description": "Disable priority sorting, instead sorting solely based on distance. Useful for new models where Jagex provide incorrect priorities."
+        },
+        "setHue": {
+          "type": "integer",
+          "description": "Force a specific hue."
+        },
+        "shiftHue": {
+          "type": "integer",
+          "description": "Add or subtract from hue within the range defined by minHue and maxHue. Defaults to 0."
+        },
+        "minHue": {
+          "type": "integer",
+          "description": "Vertex colors with a lower hue value will be clamped to the specified min hue. Defaults to 0."
+        },
+        "maxHue": {
+          "type": "integer",
+          "description": "Vertex colors with a higher hue value will be clamped to the specified max hue. Defaults to 63."
+        },
+        "setSaturation": {
+          "type": "integer",
+          "description": "Force a specific saturation."
+        },
+        "shiftSaturation": {
+          "type": "integer",
+          "description": "Add or subtract from saturation within the range defined by minSaturation and maxSaturation. Defaults to 0."
+        },
+        "minSaturation": {
+          "type": "integer",
+          "description": "Vertex colors with a lower saturation value will be clamped to the specified min saturation. Defaults to 0."
+        },
+        "maxSaturation": {
+          "type": "integer",
+          "description": "Vertex colors with a higher saturation value will be clamped to the specified max saturation. Defaults to 7."
+        },
+        "setLightness": {
+          "type": "integer",
+          "description": "Force a specific lightness."
+        },
+        "shiftLightness": {
+          "type": "integer",
+          "description": "Add or subtract from lightness within the range defined by minLightness and maxLightness. Defaults to 0."
+        },
+        "minLightness": {
+          "type": "integer",
+          "description": "Vertex colors with a lower lightness value will be clamped to the specified min lightness. Defaults to 0."
+        },
+        "maxLightness": {
+          "type": "integer",
+          "description": "Vertex colors with a higher lightness value will be clamped to the specified max lightness. Defaults to 127."
+        },
+        "setAlpha": {
+          "type": "integer",
+          "description": "Force a specific alpha value, where 0 is fully transparent, 255 is fully opaque."
+        },
+        "shiftAlpha": {
+          "type": "integer",
+          "description": "Add or subtract from alpha value within the range defined by minAlpha and maxAlpha. Defaults to 0, where 0 is fully transparent, 255 is fully opaque."
+        },
+        "minAlpha": {
+          "type": "integer",
+          "description": "Vertex colors with a lower alpha value value will be clamped to the specified min alpha value. Defaults to 0, where 0 is fully transparent, 255 is fully opaque."
+        },
+        "maxAlpha": {
+          "type": "integer",
+          "description": "Vertex colors with a higher alpha value value will be clamped to the specified max alpha value. Defaults to 255, where 0 is fully transparent, 255 is fully opaque."
+        },
+        "heightOffset": {
+          "type": "integer",
+          "description": "Height offset to apply to the model, where negative values move the model upward."
+        },
+        "materialOverrides": {
           "type": "object",
-          "additionalProperties": false,
-          "required": [ "baseMaterial", "colors" ],
-          "properties": {
-            "colors": {
-              "type": [ "array", "string", "integer" ],
-              "description": "One or more expressions or values to test the HSL color against. Available variables: `hsl`, `h`, `s`, `l`.",
-              "items": {
-                "type": [ "string", "integer" ]
+          "description": "Overrides for specific materials of the model.",
+          "additionalProperties": {
+            "$ref": "#/$defs/modelOverride",
+            "required": [
+              "textureMaterial"
+            ]
+          }
+        },
+        "colorOverrides": {
+          "description": "Overrides to apply to specific colors of the model, based on expressions provided in the `colors` field.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/modelOverride",
+            "required": [
+              "colors"
+            ],
+            "anyOf": [
+              {
+                "required": [
+                  "material"
+                ]
+              },
+              {
+                "required": [
+                  "baseMaterial"
+                ]
               }
-            },
-            "description": {
-              "type": "string",
-              "description": "Description of which part of the object these properties apply to."
-            },
-            "baseMaterial": {
-              "type": "string",
-              "description": "Case-sensitive name of the material to apply to faces which pass the color checks."
-            },
-            "uvType": {
-              "type": "string",
-              "description": "What to base UV coordinates on for object texturing. Defaults to GEOMETRY.",
-              "enum": [
-                "VANILLA",
-                "GEOMETRY",
-                "MODEL_XY",
-                "MODEL_XY_MIRROR_A",
-                "MODEL_XY_MIRROR_B",
-                "MODEL_XZ",
-                "MODEL_XZ_MIRROR_A",
-                "MODEL_XZ_MIRROR_B",
-                "MODEL_YZ",
-                "MODEL_YZ_MIRROR_A",
-                "MODEL_YZ_MIRROR_B",
-                "WORLD_XY",
-                "WORLD_XZ",
-                "WORLD_YZ",
-                "BOX"
-              ]
-            },
-            "uvScale": {
-              "type": "number",
-              "description": "A scaling factor to apply to UV coordinates. Defaults to 1."
-            },
-            "uvOrientation": {
-              "type": "integer",
-              "description": "Extra rotation to apply to UVs with 2048 corresponding to a complete rotation. Defaults to 0."
-            },
-            "uvOrientationX": {
-              "type": "integer",
-              "description": "Rotation around the X axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
-            },
-            "uvOrientationY": {
-              "type": "integer",
-              "description": "Rotation around the Y axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
-            },
-            "uvOrientationZ": {
-              "type": "integer",
-              "description": "Rotation around the Z axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
-            },
-            "hide": {
-              "type": "boolean",
-              "description": "Whether faces this override applies to should be hidden. Defaults to false."
-            },
-            "retainVanillaUvs": {
-              "type": "boolean",
-              "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."
-            },
-            "flatNormals": {
-              "type": "boolean",
-              "description": "Whether flat normals should be used instead of smooth normals. Defaults to false."
-            },
-            "upwardsNormals": {
-              "type": "boolean",
-              "description": "Whether normals should always point directly up. Defaults to false."
-            },
-            "castShadows": {
-              "type": "boolean",
-              "description": "Whether the model cast shadows. Defaults to true."
-            },
-            "receiveShadows": {
-              "type": "boolean",
-              "description": "Whether the model receive shadows cast by other objects. Defaults to true."
-            },
-            "doubleSidedFaces": {
-              "type": "boolean",
-              "description": "Whether triangles should be visible when viewed from either side. Defaults to false.2"
-            },
-            "terrainVertexSnap": {
-              "type": "boolean",
-              "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
-            },
-            "terrainVertexSnapThreshold": {
-              "type": "number",
-              "description": "The fraction along the models height defining the region of which vertices blend to the terrain surface. Defaults to 0.125."
-            },
-            "undoVanillaShading": {
-              "type": "boolean",
-              "description": "Whether the model should undo the baked phong shading in the vertex colours. Defaults to true."
-            },
-            "hideAsWaterEffect": {
-              "type": "boolean",
-              "description": "Whether the faces should be hidden when \"Hide vanilla water ripples\" is enabled. Defaults to false."
-            },
-            "shadowOpacityThreshold": {
-              "type": "number",
-              "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
-            },
-            "shadowNormalBias": {
-              "type": "boolean",
-              "description": "Whether to offset shadow receivers along their surface normal to prevent self-shadowing. Defaults to false."
-            },
-            "inheritTileColorType": {
-              "type": "string",
-              "description": "Whether to inherit color from the overlay or underlay of the tile beneath. Defaults to NONE.",
-              "enum": [ "NONE", "OVERLAY", "UNDERLAY" ]
-            },
-            "windDisplacementMode": {
-              "type": "string",
-              "description": "What type of wind displacement should be applied to the model. Defaults to DISABLED.",
-              "enum": [
-                "DISABLED",
-                "OBJECT",
-                "OBJECT_NO_GROUND_DISPLACEMENT",
-                "VERTEX",
-                "VERTEX_WITH_HEMISPHERE_BLEND",
-                "VERTEX_JIGGLE"
-              ]
-            },
-            "windDisplacementModifier": {
-              "type": "integer",
-              "description": "Modifier value between -3 and 3 to control how strongly wind should displace the model."
-            },
-            "invertDisplacementStrength": {
-              "type": "boolean",
-              "description": "Will invert the strength blend applied to the model, where vertices near the top will be effected less."
-            },
-            "depthBias": {
-              "type": "integer",
-              "description": "Specify our own depth bias, replacing the bias set by Jagex. Between 0-255."
-            },
-            "disablePrioritySorting": {
-              "type": "boolean",
-              "description": "Disable priority sorting, instead sorting solely based on distance. Useful for new models where Jagex provide incorrect priorities."
-            },
-            "setHue": {
-              "type": "integer",
-              "description": "Force a specific hue."
-            },
-            "shiftHue": {
-              "type": "integer",
-              "description": "Add or subtract from hue within the range defined by minHue and maxHue. Defaults to 0."
-            },
-            "minHue": {
-              "type": "integer",
-              "description": "Vertex colors with a lower hue value will be clamped to the specified min hue. Defaults to 0."
-            },
-            "maxHue": {
-              "type": "integer",
-              "description": "Vertex colors with a higher hue value will be clamped to the specified max hue. Defaults to 63."
-            },
-            "setSaturation": {
-              "type": "integer",
-              "description": "Force a specific saturation."
-            },
-            "shiftSaturation": {
-              "type": "integer",
-              "description": "Add or subtract from saturation within the range defined by minSaturation and maxSaturation. Defaults to 0."
-            },
-            "minSaturation": {
-              "type": "integer",
-              "description": "Vertex colors with a lower saturation value will be clamped to the specified min saturation. Defaults to 0."
-            },
-            "maxSaturation": {
-              "type": "integer",
-              "description": "Vertex colors with a higher saturation value will be clamped to the specified max saturation. Defaults to 7."
-            },
-            "setLightness": {
-              "type": "integer",
-              "description": "Force a specific lightness."
-            },
-            "shiftLightness": {
-              "type": "integer",
-              "description": "Add or subtract from lightness within the range defined by minLightness and maxLightness. Defaults to 0."
-            },
-            "minLightness": {
-              "type": "integer",
-              "description": "Vertex colors with a lower lightness value will be clamped to the specified min lightness. Defaults to 0."
-            },
-            "maxLightness": {
-              "type": "integer",
-              "description": "Vertex colors with a higher lightness value will be clamped to the specified max lightness. Defaults to 127."
-            },
-            "setAlpha": {
-              "type": "integer",
-              "description": "Force a specific alpha value, where 0 is fully transparent, 255 is fully opaque."
-            },
-            "shiftAlpha": {
-              "type": "integer",
-              "description": "Add or subtract from alpha value within the range defined by minAlpha and maxAlpha. Defaults to 0, where 0 is fully transparent, 255 is fully opaque."
-            },
-            "minAlpha": {
-              "type": "integer",
-              "description": "Vertex colors with a lower alpha value value will be clamped to the specified min alpha value. Defaults to 0, where 0 is fully transparent, 255 is fully opaque."
-            },
-            "maxAlpha": {
-              "type": "integer",
-              "description": "Vertex colors with a higher alpha value value will be clamped to the specified max alpha value. Defaults to 255, where 0 is fully transparent, 255 is fully opaque."
-            }
+            ]
+          }
+        },
+        "colors": {
+          "type": [
+            "array",
+            "string",
+            "integer"
+          ],
+          "description": "One or more expressions or values to test the HSL color against. Available variables: `hsl`, `h`, `s`, `l`.",
+          "items": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          }
+        },
+        "faces": {
+          "type": "array",
+          "description": "An array of face indices specified as a mix of either ranges like \"0-100\" or individual indices.",
+          "items": {
+            "oneOf": [
+              {
+                "type": "integer",
+                "minimum": 0
+              },
+              {
+                "type": "string",
+                "pattern": "^[0-9]+-[0-9]+$"
+              }
+            ]
           }
         }
       }

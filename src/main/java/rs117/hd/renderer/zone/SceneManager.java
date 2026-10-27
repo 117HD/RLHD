@@ -105,6 +105,7 @@ public class SceneManager {
 	private Zone[][] nextZones;
 	private final List<SortedZone> sortedZones = new ArrayList<>();
 	private boolean reloadRequested;
+	private List<WorldViewContext> frozenWorldViews;
 
 	public boolean isZoneStreamingEnabled() {
 		return plugin.configZoneStreaming;
@@ -150,6 +151,7 @@ public class SceneManager {
 		eventBus.unregister(this);
 
 		root.free();
+		freeFrozenWorldViews();
 		for (int i = 0; i < subs.length; i++) {
 			if (subs[i] != null)
 				subs[i].free();
@@ -308,10 +310,38 @@ public class SceneManager {
 				log.debug("Attempted to despawn unloaded worldview: {}", worldView);
 			} else {
 				lightManager.unloadWorldViewLights(sub.sceneContext);
-				sub.free();
+				freeWorldView(sub);
 				subs[worldViewId] = null;
 			}
 		}
+	}
+
+	private void freeWorldView(WorldViewContext ctx) {
+		if (!plugin.enableFreezeFrame) {
+			ctx.free();
+			return;
+		}
+
+		if (frozenWorldViews == null) {
+			frozenWorldViews = new ArrayList<>();
+			clientThread.invokeLater(() -> {
+				if (frozenWorldViews == null)
+					return true;
+				if (plugin.enableFreezeFrame)
+					return false;
+				freeFrozenWorldViews();
+				return true;
+			});
+		}
+		frozenWorldViews.add(ctx);
+	}
+
+	private void freeFrozenWorldViews() {
+		if (frozenWorldViews == null)
+			return;
+		for (int i = 0; i < frozenWorldViews.size(); i++)
+			frozenWorldViews.get(i).free();
+		frozenWorldViews = null;
 	}
 
 	public void reloadScene() {
@@ -525,7 +555,8 @@ public class SceneManager {
 					curZone.cull = true;
 
 					// Last minute chance for a streamed in zone to be reused
-					ctx.handleZoneSwap(x, z, false);
+					if (!plugin.enableFreezeFrame)
+						ctx.handleZoneSwap(x, z, false);
 					// Mark all zones to be culled, unless they get reused later
 					ctx.zones[x][z].cull = true;
 				}
@@ -537,7 +568,7 @@ public class SceneManager {
 			final int dx = scene.getBaseX() - prev.getBaseX() >> 3;
 			final int dy = scene.getBaseY() - prev.getBaseY() >> 3;
 
-			if (ctx.sceneContext != null &&
+			if (!plugin.enableFreezeFrame && ctx.sceneContext != null &&
 				prev.isInstance() == scene.isInstance() &&
 				client.getGameState() == GameState.LOGGED_IN && // only reuse for async loads to respect roof removal state changes
 				ctx.sceneContext.expandedMapLoadingChunks == nextSceneContext.expandedMapLoadingChunks &&
@@ -674,10 +705,8 @@ public class SceneManager {
 	}
 
 	public void swapScene(Scene scene) {
-		if (!plugin.isActive() || plugin.skipScene == scene) {
-			plugin.redrawPreviousFrame = true;
+		if (!plugin.isActive())
 			return;
-		}
 
 		if (scene.getWorldViewId() != WorldView.TOPLEVEL) {
 			swapSubScene(scene);
@@ -814,7 +843,7 @@ public class SceneManager {
 			prevCtx.streamingGroup.cancel();
 			clientThread.invoke(() -> {
 				lightManager.unloadWorldViewLights(prevCtx.sceneContext);
-				prevCtx.free();
+				freeWorldView(prevCtx);
 			});
 		}
 
