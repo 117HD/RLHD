@@ -1033,6 +1033,16 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean pohThemeEnvironments() { return true; }
 
+	String KEY_RECOLOR_GROUND_OBJECTS = "recolorGroundObjects";
+	@ConfigItem(
+		keyName = KEY_RECOLOR_GROUND_OBJECTS,
+		name = "Color-matched ground objects",
+		description = "Recolors grass and other small ground objects to match the tile's color.",
+		position = 18,
+		section = environmentSettings
+	)
+	default boolean recolorGroundObjects() { return true; }
+
 
 	/*====== Miscellaneous settings ======*/
 

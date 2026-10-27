@@ -448,6 +448,7 @@ public class HdPlugin extends Plugin {
 	public boolean configOverrideSky;
 	public boolean configReduceGlareIntensity;
 	public boolean configFrameSynchronization;
+	public boolean configRecolorGroundObjects;
 	public int configDetailDrawDistance;
 	public int configExpandedMapLoadingChunks;
 	public float configNightBrightness;
@@ -1839,6 +1840,7 @@ public class HdPlugin extends Plugin {
 		configSeasonalFoliage = config.seasonalFoliage();
 		configReduceGlareIntensity = config.glareIntensity() < 100;
 		configFrameSynchronization = config.frameSynchronization().get(true);
+		configRecolorGroundObjects = config.recolorGroundObjects();
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {
@@ -2037,6 +2039,7 @@ public class HdPlugin extends Plugin {
 								reloadScene = true;
 								break;
 							case KEY_HIDE_VANILLA_WATER_EFFECTS:
+							case KEY_RECOLOR_GROUND_OBJECTS:
 								reloadModelOverrides = true;
 								// fall-through
 							case KEY_VANILLA_SHADOW_MODE:
