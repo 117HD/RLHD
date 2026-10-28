@@ -749,18 +749,6 @@ public interface HdPluginConfig extends Config
 		return MoonPhase.DYNAMIC;
 	}
 
-	String KEY_REPLACE_VANILLA_SKYBOXES = "replaceVanillaSkyboxes";
-	@ConfigItem(
-		keyName = KEY_REPLACE_VANILLA_SKYBOXES,
-		name = "Replace vanilla skyboxes",
-		description = "Replace the game's built-in skybox models with 117 HD's own implementation.",
-		position = 6,
-		section = daylightCycleSettings
-	)
-	default boolean replaceVanillaSkyboxes() {
-		return true;
-	}
-
 	String KEY_CUSTOM_CYCLE_DURATION = "customCycleDurationMinutes";
 	@Range(min = 1)
 	@Units(Units.MINUTES)
@@ -768,7 +756,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_CUSTOM_CYCLE_DURATION,
 		name = "Custom cycle duration",
 		description = "Configures how long each Custom day & night cycle lasts.",
-		position = 7,
+		position = 6,
 		section = daylightCycleSettings
 	)
 	default int customCycleDurationMinutes() {
@@ -787,7 +775,7 @@ public interface HdPluginConfig extends Config
 			"For southern latitudes, use negative values. For more precise timing, you can provide<br>" +
 			"coordinates including decimals in the in-game chat with: <b>::117hd latlon &lt;latitude&gt; &lt;longitude&gt;</b><br>" +
 			"To return to using the values specified in the config panel, type: <b>::117hd latlon reset</b>",
-		position = 8,
+		position = 7,
 		section = daylightCycleSettings
 	)
 	default int latitudeDegrees() {
@@ -806,7 +794,7 @@ public interface HdPluginConfig extends Config
 			"For western longitudes, use negative values. For more precise timing, you can provide<br>" +
 			"coordinates including decimals in the in-game chat with: <b>::117hd latlon &lt;latitude&gt; &lt;longitude&gt;</b><br>" +
 			"To return to using the values specified in the config panel, type: <b>::117hd latlon reset</b>",
-		position = 9,
+		position = 8,
 		section = daylightCycleSettings
 	)
 	default int longitudeDegrees() {
@@ -1591,6 +1579,17 @@ public interface HdPluginConfig extends Config
 	)
 	default DefaultBoolean frameSynchronization() {
 		return DefaultBoolean.DEFAULT;
+	}
+
+	String KEY_REPLACE_VANILLA_SKYBOXES = "replaceVanillaSkyboxes";
+	@ConfigItem(
+		keyName = KEY_REPLACE_VANILLA_SKYBOXES,
+		name = "Replace vanilla skyboxes",
+		description = "Replace the game's built-in skybox models with 117 HD's own implementation.",
+		section = technicalSettings
+	)
+	default boolean replaceVanillaSkyboxes() {
+		return true;
 	}
 
 
