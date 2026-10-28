@@ -19770,6 +19770,26 @@
     ]
   },
   {
+    "description": "Nightmare of Ashihama - Magic Projectile Impact",
+    "offset": [ 0, 100, 0 ],
+    "radius": 275,
+    "strength": 10,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 900,
+    "waitForAnimation": true,
+    "color": [
+      255,
+      0,
+      166
+    ],
+    "type": "PULSE",
+    "duration": 1750,
+    "range": 20,
+    "graphicsObjectIds": [ "NIGHTMARE_MAGIC_IMPACT" ]
+  },
+  {
     "description": "Nightmare of Ashihama - Magic Projectile",
     "offset": [ 0, -50, 0 ],
     "radius": 250,
@@ -43372,9 +43392,9 @@
   },
   {
     "description": "Royal Titans - Branda Body Light Top",
-    "offset": [ 0, 550, 0 ],
+    "offset": [ 0, 580, 0 ],
     "radius": 400,
-    "strength": 15,
+    "strength": 50,
     "color": [
       255,
       124,
@@ -43455,8 +43475,45 @@
   {
     "description": "Royal Titans - Fire Elemental",
     "offset": [ 0, 100, 0 ],
+    "radius": 125,
+    "strength": 30,
+    "color": [
+      255,
+      124,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "npcIds": [ "RT_SUMMON_ELEMENTAL_FIRE" ],
+    "animationIds": [ -1, "FIRE_MINION_ATTACK01", "FIRE_MINION_SPAWN01" ],
+    "ignoreActorHiding": true,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200
+  },
+  {
+    "description": "Royal Titans - Fire Elemental - Death",
+    "offset": [ 0, 150, 0 ],
     "radius": 150,
-    "strength": 20,
+    "strength": 30,
+    "color": [
+      255,
+      124,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [ "FIRE_MINION_DEATH_SPOTANIM", "FIRE_MINION_EXPLODE_SPOTANIM" ],
+    "ignoreActorHiding": true,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200
+  },
+  {
+    "description": "Royal Titans - Fire Elemental Top",
+    "offset": [ 0, 200, 0 ],
+    "radius": 150,
+    "strength": 10,
     "color": [
       255,
       124,
@@ -43471,6 +43528,40 @@
     "fadeOutDuration": 200
   },
   {
+    "description": "Royal Titans - Ice Elemental - Top 1",
+    "offset": [ 0, 250, -40 ],
+    "radius": 225,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "npcIds": [ "RT_SUMMON_ELEMENTAL_ICE" ],
+    "animationIds": [ -1, "ICE_MINION_ATTACK01", "ICE_MINION_SPAWN01" ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
+    "ignoreActorHiding": true
+  },
+  {
+    "description": "Royal Titans - Ice Elemental - Top 2",
+    "offset": [ 0, 250, 40 ],
+    "radius": 225,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "npcIds": [ "RT_SUMMON_ELEMENTAL_ICE" ],
+    "animationIds": [ -1, "ICE_MINION_ATTACK01", "ICE_MINION_SPAWN01" ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
+    "ignoreActorHiding": true
+  },
+  {
     "description": "Royal Titans - Ice Elemental",
     "offset": [ 0, 150, 10 ],
     "radius": 225,
@@ -43483,6 +43574,7 @@
     "type": "STATIC",
     "npcIds": [ "RT_SUMMON_ELEMENTAL_ICE" ],
     "animationIds": [ -1, "ICE_MINION_ATTACK01", "ICE_MINION_SPAWN01" ],
+    "ignoreActorHiding": true,
     "fadeInDuration": 100,
     "fadeOutDuration": 200
   },
