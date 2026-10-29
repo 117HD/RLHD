@@ -91229,6 +91229,185 @@
     ]
   },
   {
+    "description": "Halloween Pumpkin",
+    "baseMaterial": "GRUNGE_3",
+    "uvScale": 0.7,
+    "uvType": "BOX",
+    "objectIds": [
+      "HW22_LANTERN_PUMPKIN01_GROUP05",
+      "HW22_LANTERN_PUMPKIN01_LIT01_SMALL02",
+      "HW22_LANTERN_TURNIP01_LIT01_GROUP01_2X2",
+      "HW22_LANTERN_TURNIP01_LIT01_GROUP04",
+      "HW22_LANTERN_TURNIP01_LIT01_GROUP01",
+      "HW22_LANTERN_PUMPKIN01_SMALL01",
+      "HW22_LANTERN_PUMPKIN01_ALT01_SMALL01_OFFSET02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 14 || h == 21 || h == 23 || h == 24",
+        "baseMaterial": "GRUNGE_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Halloween Stocks with Skeleton",
+    "baseMaterial": "GRUNGE_3",
+    "uvScale": 0.7,
+    "uvType": "BOX",
+    "objectIds": [
+      "HW22_DECORATION_SKELETON01_STOCKS01_2X2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientationY": 512
+      },
+      {
+        "colors": "h == 4 && s == 2",
+        "baseMaterial": "BURLAP",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientationY": 512
+      }
+    ]
+  },
+  {
+    "description": "Halloween Wall Beast",
+    "baseMaterial": "GRUNGE_3",
+    "uvScale": 0.7,
+    "uvType": "BOX",
+    "objectIds": [
+      "HW22_DECORATION_WALLBEAST01_CANDY01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 4 && s == 2",
+        "baseMaterial": "BURLAP",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientationY": 512
+      }
+    ]
+  },
+  {
+    "description": "Halloween Death Scarecrow",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.7,
+    "uvOrientation": 712,
+    "uvType": "BOX",
+    "objectIds": [
+      "HW22_DECORATION_REAPER01_SCARECROW01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 42",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "HD_HAY",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Halloween Shade Decoration",
+    "baseMaterial": "GRUNGE_3",
+    "uvScale": 0.7,
+    "uvType": "BOX",
+    "objectIds": [
+      "HW22_DECORATION_SHADE01_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 7",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Halloween Shade Decoration",
+    "baseMaterial": "GRUNGE_3",
+    "uvScale": 0.7,
+    "uvType": "BOX",
+    "objectIds": [
+      "HW22_DECORATION_SHADE01_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 7",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Halloween Skeleton Grave",
+    "baseMaterial": "GRUNGE_3",
+    "uvScale": 0.7,
+    "terrainVertexSnap": true,
+    "terrainVertexSnapThreshold": 0.01,
+    "uvType": "BOX",
+    "objectIds": [
+      "HW22_DECORATION_SKELETON01_GRAVESTONE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3",
+        "baseMaterial": "DIRT_1",
+        "terrainVertexSnap": true,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 42",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Halloween Webs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.7,
+    "uvOrientation": 712,
+    "uvType": "BOX",
+    "objectIds": [
+      "HW22_DECORATION_WEBBING01_LARGE01_SPIDER01_OFFSET01",
+      "HW22_DECORATION_WEBBING01_MEDIUM01",
+      "HW22_DECORATION_WEBBING01_MEDIUM01_SPIDER01",
+      "HW22_DECORATION_WEBBING01_LARGE01_OFFSET01",
+      "HW22_DECORATION_WEBBING01_SMALL01",
+      "HW22_DECORATION_WEBBING01_MEDIUM01_OFFSET01",
+      "HW22_DECORATION_WEBBING01_SMALL01_OFFSET01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 43",
+        "baseMaterial": "GROUND_WEB_1",
+        "shiftLightness": 5,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Farming patch border rocks",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",

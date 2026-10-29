@@ -39887,7 +39887,113 @@
     ]
   },
   {
-    "description": "HALLOWEEN_PUMPKIN_LARGE",
+    "description": "HALLOWEEN_TURNIP_LARGE",
+    "offset": [ 70, 15, -50 ],
+    "radius": 150,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "HW22_LANTERN_TURNIP01_LIT01_GROUP04"
+    ]
+  },
+  {
+    "description": "HALLOWEEN_TURNIP_LARGE_2",
+    "offset": [ 80, 15, 40 ],
+    "radius": 100,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "HW22_LANTERN_TURNIP01_LIT01_GROUP04"
+    ]
+  },
+  {
+    "description": "HALLOWEEN_TURNIP_LARGE_3",
+    "offset": [ -100, 15, -40 ],
+    "radius": 100,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "HW22_LANTERN_TURNIP01_LIT01_GROUP01_2X2",
+      "HW22_LANTERN_TURNIP01_LIT01_GROUP01"
+    ]
+  },
+  {
+    "description": "HALLOWEEN_TURNIP_LARGE_4",
+    "offset": [ 10, 15, -70 ],
+    "radius": 100,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "HW22_LANTERN_TURNIP01_LIT01_GROUP01_2X2",
+      "HW22_LANTERN_TURNIP01_LIT01_GROUP01"
+    ]
+  },
+  {
+    "description": "HALLOWEEN_TURNIP_LARGE_5",
+    "offset": [ -50, 15, -70 ],
+    "radius": 100,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "HW22_LANTERN_TURNIP01_LIT01_GROUP01_2X2",
+      "HW22_LANTERN_TURNIP01_LIT01_GROUP01"
+    ]
+  },
+  {
+    "description": "HALLOWEEN_TURNIP_LARGE_6",
+    "offset": [ 110, 15, -60 ],
+    "radius": 100,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "HW22_LANTERN_TURNIP01_LIT01_GROUP01",
+      "HW22_LANTERN_TURNIP01_LIT01_GROUP01_2X2"
+    ]
+  },
+  {
+    "description": "HALLOWEEN_PUMPKIN_LARGE_1",
     "height": 30,
     "radius": 150,
     "strength": 12.5,
@@ -39899,12 +40005,115 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 25,
-    "objectIds": [ "HW22_LANTERN_PUMPKIN01_LIT01_LARGE01" ]
+    "objectIds": [
+      "HW22_LANTERN_PUMPKIN01_LIT01_LARGE01"
+    ]
   },
   {
-    "description": "HALLOWEEN_PUMPKIN_SMALL",
-    "height": 15,
-    "alignment": "RIGHT",
+    "description": "HALLOWEEN_PUMPKIN_LARGE_2",
+    "offset": [ 0, 60, 0 ],
+    "radius": 35,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "HW22_LANTERN_PUMPKIN01_LIT01_GROUP01"
+    ]
+  },
+  {
+    "description": "HALLOWEEN_PUMPKIN_LARGE_3",
+    "offset": [ 0, 15, -80 ],
+    "radius": 175,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "HW22_LANTERN_PUMPKIN01_LIT01_GROUP01"
+    ]
+  },
+  {
+    "description": "HALLOWEEN_PUMPKIN_LARGE_4",
+    "offset": [ 65, 15, -95 ],
+    "radius": 75,
+    "strength": 8,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "HW22_LANTERN_PUMPKIN01_LIT01_GROUP01"
+    ]
+  },
+  {
+    "description": "HALLOWEEN_PUMPKIN_LARGE_5",
+    "offset": [ -65, 15, -85 ],
+    "radius": 75,
+    "strength": 8,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "HW22_LANTERN_PUMPKIN01_LIT01_GROUP01"
+    ]
+  },
+  {
+    "description": "HALLOWEEN_PUMPKIN_LARGE_6",
+    "offset": [ 105, 15, -55 ],
+    "radius": 75,
+    "strength": 8,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "HW22_LANTERN_PUMPKIN01_GROUP05"
+    ]
+  },
+  {
+    "description": "HALLOWEEN_PUMPKIN_LARGE_7",
+    "offset": [ -90, 15, -5 ],
+    "radius": 75,
+    "strength": 8,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "HW22_LANTERN_PUMPKIN01_GROUP05"
+    ]
+  },
+  {
+    "description": "HALLOWEEN_PUMPKIN_SMALL 1",
+    "offset": [ -50, 25, 0 ],
     "radius": 100,
     "strength": 11.5,
     "color": [
@@ -39915,7 +40124,100 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 25,
-    "objectIds": [ "HW22_LANTERN_PUMPKIN01_LIT01_SMALL02" ]
+    "objectIds": [
+      "HW22_LANTERN_PUMPKIN01_LIT01_SMALL02_OFFSET01",
+      "HW22_LANTERN_PUMPKIN01_LIT01_SMALL03_OFFSET02"
+    ]
+  },
+  {
+    "description": "HALLOWEEN_PUMPKIN_SMALL 2",
+    "offset": [ -30, 25, 0 ],
+    "radius": 100,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "HW22_LANTERN_PUMPKIN01_LIT01_SMALL02",
+      "HW22_LANTERN_PUMPKIN01_LIT01_SMALL02_RED01",
+      "HW22_LANTERN_PUMPKIN01_LIT01_SMALL02_BIEGE01",
+      "HW22_LANTERN_PUMPKIN01_LIT01_SMALL03",
+      "HW22_LANTERN_PUMPKIN01_LIT01_SMALL02_YELLOW01",
+      "HW22_LANTERN_PUMPKIN01_LIT01_SMALL03_OFFSET03"
+    ]
+  },
+  {
+    "description": "HALLOWEEN_PUMPKIN_SMALL 3",
+    "offset": [ -15, 25, 10 ],
+    "radius": 100,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "HW22_LANTERN_PUMPKIN01_LIT01_SMALL02_OFFSET02"
+    ]
+  },
+  {
+    "description": "HALLOWEEN_PUMPKIN_SMALL 4",
+    "offset": [ -33, 25, 25 ],
+    "radius": 100,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "HW22_LANTERN_PUMPKIN01_LIT01_SMALL03_OFFSET01"
+    ]
+  },
+  {
+    "description": "HALLOWEEN_PUMPKIN_SMALL_PURPLE",
+    "offset": [ -33, 25, 0 ],
+    "radius": 100,
+    "strength": 11.5,
+    "color": [
+      252,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "HW22_LANTERN_PUMPKIN01_LIT01_SMALL02_WHITE01"
+    ]
+  },
+  {
+    "description": "HALLOWEEN_PUMPKIN_SMALL_PURPLE",
+    "offset": [ -33, 25, 0 ],
+    "radius": 100,
+    "strength": 15,
+    "color": [
+      2,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "HW22_LANTERN_PUMPKIN01_LIT01_SMALL02_BLUE01"
+    ]
   },
   {
     "description": "FIRE_OF_DOMINATION",
