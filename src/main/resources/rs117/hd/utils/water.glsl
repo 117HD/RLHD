@@ -181,10 +181,14 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
             WATER_SPECULAR_REFLECTIONS != 0,
             0
         );
-        surfaceColor = linearToSrgb(sky.background * finalFresnel);
-        #if REDUCE_GLARE_INTENSITY
-            surfaceWithoutGlare = linearToSrgb(max(sky.background - sky.glare, vec3(0.0)) * finalFresnel);
+
+        #if !DECOUPLE_WATER_FROM_SKY_COLOR
+            surfaceColor = linearToSrgb(sky.background * finalFresnel);
+            #if REDUCE_GLARE_INTENSITY
+                surfaceWithoutGlare = linearToSrgb(max(sky.background - sky.glare, vec3(0.0)) * finalFresnel);
+            #endif
         #endif
+
         #if WATER_SPECULAR_REFLECTIONS
             // Only the active source has a shadow map. Do not shadow the other disk
             // with unrelated geometry projected along the active light's direction.
@@ -201,8 +205,12 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
                 sky.moon * uboSky.moonReflectionVisibility *
                     (moonOwnsShadowMap ? 1.0 - reflectionShadow * uboSky.moonShadowVisibility : 1.0);
         #endif
-    } else
+    }
+    #if !DECOUPLE_WATER_FROM_SKY_COLOR
+        // When not decoupling the water color, only run the old calculation when the sky is disabled
+        else
     #endif
+    #endif // DAYLIGHT_CYCLE
     if (finalFresnel < 0.5) {
         surfaceColor = mix(uboGlobal.waterColorDark, uboGlobal.waterColorMid, finalFresnel * 2);
     } else {
@@ -210,7 +218,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     }
 
     #if REDUCE_GLARE_INTENSITY
-        #if DAYLIGHT_CYCLE
+        #if DAYLIGHT_CYCLE && !DECOUPLE_WATER_FROM_SKY_COLOR
         if (!uboSky.enabled)
         #endif
             surfaceWithoutGlare = surfaceColor;

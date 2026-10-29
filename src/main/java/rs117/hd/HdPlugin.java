@@ -977,6 +977,7 @@ public class HdPlugin extends Plugin {
 			.define("MATERIAL_COUNT", MaterialManager.MATERIALS.length)
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
 			.define("WATER_SPECULAR_REFLECTIONS", config.waterSpecularReflections())
+			.define("DECOUPLE_WATER_FROM_SKY_COLOR", config.decoupleSkyAndWaterColor())
 			.define("DYNAMIC_LIGHTS", configDynamicLights != DynamicLights.NONE)
 			.define("TILED_LIGHTING", configTiledLighting)
 			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getTiledLightingLayers())
@@ -1997,6 +1998,7 @@ public class HdPlugin extends Plugin {
 							case KEY_NEBULAE:
 							case KEY_LEGACY_BOAT_SILHOUETTES:
 							case KEY_WATER_SPECULAR_REFLECTIONS:
+							case KEY_DECOUPLE_WATER_FROM_SKY_COLOR:
 							case KEY_CENTROID_QUALIFIER:
 								recompilePrograms = true;
 								break;
