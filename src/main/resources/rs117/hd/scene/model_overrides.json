@@ -91342,23 +91342,6 @@
     ]
   },
   {
-    "description": "Halloween Shade Decoration",
-    "baseMaterial": "GRUNGE_3",
-    "uvScale": 0.7,
-    "uvType": "BOX",
-    "objectIds": [
-      "HW22_DECORATION_SHADE01_DEFAULT01"
-    ],
-    "colorOverrides": [
-      {
-        "colors": "h > 7",
-        "baseMaterial": "CARPET_LIGHT",
-        "uvType": "BOX",
-        "uvScale": 0.7
-      }
-    ]
-  },
-  {
     "description": "Halloween Skeleton Grave",
     "baseMaterial": "GRUNGE_3",
     "uvScale": 0.7,
