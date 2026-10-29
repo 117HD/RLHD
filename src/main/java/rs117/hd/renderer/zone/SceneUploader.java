@@ -1960,7 +1960,7 @@ public class SceneUploader implements AutoCloseable {
 		boolean isModelPartiallyVisible,
 		ModelOverride modelOverride,
 		Model model,
-		boolean sortAllFaces,
+		boolean isPlayer,
 		int orientation,
 		float x, float y, float z
 	) {
@@ -2179,6 +2179,12 @@ public class SceneUploader implements AutoCloseable {
 
 			// back face culling
 			if ((aX - bX) * (cY - bY) - (cX - bX) * (aY - bY) <= 0) {
+				// Hide rogue black triangle which is part of some boot models
+				if (isPlayer && color3s[f] == 2 &&
+					verticesY[indices1[f]] == verticesY[indices2[f]] &&
+					verticesY[indices1[f]] == verticesY[indices3[f]])
+					continue;
+
 				culledFaces.put(f);
 				continue;
 			}
@@ -2188,7 +2194,7 @@ public class SceneUploader implements AutoCloseable {
 
 			// store distance for face sorting
 			if (faceDistances != null) {
-				if (shouldSort && (sortAllFaces || material.hasTransparency || transparency != 0)) {
+				if (shouldSort && (isPlayer || material.hasTransparency || transparency != 0)) {
 					final float aZ = modelProjected[offsetA + 2];
 					final float bZ = modelProjected[offsetB + 2];
 					final float cZ = modelProjected[offsetC + 2];
