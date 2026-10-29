@@ -47458,7 +47458,28 @@
     ]
   },
   {
-    "description": "TFA - Ocellus Fire Shard",
+    "description": "TFA - Ocellus Fire Shard Cast",
+    "offset": [ 0, 450, 0 ],
+    "radius": 400,
+    "strength": 25,
+    "fadeInDuration": 600,
+    "fadeOutDuration": 400,
+    "fixedDespawnTime": true,
+    "despawnDelay": 960,
+    "color": [
+      252,
+      70,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_FIRE_ATTACK01_SPOTANIM"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Fire Shard Projectile",
     "offset": [ 0, 0, 0 ],
     "radius": 200,
     "strength": 20,
