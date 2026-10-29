@@ -47458,6 +47458,103 @@
     ]
   },
   {
+    "description": "TFA - Ocellus Green Cracks",
+    "offset": [ 0, 75, 0 ],
+    "radius": 80,
+    "strength": 25,
+    "fadeInDuration": 50,
+    "fadeOutDuration": 200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P1_FLOOR_CRACK_01_END",
+      "VFX_OCELLUS_P1_FLOOR_CRACK_01_END_90",
+      "VFX_OCELLUS_P1_FLOOR_CRACK_01_END_180",
+      "VFX_OCELLUS_P1_FLOOR_CRACK_01_END_270",
+      "VFX_OCELLUS_P1_FLOOR_CRACK_02_END",
+      "VFX_OCELLUS_P1_FLOOR_CRACK_02_END_90",
+      "VFX_OCELLUS_P1_FLOOR_CRACK_02_END_180",
+      "VFX_OCELLUS_P1_FLOOR_CRACK_02_END_270",
+      "VFX_OCELLUS_P1_EXPLODE_FLOOR",
+      "VFX_OCELLUS_P1_EXPLODE_FLOOR_90",
+      "VFX_OCELLUS_P1_EXPLODE_FLOOR_180",
+      "VFX_OCELLUS_P1_EXPLODE_FLOOR_270"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Green Charge",
+    "offset": [ 0, 250, 125 ],
+    "radius": 280,
+    "strength": 15,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P1_CHARGE"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Purple Teleport Out",
+    "offset": [ 75, 220, 100 ],
+    "radius": 280,
+    "strength": 15,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 600,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "color": [
+      200,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P1_TELEPORT_OUT"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Purple Teleport Out",
+    "offset": [ -100, 220, 10 ],
+    "radius": 280,
+    "strength": 15,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 600,
+    "spawnDelay": 150,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1100,
+    "color": [
+      200,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P1_TELEPORT_IN"
+    ]
+  },
+  {
     "description": "TFA - Ocellus Fire Shard Cast",
     "offset": [ 0, 450, 0 ],
     "radius": 400,
@@ -47495,6 +47592,27 @@
     "range": 25,
     "projectileIds": [
       "VFX_OCELLUS_FIRE_ATTACK01_PROJANIM"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Fire Impact",
+    "offset": [ 0, 100, 0 ],
+    "radius": 150,
+    "strength": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 400,
+    "fixedDespawnTime": true,
+    "despawnDelay": 800,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_FIRE_ATTACK01_IMPACTANIM"
     ]
   },
   {

@@ -79365,6 +79365,26 @@
     ]
   },
   {
+    "description": "TFA - The Blade",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "TFA_THE_BLADE1",
+      "TFA_THE_BLADE1_IDLE0",
+      "TFA_THE_BLADE1_IDLE1",
+      "TFA_THE_BLADE1_IDLE2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s < 5",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "undoVanillaShading": false,
+        "uvOrientation": 150
+      }
+    ]
+  },
+  {
     "description": "TFA Lobby - Crystal Roots",
     "baseMaterial": "NONE",
     "objectIds": [
