@@ -12156,7 +12156,8 @@
       "KR_CHAIR",
       "KR_SMASHEDCHAIR",
       "KR_STOOL",
-      "KR_ROCKING_CHAIR"
+      "KR_ROCKING_CHAIR",
+      "TFA_CHAIR_NEXUS01"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -79364,6 +79365,29 @@
     ]
   },
   {
+    "description": "TFA - The Blade",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "TFA_THE_BLADE1",
+      "TFA_THE_BLADE1_IDLE0",
+      "TFA_THE_BLADE1_IDLE1",
+      "TFA_THE_BLADE1_IDLE2"
+    ],
+    "uvOrientation": 512,
+    "uvScale": 0.12,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s < 5",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "undoVanillaShading": false,
+        "uvOrientation": 150
+      }
+    ]
+  },
+  {
     "description": "TFA Lobby - Crystal Roots",
     "baseMaterial": "NONE",
     "objectIds": [
@@ -79580,20 +79604,50 @@
   },
   {
     "description": "TFA Lobby - Barrel",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "shiftLightness": 2,
+    "baseMaterial": "METALLIC_1_SMOOTH_LIGHT",
     "undoVanillaShading": false,
-    "uvType": "BOX",
-    "uvScale": 0.5,
     "objectIds": [
-      "TFA_BARREL_NEXUS01_EMPTY01"
+      "TFA_BARREL_NEXUS01_EMPTY01",
+      "TFA_BARREL_NEXUS01_RUNES01",
+      "TFA_BUCKET_NEXUS01_ARROWS01"
     ],
     "colorOverrides": [
       {
-        "description": "Metal",
-        "colors": "h == 10",
-        "baseMaterial": "METALLIC_1_SMOOTH_LIGHT",
-        "undoVanillaShading": false
+        "description": "Wood",
+        "colors": "h == 6 && s < 5 || h == 7 || h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftLightness": 2,
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Whetstone",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "minLightness": 25,
+    "objectIds": [
+      "TFA_WHETSTONE_NEXUS01_NOOP01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 7 || h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftLightness": 2,
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Water",
+        "colors": "h > 10",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.3
       }
     ]
   },
@@ -79808,7 +79862,9 @@
     "uvScale": 0.5,
     "undoVanillaShading": false,
     "objectIds": [
-      "TFA_BRAZIER_ARCHIVE01_DEFAULT01"
+      "TFA_BRAZIER_ARCHIVE01_DEFAULT01",
+      "TFA_BRAZIER_GUTHIXLOOT01_BASE01",
+      "TFA_BRAZIER_GUTHIXLOOT01_BASE01_MIRROR"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -79820,6 +79876,14 @@
         "shiftLightness": 2,
         "undoVanillaShading": false
       }
+    ]
+  },
+  {
+    "description": "TFA - Brazier Loot Flame",
+    "upwardsNormals": true,
+    "objectIds": [
+      "TFA_BRAZIER_GUTHIXLOOT01_FIRE01",
+      "TFA_BRAZIER_GUTHIXLOOT01_FIRE02"
     ]
   },
   {
@@ -80337,6 +80401,8 @@
     "baseMaterial": "SMOOTH_STONE",
     "castShadows": false,
     "uvOrientation": 256,
+    "undoVanillaShading": false,
+    "shiftLightness": 2,
     "uvScale": 2,
     "objectIds": [
       "TFA_WALLKIT_ARCHIVE02_SKULL02",
@@ -80378,7 +80444,7 @@
         "undoVanillaShading": false
       },
       {
-        "colors": "l == 2",
+        "colors": "h == 0 && l == 2 && s == 0",
         "baseMaterial": "PURE_BLACK"
       }
     ]
@@ -80466,11 +80532,13 @@
     "baseMaterial": "GRUNGE_3",
     "undoVanillaShading": false,
     "objectIds": [
-      "TFA_BOSS_TELEPORTER"
+      "TFA_BOSS_TELEPORTER",
+      "TFA_TELEPORTER_JELLY",
+      "TFA_TELEPORTER_MOIA"
     ],
     "colorOverrides": [
       {
-        "colors": "h < 10",
+        "colors": "h < 10 || h > 10 && s < 2",
         "baseMaterial": "LIGHT_BARK",
         "shiftLightness": 2,
         "undoVanillaShading": false
@@ -86494,7 +86562,6 @@
         "description": "Flame",
         "baseMaterial": "NONE",
         "colors": "a < 255",
-        "baseMaterial": "NONE",
         "upwardsNormals": true,
         "receiveShadows": false
       },
