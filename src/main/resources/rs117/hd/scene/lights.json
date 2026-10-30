@@ -47490,6 +47490,27 @@
     ]
   },
   {
+    "description": "TFA - Ocellus Green Cracks - Pet Version",
+    "offset": [ 0, 55, 0 ],
+    "radius": 55,
+    "strength": 15,
+    "fadeInDuration": 50,
+    "fadeOutDuration": 200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P1_EXPLODE_FLOOR_PET"
+    ]
+  },
+  {
     "description": "TFA - Ocellus Green Charge",
     "offset": [ 0, 250, 125 ],
     "radius": 280,
@@ -47552,6 +47573,136 @@
     "range": 25,
     "graphicsObjectIds": [
       "VFX_OCELLUS_P1_TELEPORT_IN"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Arm Grow Glow 1",
+    "offset": [ -50, 100, -100 ],
+    "radius": 180,
+    "strength": 14,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 1000,
+    "spawnDelay": 200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1500,
+    "color": [
+      180,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P2_TO_P3_ARM_GLOW01"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Arm Grow Glow 2",
+    "offset": [ -100, 150, -150 ],
+    "radius": 280,
+    "strength": 18,
+    "fadeInDuration": 600,
+    "fadeOutDuration": 400,
+    "spawnDelay": 500,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1175,
+    "color": [
+      180,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P2_TO_P3_ARM_GLOW01"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus The Blade Dislodge",
+    "offset": [ 0, 600, 0 ],
+    "radius": 600,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 600,
+    "spawnDelay": 1200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1100,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_SWORD_DROP"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus The Blade Impact",
+    "offset": [ 0, 100, 0 ],
+    "radius": 400,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 600,
+    "spawnDelay": 2350,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1100,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_SWORD_DROP"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus The Blade Dislodge Fire",
+    "offset": [ 0, 500, 0 ],
+    "radius": 400,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_SWORD_ROOT_FIRE"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus The Blade Dislodge Fire 2",
+    "offset": [ 0, 1200, 0 ],
+    "radius": 600,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 400,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1300,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_SWORD_ROOT_FIRE"
     ]
   },
   {
@@ -48470,7 +48621,7 @@
   {
     "description": "TFA - Brazier - Normal Loot",
     "offset": [ 20, 480, -50 ],
-    "radius": 800,
+    "radius": 1400,
     "strength": 15,
     "color": [
       252,
@@ -48502,9 +48653,9 @@
     ]
   },
   {
-    "description": "TFA - Brazier - Normal Loot",
+    "description": "TFA - Brazier - Rare Loot",
     "offset": [ 20, 480, -50 ],
-    "radius": 800,
+    "radius": 1400,
     "strength": 15,
     "color": [
       255,
@@ -48519,7 +48670,7 @@
     ]
   },
   {
-    "description": "TFA - Brazier - Normal Loot - Highlight",
+    "description": "TFA - Brazier - Rare Loot - Highlight",
     "offset": [ 20, 830, -50 ],
     "radius": 350,
     "strength": 25,
