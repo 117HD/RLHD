@@ -73,6 +73,7 @@ public class WaterType {
 			foamColor = NONE.foamColor;
 		if (depthColor == null)
 			depthColor = NONE.depthColor;
+		skipUnderwaterTerrain |= flat;
 	}
 
 	@Override

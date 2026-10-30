@@ -95,7 +95,7 @@
       },
       "skipUnderwaterTerrain": {
         "type": "boolean",
-        "description": "Skip generating the sunken underwater terrain beneath this water type, drawing only the water surface."
+        "description": "Skip generating underwater terrain for this water type, drawing only the water surface."
       }
     }
   }
