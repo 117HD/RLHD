@@ -47620,6 +47620,50 @@
     ]
   },
   {
+    "description": "TFA - Ocellus The Blade Charging 1",
+    "offset": [ 0, 600, 0 ],
+    "radius": 600,
+    "strength": 15,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 600,
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_SWORD_IDLE01"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus The Blade Charging 2",
+    "offset": [ 0, 600, 0 ],
+    "radius": 600,
+    "strength": 15,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 600,
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1450,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_SWORD_IDLE02"
+    ]
+  },
+  {
     "description": "TFA - Ocellus The Blade Dislodge",
     "offset": [ 0, 600, 0 ],
     "radius": 600,
@@ -47937,6 +47981,509 @@
     "range": 25,
     "projectileIds": [
       "VFX_OCELLUS_PORTAL_PROJECTILE"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse Explosion",
+    "offset": [ 0, 300, 0 ],
+    "radius": 600,
+    "strength": 15,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "fadeOutDuration": 350,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "graphicsObjectIds": [
+      "TFA_ARENA_COLLAPSING_EXPLOSION01",
+      "TFA_ARENA_COLLAPSING_EXPLOSION02",
+      "TFA_ARENA_COLLAPSING_EXPLOSION03",
+      "TFA_ARENA_COLLAPSING_EXPLOSION04"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse South 1",
+    "offset": [ 0, 100, 500 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "spawnDelay": 75,
+    "fadeOutDuration": 250,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_01"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse South 2",
+    "offset": [ 0, 100, 300 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 300,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_01"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse South 3",
+    "offset": [ 0, 100, 100 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 400,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_01"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse South 4",
+    "offset": [ 0, 100, -100 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 600,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_01"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse South 5",
+    "offset": [ 0, 100, -300 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 800,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_01"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse South 6",
+    "offset": [ 0, 100, -500 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 975,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_01"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse West 1",
+    "offset": [ 500, 100, 0 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "spawnDelay": 75,
+    "fadeOutDuration": 250,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_02"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse West 2",
+    "offset": [ 300, 100, 0 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 300,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_02"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse West 3",
+    "offset": [ 100, 100, 0 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 400,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_02"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse West 4",
+    "offset": [ -100, 100, 0 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 600,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_02"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse West 5",
+    "offset": [ -300, 100, 0 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 800,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_02"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse West 6",
+    "offset": [ -500, 100, 0 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 975,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_02"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse North 1",
+    "offset": [ 0, 100, -500 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "spawnDelay": 75,
+    "fadeOutDuration": 250,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_03"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse North 2",
+    "offset": [ 0, 100, -300 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 300,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_03"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse North 3",
+    "offset": [ 0, 100, -100 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 400,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_03"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse North 4",
+    "offset": [ 0, 100, 100 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 600,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_03"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse North 5",
+    "offset": [ 0, 100, 300 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 800,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_03"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse North 6",
+    "offset": [ 0, 100, 500 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 975,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_03"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse East 1",
+    "offset": [ -500, 100, 0 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "spawnDelay": 75,
+    "fadeOutDuration": 250,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_04"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse East 2",
+    "offset": [ -300, 100, 0 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 300,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_04"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse East 3",
+    "offset": [ -100, 100, 0 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 400,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_04"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse East 4",
+    "offset": [ 100, 100, 0 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 600,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_04"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse East 5",
+    "offset": [ 300, 100, 0 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 800,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_04"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse East 6",
+    "offset": [ 500, 100, 0 ],
+    "radius": 300,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 975,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_04"
     ]
   },
   {
