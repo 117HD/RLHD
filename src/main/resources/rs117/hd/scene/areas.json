@@ -12256,8 +12256,7 @@
     "name": "TFA_ARCHIVE_GUARDIAN",
     "regions": [
       16471
-    ],
-    "hideOtherAreas": true
+    ]
   },
   {
     "name": "TFA_BORK",
@@ -12290,6 +12289,12 @@
     ]
   },
   {
+    "name": "TFA_MOIA",
+    "regions": [
+      16216
+    ]
+  },
+  {
     "name": "TFA_OCELLUS",
     "regions": [
       16472
@@ -12310,7 +12315,8 @@
       "TFA_XARTH",
       "TFA_EZEKIEL",
       "TFA_DAGONHAI",
-      "TFA_OCELLUS"
+      "TFA_DREADNOTH",
+      "TFA_MOIA"
     ]
   },
   {
