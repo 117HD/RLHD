@@ -49039,6 +49039,7 @@
     "spawnDelay": 300,
     "waitForAnimation": true,
     "fadeInDuration": 700,
+    "spawnDelay": 300,
     "range": 10,
     "graphicsObjectIds": [
       "TFA_DAGONHAI_SARADOMIN_DAMAGE_TELEGRAPH_150"
@@ -49100,6 +49101,7 @@
     "type": "FLICKER",
     "duration": 0,
     "waitForAnimation": true,
+    "spawnDelay": 300,
     "fadeInDuration": 700,
     "range": 25,
     "graphicsObjectIds": [
