@@ -12263,50 +12263,43 @@
     "name": "TFA_BORK",
     "regions": [
       16727
-    ],
-    "hideOtherAreas": true
+    ]
   },
   {
     "name": "TFA_XARTH",
     "regions": [
       16726
-    ],
-    "hideOtherAreas": true
+    ]
   },
   {
     "name": "TFA_DAGONHAI",
     "regions": [
       16215
-    ],
-    "hideOtherAreas": true
+    ]
   },
   {
     "name": "TFA_EZEKIEL",
     "regions": [
       16214
-    ],
-    "hideOtherAreas": true
+    ]
   },
   {
     "name": "TFA_DREADNOTH",
     "regions": [
       16728
-    ],
-    "hideOtherAreas": true
+    ]
   },
   {
     "name": "TFA_OCELLUS",
     "regions": [
       16472
-    ],
-    "hideOtherAreas": true
+    ]
   },
   {
     "name": "TFA_REWARD_ROOM",
     "regions": [
       16474
-    ],
-    "hideOtherAreas": true
+    ]
   },
   {
     "name": "TFA",
@@ -12316,9 +12309,9 @@
       "TFA_BORK",
       "TFA_XARTH",
       "TFA_EZEKIEL",
-      "TFA_DAGONHAI"
-    ],
-    "hideOtherAreas": true
+      "TFA_DAGONHAI",
+      "TFA_OCELLUS"
+    ]
   },
   {
     "name": "TFA_XARTH_FISH_TANK",

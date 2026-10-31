@@ -80575,6 +80575,29 @@
     ]
   },
   {
+    "description": "TFA - Ocellus Purple Floor Dodge Pool",
+    "baseMaterial": "NONE",
+    "upwardsNormals": true,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P2_AOE_DODGE"
+    ]
+  },
+  {
+    "description": "TFA - Apply Void Shader to some NPCs who use vertex colours rather than the actual texture",
+    "baseMaterial": "NONE",
+    "npcIds": [
+      "TFA_OCELLUS_P2",
+      "TFA_OCELLUS_P3",
+      "TFA_BLADE_NPC_VAULT_ENTRY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 63 && s > 0",
+        "baseMaterial": "TFA_VOID"
+      }
+    ]
+  },
+  {
     "description": "TFA - Branches Only",
     "baseMaterial": "LIGHT_BARK",
     "uvType": "BOX",
@@ -80644,15 +80667,6 @@
         "uvType": "BOX",
         "undoVanillaShading": false
       }
-    ]
-  },
-  {
-    "description": "TFA Dreadnoth Room - Jelly Range Attack",
-    "undoVanillaShading": false,
-    "minLightness": 30,
-    "shiftLightness": 10,
-    "projectileIds": [
-      "VFX_DREADNOTH_RANGED_PROJ01"
     ]
   },
   {

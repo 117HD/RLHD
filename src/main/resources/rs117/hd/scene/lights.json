@@ -31868,6 +31868,7 @@
     "description": "DRAGON_FIRE_ARROWS",
     "offset": [ 0, -10, 55 ],
     "radius": 200,
+    "fadeOutDuration": 150,
     "strength": 6.3,
     "color": [
       252,
@@ -31896,6 +31897,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
+    "fadeOutDuration": 150,
     "range": 30,
     "fadeInDuration": 300,
     "projectileIds": [
@@ -47817,10 +47819,11 @@
     "offset": [ 0, 250, 125 ],
     "radius": 280,
     "strength": 15,
-    "fadeInDuration": 300,
+    "fadeInDuration": 200,
     "fadeOutDuration": 600,
     "fixedDespawnTime": true,
-    "despawnDelay": 1000,
+    "despawnDelay": 1050,
+    "spawnDelay": 100,
     "color": [
       0,
       255,
@@ -47968,8 +47971,8 @@
   {
     "description": "TFA - Ocellus The Blade Dislodge",
     "offset": [ 0, 600, 0 ],
-    "radius": 600,
-    "strength": 15,
+    "radius": 800,
+    "strength": 12.5,
     "fadeInDuration": 100,
     "fadeOutDuration": 600,
     "spawnDelay": 1200,
@@ -47989,9 +47992,9 @@
   },
   {
     "description": "TFA - Ocellus The Blade Impact",
-    "offset": [ 0, 100, 0 ],
-    "radius": 400,
-    "strength": 15,
+    "offset": [ 0, 200, 0 ],
+    "radius": 650,
+    "strength": 20,
     "fadeInDuration": 100,
     "fadeOutDuration": 600,
     "spawnDelay": 2350,
@@ -48248,7 +48251,7 @@
   },
   {
     "description": "TFA - Ocellus Purple Floor Aoe",
-    "offset": [ 0, 25, 0 ],
+    "offset": [ 0, 50, 0 ],
     "radius": 120,
     "strength": 10,
     "color": [
@@ -48288,9 +48291,10 @@
   {
     "description": "TFA - Ocellus Platform Collapse Explosion",
     "offset": [ 0, 300, 0 ],
-    "radius": 600,
-    "strength": 15,
+    "radius": 700,
+    "strength": 18,
     "fixedDespawnTime": true,
+    "waitForAnimation": true,
     "despawnDelay": 500,
     "fadeOutDuration": 350,
     "color": [
@@ -48315,6 +48319,8 @@
     "strength": 15,
     "fadeInDuration": 100,
     "spawnDelay": 75,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3400,
     "fadeOutDuration": 250,
     "color": [
       150,
@@ -48336,6 +48342,8 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3175,
     "color": [
       150,
       0,
@@ -48356,6 +48364,8 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 400,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3075,
     "color": [
       150,
       0,
@@ -48376,6 +48386,8 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2875,
     "color": [
       150,
       0,
@@ -48396,6 +48408,8 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2675,
     "color": [
       150,
       0,
@@ -48416,6 +48430,8 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 975,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2500,
     "color": [
       150,
       0,
@@ -48435,6 +48451,8 @@
     "strength": 15,
     "fadeInDuration": 100,
     "spawnDelay": 75,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3400,
     "fadeOutDuration": 250,
     "color": [
       150,
@@ -48456,6 +48474,8 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3175,
     "color": [
       150,
       0,
@@ -48476,6 +48496,8 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 400,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3075,
     "color": [
       150,
       0,
@@ -48496,6 +48518,8 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2875,
     "color": [
       150,
       0,
@@ -48516,6 +48540,8 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2675,
     "color": [
       150,
       0,
@@ -48536,6 +48562,8 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 975,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2500,
     "color": [
       150,
       0,
@@ -48555,6 +48583,8 @@
     "strength": 15,
     "fadeInDuration": 100,
     "spawnDelay": 75,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3400,
     "fadeOutDuration": 250,
     "color": [
       150,
@@ -48576,6 +48606,8 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3175,
     "color": [
       150,
       0,
@@ -48596,6 +48628,8 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 400,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3075,
     "color": [
       150,
       0,
@@ -48616,6 +48650,8 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2875,
     "color": [
       150,
       0,
@@ -48636,6 +48672,8 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2675,
     "color": [
       150,
       0,
@@ -48656,6 +48694,8 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 975,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2500,
     "color": [
       150,
       0,
@@ -48675,6 +48715,8 @@
     "strength": 15,
     "fadeInDuration": 100,
     "spawnDelay": 75,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3400,
     "fadeOutDuration": 250,
     "color": [
       150,
@@ -48696,6 +48738,8 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3175,
     "color": [
       150,
       0,
@@ -48716,6 +48760,8 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 400,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3075,
     "color": [
       150,
       0,
@@ -48736,6 +48782,8 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2875,
     "color": [
       150,
       0,
@@ -48756,6 +48804,8 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2675,
     "color": [
       150,
       0,
@@ -48776,6 +48826,8 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 975,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2500,
     "color": [
       150,
       0,
@@ -48940,7 +48992,7 @@
     "description": "TFA Dagon'hai Lightning Strike Dodge",
     "offset": [ 0, 100, 0 ],
     "radius": 135,
-    "strength": 15,
+    "strength": 25,
     "color": [
       0,
       230,
@@ -48959,15 +49011,16 @@
   {
     "description": "TFA Dagon'hai Lightning Strike Telegraph",
     "offset": [ 0, 100, 0 ],
-    "radius": 100,
-    "strength": 25,
+    "radius": 90,
+    "strength": 50,
     "color": [
       0,
-      200,
+      230,
       255
     ],
     "type": "FLICKER",
     "duration": 0,
+    "spawnDelay": 300,
     "waitForAnimation": true,
     "fadeInDuration": 700,
     "range": 10,
