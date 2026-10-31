@@ -8,10 +8,17 @@
 #define VOID_NEAR_DEPTH 0.3
 #define VOID_MID_DEPTH 0.8
 #define VOID_FAR_DEPTH 1.8
-// Fraction of cells holding a star
-#define VOID_STAR_DENSITY 0.08
+// Fraction of cells holding a star, per layer
+#define VOID_NEAR_DENSITY 0.14
+#define VOID_MID_DENSITY 0.14
+#define VOID_FAR_DENSITY 0.07
 // Star radius as a fraction of its cell, so stars shrink with the surface as the camera zooms out
-#define VOID_STAR_SIZE 0.05
+#define VOID_STAR_SIZE 0.08
+// Star radius limits in pixels. Stars smaller than the minimum are dimmed rather than shrunk.
+#define VOID_STAR_MIN_RADIUS 1.25
+#define VOID_STAR_MAX_RADIUS 2.5
+// Overall star brightness
+#define VOID_STAR_BRIGHTNESS 6.0
 
 // Unit Gaussians & smooth noise from star_vert, for the sky stars' scintillation
 vec3 voidStarGaussian(vec2 seed) {
@@ -52,11 +59,11 @@ vec3 voidStarScintillation(vec2 starHash, vec3 position, float size, float brigh
 }
 
 // One layer of stars on a grid in UV space. pixelsPerUv maps UV offsets to screen pixels, accounting for the surface's angle.
-vec3 voidStarLayer(vec2 uv, float cellsPerUv, mat2 pixelsPerUv, float uvPerPixel, float seed) {
+vec3 voidStarLayer(vec2 uv, float cellsPerUv, float density, mat2 pixelsPerUv, float uvPerPixel, float seed) {
     vec2 grid = uv * cellsPerUv;
     vec2 cell = floor(grid);
     vec4 h = hash42(cell + seed * 1013.0);
-    if (h.x > VOID_STAR_DENSITY)
+    if (h.x > density)
         return vec3(0);
 
     // Skip cells under 2 pixels across, where stars have already dimmed to nothing
@@ -70,7 +77,7 @@ vec3 voidStarLayer(vec2 uv, float cellsPerUv, mat2 pixelsPerUv, float uvPerPixel
     // Like the sky's own star sprites, keep radii within a small pixel range, with the same falloff, and dim stars
     // below that rather than shrinking them, so they neither balloon when close nor blur or flicker when far
     float trueRadius = VOID_STAR_SIZE * mix(0.6, 1.4, h.w * h.w) / max(cellsPerPixel, 1e-6);
-    float radius = clamp(trueRadius, 1.25, 4.0);
+    float radius = clamp(trueRadius, VOID_STAR_MIN_RADIUS, VOID_STAR_MAX_RADIUS);
     float d = pixels / radius;
     float falloff = exp(-d * d * 4.4);
 
@@ -78,7 +85,7 @@ vec3 voidStarLayer(vec2 uv, float cellsPerUv, mat2 pixelsPerUv, float uvPerPixel
     float brightness = baseBrightness * min(1.0, trueRadius * trueRadius / (radius * radius));
     vec3 tint = mix(vec3(0.75, 0.85, 1.0), vec3(1.0, 0.9, 0.7), h.y);
     vec3 twinkle = voidStarScintillation(hash23(vec3(cell, seed)), vec3(starPos / cellsPerUv * 12.0, seed), h.w * h.w, baseBrightness);
-    return tint * twinkle * brightness * falloff * 4.0;
+    return tint * twinkle * brightness * falloff * VOID_STAR_BRIGHTNESS;
 }
 
 // Linear sRGB of a starry void seen into a surface: a dark background & stars, layered at
@@ -117,8 +124,8 @@ vec3 sampleVoidShader(vec3 position, vec3 normal, vec3 viewDir, vec3 dPdx, vec3 
 
     vec3 color = STARFIELD_BACKGROUND_COLOR;
     // Nearer layers have fewer, larger-looking stars
-    color += voidStarLayer(uv + shift * VOID_NEAR_DEPTH, 6.0, pixelsPerUv, uvPerPixel, 1.0);
-    color += voidStarLayer(uv + shift * VOID_MID_DEPTH, 10.0, pixelsPerUv, uvPerPixel, 2.0) * 0.7;
-    color += voidStarLayer(uv + shift * VOID_FAR_DEPTH, 16.0, pixelsPerUv, uvPerPixel, 3.0) * 0.5;
+    color += voidStarLayer(uv + shift * VOID_NEAR_DEPTH, 6.0, VOID_NEAR_DENSITY, pixelsPerUv, uvPerPixel, 1.0);
+    color += voidStarLayer(uv + shift * VOID_MID_DEPTH, 10.0, VOID_MID_DENSITY, pixelsPerUv, uvPerPixel, 2.0) * 0.7;
+    color += voidStarLayer(uv + shift * VOID_FAR_DEPTH, 16.0, VOID_FAR_DENSITY, pixelsPerUv, uvPerPixel, 3.0) * 0.5;
     return color;
 }
