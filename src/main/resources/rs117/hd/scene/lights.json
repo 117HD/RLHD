@@ -48296,6 +48296,7 @@
     "fixedDespawnTime": true,
     "waitForAnimation": true,
     "despawnDelay": 500,
+    "spawnDelay": 200,
     "fadeOutDuration": 350,
     "color": [
       150,
