@@ -47244,6 +47244,28 @@
     ]
   },
   {
+    "description": "Xarth - Pillar Collpase Fire",
+    "offset": [ 0, 300, 0 ],
+    "radius": 350,
+    "strength": 16,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1400,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "fadeInDuration": 0,
+    "fadeOutDuration": 600,
+    "range": 20,
+    "graphicsObjectIds": [
+      "VFX_XARTH_RUBBLE_COLLAPSE_01"
+    ]
+  },
+  {
     "description": "Xarth - Flaming Zombie",
     "offset": [ 0, 150, 0 ],
     "radius": 200,
@@ -47931,9 +47953,6 @@
     "strength": 15,
     "fadeInDuration": 400,
     "fadeOutDuration": 600,
-    "spawnDelay": 100,
-    "fixedDespawnTime": true,
-    "despawnDelay": 1200,
     "color": [
       150,
       0,
@@ -47942,8 +47961,8 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 25,
-    "graphicsObjectIds": [
-      "VFX_OCELLUS_SWORD_IDLE01"
+    "objectIds": [
+      "TFA_THE_BLADE1_IDLE1"
     ]
   },
   {
@@ -47953,9 +47972,6 @@
     "strength": 15,
     "fadeInDuration": 400,
     "fadeOutDuration": 600,
-    "spawnDelay": 100,
-    "fixedDespawnTime": true,
-    "despawnDelay": 1450,
     "color": [
       150,
       0,
@@ -47964,8 +47980,8 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 25,
-    "graphicsObjectIds": [
-      "VFX_OCELLUS_SWORD_IDLE02"
+    "objectIds": [
+      "TFA_THE_BLADE1_IDLE2"
     ]
   },
   {
@@ -48295,8 +48311,7 @@
     "strength": 18,
     "fixedDespawnTime": true,
     "waitForAnimation": true,
-    "despawnDelay": 500,
-    "spawnDelay": 200,
+    "despawnDelay": 450,
     "fadeOutDuration": 350,
     "color": [
       150,
@@ -48316,12 +48331,12 @@
   {
     "description": "TFA - Ocellus Platform Collapse South 1",
     "offset": [ 0, 100, 500 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "spawnDelay": 75,
     "fixedDespawnTime": true,
-    "despawnDelay": 3400,
+    "despawnDelay": 3700,
     "fadeOutDuration": 250,
     "color": [
       150,
@@ -48338,13 +48353,13 @@
   {
     "description": "TFA - Ocellus Platform Collapse South 2",
     "offset": [ 0, 100, 300 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 300,
     "fixedDespawnTime": true,
-    "despawnDelay": 3175,
+    "despawnDelay": 3475,
     "color": [
       150,
       0,
@@ -48360,13 +48375,13 @@
   {
     "description": "TFA - Ocellus Platform Collapse South 3",
     "offset": [ 0, 100, 100 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 400,
     "fixedDespawnTime": true,
-    "despawnDelay": 3075,
+    "despawnDelay": 3375,
     "color": [
       150,
       0,
@@ -48382,13 +48397,13 @@
   {
     "description": "TFA - Ocellus Platform Collapse South 4",
     "offset": [ 0, 100, -100 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 600,
     "fixedDespawnTime": true,
-    "despawnDelay": 2875,
+    "despawnDelay": 3175,
     "color": [
       150,
       0,
@@ -48404,13 +48419,13 @@
   {
     "description": "TFA - Ocellus Platform Collapse South 5",
     "offset": [ 0, 100, -300 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 800,
     "fixedDespawnTime": true,
-    "despawnDelay": 2675,
+    "despawnDelay": 2975,
     "color": [
       150,
       0,
@@ -48426,13 +48441,13 @@
   {
     "description": "TFA - Ocellus Platform Collapse South 6",
     "offset": [ 0, 100, -500 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 975,
     "fixedDespawnTime": true,
-    "despawnDelay": 2500,
+    "despawnDelay": 2800,
     "color": [
       150,
       0,
@@ -48448,12 +48463,12 @@
   {
     "description": "TFA - Ocellus Platform Collapse West 1",
     "offset": [ 500, 100, 0 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "spawnDelay": 75,
     "fixedDespawnTime": true,
-    "despawnDelay": 3400,
+    "despawnDelay": 3700,
     "fadeOutDuration": 250,
     "color": [
       150,
@@ -48470,13 +48485,13 @@
   {
     "description": "TFA - Ocellus Platform Collapse West 2",
     "offset": [ 300, 100, 0 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 300,
     "fixedDespawnTime": true,
-    "despawnDelay": 3175,
+    "despawnDelay": 3475,
     "color": [
       150,
       0,
@@ -48492,13 +48507,13 @@
   {
     "description": "TFA - Ocellus Platform Collapse West 3",
     "offset": [ 100, 100, 0 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 400,
     "fixedDespawnTime": true,
-    "despawnDelay": 3075,
+    "despawnDelay": 3375,
     "color": [
       150,
       0,
@@ -48514,13 +48529,13 @@
   {
     "description": "TFA - Ocellus Platform Collapse West 4",
     "offset": [ -100, 100, 0 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 600,
     "fixedDespawnTime": true,
-    "despawnDelay": 2875,
+    "despawnDelay": 3175,
     "color": [
       150,
       0,
@@ -48536,13 +48551,13 @@
   {
     "description": "TFA - Ocellus Platform Collapse West 5",
     "offset": [ -300, 100, 0 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 800,
     "fixedDespawnTime": true,
-    "despawnDelay": 2675,
+    "despawnDelay": 2975,
     "color": [
       150,
       0,
@@ -48558,13 +48573,13 @@
   {
     "description": "TFA - Ocellus Platform Collapse West 6",
     "offset": [ -500, 100, 0 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 975,
     "fixedDespawnTime": true,
-    "despawnDelay": 2500,
+    "despawnDelay": 2800,
     "color": [
       150,
       0,
@@ -48580,12 +48595,12 @@
   {
     "description": "TFA - Ocellus Platform Collapse North 1",
     "offset": [ 0, 100, -500 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "spawnDelay": 75,
     "fixedDespawnTime": true,
-    "despawnDelay": 3400,
+    "despawnDelay": 3700,
     "fadeOutDuration": 250,
     "color": [
       150,
@@ -48602,13 +48617,13 @@
   {
     "description": "TFA - Ocellus Platform Collapse North 2",
     "offset": [ 0, 100, -300 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 300,
     "fixedDespawnTime": true,
-    "despawnDelay": 3175,
+    "despawnDelay": 3475,
     "color": [
       150,
       0,
@@ -48624,13 +48639,13 @@
   {
     "description": "TFA - Ocellus Platform Collapse North 3",
     "offset": [ 0, 100, -100 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 400,
     "fixedDespawnTime": true,
-    "despawnDelay": 3075,
+    "despawnDelay": 3375,
     "color": [
       150,
       0,
@@ -48646,13 +48661,13 @@
   {
     "description": "TFA - Ocellus Platform Collapse North 4",
     "offset": [ 0, 100, 100 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 600,
     "fixedDespawnTime": true,
-    "despawnDelay": 2875,
+    "despawnDelay": 3175,
     "color": [
       150,
       0,
@@ -48668,13 +48683,13 @@
   {
     "description": "TFA - Ocellus Platform Collapse North 5",
     "offset": [ 0, 100, 300 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 800,
     "fixedDespawnTime": true,
-    "despawnDelay": 2675,
+    "despawnDelay": 2975,
     "color": [
       150,
       0,
@@ -48690,13 +48705,13 @@
   {
     "description": "TFA - Ocellus Platform Collapse North 6",
     "offset": [ 0, 100, 500 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 975,
     "fixedDespawnTime": true,
-    "despawnDelay": 2500,
+    "despawnDelay": 2800,
     "color": [
       150,
       0,
@@ -48712,12 +48727,12 @@
   {
     "description": "TFA - Ocellus Platform Collapse East 1",
     "offset": [ -500, 100, 0 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "spawnDelay": 75,
     "fixedDespawnTime": true,
-    "despawnDelay": 3400,
+    "despawnDelay": 3700,
     "fadeOutDuration": 250,
     "color": [
       150,
@@ -48734,13 +48749,13 @@
   {
     "description": "TFA - Ocellus Platform Collapse East 2",
     "offset": [ -300, 100, 0 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 300,
     "fixedDespawnTime": true,
-    "despawnDelay": 3175,
+    "despawnDelay": 3475,
     "color": [
       150,
       0,
@@ -48756,13 +48771,13 @@
   {
     "description": "TFA - Ocellus Platform Collapse East 3",
     "offset": [ -100, 100, 0 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 400,
     "fixedDespawnTime": true,
-    "despawnDelay": 3075,
+    "despawnDelay": 3375,
     "color": [
       150,
       0,
@@ -48778,13 +48793,13 @@
   {
     "description": "TFA - Ocellus Platform Collapse East 4",
     "offset": [ 100, 100, 0 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 600,
     "fixedDespawnTime": true,
-    "despawnDelay": 2875,
+    "despawnDelay": 3175,
     "color": [
       150,
       0,
@@ -48800,13 +48815,13 @@
   {
     "description": "TFA - Ocellus Platform Collapse East 5",
     "offset": [ 300, 100, 0 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 800,
     "fixedDespawnTime": true,
-    "despawnDelay": 2675,
+    "despawnDelay": 2975,
     "color": [
       150,
       0,
@@ -48822,13 +48837,13 @@
   {
     "description": "TFA - Ocellus Platform Collapse East 6",
     "offset": [ 500, 100, 0 ],
-    "radius": 300,
-    "strength": 15,
+    "radius": 275,
+    "strength": 9,
     "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "spawnDelay": 975,
     "fixedDespawnTime": true,
-    "despawnDelay": 2500,
+    "despawnDelay": 2800,
     "color": [
       150,
       0,
