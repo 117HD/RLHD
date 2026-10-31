@@ -1071,6 +1071,7 @@ public class LegacyRenderer implements Renderer {
 			plugin.uboGlobal.underwaterCausticsColor.set(env.getWaterCausticsColor());
 			plugin.uboGlobal.underwaterCausticsStrength.set(env.waterCausticsStrength);
 			plugin.uboGlobal.elapsedTime.set((float) (plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
+			plugin.uboGlobal.voidShader.set(environmentManager.getTargetEnvironment().voidShader ? 1 : 0);
 
 			SkyState sky = skyManager.getState();
 			float[] shadowAngles = skyRenderer.usesMoonShadows ? sky.moonAngles : sky.shadowAngles;

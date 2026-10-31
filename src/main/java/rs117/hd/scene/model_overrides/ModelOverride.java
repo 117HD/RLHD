@@ -171,6 +171,8 @@ public class ModelOverride
 			if (Props.DEVELOPMENT)
 				throw new IllegalStateException("Invalid inheritTileColorType");
 			inheritTileColorType = ModelOverride.NONE.inheritTileColorType;
+		} else if (!plugin.configRecolorGroundObjects) {
+			inheritTileColorType = InheritTileColorType.NONE;
 		}
 		if (windDisplacementMode == null) {
 			if (Props.DEVELOPMENT)

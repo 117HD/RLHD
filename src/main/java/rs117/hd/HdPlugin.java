@@ -422,6 +422,7 @@ public class HdPlugin extends Plugin {
 	public boolean configProjectileLights;
 	public boolean configNpcLights;
 	public boolean configPetLights;
+	public boolean configThrallLights;
 	public boolean configSpotanimLights;
 	public boolean configObjectLights;
 	public boolean configHideFakeShadows;
@@ -447,6 +448,7 @@ public class HdPlugin extends Plugin {
 	public boolean configOverrideSky;
 	public boolean configReduceGlareIntensity;
 	public boolean configFrameSynchronization;
+	public boolean configRecolorGroundObjects;
 	public int configDetailDrawDistance;
 	public int configExpandedMapLoadingChunks;
 	public float configNightBrightness;
@@ -975,6 +977,7 @@ public class HdPlugin extends Plugin {
 			.define("MATERIAL_COUNT", MaterialManager.MATERIALS.length)
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
 			.define("WATER_SPECULAR_REFLECTIONS", config.waterSpecularReflections())
+			.define("DECOUPLE_WATER_FROM_SKY_COLOR", config.decoupleSkyAndWaterColor())
 			.define("DYNAMIC_LIGHTS", configDynamicLights != DynamicLights.NONE)
 			.define("TILED_LIGHTING", configTiledLighting)
 			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getTiledLightingLayers())
@@ -1808,6 +1811,7 @@ public class HdPlugin extends Plugin {
 		configProjectileLights = config.projectileLights();
 		configNpcLights = config.npcLights();
 		configPetLights = config.petLights();
+		configThrallLights = config.thrallLights();
 		configSpotanimLights = config.spotanimLights();
 		configObjectLights = config.objectLights();
 		configVanillaShadowMode = config.vanillaShadowMode();
@@ -1837,6 +1841,7 @@ public class HdPlugin extends Plugin {
 		configSeasonalFoliage = config.seasonalFoliage();
 		configReduceGlareIntensity = config.glareIntensity() < 100;
 		configFrameSynchronization = config.frameSynchronization().get(true);
+		configRecolorGroundObjects = config.recolorGroundObjects();
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {
@@ -1993,6 +1998,7 @@ public class HdPlugin extends Plugin {
 							case KEY_NEBULAE:
 							case KEY_LEGACY_BOAT_SILHOUETTES:
 							case KEY_WATER_SPECULAR_REFLECTIONS:
+							case KEY_DECOUPLE_WATER_FROM_SKY_COLOR:
 							case KEY_CENTROID_QUALIFIER:
 								recompilePrograms = true;
 								break;
@@ -2035,6 +2041,7 @@ public class HdPlugin extends Plugin {
 								reloadScene = true;
 								break;
 							case KEY_HIDE_VANILLA_WATER_EFFECTS:
+							case KEY_RECOLOR_GROUND_OBJECTS:
 								reloadModelOverrides = true;
 								// fall-through
 							case KEY_VANILLA_SHADOW_MODE:

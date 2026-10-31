@@ -193,9 +193,11 @@ public class Zone implements Destructible {
 		}
 
 		if (uploadJob != null) {
-			uploadJob.cancel();
-			DestructibleHandler.destroy(uploadJob.zoneBeingUploaded);
+			ZoneUploadJob job = uploadJob;
 			uploadJob = null;
+			job.cancel();
+			DestructibleHandler.destroy(job.zoneBeingUploaded);
+			job.release();
 		}
 
 		sortedAlphaFacesUpload.release();

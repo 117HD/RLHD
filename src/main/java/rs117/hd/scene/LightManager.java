@@ -26,12 +26,14 @@
 package rs117.hd.scene;
 
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ListMultimap;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,6 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
 import net.runelite.api.events.*;
+import net.runelite.api.gameval.NpcID;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.callback.RenderCallbackManager;
 import net.runelite.client.eventbus.EventBus;
@@ -80,6 +83,27 @@ import static rs117.hd.utils.collections.Util.quickSort;
 public class LightManager {
 	private static final ResourcePath LIGHTS_PATH = Props
 		.getFile("rlhd.lights-path", () -> path(LightManager.class, "lights.json"));
+
+	private static final Set<Integer> THRALL_IDS = ImmutableSet.of(
+		NpcID.ARCEUUS_THRALL_GHOST_LESSER,
+		NpcID.ARCEUUS_THRALL_SKELETON_LESSER,
+		NpcID.ARCEUUS_THRALL_ZOMBIE_LESSER,
+		NpcID.ARCEUUS_THRALL_GHOST_SUPERIOR,
+		NpcID.ARCEUUS_THRALL_SKELETON_SUPERIOR,
+		NpcID.ARCEUUS_THRALL_ZOMBIE_SUPERIOR,
+		NpcID.ARCEUUS_THRALL_GHOST_GREATER,
+		NpcID.ARCEUUS_THRALL_SKELETON_GREATER,
+		NpcID.ARCEUUS_THRALL_ZOMBIE_GREATER,
+		NpcID.THRALL_IMP_MAGIC_LESSER,
+		NpcID.THRALL_IMP_RANGED_LESSER,
+		NpcID.THRALL_IMP_MELEE_LESSER,
+		NpcID.THRALL_IMP_MAGIC_SUPERIOR,
+		NpcID.THRALL_IMP_RANGED_SUPERIOR,
+		NpcID.THRALL_IMP_MELEE_SUPERIOR,
+		NpcID.THRALL_IMP_MAGIC_GREATER,
+		NpcID.THRALL_IMP_RANGED_GREATER,
+		NpcID.THRALL_IMP_MELEE_GREATER
+	);
 
 	@Inject
 	private Client client;
@@ -695,11 +719,20 @@ public class LightManager {
 		if (!renderCallbackManager.addEntity(renderable, false))
 			return true;
 
-		boolean hideSomeNpcLights = !plugin.configNpcLights || !plugin.configPetLights;
+		boolean hideSomeNpcLights = !plugin.configNpcLights || !plugin.configPetLights || !plugin.configThrallLights;
 		if (hideSomeNpcLights && renderable instanceof NPC) {
-			if (!plugin.configNpcLights && !plugin.configPetLights)
+			if (!plugin.configNpcLights && !plugin.configPetLights && !plugin.configThrallLights)
 				return true;
-			return ((NPC) renderable).getComposition().isFollower() != plugin.configPetLights;
+
+			boolean isThrall = THRALL_IDS.contains(((NPC) renderable).getId());
+			if (isThrall)
+				return !plugin.configThrallLights;
+
+			boolean isPet = ((NPC) renderable).getComposition().isFollower();
+			if (isPet)
+				return !plugin.configPetLights;
+
+			return !plugin.configNpcLights;
 		}
 
 		if (renderable instanceof Projectile)

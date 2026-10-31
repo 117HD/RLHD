@@ -12,7 +12,7 @@ struct Material {
     int ambientOcclusionMap;
     int flowMap;
     int shadowAlphaMap;
-    int flags; // overrideBaseColor << 2 | unlit << 1 | hasTransparency
+    int flags; // voidShader << 3 | overrideBaseColor << 2 | unlit << 1 | hasTransparency
     float subsurface;
     float brightness;
     float displacementScale;
@@ -36,6 +36,10 @@ bool getMaterialShouldOverrideBaseColor(const Material material) {
 
 int getMaterialIsUnlit(const Material material) {
     return material.flags >> 1 & 1;
+}
+
+int getMaterialIsVoidShader(const Material material) {
+    return material.flags >> 3 & 1;
 }
 
 bool getMaterialHasTransparency(const Material material) {
