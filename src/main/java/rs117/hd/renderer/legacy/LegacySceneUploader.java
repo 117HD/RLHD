@@ -835,7 +835,7 @@ public class LegacySceneUploader {
 		int nwVertexKey = vertexKeys[2];
 		int neVertexKey = vertexKeys[3];
 
-		if (sceneContext.isTileFlagSet(tileZ, tileExX, tileExY, TILE_WATER_FLAG)) {
+		if (sceneContext.isTileFlagSet(tileZ, tileExX, tileExY, TILE_WATER_FLAG) && !waterType.skipUnderwaterTerrain) {
 			// underwater terrain
 
 			underwaterTerrain = 1;
@@ -1177,6 +1177,14 @@ public class LegacySceneUploader {
 			int underlayId = scene.getUnderlayIds()[tileZ][tileExX][tileExY];
 			var overlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, overlayId);
 			var underlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, underlayId);
+
+			// The underwater terrain must cover the whole tile model, so skip it entirely if any face opts out
+			for (int face = 0; face < faceCount; ++face) {
+				var override = ProceduralGenerator.isOverlayFace(tile, face) ? overlayOverride : underlayOverride;
+				int textureId = faceTextures == null ? -1 : faceTextures[face];
+				if (proceduralGenerator.seasonalWaterType(override, textureId).skipUnderwaterTerrain)
+					return new int[] { bufferLength, uvBufferLength, 0 };
+			}
 
 			// underwater terrain
 			for (int face = 0; face < faceCount; ++face) {

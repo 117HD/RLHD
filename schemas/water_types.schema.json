@@ -92,6 +92,10 @@
       "fishingSpotRecolor": {
         "type": "integer",
         "description": "A Jagex HSL value to apply to fishing spot replacement models on this water type."
+      },
+      "skipUnderwaterTerrain": {
+        "type": "boolean",
+        "description": "Skip generating the sunken underwater terrain beneath this water type, drawing only the water surface."
       }
     }
   }

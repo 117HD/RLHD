@@ -11556,6 +11556,123 @@
     "groundMaterial": "DIRT"
   },
   {
+    "name": "TFA Archive Guardian - Desert Tank Sand",
+    "area": "TFA_XARTH_DESERT_TANK",
+    "overlayIds": [
+      318
+    ],
+    "groundMaterial": "SANDY_DIRT",
+    "uvOrientation": 256
+  },
+  {
+    "name": "TFA Archive Guardian - Tundra Tank Snow",
+    "area": "TFA_XARTH_TUNDRA_TANK",
+    "overlayIds": [
+      197
+    ],
+    "shiftLightness": 10,
+    "groundMaterial": "DIRTY_SNOW"
+  },
+  {
+    "name": "TFA Archive Guardian - Fish Tank Dirt",
+    "area": "TFA_XARTH_FISH_TANK",
+    "overlayIds": [
+      318
+    ],
+    "groundMaterial": "PACKED_EARTH"
+  },
+  {
+    "name": "TFA Archive Guardian - Fish Tank Water Fix",
+    "area": "TFA_XARTH_FISH_TANK",
+    "overlayIds": [
+      456
+    ],
+    "waterType": "TFA_FISH_TANK_WATER"
+  },
+  {
+    "name": "TFA - Grass that shouldn't blend",
+    "area": "TFA_NO_BLEND_GRASS",
+    "overlayIds": [
+      646
+    ],
+    "blended": false,
+    "groundMaterial": "GRASS_1"
+  },
+  {
+    "name": "TFA Ezekiel - Grass that shouldn't blend",
+    "area": "TFA_EZEKIEL",
+    "overlayIds": [
+      646
+    ],
+    "blended": false,
+    "maxLightness": 23,
+    "groundMaterial": "GRASS_1"
+  },
+  {
+    "name": "TFA Dagon'hai - Dirt that shouldn't blend",
+    "area": "TFA_DAGONHAI",
+    "overlayIds": [
+      11
+    ],
+    "blended": false,
+    "maxLightness": 23,
+    "groundMaterial": "PACKED_EARTH"
+  },
+  {
+    "name": "TFA Ezekiel - Tiles",
+    "area": "TFA_EZEKIEL",
+    "underlayIds": [
+      72,
+      196,
+      252,
+      253
+    ],
+    "blended": false,
+    "uvScale": 2,
+    "shiftLightness": 8,
+    "maxLightness": 40,
+    "groundMaterial": "WORN_TILES"
+  },
+  {
+    "name": "TFA Dagon'hai - Blend all - Override below",
+    "area": "TFA_DAGONHAI",
+    "overlayIds": [
+      245,
+      648,
+      649
+    ],
+    "groundMaterial": "PACKED_EARTH"
+  },
+  {
+    "name": "TFA Archive Guardian - Cracks and underneath Tile objects - Should not blend",
+    "area": "TFA",
+    "overlayIds": [
+      245,
+      648,
+      649
+    ],
+    "blended": false,
+    "groundMaterial": "PACKED_EARTH"
+  },
+  {
+    "name": "TFA - Dirt",
+    "area": "TFA",
+    "overlayIds": [ 14 ],
+    "groundMaterial": "PACKED_EARTH",
+    "maxLightness": 35
+  },
+  {
+    "name": "TFA - Complex Tiles",
+    "area": "TFA",
+    "groundMaterial": "PACKED_EARTH",
+    "shiftLightness": 1,
+    "maxLightness": 35,
+    "replacements": {
+      "DEFAULT_DIRT": "s == 1",
+      "DEFAULT_GRASS": "s != 0"
+    }
+  },
+  {
     "name": "TAG - Areas - END"
   },
   {

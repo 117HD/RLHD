@@ -19150,7 +19150,7 @@
   {
     "description": "Mage Imp Thrall",
     "height": 30,
-    "radius": 150,
+    "radius": 125,
     "strength": 25,
     "color": [
       0,
@@ -19318,6 +19318,30 @@
     "range": 10,
     "fadeInDuration": 200,
     "spawnDelay": 600,
+    "ignoreActorHiding": true,
+    "npcIds": [
+      "THRALL_IMP_MELEE_LESSER",
+      "THRALL_IMP_MELEE_SUPERIOR",
+      "THRALL_IMP_MELEE_GREATER"
+    ]
+  },
+  {
+    "description": "Melee Imp Thrall - Despawn",
+    "height": 30,
+    "radius": 125,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
     "ignoreActorHiding": true,
     "npcIds": [
       "THRALL_IMP_MELEE_LESSER",
@@ -31841,6 +31865,46 @@
     ]
   },
   {
+    "description": "DRAGON_FIRE_ARROWS",
+    "offset": [ 0, -10, 55 ],
+    "radius": 200,
+    "fadeOutDuration": 150,
+    "strength": 6.3,
+    "color": [
+      252,
+      122,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "fadeInDuration": 300,
+    "projectileIds": [
+      "DRAGON_ARROW_LIT_TRAVEL",
+      "II_DRAGON_ARROW_NORMAL_PROJANIM",
+      "II_DRAGON_ARROW_MAGIC_PROJANIM"
+    ]
+  },
+  {
+    "description": "DRAGON_FIRE_DART",
+    "offset": [ 0, 10, 0 ],
+    "radius": 150,
+    "strength": 6.3,
+    "color": [
+      252,
+      122,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeOutDuration": 150,
+    "range": 30,
+    "fadeInDuration": 300,
+    "projectileIds": [
+      "II_DRAGON_DART_PROJANIM"
+    ]
+  },
+  {
     "description": "ARMADYL_CROSSBOW_SPEC",
     "radius": 250,
     "strength": 7.5,
@@ -31855,6 +31919,23 @@
     "fadeInDuration": 300,
     "projectileIds": [
       "ACB_SPECIALATTACK"
+    ]
+  },
+  {
+    "description": "ZARYTE_CROSSBOW_SPEC",
+    "radius": 250,
+    "strength": 7.5,
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 300,
+    "projectileIds": [
+      "ZCB_SPECIALATTACK"
     ]
   },
   {
@@ -41352,10 +41433,10 @@
     "visibleFromOtherPlanes": true
   },
   {
-    "description": "VARLAMORE_TEMPLE_CRYPT_CANDLES",
-    "height": 50,
-    "radius": 200,
-    "strength": 4,
+    "description": "VARLAMORE_TEMPLE_CRYPT_CANDLES_1",
+    "offset": [ 0, 50, 0 ],
+    "radius": 150,
+    "strength": 7,
     "color": [
       252,
       148,
@@ -41365,7 +41446,42 @@
     "range": 10,
     "objectIds": [
       "DECO_CANDLES01_RED",
+      "DECO_CANDLES04_RED"
+    ],
+    "visibleFromOtherPlanes": true
+  },
+  {
+    "description": "VARLAMORE_TEMPLE_CRYPT_CANDLES_2",
+    "offset": [ 15, 50, 50 ],
+    "radius": 130,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "objectIds": [
       "DECO_CANDLES02_RED"
+    ],
+    "visibleFromOtherPlanes": true
+  },
+  {
+    "description": "VARLAMORE_TEMPLE_CRYPT_CANDLES_3",
+    "offset": [ 20, 55, -5 ],
+    "radius": 115,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "objectIds": [
+      "DECO_CANDLES05_RED",
+      "DECO_CANDLES06_RED"
     ],
     "visibleFromOtherPlanes": true
   },
@@ -44888,6 +45004,125 @@
     "graphicsObjectIds": [ "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM_F", "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM" ]
   },
   {
+    "description": "Tonalztic Special Attack Throw 1",
+    "offset": [ 20, 130, 30 ],
+    "radius": 200,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "fadeInDuration": 175,
+    "fadeOutDuration": 375,
+    "graphicsObjectIds": [ "VFX_GLAIVE_CHARGED_SPECIAL" ]
+  },
+  {
+    "description": "Tonalztic Special Attack Throw 2",
+    "offset": [ -20, 130, 40 ],
+    "radius": 200,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "fixedDespawnTime": true,
+    "spawnDelay": 200,
+    "despawnDelay": 600,
+    "fadeInDuration": 175,
+    "fadeOutDuration": 375,
+    "graphicsObjectIds": [ "VFX_GLAIVE_CHARGED_SPECIAL" ]
+  },
+  {
+    "description": "Tonalztic Special Attack Throw 3",
+    "offset": [ 40, 130, 0 ],
+    "radius": 230,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "fixedDespawnTime": true,
+    "spawnDelay": 450,
+    "despawnDelay": 500,
+    "fadeInDuration": 175,
+    "fadeOutDuration": 375,
+    "graphicsObjectIds": [ "VFX_GLAIVE_CHARGED_SPECIAL" ]
+  },
+  {
+    "description": "Tonalztic Special Attack Throw 4",
+    "offset": [ 0, 130, -45 ],
+    "radius": 230,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "fixedDespawnTime": true,
+    "spawnDelay": 600,
+    "despawnDelay": 500,
+    "fadeInDuration": 175,
+    "fadeOutDuration": 375,
+    "graphicsObjectIds": [ "VFX_GLAIVE_CHARGED_SPECIAL" ]
+  },
+  {
+    "description": "Tonalztic Special Attack Throw 5",
+    "offset": [ -20, 130, 0 ],
+    "radius": 250,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "fixedDespawnTime": true,
+    "spawnDelay": 500,
+    "despawnDelay": 900,
+    "fadeInDuration": 175,
+    "fadeOutDuration": 375,
+    "graphicsObjectIds": [ "VFX_GLAIVE_CHARGED_SPECIAL" ]
+  },
+  {
+    "description": "Tonalztic Special Attack Projectile",
+    "offset": [ 0, 0, 0 ],
+    "radius": 280,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 50,
+    "fadeOutDuration": 375,
+    "projectileIds": [ "PROJANIM_GLAIVE_01_SPECIAL" ]
+  },
+  {
+    "description": "Tonalztic Regular Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 200,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 375,
+    "projectileIds": [ "PROJANIM_GLAIVE_01_REGULAR" ]
+  },
+  {
     "description": "Burning Claws Special Attack 1",
     "offset": [ 0, 75, 90 ],
     "radius": 270,
@@ -45246,7 +45481,11 @@
       "DRAGON_HALBERD_SPECIAL_WEST_RED",
       "DRAGON_HALBERD_SPECIAL_NORTH_RED",
       "DRAGON_HALBERD_SPECIAL_SOUTH_RED",
-      "DRAGON_HALBERD_SPECIAL_EAST_RED"
+      "DRAGON_HALBERD_SPECIAL_EAST_RED",
+      "DRAGON_HALBERD_SPECIAL_WEST_DARKRED",
+      "DRAGON_HALBERD_SPECIAL_EAST_DARKRED",
+      "DRAGON_HALBERD_SPECIAL_NORTH_DARKRED",
+      "DRAGON_HALBERD_SPECIAL_SOUTH_DARKRED"
     ]
   },
   {
@@ -45271,6 +45510,30 @@
       "DRAGON_HALBERD_SPECIAL_NORTH_WHITE",
       "DRAGON_HALBERD_SPECIAL_SOUTH_WHITE",
       "DRAGON_HALBERD_SPECIAL_EAST_WHITE"
+    ]
+  },
+  {
+    "description": "Scythe of Vitur swing & Dragon Halberd special attack - Blue/Holy",
+    "offset": [ 0, 0, 0 ],
+    "radius": 250,
+    "waitForAnimation": true,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 890,
+    "strength": 10,
+    "color": [
+      40,
+      40,
+      255
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 300,
+    "graphicsObjectIds": [
+      "DRAGON_HALBERD_SPECIAL_WEST_BLUE",
+      "DRAGON_HALBERD_SPECIAL_NORTH_BLUE",
+      "DRAGON_HALBERD_SPECIAL_SOUTH_BLUE",
+      "DRAGON_HALBERD_SPECIAL_EAST_BLUE"
     ]
   },
   {
@@ -46338,7 +46601,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "LUC2_GT_WALLKIT_SHRINE_LIGHTS"
+      "LUC2_GT_WALLKIT_SHRINE_LIGHTS",
+      "TFA_WALLKIT_EZEKIEL01_LIGHTS01"
     ]
   },
   {
@@ -46821,8 +47085,150 @@
   {
     "description": "Tormented Demon - Fire Bolt Projectile",
     "offset": [ 0, -50, 0 ],
-    "radius": 200,
-    "strength": 15,
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 600,
+    "range": 20,
+    "projectileIds": [
+      "LUC2_UNDEAD_DEMON_FIREBALL_PROJ"
+    ]
+  },
+  {
+    "description": "Xarth - Top 1",
+    "offset": [ 0, 650, -100 ],
+    "radius": 425,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "npcIds": [
+      "TFA_XARTH"
+    ],
+    "excludeAnimationIds": [ "XARTH_DEATH_01" ]
+  },
+  {
+    "description": "Xarth - Top 2",
+    "offset": [ 0, 650, 100 ],
+    "radius": 425,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "npcIds": [
+      "TFA_XARTH"
+    ],
+    "excludeAnimationIds": [ "XARTH_DEATH_01" ]
+  },
+  {
+    "description": "Xarth - Main",
+    "offset": [ 0, 150, -50 ],
+    "radius": 375,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 3000,
+    "range": 20,
+    "npcIds": [
+      "TFA_XARTH"
+    ],
+    "excludeAnimationIds": [ "XARTH_DEATH_01" ]
+  },
+  {
+    "description": "Xarth - Feet 1",
+    "offset": [ 50, 75, 75 ],
+    "radius": 425,
+    "strength": 30,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 3000,
+    "range": 20,
+    "npcIds": [
+      "TFA_XARTH"
+    ],
+    "excludeAnimationIds": [ "XARTH_DEATH_01" ]
+  },
+  {
+    "description": "Xarth - Feet 2",
+    "offset": [ -50, 75, 75 ],
+    "radius": 225,
+    "strength": 30,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 3000,
+    "range": 20,
+    "npcIds": [
+      "TFA_XARTH"
+    ],
+    "excludeAnimationIds": [ "XARTH_DEATH_01" ]
+  },
+  {
+    "description": "Xarth - Flame Stomp",
+    "areas": [ "TFA_XARTH" ],
+    "height": 40,
+    "radius": 275,
+    "strength": 10,
+    "waitForAnimation": true,
+    "fixedDespawnTime": true,
+    "despawnDelay": 750,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [
+      "VFX_VMQ4_ENNIUS_FIRE_EXPLOSION"
+    ]
+  },
+  {
+    "description": "Xarth - Arena Fire Hazard",
+    "offset": [ 0, 100, 0 ],
+    "radius": 150,
+    "strength": 10,
     "color": [
       252,
       148,
@@ -46833,8 +47239,3176 @@
     "fadeInDuration": 300,
     "fadeOutDuration": 300,
     "range": 20,
+    "objectIds": [
+      "TFA_XARTH_ARENAFIRE"
+    ]
+  },
+  {
+    "description": "Xarth - Pillar Collpase Fire",
+    "offset": [ 0, 300, 0 ],
+    "radius": 350,
+    "strength": 16,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1400,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "fadeInDuration": 0,
+    "fadeOutDuration": 600,
+    "range": 20,
+    "graphicsObjectIds": [
+      "VFX_XARTH_RUBBLE_COLLAPSE_01"
+    ]
+  },
+  {
+    "description": "Xarth - Flaming Zombie",
+    "offset": [ 0, 150, 0 ],
+    "radius": 200,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 600,
+    "despawnWithParent": true,
+    "range": 20,
+    "npcIds": [
+      "TFA_XARTH_CORPSE"
+    ],
+    "animationIds": [ -1 ]
+  },
+  {
+    "description": "Xarth - Fire Ball Projectile",
+    "offset": [ 0, 25, 0 ],
+    "radius": 220,
+    "strength": 18,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 600,
+    "range": 20,
     "projectileIds": [
-      "LUC2_UNDEAD_DEMON_FIREBALL_PROJ"
+      "LUC2_UNDEAD_DEMON_FIREBALL_LARGE_PROJ",
+      "VFX_XARTH_AOE_PROJANIM_01"
+    ]
+  },
+  {
+    "description": "Xarth - Fire Bolt Projectile",
+    "offset": [ 0, 0, 0 ],
+    "radius": 250,
+    "strength": 18,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "projectileIds": [
+      "LUC2_UNDEAD_DEMON_FIREBALL_PROJ_BIG"
+    ]
+  },
+  {
+    "description": "Xarth - Spike Projectile",
+    "offset": [ 0, 0, 0 ],
+    "radius": 200,
+    "strength": 9,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "projectileIds": [
+      "VFX_XARTH_ATTACK_RANGED_PROJECTILE_01"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 01, 1",
+    "offset": [ -50, 250, 60 ],
+    "radius": 300,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE01",
+      "TFA_XARTH01_CORPSE_PILE_FIRE03"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 01, 2",
+    "offset": [ -700, 250, -60 ],
+    "radius": 300,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE01"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 01, 3",
+    "offset": [ 250, 350, -100 ],
+    "radius": 460,
+    "strength": 30,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE01",
+      "TFA_XARTH01_CORPSE_PILE_FIRE03"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 01, 4",
+    "offset": [ 650, 310, -220 ],
+    "radius": 300,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE01",
+      "TFA_XARTH01_CORPSE_PILE_FIRE03"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 01, 5",
+    "offset": [ 950, 200, -180 ],
+    "radius": 300,
+    "strength": 20,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE01",
+      "TFA_XARTH01_CORPSE_PILE_FIRE03"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 02, 1",
+    "offset": [ 100, 380, 200 ],
+    "radius": 400,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE02"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 02, 2",
+    "offset": [ 0, 350, -400 ],
+    "radius": 400,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE02"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 02, 3",
+    "offset": [ 100, 220, -50 ],
+    "radius": 300,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE02"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 03, 1",
+    "offset": [ -400, 320, -100 ],
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE03"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 03, 2",
+    "offset": [ 0, 220, -300 ],
+    "radius": 250,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE03"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 04, 1",
+    "offset": [ 100, 340, -350 ],
+    "radius": 500,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE04"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 04, 2",
+    "offset": [ 100, 340, -950 ],
+    "radius": 500,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE04"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 04, 3",
+    "offset": [ 100, 270, 450 ],
+    "radius": 500,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE04"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 05",
+    "offset": [ 100, 360, 200 ],
+    "radius": 500,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE05"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 06",
+    "offset": [ 100, 280, 200 ],
+    "radius": 400,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE06"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 07, 1",
+    "offset": [ 0, 200, 50 ],
+    "radius": 500,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE07"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 07, 2",
+    "offset": [ 0, 230, -350 ],
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE07"
+    ]
+  },
+  {
+    "description": "Xarth - Corpse Pile Fire 08",
+    "offset": [ 250, 300, 200 ],
+    "radius": 500,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE08"
+    ]
+  },
+  {
+    "description": "Xarth - Pillar Fire",
+    "offset": [ 0, 400, 0 ],
+    "radius": 400,
+    "strength": 50,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE01_PILLAR02_BURNT01"
+    ]
+  },
+  {
+    "description": "Xarth Portal Orange",
+    "offset": [ 0, 400, 0 ],
+    "radius": 900,
+    "strength": 50,
+    "color": [
+      252,
+      130,
+      10
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 5,
+    "objectIds": [
+      "TFA_PORTAL_XARTH01"
+    ]
+  },
+  {
+    "description": "Xarth Portal Red Slow",
+    "offset": [ 0, 400, 0 ],
+    "radius": 700,
+    "strength": 75,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 10,
+    "objectIds": [
+      "TFA_PORTAL_XARTH01"
+    ]
+  },
+  {
+    "description": "Xarth Portal Red Fast",
+    "offset": [ 0, 400, 0 ],
+    "radius": 550,
+    "strength": 75,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 1750,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 10,
+    "objectIds": [
+      "TFA_PORTAL_XARTH01"
+    ]
+  },
+  {
+    "description": "TFA - Red Relic Glow",
+    "offset": [ 0, 185, 0 ],
+    "radius": 250,
+    "strength": 50,
+    "color": [
+      252,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_ARTEFACT_GUTHIXIAN02"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Green Cracks",
+    "offset": [ 0, 75, 0 ],
+    "radius": 80,
+    "strength": 25,
+    "fadeInDuration": 50,
+    "fadeOutDuration": 200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P1_FLOOR_CRACK_01_END",
+      "VFX_OCELLUS_P1_FLOOR_CRACK_01_END_90",
+      "VFX_OCELLUS_P1_FLOOR_CRACK_01_END_180",
+      "VFX_OCELLUS_P1_FLOOR_CRACK_01_END_270",
+      "VFX_OCELLUS_P1_FLOOR_CRACK_02_END",
+      "VFX_OCELLUS_P1_FLOOR_CRACK_02_END_90",
+      "VFX_OCELLUS_P1_FLOOR_CRACK_02_END_180",
+      "VFX_OCELLUS_P1_FLOOR_CRACK_02_END_270",
+      "VFX_OCELLUS_P1_EXPLODE_FLOOR",
+      "VFX_OCELLUS_P1_EXPLODE_FLOOR_90",
+      "VFX_OCELLUS_P1_EXPLODE_FLOOR_180",
+      "VFX_OCELLUS_P1_EXPLODE_FLOOR_270"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Green Cracks - Pet Version",
+    "offset": [ 0, 55, 0 ],
+    "radius": 55,
+    "strength": 15,
+    "fadeInDuration": 50,
+    "fadeOutDuration": 200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P1_EXPLODE_FLOOR_PET"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Green Charge",
+    "offset": [ 0, 250, 125 ],
+    "radius": 280,
+    "strength": 15,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1050,
+    "spawnDelay": 100,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P1_CHARGE"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Purple Teleport Out",
+    "offset": [ 75, 220, 100 ],
+    "radius": 280,
+    "strength": 15,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 600,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "color": [
+      200,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P1_TELEPORT_OUT"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Purple Teleport Out",
+    "offset": [ -100, 220, 10 ],
+    "radius": 280,
+    "strength": 15,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 600,
+    "spawnDelay": 150,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1100,
+    "color": [
+      200,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P1_TELEPORT_IN"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Arm Grow Glow 1",
+    "offset": [ -50, 100, -100 ],
+    "radius": 180,
+    "strength": 14,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 1000,
+    "spawnDelay": 200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1500,
+    "color": [
+      180,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P2_TO_P3_ARM_GLOW01"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Arm Grow Glow 2",
+    "offset": [ -100, 150, -150 ],
+    "radius": 280,
+    "strength": 18,
+    "fadeInDuration": 600,
+    "fadeOutDuration": 400,
+    "spawnDelay": 500,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1175,
+    "color": [
+      180,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P2_TO_P3_ARM_GLOW01"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus The Blade Charging 1",
+    "offset": [ 0, 600, 0 ],
+    "radius": 600,
+    "strength": 15,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 600,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_THE_BLADE1_IDLE1"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus The Blade Charging 2",
+    "offset": [ 0, 600, 0 ],
+    "radius": 600,
+    "strength": 15,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 600,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_THE_BLADE1_IDLE2"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus The Blade Dislodge",
+    "offset": [ 0, 600, 0 ],
+    "radius": 800,
+    "strength": 12.5,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 600,
+    "spawnDelay": 1200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1100,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_SWORD_DROP"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus The Blade Impact",
+    "offset": [ 0, 200, 0 ],
+    "radius": 650,
+    "strength": 20,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 600,
+    "spawnDelay": 2350,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1100,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_SWORD_DROP"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus The Blade Dislodge Fire",
+    "offset": [ 0, 500, 0 ],
+    "radius": 400,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_SWORD_ROOT_FIRE"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus The Blade Dislodge Fire 2",
+    "offset": [ 0, 1200, 0 ],
+    "radius": 600,
+    "strength": 15,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 400,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1300,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_SWORD_ROOT_FIRE"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Fire Shard Cast",
+    "offset": [ 0, 450, 0 ],
+    "radius": 400,
+    "strength": 25,
+    "fadeInDuration": 600,
+    "fadeOutDuration": 400,
+    "fixedDespawnTime": true,
+    "despawnDelay": 960,
+    "color": [
+      252,
+      70,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_FIRE_ATTACK01_SPOTANIM"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Fire Shard Projectile",
+    "offset": [ 0, 0, 0 ],
+    "radius": 200,
+    "strength": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 400,
+    "color": [
+      252,
+      70,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "projectileIds": [
+      "VFX_OCELLUS_FIRE_ATTACK01_PROJANIM"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Fire Impact",
+    "offset": [ 0, 100, 0 ],
+    "radius": 150,
+    "strength": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 400,
+    "fixedDespawnTime": true,
+    "despawnDelay": 800,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_FIRE_ATTACK01_IMPACTANIM"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Orange Portal Spawn",
+    "offset": [ 0, 100, 0 ],
+    "radius": 120,
+    "strength": 20,
+    "color": [
+      252,
+      200,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 200,
+    "fadeInDuration": 300,
+    "objectIds": [
+      "TFA_OCELLUS_QUADRANT_WALL_INACTIVE"
+    ],
+    "animationIds": [ "VFX_OCELLUS_P2_PORTAL_SPAWN" ]
+  },
+  {
+    "description": "TFA - Ocellus Orange Portal Despawn",
+    "offset": [ 0, 100, 0 ],
+    "radius": 120,
+    "strength": 20,
+    "color": [
+      252,
+      200,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "despawnDelay": 600,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 300,
+    "objectIds": [
+      "TFA_OCELLUS_QUADRANT_WALL_INACTIVE"
+    ],
+    "animationIds": [ "VFX_OCELLUS_P2_PORTAL_DESPAWN" ]
+  },
+  {
+    "description": "TFA - Ocellus Orange Portal",
+    "offset": [ 0, 100, 0 ],
+    "radius": 120,
+    "strength": 20,
+    "color": [
+      252,
+      200,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "despawnWithParent": true,
+    "objectIds": [
+      "TFA_OCELLUS_QUADRANT_WALL_INACTIVE"
+    ],
+    "animationIds": [ "VFX_OCELLUS_P2_PORTAL_IDLE" ]
+  },
+  {
+    "description": "TFA - Ocellus Purple Portal",
+    "offset": [ 0, 100, 0 ],
+    "radius": 140,
+    "strength": 20,
+    "color": [
+      255,
+      0,
+      230
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "despawnWithParent": true,
+    "objectIds": [
+      "TFA_OCELLUS_QUADRANT_WALL_ACTIVE"
+    ],
+    "animationIds": [ "VFX_OCELLUS_P2_PORTAL_IDLE" ]
+  },
+  {
+    "description": "TFA - Ocellus Safe Teleport Orange Portal Spawn",
+    "offset": [ 0, 100, 0 ],
+    "radius": 140,
+    "strength": 20,
+    "color": [
+      252,
+      200,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "fadeInDuration": 300,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P2_SAFE_PORTAL_SPAWN"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Safe Teleport Orange Portal Despawn",
+    "offset": [ 0, 100, 0 ],
+    "radius": 140,
+    "strength": 20,
+    "color": [
+      252,
+      200,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "fixedDespawnTime": true,
+    "despawnDelay": 300,
+    "fadeOutDuration": 300,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P2_SAFE_PORTAL_DESPAWN"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Safe Teleport Orange Portal",
+    "offset": [ 0, 100, 0 ],
+    "radius": 140,
+    "strength": 20,
+    "color": [
+      252,
+      200,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P2_SAFE_PORTAL_IDLE"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Purple Floor Aoe",
+    "offset": [ 0, 50, 0 ],
+    "radius": 120,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      230
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 200,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100,
+    "despawnDelay": 3200,
+    "fixedDespawnTime": true,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P2_AOE_DODGE"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Purple Portal Projectile",
+    "offset": [ 0, 100, 0 ],
+    "radius": 225,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      230
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "projectileIds": [
+      "VFX_OCELLUS_PORTAL_PROJECTILE"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse Explosion",
+    "offset": [ 0, 300, 0 ],
+    "radius": 700,
+    "strength": 18,
+    "fixedDespawnTime": true,
+    "waitForAnimation": true,
+    "despawnDelay": 450,
+    "fadeOutDuration": 350,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "graphicsObjectIds": [
+      "TFA_ARENA_COLLAPSING_EXPLOSION01",
+      "TFA_ARENA_COLLAPSING_EXPLOSION02",
+      "TFA_ARENA_COLLAPSING_EXPLOSION03",
+      "TFA_ARENA_COLLAPSING_EXPLOSION04"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse South 1",
+    "offset": [ 0, 100, 500 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "spawnDelay": 75,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3700,
+    "fadeOutDuration": 250,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_01"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse South 2",
+    "offset": [ 0, 100, 300 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3475,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_01"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse South 3",
+    "offset": [ 0, 100, 100 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 400,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3375,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_01"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse South 4",
+    "offset": [ 0, 100, -100 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3175,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_01"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse South 5",
+    "offset": [ 0, 100, -300 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2975,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_01"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse South 6",
+    "offset": [ 0, 100, -500 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 975,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2800,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_01"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse West 1",
+    "offset": [ 500, 100, 0 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "spawnDelay": 75,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3700,
+    "fadeOutDuration": 250,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_02"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse West 2",
+    "offset": [ 300, 100, 0 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3475,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_02"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse West 3",
+    "offset": [ 100, 100, 0 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 400,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3375,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_02"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse West 4",
+    "offset": [ -100, 100, 0 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3175,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_02"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse West 5",
+    "offset": [ -300, 100, 0 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2975,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_02"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse West 6",
+    "offset": [ -500, 100, 0 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 975,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2800,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_02"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse North 1",
+    "offset": [ 0, 100, -500 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "spawnDelay": 75,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3700,
+    "fadeOutDuration": 250,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_03"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse North 2",
+    "offset": [ 0, 100, -300 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3475,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_03"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse North 3",
+    "offset": [ 0, 100, -100 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 400,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3375,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_03"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse North 4",
+    "offset": [ 0, 100, 100 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3175,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_03"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse North 5",
+    "offset": [ 0, 100, 300 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2975,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_03"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse North 6",
+    "offset": [ 0, 100, 500 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 975,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2800,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_03"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse East 1",
+    "offset": [ -500, 100, 0 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "spawnDelay": 75,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3700,
+    "fadeOutDuration": 250,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_04"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse East 2",
+    "offset": [ -300, 100, 0 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3475,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_04"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse East 3",
+    "offset": [ -100, 100, 0 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 400,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3375,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_04"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse East 4",
+    "offset": [ 100, 100, 0 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3175,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_04"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse East 5",
+    "offset": [ 300, 100, 0 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2975,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_04"
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Platform Collapse East 6",
+    "offset": [ 500, 100, 0 ],
+    "radius": 275,
+    "strength": 9,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "spawnDelay": 975,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2800,
+    "color": [
+      150,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_04"
+    ]
+  },
+  {
+    "description": "Dagon'hai Imp",
+    "height": 30,
+    "radius": 125,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "npcIds": [
+      "TFA_DAGONHAI_DEMON"
+    ],
+    "excludeAnimationIds": [ "LEAGUES_6_THRALL_IMP_MELEE_DESPAWN_SILENT" ]
+  },
+  {
+    "description": "Dagon'hai Imp - Despawn",
+    "height": 30,
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "npcIds": [
+      "TFA_DAGONHAI_DEMON"
+    ],
+    "animationIds": [ "LEAGUES_6_THRALL_IMP_MELEE_DESPAWN_SILENT" ]
+  },
+  {
+    "description": "TFA Dagon'hai Book Glow Large",
+    "offset": [ 0, 350, 0 ],
+    "radius": 850,
+    "strength": 20,
+    "color": [
+      100,
+      255,
+      100
+    ],
+    "type": "PULSE",
+    "duration": 5000,
+    "range": 10,
+    "objectIds": [
+      "TFA_DAGONHAI_BOOK01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Pot",
+    "offset": [ 0, 125, 0 ],
+    "radius": 350,
+    "strength": 20,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "range": 20,
+    "npcIds": [
+      "TFA_DAGONHAI_FOCUS"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Fireball",
+    "offset": [ 0, 0, 0 ],
+    "radius": 250,
+    "strength": 20,
+    "color": [
+      252,
+      70,
+      3
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [
+      "VFX_DAGONHAI_CAULDRON_ATTACK_ZAMORAK_PROJANIM_01"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Fireball - Impact",
+    "offset": [ 0, 50, 0 ],
+    "radius": 125,
+    "strength": 20,
+    "fadeOutDuration": 200,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      70,
+      3
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "graphicsObjectIds": [
+      "VFX_DAGONHAI_CAULDRON_ATTACK_ZAMORAK_AOE_IDLE_00",
+      "VFX_DAGONHAI_CAULDRON_ATTACK_ZAMORAK_AOE_IDLE_01",
+      "VFX_DAGONHAI_CAULDRON_ATTACK_ZAMORAK_AOE_IDLE_02",
+      "VFX_DAGONHAI_CAULDRON_ATTACK_ZAMORAK_AOE_IDLE_03"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Fireball - Impact End",
+    "offset": [ 0, 200, 0 ],
+    "radius": 220,
+    "strength": 20,
+    "fadeOutDuration": 600,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      70,
+      3
+    ],
+    "type": "FLICKER",
+    "fixedDespawnTime": true,
+    "despawnDelay": 1100,
+    "range": 20,
+    "graphicsObjectIds": [
+      "VFX_DAGONHAI_CAULDRON_ATTACK_ZAMORAK_AOE_ATTACK_01"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Purple Portal",
+    "offset": [ 0, 150, 0 ],
+    "radius": 200,
+    "strength": 20,
+    "color": [
+      252,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 10,
+    "npcIds": [
+      "TFA_DAGONHAI_RIFT"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Lightning Strike Dodge",
+    "offset": [ 0, 100, 0 ],
+    "radius": 135,
+    "strength": 25,
+    "color": [
+      0,
+      230,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "range": 25,
+    "fixedDespawnTime": true,
+    "despawnDelay": 550,
+    "graphicsObjectIds": [
+      "TFA_DAGONHAI_SARADOMIN_DAMAGE_LIGHTNING"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Lightning Strike Telegraph",
+    "offset": [ 0, 100, 0 ],
+    "radius": 90,
+    "strength": 50,
+    "color": [
+      0,
+      230,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "spawnDelay": 300,
+    "waitForAnimation": true,
+    "fadeInDuration": 700,
+    "range": 10,
+    "graphicsObjectIds": [
+      "TFA_DAGONHAI_SARADOMIN_DAMAGE_TELEGRAPH_150"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Lightning Strike Heal",
+    "offset": [ 0, 100, 0 ],
+    "radius": 135,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "range": 25,
+    "fadeOutDuration": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "graphicsObjectIds": [
+      "TFA_DAGONHAI_SARADOMIN_HEAL_LIGHTNING"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Lightning Strike Heal Impact",
+    "offset": [ 0, 100, 0 ],
+    "radius": 135,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "fadeInDuration": 200,
+    "range": 5,
+    "fadeOutDuration": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "graphicsObjectIds": [
+      "TFA_DAGONHAI_SARADOMIN_HEAL_IMPACT"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Lightning Strike Heal Telegraph",
+    "offset": [ 0, 100, 0 ],
+    "radius": 100,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "fadeInDuration": 700,
+    "range": 25,
+    "graphicsObjectIds": [
+      "TFA_DAGONHAI_SARADOMIN_HEAL_TELEGRAPH_180",
+      "TFA_DAGONHAI_SARADOMIN_HEAL_TELEGRAPH_150"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Lightning Strike Strength Boost 1",
+    "offset": [ 0, 100, 0 ],
+    "radius": 115,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "range": 5,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2300,
+    "graphicsObjectIds": [
+      "TFA_DAGONHAI_DEMONIC_STRENGTH_TELEGRAPH"
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai Lightning Strike Strength Boost 2",
+    "offset": [ 0, 100, 0 ],
+    "radius": 150,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 200,
+    "waitForAnimation": true,
+    "range": 25,
+    "fadeOutDuration": 300,
+    "spawnDelay": 2100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1300,
+    "graphicsObjectIds": [
+      "TFA_DAGONHAI_DEMONIC_STRENGTH_TELEGRAPH"
+    ]
+  },
+  {
+    "description": "TFA - Pink Relic Glow",
+    "offset": [ 0, 185, 0 ],
+    "radius": 250,
+    "strength": 50,
+    "color": [
+      252,
+      0,
+      100
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_ARTEFACT_GUTHIXIAN03"
+    ]
+  },
+  {
+    "description": "TFA - Blue Relic Glow 1",
+    "offset": [ 0, 195, 0 ],
+    "radius": 450,
+    "strength": 15,
+    "color": [
+      100,
+      100,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "TFA_ARTEFACT_GUTHIXIAN06"
+    ]
+  },
+  {
+    "description": "TFA - Blue Relic Glow 2",
+    "offset": [ 0, 150, 0 ],
+    "radius": 350,
+    "strength": 35,
+    "color": [
+      100,
+      100,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "TFA_ARTEFACT_GUTHIXIAN06"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Star Heal Cast 1",
+    "offset": [ -20, 100, 50 ],
+    "radius": 95,
+    "strength": 15,
+    "fadeInDuration": 200,
+    "despawnDelay": 500,
+    "fadeOutDuration": 800,
+	"fadeOverlap": true,
+	"fixedDespawnTime": true,
+    "color": [
+      252,
+      200,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+
+    "spawnDelay": 150,
+    "waitForAnimation": true,
+    "range": 25,
+    "graphicsObjectIds": [
+      "EZEKIEL_HEAL_SPOTANIM_VFX01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Star Heal Cast 2",
+    "offset": [ 35, 100, 50 ],
+    "radius": 105,
+    "strength": 15,
+    "despawnDelay": 700,
+    "fadeOutDuration": 800,
+    "fadeInDuration": 200,
+    "fixedDespawnTime": true,
+    "fadeOverlap": true,
+    "color": [
+      252,
+      200,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "spawnDelay": 350,
+    "waitForAnimation": true,
+    "range": 25,
+    "graphicsObjectIds": [
+      "EZEKIEL_HEAL_SPOTANIM_VFX01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Star Heal Cast 3",
+    "offset": [ -25, 250, 25 ],
+    "radius": 230,
+    "strength": 25,
+    "despawnDelay": 700,
+    "fadeOutDuration": 800,
+    "fadeInDuration": 200,
+    "fixedDespawnTime": true,
+    "fadeOverlap": true,
+    "color": [
+      252,
+      200,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "spawnDelay": 550,
+    "waitForAnimation": true,
+    "range": 25,
+    "graphicsObjectIds": [
+      "EZEKIEL_HEAL_SPOTANIM_VFX01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Star Heal Cast 4",
+    "offset": [ 0, 100, 0 ],
+    "radius": 125,
+    "strength": 15,
+    "despawnDelay": 800,
+    "fadeOutDuration": 300,
+    "fixedDespawnTime": true,
+    "fadeOverlap": true,
+    "color": [
+      252,
+      200,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "spawnDelay": 750,
+    "waitForAnimation": true,
+    "range": 25,
+    "graphicsObjectIds": [
+      "EZEKIEL_HEAL_SPOTANIM_VFX01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Star Explosion Cast",
+    "offset": [ -20, 100, 75 ],
+    "radius": 200,
+    "strength": 15,
+    "despawnDelay": 800,
+    "fadeOutDuration": 300,
+    "fixedDespawnTime": true,
+    "color": [
+      252,
+      200,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "spawnDelay": 1550,
+    "waitForAnimation": true,
+    "range": 25,
+    "graphicsObjectIds": [
+      "EZEKIEL_SPECIAL_CRACK_VFX01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Star Explosion 1",
+    "offset": [ 0, 185, 0 ],
+    "radius": 175,
+    "strength": 15,
+    "despawnDelay": 900,
+    "fadeOutDuration": 300,
+    "fixedDespawnTime": true,
+    "color": [
+      252,
+      200,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "spawnDelay": 50,
+    "waitForAnimation": true,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_EZEKIEL_STAR_EXPLOSION01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Star Explosion 2",
+    "offset": [ 0, 185, 0 ],
+    "radius": 175,
+    "strength": 15,
+    "spawnDelay": 1200,
+    "despawnDelay": 900,
+    "fadeOutDuration": 300,
+    "fixedDespawnTime": true,
+    "color": [
+      252,
+      200,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_EZEKIEL_STAR_EXPLOSION01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Lightning Strike Dodge",
+    "offset": [ 0, 100, 0 ],
+    "radius": 135,
+    "strength": 15,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "range": 25,
+    "fixedDespawnTime": true,
+    "despawnDelay": 550,
+    "graphicsObjectIds": [
+      "VFX_EZEKIEL_FINALE_IMPACT_MEDIUM01",
+      "VFX_EZEKIEL_FINALE_IMPACT_SMALL01",
+      "VFX_EZEKIEL_FINALE_IMPACT_LARGE01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Lightning Magic Attack Cast 1",
+    "offset": [ 0, 150, 25 ],
+    "radius": 170,
+    "strength": 15,
+    "fadeInDuration": 500,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "range": 25,
+    "fixedDespawnTime": true,
+    "despawnDelay": 550,
+    "graphicsObjectIds": [
+      "EZEKIEL_MAGIC_ATTACK_VFX01",
+      "VFX_EZEKIEL_FINALE_CAST01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Lightning Magic Attack Cast 2",
+    "offset": [ 0, 300, 0 ],
+    "radius": 320,
+    "strength": 25,
+    "fadeInDuration": 200,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "range": 25,
+    "spawnDelay": 700,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 500,
+    "despawnDelay": 750,
+    "graphicsObjectIds": [
+      "EZEKIEL_MAGIC_ATTACK_VFX01",
+      "VFX_EZEKIEL_FINALE_CAST01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Lightning Magic Attack Cast 3",
+    "offset": [ 0, 300, 0 ],
+    "radius": 450,
+    "strength": 25,
+    "fadeInDuration": 100,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "duration": 0,
+    "waitForAnimation": true,
+    "range": 25,
+    "spawnDelay": 50,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 500,
+    "despawnDelay": 750,
+    "graphicsObjectIds": [
+      "VFX_EZEKIEL_FINALE_CAST_LOOP01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Lightning Magic Attack Windup",
+    "offset": [ 0, 100, 0 ],
+    "radius": 135,
+    "strength": 5,
+    "fadeInDuration": 500,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "range": 25,
+    "fixedDespawnTime": true,
+    "despawnDelay": 550,
+    "graphicsObjectIds": [
+      "EZEKIEL_MAGIC_ATTACK_IMPACT_VFX01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Lightning Magic Attack Hit",
+    "offset": [ 0, 100, 0 ],
+    "radius": 150,
+    "strength": 15,
+    "fadeOutDuration": 300,
+    "color": [
+      50,
+      150,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "spawnDelay": 600,
+    "waitForAnimation": true,
+    "range": 40,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "graphicsObjectIds": [
+      "EZEKIEL_MAGIC_ATTACK_IMPACT_VFX01"
+    ]
+  },
+  {
+    "description": "TFA - Ezekiel Lightning Strike On Swords",
+    "offset": [ 0, 100, 0 ],
+    "radius": 135,
+    "strength": 15,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "waitForAnimation": true,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_EZEKIEL_SWORD_TELEGRAPH01",
+      "VFX_EZEKIEL_SWORD_TELEGRAPH02",
+      "VFX_EZEKIEL_SWORD_TELEGRAPH03",
+      "VFX_EZEKIEL_SWORD_TELEGRAPH04"
+    ]
+  },
+  {
+    "description": "TFA - Moia Zombie",
+    "offset": [ 0, 185, 0 ],
+    "radius": 160,
+    "strength": 15,
+    "color": [
+      252,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "npcIds": [
+      "TFA_MOIA_MINION"
+    ]
+  },
+  {
+    "description": "TFA - Brazier - Normal Loot",
+    "offset": [ 20, 480, -50 ],
+    "radius": 1400,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_BRAZIER_GUTHIXLOOT01_FIRE01"
+    ]
+  },
+  {
+    "description": "TFA - Brazier - Normal Loot - Highlight",
+    "offset": [ 20, 830, -50 ],
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_BRAZIER_GUTHIXLOOT01_FIRE01"
+    ]
+  },
+  {
+    "description": "TFA - Brazier - Rare Loot",
+    "offset": [ 20, 480, -50 ],
+    "radius": 1400,
+    "strength": 15,
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "TFA_BRAZIER_GUTHIXLOOT01_FIRE02"
+    ]
+  },
+  {
+    "description": "TFA - Brazier - Rare Loot - Highlight",
+    "offset": [ 20, 830, -50 ],
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_BRAZIER_GUTHIXLOOT01_FIRE02"
+    ]
+  },
+  {
+    "description": "TFA - Brazier",
+    "offset": [ 0, 285, 0 ],
+    "radius": 400,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_BRAZIER_GUTHIXIAN_FLAME02",
+      "TFA_BRAZIER_GUTHIXIAN_FLAME01"
+    ]
+  },
+  {
+    "description": "TFA - Floor Flames 1",
+    "offset": [ -35, 50, -35 ],
+    "radius": 150,
+    "strength": 12,
+    "color": [
+      252,
+      128,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_FIRE_ARCHIVE01_SCATTER01"
+    ]
+  },
+  {
+    "description": "TFA - Floor Flames 2",
+    "offset": [ -40, 50, -40 ],
+    "radius": 175,
+    "strength": 12,
+    "color": [
+      252,
+      128,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_FIRE_ARCHIVE01_SCATTER02"
+    ]
+  },
+  {
+    "description": "TFA - Floor Flames 3",
+    "offset": [ -40, 50, -40 ],
+    "radius": 200,
+    "strength": 12,
+    "color": [
+      252,
+      128,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_FIRE_ARCHIVE01_SCATTER03"
+    ]
+  },
+  {
+    "description": "TFA - Floor Flames 4",
+    "offset": [ 0, 50, 0 ],
+    "radius": 250,
+    "strength": 12,
+    "color": [
+      252,
+      128,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_FIRE_ARCHIVE01_SCATTER04"
+    ]
+  },
+  {
+    "description": "TFA - Floor Flames 5",
+    "offset": [ -50, 175, -60 ],
+    "radius": 220,
+    "strength": 17,
+    "color": [
+      252,
+      128,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_FIRE_ARCHIVE01_SCATTER01A"
+    ]
+  },
+  {
+    "description": "TFA - Floor Flames 6",
+    "offset": [ 20, 185, 20 ],
+    "radius": 220,
+    "strength": 17,
+    "color": [
+      252,
+      128,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "TFA_FIRE_ARCHIVE01_SCATTER02A"
+    ]
+  },
+  {
+    "description": "TFA - Inert Guardian Light",
+    "offset": [ 0, 300, 0 ],
+    "radius": 500,
+    "strength": 17,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 750,
+    "npcIds": [
+      "TFA_GUARDIAN_BATTERY_ACTIVE"
+    ],
+    "animationIds": [ -1 ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam Charge 1",
+    "offset": [ 0, 150, 200 ],
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "fixedDespawnTime": true,
+    "despawnDelay": 3250,
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 1800,
+    "fadeOutDuration": 2500,
+    "fadeInDuration": 1000,
+    "despawnWithParent": true,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam Charge 2",
+    "offset": [ 0, 800, 300 ],
+    "radius": 400,
+    "strength": 17,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3000,
+    "spawnDelay": 3000,
+    "fadeOutDuration": 500,
+    "fadeInDuration": 1000,
+    "despawnWithParent": true,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam 1",
+    "offset": [ 0, 150, 100 ],
+    "radius": 250,
+    "strength": 17,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 5420,
+    "despawnDelay": 1400,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 880,
+    "fadeInDuration": 250,
+    "despawnWithParent": true,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam 2",
+    "offset": [ 0, 150, 300 ],
+    "radius": 250,
+    "strength": 17,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 5580,
+    "despawnDelay": 1240,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 880,
+    "fadeInDuration": 250,
+    "despawnWithParent": true,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam 3",
+    "offset": [ 0, 150, 500 ],
+    "radius": 250,
+    "strength": 18.2,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 5750,
+    "despawnDelay": 1070,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 880,
+    "fadeInDuration": 250,
+    "despawnWithParent": true,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam 4",
+    "offset": [ 0, 150, 700 ],
+    "radius": 260,
+    "strength": 22.7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 5950,
+    "despawnDelay": 870,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 840,
+    "fadeInDuration": 240,
+    "despawnWithParent": true,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam 5",
+    "offset": [ 0, 150, 900 ],
+    "radius": 270,
+    "strength": 22.6,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 6110,
+    "despawnDelay": 710,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 810,
+    "fadeInDuration": 100,
+    "despawnWithParent": true,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam 6",
+    "offset": [ 0, 150, 1100 ],
+    "radius": 280,
+    "strength": 22.7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 6260,
+    "despawnDelay": 560,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 600,
+    "fadeInDuration": 110,
+    "despawnWithParent": true,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam 7",
+    "offset": [ 0, 150, 1300 ],
+    "radius": 290,
+    "strength": 22.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 6350,
+    "despawnDelay": 610,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 610,
+    "fadeInDuration": 150,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam 8",
+    "offset": [ 0, 150, 1500 ],
+    "radius": 300,
+    "strength": 22.7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 6390,
+    "despawnDelay": 580,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 560,
+    "fadeInDuration": 160,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam 9",
+    "offset": [ -10, 150, 1700 ],
+    "radius": 320,
+    "strength": 22.7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 6410,
+    "despawnDelay": 570,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 560,
+    "fadeInDuration": 150,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam 10",
+    "offset": [ -20, 150, 1900 ],
+    "radius": 335,
+    "strength": 22.7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 6420,
+    "despawnDelay": 570,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 560,
+    "fadeInDuration": 150,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam 11",
+    "offset": [ -40, 150, 2100 ],
+    "radius": 350,
+    "strength": 22.7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 6450,
+    "despawnDelay": 550,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 560,
+    "fadeInDuration": 130,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam 12",
+    "offset": [ -60, 150, 2300 ],
+    "radius": 365,
+    "strength": 22.4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 6520,
+    "despawnDelay": 480,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 500,
+    "fadeInDuration": 100,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam 13",
+    "offset": [ -90, 150, 2500 ],
+    "radius": 385,
+    "strength": 22.3,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 6580,
+    "despawnDelay": 420,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 420,
+    "fadeInDuration": 100,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam 14",
+    "offset": [ -120, 150, 2700 ],
+    "radius": 405,
+    "strength": 22.4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 6630,
+    "despawnDelay": 350,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 330,
+    "fadeInDuration": 100,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam 15",
+    "offset": [ -160, 150, 2900 ],
+    "radius": 425,
+    "strength": 22.2,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 6650,
+    "despawnDelay": 330,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 100,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam Top 1",
+    "offset": [ 0, 580, 400 ],
+    "radius": 350,
+    "strength": 10.2,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 5580,
+    "despawnDelay": 1450,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 880,
+    "fadeInDuration": 250,
+    "despawnWithParent": true,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam Top 2",
+    "offset": [ 0, 500, 550 ],
+    "radius": 200,
+    "strength": 10.2,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 5750,
+    "despawnDelay": 1220,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 880,
+    "fadeInDuration": 250,
+    "despawnWithParent": true,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam Top 3",
+    "offset": [ 0, 440, 700 ],
+    "radius": 200,
+    "strength": 11,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 5950,
+    "despawnDelay": 1020,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 840,
+    "fadeInDuration": 240,
+    "despawnWithParent": true,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam Top 4",
+    "offset": [ 0, 400, 900 ],
+    "radius": 200,
+    "strength": 10.9,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 6110,
+    "despawnDelay": 860,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 810,
+    "fadeInDuration": 100,
+    "despawnWithParent": true,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Guardian Fire Beam Top 5",
+    "offset": [ 0, 380, 1100 ],
+    "radius": 200,
+    "strength": 10.2,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "spawnDelay": 6260,
+    "despawnDelay": 710,
+    "fixedDespawnTime": true,
+    "fadeOutDuration": 600,
+    "fadeInDuration": 110,
+    "despawnWithParent": true,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "VFX_GUARDIAN_ENRAGED_PHASE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Smorks Magic Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 250,
+    "strength": 17,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "fadeOutDuration": 200,
+    "duration": 0,
+    "range": 25,
+    "projectileIds": [
+      "VFX_SMORK_MAGE_ATTACK_PROJANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Smorks Napalm Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 300,
+    "strength": 17,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "fadeOutDuration": 400,
+    "duration": 0,
+    "range": 25,
+    "projectileIds": [
+      "VFX_SMORK_NAPALM_FIRE_PROJANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Smorks Napalm Attack Splash",
+    "offset": [ 0, 50, 0 ],
+    "radius": 250,
+    "strength": 12,
+    "color": [
+      252,
+      128,
+      3
+    ],
+    "type": "FLICKER",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 500,
+    "waitForAnimation": true,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "duration": 0,
+    "range": 25,
+    "graphicsObjectIds": [
+      "VFX_SMORK_NAPALM_FIRE_SPOTANIM01"
+    ]
+  },
+  {
+    "description": "TFA - Archive Transporter Eye Glow Right",
+    "offset": [ 20, 135, -20 ],
+    "radius": 50,
+    "strength": 7,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "TFA_BOSS_TELEPORTER"
+    ]
+  },
+  {
+    "description": "TFA - Archive Transporter Eye Glow Left",
+    "offset": [ -20, 135, -20 ],
+    "radius": 50,
+    "strength": 7,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "TFA_BOSS_TELEPORTER"
+    ]
+  },
+  {
+    "description": "TFA - Archive Transporter Eye Glow Right Red",
+    "offset": [ 20, 135, -20 ],
+    "radius": 50,
+    "strength": 9,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "TFA_TELEPORTER_JELLY"
+    ]
+  },
+  {
+    "description": "TFA - Archive Transporter Eye Glow Left Red",
+    "offset": [ -20, 135, -20 ],
+    "radius": 50,
+    "strength": 9,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "TFA_TELEPORTER_JELLY"
+    ]
+  },
+  {
+    "description": "TFA - Archive Transporter Eye Glow Right Purple",
+    "offset": [ 20, 135, -20 ],
+    "radius": 50,
+    "strength": 9,
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "TFA_TELEPORTER_MOIA"
+    ]
+  },
+  {
+    "description": "TFA - Archive Transporter Eye Glow Left Purple",
+    "offset": [ -20, 135, -20 ],
+    "radius": 50,
+    "strength": 9,
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "TFA_TELEPORTER_MOIA"
     ]
   },
   {

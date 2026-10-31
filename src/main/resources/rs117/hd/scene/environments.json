@@ -2449,7 +2449,10 @@
     ],
     "fogColor": "#060505",
     "fogDepth": 50,
-    "instantTransition": true
+    "instantTransition": true,
+    "groundFogEnd": -300,
+    "groundFogOpacity": 1,
+    "groundFogStart": 600
   },
   {
     "area": "BURGH_DE_ROTT_BASEMENT",
@@ -3256,6 +3259,72 @@
     "windSpeed": 15,
     "windStrength": 50,
     "hideVanillaSkyboxes": true
+  },
+  {
+    "area": "Guthix Temple - Entrance",
+    "groundFogOpacity": 0.85,
+    "groundFogStart": 100,
+    "groundFogEnd": -200,
+    "instantTransition": true
+  },
+  {
+    "area": "TFA_LOBBY",
+    "groundFogOpacity": 0.85,
+    "groundFogStart": 500,
+    "groundFogEnd": -50,
+    "instantTransition": true
+  },
+  {
+    "area": "TFA_ARCHIVE_GUARDIAN",
+    "groundFogOpacity": 0.85,
+    "groundFogStart": 500,
+    "groundFogEnd": -50
+  },
+  {
+    "area": "TFA_BORK",
+    "groundFogOpacity": 0.85,
+    "groundFogStart": -100,
+    "groundFogEnd": -400,
+    "instantTransition": true
+  },
+  {
+    "area": "TFA_DREADNOTH",
+    "groundFogOpacity": 0.85,
+    "groundFogStart": -100,
+    "groundFogEnd": -400,
+    "instantTransition": true
+  },
+  {
+    "area": "TFA_DAGONHAI",
+    "groundFogOpacity": 0.85,
+    "groundFogStart": -100,
+    "groundFogEnd": -500,
+    "instantTransition": true
+  },
+  {
+    "area": "TFA_OCELLUS",
+    "voidShader": true,
+    "groundFogOpacity": 0.85,
+    "groundFogStart": 500,
+    "groundFogEnd": -250
+  },
+  {
+    "area": "TFA_REWARD_ROOM",
+    "voidShader": true,
+    "sky": {
+      "parent": "VOID",
+      "moonVisibility": 0,
+      "nebulaVisibility": 0,
+      "horizonWidth": 25,
+      "profile": {
+        "horizon": [
+          {
+            "altitude": 0,
+            "color": "#01000A"
+          }
+        ]
+      }
+    }
   },
   {
     "key": "OVERWORLD",

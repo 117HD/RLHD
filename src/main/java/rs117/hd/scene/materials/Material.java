@@ -59,6 +59,7 @@ public class Material {
 	private boolean seasonalFoliage;
 	private boolean overrideBaseColor;
 	private boolean unlit;
+	private boolean voidShader;
 	@JsonAdapter(ColorUtils.LinearAdapter.class)
 	public float brightness = 1;
 	public float subsurface;
@@ -216,6 +217,7 @@ public class Material {
 		struct.flowMap.set(getTextureLayer(flowMap));
 		struct.shadowAlphaMap.set(getTextureLayer(shadowAlphaMap));
 		struct.flags.set(
+			(voidShader ? 1 : 0) << 3 |
 			(overrideBaseColor ? 1 : 0) << 2 |
 			(unlit ? 1 : 0) << 1 |
 			(hasTransparency ? 1 : 0)

@@ -8674,12 +8674,29 @@
       "FOSSIL_WYVERN_CAVE_ENTRANCE",
       "TZHAAR_KARAMJADUNGEON_WALL_ENTRANCE",
       "RC_ZMI_DUNGEON_WALL_CRACK_ENTRANCE_EXIT",
-      "TOG_CAVE_DOWN",
       "WILD_CAVE_ENTRANCE_MID",
       "WILDERNESS_GWD_ENTRANCE",
       "TROLL_STRONGHOLD_DOOR",
       "SOTFA_CAVE_ENTRANCE_OP",
       "SOTFA_CAVE_ENTRANCE_ESCAPE"
+    ]
+  },
+  {
+    "description": "Tears of Guthix Chasm Entrance Cave",
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "s == 7",
+        "baseMaterial": "ROCK_2",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ],
+    "objectIds": [
+      "TOG_CAVE_DOWN",
+      "TOG_CAVE_UP"
     ]
   },
   {
@@ -9357,6 +9374,7 @@
   },
   {
     "description": "LUMBRIDGE_CAVE_WALLS",
+    "hideInAreas": [ "LUMBRIDGE_SWAMP_CAVES_FLOATING_TERRAIN_FIX" ],
     "baseMaterial": "ROCK_2",
     "objectIds": [
       "SWAMP_CAVEWALL_OUTSIDECORNER",
@@ -9391,7 +9409,6 @@
       "SWAMP_CAVEWALLMOSS10",
       "SWAMP_CAVEWALLMOSS11",
       "SWAMP_CAVEWALLMOSS12",
-      "TOG_CAVE_UP",
       "TOG_WEEPINGWALL",
       "TOG_WEEPING_WALL_BACK_R",
       "TOG_WEEPING_WALL_BACK_L",
@@ -12139,7 +12156,8 @@
       "KR_CHAIR",
       "KR_SMASHEDCHAIR",
       "KR_STOOL",
-      "KR_ROCKING_CHAIR"
+      "KR_ROCKING_CHAIR",
+      "TFA_CHAIR_NEXUS01"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -17692,7 +17710,6 @@
       "MYARM_ROCK_FLOOR_02",
       "MYARM_ROCK_FLOOR_03",
       "MYARM_ROCK_FLOOR_04",
-      "LOTR_RUINS_FLOOR_RUBBLE_02_LVL2",
       "DORGESH_ROCKS_DARK1",
       "DORGESH_ROCKS_DARK4",
       "DORGESH_ROCKS_DARK5",
@@ -76203,7 +76220,9 @@
     "objectIds": [
       "TEMPOROSS_RIPPLE_3_NOSHADOW",
       "TEMPOROSS_RIPPLE_1_NOSHADOW",
-      "FX_CAMTORUM01_RIPPLE01"
+      "FX_CAMTORUM01_RIPPLE01",
+      "TOA_ZEBAK_RIPPLE01",
+      "TOA_ZEBAK_RIPPLE02"
     ]
   },
   {
@@ -78717,7 +78736,9 @@
     "objectIds": [
       "LUC2_CAVE_WALL_TOP_CRNR_INNER",
       "LUC2_CAVE_WALL_TOP_CRNR_OUTER",
-      "LUC2_CAVE_WALL_TOP"
+      "LUC2_CAVE_WALL_TOP",
+      "TFA_WALLKIT_LOBBY01_TOP03",
+      "TFA_WALLKIT_LOBBY01_TOP02"
     ],
     "receiveShadows": false,
     "castShadows": false,
@@ -78737,17 +78758,45 @@
       "LUC2_GT_CHASM_02",
       "LUC2_GT_CHASM_01",
       "LUC2_GT_CHASM_01_BLEND_MIRROR",
-      "LUC2_GT_CHASM_01_BLEND"
+      "LUC2_GT_CHASM_01_BLEND",
+      "LUC2_GT_WALLKIT_CHASM_01_BLEND",
+      "LUC2_GT_WALLKIT_CHASM_01"
     ],
     "uvType": "BOX",
-    "castShadows": false
+    "castShadows": false,
+    "colorOverrides": [
+      {
+        "colors": "s == 1",
+        "undoVanillaShading": false,
+        "shiftLightness": 3,
+        "baseMaterial": "ROCK_3_LIGHT",
+        "uvType": "BOX",
+        "castShadows": false
+      },
+      {
+        "colors": "s == 2",
+        "undoVanillaShading": false,
+        "shiftLightness": 3,
+        "baseMaterial": "ROCK_3_LIGHT",
+        "uvType": "BOX",
+        "castShadows": false
+      },
+      {
+        "colors": "s == 7",
+        "undoVanillaShading": false,
+        "baseMaterial": "ROCK_3_LIGHT",
+        "uvType": "BOX",
+        "shiftLightness": 1,
+        "shiftSaturation": -2,
+        "castShadows": false
+      }
+    ]
   },
   {
     "description": "Guthix Temple - Cave Walls and Misc Stone - Bottom",
     "baseMaterial": "ROCK_3_LIGHT",
     "objectIds": [
       "LUC2_GT_WALLKIT_CHASM_01_BLEND_MIRROR",
-      "LUC2_GT_WALLKIT_CHASM_01",
       "LUC2_GT_WALLKIT_LEVEL1_01",
       "LUC2_GT_WALLKIT_LEVEL0_02",
       "LUC2_GT_WALLKIT_LEVEL0_01",
@@ -78756,7 +78805,6 @@
       "LUC2_RAID_ENTRY2",
       "LUC2_GT_TEMPLE_WALL_CLIMB2",
       "LUC2_GT_TEMPLE_WALL_CLIMB1",
-      "LUC2_GT_WALLKIT_CHASM_01_BLEND",
       "LUC2_GT_GIANT_SKULL_BOTTOM",
       "LUC2_GT_GIANT_SKULL_TOP",
       "LUC2_GT_MAIN_SKULL_TENDRIL_BOTTOML",
@@ -78788,9 +78836,38 @@
       "LUC2_GT_PILLAR_TORCH",
       "LUC2_GT_GIANT_SKULL_BOTTOM_FIRE_NOOP",
       "LUC2_GT_GIANT_SKULL_BOTTOM_AIR_NOOP",
-      "LUC2_GT_GIANT_SKULL_BOTTOM_EARTH_NOOP"
+      "LUC2_GT_GIANT_SKULL_BOTTOM_EARTH_NOOP",
+      "TFA_WALLKIT_LOBBY01_CHASM01",
+      "TFA_WALLKIT_LOBBY01_TOP01",
+      "TFA_WALLKIT_LOBBY02_LOW01_TOP01",
+      "TFA_WALLKIT_LOBBY02_LOW01",
+      "TFA_WALLKIT_LOBBY01_DEFAULT01",
+      "TFA_WALLKIT_LOBBY01_DEFAULT02_BLEND",
+      "TFA_WALLKIT_LOBBY01_DEFAULT02_BLEND_MIRROR",
+      "TFA_WALLKIT_LOBBY01_DEFAULT02",
+      "TFA_WALLKIT_LOBBY02_DEFAULT02"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Guthix Temple - Cave Walls and Misc Stone - Bottom",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "objectIds": [
+      "LUC2_RAID_ENTRY_OPEN",
+      "TFA_LOBBY_RAID_EXIT",
+      "TFA_LOBBY_RAID_EXIT_FLOOR2"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "uvType": "BOX",
+        "baseMaterial": "STONE_DARK",
+        "colors": "s == 7",
+        "upwardsNormals": true,
+        "receiveShadows": false,
+        "undoVanillaShading": false
+      }
+    ]
   },
   {
     "description": "Guthix Temple - Cave Walls - Top",
@@ -78803,7 +78880,8 @@
       "LUC2_GT_MAIN_SKULL_TENDRIL_TOPL",
       "LUC2_GT_MAIN_SKULL_TENDRIL_TOPR",
       "LUC2_GT_MAIN_PILLAR_LEVEL4",
-      "LUC2_GT_MAIN_PILLAR_LEVEL4_DAMAGED"
+      "LUC2_GT_MAIN_PILLAR_LEVEL4_DAMAGED",
+      "TFA_WALLKIT_LOBBY02_DEFAULT01"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -79119,10 +79197,9 @@
     ]
   },
   {
-    "description": "Guthix Temple - Henge and Shrine Torch",
+    "description": "Guthix Temple - Stone Henge",
     "baseMaterial": "STONE_NORMALED_LIGHT",
     "objectIds": [
-      "LUC2_GT_WALLKIT_SHRINE_LIGHTS",
       "LUC2_GT_HENGE_PUZZLE_HENGE_01",
       "LUC2_GT_HENGE_PUZZLE_HENGE_STATIC_01",
       "LUC2_GT_HENGE_PUZZLE_HENGE_02",
@@ -79142,12 +79219,50 @@
     ]
   },
   {
+    "description": "Guthix Temple - Shrine Torch",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "LUC2_GT_WALLKIT_SHRINE_LIGHTS",
+      "TFA_WALLKIT_EZEKIEL01_LIGHTS01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 13",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_125"
+      }
+    ]
+  },
+  {
     "description": "Guthix Temple - Stone of Jas Plinth",
     "baseMaterial": "ROCK_3",
     "uvType": "BOX",
     "uvScale": 0.75,
     "objectIds": [
       "LUC2_STONE_OF_JAS_PLINTH"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 5 || h == 6 && a > 254",
+        "baseMaterial": "GRUNGE_3_LIGHT_VERY_SHINY",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
     ]
   },
   {
@@ -79248,6 +79363,2191 @@
         "uvScale": 0.65,
         "uvOrientation": 256,
         "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "TFA - The Blade",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "TFA_THE_BLADE1",
+      "TFA_THE_BLADE1_IDLE0",
+      "TFA_THE_BLADE1_IDLE1",
+      "TFA_THE_BLADE1_IDLE2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s < 5",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 3,
+        "uvScale": 0.7,
+        "undoVanillaShading": false,
+        "uvOrientation": 150
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Crystal Roots",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "TFA_GATHERING_ROCK_ACTIVE02",
+      "TFA_GATHERING_ROCK_INACTIVE01",
+      "TFA_GATHERING_ROCK_INACTIVE03",
+      "TFA_GATHERING_ROCK_ACTIVE01",
+      "TFA_GATHERING_ROCK_ACTIVE03",
+      "TFA_GATHERING_ROCK_INACTIVE02",
+      "TFA_GATHERING_ROCK_ACTIVE03",
+      "TFA_CRYSTAL_ASCENSION01_ROOTS02",
+      "TFA_CRYSTAL_ASCENSION01_ROOTS01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "undoVanillaShading": false,
+        "uvOrientation": 150
+      }
+    ]
+  },
+  {
+    "description": "TFA - Grass",
+    "areas": [ "TFA" ],
+    "baseMaterial": "GRASS_BLADE",
+    "shiftLightness": 3,
+    "uvType": "MODEL_XY",
+    "flatNormals": true,
+    "undoVanillaShading": false,
+    "castShadows": false,
+    "upwardsNormals": true,
+    "windDisplacementMode": "OBJECT",
+    "objectIds": [
+      "AVIUM_GRASS_1",
+      "AVIUM_GRASS_2",
+      "AVIUM_GRASS_3",
+      "AVIUM_GRASS_4",
+      "AVIUM_GRASS_6",
+      "TFA_BORK_GRASS_1",
+      "TFA_BORK_GRASS_3",
+      "TFA_BORK_GRASS_2",
+      "TFA_BORK_GRASS_4",
+      "PHOENIX_BURNT_GRASS_3"
+    ]
+  },
+  {
+    "description": "TFA Lobby - Stalagtite",
+    "baseMaterial": "ROCK_6",
+    "objectIds": [
+      "TFA_STALAGMITE_GUTHIXIAN00_GROUP02_2X2",
+      "TFA_STALAGMITE_GUTHIXIAN00_GROUP01",
+      "TFA_STALAGMITE_GUTHIXIAN00_GROUP01_2X2",
+      "TFA_STALAGMITE_GUTHIXIAN00_GROUP02",
+      "TFA_STALAGMITE_GUTHIXIAN00_GROUP02_DARK01",
+      "TFA_STALAGMITE_GUTHIXIAN00_GROUP01_DARK01",
+      "TFA_STALAGMITE_GUTHIXIAN00_GROUP01_2X2_DARK01",
+      "TFA_STALAGMITE_GUTHIXIAN00_GROUP02_2X2_DARK01"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "TFA Lobby - Barricade - Plank",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": 2,
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "TFA_BARRICADE_NEXUS01_PLANKS03A",
+      "TFA_BARRICADE_NEXUS01_PLANKS03B",
+      "TFA_BARRICADE_NEXUS01_PLANKS01",
+      "TFA_BARRICADE_NEXUS01_PLANKS02B"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Sacks",
+        "colors": "h == 7",
+        "baseMaterial": "BURLAP",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Barricade - Log",
+    "baseMaterial": "LIGHT_BARK",
+    "shiftLightness": 2,
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.55555,
+    "objectIds": [
+      "TFA_BARRICADE_NEXUS01_WEAPONISED04",
+      "TFA_BARRICADE_NEXUS01_WEAPONISED02",
+      "TFA_BARRICADE_NEXUS01_WEAPONISED03",
+      "TFA_BARRICADE_NEXUS01_WEAPONISED01",
+      "TFA_RACK_NEXUS01_WEAPON03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Sacks",
+        "colors": "h == 7 && l >= 17",
+        "baseMaterial": "BURLAP",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Spear Shaft",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Spear Tip",
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_SMOOTH_LIGHT",
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Weapon Rack",
+    "baseMaterial": "LIGHT_BARK",
+    "shiftLightness": 2,
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TFA_RACK_NEXUS01_WEAPON01",
+      "TFA_RACK_NEXUS01_WEAPON02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grip",
+        "colors": "h == 18",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Bow Limbs",
+        "colors": "h == 7 && s == 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.3
+      },
+      {
+        "description": "Shield Frame",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftLightness": 3,
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 || h == 8 && s == 5 || h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Chest, Cart",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": 2,
+    "undoVanillaShading": false,
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TFA_CHEST_NEXUS01_SUPPLY01",
+      "TFA_REWARDS_CHEST_LOBBY_CLOSED",
+      "TFA_WHEELBARROW_NEXUS01_SUPPLY01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Pouch",
+        "colors": "h == 6",
+        "baseMaterial": "BURLAP",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Cloth",
+        "colors": "h == 7 && l > 20",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Glass",
+        "colors": "h == 0 || h >= 10",
+        "baseMaterial": "METALLIC_1_SMOOTH_LIGHT",
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Barrel",
+    "baseMaterial": "METALLIC_1_SMOOTH_LIGHT",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_BARREL_NEXUS01_EMPTY01",
+      "TFA_BARREL_NEXUS01_RUNES01",
+      "TFA_BUCKET_NEXUS01_ARROWS01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 6 && s < 5 || h == 7 || h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftLightness": 2,
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Whetstone",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "minLightness": 25,
+    "objectIds": [
+      "TFA_WHETSTONE_NEXUS01_NOOP01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 7 || h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftLightness": 2,
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Water",
+        "colors": "h > 10",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Bank Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": 2,
+    "undoVanillaShading": false,
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TFA_LOBBY_BANKCHEST_CLOSED",
+      "TFA_LOBBY_BANKCHEST_OPEN",
+      "TFA_LOOT_WHEELBARROW"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood Panels",
+        "colors": "h == 6 && s == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftLightness": 2,
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_SMOOTH_LIGHT",
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Cloth",
+        "colors": "h == 16",
+        "uvType": "BOX",
+        "baseMaterial": "CARPET_LIGHT",
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": 2,
+    "minLightness": 11,
+    "undoVanillaShading": false,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "TFA_CRATE_NEXUS01_SINGLE01",
+      "TFA_CRATE_NEXUS01_STACKED01",
+      "TFA_CRATE_ARCHIVE01_SINGLE01",
+      "TFA_CRATE_ARCHIVE01_STACK01",
+      "ARMACUS_CRATE"
+    ]
+  },
+  {
+    "description": "TFA Lobby - Sacks",
+    "baseMaterial": "BURLAP",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_SACK_NEXUS01_PILE01",
+      "TFA_SACK_NEXUS01_COUPLE01"
+    ]
+  },
+  {
+    "description": "TFA Lobby - Record Table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "uvOrientationY": 512,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_OUT_OF_RAID_SCOREBOARD",
+      "TFA_IN_RAID_SCOREBOARD_BROKEN",
+      "TFA_LOBBY_CHAIR_STUMP01_DEFAULT01",
+      "TFA_TABLE_NEXUS01_RUNES01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Table Edge",
+        "colors": "h == 7 && s < 6",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Books, Parchment",
+        "colors": "h == 6 || h == 7 || h >= 13 || h == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Cup",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Grouping Board",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvScale": 0.7,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_GROUPING_BOARD",
+      "TFA_BOARD_GUTHIXIAN01_PLANNING01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Tree",
+        "colors": "h == 7 && s < 6",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "minLightness": 9,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Parchment",
+        "colors": "h == 0 || h == 6 || h == 7  || h == 8 && s == 1 || h == 10",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Banners",
+        "colors": "h == 16",
+        "uvType": "BOX",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvScale": 0.6,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Planning Table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.7,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_LOBBY_TABLE_GUTHIXIAN01_PLANNING01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Parchment",
+        "colors": "h == 0 || h == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Wood Pole",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "undoVanillaShading": false,
+        "uvOrientation": 630
+      }
+    ]
+  },
+  {
+    "description": "TFA - Brazier 1",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_BRAZIER_ARCHIVE01_DEFAULT02",
+      "TFA_BRAZIER_GUTHIXIAN01_FINAL01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Paint",
+        "colors": "h == 6 || h == 8 || h == 16",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.15,
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA - Brazier 2",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvScale": 0.5,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_BRAZIER_ARCHIVE01_DEFAULT01",
+      "TFA_BRAZIER_GUTHIXLOOT01_BASE01",
+      "TFA_BRAZIER_GUTHIXLOOT01_BASE01_MIRROR"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA - Brazier Loot Flame",
+    "upwardsNormals": true,
+    "objectIds": [
+      "TFA_BRAZIER_GUTHIXLOOT01_FIRE01",
+      "TFA_BRAZIER_GUTHIXLOOT01_FIRE02"
+    ]
+  },
+  {
+    "description": "TFA Lobby - Plank Stacks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "shiftLightness": 2,
+    "minLightness": 11,
+    "undoVanillaShading": false,
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "TFA_BUNDLE_LUMBER02_PLANKS01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 10",
+        "undoVanillaShading": false,
+        "baseMaterial": "GRUNGE_3_DARK"
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Chasm Edge",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "shiftLightness": 3,
+    "uvOrientation": 200,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_FLOORKIT_LOBBY01_CHASM01",
+      "TFA_FLOORKIT_LOBBY01_CHASM02",
+      "TFA_FLOORKIT_LOBBY01_CHASM03",
+      "TFA_FLOORKIT_LOBBY01_CHASM02_DARKER02",
+      "TFA_FLOORKIT_LOBBY01_CHASM03_DARKER02",
+      "TFA_FLOORKIT_LOBBY01_CHASM02_DARKER03",
+      "TFA_FLOORKIT_LOBBY01_CHASM01_DARKER01",
+      "TFA_FLOORKIT_LOBBY01_CHASM01_DARKER02"
+    ],
+    "uvType": "BOX",
+    "castShadows": false
+  },
+  {
+    "description": "TFA Lobby - Chasm Edge Alt",
+    "baseMaterial": "ROCK_6",
+    "shiftLightness": 6,
+    "undoVanillaShading": false,
+    "uvScale": 2,
+    "objectIds": [
+      "TFA_FLOORKIT_LOBBY02_CHASM03",
+      "TFA_FLOORKIT_LOBBY02_CHASM01_TILE01",
+      "TFA_FLOORKIT_LOBBY02_CHASM02",
+      "TFA_FLOORKIT_LOBBY02_CHASM01",
+      "TFA_FLOORKIT_GUTHIXIAN00_TILE01",
+      "TFA_FLOORKIT_GUTHIXIAN00_TILE01_RAISEOBJ",
+      "TFA_FLOORKIT_GUTHIXIAN00_TILE02",
+      "TFA_FLOORKIT_GUTHIXIAN00_TILE03",
+      "TFA_FLOORKIT_LOBBY01_CHASM02_SUPPORT02",
+      "TFA_FLOORKIT_LOBBY01_CHASM03_RAISEOBJ",
+      "TFA_FLOORKIT_LOBBY01_CHASM02_SUPPORT02_RAISEOBJ",
+      "TFA_FLOORKIT_LOBBY01_CHASM03_RAISEOBJ02",
+      "TFA_FLOORKIT_LOBBY01_CHASM02_SUPPORT01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 120
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Stone Circle",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "TFA_FLOORKIT_GUTHIXIAN00_QUARTER01",
+      "TFA_FLOORKIT_GUTHIXIAN00_CORNER01",
+      "TFA_FLOORKIT_GUTHIXIAN00_QUARTER01_M",
+      "TFA_FLOORKIT_GUTHIXIAN00_SIDE01",
+      "TFA_FLOORKIT_GUTHIXIAN00_QUARTER03",
+      "TFA_FLOORKIT_GUTHIXIAN00_SIDE02_OFFSET01",
+      "TFA_FLOORKIT_GUTHIXIAN00_QUARTER02_M",
+      "TFA_FLOORKIT_GUTHIXIAN00_SIDE02"
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.5
+  },
+  {
+    "description": "TFA Lobby - Plank Bridges",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "undoVanillaShading": false,
+    "uvOrientation": 512,
+    "objectIds": [
+      "TFA_FLOORKIT_GUTHIXIAN00_PLANKS03",
+      "TFA_FLOORKIT_GUTHIXIAN00_PLANKS01",
+      "TFA_FLOORKIT_GUTHIXIAN00_PLANKS02",
+      "TFA_FLOORKIT_GUTHIXIAN00_PLANKS01_RAISED"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "TFA Lobby - Plank Bridges - Custom UVs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_FLOORKIT_GUTHIXIAN00_PLANKS04"
+    ],
+    "uvs": [ 0.6563, -0.0078, 0.6563, 0.3047, 0.5391, 0.3047, 0.6563, -0.0078, 0.5391, 0.3047, 0.5391, -0.0078, 0.6562, 2.6094, 0.5391, 2.6094, 0.5391, 0.5, 0.6562, 2.6094, 0.5391, 0.5, 0.6563, 0.5, 1.0078, -2.6094, 0.9922, -0.5, 0.6953, -2.4688, 0.6953, -2.4688, 0.9922, -0.5, 0.6953, -0.5, 0.6563, -2.4688, 0.6563, -0.5, 0.5391, -2.4688, 0.5391, -2.4688, 0.6563, -0.5, 0.5391, -0.5, 0.5391, -0.5, 0.6563, -0.5, 0.5391, 1.5, 0.5391, 1.5, 0.6563, -0.5, 0.6562, 1.5, 0.5391, 1.5, 0.6562, 1.5, 0.6562, 3.9141, 0.5391, 1.5, 0.6562, 3.9141, 0.5391, 3.9141, 0.5391, -0.3047, 0.6563, -0.3047, 0.5391, 0.0078, 0.5391, 0.0078, 0.6563, -0.3047, 0.6563, 0.0078, 0.5391, -3.8125, 0.6563, -3.8125, 0.6563, -1.5, 0.5391, -3.8125, 0.6563, -1.5, 0.5391, -1.5, 0.5391, -1.5, 0.6563, -1.5, 0.5391, 0.5, 0.5391, 0.5, 0.6563, -1.5, 0.6563, 0.5, 0.9922, -0.5, 0.9922, 1.5, 0.6953, 1.5, 0.9922, -0.5, 0.6953, 1.5, 0.6953, -0.5, 0.6563, 0.3437, 0.6563, 0.6562, 0.5391, 0.6562, 0.6563, 0.3437, 0.5391, 0.6562, 0.5391, 0.3437, 0.6562, 2.2422, 0.5391, 2.2422, 0.5391, 0.5, 0.6562, 2.2422, 0.5391, 0.5, 0.6563, 0.5, 0.6563, -2.2422, 0.6406, -0.5, 0.3438, -2.1953, 0.3438, -2.1953, 0.6406, -0.5, 0.3516, -0.5, 0.6563, -2.1953, 0.6563, -0.5, 0.5391, -2.1953, 0.5391, -2.1953, 0.6563, -0.5, 0.5391, -0.5, 0.5391, -0.5, 0.6563, -0.5, 0.5391, 1.5, 0.5391, 1.5, 0.6563, -0.5, 0.6562, 1.5, 0.5391, 1.5, 0.6562, 1.5, 0.6562, 3.7266, 0.5391, 1.5, 0.6562, 3.7266, 0.5391, 3.7266, 0.5391, -0.6563, 0.6563, -0.6563, 0.5391, -0.3438, 0.5391, -0.3438, 0.6563, -0.6563, 0.6563, -0.3438, 0.5391, -3.7578, 0.6563, -3.7578, 0.6563, -1.5, 0.5391, -3.7578, 0.6563, -1.5, 0.5391, -1.5, 0.5391, -1.5, 0.6563, -1.5, 0.5391, 0.5, 0.5391, 0.5, 0.6563, -1.5, 0.6563, 0.5, 0.6406, -0.5, 0.6016, 1.5, 0.3594, 1.5, 0.6406, -0.5, 0.3594, 1.5, 0.3516, -0.5, 0.5391, 0.8437, 0.6563, 0.7656, 0.6563, 0.8437, 0.5391, -2.5781, 0.6563, -2.5781, 0.5391, -2.5078, 0.5391, -2.5078, 0.6563, -2.5781, 0.6563, -2.5078, 0.5391, 2.5078, 0.6562, 2.5078, 0.5391, 2.5781, 0.5391, 2.5781, 0.6562, 2.5078, 0.6562, 2.5781, 0.5391, 0.8984, 0.6563, 0.8984, 0.6563, 1.0078, 0.5391, 0.8984, 0.6563, 1.0078, 0.5391, 1.0078, 0.5391, -2.5781, 0.6563, -2.5781, 0.6563, -0.5, 0.5391, -2.5781, 0.6563, -0.5, 0.5391, -0.5, 0.5391, -0.5, 0.6563, -0.5, 0.5391, 1.5, 0.5391, 1.5, 0.6563, -0.5, 0.6562, 1.5, 0.5391, 1.5, 0.6562, 1.5, 0.6562, 3.7344, 0.5391, 1.5, 0.6562, 3.7344, 0.5391, 3.7344, 0.5391, -1.0078, 0.6563, -1.0078, 0.5391, -0.6953, 0.5391, -0.6953, 0.6563, -1.0078, 0.6563, -0.6953, 0.5391, -3.8828, 0.6563, -3.8828, 0.6563, -1.5, 0.5391, -3.8828, 0.6563, -1.5, 0.5391, -1.5, 0.5391, -1.5, 0.6563, -1.5, 0.5391, 0.5, 0.5391, 0.5, 0.6563, -1.5, 0.6563, 0.5, 0.5391, 0.5, 0.6563, 0.5, 0.6562, 2.5703, 0.5391, 0.5, 0.6562, 2.5703, 0.5391, 2.5703, 0.5391, 0.7656, 0.6563, 0.7656, 0.5391, 0.8437, 0.0078, 1.5, 0.0078, -0.5, 0.3047, -0.5, 0.0078, 1.5, 0.3047, -0.5, 0.3047, 1.5, 0.0078, 1.5, 0.3047, 1.5, 0.3047, 3.8828, 0.0078, 1.5, 0.3047, 3.8828, -0.0078, 3.7344, 0.125, -2.5078, 0.0078, -0.5, -0.0078, -2.5781, 0.125, -2.5078, -0.0078, -2.5781, 0.1016, -2.5781, 0.2344, -2.5703, 0.125, -2.5078, 0.1563, -2.5781, 0.125, -2.5078, 0.2344, -2.5703, 0.3047, -0.5, 0.125, -2.5078, 0.3047, -0.5, 0.0078, -0.5, 0.3594, 1.5, 0.6016, 1.5, 0.6562, 3.7578, 0.3594, 1.5, 0.6562, 3.7578, 0.3437, 3.7266, 0.6953, 1.5, 0.9922, 1.5, 1.0078, 3.8125, 0.6953, 1.5, 1.0078, 3.8125, 0.6953, 3.9141, 0.5234, 2.2656, 0.6406, 2.2109, 0.6406, 2.2734, 0.5234, -3.5313, 0.6406, -3.5391, 0.5234, -3.4609, 0.5234, -3.4609, 0.6406, -3.5391, 0.6406, -3.4688, 0.5234, 2.2344, 0.6406, 2.2422, 0.5234, 2.3047, 0.5234, 2.3047, 0.6406, 2.2422, 0.6406, 2.3125, 0.5234, 2.3047, 0.6406, 2.3125, 0.6406, 2.3906, 0.5234, 2.3047, 0.6406, 2.3906, 0.5234, 2.3828, 0.5234, -3.4219, 0.6406, -3.4297, 0.6953, -1.9375, 0.5234, -3.4219, 0.6953, -1.9375, 0.5781, -1.9297, 0.5781, -1.9297, 0.6953, -1.9375, 0.6172, -0.9141, 0.6172, -0.9141, 0.6953, -1.9375, 0.7344, -0.9219, 0.6172, -0.9141, 0.7344, -0.9219, 0.7813, 0.4375, 0.6172, -0.9141, 0.7813, 0.4375, 0.6641, 0.4453, 0.6641, 1.3516, 0.7813, 1.3437, 0.6641, 1.6797, 0.6641, 1.6797, 0.7813, 1.3437, 0.7812, 1.6719, 0.6641, -0.3359, 0.7813, -0.3281, 0.7266, 1.125, 0.6641, -0.3359, 0.7266, 1.125, 0.6094, 1.1172, 0.6094, 1.1172, 0.7266, 1.125, 0.5703, 2.1406, 0.5703, 2.1406, 0.7266, 1.125, 0.6875, 2.1484, 0.5703, 0.7187, 0.6875, 0.7266, 0.6406, 2.2109, 0.5703, 0.7187, 0.6406, 2.2109, 0.5234, 2.2031, 0.5234, 2.2031, 0.6406, 2.2109, 0.5234, 2.2656, -0.4048, -0.3945, -0.4232, 1.0252, -0.7215, 1.0249, -0.4048, -0.3945, -0.7215, 1.0249, -0.6975, -0.4004, -0.4048, -0.3945, -0.6975, -0.4004, -0.6618, -2.4222, -0.4048, -0.3945, -0.6618, -2.4222, -0.3526, -2.2671, -0.5859, 3.0303, -0.4232, 1.0252, -0.4534, 3.1079, -0.5859, 3.0303, -0.4534, 3.1079, -0.5584, 3.1022, -0.691, 3.091, -0.5859, 3.0303, -0.6136, 3.1021, -0.5859, 3.0303, -0.691, 3.091, -0.7215, 1.0249, -0.5859, 3.0303, -0.7215, 1.0249, -0.4232, 1.0252, 0.7812, 1.6719, 0.7812, 1.9531, 0.6641, 1.9609, 0.7812, 1.6719, 0.6641, 1.9609, 0.6641, 1.6797, 0.7813, 0.3125, 0.6641, 0.3203, 0.6172, -1.3359, 0.7813, 0.3125, 0.6172, -1.3359, 0.7344, -1.3438, -1.147, -3.6342, -1.1833, -1.8904, -1.4617, -3.588, -1.4617, -3.588, -1.1833, -1.8904, -1.4724, -1.8931, 0.7813, -0.1641, 0.7344, 1.4375, 0.6641, -0.1719, 0.6641, -0.1719, 0.7344, 1.4375, 0.6172, 1.4297, 0.6172, 1.4297, 0.7344, 1.4375, 0.5703, 2.8047, 0.5703, 2.8047, 0.7344, 1.4375, 0.6875, 2.8125, 0.5703, 2.8047, 0.6875, 2.8125, 0.625, 4.9219, 0.5703, 2.8047, 0.625, 4.9219, 0.5078, 4.9141, 0.5078, -0.1953, 0.625, -0.1875, 0.5078, 0.1172, 0.5078, 0.1172, 0.625, -0.1875, 0.625, 0.125, 0.5078, -4.8438, 0.625, -4.8516, 0.6875, -2.7344, 0.5078, -4.8438, 0.6875, -2.7344, 0.5703, -2.7266, 0.5703, -2.7266, 0.6875, -2.7344, 0.6172, -1.3359, 0.6172, -1.3359, 0.6875, -2.7344, 0.7344, -1.3438, -1.1833, -1.8904, -1.2122, -0.4256, -1.4518, -0.4275, -1.1833, -1.8904, -1.4518, -0.4275, -1.4724, -1.8931, -1.4518, -0.4275, -1.2122, -0.4256, -1.1737, 1.8335, -1.4518, -0.4275, -1.1737, 1.8335, -1.4918, 1.7957 ]
+  },
+  {
+    "description": "TFA Lobby - Raid Entrance Door",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_LOBBY_RAID_ENTRY"
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientation": 350,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Pillar",
+    "baseMaterial": "ROCK_6",
+    "undoVanillaShading": false,
+    "minLightness": 12,
+    "shiftLightness": 2,
+    "objectIds": [
+      "TFA_PILLAR_GUTHIXIAN00_LOBBY01",
+      "TFA_PILLAR_GUTHIXIAN00_LOBBY02"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": 2,
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "TFA Lobby - Roots",
+    "baseMaterial": "LIGHT_BARK",
+    "uvOrientation": 120,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_ROOT_GUTHIXIAN01_LARGE03",
+      "TFA_ROOT_GUTHIXIAN01_LARGE02",
+      "TFA_ROOT_GUTHIXIAN01_LARGE01",
+      "TFA_ENTRANCE_GUTHIXIAN00_MANTEL01",
+      "TFA_ROOT_GUTHIXIAN01_LARGE02_OFFSET01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": 2,
+        "baseMaterial": "PURE_BLACK"
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_6",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "TFA - Loot Room Platform",
+    "baseMaterial": "ROCK_3",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALLKIT_GUTHIXLOOT01_PLATFORM01",
+      "TFA_WALLKIT_GUTHIXLOOT01_PLATFORM02",
+      "TFA_WALLKIT_GUTHIXLOOT01_PLATFORM03",
+      "TFA_WALLKIT_GUTHIXLOOT01_PLATFORM04",
+      "TFA_WALLKIT_GUTHIXLOOT01_WALKWAY01",
+      "TFA_WALLKIT_GUTHIXLOOT01_WALKWAY02",
+      "TFA_WALLKIT_GUTHIXLOOT01_WALKWAY03",
+      "TFA_WALLKIT_GUTHIXLOOT01_RAMP01",
+      "TFA_RUBBLE_GUTHIXLOOT01_STEPS01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 43",
+        "baseMaterial": "NONE",
+        "castShadows": false,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Grass",
+        "colors": "s < 2",
+        "baseMaterial": "SMOOTH_STONE",
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 2
+      }
+    ]
+  },
+  {
+    "description": "TFA - Loot Room Platform - Trees",
+    "baseMaterial": "LIGHT_BARK",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES01",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES02",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES03",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES04",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES05",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES06",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES07"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h == 43",
+        "baseMaterial": "NONE",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA - Loot Room Platform - Walkway",
+    "baseMaterial": "LIGHT_BARK",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES01",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES02",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES03",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES04",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES05",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES06",
+      "TFA_WALLKIT_GUTHIXLOOT01_TREES07"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h == 43",
+        "baseMaterial": "NONE",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA - Walls with Branches and or Bark",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE01_DEFAULT01_BLACKOUT01",
+      "TFA_WALLKIT_ARCHIVE01_DEFAULT01_DARKER03",
+      "TFA_WALLKIT_ARCHIVE01_DEFAULT01_DARKER02",
+      "TFA_WALLKIT_ARCHIVE01_DEFAULT01_DARKER04",
+      "TFA_WALLKIT_ARCHIVE01_DEFAULT01",
+      "TFA_WALLKIT_ARCHIVE01_ROOTS01",
+      "TFA_WALLKIT_ARCHIVE01_ROOTS02",
+      "TFA_WALLKIT_ARCHIVE01_TRANSITION01",
+      "TFA_WALLKIT_ARCHIVE01_PILLAR01",
+      "TFA_WALLKIT_ARCHIVE01_TRANSITION02",
+      "TFA_WALLKIT_ARCHIVE01_TRUNKS01",
+      "TFA_WALLKIT_ARCHIVE01_PILLAR01_M",
+      "TFA_WALLKIT_ARCHIVE01_PILLAR02",
+      "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE01",
+      "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE02",
+      "TFA_NEXUS_SECTION_DOOR_CLOSED",
+      "TFA_NEXUS_SECTION_DOOR_CLOSED_ANIM",
+      "TFA_NEXUS_SECTION3_DOOR_EAST",
+      "TFA_NEXUS_SECTION2_DOOR_WEST",
+      "TFA_NEXUS_SECTION1_DOOR_WEST",
+      "TFA_NEXUS_SECTION3_DOOR_WEST",
+      "TFA_NEXUS_SECTION1_DOOR_EAST",
+      "TFA_NEXUS_SECTION2_DOOR_EAST",
+      "TFA_NEXUS_SECTION1_DOOR_WEST_SLIGHTLY",
+      "TFA_NEXUS_SECTION1_DOOR_EAST_SLIGHTLY",
+      "TFA_NEXUS_SECTION2_DOOR_WEST_SLIGHTLY",
+      "TFA_NEXUS_SECTION2_DOOR_EAST_SLIGHTLY",
+      "TFA_NEXUS_SECTION3_DOOR_WEST_SLIGHTLY",
+      "TFA_NEXUS_SECTION3_DOOR_EAST_SLIGHTLY",
+      "TFA_NEXUS_SECTION1_DOOR_EAST_SLIGHTLY_OPENED",
+      "TFA_NEXUS_SECTION1_DOOR_WEST_SLIGHTLY_OPENED",
+      "TFA_NEXUS_SECTION3_DOOR_EAST_SLIGHTLY_OPENED",
+      "TFA_NEXUS_SECTION3_DOOR_WEST_SLIGHTLY_OPENED",
+      "TFA_NEXUS_SECTION2_DOOR_WEST_SLIGHTLY_OPENED",
+      "TFA_NEXUS_SECTION2_DOOR_EAST_SLIGHTLY_OPENED",
+      "TFA_RECORDS_ROOM_DOOR_LOCKED",
+      "TFA_RECORDS_ROOM_DOOR_UNLOCKED",
+      "TFA_WALLKIT_ARCHIVE01_DEFAULT01_DARKER01",
+      "TFA_NEXUS_SECTION3_DOOR_CLOSED_DARK",
+      "TFA_WALLKIT_ARCHIVE01_PILLAR01_DARKER01_M",
+      "TFA_WALLKIT_ARCHIVE01_PILLAR01_DARKER01",
+      "TFA_NEXUS_OCELLUS_DOOR_CLOSED",
+      "TFA_NEXUS_OCELLUS_DOOR_CLOSED_ANIM",
+      "TFA_NEXUS_OCELLUS_DOOR_OPEN",
+      "TFA_WALLKIT_ARCHIVE01_TRANSITION01_DARKER03",
+      "TFA_WALLKIT_ARCHIVE01_ROOTS01_DARKER03",
+      "TFA_WALLKIT_ARCHIVE01_TRANSITION02_DARKER03",
+      "TFA_WALLKIT_ARCHIVE01_TRANSITION02_DARKER02",
+      "TFA_WALLKIT_ARCHIVE01_ROOTS01_DARKER02",
+      "TFA_WALLKIT_ARCHIVE01_TRANSITION01_DARKER02",
+      "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE03",
+      "TFA_WALLKIT_ARCHIVE01_PILLAR02_FALLOFF01",
+      "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE03_2X2",
+      "TFA_DUNGEONKIT_GUTHIXIAN01_FENCE02_M",
+      "TFA_NEXUS_SECTION1_DOOR_EAST_SLIGHTLY_OPENED",
+      "TFA_NEXUS_SECTION1_DOOR_WEST_SLIGHTLY_OPENED",
+      "TFA_WALLKIT_ARCHIVE01_ENTRY02",
+      "TFA_WALLKIT_ARCHIVE01_ENTRY01",
+      "TFA_WALLKIT_ARCHIVE01_ENTRY03",
+      "TFA_WALLKIT_ARCHIVE01_DAMAGED02",
+      "TFA_WALLKIT_SOULPRISON01_PORTAL01",
+      "TFA_WALLKIT_ARCHIVE01_PILLAR02_GREY01",
+      "TFA_WALLKIT_ARCHIVE01_PILLAR02_FALLOFF02",
+      "TFA_WALLKIT_ARCHIVE01_PILLAR02_FALLOFF03",
+      "TFA_OCELLUS_PLATFORM_JUMP_OUTER_NORTH",
+      "TFA_OCELLUS_PLATFORM_JUMP_MIDDLE",
+      "TFA_OCELLUS_PLATFORM_JUMP_OUTER_SOUTH",
+      "TFA_OCELLUS_PLATFORM_JUMP_OUTER_EAST",
+      "TFA_OCELLUS_PLATFORM_JUMP_OUTER_WEST"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 16 && s == 6",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "shiftLightness": 8,
+        "uvScale": 0.15,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai - Book Plinth with Force Field",
+    "baseMaterial": "NONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_DAGONHAI_BOOK01_DEFAULT01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 21 && a == 255",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 7 || h == 8",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai - Wall with Bookcase",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE01_BOOKS04",
+      "TFA_WALLKIT_ARCHIVE01_BOOKS03",
+      "TFA_WALLKIT_ARCHIVE01_BOOKS01",
+      "TFA_WALLKIT_ARCHIVE01_BOOKS02"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 12 || h == 21 && s == 3 || h >= 23 || h == 10 || h == 7 && s == 1 || h == 8 && s == 1",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "shiftLightness": -4,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai - Table with Books or Paper",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_TABLE_ARCHIVE01_BOOKS01",
+      "TFA_TABLE_ARCHIVE01_BOOKS02",
+      "TFA_TABLE_ARCHIVE01_BOOKS03",
+      "TFA_TABLE_ARCHIVE01_BOOKS04",
+      "TFA_TABLE_ARCHIVE01_BOOKS07",
+      "TFA_TABLE_ARCHIVE01_BOOKS06",
+      "TFA_TABLE_ARCHIVE01_BOOKS05"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 12 || h == 21 && s == 3 || h >= 23 || h == 10 || h == 7 && s == 1 || h == 8 && s == 1",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "shiftLightness": -4,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 5 || h == 8 || h == 7 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientationY": 512,
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "shiftLightness": 5,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Dagon'hai - Fallen Books and Paper",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "shiftLightness": 2,
+    "objectIds": [
+      "TFA_BOOK_ARCHIVE01_FALLEN02",
+      "TFA_BOOK_ARCHIVE01_FALLEN04",
+      "TFA_BOOK_ARCHIVE01_PAPER01",
+      "TFA_BOOK_ARCHIVE01_FALLEN01",
+      "TFA_BOOK_ARCHIVE01_FALLEN02B",
+      "TFA_BOOK_ARCHIVE01_PAPER02",
+      "TFA_BOOK_ARCHIVE01_FALLEN03B",
+      "TFA_BOOK_ARCHIVE01_FALLEN05",
+      "TFA_BOOK_ARCHIVE01_FALLEN01B",
+      "TFA_BOOK_ARCHIVE01_FALLEN05B",
+      "TFA_BOOK_ARCHIVE01_FALLEN03"
+    ]
+  },
+  {
+    "description": "TFA Moia - Dead Walls with Branches and or Bark",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE01_MOIA01_BRANCH02",
+      "TFA_WALLKIT_MOIA01_DEFAULT02",
+      "TFA_WALLKIT_MOIA01_DEFAULT01",
+      "TFA_WALLKIT_ARCHIVE01_SKELETON01",
+      "TFA_WALLKIT_MOIA01_PILLAR01_M",
+      "TFA_WALLKIT_ARCHIVE01_MOIA01_PILLAR01",
+      "TFA_WALLKIT_ARCHIVE01_MOIA01_ROOTS01",
+      "TFA_WALLKIT_ARCHIVE01_SKELETON02",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_MOIA01_TRANSITION01",
+      "TFA_WALLKIT_ARCHIVE01_MOIA01_ROOTS02",
+      "TFA_WALLKIT_ARCHIVE01_MOIA01_TRANSITION01",
+      "TFA_WALLKIT_ARCHIVE01_MOIA01_TRANSITION02",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_MOIA01_TRANSITION02",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_MOIA01_CORNER01",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_MOIA01",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_MOIA01_CORNER02",
+      "TFA_WALLKIT_MOIA01_TRUNKS01",
+      "TFA_WALLKIT_ARCHIVE01_MOIA01_BRANCH01",
+      "TFA_ARCHIVE01_MOIA01_PILLAR04",
+      "TFA_ARCHIVE01_MOIA01_PILLAR01",
+      "TFA_ARCHIVE01_MOIA01_PILLAR02",
+      "TFA_ARCHIVE01_MOIA01_PILLAR03"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 16 && s == 6",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "shiftLightness": 8,
+        "uvScale": 0.15,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA - Huge Skull Walls with Bark",
+    "baseMaterial": "SMOOTH_STONE",
+    "castShadows": false,
+    "uvOrientation": 256,
+    "undoVanillaShading": false,
+    "shiftLightness": 2,
+    "uvScale": 2,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE02_SKULL02",
+      "TFA_WALLKIT_ARCHIVE02_SKULL01",
+      "TFA_WALLKIT_ARCHIVE02_FILLER01",
+      "TFA_WALLKIT_ARCHIVE02_FILLER01_M",
+      "TFA_WALLKIT_ARCHIVE02_WALKWAY02",
+      "TFA_WALLKIT_ARCHIVE02_WALKWAY01",
+      "TFA_WALLKIT_ARCHIVE02_CORNER00",
+      "TFA_WALLKIT_ARCHIVE02_WALKWAY00",
+      "TFA_WALLKIT_ARCHIVE02_PILLAR04",
+      "TFA_WALLKIT_ARCHIVE02_PILLAR03",
+      "TFA_WALLKIT_ARCHIVE02_PILLAR01",
+      "TFA_WALLKIT_ARCHIVE02_PILLAR00",
+      "TFA_WALLKIT_ARCHIVE02_FILLER00_M",
+      "TFA_WALLKIT_ARCHIVE02_STRAIGHT00",
+      "TFA_WALLKIT_ARCHIVE02_FILLER00",
+      "TFA_WALLKIT_ARCHIVE03_WALKWAY04",
+      "TFA_WALLKIT_ARCHIVE03_WALKWAY01",
+      "TFA_WALLKIT_ARCHIVE03_WALKWAY05",
+      "TFA_WALLKIT_ARCHIVE03_WALKWAY03",
+      "TFA_WALLKIT_ARCHIVE03_WALKWAY02"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 16 && s == 6",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "shiftLightness": 8,
+        "uvScale": 0.4,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 0 && l == 2 && s == 0",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "TFA - Final Boss Platform",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvOrientation": 256,
+    "shiftLightness": 8,
+    "undoVanillaShading": false,
+    "upwardsNormals": true,
+    "uvScale": 2,
+    "objectIds": [
+      "TFA_DUNGEONKIT_GUTHIXIAN03_BRIDGE01",
+      "TFA_WALLKIT_ARCHIVE03_SLICE01_M",
+      "TFA_WALLKIT_ARCHIVE03_SLICE01",
+      "TFA_WALLKIT_ARCHIVE03_SLICE01_OFFSET",
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT01",
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT02",
+      "TFA_WALLKIT_ARCHIVE03_ENTRANCE01",
+      "TFA_WALLKIT_ARCHIVE03_CENTER01",
+      "TFA_WALLKIT_ARCHIVE03_CENTER01_BLOCKWALK",
+      "TFA_WALLKIT_ARCHIVE03_ENTRANCE02_CLOSED",
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_01",
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_02",
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_03",
+      "TFA_WALLKIT_ARCHIVE03_STRAIGHT_COLLAPSE_04",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_SE_03",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_SE_02",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_SE_01",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_NE_03",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_NE_02",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_NE_01",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_NW_03",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_NW_02",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_NW_01",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_SW_03",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_SW_02",
+      "TFA_WALLKIT_ARCHIVE03_SLICE_COLLAPSE_SW_01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 12",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK",
+        "uvType": "BOX",
+        "shiftLightness": 8,
+        "uvScale": 0.15,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA - Final Boss Censers",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "undoVanillaShading": false,
+    "uvScale": 0.15,
+    "objectIds": [
+      "TFA_OCELLUS_ARTIFACT_SPEC_INACTIVE",
+      "TFA_OCELLUS_ARTIFACT_HEAL_INACTIVE",
+      "TFA_OCELLUS_ARTIFACT_SPEC",
+      "TFA_OCELLUS_ARTIFACT_HEAL",
+      "TFA_OCELLUS_ARTIFACT_DAMAGE_MELEE",
+      "TFA_OCELLUS_ARTIFACT_DAMAGE_RANGED",
+      "TFA_OCELLUS_ARTIFACT_DAMAGE_MELEE_INACTIVE",
+      "TFA_OCELLUS_ARTIFACT_DAMAGE_RANGED_INACTIVE"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "TFA - Boss Teleporter",
+    "baseMaterial": "GRUNGE_3",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_BOSS_TELEPORTER",
+      "TFA_TELEPORTER_JELLY",
+      "TFA_TELEPORTER_MOIA"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 10 || h > 10 && s < 2",
+        "baseMaterial": "LIGHT_BARK",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA - Relic Display Plinth",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_DISPLAY_PLINTH02_GUTHIXIAN01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 16 && s == 7",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "shiftLightness": 8,
+        "uvScale": 0.15,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA - Ocellus Purple Floor Dodge Pool",
+    "baseMaterial": "NONE",
+    "upwardsNormals": true,
+    "graphicsObjectIds": [
+      "VFX_OCELLUS_P2_AOE_DODGE"
+    ]
+  },
+  {
+    "description": "TFA - Apply Void Shader to some NPCs who use vertex colours rather than the actual texture",
+    "baseMaterial": "NONE",
+    "npcIds": [
+      "TFA_OCELLUS_P2",
+      "TFA_OCELLUS_P3",
+      "TFA_BLADE_NPC_VAULT_ENTRY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 63 && s > 0",
+        "baseMaterial": "TFA_VOID"
+      }
+    ]
+  },
+  {
+    "description": "TFA - Branches Only",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "shiftLightness": 4,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE02_VINES02_SMALL",
+      "TFA_WALLKIT_ARCHIVE02_VINES00_SMALL_M",
+      "TFA_WALLKIT_ARCHIVE02_VINES01_SMALL",
+      "TFA_WALLKIT_ARCHIVE02_VINES03_SMALL",
+      "TFA_WALLKIT_ARCHIVE02_VINES00",
+      "TFA_WALLKIT_ARCHIVE02_VINES03",
+      "TFA_WALLKIT_ARCHIVE02_VINES02",
+      "TFA_WALLKIT_ARCHIVE02_VINES01",
+      "TFA_WALLKIT_ARCHIVE02_VINES00_SMALL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 16 && s == 7",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "shiftLightness": 8,
+        "uvScale": 0.15,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA - Artifact",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_ARTEFACT_GUTHIXIAN01",
+      "TFA_ARTEFACT_GUTHIXIAN02",
+      "TFA_ARTEFACT_GUTHIXIAN03",
+      "TFA_ARTEFACT_GUTHIXIAN04",
+      "TFA_ARTEFACT_GUTHIXIAN05"
+    ]
+  },
+  {
+    "description": "TFA - Artifact - Upwards Normals",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "upwardsNormals": true,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_ARTEFACT_GUTHIXIAN06"
+    ]
+  },
+  {
+    "description": "TFA Ezekiel Room - Pillar",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE01_PILLAR01_SHIELD01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 16 && s == 1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Dreadnoth Room - Pillar",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALLKIT_SOULPRISON01_PILLAR01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 2 || h == 7 && s > 1",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Dreadnoth Room - Corpse/Robes",
+    "baseMaterial": "CARPET_LIGHT",
+    "maxLightness": 33,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_SOULPRISON_CORPSE01_DARK01",
+      "TFA_SOULPRISON_CORPSE02_DARK01",
+      "TFA_SOULPRISON_CORPSE01",
+      "TFA_SOULPRISON_CORPSE02",
+      "TFA_SOULPRISON_CORPSE03",
+      "TFA_SOULPRISON_CORPSE05"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "TFA Dreadnoth Room - Corpse with Legs",
+    "baseMaterial": "CARPET_LIGHT",
+    "maxLightness": 33,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_SOULPRISON_CORPSE04"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "GRUNGE_3",
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Xarth Room - Walls",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALLKIT_XARTH01_DEFAULT01",
+      "TFA_WALLKIT_XARTH01_TRANSITION02",
+      "TFA_WALLKIT_XARTH01_TRANSITION01",
+      "TFA_WALLKIT_XARTH01_VIVARIUM01_ENTRANCE01",
+      "TFA_WALLKIT_XARTH01_PILLAR01_M",
+      "TFA_WALLKIT_XARTH01_PILLAR01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s > 1",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Xarth Room - Walls - Burnt",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALLKIT_XARTH01_DEFAULT01_BURNT02",
+      "TFA_WALLKIT_XARTH01_DEFAULT01_BURNT01",
+      "TFA_WALLKIT_XARTH01_TRANSITION02_BURNT01",
+      "TFA_WALLKIT_XARTH01_TRUNKS01_BURNT01",
+      "TFA_WALLKIT_XARTH01_TRANSITION01_BURNT01",
+      "TFA_WALLKIT_ARCHIVE01_PILLAR02_BURNT01",
+      "TFA_WALLKIT_XARTH01_PILLAR01_BURNT01",
+      "TFA_WALLKIT_ARCHIVE01_PILLAR01_BURNT01_M",
+      "TFA_XARTH_RUBBLE_1",
+      "TFA_XARTH_RUBBLE_2",
+      "TFA_XARTH_RUBBLE_3"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 10 || h == 16",
+        "baseMaterial": "GRAVEL_LIGHT",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_75",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "TFA Xarth Room - Tiles - Burnt",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "uvType": "BOX",
+    "shiftLightness": 2,
+    "objectIds": [
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_BURNT01",
+      "TFA_FLOORKIT_GUTHIXIAN01_FILLER01_BURNT01",
+      "TFA_FLOORKIT_GUTHIXIAN01_DIAG01_BURNT01"
+    ]
+  },
+  {
+    "description": "TFA Xarth Room - Burnt Corpse Piles",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "shiftLightness": 2,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE01",
+      "TFA_XARTH01_CORPSE_PILE02",
+      "TFA_XARTH01_CORPSE_PILE03",
+      "TFA_XARTH01_CORPSE_PILE04",
+      "TFA_XARTH01_CORPSE_PILE05",
+      "TFA_XARTH01_CORPSE_PILE06",
+      "TFA_XARTH01_CORPSE_PILE07",
+      "TFA_XARTH01_CORPSE_PILE08",
+      "TFA_XARTH01_CORPSE_PILE09",
+      "TFA_XARTH01_CORPSE_PILE010",
+      "TFA_CORPSE_HUMAN01_BURNT01_DARK01",
+      "TFA_CORPSE_GOBLIN01_BURNT01_DARK01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "s !=0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "l > 4",
+        "baseMaterial": "GRUNGE_1",
+        "uvType": "BOX",
+        "shiftLightness": 5,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Xarth Room - Corpse Pile Fire",
+    "baseMaterial": "GRAY_80",
+    "upwardsNormals": true,
+    "objectIds": [
+      "TFA_XARTH01_CORPSE_PILE_FIRE01",
+      "TFA_XARTH01_CORPSE_PILE_FIRE02",
+      "TFA_XARTH01_CORPSE_PILE_FIRE03",
+      "TFA_XARTH01_CORPSE_PILE_FIRE04",
+      "TFA_XARTH01_CORPSE_PILE_FIRE05",
+      "TFA_XARTH01_CORPSE_PILE_FIRE06",
+      "TFA_XARTH01_CORPSE_PILE_FIRE07",
+      "TFA_XARTH01_CORPSE_PILE_FIRE08"
+    ]
+  },
+  {
+    "description": "TFA Xarth Room - Vivarium Glass Walls",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALLKIT_XARTH01_VIVARIUM01",
+      "TFA_WALLKIT_XARTH01_VIVARIUM02",
+      "TFA_WALLKIT_XARTH01_VIVARIUM03",
+      "TFA_WALLKIT_XARTH01_VIVARIUM03",
+      "TFA_WALLKIT_XARTH01_VIVARIUM04",
+      "TFA_WALLKIT_XARTH01_VIVARIUM05",
+      "TFA_WALLKIT_XARTH01_VIVARIUM01_FISH",
+      "TFA_WALLKIT_XARTH01_VIVARIUM02_FISH",
+      "TFA_WALLKIT_XARTH01_VIVARIUM03_FISH",
+      "TFA_WALLKIT_XARTH01_VIVARIUM04_FISH"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h > 30 && s == 2 && a < 255 || h == 0 && s == 2 && a < 255",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "shiftAlpha": 60,
+        "shiftSaturation": -1
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_75",
+        "shiftAlpha": -30
+      },
+      {
+        "colors": "h == 7 && s > 1",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Bork Room - Walls - Damaged",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE01_DAMAGED01",
+      "TFA_WALLKIT_ARCHIVE01_DAMAGED04",
+      "TFA_WALLKIT_ARCHIVE01_DAMAGED03"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 7 && s == 4",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 16 && s == 6",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.15,
+        "shiftLightness": 8,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Archive Guardian Room - Walls - Undo Vanilla Shading",
+    "baseMaterial": "SMOOTH_STONE_LIGHT",
+    "objectIds": [
+      "TFA_FALLOFF_GUTHIXIAN01_EDGE01_DARKER01",
+      "TFA_FALLOFF_GUTHIXIAN01_DIAG01_DARKER01",
+      "TFA_FALLOFF_GUTHIXIAN01_FILLER01_DARKER02",
+      "TFA_FALLOFF_GUTHIXIAN01_EDGE01_DARKER02",
+      "TFA_FALLOFF_GUTHIXIAN01_DIAG01_DARKER02",
+      "TFA_FALLOFF_GUTHIXIAN01_EDGE01_DARKER03",
+      "TFA_FALLOFF_GUTHIXIAN01_EDGE03",
+      "TFA_FALLOFF_GUTHIXIAN01_EDGE01",
+      "TFA_FALLOFF_GUTHIXIAN01_EDGE02",
+      "TFA_FALLOFF_GUTHIXIAN01_DIAG01",
+      "TFA_FALLOFF_GUTHIXIAN01_END01_M",
+      "TFA_FALLOFF_GUTHIXIAN01_FILLER01",
+      "TFA_FALLOFF_GUTHIXIAN01_CORNER01",
+      "TFA_FALLOFF_GUTHIXIAN01_END01",
+      "TFA_FALLOFF_GUTHIXIAN01_DIAG02"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "minLightness": 10,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Dreadnoth Room - Walls - Undo Vanilla Shading",
+    "baseMaterial": "SMOOTH_STONE_LIGHT",
+    "objectIds": [
+      "TFA_FALLOFF_SOULPRISON01_EDGE03",
+      "TFA_FALLOFF_SOULPRISON01_EDGE02",
+      "TFA_FALLOFF_SOULPRISON01_EDGE01",
+      "TFA_FALLOFF_SOULPRISON01_DIAG01",
+      "TFA_FALLOFF_SOULPRISON01_FILLER01_SLIME",
+      "TFA_FALLOFF_SOULPRISON01_DIAG02",
+      "TFA_FALLOFF_SOULPRISON01_DIAG03_TWISTED",
+      "TFA_FALLOFF_SOULPRISON01_EDGE01_TWISTED",
+      "TFA_FALLOFF_SOULPRISON01_EDGE02_TWISTED"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 1",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "uvScale": 0.7,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 61",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "minLightness": 10,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Archive Guardian Room - Floor Tiles",
+    "baseMaterial": "SMOOTH_STONE_LIGHT",
+    "objectIds": [
+      "TFA_FLOORKIT_GUTHIXIAN01_CORNER01_DARK02",
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_DARK02",
+      "TFA_FLOORKIT_GUTHIXIAN01_DIAG01_DARK02",
+      "TFA_FLOORKIT_GUTHIXIAN01_DIAG01_DARK01",
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_DARK01",
+      "TFA_FLOORKIT_GUTHIXIAN01_CORNER02_DARK01",
+      "TFA_FLOORKIT_GUTHIXIAN01_CORNER01",
+      "TFA_FLOORKIT_GUTHIXIAN01_FILLER01",
+      "TFA_FLOORKIT_GUTHIXIAN01_CORNER01_DARK01",
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01",
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_RAISE01",
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_DARK03",
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_DARK04",
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_DARK05",
+      "TFA_FLOORKIT_GUTHIXIAN01_DIAG02",
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE02",
+      "TFA_FLOORKIT_GUTHIXIAN01_CORNER02",
+      "TFA_FLOORKIT_GUTHIXIAN01_FILLER01_GREY01",
+      "TFA_FLOORKIT_GUTHIXIAN01_DIAG01_GREY01",
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_GREY01",
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_GREY02",
+      "TFA_FLOORKIT_GUTHIXIAN01_FILLER01_DARK01",
+      "TFA_FLOORKIT_GUTHIXIAN01_DIAG01",
+      "TFA_FLOORKIT_GUTHIXIAN01_DIAG01_OFFSET",
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_GREY03",
+      "TFA_FLOORKIT_GUTHIXIAN01_DIAG01_GREY03",
+      "TFA_SKEWSTEPS_GUTHIXIAN01_CORNER01_GREY01",
+      "TFA_SKEWSTEPS_GUTHIXIAN01_EDGE01_GREY01",
+      "TFA_FLOORKIT_GUTHIXIAN01_CORNER01_GREY03",
+      "TFA_SKEWSTEPS_GUTHIXIAN01_EDGE01_PURPLE01",
+      "TFA_SKEWSTEPS_GUTHIXIAN01_CORNER03_PURPLE01",
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_PURPLE01",
+      "TFA_FLOORKIT_GUTHIXIAN01_TILE01_PURPLE02",
+      "TFA_FLOORKIT_MOIA01_GRAVE05",
+      "TFA_FLOORKIT_MOIA01_GRAVE02",
+      "TFA_FLOORKIT_MOIA01_GRAVE04",
+      "TFA_FLOORKIT_MOIA01_GRAVE03",
+      "TFA_FLOORKIT_GUTHIXIAN00_TILE01_PURPLE01",
+      "TFA_FLOORKIT_MOIA01_GRAVE01",
+      "TFA_FLOORKIT_GUTHIXIAN00_TILE01_PURPLE02"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "TFA Archive Guardian Room - Inert Guardian",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_DUNGEONKIT_GUTHIXIAN01_BATTERY01_BASE",
+      "TFA_CORPSE_GUARDIAN01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7 || h == 8",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 16 && s == 6",
+        "baseMaterial": "LEAF_VEINS",
+        "shiftLightness": 8,
+        "uvType": "BOX",
+        "uvScale": 0.15,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Archive Guardian Room - Inert Guardian - Flame Holder",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "shiftLightness": 2,
+    "undoVanillaShading": false,
+    "npcIds": [
+      "TFA_GUARDIAN_BATTERY_INACTIVE",
+      "TFA_GUARDIAN_BATTERY_ACTIVE",
+      "TFA_GUARDIAN_BATTERY_DESTROYED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_90",
+        "upwardsNormals": true
+      },
+      {
+        "colors": "h == 16 && s == 6",
+        "baseMaterial": "LEAF_VEINS",
+        "shiftLightness": 8,
+        "uvType": "BOX",
+        "uvScale": 0.15,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Archive Guardian Room - Guardian Origin",
+    "baseMaterial": "SMOOTH_STONE",
+    "shiftLightness": 1,
+    "objectIds": [
+      "TFA_DUNGEONKIT_GUTHIXIAN01_BASE01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 13 && s == 3",
+        "baseMaterial": "GRASS_BLADE",
+        "undoVanillaShading": false,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 13 && s == 4",
+        "baseMaterial": "GRASS_2",
+        "uvScale": 1.5,
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "shiftSaturation": -1,
+        "shiftHue": -2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Archive Guardian Room - Mushroom",
+    "baseMaterial": "NONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_GUARDIAN_MUSHROOM_DESPAWN",
+      "TFA_GUARDIAN_MUSHROOM_ACTIVE",
+      "TFA_GUARDIAN_MUSHROOM_SPAWN"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "TFA Archive Guardian Room - Animated Vine",
+    "baseMaterial": "NONE",
+    "minLightness": 16,
+    "undoVanillaShading": false,
+    "npcIds": [
+      "ARCHIVE_GUARDIAN_TENTACLE"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "TFA Archive Guardian Room - Black Wall Filler",
+    "baseMaterial": "PURE_BLACK",
+    "receiveShadows": false,
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP01",
+      "TFA_WALLKIT_ARCHIVE02_TOP01"
+    ]
+  },
+  {
+    "description": "TFA Archive Guardian Room - Dirt Wall Filler",
+    "objectIds": [
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_CORNER02",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_CORNER01",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_TRANSITION02",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_TRANSITION01",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_DARK01",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_DARK02",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_DARK03",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_TRANSITION03",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_TRANSITION01_DARKER01",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_TRANSITION03_DARKER01",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_CORNER01_DARKER01",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_CORNER01_DARKER02",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_TRANSITION03_DARKER02",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_TRANSITION01_DARKER02",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_CORNER01_DARKER03",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_CORNER02_DARKER03",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_TRANSITION02_DARKER03",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_TRANSITION01_DARKER03",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_TRANSITION03_DARKER03",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_DARK04",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_TRANSITION02_DARKER04",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_CORNER01_DARKER04",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_CORNER02_DARKER04",
+      "TFA_WALLKIT_ARCHIVE01_WALLTOP_ROOTS01_TRANSITION01_DARKER04"
+    ],
+    "colorOverrides": [
+      {
+        "colors": 2,
+        "baseMaterial": "PURE_BLACK"
+      },
+      {
+        "colors": "h == 21",
+        "baseMaterial": "SMOOTH_STONE",
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.7
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "TFA Bork Room - Smorks Range Attack",
+    "undoVanillaShading": false,
+    "projectileIds": [
+      "VFX_SMORK_RANGE_ATTACK_PROJANIM01"
+    ]
+  },
+  {
+    "description": "TFA Bork Room - Rubble",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "LOTR_RUINS_FLOOR_RUBBLE_02_LVL1",
+      "TFA_RUBBLE_ARCHIVE02_SMALL04",
+      "TFA_RUBBLE_ARCHIVE02_MEDIUM01_OFFSET01",
+      "TFA_RUBBLE_ARCHIVE02_SMALL02A",
+      "TFA_RUBBLE_ARCHIVE02_MEDIUM03",
+      "TFA_RUBBLE_ARCHIVE02_MEDIUM02",
+      "TFA_RUBBLE_ARCHIVE02_SMALL03",
+      "TFA_RUBBLE_ARCHIVE02_SMALL01",
+      "TFA_RUBBLE_ARCHIVE02_SMALL05",
+      "TFA_RUBBLE_ARCHIVE02_SMALL02",
+      "TFA_RUBBLE_ARCHIVE02_MEDIUM01",
+      "TFA_TOOLS_ARCHIVE01_HAMMER01",
+      "TFA_TOOLS_ARCHIVE01_HAMMER02",
+      "TFA_TOOLS_ARCHIVE01_HAMMER03",
+      "TFA_WALLKIT_ARCHIVE01_ENTRY01_6X6",
+      "LOTR_RUINS_FLOOR_RUBBLE_03_LVL1",
+      "LOTR_RUINS_FLOOR_RUBBLE_02_LVL2",
+      "LOTR_RUINS_FLOOR_RUBBLE_01_LVL1"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 3",
+        "baseMaterial": "GRAY_85",
+        "uvType": "BOX",
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 7 && s == 3 && l < 11 || h == 10 || h == 8 && s == 3",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "shiftLightness": 1,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Bork Room - Rubble - Large",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_RUBBLE_ARCHIVE02_LARGE1",
+      "TFA_RUBBLE_ARCHIVE01_CANNONBALL01_OFFSET01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 10 && s == 3",
+        "baseMaterial": "GRAY_85",
+        "uvType": "BOX",
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 10 || h == 8 && s == 3 || h == 7",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Bork Room - Rubble - Cannonball with Skidmark",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_RUBBLE_ARCHIVE01_CANNONBALL03",
+      "TFA_RUBBLE_ARCHIVE01_CANNONBALL02",
+      "TFA_RUBBLE_ARCHIVE01_HOLE01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 10 || h == 8 && s == 3 || h == 7",
+        "baseMaterial": "DIRT_1",
+        "uvScale": 0.5,
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Bork Room - Shelves with Tools",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_SHELF_ARCHIVE01_DEFAULT01",
+      "TFA_SHELF_ARCHIVE01_DEFAULT03",
+      "TFA_LADDER_ARCHIVE01_DEFAULT01",
+      "TFA_SHELF_ARCHIVE01_FALLEN01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 6 || h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Bork Room - Broom",
+    "baseMaterial": "LEAF_VEINS",
+    "shiftLightness": 8,
+    "uvType": "BOX",
+    "uvScale": 0.15,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_TOOLS_ARCHIVE01_BROOM01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 1",
+        "baseMaterial": "ROPE_LIGHT",
+        "undoVanillaShading": false,
+        "uvType": "MODEL_XY",
+        "uvOrientation": -200,
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "shiftLightness": 2,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Ezekiel Room - Arena Tiles",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "TFA_FLOORKIT_EZEKIEL01_TILE01_RAISEOBJ",
+      "TFA_FLOORKIT_EZEKIEL01_GUTHIX01",
+      "TFA_SKEWSTEPS_GUTHIXIAN01_EDGE01",
+      "TFA_SKEWSTEPS_GUTHIXIAN01_CORNER01",
+      "TFA_SKEWSTEPS_GUTHIXIAN01_CORNER03",
+      "TFA_FLOORKIT_EZEKIEL01_TILE01_RAISEOBJ",
+      "TFA_FLOORKIT_EZEKIEL01_DIAG01_RAISEOBJ",
+      "TFA_FLOORKIT_EZEKIEL01_TILE01",
+      "TFA_FLOORKIT_EZEKIEL01_DIAG01"
+    ]
+  },
+  {
+    "description": "TFA Ezekiel - Training Dummy",
+    "baseMaterial": "BURLAP",
+    "objectIds": [
+      "TFA_TRAINING_DUMMY01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Frame",
+        "colors": "h == 7 && s != 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftLightness": -2,
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1",
+        "shiftLightness": 10,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Ezekiel - Weapon Racks",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_RACK_EZEKIEL01_WEAPON01",
+      "TFA_RACK_EZEKIEL06_WEAPON01",
+      "TFA_RACK_EZEKIEL02_WEAPON01",
+      "TFA_RACK_EZEKIEL04_WEAPON01",
+      "TFA_RACK_EZEKIEL09_WEAPON01",
+      "TFA_RACK_EZEKIEL05_WEAPON01",
+      "TFA_RACK_EZEKIEL08_WEAPON01",
+      "TFA_RACK_EZEKIEL07_WEAPON01",
+      "TFA_RACK_EZEKIEL03_WEAPON01",
+      "TFA_WEAPONS_ARCHIVE01_LEANING01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Frame",
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "minLightness": 16,
+        "uvOrientationZ": 512,
+        "uvType": "BOX",
+        "undoVanillaShading": false,
+        "uvScale": 0.65
+      },
+      {
+        "description": "Frame 2",
+        "colors": "h == 7 && s < 3",
+        "baseMaterial": "LIGHT_BARK",
+        "shiftLightness": 2,
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "TFA Ezekiel - Shields",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_WALL_ARCHIVE01_SHIELD01_SARODOMIN01",
+      "TFA_WALL_ARCHIVE01_SHIELD01_ZAMORAK01",
+      "TFA_WEAPON_ARCHIVE01_SHIELD01_FORINTHRY01",
+      "TFA_WEAPON_ARCHIVE01_SHIELD01_ZAMORAK01"
+    ]
+  },
+  {
+    "description": "TFA Ezekiel - Corpses",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TFA_CORPSE_EZEKIEL01_ZAMORAK02",
+      "TFA_CORPSE_EZEKIEL01_ZAROS01",
+      "TFA_CORPSE_EZEKIEL01_KNIGHT01",
+      "TFA_CORPSE_EZEKIEL01_KNIGHT02",
+      "TFA_CORPSE_EZEKIEL01_ZAROS02",
+      "TFA_CORPSE_EZEKIEL01_ZAMORAK01",
+      "TFA_CORPSE_EZEKIEL01_FORTNITHY01",
+      "TFA_CORPSE_EZEKIEL01_SARADOMIN02",
+      "TFA_CORPSE_EZEKIEL01_BANDOS02",
+      "TFA_CORPSE_EZEKIEL01_SARADOMIN01",
+      "TFA_CORPSE_EZEKIEL01_BANDOS01",
+      "TFA_CORPSE_EZEKIEL01_FORTNITHY02",
+      "TFA_CORPSE_EZEKIEL01_GOBLIN02",
+      "TFA_CORPSE_SARADOMIN01_DARK01",
+      "TFA_CORPSE_SARADOMIN02_DARK01",
+      "TFA_CORPSE_EZEKIEL01_GOBLIN01",
+      "TFA_CORPSE_ZAMORAK01_DARK01",
+      "TFA_CORPSE_ZAMORAK02_DARK01",
+      "TFA_CORPSE_GOBLIN01_DARK01",
+      "TFA_CORPSE_GOBLIN02_DARK02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Bark",
+        "colors": "h == 7 && s == 2",
+        "baseMaterial": "LIGHT_BARK",
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 8 && s > 2 && s < 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "undoVanillaShading": false,
+        "uvOrientation": 240,
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "shiftLightness": 1
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 15",
+        "baseMaterial": "SMOOTH_STONE",
+        "undoVanillaShading": false,
+        "uvScale": 0.5,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s < 2 || h == 5 || h == 7 && s == 0 || h == 7 && s > 3 && s < 7 || h == 46 || h == 49 || h == 40 || h == 41 || h == 10 || h == 14 || h == 42 ",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "undoVanillaShading": false,
+        "shiftLightness": 2
+      },
+      {
+        "description": "Skin/Hair",
+        "colors": "h == 4 || h == 6 || h == 8 && s < 2 || h == 9 || h == 21 || h == 10 || h == 11 || h == 63",
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "undoVanillaShading": false
       }
     ]
   },
@@ -84279,8 +86579,8 @@
     "colorOverrides": [
       {
         "description": "Flame",
-        "colors": "a < 255",
         "baseMaterial": "NONE",
+        "colors": "a < 255",
         "upwardsNormals": true,
         "receiveShadows": false
       },

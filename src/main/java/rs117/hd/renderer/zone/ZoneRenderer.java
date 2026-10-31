@@ -726,6 +726,7 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboGlobal.underwaterCausticsColor.set(env.getWaterCausticsColor());
 		plugin.uboGlobal.underwaterCausticsStrength.set(env.waterCausticsStrength);
 		plugin.uboGlobal.elapsedTime.set((float) (plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
+		plugin.uboGlobal.voidShader.set(environmentManager.getTargetEnvironment().voidShader ? 1 : 0);
 		plugin.uboGlobal.orthographicProjection.set(plugin.orthographicProjection ? 1 : 0);
 
 		if (plugin.configColorFilter != ColorFilter.NONE) {
