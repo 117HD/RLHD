@@ -47909,9 +47909,9 @@
     "strength": 14,
     "fadeInDuration": 400,
     "fadeOutDuration": 1000,
-    "spawnDelay": 200,
+    "spawnDelay": 3200,
     "fixedDespawnTime": true,
-    "despawnDelay": 1500,
+    "despawnDelay": 4500,
     "color": [
       180,
       0,
@@ -47931,9 +47931,9 @@
     "strength": 18,
     "fadeInDuration": 600,
     "fadeOutDuration": 400,
-    "spawnDelay": 500,
+    "spawnDelay": 3500,
     "fixedDespawnTime": true,
-    "despawnDelay": 1175,
+    "despawnDelay": 4175,
     "color": [
       180,
       0,
