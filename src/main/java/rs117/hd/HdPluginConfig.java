@@ -1559,6 +1559,16 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	@ConfigItem(
+		keyName = "devEnableVoidShader",
+		name = "dev: enable void shader",
+		description = "Override the void shader uniform. Default follows the environment; On and Off force the runtime branch.",
+		section = experimentalSettings
+	)
+	default DefaultBoolean enableVoidShader() {
+		return DefaultBoolean.DEFAULT;
+	}
+
 	String KEY_CENTROID_QUALIFIER = "centroidQualifier";
 	@ConfigItem(
 		keyName = KEY_CENTROID_QUALIFIER,

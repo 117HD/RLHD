@@ -55,6 +55,7 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public final Property waterColorDark = addProperty(PropertyType.FVec3, "waterColorDark");
 
 	public final Property sceneBase = addProperty(PropertyType.IVec2, "sceneBase");
+	public final Property voidShader = addProperty(PropertyType.Int, "voidShader");
 
 	public final Property underwaterEnvironment = addProperty(PropertyType.Int, "underwaterEnvironment");
 	public final Property underwaterCaustics = addProperty(PropertyType.Int, "underwaterCaustics");
@@ -77,5 +78,4 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 
 	public final Property lightningBrightness = addProperty(PropertyType.Float, "lightningBrightness");
 	public final Property elapsedTime = addProperty(PropertyType.Float, "elapsedTime");
-	public final Property voidShader = addProperty(PropertyType.Int, "voidShader");
 }

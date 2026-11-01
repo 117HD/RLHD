@@ -48,6 +48,7 @@ layout(std140) uniform UBOGlobal {
     vec3 waterColorDark;
 
     ivec2 sceneBase;
+    bool voidShader;
 
     bool underwaterEnvironment;
     bool underwaterCaustics;
@@ -70,5 +71,4 @@ layout(std140) uniform UBOGlobal {
 
     float lightningBrightness;
     float elapsedTime;
-    bool voidShader;
 } uboGlobal;

@@ -91,7 +91,6 @@ vec2 worldUvs(float scale) {
 #include <utils/fog.glsl>
 #include <utils/wireframe.glsl>
 #include <utils/lights.glsl>
-// Before the conditional sky include, since #pragma once would otherwise skip the starfield it needs when the cycle is off
 #include <utils/void_shader.glsl>
 
 #if DAYLIGHT_CYCLE

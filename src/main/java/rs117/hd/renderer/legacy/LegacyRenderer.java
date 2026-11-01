@@ -1045,6 +1045,7 @@ public class LegacyRenderer implements Renderer {
 				sceneContext.scene.getBaseX() * LOCAL_TILE_SIZE,
 				sceneContext.scene.getBaseY() * LOCAL_TILE_SIZE
 			);
+			plugin.uboGlobal.voidShader.set(config.enableVoidShader().get(environmentManager.getTargetEnvironment().voidShader) ? 1 : 0);
 
 			plugin.uboGlobal.drawDistance.set((float) plugin.getDrawDistance());
 			plugin.uboGlobal.expandedMapLoadingChunks.set(sceneContext.expandedMapLoadingChunks);
@@ -1071,7 +1072,6 @@ public class LegacyRenderer implements Renderer {
 			plugin.uboGlobal.underwaterCausticsColor.set(env.getWaterCausticsColor());
 			plugin.uboGlobal.underwaterCausticsStrength.set(env.waterCausticsStrength);
 			plugin.uboGlobal.elapsedTime.set((float) (plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
-			plugin.uboGlobal.voidShader.set(environmentManager.getTargetEnvironment().voidShader ? 1 : 0);
 
 			SkyState sky = skyManager.getState();
 			float[] shadowAngles = skyRenderer.usesMoonShadows ? sky.moonAngles : sky.shadowAngles;
