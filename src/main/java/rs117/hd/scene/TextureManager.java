@@ -154,11 +154,11 @@ public class TextureManager {
 	}
 
 	@Nullable
-	public BufferedImage loadTexture(@Nullable String filename, int fallbackVanillaIndex) {
+	public BufferedImage loadTexture(@Nullable String filename, int fallbackVanillaIndex, boolean forcedAlphaDiscard) {
 		if (filename != null) {
 			var image = loadTexture(filename);
 			if (image != null) {
-				currentTextureIsAlphaMask = isAlphaMaskTexture(image);
+				currentTextureIsAlphaMask = forcedAlphaDiscard || isAlphaMaskTexture(image);
 				if(currentTextureIsAlphaMask) {
 					alphaMaskTextures.add(filename);
 				} else {

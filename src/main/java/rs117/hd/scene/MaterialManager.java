@@ -446,7 +446,7 @@ public class MaterialManager {
 				continue;
 
 			var material = layer.material;
-			var image = textureManager.loadTexture(material.getTextureName(), material.vanillaTextureIndex);
+			var image = textureManager.loadTexture(material.getTextureName(), material.vanillaTextureIndex, material.alphaDiscard);
 			if (image == null)
 				continue;
 
