@@ -238,6 +238,7 @@ public class ZoneRenderer implements Renderer {
 		sceneCmd.setFrameTimer(frameTimer);
 		gapFillerCmd.setFrameTimer(frameTimer);
 		fastDirectionalCmd.setFrameTimer(frameTimer);
+		detailedDirectionalCmd.setFrameTimer(frameTimer);
 		terrainShadowCmd.setFrameTimer(frameTimer);
 
 		jobSystem.startUp(config.cpuUsageLimit());
@@ -1363,8 +1364,10 @@ public class ZoneRenderer implements Renderer {
 						ctx.drawAll(VAO_SHADOW, ctx.vaoDirectionalCmd);
 					}
 
-					if(plugin.configUseOIT) // Draw all alpha-models regardless of order when using OIT
+					if(plugin.configUseOIT) { // Draw all alpha-models regardless of order when using OIT
 						ctx.drawAll(VAO_ALPHA, oitRenderer.transparentCmd);
+						ctx.drawAll(VAO_ALPHA, plugin.configShadowMode == ShadowMode.DETAILED ? detailedDirectionalCmd : fastDirectionalCmd);
+					}
 
 					// Draw players with sorted alpha, without writing depth
 					ctx.vaoSceneCmd.DepthMask(false);
