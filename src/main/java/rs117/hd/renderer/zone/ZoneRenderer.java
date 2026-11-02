@@ -1043,9 +1043,9 @@ public class ZoneRenderer implements Renderer {
 		glBindVertexArray(0);
 
 		// Done rendering the scene
+		renderState.disable.set(GL_BLEND);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.disable.set(GL_DEPTH_TEST);
-		renderState.disable.set(GL_BLEND);
 		renderState.apply();
 
 		frameTimer.end(Timer.DRAW_SCENE);
@@ -1266,8 +1266,8 @@ public class ZoneRenderer implements Renderer {
 				if (skyRenderer.castsShadows && !ctx.isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 					z.renderSortedAlpha(
 						plugin.configShadowMode == ShadowMode.DETAILED ? detailedDirectionalCmd : fastDirectionalCmd,
-						zx - offset,
-						zz - offset,
+						zoneX,
+						zoneZ,
 						level,
 						ctx,
 						true,
@@ -1281,7 +1281,7 @@ public class ZoneRenderer implements Renderer {
 						// can Z-fight depending on draw order. To avoid alpha models above water causing the water surface to fail its
 						// depth test, we disable depth writes for alpha models and rely on correct back to front ordering of the zones
 						sceneCmd.DepthMask(false);
-						z.renderSortedAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
+						z.renderSortedAlpha(sceneCmd, zoneX, zoneZ, level, ctx, false, false);
 						sceneCmd.DepthMask(true);
 					} else {
 						// Draw alpha models in two passes, first blending colors correctly, then writing depth for subsequent opaque models
@@ -1290,12 +1290,12 @@ public class ZoneRenderer implements Renderer {
 						// Write color without depth writes
 						sceneCmd.DepthMask(false);
 						sceneCmd.ColorMask(true, true, true, true);
-						z.renderSortedAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
+						z.renderSortedAlpha(sceneCmd, zoneX, zoneZ, level, ctx, false, false);
 
 						// Write depth without color
 						sceneCmd.DepthMask(true);
 						sceneCmd.ColorMask(false, false, false, false);
-						z.renderSortedAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, true, false);
+						z.renderSortedAlpha(sceneCmd, zoneX, zoneZ, level, ctx, true, false);
 
 						// Restore color writes
 						sceneCmd.ColorMask(true, true, true, true);
@@ -1487,7 +1487,7 @@ public class ZoneRenderer implements Renderer {
 				// Blit from the resolved FBO to the default FBO
 				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
 
-				if (APPLE) {
+				if (APPLE && !client.isResized()) {
 					// On macOS, we need to ensure that the alpha channel is opaque to prevent whatever
 					// is beneath from leaking through. In fixed mode, the MSAA resolve alone is not
 					// sufficient, since the viewport only covers part of the screen.
