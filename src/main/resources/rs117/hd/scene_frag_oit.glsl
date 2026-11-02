@@ -13,8 +13,11 @@ in float vViewZ;
 
 void main() {
 	vec4 outputColor = shadeFragment();
+
+	#include OIT_MRT_INIT
+
 	if (outputColor.a <= OIT_ALPHA_DISCARD)
-		discard;
+		return;
 
 	ivec2 coords = ivec2(gl_FragCoord.xy);
 	vec2 depth = texelFetch(alphaFirstLastDepth, coords, 0).rg;
@@ -25,8 +28,6 @@ void main() {
 
 	OitBinLayout bins = oitComputeBinLayout(firstLayerSample, farthestLayer, z, OIT_BIN_COUNT);
 	bool isOpaque = outputColor.a >= OIT_ALPHA_OPAQUE;
-
-	#include OIT_MRT_INIT
 
 	if (isOpaque) {
 		int k = bins.home;

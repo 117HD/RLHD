@@ -63,6 +63,9 @@ public class OitRenderer {
 	private SceneShaderProgram.AlphaDiscard sceneAlphaDiscardProgram;
 
 	@Inject
+	private SceneShaderProgram.AlphaDiscardMSAA sceneAlphaDiscardMSAAProgram;
+
+	@Inject
 	private OITPrePassShaderProgram prePassProgram;
 
 	@Inject
@@ -106,6 +109,7 @@ public class OitRenderer {
 		sceneTransparentOITProgram.compile(includes);
 		sceneTransparentOITWaterProgram.compile(includes);
 		sceneAlphaDiscardProgram.compile(includes);
+		sceneAlphaDiscardMSAAProgram.compile(includes);
 
 		prePassProgram.compile(includes);
 		prePassWaterProgram.compile(includes);
@@ -118,6 +122,7 @@ public class OitRenderer {
 		sceneTransparentOITProgram.destroy();
 		sceneTransparentOITWaterProgram.destroy();
 		sceneAlphaDiscardProgram.destroy();
+		sceneAlphaDiscardMSAAProgram.destroy();
 
 		prePassProgram.destroy();
 		prePassWaterProgram.destroy();
@@ -311,7 +316,9 @@ public class OitRenderer {
 
 		renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboScene);
 		renderState.toggle(GL_MULTISAMPLE, plugin.msaaSamples > 1);
-		renderState.program.set(sceneAlphaDiscardProgram);
+		boolean useAlphaToCoverage = samples > 1;
+		renderState.toggle(GL_SAMPLE_ALPHA_TO_COVERAGE, useAlphaToCoverage);
+		renderState.program.set(useAlphaToCoverage ? sceneAlphaDiscardMSAAProgram : sceneAlphaDiscardProgram);
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.enable.set(GL_CULL_FACE);
 		renderState.disable.set(GL_BLEND);
@@ -321,8 +328,10 @@ public class OitRenderer {
 
 		alphaDiscardCmd.execute(renderState);
 
+		renderState.disable.set(GL_SAMPLE_ALPHA_TO_COVERAGE);
 		renderState.depthMask.set(false);
 		renderState.disable.set(GL_DEPTH_TEST);
+		renderState.apply();
 
 		frameTimer.end(Timer.RENDER_ALPHA_DISCARD);
 		frameTimer.end(Timer.DRAW_ALPHA_DISCARD);

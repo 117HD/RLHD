@@ -114,6 +114,13 @@ public class SceneShaderProgram extends ShaderProgram {
 		}
 	}
 
+	public static class AlphaDiscardMSAA extends AlphaDiscard {
+		@Override
+		public void compile(ShaderIncludes includes) throws ShaderException, IOException {
+			super.compile(includes.copy().define("ALPHA_DISCARD_MSAA", true));
+		}
+	}
+
 	public static class Legacy extends SceneShaderProgram {
 		Legacy() {
 			shaderTemplate.add(GL_GEOMETRY_SHADER, "scene_geom.glsl");

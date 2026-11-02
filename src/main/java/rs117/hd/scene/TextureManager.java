@@ -158,7 +158,10 @@ public class TextureManager {
 		if (filename != null) {
 			var image = loadTexture(filename);
 			if (image != null) {
-				currentTextureIsAlphaMask = forcedAlphaDiscard || isAlphaMaskTexture(image);
+				if (forcedAlphaDiscard)
+					ensureAlphaMask(image);
+
+				currentTextureIsAlphaMask = isAlphaMaskTexture(image);
 				if(currentTextureIsAlphaMask) {
 					alphaMaskTextures.add(filename);
 				} else {
@@ -227,6 +230,16 @@ public class TextureManager {
 		}
 
 		return null;
+	}
+
+	private static void ensureAlphaMask(BufferedImage image) {
+		for (int y = 0; y < image.getHeight(); y++) {
+			for (int x = 0; x < image.getWidth(); x++) {
+				int argb = image.getRGB(x, y);
+				if ((argb & 0x00FFFFFF) == 0 && (argb >>> 24) != 0)
+					image.setRGB(x, y, argb & 0x00FFFFFF);
+			}
+		}
 	}
 
 	public void uploadTexture(int target, int textureLayer, int[] textureSize, BufferedImage image) {
@@ -325,6 +338,8 @@ public class TextureManager {
 				final int neighborY = (y + dy + height) % height;
 				for (int dx = -1; dx <= 1; dx++) {
 					if (dx == 0 && dy == 0)
+						continue;
+					if (dx != 0 && dy != 0) // Propagate only across edge-adjacent texels.
 						continue;
 
 					final int neighborX = (x + dx + width) % width;

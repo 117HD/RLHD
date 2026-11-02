@@ -6,7 +6,10 @@ out vec4 FragColor;
 
 void main() {
     vec4 frag = shadeFragment();
-    if(frag.a <= 0.1)
+#ifndef ALPHA_DISCARD_MSAA
+    if (frag.a <= 0.1)
         discard;
-    FragColor = vec4(frag.rgb, 1.0);
+#endif
+
+    FragColor = vec4(frag.rgb, frag.a <= 0.1 ? 0.0 : 1.0);
 }
