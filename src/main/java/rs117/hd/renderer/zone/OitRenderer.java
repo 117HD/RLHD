@@ -314,7 +314,7 @@ public class OitRenderer {
 		renderState.program.set(sceneAlphaDiscardProgram);
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.enable.set(GL_CULL_FACE);
-		renderState.enable.set(GL_BLEND);
+		renderState.disable.set(GL_BLEND);
 
 		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.depthMask.set(true);
@@ -323,7 +323,6 @@ public class OitRenderer {
 
 		renderState.depthMask.set(false);
 		renderState.disable.set(GL_DEPTH_TEST);
-		renderState.disable.set(GL_BLEND);
 
 		frameTimer.end(Timer.RENDER_ALPHA_DISCARD);
 		frameTimer.end(Timer.DRAW_ALPHA_DISCARD);
