@@ -461,7 +461,7 @@ public class Zone implements Destructible {
 		static final int MUTLI_LOC = 4;
 		static final int ALPHA_DISCARD = 8;
 		static final int SORT_COMPLETED = 16;
-		
+
 		void setSorted() {
 			flags |= SORT_COMPLETED;
 		}
@@ -640,7 +640,7 @@ public class Zone implements Destructible {
 
 			if (faceOverride.hide)
 				continue;
-				
+
 			if (material.alphaDiscard)
 				m.flags |= AlphaModel.ALPHA_DISCARD;
 

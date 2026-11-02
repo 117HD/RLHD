@@ -385,7 +385,7 @@ public class OitRenderer {
 		renderState.disable.set(GL_BLEND);
 		renderState.stencilFunc.set(GL_EQUAL, 1, 0xFF);
 		renderState.stencilOp.set(GL_KEEP, GL_KEEP, GL_KEEP);
-		
+
 		if (samples > 1)
 			depthMergeProgram.merge(
 				renderState, plugin.vaoTri,
@@ -442,7 +442,8 @@ public class OitRenderer {
 				waterCmd.execute(renderState);
 			}
 
-			renderState.depthMask.set(true);
+			// The fullscreen composite must not overwrite the scene depth buffer.
+			renderState.depthMask.set(false);
 			frameTimer.end(Timer.RENDER_ALPHA);
 			frameTimer.end(Timer.DRAW_ALPHA);
 

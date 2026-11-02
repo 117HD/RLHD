@@ -450,7 +450,7 @@ public class MaterialManager {
 			if (image == null)
 				continue;
 
-			material.alphaDiscard |= textureManager.isAlphasMaskTexture(material.getTextureName(), material.vanillaTextureIndex);
+			material.alphaDiscard |= textureManager.isCurrentTextureIsAlphaMask();
 			try {
 				if (!uploadedAnything) {
 					glActiveTexture(TEXTURE_UNIT_GAME);

@@ -31,7 +31,6 @@ import java.awt.image.DataBufferInt;
 import java.io.IOException;
 import java.nio.IntBuffer;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +38,7 @@ import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
@@ -47,7 +47,6 @@ import org.lwjgl.opengl.*;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
-import rs117.hd.utils.collections.IntHashSet;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.utils.MathUtils.*;
@@ -84,8 +83,8 @@ public class TextureManager {
 	private BufferedImage vanillaImage;
 	private int[] alphaMaskNearestOpaque;
 	private int[] alphaMaskFloodQueue;
-	private final HashSet<String> alphaMaskTextures = new HashSet<>();
-	private final IntHashSet alphaMaskVanillaTextures = new IntHashSet();
+
+	@Getter
 	private boolean currentTextureIsAlphaMask;
 
 	private ScheduledFuture<?> debounce;
@@ -122,8 +121,6 @@ public class TextureManager {
 		vanillaImage = null;
 		alphaMaskNearestOpaque = null;
 		alphaMaskFloodQueue = null;
-		alphaMaskVanillaTextures.clear();
-		alphaMaskTextures.clear();
 		currentTextureIsAlphaMask = false;
 	}
 
@@ -149,10 +146,6 @@ public class TextureManager {
 		return true;
 	}
 
-	public boolean isAlphasMaskTexture(@Nullable String filename, int fallbackVanillaIndex) {
-		return (filename != null && alphaMaskTextures.contains(filename)) || alphaMaskVanillaTextures.contains(fallbackVanillaIndex);
-	}
-
 	@Nullable
 	public BufferedImage loadTexture(@Nullable String filename, int fallbackVanillaIndex, boolean forcedAlphaDiscard) {
 		if (filename != null) {
@@ -161,12 +154,7 @@ public class TextureManager {
 				if (forcedAlphaDiscard)
 					ensureAlphaMask(image);
 
-				currentTextureIsAlphaMask = isAlphaMaskTexture(image);
-				if(currentTextureIsAlphaMask) {
-					alphaMaskTextures.add(filename);
-				} else {
-					alphaMaskTextures.remove(filename);
-				}
+				currentTextureIsAlphaMask = forcedAlphaDiscard || isAlphaMaskTexture(image);
 				return image;
 			}
 			if (fallbackVanillaIndex == -1) {
@@ -209,11 +197,7 @@ public class TextureManager {
 		}
 
 		currentTextureIsAlphaMask = hasTransparentPixel && hasOpaquePixel;
-		if (currentTextureIsAlphaMask) {
-			alphaMaskVanillaTextures.add(fallbackVanillaIndex);
-		} else {
-			alphaMaskVanillaTextures.remove(fallbackVanillaIndex);
-		}
+		currentTextureIsAlphaMask |= forcedAlphaDiscard;
 
 		return vanillaImage;
 	}

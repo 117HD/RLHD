@@ -1,4 +1,29 @@
-#pragma once
+/*
+ * Copyright (c) 2018, Adam <Adam@sigterm.info>
+ * Copyright (c) 2021, 117 <https://twitter.com/117scape>
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+ #pragma once
 
 #include <uniforms/global.glsl>
 #include <uniforms/sky.glsl>
@@ -6,12 +31,7 @@
 #include <uniforms/materials.glsl>
 #include <uniforms/water_types.glsl>
 
-#include <utils/constants.glsl>
-#include <utils/misc.glsl>
-
 #if SHADER_TYPE == FRAGMENT_SHADER
-
-#include <utils/output_transform.glsl>
 
 #ifndef DISPLAY_BASE_COLOR
 #define DISPLAY_BASE_COLOR 0
@@ -51,10 +71,6 @@ flat in ivec3 fAlphaBiasHsl;
 flat in ivec3 fMaterialData;
 flat in ivec3 fTerrainData;
 
-#if FLAT_SHADING && ZONE_RENDERER
-    flat in vec3 fFlatNormal;
-#endif
-
 #if CENTROID_QUALIFIER
     centroid in vec3 fTexBlend;
 #else
@@ -72,6 +88,9 @@ vec2 worldUvs(float scale) {
 }
 
 #include <utils/hash.glsl>
+#include <utils/constants.glsl>
+#include <utils/misc.glsl>
+#include <utils/output_transform.glsl>
 #include <utils/caustics.glsl>
 #include <utils/color_utils.glsl>
 #include <utils/normals.glsl>
@@ -89,26 +108,6 @@ vec2 worldUvs(float scale) {
 
 #include <utils/water.glsl>
 
-#ifndef TILE_MATERIAL_COUNT
-#define TILE_MATERIAL_COUNT 3
-#endif
-
-#if TILE_MATERIAL_COUNT >= 2
-    #define TILE_PICK2(sampled, fallback) (sampled)
-    #define TILE_CALL2(stmt) stmt
-#else
-    #define TILE_PICK2(sampled, fallback) (fallback)
-    #define TILE_CALL2(stmt)
-#endif
-
-#if TILE_MATERIAL_COUNT >= 3
-    #define TILE_PICK3(sampled, fallback) (sampled)
-    #define TILE_CALL3(stmt) stmt
-#else
-    #define TILE_PICK3(sampled, fallback) (fallback)
-    #define TILE_CALL3(stmt)
-#endif
-
 struct SurfaceSample {
     Material material;
     vec4 color;                  // blended albedo (rgb) + alpha, pre-lighting
@@ -118,7 +117,6 @@ struct SurfaceSample {
     vec3 specularStrength;
     float unlit;
     float subsurface;
-    float selfShadowing;
     vec3 fragPos;                // world position, POM-displaced if enabled
     vec3 flatNormal;
     bool disableShadowReceiving;
@@ -131,7 +129,6 @@ struct SurfaceSample {
 SurfaceSample sampleSurface(vec3 viewDir, ivec4 tint, bool isUnderwater, WaterType waterType, bool isSquashed) {
     SurfaceSample surface;
     surface.hasDebugOverride = false;
-    surface.selfShadowing = 0;
     surface.subsurface = 0;
     surface.fragPos = IN.position;
     surface.flatNormal = normalize(cross(dFdx(IN.position), dFdy(IN.position)));
@@ -149,18 +146,10 @@ SurfaceSample sampleSurface(vec3 viewDir, ivec4 tint, bool isUnderwater, WaterTy
     } else {
         material1 = getMaterial(fMaterialData[0] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
     }
-    #if TILE_MATERIAL_COUNT >= 2
-        Material material2 = identicalMaterials ? material1 :
-            getMaterial(fMaterialData[1] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
-    #else
-        #define material2 material1
-    #endif
-    #if TILE_MATERIAL_COUNT >= 3
-        Material material3 = identicalMaterials ? material1 :
-            getMaterial(fMaterialData[2] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
-    #else
-        #define material3 material1
-    #endif
+    Material material2 = identicalMaterials ? material1 :
+        getMaterial(fMaterialData[1] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
+    Material material3 = identicalMaterials ? material1 :
+        getMaterial(fMaterialData[2] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
 
     surface.material = material1;
     surface.disableShadowReceiving = (fMaterialData[0] >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 1;
@@ -281,7 +270,7 @@ SurfaceSample sampleSurface(vec3 viewDir, ivec4 tint, bool isUnderwater, WaterTy
     baseColor3.rgb = srgbToLinear(hslToSrgb(baseColor3.xyz));
 
     if (isSquashed)
-        baseColor1 = baseColor2 = baseColor3 = baseColor1 * .4;
+        baseColor1.rgb = baseColor2.rgb = baseColor3.rgb = baseColor1.rgb * .4;
 
     #if DISPLAY_BASE_COLOR
     if (DISPLAY_BASE_COLOR == 1) { // Redundant, used for syntax highlighting in IntelliJ
@@ -294,8 +283,10 @@ SurfaceSample sampleSurface(vec3 viewDir, ivec4 tint, bool isUnderwater, WaterTy
     #endif
 
     vec4 texColor1 = colorMap1 == -1 ? vec4(1) : texture(textureArray, vec3(uv1, colorMap1), mipBias);
-    vec4 texColor2 = identicalMaterials ? texColor1 : TILE_PICK2(colorMap2 == -1 ? vec4(1) : texture(textureArray, vec3(uv2, colorMap2), mipBias), texColor1);
-    vec4 texColor3 = identicalMaterials ? texColor1 : TILE_PICK3(colorMap3 == -1 ? vec4(1) : texture(textureArray, vec3(uv3, colorMap3), mipBias), texColor1);
+    vec4 texColor2 = identicalMaterials ? texColor1 :
+        colorMap2 == -1 ? vec4(1) : texture(textureArray, vec3(uv2, colorMap2), mipBias);
+    vec4 texColor3 = identicalMaterials ? texColor1 :
+        colorMap3 == -1 ? vec4(1) : texture(textureArray, vec3(uv3, colorMap3), mipBias);
 
     texColor1.rgb *= material1.brightness;
     texColor2.rgb *= material2.brightness;
@@ -391,9 +382,13 @@ SurfaceSample sampleSurface(vec3 viewDir, ivec4 tint, bool isUnderwater, WaterTy
 
     // roughness maps - material2/3 fetches skipped when not needed
     float roughness1 = material1.roughnessMap == -1 ? 1 : linearToSrgb(texture(textureArray, vec3(uv1, material1.roughnessMap)).r);
-    float roughness2 = identicalMaterials ? roughness1 : TILE_PICK2(material2.roughnessMap == -1 ? 1 : linearToSrgb(texture(textureArray, vec3(uv2, material2.roughnessMap)).r), roughness1);
-    float roughness3 = identicalMaterials ? roughness1 : TILE_PICK3(material3.roughnessMap == -1 ? 1 : linearToSrgb(texture(textureArray, vec3(uv3, material3.roughnessMap)).r), roughness1);
-    surface.specularStrength *= vec3(roughness1, roughness2, roughness3);
+    surface.specularStrength *= vec3(
+        roughness1,
+        identicalMaterials ? roughness1 :
+            material2.roughnessMap == -1 ? 1 : linearToSrgb(texture(textureArray, vec3(uv2, material2.roughnessMap)).r),
+        identicalMaterials ? roughness1 :
+            material3.roughnessMap == -1 ? 1 : linearToSrgb(texture(textureArray, vec3(uv3, material3.roughnessMap)).r)
+    );
 
     // apply specular highlights to anything semi-transparent
     // this isn't always desirable but adds subtle light reflections to windows, etc.
@@ -411,9 +406,12 @@ SurfaceSample sampleSurface(vec3 viewDir, ivec4 tint, bool isUnderwater, WaterTy
     float ao1 = material1.ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(uv1, material1.ambientOcclusionMap)).r;
     surface.aoFactor = ao1;
     if (!identicalMaterials) {
-        float ao2 = TILE_PICK2(material2.ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(uv2, material2.ambientOcclusionMap)).r, ao1);
-        float ao3 = TILE_PICK3(material3.ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(uv3, material3.ambientOcclusionMap)).r, ao1);
-        surface.aoFactor = fTexBlend.x * ao1 + fTexBlend.y * ao2 + fTexBlend.z * ao3;
+        surface.aoFactor =
+            fTexBlend.x * ao1 +
+            fTexBlend.y * (material2.ambientOcclusionMap == -1 ? 1 :
+                texture(textureArray, vec3(uv2, material2.ambientOcclusionMap)).r) +
+            fTexBlend.z * (material3.ambientOcclusionMap == -1 ? 1 :
+                texture(textureArray, vec3(uv3, material3.ambientOcclusionMap)).r);
     }
 
     surface.unlit = dot(fTexBlend, vec3(
@@ -423,13 +421,6 @@ SurfaceSample sampleSurface(vec3 viewDir, ivec4 tint, bool isUnderwater, WaterTy
     ));
 
     surface.subsurface = material1.subsurface;
-
-    #if TILE_MATERIAL_COUNT < 2
-        #undef material2
-    #endif
-    #if TILE_MATERIAL_COUNT < 3
-        #undef material3
-    #endif
 
     return surface;
 }
@@ -495,7 +486,6 @@ vec4 shadeFragment() {
             bool applyNormalBias = (fMaterialData[0] >> MATERIAL_FLAG_SHADOW_NORMAL_BIAS & 1) == 1;
             shadow = sampleShadowMap(surface.fragPos, surface.flatNormal, true, applyNormalBias, true);
         }
-        shadow = max(shadow, surface.selfShadowing);
         float inverseShadow = 1 - shadow;
 
         #if DISPLAY_SHADOWS

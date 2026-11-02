@@ -57,10 +57,6 @@ layout (location = 0) in vec3 vPosition;
     flat out ivec3 fMaterialData;
     flat out ivec3 fTerrainData;
 
-    #if FLAT_SHADING
-        flat out vec3 fFlatNormal;
-    #endif
-
     #if CENTROID_QUALIFIER
         centroid out vec3 fTexBlend;
     #else
@@ -121,10 +117,6 @@ layout (location = 0) in vec3 vPosition;
         OUT.position = worldPosition;
         OUT.uv = computeVertexUvs(materialData, worldPosition, vUv.xyz);
         OUT.normal = worldNormal;
-
-        #if FLAT_SHADING
-            fFlatNormal = worldNormal;
-        #endif
 
         vViewZ = (uboGlobal.viewMatrix * vec4(worldPosition, 1.0)).z;
 
