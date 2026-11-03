@@ -49577,11 +49577,7 @@
     "offset": [ 20, 480, -50 ],
     "radius": 1400,
     "strength": 15,
-    "color": [
-      255,
-      0,
-      255
-    ],
+    "color": "#ff95ff",
     "type": "FLICKER",
     "duration": 0,
     "range": 15,
@@ -49594,11 +49590,7 @@
     "offset": [ 20, 830, -50 ],
     "radius": 350,
     "strength": 25,
-    "color": [
-      255,
-      0,
-      255
-    ],
+    "color": "#ff95ff",
     "type": "FLICKER",
     "duration": 0,
     "range": 25,
