@@ -80584,6 +80584,45 @@
     ]
   },
   {
+    "description": "TFA - Ocellus - Void objects & NPCs",
+    "objectIds": [
+      "TFA_OCELLUS_VOID_DEGEN_BOMB"
+    ],
+    "npcIds": [
+      "TFA_OCELLUS_P3_BOMBPORTAL_BASIC",
+      "TFA_OCELLUS_P3_BOMBPORTAL_HEAL",
+      "TFA_OCELLUS_P3_BOMBPORTAL_BUFF",
+      "TFA_VAULT_EXIT_SMALL",
+      "TFA_UNIQUE_CHEST_VAULT_CLOSED",
+      "TFA_UNIQUE_CHEST_VAULT_OPEN",
+      "TFA_REWARDS_CHEST_VAULT_CLOSED_NOTMINE",
+      "TFA_REWARDS_CHEST_VAULT_CLOSED_MINE",
+      "TFA_REWARDS_CHEST_VAULT_OPEN_NOTMINE",
+      "TFA_REWARDS_CHEST_VAULT_OPEN_MINE",
+      "TFA_REWARDS_CHEST_VAULT_1_CLOSED",
+      "TFA_REWARDS_CHEST_VAULT_1_OPEN",
+      "TFA_REWARDS_CHEST_VAULT_2_CLOSED",
+      "TFA_REWARDS_CHEST_VAULT_2_OPEN",
+      "TFA_REWARDS_CHEST_VAULT_3_CLOSED",
+      "TFA_REWARDS_CHEST_VAULT_3_OPEN",
+      "TFA_REWARDS_CHEST_VAULT_4_CLOSED",
+      "TFA_REWARDS_CHEST_VAULT_4_OPEN",
+      "TFA_REWARDS_CHEST_VAULT_5_CLOSED",
+      "TFA_REWARDS_CHEST_VAULT_5_OPEN",
+      "TFA_REWARDS_CHEST_VAULT_6_CLOSED",
+      "TFA_REWARDS_CHEST_VAULT_6_OPEN",
+      "TFA_REWARDS_CHEST_VAULT_7_CLOSED",
+      "TFA_REWARDS_CHEST_VAULT_7_OPEN",
+      "TFA_REWARDS_CHEST_VAULT_8_CLOSED",
+      "TFA_REWARDS_CHEST_VAULT_8_OPEN"
+    ],
+    "materialOverrides": {
+      "TFA_VOID": {
+        "textureMaterial": "TFA_VOID_DENSE"
+      }
+    }
+  },
+  {
     "description": "TFA - Apply Void Shader to some NPCs who use vertex colours rather than the actual texture",
     "baseMaterial": "NONE",
     "npcIds": [
@@ -80594,7 +80633,7 @@
     "colorOverrides": [
       {
         "colors": "h == 63 && s > 0",
-        "baseMaterial": "TFA_VOID"
+        "baseMaterial": "TFA_VOID_DENSE"
       }
     ]
   },

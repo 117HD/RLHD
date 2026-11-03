@@ -1130,6 +1130,11 @@
     "voidShader": true
   },
   {
+    "parent": "TFA_VOID",
+    "name": "TFA_VOID_DENSE",
+    "voidDensity": 7.25
+  },
+  {
     "name": "GLASS_1",
     "parent": "NONE",
     "subsurface": 1

@@ -60,6 +60,7 @@ public class Material {
 	private boolean overrideBaseColor;
 	private boolean unlit;
 	private boolean voidShader;
+	private float voidDensity = 1;
 	@JsonAdapter(ColorUtils.LinearAdapter.class)
 	public float brightness = 1;
 	public float subsurface;
@@ -230,7 +231,10 @@ public class Material {
 		struct.flowMapStrength.set(flowMapStrength);
 		struct.flowMapDuration.set(flowMapDuration);
 		struct.scrollDuration.set(scrollSpeedX, scrollSpeedY);
-		struct.textureScale.set(divide(vec(1), textureScale));
+		var texScale = divide(vec(1), textureScale);
+		if (voidShader)
+			texScale[0] = voidDensity;
+		struct.textureScale.set(texScale);
 	}
 
 	private Material resolveReference(@Nullable Material material, Map<String, Material> materials) {

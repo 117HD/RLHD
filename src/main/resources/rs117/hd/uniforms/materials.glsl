@@ -30,8 +30,8 @@ layout(std140) uniform UBOMaterials {
 
 #include MATERIAL_GETTER
 
-int getMaterialIsVoidShader(const Material material) {
-    return material.flags >> 3 & 1;
+bool getMaterialIsVoidShader(const Material material) {
+    return (material.flags >> 3 & 1) == 1;
 }
 
 bool getMaterialShouldOverrideBaseColor(const Material material) {

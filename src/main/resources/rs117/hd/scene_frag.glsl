@@ -528,21 +528,17 @@ void main() {
         #endif
 
         outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
-        outputColor.rgb = linearToSrgb(outputColor.rgb);
 
-        // Void shader materials show a starry void through the surface, in place of its texture & lighting. Only in
-        // environments that turn it on, branching on a uniform so it costs nothing elsewhere.
         if (uboGlobal.voidShader) {
             vec3 dPdx = dFdx(IN.position);
             vec3 dPdy = dFdy(IN.position);
-            float voidShader = dot(fTexBlend, vec3(
-                getMaterialIsVoidShader(material1),
-                getMaterialIsVoidShader(material2),
-                getMaterialIsVoidShader(material3)
-            ));
-            if (voidShader > 0.0)
-                outputColor.rgb = mix(outputColor.rgb, linearToSrgb(sampleVoidShader(IN.position, N, viewDir, dPdx, dPdy)), voidShader);
+            if (getMaterialIsVoidShader(material1)) {
+                float density = material1.textureScale.x;
+                outputColor.rgb = sampleVoidShader(IN.position, N, viewDir, dPdx, dPdy, density);
+            }
         }
+
+        outputColor.rgb = linearToSrgb(outputColor.rgb);
 
         if (isUnderwater) {
             sampleUnderwater(outputColor.rgb, waterType, waterDepth, lightDotNormals);
