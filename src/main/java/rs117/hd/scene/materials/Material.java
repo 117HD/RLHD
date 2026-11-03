@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.config.HexTilingMode;
 import rs117.hd.opengl.uniforms.UBOMaterials;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -63,6 +64,9 @@ public class Material {
 	public float brightness = 1;
 	public float subsurface;
 	private float displacementScale = .1f;
+	private float hexTilingScale = 0.0f;
+	private float hexTilingBlend = 0.25f;
+	private HexTilingMode hexTilingMode = HexTilingMode.OFFSET_WITH_ROTATION;
 	private float flowMapStrength;
 	private float[] flowMapDuration = { 0, 0 };
 	private float specularStrength;
@@ -215,7 +219,13 @@ public class Material {
 		struct.ambientOcclusionMap.set(getTextureLayer(ambientOcclusionMap));
 		struct.flowMap.set(getTextureLayer(flowMap));
 		struct.shadowAlphaMap.set(getTextureLayer(shadowAlphaMap));
+
+		// Hex tiling replaces the texture scale, since the uv data is shared between them
+		boolean hexTilingEnabled = hexTilingScale > 0;
+
 		struct.flags.set(
+			(hexTilingEnabled ? 1 : 0) << 5 |
+			(hexTilingMode.ordinal() & 0x3) << 3 |
 			(overrideBaseColor ? 1 : 0) << 2 |
 			(unlit ? 1 : 0) << 1 |
 			(hasTransparency ? 1 : 0)
@@ -228,7 +238,15 @@ public class Material {
 		struct.flowMapStrength.set(flowMapStrength);
 		struct.flowMapDuration.set(flowMapDuration);
 		struct.scrollDuration.set(scrollSpeedX, scrollSpeedY);
-		struct.textureScale.set(divide(vec(1), textureScale));
+		if (hexTilingEnabled) {
+			struct.uvData.set(
+				divide(1, hexTilingScale),
+				pow(79.4971f, 1 - saturate(hexTilingBlend)), // magic number for minimal blending without artifacts
+				0
+			);
+		} else {
+			struct.uvData.set(divide(vec(1), textureScale));
+		}
 	}
 
 	private Material resolveReference(@Nullable Material material, Map<String, Material> materials) {
