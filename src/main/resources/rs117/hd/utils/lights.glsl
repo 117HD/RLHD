@@ -36,7 +36,7 @@ void calculateLight(
                 pointLightDotNormals, dot(-pointLightDir, viewDir), subsurface);
 
         vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
-        pointLightsSpecularOut += pointLightColor * specular(texBlend, viewDir, pointLightReflectDir, specularGloss, specularStrength);
+        pointLightsSpecularOut += pointLightColor * light.color.w * specular(texBlend, viewDir, pointLightReflectDir, specularGloss, specularStrength);
     }
 }
 
