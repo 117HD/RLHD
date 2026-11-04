@@ -1132,7 +1132,7 @@
   {
     "name": "TFA_VOID_DENSE",
     "parent": "TFA_VOID",
-    "voidDensity": 7.25
+    "voidStarDensity": 7.25
   },
   {
     "name": "GLASS_1",

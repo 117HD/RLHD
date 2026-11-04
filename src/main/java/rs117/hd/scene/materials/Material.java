@@ -60,7 +60,7 @@ public class Material {
 	private boolean overrideBaseColor;
 	private boolean unlit;
 	private boolean voidShader;
-	private float voidDensity = 1;
+	private float voidStarDensity = 1;
 	@JsonAdapter(ColorUtils.LinearAdapter.class)
 	public float brightness = 1;
 	public float subsurface;
@@ -233,7 +233,7 @@ public class Material {
 		struct.scrollDuration.set(scrollSpeedX, scrollSpeedY);
 		var texScale = divide(vec(1), textureScale);
 		if (voidShader)
-			texScale[0] = voidDensity;
+			texScale[0] = voidStarDensity;
 		struct.textureScale.set(texScale);
 	}
 

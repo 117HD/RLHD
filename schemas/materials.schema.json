@@ -74,7 +74,7 @@
         "type": "boolean",
         "description": "Whether to replace the surface's texture and lighting with a starry void seen through it. Only shown in environments with voidShader."
       },
-      "voidDensity": {
+      "voidStarDensity": {
         "type": "number",
         "minimum": 0,
         "description": "Controls the density of stars in the void shader. Defaults to 1."
