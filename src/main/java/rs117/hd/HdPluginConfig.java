@@ -1602,6 +1602,28 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_VALIDATE_SHADERS = "validateShaders";
+	@ConfigItem(
+		keyName = KEY_VALIDATE_SHADERS,
+		name = "Validate shaders",
+		description = "Validate shaders after compilation. Useful for debugging.",
+		section = technicalSettings
+	)
+	default DefaultBoolean validateShaders() {
+		return DefaultBoolean.DEFAULT;
+	}
+
+	String KEY_REPLACE_VANILLA_SKYBOXES = "replaceVanillaSkyboxes";
+	@ConfigItem(
+		keyName = KEY_REPLACE_VANILLA_SKYBOXES,
+		name = "Replace vanilla skyboxes",
+		description = "Replace the game's built-in skybox models with 117 HD's own implementation.",
+		section = technicalSettings
+	)
+	default boolean replaceVanillaSkyboxes() {
+		return true;
+	}
+
 
 	/*====== Internal settings ======*/
 
