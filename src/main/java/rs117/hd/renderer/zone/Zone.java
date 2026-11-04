@@ -402,10 +402,14 @@ public class Zone implements Destructible {
 		flush(cmd);
 	}
 
+	void appendOpaqueLevel(int level) {
+		pushRange(level > 0 ? this.levelOffsets[level - 1] : 0, this.levelOffsets[level]);
+	}
+
 	void renderOpaqueLevel(CommandBuffer cmd, int level) {
 		drawIdx = 0;
 
-		pushRange(level > 0 ? this.levelOffsets[level - 1] : 0, this.levelOffsets[level]);
+		appendOpaqueLevel(level);
 
 		if (drawIdx == 0)
 			return;
