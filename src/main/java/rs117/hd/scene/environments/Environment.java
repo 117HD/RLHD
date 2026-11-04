@@ -173,6 +173,10 @@ public class Environment {
 		return sky != null ? sky : SkyConfiguration.DEFAULT_PRESET;
 	}
 
+	public boolean hasSky() {
+		return isOverworld || sky != null;
+	}
+
 	public Environment copy() {
 		var env = new Environment();
 		env.fogColor = new float[3];
