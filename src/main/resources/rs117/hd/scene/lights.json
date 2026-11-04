@@ -27774,6 +27774,24 @@
     ]
   },
   {
+    "description": "Cosmic altar shooting star",
+    "height": 50,
+    "radius": 375,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1200,
+    "nightMultiplier": 1.5,
+    "range": 5,
+    "projectileIds": [
+      "SHOOTING_STAR"
+    ]
+  },
+  {
     "description": "MAGIC_GUILD_PORTALS_OUTSIDE",
     "offset": [ -200, 125 , 0 ],
     "radius": 400,
