@@ -1041,6 +1041,8 @@ public class LegacyRenderer implements Renderer {
 			plugin.uboGlobal.useFog.set(fogDepth > 0 ? 1 : 0);
 			plugin.uboGlobal.fogDepth.set(fogDepth);
 
+			plugin.uboGlobal.voidShader.set(environmentManager.getTargetEnvironment().voidShader ? 1 : 0);
+
 			plugin.uboGlobal.sceneBase.set(
 				sceneContext.scene.getBaseX() * LOCAL_TILE_SIZE,
 				sceneContext.scene.getBaseY() * LOCAL_TILE_SIZE

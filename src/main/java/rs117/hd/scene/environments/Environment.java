@@ -52,6 +52,7 @@ public class Environment {
 	public boolean allowSkyOverride = true;
 	public boolean allowRoofShadows = true;
 	public boolean lightningEffects = false;
+	public boolean voidShader = false;
 	public boolean instantTransition = false;
 	@JsonAdapter(ExpressionParser.PredicateAdapter.class)
 	public ExpressionPredicate varbitCondition = ExpressionPredicate.TRUE;

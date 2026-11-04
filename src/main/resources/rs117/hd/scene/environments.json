@@ -3303,12 +3303,14 @@
   },
   {
     "area": "TFA_OCELLUS",
+    "voidShader": true,
     "groundFogOpacity": 0.85,
     "groundFogStart": 500,
     "groundFogEnd": -250
   },
   {
     "area": "TFA_REWARD_ROOM",
+    "voidShader": true,
     "sky": {
       "parent": "VOID",
       "moonVisibility": 0,
