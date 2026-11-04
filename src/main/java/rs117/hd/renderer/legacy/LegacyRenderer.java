@@ -1045,7 +1045,6 @@ public class LegacyRenderer implements Renderer {
 				sceneContext.scene.getBaseX() * LOCAL_TILE_SIZE,
 				sceneContext.scene.getBaseY() * LOCAL_TILE_SIZE
 			);
-			plugin.uboGlobal.voidShader.set(config.enableVoidShader().get(environmentManager.getTargetEnvironment().voidShader) ? 1 : 0);
 
 			plugin.uboGlobal.drawDistance.set((float) plugin.getDrawDistance());
 			plugin.uboGlobal.expandedMapLoadingChunks.set(sceneContext.expandedMapLoadingChunks);

@@ -109,7 +109,9 @@ void main() {
     vec3 downDir = vec3(0, -1, 0);
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(uboGlobal.cameraPos - IN.position);
-    vec3 flatNormal = normalize(cross(dFdx(IN.position), dFdy(IN.position)));
+    vec3 dPdx = dFdx(IN.position);
+    vec3 dPdy = dFdy(IN.position);
+    vec3 flatNormal = normalize(cross(dPdx, dPdy));
 
     bool identicalMaterials = !isTerrain || (
         ((fMaterialData[0] ^ fMaterialData[1] | (fMaterialData[0] ^ fMaterialData[2]))
@@ -529,13 +531,9 @@ void main() {
 
         outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
 
-        if (uboGlobal.voidShader) {
-            vec3 dPdx = dFdx(IN.position);
-            vec3 dPdy = dFdy(IN.position);
-            if (getMaterialIsVoidShader(material1)) {
-                float density = material1.textureScale.x;
-                outputColor.rgb = sampleVoidShader(IN.position, N, viewDir, dPdx, dPdy, density);
-            }
+        if (getMaterialIsVoidShader(material1)) {
+            float density = material1.textureScale.x;
+            outputColor.rgb = sampleVoidShader(IN.position, N, viewDir, dPdx, dPdy, density);
         }
 
         outputColor.rgb = linearToSrgb(outputColor.rgb);

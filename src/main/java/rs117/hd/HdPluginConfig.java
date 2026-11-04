@@ -1559,16 +1559,6 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	@ConfigItem(
-		keyName = "devEnableVoidShader",
-		name = "dev: enable void shader",
-		description = "Override the void shader uniform. Default follows the environment; On and Off force the runtime branch.",
-		section = experimentalSettings
-	)
-	default DefaultBoolean enableVoidShader() {
-		return DefaultBoolean.DEFAULT;
-	}
-
 	String KEY_CENTROID_QUALIFIER = "centroidQualifier";
 	@ConfigItem(
 		keyName = KEY_CENTROID_QUALIFIER,
@@ -1611,17 +1601,6 @@ public interface HdPluginConfig extends Config
 	)
 	default DefaultBoolean validateShaders() {
 		return DefaultBoolean.DEFAULT;
-	}
-
-	String KEY_REPLACE_VANILLA_SKYBOXES = "replaceVanillaSkyboxes";
-	@ConfigItem(
-		keyName = KEY_REPLACE_VANILLA_SKYBOXES,
-		name = "Replace vanilla skyboxes",
-		description = "Replace the game's built-in skybox models with 117 HD's own implementation.",
-		section = technicalSettings
-	)
-	default boolean replaceVanillaSkyboxes() {
-		return true;
 	}
 
 

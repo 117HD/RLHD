@@ -671,8 +671,6 @@ public class ZoneRenderer implements Renderer {
 				environmentManager.getTargetEnvironment().allowRoofShadows;
 
 			plugin.uboGlobal.sceneBase.set(scene.getBaseX() * LOCAL_TILE_SIZE, scene.getBaseY() * LOCAL_TILE_SIZE);
-//			plugin.uboGlobal.voidShader.set(config.enableVoidShader().get(environmentManager.getTargetEnvironment().voidShader) ? 1 : 0);
-			plugin.uboGlobal.voidShader.set(config.enableVoidShader().get(true) ? 1 : 0);
 			plugin.uboGlobal.lightDir.set(directionalCamera.getForwardDirection());
 		}
 
