@@ -21121,6 +21121,48 @@
     ]
   },
   {
+    "description": "Seers Church Altar 1",
+    "offset": [ 93, 195, -33 ],
+    "radius": 250,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "schedule": {
+      "during": "NIGHT",
+      "randomOffset": 0
+    },
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      "ALTAR"
+    ]
+  },
+  {
+    "description": "Seers Church Altar 2",
+    "offset": [ -93, 195, -33 ],
+    "radius": 250,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "schedule": {
+      "during": "NIGHT",
+      "randomOffset": 0
+    },
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      "ALTAR"
+    ]
+  },
+  {
     "description": "KOUREND_MAIN_TABLE_CANDLES_1",
     "offset": [ -83, 200, 141 ],
     "radius": 280,
@@ -54336,6 +54378,23 @@
     "range": 20,
     "objectIds": [
       "WYRMSCRAIG_CATHEDRAL_CANDLE_TABLE"
+    ]
+  },
+  {
+    "description": "Lands End Altar Candles",
+    "offset": [ 0, 180, 20 ],
+    "radius": 130,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "BRAIN_MON_PRAY_TABLE"
     ]
   },
   {

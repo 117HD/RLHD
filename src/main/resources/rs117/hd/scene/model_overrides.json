@@ -107481,7 +107481,8 @@
     "uvScale": 0.7,
     "uvOrientationY": 512,
     "objectIds": [
-      "WYRMSCRAIG_CATHEDRAL_CANDLE_TABLE"
+      "WYRMSCRAIG_CATHEDRAL_CANDLE_TABLE",
+      "BRAIN_MON_PRAY_TABLE"
     ],
     "colorOverrides": [
       {
@@ -107490,7 +107491,7 @@
         "receiveShadows": false
       },
       {
-        "colors": "h == 6",
+        "colors": "h == 0 || h == 6 || h == 7",
         "baseMaterial": "GRUNGE_3"
       }
     ]
