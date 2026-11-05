@@ -50940,6 +50940,51 @@
     "uvOrientation": 512
   },
   {
+    "description": "Royal Titans - Branda",
+    "baseMaterial": "NONE",
+    "npcIds": [
+      "RT_FIRE_QUEEN"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": [ "a < 255" ],
+        "baseMaterial": "NONE",
+        "shiftAlpha": 25,
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Royal Titans - Fire Elemental Summon",
+    "baseMaterial": "GRAY_75",
+    "upwardsNormals": true,
+    "npcIds": [
+      "RT_SUMMON_ELEMENTAL_FIRE"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": [ "a < 255" ],
+        "baseMaterial": "NONE",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Royal Titans - Ice Elemental Summon",
+    "baseMaterial": "NONE",
+    "flatNormals": true,
+    "npcIds": [
+      "RT_SUMMON_ELEMENTAL_ICE"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "minLightness": 30
+  },
+  {
     "description": "Objects - Wooden - Beehive",
     "baseMaterial": "WOOD_GRAIN_3_SEMILIGHT_DULL",
     "objectIds": [
@@ -64395,6 +64440,23 @@
     ]
   },
   {
+    "description": "Nightmare of Ashihama - Nightmare Rift",
+    "shiftAlpha": 40,
+    "graphicsObjectIds": [
+      "NIGHTMARE_RIFT"
+    ]
+  },
+  {
+    "description": "Nightmare of Ashihama - Mushroom",
+    "undoVanillaShading": false,
+    "upwardsNormals": true,
+    "baseMaterial": "GRAY_125",
+    "objectIds": [
+      "NIGHTMARE_SPORES_INITIAL",
+      "NIGHTMARE_SPORES"
+    ]
+  },
+  {
     "description": "Nightmare of Ashihama - Arena Floor",
     "baseMaterial": "CARPET_LIGHT",
     "uvType": "MODEL_XZ",
@@ -64600,7 +64662,8 @@
       },
       {
         "colors": "h == 0 || h == 17 && s == 7",
-        "baseMaterial": "NONE"
+        "baseMaterial": "NONE",
+        "castShadows": false
       }
     ]
   },
