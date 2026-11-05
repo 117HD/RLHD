@@ -425,9 +425,159 @@ SurfaceSample sampleSurface(vec3 viewDir, ivec4 tint, bool isUnderwater, WaterTy
     return surface;
 }
 
+float sampleSurfaceShadow(SurfaceSample surface) {
+    if (surface.disableShadowReceiving)
+        return 0.0;
+
+    bool applyNormalBias = (fMaterialData[0] >> MATERIAL_FLAG_SHADOW_NORMAL_BIAS & 1) == 1;
+    return sampleShadowMap(surface.fragPos, surface.flatNormal, true, applyNormalBias, true);
+}
+
+vec4 shadeScene(SurfaceSample surface, vec3 viewDir, bool isUnderwater, WaterType waterType, float waterDepth) {
+    if (surface.hasDebugOverride)
+        return surface.debugColor;
+
+    vec3 downDir = vec3(0, -1, 0);
+    float lightDotNormals = dot(surface.normals, uboGlobal.lightDir);
+    float downDotNormals = dot(downDir, surface.normals);
+    float viewDotNormals = dot(viewDir, surface.normals);
+
+    #if DISABLE_DIRECTIONAL_SHADING
+        lightDotNormals = .7;
+    #endif
+
+    float shadow = sampleSurfaceShadow(surface);
+    float inverseShadow = 1 - shadow;
+
+    #if DISPLAY_SHADOWS
+        if (DISPLAY_SHADOWS == 1) return vec4(inverseShadow, inverseShadow, inverseShadow, 1.0);
+    #endif
+
+    float combinedSpecularStrength = dot(surface.specularStrength, fTexBlend);
+
+    // calculate lighting
+
+    // ambient light
+    vec3 ambientLightOut = uboGlobal.ambientColor * uboGlobal.ambientStrength;
+    ambientLightOut *= surface.aoFactor;
+
+    // directional light
+    vec3 dirLightColor = uboGlobal.lightColor * uboGlobal.lightStrength;
+
+    // underwater caustics based on directional light
+    if (uboGlobal.underwaterCaustics && uboGlobal.underwaterEnvironment) {
+        float scale = 12.8;
+        vec2 causticsUv = worldUvs(scale);
+
+        const ivec2 direction = ivec2(1, -1);
+        const int driftSpeed = 231;
+        vec2 drift = animationFrame(231) * ivec2(1, -2);
+        vec2 flow1 = causticsUv + animationFrame(19) * direction + drift;
+        vec2 flow2 = causticsUv * 1.25 + animationFrame(37) * -direction + drift;
+
+        vec3 caustics = sampleCaustics(flow1, flow2) * 2;
+
+        vec3 causticsColor = uboGlobal.underwaterCausticsColor * uboGlobal.underwaterCausticsStrength;
+        dirLightColor += caustics * causticsColor * lightDotNormals * pow(uboGlobal.lightStrength, 1.5);
+    }
+
+    // apply shadows
+    dirLightColor *= inverseShadow;
+
+    vec3 lightColor = dirLightColor;
+    vec3 lightOut = max(lightDotNormals, 0.0) * lightColor;
+
+    // directional light specular
+    vec3 lightReflectDir = reflect(-uboGlobal.lightDir, surface.normals);
+    vec3 lightSpecularOut = lightColor * specular(fTexBlend, viewDir, lightReflectDir, surface.specularGloss, surface.specularStrength);
+
+    // point lights
+    vec3 pointLightsOut = vec3(0);
+    vec3 pointLightsSpecularOut = vec3(0);
+    float subsurface = surface.subsurface;
+    calculateLighting(IN.position, surface.normals, viewDir, fTexBlend, surface.specularGloss, surface.specularStrength,
+        subsurface, pointLightsOut, pointLightsSpecularOut);
+
+    // sky light
+    vec3 skyLightColor = uboGlobal.fogColor;
+    float skyLightStrength = 0.5;
+    float skyDotNormals = downDotNormals;
+    vec3 skyLightOut = max(skyDotNormals, 0.0) * skyLightColor * skyLightStrength;
+
+
+    // lightning
+    vec3 lightningColor = vec3(.25, .25, .25);
+    float lightningStrength = uboGlobal.lightningBrightness;
+    float lightningDotNormals = downDotNormals;
+    vec3 lightningOut = max(lightningDotNormals, 0.0) * lightningColor * lightningStrength;
+
+    // Artistic thin-sheet transmission
+    vec3 transmissionOut = vec3(0.0);
+    if (subsurface > 0.0)
+        transmissionOut = dirLightColor * thinSheetTransmission(
+            dot(surface.normals, uboGlobal.lightDir), dot(-uboGlobal.lightDir, viewDir), subsurface);
+
+    // underglow
+    vec3 underglowOut = uboGlobal.underglowColor * max(surface.normals.y, 0) * uboGlobal.underglowStrength;
+
+
+    // fresnel reflection
+    float baseOpacity = 0.4;
+    float fresnel = 1.0 - clamp(viewDotNormals, 0.0, 1.0);
+    float finalFresnel = clamp(mix(baseOpacity, 1.0, fresnel * 1.2), 0.0, 1.0);
+    vec3 surfaceColor = vec3(0);
+    vec3 surfaceColorOut = surfaceColor * max(combinedSpecularStrength, 0.2);
+
+
+    // apply lighting
+    vec3 compositeLight = ambientLightOut + lightOut + lightSpecularOut + skyLightOut + lightningOut +
+    underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut + transmissionOut;
+
+    #if DISPLAY_LIGHTING
+        if (DISPLAY_LIGHTING == 1) return vec4(compositeLight, 1.0);
+    #endif
+
+    vec4 outputColor = surface.color;
+
+    #if VANILLA_COLOR_BANDING
+        outputColor.rgb = linearToSrgb(outputColor.rgb);
+        outputColor.rgb = srgbToHsv(outputColor.rgb);
+        outputColor.b = floor(outputColor.b * 127) / 127;
+        outputColor.rgb = hsvToSrgb(outputColor.rgb);
+        outputColor.rgb = srgbToLinear(outputColor.rgb);
+    #endif
+
+    outputColor.rgb *= mix(compositeLight, vec3(1), surface.unlit);
+    outputColor.rgb = linearToSrgb(outputColor.rgb);
+
+    if (isUnderwater)
+        sampleUnderwater(outputColor.rgb, waterType, waterDepth, lightDotNormals);
+
+    return outputColor;
+}
+
+vec4 shadeVoidShader(SurfaceSample surface, vec3 viewDir, vec3 dPdx, vec3 dPdy, bool isUnderwater, WaterType waterType, float waterDepth) {
+    float density = surface.material.textureScale.x;
+    vec4 outputColor = surface.color;
+    outputColor.rgb = sampleVoidShader(IN.position, surface.normals, viewDir, dPdx, dPdy, density);
+    outputColor.rgb = linearToSrgb(outputColor.rgb);
+
+    if (isUnderwater) {
+        float lightDotNormals = dot(surface.normals, uboGlobal.lightDir);
+        #if DISABLE_DIRECTIONAL_SHADING
+            lightDotNormals = .7;
+        #endif
+        sampleUnderwater(outputColor.rgb, waterType, waterDepth, lightDotNormals);
+    }
+
+    return outputColor;
+}
+
 vec4 shadeFragment() {
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(uboGlobal.cameraPos - IN.position);
+    vec3 dPdx = dFdx(IN.position);
+    vec3 dPdy = dFdy(IN.position);
 
     // Water data
     bool isTerrain = (fTerrainData[0] & 1) != 0; // 1 = 0b1
@@ -465,142 +615,16 @@ vec4 shadeFragment() {
     {
         // Material sampling/blending lives in sampleSurface() - it's the only
         // place that cares whether this is a 1-material (model) or
-        // 3-material (terrain) tile. Everything below is the shared
-        // lighting/fog/grading path and doesn't need to know which.
+        // 3-material (terrain) tile.
         ivec4 tint = getWorldViewTint(fWorldViewId);
         SurfaceSample surface = sampleSurface(viewDir, tint, isUnderwater, waterType, isSquashed);
         if (surface.hasDebugOverride)
             return surface.debugColor;
 
-        vec3 downDir = vec3(0, -1, 0);
-        float lightDotNormals = dot(surface.normals, uboGlobal.lightDir);
-        float downDotNormals = dot(downDir, surface.normals);
-        float viewDotNormals = dot(viewDir, surface.normals);
-
-        #if DISABLE_DIRECTIONAL_SHADING
-            lightDotNormals = .7;
-        #endif
-
-        float shadow = 0;
-        if (!surface.disableShadowReceiving) {
-            bool applyNormalBias = (fMaterialData[0] >> MATERIAL_FLAG_SHADOW_NORMAL_BIAS & 1) == 1;
-            shadow = sampleShadowMap(surface.fragPos, surface.flatNormal, true, applyNormalBias, true);
-        }
-        float inverseShadow = 1 - shadow;
-
-        #if DISPLAY_SHADOWS
-            if (DISPLAY_SHADOWS == 1) return vec4(inverseShadow, inverseShadow, inverseShadow, 1.0);
-        #endif
-
-        float combinedSpecularStrength = dot(surface.specularStrength, fTexBlend);
-
-        // calculate lighting
-
-        // ambient light
-        vec3 ambientLightOut = uboGlobal.ambientColor * uboGlobal.ambientStrength;
-        ambientLightOut *= surface.aoFactor;
-
-        // directional light
-        vec3 dirLightColor = uboGlobal.lightColor * uboGlobal.lightStrength;
-
-        // underwater caustics based on directional light
-        if (uboGlobal.underwaterCaustics && uboGlobal.underwaterEnvironment) {
-            float scale = 12.8;
-            vec2 causticsUv = worldUvs(scale);
-
-            const ivec2 direction = ivec2(1, -1);
-            const int driftSpeed = 231;
-            vec2 drift = animationFrame(231) * ivec2(1, -2);
-            vec2 flow1 = causticsUv + animationFrame(19) * direction + drift;
-            vec2 flow2 = causticsUv * 1.25 + animationFrame(37) * -direction + drift;
-
-            vec3 caustics = sampleCaustics(flow1, flow2) * 2;
-
-            vec3 causticsColor = uboGlobal.underwaterCausticsColor * uboGlobal.underwaterCausticsStrength;
-            dirLightColor += caustics * causticsColor * lightDotNormals * pow(uboGlobal.lightStrength, 1.5);
-        }
-
-        // apply shadows
-        dirLightColor *= inverseShadow;
-
-        vec3 lightColor = dirLightColor;
-        vec3 lightOut = max(lightDotNormals, 0.0) * lightColor;
-
-        // directional light specular
-        vec3 lightReflectDir = reflect(-uboGlobal.lightDir, surface.normals);
-        vec3 lightSpecularOut = lightColor * specular(fTexBlend, viewDir, lightReflectDir, surface.specularGloss, surface.specularStrength);
-
-        // point lights
-        vec3 pointLightsOut = vec3(0);
-        vec3 pointLightsSpecularOut = vec3(0);
-        float subsurface = surface.subsurface;
-        calculateLighting(IN.position, surface.normals, viewDir, fTexBlend, surface.specularGloss, surface.specularStrength,
-            subsurface, pointLightsOut, pointLightsSpecularOut);
-
-        // sky light
-        vec3 skyLightColor = uboGlobal.fogColor;
-        float skyLightStrength = 0.5;
-        float skyDotNormals = downDotNormals;
-        vec3 skyLightOut = max(skyDotNormals, 0.0) * skyLightColor * skyLightStrength;
-
-
-        // lightning
-        vec3 lightningColor = vec3(.25, .25, .25);
-        float lightningStrength = uboGlobal.lightningBrightness;
-        float lightningDotNormals = downDotNormals;
-        vec3 lightningOut = max(lightningDotNormals, 0.0) * lightningColor * lightningStrength;
-
-        // Artistic thin-sheet transmission
-        vec3 transmissionOut = vec3(0.0);
-        if (subsurface > 0.0)
-            transmissionOut = dirLightColor * thinSheetTransmission(
-                dot(surface.normals, uboGlobal.lightDir), dot(-uboGlobal.lightDir, viewDir), subsurface);
-
-        // underglow
-        vec3 underglowOut = uboGlobal.underglowColor * max(surface.normals.y, 0) * uboGlobal.underglowStrength;
-
-
-        // fresnel reflection
-        float baseOpacity = 0.4;
-        float fresnel = 1.0 - clamp(viewDotNormals, 0.0, 1.0);
-        float finalFresnel = clamp(mix(baseOpacity, 1.0, fresnel * 1.2), 0.0, 1.0);
-        vec3 surfaceColor = vec3(0);
-        vec3 surfaceColorOut = surfaceColor * max(combinedSpecularStrength, 0.2);
-
-
-        // apply lighting
-        vec3 compositeLight = ambientLightOut + lightOut + lightSpecularOut + skyLightOut + lightningOut +
-        underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut + transmissionOut;
-
-        #if DISPLAY_LIGHTING
-            if (DISPLAY_LIGHTING == 1) return vec4(compositeLight, 1.0);
-        #endif
-
-        outputColor = surface.color;
-
-        #if VANILLA_COLOR_BANDING
-            outputColor.rgb = linearToSrgb(outputColor.rgb);
-            outputColor.rgb = srgbToHsv(outputColor.rgb);
-            outputColor.b = floor(outputColor.b * 127) / 127;
-            outputColor.rgb = hsvToSrgb(outputColor.rgb);
-            outputColor.rgb = srgbToLinear(outputColor.rgb);
-        #endif
-
-        outputColor.rgb *= mix(compositeLight, vec3(1), surface.unlit);
-
-        //// TODO: If we want to support ShaderSubTypes hmmm
-        if (uboGlobal.voidShader && getMaterialIsVoidShader(surface.material)) {
-            float density = surface.material.textureScale.x;
-            vec3 dPdx = dFdx(IN.position);
-            vec3 dPdy = dFdy(IN.position);
-            outputColor.rgb = sampleVoidShader(IN.position, surface.normals, viewDir, dPdx, dPdy, density);
-        }
-        
-        outputColor.rgb = linearToSrgb(outputColor.rgb);
-
-        if (isUnderwater) {
-            sampleUnderwater(outputColor.rgb, waterType, waterDepth, lightDotNormals);
-        }
+        if (uboGlobal.voidShader && getMaterialIsVoidShader(surface.material))
+            outputColor = shadeVoidShader(surface, viewDir, dPdx, dPdy, isUnderwater, waterType, waterDepth);
+        else
+            outputColor = shadeScene(surface, viewDir, isUnderwater, waterType, waterDepth);
     }
     #endif // WATER_PASS
 
