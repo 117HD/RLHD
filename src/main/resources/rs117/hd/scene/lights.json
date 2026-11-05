@@ -52920,6 +52920,96 @@
     ]
   },
   {
+    "description": "Myths Guild - Entrance Barrier",
+    "offset": [ 0, 220, 0 ],
+    "visibleFromOtherPlanes": true,
+    "radius": 250,
+    "strength": 20,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DS2_GUILD_BRIDGE_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Myths Guild - Pool of Dreams",
+    "offset": [ 0, 180, 0 ],
+    "visibleFromOtherPlanes": true,
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DS2_GUILD_DREAM_POOL"
+    ]
+  },
+  {
+    "description": "Myths Guild - Legends Portal",
+    "offset": [ 0, 250, 0 ],
+    "visibleFromOtherPlanes": true,
+    "radius": 275,
+    "strength": 15,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DS2_GUILD_PORTAL_LEGEND"
+    ]
+  },
+  {
+    "description": "Myths Guild - Champion Portal",
+    "offset": [ 0, 250, 0 ],
+    "visibleFromOtherPlanes": true,
+    "radius": 300,
+    "strength": 60,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DS2_GUILD_PORTAL_CHAMP"
+    ]
+  },
+  {
+    "description": "Myths Guild - Hero Portal",
+    "offset": [ 0, 250, 0 ],
+    "visibleFromOtherPlanes": true,
+    "radius": 250,
+    "strength": 30,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DS2_GUILD_PORTAL_HERO"
+    ]
+  },
+  {
     "description": "Zulrah - Pillar Torch East - Wide",
     "offset": [ 70, 140, -80 ],
     "worldX": 2271,
