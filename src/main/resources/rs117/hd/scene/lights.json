@@ -53010,6 +53010,24 @@
     ]
   },
   {
+    "description": "Smoke Dungeon - Fire Elemental",
+    "offset": [ 0, 250, 0 ],
+    "radius": 325,
+    "strength": 20,
+    "color": [
+      255,
+      124,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [ "ELEMENTAL_FIRE" ],
+    "excludeAnimationIds": [ "ELEMENTAL_FIRE_DEATH" ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 800
+  },
+  {
     "description": "Zulrah - Pillar Torch East - Wide",
     "offset": [ 70, 140, -80 ],
     "worldX": 2271,

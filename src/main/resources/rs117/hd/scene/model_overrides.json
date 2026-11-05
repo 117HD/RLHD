@@ -97221,6 +97221,13 @@
     ]
   },
   {
+    "description": "Smoke Dungeon - Fire Elemental",
+    "upwardsNormals": true,
+    "npcIds": [
+      "ELEMENTAL_FIRE"
+    ]
+  },
+  {
     "description": "TOA Ground Blending Models",
     "baseMaterial": "GRAVEL_TOA",
     "uvType": "WORLD_XZ",
