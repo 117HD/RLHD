@@ -23743,9 +23743,6 @@
       "CATA_BOSS_EXIT_PORTAL",
       "TOURNAMENT_CASTLEWARS_TO_CLANWARS",
       "CASTLEWARS_F2P_PORTAL",
-      "DS2_GUILD_PORTAL_CHAMP",
-      "DS2_GUILD_PORTAL_HERO",
-      "DS2_GUILD_PORTAL_LEGEND",
       "SHAYZIENQUEST_PRISON_PORTAL",
       "TOB_SOTETSEG_DARKREALM_EXIT",
       "POH_TELENEXUS_1",
@@ -97166,9 +97163,65 @@
     "description": "Myths Guild - Metallic - Range",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.4,
     "objectIds": [
       "DS2_GUILD_COOKING_RANGE"
+    ]
+  },
+  {
+    "description": "Myths Guild - Metallic - Wall Sconce",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.3,
+    "objectIds": [
+      "DS2_GUILD_WALL_SCONCE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Baked in Shadow - Hide",
+        "colors": [ "s == 0 && a < 255" ],
+        "hide": true
+      },
+      {
+        "description": "Flame",
+        "colors": [ "a < 255" ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Myths Guild - Entrance Barrier",
+    "upwardsNormals": true,
+    "objectIds": [
+      "DS2_GUILD_BRIDGE_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Myths Guild - Portals",
+    "baseMaterial": "MARBLE_4_LOW_CONTRAST_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "DS2_GUILD_PORTAL_HERO",
+      "DS2_GUILD_PORTAL_CHAMP",
+      "DS2_GUILD_PORTAL_LEGEND"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Baked in Shadow - Hide",
+        "colors": [ "h < 42" ],
+        "upwardsNormals": true,
+        "baseMaterial": "GRAY_60",
+        "castShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Smoke Dungeon - Fire Elemental",
+    "upwardsNormals": true,
+    "npcIds": [
+      "ELEMENTAL_FIRE"
     ]
   },
   {
@@ -107481,7 +107534,8 @@
     "uvScale": 0.7,
     "uvOrientationY": 512,
     "objectIds": [
-      "WYRMSCRAIG_CATHEDRAL_CANDLE_TABLE"
+      "WYRMSCRAIG_CATHEDRAL_CANDLE_TABLE",
+      "BRAIN_MON_PRAY_TABLE"
     ],
     "colorOverrides": [
       {
@@ -107490,7 +107544,7 @@
         "receiveShadows": false
       },
       {
-        "colors": "h == 6",
+        "colors": "h == 0 || h == 6 || h == 7",
         "baseMaterial": "GRUNGE_3"
       }
     ]

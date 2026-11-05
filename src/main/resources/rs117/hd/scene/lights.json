@@ -21121,6 +21121,48 @@
     ]
   },
   {
+    "description": "Seers Church Altar 1",
+    "offset": [ 93, 195, -33 ],
+    "radius": 250,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "schedule": {
+      "during": "NIGHT",
+      "randomOffset": 0
+    },
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      "ALTAR"
+    ]
+  },
+  {
+    "description": "Seers Church Altar 2",
+    "offset": [ -93, 195, -33 ],
+    "radius": 250,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "schedule": {
+      "during": "NIGHT",
+      "randomOffset": 0
+    },
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      "ALTAR"
+    ]
+  },
+  {
     "description": "KOUREND_MAIN_TABLE_CANDLES_1",
     "offset": [ -83, 200, 141 ],
     "radius": 280,
@@ -52878,6 +52920,114 @@
     ]
   },
   {
+    "description": "Myths Guild - Entrance Barrier",
+    "offset": [ 0, 220, 0 ],
+    "visibleFromOtherPlanes": true,
+    "radius": 250,
+    "strength": 20,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DS2_GUILD_BRIDGE_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Myths Guild - Pool of Dreams",
+    "offset": [ 0, 180, 0 ],
+    "visibleFromOtherPlanes": true,
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DS2_GUILD_DREAM_POOL"
+    ]
+  },
+  {
+    "description": "Myths Guild - Legends Portal",
+    "offset": [ 0, 250, 0 ],
+    "visibleFromOtherPlanes": true,
+    "radius": 275,
+    "strength": 15,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DS2_GUILD_PORTAL_LEGEND"
+    ]
+  },
+  {
+    "description": "Myths Guild - Champion Portal",
+    "offset": [ 0, 250, 0 ],
+    "visibleFromOtherPlanes": true,
+    "radius": 300,
+    "strength": 60,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DS2_GUILD_PORTAL_CHAMP"
+    ]
+  },
+  {
+    "description": "Myths Guild - Hero Portal",
+    "offset": [ 0, 250, 0 ],
+    "visibleFromOtherPlanes": true,
+    "radius": 250,
+    "strength": 30,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DS2_GUILD_PORTAL_HERO"
+    ]
+  },
+  {
+    "description": "Smoke Dungeon - Fire Elemental",
+    "offset": [ 0, 250, 0 ],
+    "radius": 325,
+    "strength": 20,
+    "color": [
+      255,
+      124,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [ "ELEMENTAL_FIRE" ],
+    "excludeAnimationIds": [ "ELEMENTAL_FIRE_DEATH" ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 800
+  },
+  {
     "description": "Zulrah - Pillar Torch East - Wide",
     "offset": [ 70, 140, -80 ],
     "worldX": 2271,
@@ -54336,6 +54486,23 @@
     "range": 20,
     "objectIds": [
       "WYRMSCRAIG_CATHEDRAL_CANDLE_TABLE"
+    ]
+  },
+  {
+    "description": "Lands End Altar Candles",
+    "offset": [ 0, 180, 20 ],
+    "radius": 130,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "BRAIN_MON_PRAY_TABLE"
     ]
   },
   {
