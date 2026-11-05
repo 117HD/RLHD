@@ -23,6 +23,7 @@
 
    Incorporates some of the ideas from SABR shader. Thanks to Joshua Street.
 */
+#pragma once
 
 struct XBRTable
 {
