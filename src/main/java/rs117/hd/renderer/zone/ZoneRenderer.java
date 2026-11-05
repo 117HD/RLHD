@@ -508,8 +508,8 @@ public class ZoneRenderer implements Renderer {
 				sceneCmd.DepthMask(false);
 				ctx.drawAll(VAO_PRESCENE, sceneCmd);
 				sceneCmd.DepthMask(true);
-				sceneCmd.Disable(GL_BLEND);
 			}
+			sceneCmd.Disable(GL_BLEND);
 
 			frameTimer.end(Timer.DRAW_PRESCENE);
 		} catch (Throwable ex) {
@@ -1149,10 +1149,10 @@ public class ZoneRenderer implements Renderer {
 				frameTimer.begin(Timer.DRAW_ZONE_OPAQUE);
 				boolean renderGroundLevel = ctx.minLevel == 0;
 				if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
-					sceneCmd.Disable(GL_BLEND);
 					if (renderGroundLevel)
 						z.appendOpaqueLevel(Zone.LEVEL_TERRAIN);
-					z.renderOpaque(sceneCmd, ctx, false);
+					z.renderOpaque(null, ctx, false);
+					z.flush(sceneCmd);
 
 					if (renderGroundLevel && z.hasGapFiller)
 						z.renderOpaqueLevel(gapFillerCmd, Zone.LEVEL_GAP_FILLER);
@@ -1244,7 +1244,6 @@ public class ZoneRenderer implements Renderer {
 				return;
 
 			frameTimer.begin(Timer.DRAW_ZONE_ALPHA);
-			sceneCmd.Enable(GL_BLEND);
 
 			final boolean renderWater = z.inSceneFrustum && ctx.minLevel == 0 && level == 0 && z.hasWater;
 			if (renderWater) {
@@ -1340,6 +1339,10 @@ public class ZoneRenderer implements Renderer {
 						skyRenderer.appendTo(sceneCmd);
 						sceneCmd.SetShader(sceneProgram);
 					}
+					break;
+				case DrawCallbacks.PRE_PASS_ALPHA:
+					if(!plugin.configUseOIT)
+						sceneCmd.Enable(GL_BLEND);
 					break;
 				case DrawCallbacks.PASS_ALPHA:
 					modelStreamingManager.ensureAsyncUploadsComplete(null);

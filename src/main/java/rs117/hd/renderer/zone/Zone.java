@@ -345,8 +345,9 @@ public class Zone implements Destructible {
 		copyTo(glDrawLength, drawEnd, 0, drawIdx);
 	}
 
-	void renderOpaque(CommandBuffer cmd, WorldViewContext ctx, boolean roofShadows) {
-		drawIdx = 0;
+	void renderOpaque(@Nullable CommandBuffer cmd, WorldViewContext ctx, boolean roofShadows) {
+		if(cmd != null)
+			drawIdx = 0;
 
 		int currentLevel = ctx.level;
 		int maxLevel = ctx.maxLevel;
@@ -399,6 +400,9 @@ public class Zone implements Destructible {
 		lastDrawMode = STATIC_VAO;
 		lastVao = glVao;
 		lastTboF = tboF.getTexId();
+		if(cmd == null)
+			return;
+
 		flush(cmd);
 	}
 
@@ -964,7 +968,7 @@ public class Zone implements Destructible {
 		flush(cmd);
 	}
 
-	private void flush(CommandBuffer cmd) {
+	void flush(CommandBuffer cmd) {
 		if (lastDrawMode == ELEMENTS_VAO) {
 			if (alphaFaceCount > 0 && lastVao != 0) {
 				int vertexCount = alphaFaceCount * 3;
