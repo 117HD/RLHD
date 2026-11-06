@@ -158,7 +158,8 @@ public class EnvironmentManager {
 	}
 
 	private Environment[] loadEnvironments(ResourcePath path) throws IOException {
-		Environment[] loaded = path.loadJson(plugin.getGson(), Environment[].class);
+		Environment[] loaded = GadScapeData.merge(plugin.getGson(), "environments.json", path.loadJson(plugin.getGson(), Environment[].class),
+			Environment[].class, e -> e.area == null ? null : e.area.name);
 		if (loaded == null)
 			throw new IOException("Empty or invalid: " + path);
 

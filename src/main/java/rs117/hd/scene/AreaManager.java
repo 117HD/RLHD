@@ -58,7 +58,7 @@ public class AreaManager {
 	public void startUp() {
 		fileWatcher = AREA_PATH.watch((path, first) -> {
 			try {
-				Area[] areas = path.loadJson(plugin.getGson(), Area[].class);
+				Area[] areas = GadScapeData.merge(plugin.getGson(), "areas.json", path.loadJson(plugin.getGson(), Area[].class), Area[].class, a -> a.name);
 				if (areas == null)
 					throw new IOException("Empty or invalid: " + path);
 

@@ -154,7 +154,7 @@ public class LightManager {
 	public void loadConfig(Gson gson, ResourcePath path) {
 		LightDefinition[] lights;
 		try (var ignored = gamevalManager.obtainHandle()) {
-			lights = path.loadJson(gson, LightDefinition[].class);
+			lights = GadScapeData.merge(gson, "lights.json", path.loadJson(gson, LightDefinition[].class), LightDefinition[].class, null);
 			if (lights == null) {
 				log.warn("Skipping empty lights.json");
 				return;

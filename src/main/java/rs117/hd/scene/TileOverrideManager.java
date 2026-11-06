@@ -76,7 +76,8 @@ public class TileOverrideManager {
 			sceneManager.getLoadingLock().lock();
 			sceneManager.completeAllStreaming();
 
-			TileOverride[] allOverrides = TILE_OVERRIDES_PATH.loadJson(plugin.getGson(), TileOverride[].class);
+			TileOverride[] allOverrides = GadScapeData.merge(plugin.getGson(), "tile_overrides.json",
+				TILE_OVERRIDES_PATH.loadJson(plugin.getGson(), TileOverride[].class), TileOverride[].class, t -> t.name);
 			if (allOverrides == null)
 				throw new IOException("Empty or invalid: " + TILE_OVERRIDES_PATH);
 
