@@ -153,6 +153,9 @@ public class ZoneRenderer implements Renderer {
 	private SceneShaderProgram sceneProgram;
 
 	@Inject
+	private SceneShaderProgram.Depth sceneDepthProgram;
+
+	@Inject
 	private SceneShaderProgram.Water waterProgram;
 
 	@Inject
@@ -183,6 +186,7 @@ public class ZoneRenderer implements Renderer {
 
 	public final RenderState renderState = new RenderState();
 	public final CommandBuffer sceneCmd = new CommandBuffer("Scene");
+	public final CommandBuffer sceneDepthCmd = new CommandBuffer("SceneDepth");
 	public final CommandBuffer gapFillerCmd = new CommandBuffer("GapFiller");
 	public final CommandBuffer fastDirectionalCmd = new CommandBuffer("FastDirectional");
 	public final CommandBuffer detailedDirectionalCmd = new CommandBuffer("DetailedDirectional");
@@ -352,6 +356,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
 		sceneProgram.compile(includes);
+		sceneDepthProgram.compile(includes);
 		waterProgram.compile(includes);
 		sceneOpaqueProgram.compile(includes);
 		fastShadowProgram.compile(includes);
@@ -364,6 +369,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void destroyShaders() {
 		sceneProgram.destroy();
+		sceneDepthProgram.destroy();
 		waterProgram.destroy();
 		sceneOpaqueProgram.destroy();
 		fastShadowProgram.destroy();
@@ -459,6 +465,7 @@ public class ZoneRenderer implements Renderer {
 			ctx.maxLevel = maxLevel;
 			ctx.hideRoofIds = hideRoofIds;
 			ctx.vaoSceneCmd.reset();
+			ctx.vaoDepthCmd.reset();
 			ctx.vaoDirectionalCmd.reset();
 
 			if (isTopLevel) {
@@ -776,6 +783,7 @@ public class ZoneRenderer implements Renderer {
 		if (SUPPORTS_INDIRECT_DRAW)
 			indirectDrawCmdsStaging.clear();
 		sceneCmd.reset();
+		sceneDepthCmd.reset();
 		fastDirectionalCmd.reset();
 		detailedDirectionalCmd.reset();
 		terrainShadowCmd.reset();
@@ -1015,13 +1023,12 @@ public class ZoneRenderer implements Renderer {
 			renderState.ido.set(indirectDrawCmds.id);
 		renderState.apply();
 
-		skyRenderer.clear(shouldRenderVanillaSkybox);
-
 		frameTimer.begin(Timer.RENDER_SCENE_AND_SKY);
 
 		renderState.enable.set(GL_CULL_FACE);
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.depthFunc.set(GL_GEQUAL);
+		renderState.depthMask.set(!plugin.configSceneDepth);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 		renderState.toggle(GL_BLEND, !plugin.configUseOIT);
 
@@ -1050,6 +1057,49 @@ public class ZoneRenderer implements Renderer {
 		renderState.apply();
 
 		frameTimer.end(Timer.DRAW_SCENE);
+	}
+
+	private void depthPass() {
+		renderState.disable.set(GL_STENCIL_TEST);
+		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
+		renderState.toggle(GL_MULTISAMPLE, plugin.msaaSamples > 1);
+		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
+		renderState.depthMask.set(true);
+		renderState.colorMask.set(true, true, true, true);
+
+		if (SUPPORTS_INDIRECT_DRAW)
+			renderState.ido.set(indirectDrawCmds.id);
+		renderState.apply();
+
+		skyRenderer.clear(shouldRenderVanillaSkybox);
+
+		if (plugin.configSceneDepth) {
+			frameTimer.begin(Timer.DRAW_DEPTH);
+			frameTimer.begin(Timer.RENDER_SCENE_DEPTH);
+
+			renderState.enable.set(GL_CULL_FACE);
+			renderState.enable.set(GL_DEPTH_TEST);
+			renderState.disable.set(GL_BLEND);
+			renderState.depthFunc.set(GL_GEQUAL);
+			renderState.depthMask.set(true);
+			renderState.colorMask.set(false, false, false, false);
+			renderState.apply();
+
+			sceneDepthProgram.use();
+			sceneDepthCmd.execute(renderState);
+
+			renderState.colorMask.set(true, true, true, true);
+			renderState.disable.set(GL_CULL_FACE);
+			renderState.disable.set(GL_DEPTH_TEST);
+			renderState.depthMask.set(true);
+			renderState.apply();
+
+			frameTimer.end(Timer.RENDER_SCENE_DEPTH);
+			frameTimer.end(Timer.DRAW_DEPTH);
+		}
+
+		if (plugin.configUseOIT)
+			oitRenderer.depthPass(renderState);
 	}
 
 	@Override
@@ -1153,6 +1203,10 @@ public class ZoneRenderer implements Renderer {
 						z.appendOpaqueLevel(Zone.LEVEL_TERRAIN);
 					z.renderOpaque(null, ctx, false);
 					z.flush(sceneCmd);
+
+					z.renderOpaque(sceneDepthCmd, ctx, false);
+					if (renderGroundLevel)
+						z.renderOpaqueLevel(sceneDepthCmd, Zone.LEVEL_TERRAIN);
 
 					if (renderGroundLevel && z.hasGapFiller)
 						z.renderOpaqueLevel(gapFillerCmd, Zone.LEVEL_GAP_FILLER);
@@ -1333,6 +1387,7 @@ public class ZoneRenderer implements Renderer {
 					fastDirectionalCmd.ExecuteSubCommandBuffer(ctx.vaoDirectionalCmd);
 
 					sceneCmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
+					sceneDepthCmd.ExecuteSubCommandBuffer(ctx.vaoDepthCmd);
 
 					if (skyRenderer.shouldRender(shouldRenderVanillaSkybox) && sceneManager.isRoot(ctx)) {
 						// Draw the sky after drawing top-level scene opaque
@@ -1357,6 +1412,7 @@ public class ZoneRenderer implements Renderer {
 
 					// Draw opaque
 					ctx.drawAll(VAO_OPAQUE, ctx.vaoSceneCmd);
+					ctx.drawAll(VAO_OPAQUE, ctx.vaoDepthCmd);
 
 					// Draw to shadow map
 					if (skyRenderer.castsShadows && !ctx.isSquashed) {
@@ -1471,6 +1527,7 @@ public class ZoneRenderer implements Renderer {
 			if (shouldRenderScene) {
 				tiledLightingPass();
 				directionalShadowPass();
+				depthPass();
 				scenePass();
 				if(plugin.configUseOIT)
 					oitRenderer.render(renderState);

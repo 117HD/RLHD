@@ -72,9 +72,8 @@ layout (location = 0) in vec3 vPosition;
     out float vViewZ;
 
     void main() {
-        SceneVertex sv = resolveSceneVertex(vPosition, vTextureFaceIdx, vSceneBase, vWorldViewId);
+        SceneVertex sv = resolveSceneVertex(vPosition, vTextureFaceIdx, vSceneBase, vWorldViewId, true);
         int vertex = sv.vertex;
-        int faceIdx = sv.faceIdx;
         bool isProvoking = gl_VertexID % 3 == 2;
 
         int materialData = 0;
@@ -100,16 +99,6 @@ layout (location = 0) in vec3 vPosition;
         vec3 worldPosition = sv.worldPosition;
         if (sv.hasWorldView)
             worldNormal = mat3(sv.worldViewProjection) * worldNormal;
-
-        // Clamp underwater vertices to the water surface along the draw distance border, excluding
-        // waterDepth == 1, which is used when the geometry already sits flush with the surface
-        int waterDepth = fTerrainData[vertex] >> 11 & 0xFFF;
-        if (waterDepth > 1) {
-            ivec2 cam = ivec2(uboGlobal.cameraPos.xz / CHUNK_SIZE) * CHUNK_SIZE + CHUNK_SIZE / 2;
-            ivec2 d = ivec2(abs(worldPosition.xz - cam) / TILE_SIZE);
-            if (max(d.x, d.y) > int(uboGlobal.drawDistance / 8) * 8 + 3)
-                worldPosition.y -= waterDepth;
-        }
 
         fTexBlend = vec3(0);
         fTexBlend[vertex] = 1.0;

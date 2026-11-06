@@ -1401,6 +1401,17 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_SCENE_DEPTH = "experimentalSceneDepth";
+	@ConfigItem(
+		keyName = KEY_SCENE_DEPTH,
+		name = "Use scene depth pass",
+		description = "Renders opaque scene depth before scene color.",
+		section = experimentalSettings
+	)
+	default boolean useSceneDepth() {
+		return true;
+	}
+
 	String KEY_FASTER_MODEL_HASHING = "experimentalFasterModelHashing";
 	@ConfigItem(
 		keyName = KEY_FASTER_MODEL_HASHING,

@@ -714,7 +714,13 @@ struct SceneVertex {
     ivec3 faceTerrainData;
 };
 
-SceneVertex resolveSceneVertex(vec3 localPosition, int textureFaceIdx, ivec2 sceneBase, int worldViewId) {
+SceneVertex resolveSceneVertex(
+    vec3 localPosition,
+    int textureFaceIdx,
+    ivec2 sceneBase,
+    int worldViewId,
+    bool clampWaterDepth
+) {
     SceneVertex v;
 
     v.vertex = gl_VertexID % 3;
@@ -733,7 +739,18 @@ SceneVertex resolveSceneVertex(vec3 localPosition, int textureFaceIdx, ivec2 sce
 
     v.faceAlphaBiasHsl = texelFetch(textureFaces, v.faceIdx).xyz;
     v.faceMaterialData = texelFetch(textureFaces, v.faceIdx + 1).xyz;
-    v.faceTerrainData = texelFetch(textureFaces, v.faceIdx + 2).xyz;
+
+    if (clampWaterDepth) {
+        v.faceTerrainData = texelFetch(textureFaces, v.faceIdx + 2).xyz;
+        int waterDepth = v.faceTerrainData[v.vertex] >> 11 & 0xFFF;
+        if (waterDepth > 1) {
+            ivec2 cam = ivec2(uboGlobal.cameraPos.xz / CHUNK_SIZE) * CHUNK_SIZE + CHUNK_SIZE / 2;
+            ivec2 d = ivec2(abs(v.worldPosition.xz - cam) / TILE_SIZE);
+            if (max(d.x, d.y) > int(uboGlobal.drawDistance / 8) * 8 + 3)
+                v.worldPosition.y -= waterDepth;
+        }
+    } else
+        v.faceTerrainData = ivec3(0);
 
     return v;
 }

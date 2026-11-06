@@ -36,6 +36,7 @@ public class SceneShaderProgram extends ShaderProgram {
 	public void compile(ShaderIncludes includes) throws ShaderException, IOException {
 		super.compile(includes.copy().define("WATER_PASS", isWater()));
 	}
+
 	@Override
 	protected void initialize() {
 		uniTextureArray.set(TEXTURE_UNIT_GAME);
@@ -47,6 +48,14 @@ public class SceneShaderProgram extends ShaderProgram {
 	}
 
 	public static class Water extends SceneShaderProgram {}
+
+	public static class Depth extends SceneShaderProgram {
+		Depth() {
+			shaderTemplate
+				.add(GL_VERTEX_SHADER, "scene_depth_vert.glsl")
+				.add(GL_FRAGMENT_SHADER, "stub_frag.glsl");
+		}
+	}
 
 	public static class Opaque extends SceneShaderProgram {
 		Opaque() { shaderTemplate.add(GL_FRAGMENT_SHADER, "scene_frag_opaque.glsl"); }

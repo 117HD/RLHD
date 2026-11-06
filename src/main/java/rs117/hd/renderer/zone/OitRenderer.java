@@ -133,7 +133,7 @@ public class OitRenderer {
 
 	/**
 	 * Recreates the OIT framebuffers and textures if they are missing or the resolution or
-	 * sample count changed. Call once per frame before {@link #prePass}.
+	 * sample count changed. Call once per frame before {@link #depthPass}.
 	 */
 	public void updateFBO(boolean force) {
 		int newSamples = Math.max(1, plugin.msaaSamples);
@@ -339,7 +339,7 @@ public class OitRenderer {
 		checkGLErrors();
 	}
 
-	private void prePass(RenderState renderState) {
+	public void depthPass(RenderState renderState) {
 		if (transparentCmd.isEmpty() && waterCmd.isEmpty())
 			return;
 
@@ -409,8 +409,6 @@ public class OitRenderer {
 		alphaDiscardPass(renderState);
 
 		if (!transparentCmd.isEmpty() || !waterCmd.isEmpty()) {
-			prePass(renderState);
-
 			frameTimer.begin(Timer.DRAW_ALPHA);
 			frameTimer.begin(Timer.RENDER_ALPHA);
 			renderState.program.set(sceneTransparentOITProgram);

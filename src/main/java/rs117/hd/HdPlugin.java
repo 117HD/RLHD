@@ -452,6 +452,7 @@ public class HdPlugin extends Plugin {
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
 	public boolean configUseOIT;
+	public boolean configSceneDepth;
 	public boolean configOverrideSky;
 	public boolean configReduceGlareIntensity;
 	public boolean configFrameSynchronization;
@@ -1855,6 +1856,7 @@ public class HdPlugin extends Plugin {
 		configDynamicLights = config.dynamicLights();
 		configTiledLighting = config.tiledLighting().get(!OLD_INTEL_GPU);
 		configUseOIT = config.useOIT();
+		configSceneDepth = config.useSceneDepth();
 		configTiledLightingImageLoadStore = config.imageLoadStore().get(true);
 		configOverrideSky = config.overrideSky();
 		configDetailDrawDistance = config.detailDrawDistance();
