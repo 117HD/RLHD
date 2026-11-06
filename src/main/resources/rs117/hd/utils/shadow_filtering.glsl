@@ -5,6 +5,27 @@
 #include <utils/hash.glsl>
 #include <utils/misc.glsl>
 
+// Bias limits in world space units
+const float MODEL_SHADOW_BIAS_LIMIT = 115.0;
+const float TERRAIN_SHADOW_BIAS_LIMIT = 69.0;
+
+struct ShadowReceiver {
+    vec2 texelPos; // Texel position for a particular shadow map
+    vec2 depthPerTexel; // Normalized depth per texel X & Y
+    float depth; // Unbiased reference depth
+    float bias; // Bias in normalized depth units
+    float biasLimit; // Bias limit in normalized depth units
+};
+
+float limitShadowBias(float bias, float limit) {
+    float magnitude = abs(bias);
+    // Preserve small offsets exactly, and approach the limit asymptotically
+    float knee = limit * 0.5;
+    if (magnitude > knee)
+        bias = sign(bias) * (limit - knee * (knee / magnitude));
+    return bias;
+}
+
 vec2 getShadowDitherOffset(int i) {
 #if SHADOW_FILTERING == SHADOW_FILTERING_DITHER
     int firstIndex = int(hash12(gl_FragCoord.xy) * POISSON_DISK_LENGTH);
@@ -15,63 +36,40 @@ vec2 getShadowDitherOffset(int i) {
 #endif
 }
 
-float fetchShadowTexel(
-    sampler2D tex,
-    bool hasTransparency,
-    ivec2 pixelCoord,
-    float fragDepth,
-    vec4 receiverPlane,
-    int i
-) {
-    pixelCoord += ivec2(getShadowDitherOffset(i));
+float fetchShadowTexel(sampler2D tex, bool hasTransparency, ShadowReceiver receiver, int i, ivec2 texelPos) {
+    texelPos += ivec2(getShadowDitherOffset(i));
     #if SHADOW_FILTERING == SHADOW_FILTERING_PCSS
         // texelFetch does not apply the texture's clamp-to-border setting.
-        if (any(lessThan(pixelCoord, ivec2(0))) || any(greaterThanEqual(pixelCoord, textureSize(tex, 0))))
+        if (any(lessThan(texelPos, ivec2(0))) || any(greaterThanEqual(texelPos, textureSize(tex, 0))))
             return 0.0;
     #endif
-    float bias = dot(vec2(pixelCoord) + 0.5 - receiverPlane.xy, receiverPlane.zw);
-    // The inverse projection's Z column spans half the camera's depth range.
-    float correctionLimit = 64. / (2.0 * length(uboGlobal.invLightProjectionMatrix[2].xyz));
-    fragDepth += clamp(bias, -correctionLimit, correctionLimit);
+    float bias = dot(vec2(texelPos) + 0.5 - receiver.texelPos, receiver.depthPerTexel);
+    float fragDepth = receiver.depth + limitShadowBias(bias - receiver.bias, receiver.biasLimit);
 
     if (hasTransparency) {
-        int alphaDepth = int(texelFetch(tex, pixelCoord, 0).r * SHADOW_COMBINED_MAX);
+        int alphaDepth = int(texelFetch(tex, texelPos, 0).r * SHADOW_COMBINED_MAX);
         float depth = float(alphaDepth & SHADOW_DEPTH_MAX) / SHADOW_DEPTH_MAX;
         float alpha = 1 - float(alphaDepth >> SHADOW_DEPTH_BITS) / SHADOW_ALPHA_MAX;
         return depth < fragDepth ? alpha : 0.f;
     }
 
-    return texelFetch(tex, pixelCoord, 0).r < fragDepth ? 1.f : 0.f;
+    return texelFetch(tex, texelPos, 0).r < fragDepth ? 1.f : 0.f;
 }
 
-float sampleShadowPCF1x1(
-    sampler2D tex,
-    bool hasTransparency,
-    float fragDepth,
-    vec4 shadowPos,
-    vec4 receiverPlane,
-    vec3 receiverPosition
-) {
-    ivec2 pixelCoord = ivec2(shadowPos.xy * textureSize(tex, 0));
-    return fetchShadowTexel(tex, hasTransparency, pixelCoord, fragDepth, receiverPlane, 0);
+float sampleShadowPCF1x1(sampler2D tex, bool hasTransparency, ShadowReceiver receiver, vec3 fragPos, vec4 shadowPos) {
+    ivec2 texelPos = ivec2(shadowPos.xy * textureSize(tex, 0));
+    return fetchShadowTexel(tex, hasTransparency, receiver, 0, texelPos);
 }
 
-float sampleShadowPCF2x2(
-    sampler2D tex,
-    bool hasTransparency,
-    float fragDepth,
-    vec4 shadowPos,
-    vec4 receiverPlane,
-    vec3 receiverPosition
-) {
+float sampleShadowPCF2x2(sampler2D tex, bool hasTransparency, ShadowReceiver receiver, vec3 fragPos, vec4 shadowPos) {
     shadowPos.xy *= textureSize(tex, 0);
     shadowPos.xy -= .5; // Shift so the 2x2 kernel straddles the sample point
 
     ivec2 offset = ivec2(floor(shadowPos.xy));
-    float c00 = fetchShadowTexel(tex, hasTransparency, offset + ivec2(0, 0), fragDepth, receiverPlane, 0);
-    float c10 = fetchShadowTexel(tex, hasTransparency, offset + ivec2(1, 0), fragDepth, receiverPlane, 1);
-    float c01 = fetchShadowTexel(tex, hasTransparency, offset + ivec2(0, 1), fragDepth, receiverPlane, 2);
-    float c11 = fetchShadowTexel(tex, hasTransparency, offset + ivec2(1, 1), fragDepth, receiverPlane, 3);
+    float c00 = fetchShadowTexel(tex, hasTransparency, receiver, 0, offset + ivec2(0, 0));
+    float c10 = fetchShadowTexel(tex, hasTransparency, receiver, 1, offset + ivec2(1, 0));
+    float c01 = fetchShadowTexel(tex, hasTransparency, receiver, 2, offset + ivec2(0, 1));
+    float c11 = fetchShadowTexel(tex, hasTransparency, receiver, 3, offset + ivec2(1, 1));
 
     if (c00 == c10 && c10 == c01 && c01 == c11)
         return c00;
@@ -88,14 +86,7 @@ float sampleShadowPCF2x2(
     #endif
 }
 
-float sampleShadowPCF3x3(
-    sampler2D tex,
-    bool hasTransparency,
-    float fragDepth,
-    vec4 shadowPos,
-    vec4 receiverPlane,
-    vec3 receiverPosition
-) {
+float sampleShadowPCF3x3(sampler2D tex, bool hasTransparency, ShadowReceiver receiver, vec3 fragPos, vec4 shadowPos) {
     shadowPos.xy *= textureSize(tex, 0);
 
     const int kernelSize = 3;
@@ -110,23 +101,19 @@ float sampleShadowPCF3x3(
         vec3 lerpY = vec3(1 - lerp.y, 1, lerp.y);
     #endif
 
-    float c00 = fetchShadowTexel(
-        tex, hasTransparency, offset + ivec2(0, 0),                           fragDepth, receiverPlane, 0);
-    float c02 = fetchShadowTexel(
-        tex, hasTransparency, offset + ivec2(0, kernelSize - 1),              fragDepth, receiverPlane, 1);
-    float c20 = fetchShadowTexel(
-        tex, hasTransparency, offset + ivec2(kernelSize - 1, 0),              fragDepth, receiverPlane, 2);
-    float c22 = fetchShadowTexel(
-        tex, hasTransparency, offset + ivec2(kernelSize - 1, kernelSize - 1), fragDepth, receiverPlane, 3);
+    float c00 = fetchShadowTexel(tex, hasTransparency, receiver, 0, offset + ivec2(0, 0));
+    float c02 = fetchShadowTexel(tex, hasTransparency, receiver, 1, offset + ivec2(0, kernelSize - 1));
+    float c20 = fetchShadowTexel(tex, hasTransparency, receiver, 2, offset + ivec2(kernelSize - 1, 0));
+    float c22 = fetchShadowTexel(tex, hasTransparency, receiver, 3, offset + ivec2(kernelSize - 1, kernelSize - 1));
 
     if ((c00 == 0.0 || c00 == 1.0) && c00 == c02 && c00 == c20 && c00 == c22)
         return c00;
 
-    float s01 = fetchShadowTexel(tex, hasTransparency, offset + ivec2(0, 1), fragDepth, receiverPlane, 4);
-    float s10 = fetchShadowTexel(tex, hasTransparency, offset + ivec2(1, 0), fragDepth, receiverPlane, 5);
-    float s11 = fetchShadowTexel(tex, hasTransparency, offset + ivec2(1, 1), fragDepth, receiverPlane, 6);
-    float s12 = fetchShadowTexel(tex, hasTransparency, offset + ivec2(1, 2), fragDepth, receiverPlane, 7);
-    float s21 = fetchShadowTexel(tex, hasTransparency, offset + ivec2(2, 1), fragDepth, receiverPlane, 8);
+    float s01 = fetchShadowTexel(tex, hasTransparency, receiver, 4, offset + ivec2(0, 1));
+    float s10 = fetchShadowTexel(tex, hasTransparency, receiver, 5, offset + ivec2(1, 0));
+    float s11 = fetchShadowTexel(tex, hasTransparency, receiver, 6, offset + ivec2(1, 1));
+    float s12 = fetchShadowTexel(tex, hasTransparency, receiver, 7, offset + ivec2(1, 2));
+    float s21 = fetchShadowTexel(tex, hasTransparency, receiver, 8, offset + ivec2(2, 1));
 
     float shadow;
     #if SHADOW_FILTERING == SHADOW_FILTERING_AVERAGE
@@ -149,51 +136,48 @@ float sampleShadowPCF3x3(
     return shadow * kernelAreaReciprocal;
 }
 
-float fetchHardwareShadowTexel(sampler2DShadow tex, vec2 uv, float fragDepth, vec4 receiverPlane, int i) {
-    vec2 pixelCoord = uv * textureSize(tex, 0) + getShadowDitherOffset(i);
-    fragDepth += dot(pixelCoord - receiverPlane.xy, receiverPlane.zw);
-    return texture(tex, vec3(pixelCoord / textureSize(tex, 0), fragDepth));
+float fetchHardwareShadowTexel(sampler2DShadow tex, ShadowReceiver receiver, int i, vec2 shadowPos) {
+    vec2 texelPos = shadowPos * textureSize(tex, 0) + getShadowDitherOffset(i);
+    float bias = dot(texelPos - receiver.texelPos, receiver.depthPerTexel);
+    float fragDepth = receiver.depth + limitShadowBias(bias - receiver.bias, receiver.biasLimit);
+    return texture(tex, vec3(texelPos / textureSize(tex, 0), fragDepth));
 }
 
-float sampleHardwareShadow1x1(sampler2DShadow tex, float fragDepth, vec4 shadowPos, vec4 receiverPlane) {
-    return fetchHardwareShadowTexel(tex, shadowPos.xy, fragDepth, receiverPlane, 0);
+float sampleHardwareShadow1x1(sampler2DShadow tex, ShadowReceiver receiver, vec4 shadowPos) {
+    return fetchHardwareShadowTexel(tex, receiver, 0, shadowPos.xy);
 }
 
-float sampleHardwareShadow2x2(sampler2DShadow tex, float fragDepth, vec4 shadowPos, vec4 receiverPlane) {
+float sampleHardwareShadow2x2(sampler2DShadow tex, ShadowReceiver receiver, vec4 shadowPos) {
     vec2 texelSize = 1.0 / vec2(textureSize(tex, 0));
     vec2 offset = shadowPos.xy - .5 * texelSize;
 
-    float c00 = fetchHardwareShadowTexel(tex, offset + vec2(0, 0) * texelSize, fragDepth, receiverPlane, 0);
-    float c10 = fetchHardwareShadowTexel(tex, offset + vec2(1, 0) * texelSize, fragDepth, receiverPlane, 1);
-    float c01 = fetchHardwareShadowTexel(tex, offset + vec2(0, 1) * texelSize, fragDepth, receiverPlane, 2);
-    float c11 = fetchHardwareShadowTexel(tex, offset + vec2(1, 1) * texelSize, fragDepth, receiverPlane, 3);
+    float c00 = fetchHardwareShadowTexel(tex, receiver, 0, offset + vec2(0, 0) * texelSize);
+    float c10 = fetchHardwareShadowTexel(tex, receiver, 1, offset + vec2(1, 0) * texelSize);
+    float c01 = fetchHardwareShadowTexel(tex, receiver, 2, offset + vec2(0, 1) * texelSize);
+    float c11 = fetchHardwareShadowTexel(tex, receiver, 3, offset + vec2(1, 1) * texelSize);
 
     return (c00 + c10 + c01 + c11) * 0.25;
 }
 
-float sampleHardwareShadow3x3(sampler2DShadow tex, float fragDepth, vec4 shadowPos, vec4 receiverPlane) {
+float sampleHardwareShadow3x3(sampler2DShadow tex, ShadowReceiver receiver, vec4 shadowPos) {
     vec2 texelSize = 1.0 / vec2(textureSize(tex, 0));
 
     const int kernelSize = 3;
     vec2 offset = shadowPos.xy - float(kernelSize / 2) * texelSize;
 
-    float c00 = fetchHardwareShadowTexel(
-        tex, offset + vec2(0, 0) * texelSize,                           fragDepth, receiverPlane, 0);
-    float c02 = fetchHardwareShadowTexel(
-        tex, offset + vec2(0, kernelSize - 1) * texelSize,              fragDepth, receiverPlane, 1);
-    float c20 = fetchHardwareShadowTexel(
-        tex, offset + vec2(kernelSize - 1, 0) * texelSize,              fragDepth, receiverPlane, 2);
-    float c22 = fetchHardwareShadowTexel(
-        tex, offset + vec2(kernelSize - 1, kernelSize - 1) * texelSize, fragDepth, receiverPlane, 3);
+    float c00 = fetchHardwareShadowTexel(tex, receiver, 0, offset + vec2(0, 0) * texelSize);
+    float c02 = fetchHardwareShadowTexel(tex, receiver, 1, offset + vec2(0, kernelSize - 1) * texelSize);
+    float c20 = fetchHardwareShadowTexel(tex, receiver, 2, offset + vec2(kernelSize - 1, 0) * texelSize);
+    float c22 = fetchHardwareShadowTexel(tex, receiver, 3, offset + vec2(kernelSize - 1, kernelSize - 1) * texelSize);
 
     if ((c00 == 0.0 || c00 == 1.0) && c00 == c02 && c00 == c20 && c00 == c22)
         return c00;
 
-    float s01 = fetchHardwareShadowTexel(tex, offset + vec2(0, 1) * texelSize, fragDepth, receiverPlane, 4);
-    float s10 = fetchHardwareShadowTexel(tex, offset + vec2(1, 0) * texelSize, fragDepth, receiverPlane, 5);
-    float s11 = fetchHardwareShadowTexel(tex, offset + vec2(1, 1) * texelSize, fragDepth, receiverPlane, 6);
-    float s12 = fetchHardwareShadowTexel(tex, offset + vec2(1, 2) * texelSize, fragDepth, receiverPlane, 7);
-    float s21 = fetchHardwareShadowTexel(tex, offset + vec2(2, 1) * texelSize, fragDepth, receiverPlane, 8);
+    float s01 = fetchHardwareShadowTexel(tex, receiver, 4, offset + vec2(0, 1) * texelSize);
+    float s10 = fetchHardwareShadowTexel(tex, receiver, 5, offset + vec2(1, 0) * texelSize);
+    float s11 = fetchHardwareShadowTexel(tex, receiver, 6, offset + vec2(1, 1) * texelSize);
+    float s12 = fetchHardwareShadowTexel(tex, receiver, 7, offset + vec2(1, 2) * texelSize);
+    float s21 = fetchHardwareShadowTexel(tex, receiver, 8, offset + vec2(2, 1) * texelSize);
 
     float shadow =
         c00 + s01 + c02 +

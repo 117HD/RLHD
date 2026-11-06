@@ -70,6 +70,9 @@ public class SkyManager {
 	private HdPlugin plugin;
 
 	@Inject
+	private HdPluginConfig config;
+
+	@Inject
 	private EnvironmentManager environmentManager;
 
 	private final Random random = new Random(SEED);
@@ -85,7 +88,7 @@ public class SkyManager {
 	private long frameUtcMillis;
 	private long lastDirectionalCameraUpdateMillis;
 
-	private double customCycleElapsedDays = .35f;
+	private double customCycleElapsedDays;
 	private long customCycleStartMillis;
 
 	private boolean isSunDescending;
@@ -199,7 +202,7 @@ public class SkyManager {
 		SkyConfiguration.DEFAULT_PRESET = preset;
 	}
 
-	public void updateConfig(HdPluginConfig config) {
+	public void updateConfig() {
 		configCycle = config.daylightCycle();
 		configMoonBehavior = config.moonBehavior();
 		configMoonPhase = configMoonBehavior == MoonBehavior.DISABLED ? MoonPhase.FIRST_QUARTER : config.moonPhase();
@@ -232,8 +235,14 @@ public class SkyManager {
 		}
 
 		if (configCycle == DaylightCycle.CUSTOM) {
-			if (customCycleStartMillis == 0)
-				customCycleStartMillis = Instant.ofEpochMilli(frameUtcMillis).truncatedTo(ChronoUnit.DAYS).toEpochMilli();
+			if (customCycleStartMillis == 0) {
+				customCycleStartMillis = Instant
+					.ofEpochMilli(frameUtcMillis)
+					.truncatedTo(ChronoUnit.DAYS)
+					.toEpochMilli();
+				// Start the custom cycle at 11 AM local mean solar time
+				customCycleElapsedDays = 11 / 24.0 - configLatLon[1] / 360.0;
+			}
 			customCycleElapsedDays += plugin.deltaTimeMs / (configCycleDuration * MINUTE_MS);
 		}
 
@@ -260,7 +269,7 @@ public class SkyManager {
 			from,
 			to,
 			environmentManager.getTransitionProgress(),
-			environmentManager.getTargetEnvironment().isOverworld,
+			environmentManager.getTargetEnvironment().hasSky(),
 			environmentManager.getCurrentEnvironment().getShadowAngles()
 		);
 	}
@@ -515,9 +524,19 @@ public class SkyManager {
 		copyTo(out.referenceFogColorLinear, fogColor);
 	}
 
+	public float getShadowAltitude(boolean useMoon) {
+		float altitude = (useMoon ? state.moonAngles : state.shadowAngles)[0];
+		// Asymptotically approach the horizon for altitudes below 2 degrees,
+		// to prevent underwater terrain from shadowing specular sun & moon reflections
+		final float horizonTransition = 2 * DEG_TO_RAD;
+		if (state.cycleActive && altitude < horizonTransition)
+			altitude = horizonTransition * exp(altitude / horizonTransition - 1);
+		return altitude;
+	}
+
 	public void updateDirectionalCamera(Camera directionalCamera, boolean useMoon) {
 		float[] angles = useMoon ? state.moonAngles : state.shadowAngles;
-		float[] orientation = { PI - angles[1], angles[0] };
+		float[] orientation = { PI - angles[1], getShadowAltitude(useMoon) };
 		if (state.cycleActive) {
 			final float angleThreshold = 0.0005f;
 			final float timeThresholdMs = 125;

@@ -265,6 +265,10 @@ public class DeveloperTools implements KeyListener {
 				toggle.setEnabled(false);
 	}
 
+	public void updateConfig() {
+		profiler.reset();
+	}
+
 	@Subscribe
 	public void onCommandExecuted(CommandExecuted commandExecuted) {
 		if (!commandExecuted.getCommand().equalsIgnoreCase("117hd"))

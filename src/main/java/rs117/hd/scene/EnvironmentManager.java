@@ -343,7 +343,7 @@ public class EnvironmentManager {
 
 		Environment areaEnvironment = getResolvedTargetEnvironment();
 		Environment lightingEnvironment = areaEnvironment;
-		if (!config.atmosphericLighting() && !lightingEnvironment.force)
+		if (config.disableEnvironmentalLighting() && !lightingEnvironment.force)
 			lightingEnvironment = getOverworldEnvironment();
 		lightingEnvironment.copyTo(state.to);
 		state.to.fogDepth = areaEnvironment.fogDepth;
@@ -439,7 +439,7 @@ public class EnvironmentManager {
 			generateNextLightningTime();
 		}
 
-		if (lightningEnabled && config.flashingEffects()) {
+		if (lightningEnabled && config.legacyLightning()) {
 			applyLightning(state.current.getFogColor());
 			applyLightning(state.current.getWaterColor());
 		} else {
@@ -448,7 +448,7 @@ public class EnvironmentManager {
 	}
 
 	public void applyLightning(float[] color) {
-		if (lightningEnabled && config.flashingEffects())
+		if (lightningEnabled && config.legacyLightning())
 			mix(color, color, LIGHTNING_COLOR, clamp(lightningBrightness, 0, 1));
 	}
 

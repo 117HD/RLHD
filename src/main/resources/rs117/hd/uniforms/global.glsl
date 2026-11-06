@@ -17,6 +17,7 @@ layout(std140) uniform UBOGlobal {
     float drawDistance;
 
     float colorBlindnessIntensity;
+    float glareIntensity;
     float gammaCorrection;
     float saturation;
 	float contrast;
@@ -41,6 +42,8 @@ layout(std140) uniform UBOGlobal {
     float groundFogStart;
     float groundFogEnd;
     float groundFogOpacity;
+
+    bool voidShader;
 
     vec3 waterColorLight;
     vec3 waterColorMid;

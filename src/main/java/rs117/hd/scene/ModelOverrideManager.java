@@ -15,7 +15,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.gameval.*;
@@ -83,9 +82,12 @@ public class ModelOverrideManager {
 					}
 					modelOverrides.clear();
 					for (ModelOverride override : parsedOverrides) {
+						// Ignore trailing commas in the JSON
+						if (override == null)
+							continue;
 						try {
 							override.normalize(plugin);
-						} catch (IllegalStateException ex) {
+						} catch (Exception ex) {
 							log.error("Invalid model override '{}': {}", override.description, ex.getMessage());
 							continue;
 						}
@@ -212,10 +214,11 @@ public class ModelOverrideManager {
 				}
 			}
 
-			if (current != null && current.areaOverrides != null && !current.areaOverrides.isEmpty()) {
-				var areaOverrides = current.areaOverrides;
-				current = entry.copy();
-				current.areaOverrides = areaOverrides;
+			if (current != null && current.areaOverrides != null) {
+				var replacement = entry.copy();
+				replacement.areaOverrideBounds = current.areaOverrideBounds;
+				replacement.areaOverrides = current.areaOverrides;
+				current = replacement;
 			} else {
 				current = entry;
 			}
@@ -226,14 +229,24 @@ public class ModelOverrideManager {
 				current = ModelOverride.NONE;
 
 			if (current.areaOverrides == null) {
-				// We need to replace the override with a copy that has a separate list of area overrides to avoid conflicts
+				// Create a copy to avoid aliasing area overrides with other UUIDs
 				current = current.copy();
-				current.areaOverrides = new HashMap<>();
 				modelOverrides.put(uuid, current);
 			}
 
-			for (var area : entry.areas)
-				current.areaOverrides.put(area, entry);
+			int size = entry.areas.length;
+			if (current.areaOverrides == null) {
+				current.areaOverrides = new ModelOverride[size];
+				Arrays.fill(current.areaOverrides, 0, size, entry);
+				current.areaOverrideBounds = entry.areas;
+			} else {
+				int offset = current.areaOverrides.length;
+				size += offset;
+				current.areaOverrides = Arrays.copyOf(current.areaOverrides, size);
+				Arrays.fill(current.areaOverrides, offset, size, entry);
+				current.areaOverrideBounds = Arrays.copyOf(current.areaOverrideBounds, size);
+				System.arraycopy(entry.areas, 0, current.areaOverrideBounds, offset, entry.areas.length);
+			}
 		}
 	}
 
@@ -296,10 +309,11 @@ public class ModelOverrideManager {
 	public void setObjectOverrideMappings(Map<Integer, ModelOverride> mappings) {
 		for (var entry : mappings.entrySet()) {
 			int uuid = ModelHash.packUuid(ModelHash.TYPE_OBJECT, entry.getKey());
-			if (entry.getValue() == null)
+			if (entry.getValue() == null) {
 				modelOverrides.remove(uuid);
-			else
+			} else {
 				modelOverrides.put(uuid, entry.getValue());
+			}
 		}
 	}
 
@@ -308,25 +322,56 @@ public class ModelOverrideManager {
 		var seen = java.util.Collections.newSetFromMap(new IdentityHashMap<ModelOverride, Boolean>());
 		for (var entry : modelOverrides) {
 			ModelOverride root = entry.getValue();
-			if (root.areaOverrides != null && root.areaOverrides.containsValue(areaOverride) && seen.add(root))
-				owners.add(root);
+			if (root.areaOverrides == null || !seen.add(root))
+				continue;
+			for (ModelOverride override : root.areaOverrides) {
+				if (override == areaOverride) {
+					owners.add(root);
+					break;
+				}
+			}
 		}
 		return owners;
 	}
 
 	public void updateAreaOverrideMappings(List<ModelOverride> owners, ModelOverride areaOverride) {
-		for (ModelOverride root : owners) {
-			if (root.areaOverrides == null) {
-				if (areaOverride.areas == null || areaOverride.areas.length == 0) continue;
-				root.areaOverrides = new HashMap<>();
+		int areaCount = areaOverride.areas == null ? 0 : areaOverride.areas.length;
+		for (int owner = 0; owner < owners.size(); owner++) {
+			ModelOverride root = owners.get(owner);
+			int oldCount = root.areaOverrides == null ? 0 : root.areaOverrides.length;
+			int first = oldCount;
+			int size = oldCount + areaCount;
+			for (int i = 0; i < oldCount; i++) {
+				if (root.areaOverrides[i] == areaOverride) {
+					first = Math.min(first, i);
+					size--;
+				}
 			}
 
-			root.areaOverrides.entrySet().removeIf(entry -> entry.getValue() == areaOverride);
-			if (areaOverride.areas != null)
-				for (var area : areaOverride.areas)
-					root.areaOverrides.put(area, areaOverride);
+			if (size == 0) {
+				root.areaOverrides = null;
+				root.areaOverrideBounds = null;
+				continue;
+			}
 
-			if (root.areaOverrides.isEmpty()) root.areaOverrides = null;
+			ModelOverride[] overrides = new ModelOverride[size];
+			AABB[] bounds = new AABB[size];
+			int offset = 0;
+			for (int i = 0; i <= oldCount; i++) {
+				// Preserve first-match precedence when editing an existing area's bounds.
+				if (i == first && areaCount > 0) {
+					Arrays.fill(overrides, offset, offset + areaCount, areaOverride);
+					System.arraycopy(areaOverride.areas, 0, bounds, offset, areaCount);
+					offset += areaCount;
+				}
+				if (root.areaOverrides != null && i < oldCount && root.areaOverrides[i] != areaOverride) {
+					overrides[offset] = root.areaOverrides[i];
+					bounds[offset++] = root.areaOverrideBounds[i];
+				}
+			}
+
+			root.areaOverrides = overrides;
+			root.areaOverrideBounds = bounds;
 		}
 	}
 
@@ -365,6 +410,8 @@ public class ModelOverrideManager {
 	private ModelOverride[] getSaveDefinitions(List<ModelOverride> sourceDefinitions) {
 		List<ModelOverride> definitions = new ArrayList<>();
 		for (ModelOverride definition : sourceDefinitions) {
+			if (definition == null)
+				continue;
 			if (definition.areas == null || definition.areas.length == 0) {
 				definitions.add(definition);
 				continue;
@@ -377,7 +424,16 @@ public class ModelOverrideManager {
 				Set<Integer> graphicsObjectIds = new HashSet<>();
 				for (var entry : modelOverrides) {
 					var root = entry.getValue();
-					if (root.areaOverrides == null || root.areaOverrides.get(area) != definition)
+					if (root.areaOverrides == null)
+						continue;
+					boolean matches = false;
+					for (int i = 0; i < root.areaOverrides.length; i++) {
+						if (root.areaOverrides[i] == definition && root.areaOverrideBounds[i].equals(area)) {
+							matches = true;
+							break;
+						}
+					}
+					if (!matches)
 						continue;
 
 					int id = ModelHash.getUuidId(entry.getKey());
@@ -417,9 +473,9 @@ public class ModelOverrideManager {
 		var override = getOverride(uuid);
 
 		if (worldPos != null && override.areaOverrides != null)
-			for (var entry : override.areaOverrides.entrySet())
-				if (entry.getKey().contains(worldPos))
-					return entry.getValue();
+			for (int i = 0; i < override.areaOverrides.length; i++)
+				if (override.areaOverrideBounds[i].contains(worldPos))
+					return override.areaOverrides[i];
 
 		return override;
 	}

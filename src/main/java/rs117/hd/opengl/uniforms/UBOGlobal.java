@@ -24,6 +24,7 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public final Property drawDistance = addProperty(PropertyType.Float, "drawDistance");
 
 	public final Property colorBlindnessIntensity = addProperty(PropertyType.Float, "colorBlindnessIntensity");
+	public final Property glareIntensity = addProperty(PropertyType.Float, "glareIntensity");
 	public final Property gammaCorrection = addProperty(PropertyType.Float, "gammaCorrection");
 	public final Property saturation = addProperty(PropertyType.Float, "saturation");
 	public final Property contrast = addProperty(PropertyType.Float, "contrast");
@@ -48,6 +49,8 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public final Property groundFogStart = addProperty(PropertyType.Float, "groundFogStart");
 	public final Property groundFogEnd = addProperty(PropertyType.Float, "groundFogEnd");
 	public final Property groundFogOpacity = addProperty(PropertyType.Float, "groundFogOpacity");
+
+	public final Property voidShader = addProperty(PropertyType.Int, "voidShader");
 
 	public final Property waterColorLight = addProperty(PropertyType.FVec3, "waterColorLight");
 	public final Property waterColorMid = addProperty(PropertyType.FVec3, "waterColorMid");

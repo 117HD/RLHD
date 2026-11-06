@@ -31,3 +31,9 @@
     #define getWorldViewProjection(worldViewIndex) mat4(1)
     #define getWorldViewTint(worldViewIndex) ivec4(0)
 #endif
+
+bool isWorldViewSquashed(int worldViewIndex) {
+    if (worldViewIndex <= 0)
+        return false;
+    return getWorldViewProjection(worldViewIndex)[1][1] < .1f;
+}

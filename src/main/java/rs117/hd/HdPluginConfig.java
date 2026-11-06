@@ -75,7 +75,8 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "General",
 		description = "General settings",
-		position = 0
+		position = 0,
+		closedByDefault = true
 	)
 	String generalSettings = "generalSettings";
 
@@ -223,12 +224,36 @@ public interface HdPluginConfig extends Config
 		return 16;
 	}
 
+	String KEY_NORMAL_MAPPING = "normalMapping";
+	@ConfigItem(
+		keyName = KEY_NORMAL_MAPPING,
+		name = "Normal mapping",
+		description = "Affects how light interacts with certain materials. Barely impacts performance.",
+		position = 10,
+		section = generalSettings
+	)
+	default boolean normalMapping() {
+		return true;
+	}
+
+	String KEY_PARALLAX_OCCLUSION_MAPPING = "parallaxOcclusionMappingToggle";
+	@ConfigItem(
+		keyName = KEY_PARALLAX_OCCLUSION_MAPPING,
+		name = "Parallax occlusion mapping",
+		description = "Adds more depth to some materials, at the cost of higher GPU usage.",
+		position = 11,
+		section = generalSettings
+	)
+	default boolean parallaxOcclusionMapping() {
+		return true;
+	}
+
 	String KEY_UNLOCK_FPS = "unlockFps";
 	@ConfigItem(
 		keyName = KEY_UNLOCK_FPS,
 		name = "Unlock FPS",
 		description = "Removes the 50 FPS cap for some game content, such as camera movement and dynamic lighting.",
-		position = 10,
+		position = 12,
 		section = generalSettings
 	)
 	default boolean unlockFps()
@@ -254,7 +279,7 @@ public interface HdPluginConfig extends Config
 			"If set to 'on', the game will attempt to match your monitor's refresh rate <b>exactly</b>,<br>" +
 			"but if it can't keep up, FPS will be <u>halved until it catches up</u>. This option is rarely desired.<br>" +
 			"Note: GPUs that don't support Adaptive VSync will silently fall back to 'on'.",
-		position = 11,
+		position = 13,
 		section = generalSettings
 	)
 	default SyncMode syncMode()
@@ -269,7 +294,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Controls the maximum number of frames per second.<br>" +
 			"This setting only applies if Unlock FPS is enabled and VSync mode is set to 'off'.",
-		position = 12,
+		position = 14,
 		section = generalSettings
 	)
 	@Range(
@@ -286,7 +311,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_COLOR_BLINDNESS,
 		name = "Color blindness",
 		description = "Adjust colors to make them more distinguishable for people with a certain type of color blindness.",
-		position = 13,
+		position = 15,
 		section = generalSettings
 	)
 	default ColorBlindMode colorBlindness()
@@ -298,7 +323,7 @@ public interface HdPluginConfig extends Config
 		keyName = "colorBlindnessIntensity",
 		name = "Blindness intensity",
 		description = "Specifies how intense the color blindness adjustment should be.",
-		position = 14,
+		position = 16,
 		section = generalSettings
 	)
 	@Units(Units.PERCENT)
@@ -309,23 +334,11 @@ public interface HdPluginConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "flashingEffects",
-		name = "Flashing effects",
-		description = "Whether to show rapid flashing effects, such as lightning, in certain areas.",
-		position = 15,
-		section = generalSettings
-	)
-	default boolean flashingEffects()
-	{
-		return false;
-	}
-
-	@ConfigItem(
 		keyName = "fSaturation",
 		name = "Saturation",
 		description = "Controls the saturation of the final rendered image.<br>" +
 			"Intended to be kept between 0% and 120%.",
-		position = 16,
+		position = 17,
 		section = generalSettings
 	)
 	@Units(Units.PERCENT)
@@ -345,7 +358,7 @@ public interface HdPluginConfig extends Config
 		name = "Contrast",
 		description = "Controls the contrast of the final rendered image.<br>" +
 			"Intended to be kept between 90% and 110%.",
-		position = 17,
+		position = 18,
 		section = generalSettings
 	)
 	@Units(Units.PERCENT)
@@ -372,7 +385,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Controls the brightness of the game, excluding the UI.<br>" +
 			"Adjust until the circle on the left is barely visible.",
-		position = 18,
+		position = 19,
 		section = generalSettings
 	)
 	default int brightness() {
@@ -460,7 +473,7 @@ public interface HdPluginConfig extends Config
 		section = shadowSettings
 	)
 	default boolean roofShadows() {
-		return false;
+		return true;
 	}
 
 	String KEY_TERRAIN_SHADOWS = "terrainShadows";
@@ -489,6 +502,21 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_VANILLA_SHADOW_MODE = "vanillaShadowMode";
+	@ConfigItem(
+		keyName = KEY_VANILLA_SHADOW_MODE,
+		name = "Vanilla shadows",
+		description =
+			"Choose whether shadows built into models by Jagex should be hidden. This does not affect clickboxes.<br>" +
+			"'Show in PvM' will retain shadows for falling crystals during the Olm fight and other useful cases.<br>" +
+			"'Prefer in PvM' will do the above and also disable 117 HD's dynamic shadows in such cases.",
+		position = 8,
+		section = shadowSettings
+	)
+	default VanillaShadowMode vanillaShadowMode() {
+		return VanillaShadowMode.SHOW_IN_PVM;
+	}
+
 
 	/*====== Lighting settings ======*/
 
@@ -500,10 +528,10 @@ public interface HdPluginConfig extends Config
 	)
 	String lightingSettings = "lightingSettings";
 
-	String KEY_DYNAMIC_LIGHTS = "dynamicLights";
+	String KEY_LIGHTS = "dynamicLights";
 	@ConfigItem(
-		keyName = KEY_DYNAMIC_LIGHTS,
-		name = "Dynamic lights",
+		keyName = KEY_LIGHTS,
+		name = "Lights",
 		description =
 			"The maximum number of dynamic lights visible at once.<br>" +
 			"Reducing this may improve performance.",
@@ -514,29 +542,15 @@ public interface HdPluginConfig extends Config
 		return DynamicLights.SOME;
 	}
 
-	String KEY_TILED_LIGHTING = "tiledLighting";
+	String KEY_OBJECT_LIGHTS = "objectLights";
 	@ConfigItem(
-		keyName = KEY_TILED_LIGHTING,
-		name = "Tiled lighting",
-		description = "Allows rendering <b>a lot</b> more lights simultaneously.",
-		section = lightingSettings,
-		position = 1
-	)
-	default boolean tiledLighting() {
-		return true;
-	}
-	@ConfigItem(keyName = KEY_TILED_LIGHTING, hidden = true, name = "", description = "")
-	void tiledLighting(boolean enabled);
-
-	String KEY_PROJECTILE_LIGHTS = "projectileLights";
-	@ConfigItem(
-		keyName = KEY_PROJECTILE_LIGHTS,
-		name = "Projectile lights",
-		description = "Adds dynamic lights to some projectiles.",
-		position = 2,
+		keyName = KEY_OBJECT_LIGHTS,
+		name = "Object lights",
+		description = "Adds dynamic lights to objects, such as lamps and fires.",
+		position = 1,
 		section = lightingSettings
 	)
-	default boolean projectileLights() {
+	default boolean objectLights() {
 		return true;
 	}
 
@@ -544,62 +558,82 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_NPC_LIGHTS,
 		name = "NPC lights",
-		description = "Adds dynamic lights to some NPCs.",
-		position = 3,
+		description = "Adds dynamic lights to some NPCs, excluding pets and followers.",
+		position = 1,
 		section = lightingSettings
 	)
 	default boolean npcLights() {
 		return true;
 	}
 
-	String KEY_ATMOSPHERIC_LIGHTING = "environmentalLighting";
+	String KEY_PET_LIGHTS = "petLights";
 	@ConfigItem(
-		keyName = KEY_ATMOSPHERIC_LIGHTING,
-		name = "Atmospheric lighting",
-		description = "Change environmental lighting based on the current area.",
+		keyName = KEY_PET_LIGHTS,
+		name = "Pet lights",
+		description = "Adds dynamic lights to pets and followers.",
+		position = 2,
+		section = lightingSettings
+	)
+	default boolean petLights() {
+		return true;
+	}
+
+	String KEY_THRALL_LIGHTS = "thrallLights";
+	@ConfigItem(
+		keyName = KEY_THRALL_LIGHTS,
+		name = "Thrall lights",
+		description = "Adds dynamic lights to thralls.",
+		position = 3,
+		section = lightingSettings
+	)
+	default boolean thrallLights() {
+		return true;
+	}
+
+	String KEY_SPOTANIM_LIGHTS = "spotanimLights";
+	@ConfigItem(
+		keyName = KEY_SPOTANIM_LIGHTS,
+		name = "Animation lights",
+		description = "Adds dynamic lights to spells and other graphical effects.",
 		position = 4,
 		section = lightingSettings
 	)
-	default boolean atmosphericLighting() {
+	default boolean spotanimLights() {
 		return true;
 	}
 
-	String KEY_VANILLA_SHADOW_MODE = "vanillaShadowMode";
+	String KEY_PROJECTILE_LIGHTS = "projectileLights";
 	@ConfigItem(
-		keyName = KEY_VANILLA_SHADOW_MODE,
-		name = "Vanilla shadows",
-		description =
-			"Choose whether shadows built into models by Jagex should be hidden. This does not affect clickboxes.<br>" +
-			"'Show in PvM' will retain shadows for falling crystals during the Olm fight and other useful cases.<br>" +
-			"'Prefer in PvM' will do the above and also disable 117 HD's dynamic shadows in such cases.",
-		position = 11,
+		keyName = KEY_PROJECTILE_LIGHTS,
+		name = "Projectile lights",
+		description = "Adds dynamic lights to some projectiles.",
+		position = 5,
 		section = lightingSettings
 	)
-	default VanillaShadowMode vanillaShadowMode() {
-		return VanillaShadowMode.SHOW_IN_PVM;
-	}
-
-	String KEY_NORMAL_MAPPING = "normalMapping";
-	@ConfigItem(
-		keyName = KEY_NORMAL_MAPPING,
-		name = "Normal mapping",
-		description = "Affects how light interacts with certain materials. Barely impacts performance.",
-		position = 12,
-		section = lightingSettings
-	)
-	default boolean normalMapping() {
+	default boolean projectileLights() {
 		return true;
 	}
 
-	String KEY_PARALLAX_OCCLUSION_MAPPING = "parallaxOcclusionMappingToggle";
+	String KEY_WATER_SPECULAR_REFLECTIONS = "waterSpecularReflection";
 	@ConfigItem(
-		keyName = KEY_PARALLAX_OCCLUSION_MAPPING,
-		name = "Parallax occlusion mapping",
-		description = "Adds more depth to some materials, at the cost of higher GPU usage.",
-		position = 13,
+		keyName = KEY_WATER_SPECULAR_REFLECTIONS,
+		name = "Water sun & moon reflections",
+		description = "Enables sun and moon highlights on water, including the fake sun when day & night is disabled.",
+		position = 6,
 		section = lightingSettings
 	)
-	default boolean parallaxOcclusionMapping() {
+	default boolean waterSpecularReflections() {
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "underwaterCaustics",
+		name = "Underwater caustics",
+		description = "Apply underwater lighting effects to imitate sunlight passing through waves on the surface.",
+		position = 7,
+		section = lightingSettings
+	)
+	default boolean underwaterCaustics() {
 		return true;
 	}
 
@@ -610,7 +644,7 @@ public interface HdPluginConfig extends Config
 		name = "Day & night",
 		description = "Daylight cycle settings",
 		position = 3,
-		closedByDefault = true
+		closedByDefault = false
 	)
 	String daylightCycleSettings = "daylightCycleSettings";
 
@@ -622,7 +656,7 @@ public interface HdPluginConfig extends Config
 			"Controls the day & night cycle behavior.<br>" +
 			"'Off' disables the day & night cycle entirely.<br>" +
 			"'Default' shows everyone the same sky, with one complete day passing per hour.<br>" +
-			"'Real-time' follows your local time, roughly matching the real sun in your hemisphere.<br>" +
+			"'Real-time' matches the Sun & Moon in the real world, for your configured latitude & longitude.<br>" +
 			"'Custom' follows the sun and moon at the configured location, respecting the Custom cycle duration.<br>" +
 			"'Dawn' shows the sky just before sunrise.<br>" +
 			"'Sunrise' shows a constant sunrise.<br>" +
@@ -715,18 +749,6 @@ public interface HdPluginConfig extends Config
 		return MoonPhase.DYNAMIC;
 	}
 
-	String KEY_REPLACE_VANILLA_SKYBOXES = "replaceVanillaSkyboxes";
-	@ConfigItem(
-		keyName = KEY_REPLACE_VANILLA_SKYBOXES,
-		name = "Replace vanilla skyboxes",
-		description = "Replace the game's built-in skybox models with 117 HD's own implementation.",
-		position = 6,
-		section = daylightCycleSettings
-	)
-	default boolean replaceVanillaSkyboxes() {
-		return true;
-	}
-
 	String KEY_CUSTOM_CYCLE_DURATION = "customCycleDurationMinutes";
 	@Range(min = 1)
 	@Units(Units.MINUTES)
@@ -734,7 +756,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_CUSTOM_CYCLE_DURATION,
 		name = "Custom cycle duration",
 		description = "Configures how long each Custom day & night cycle lasts.",
-		position = 7,
+		position = 6,
 		section = daylightCycleSettings
 	)
 	default int customCycleDurationMinutes() {
@@ -753,7 +775,7 @@ public interface HdPluginConfig extends Config
 			"For southern latitudes, use negative values. For more precise timing, you can provide<br>" +
 			"coordinates including decimals in the in-game chat with: <b>::117hd latlon &lt;latitude&gt; &lt;longitude&gt;</b><br>" +
 			"To return to using the values specified in the config panel, type: <b>::117hd latlon reset</b>",
-		position = 9,
+		position = 7,
 		section = daylightCycleSettings
 	)
 	default int latitudeDegrees() {
@@ -772,7 +794,7 @@ public interface HdPluginConfig extends Config
 			"For western longitudes, use negative values. For more precise timing, you can provide<br>" +
 			"coordinates including decimals in the in-game chat with: <b>::117hd latlon &lt;latitude&gt; &lt;longitude&gt;</b><br>" +
 			"To return to using the values specified in the config panel, type: <b>::117hd latlon reset</b>",
-		position = 10,
+		position = 8,
 		section = daylightCycleSettings
 	)
 	default int longitudeDegrees() {
@@ -955,24 +977,12 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	@ConfigItem(
-		keyName = "underwaterCaustics",
-		name = "Underwater caustics",
-		description = "Apply underwater lighting effects to imitate sunlight passing through waves on the surface.",
-		position = 12,
-		section = environmentSettings
-	)
-	default boolean underwaterCaustics()
-	{
-		return true;
-	}
-
 	String KEY_WIND_DISPLACEMENT = "windDisplacement";
 	@ConfigItem(
 		keyName = KEY_WIND_DISPLACEMENT,
 		name = "Wind displacement",
 		description = "Controls whether things like grass and leaves should be affected by wind.",
-		position = 13,
+		position = 12,
 		section = environmentSettings
 	)
 	default boolean windDisplacement() {
@@ -984,7 +994,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_CHARACTER_DISPLACEMENT,
 		name = "Character displacement",
 		description = "Let players & NPCs affect things like grass whilst walking around.",
-		position = 14,
+		position = 13,
 		section = environmentSettings
 	)
 	default boolean characterDisplacement() {
@@ -996,7 +1006,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_HIDE_VANILLA_WATER_EFFECTS,
 		name = "Hide vanilla water ripples",
 		description = "Hide vanilla ripples found around objects floating in the water.",
-		position = 15,
+		position = 16,
 		section = environmentSettings
 	)
 	default boolean hideVanillaWaterEffects() { return true; }
@@ -1006,10 +1016,20 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_POH_THEME_ENVIRONMENTS,
 		name = "Player-owned house themes",
 		description = "Change the environmental lighting based on the POH style.",
-		position = 16,
+		position = 17,
 		section = environmentSettings
 	)
 	default boolean pohThemeEnvironments() { return true; }
+
+	String KEY_RECOLOR_GROUND_OBJECTS = "recolorGroundObjects";
+	@ConfigItem(
+		keyName = KEY_RECOLOR_GROUND_OBJECTS,
+		name = "Color-matched ground objects",
+		description = "Recolors grass and other small ground objects to match the tile's color.",
+		position = 18,
+		section = environmentSettings
+	)
+	default boolean recolorGroundObjects() { return true; }
 
 
 	/*====== Miscellaneous settings ======*/
@@ -1047,21 +1067,6 @@ public interface HdPluginConfig extends Config
 		position = -99
 	)
 	default boolean powerSaving() {
-		return false;
-	}
-
-	String KEY_MACOS_INTEL_WORKAROUND = "macosIntelWorkaround";
-	@ConfigItem(
-		keyName = KEY_MACOS_INTEL_WORKAROUND,
-		name = "Fix broken colors on Intel Macs",
-		description = "Workaround for visual artifacts found on some Intel GPU drivers on macOS.",
-		warning =
-			"This setting can cause RuneLite to crash, and it can be difficult to undo.\n" +
-			"Only enable it if you are seeing broken colors. Are you sure you want to enable this setting?",
-		section = miscellaneousSettings
-	)
-	default boolean macosIntelWorkaround()
-	{
 		return false;
 	}
 
@@ -1152,16 +1157,40 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String KEY_WINDOWS_HDR_CORRECTION = "windowsHdrCorrection";
+	String KEY_GLARE_INTENSITY = "glareIntensity";
+	@Range(min = 0, max = 100)
+	@Units(Units.PERCENT)
 	@ConfigItem(
-		keyName = KEY_WINDOWS_HDR_CORRECTION,
-		name = "Windows HDR correction",
-		description =
-			"Correctly simulates SDR gamma 2.2 when Windows is in HDR mode.<br>" +
-			"Note: this does not enable HDR. It only works around an issue within Windows' HDR implementation.",
+		keyName = KEY_GLARE_INTENSITY,
+		name = "Glare intensity",
+		description = "Reduce the glow around the sun & moon and their bright water reflections.",
 		section = miscellaneousSettings
 	)
-	default boolean windowsHdrCorrection() {
+	default int glareIntensity() {
+		return 100;
+	}
+
+	String KEY_ZONE_STREAMING = "experimentalZoneStreaming";
+	@ConfigItem(
+		keyName = KEY_ZONE_STREAMING,
+		name = "Zone streaming",
+		description =
+			"Load zones in parallel in the background, switching to new scenes almost instantly.<br>" +
+			"You will see zones appear when they are loaded, instead of having to wait for them all at once.",
+		section = miscellaneousSettings
+	)
+	default boolean zoneStreaming() {
+		return true;
+	}
+
+	String KEY_WIREFRAME = "wireframe";
+	@ConfigItem(
+		keyName = KEY_WIREFRAME,
+		name = "Wireframe",
+		description = "Show the edges of individual triangles in the scene.",
+		section = miscellaneousSettings
+	)
+	default boolean wireframe() {
 		return false;
 	}
 
@@ -1318,40 +1347,49 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_LEGACY_BOAT_SILHOUETTES = "legacyBoatSilhouettes";
+	@ConfigItem(
+		keyName = KEY_LEGACY_BOAT_SILHOUETTES,
+		name = "Legacy boat silhouettes",
+		description = "Renders boat silhouettes with textures like before.",
+		section = legacySettings
+	)
+	default boolean legacyBoatSilhouettes() {
+		return false;
+	}
+
+	String KEY_LEGACY_DISABLE_ENVIRONMENTAL_LIGHTING = "legacyDisableEnvironmentalLighting";
+	@ConfigItem(
+		keyName = KEY_LEGACY_DISABLE_ENVIRONMENTAL_LIGHTING,
+		name = "Disable environmental lighting",
+		description = "Disable lighting tuned per environment, falling back to bright sunlight everywhere.",
+		section = legacySettings
+	)
+	default boolean disableEnvironmentalLighting() {
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "legacyLightning",
+		name = "Legacy lightning",
+		description = "Crudely simulates lightning in areas such as Barrows and deep Wilderness.",
+		section = legacySettings
+	)
+	default boolean legacyLightning() {
+		return false;
+	}
+
 
 	/*====== Experimental settings ======*/
 
 	@ConfigSection(
 		name = "Experimental",
-		description = "Experimental features - if you're experiencing issues, you should consider disabling these.",
+		description = "Experimental features. If you're experiencing issues, you should consider disabling these.",
 		position = 7,
 		closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";
 
-	String KEY_FASTER_MODEL_HASHING = "experimentalFasterModelHashing";
-	@ConfigItem(
-		keyName = KEY_FASTER_MODEL_HASHING,
-		name = "Use faster model hashing",
-		description = "Should increase performance at the expense of potential graphical issues.",
-		section = experimentalSettings
-	)
-	default boolean fasterModelHashing() {
-		return true;
-	}
-
-	String KEY_ZONE_STREAMING = "experimentalZoneStreaming";
-	@ConfigItem(
-		keyName = KEY_ZONE_STREAMING,
-		name = "Zone streaming",
-		description =
-			"Load zones in parallel in the background, switching to new scenes almost instantly.<br>" +
-			"You will see zones appear when they are loaded, instead of having to wait for them all at once.",
-		section = experimentalSettings
-	)
-	default boolean zoneStreaming() {
-		return true;
-	}
 
 	String KEY_PRESERVE_VANILLA_NORMALS = "experimentalPreserveVanillaNormals";
 	@ConfigItem(
@@ -1388,26 +1426,62 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String KEY_WIREFRAME = "wireframe";
+	String KEY_SIMPLE_BOAT_SILHOUETTES = "experimentalSimpleBoatSilhouettes";
 	@ConfigItem(
-		keyName = KEY_WIREFRAME,
-		name = "Wireframe",
-		description = "Show the edges of individual triangles in the scene.",
+		keyName = KEY_SIMPLE_BOAT_SILHOUETTES,
+		name = "Simple boat silhouettes",
+		description = "Skip rendering animated objects when boats are flattened beneath other boats.",
 		section = experimentalSettings
 	)
-	default boolean wireframe() {
+	default boolean simpleBoatSilhouettes() {
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "experimentalNightAdaptationEverywhere",
+		name = "Night adaptation everywhere",
+		description = "Apply Day & night's 'Night brightness' adaptation to all dark scenes.",
+		section = experimentalSettings
+	)
+	default boolean nightAdaptationEverywhere() {
 		return false;
 	}
 
-	String KEY_TILED_LIGHTING_IMAGE_STORE = "experimentalTiledLightingImageStore";
-	@ConfigItem(
-		keyName = KEY_TILED_LIGHTING_IMAGE_STORE,
-		name = "Use tiled lighting image store",
-		description = "If you experience any issues with tiled lighting, disabling this <i>might</i> help.",
-		section = experimentalSettings
+
+	/*====== Technical settings ======*/
+
+	@ConfigSection(
+		name = "Technical",
+		description = "Technical settings. Leave these on their default settings unless you know what you're doing.",
+		position = 8,
+		closedByDefault = true
 	)
-	default boolean tiledLightingImageLoadStore() {
-		return true;
+	String technicalSettings = "technicalSettings";
+
+	String KEY_TILED_LIGHTING = "tiledLighting";
+	@ConfigItem(
+		keyName = KEY_TILED_LIGHTING,
+		name = "Tiled lighting",
+		description =
+			"Allows rendering <b>a lot</b> more lights simultaneously.<br>" +
+			"Disabled by default on older Intel GPUs.",
+		section = technicalSettings
+	)
+	default DefaultBoolean tiledLighting() {
+		return DefaultBoolean.DEFAULT;
+	}
+	@ConfigItem(keyName = KEY_TILED_LIGHTING, hidden = true, name = "", description = "")
+	void tiledLighting(DefaultBoolean state);
+
+	String KEY_IMAGE_LOAD_STORE = "experimentalTiledLightingImageStore";
+	@ConfigItem(
+		keyName = KEY_IMAGE_LOAD_STORE,
+		name = "Image load store",
+		description = "If you experience any issues with tiled lighting, disabling this <i>might</i> help.",
+		section = technicalSettings
+	)
+	default DefaultBoolean imageLoadStore() {
+		return DefaultBoolean.DEFAULT;
 	}
 
 	String KEY_INDIRECT_DRAW = "experimentalIndirectDraw";
@@ -1417,7 +1491,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Indirect draw is currently only enabled automatically for Nvidia GPUs.<br>" +
 			"Enabling this <i>might</i> improve performance, if it is supported by your system.",
-		section = experimentalSettings
+		section = technicalSettings
 	)
 	default DefaultBoolean indirectDraw() {
 		return DefaultBoolean.DEFAULT;
@@ -1430,9 +1504,20 @@ public interface HdPluginConfig extends Config
 		description =
 			"Storage buffers may improve performance, but may also cause graphical artifacts on some hardware.<br>" +
 			"By default, we disable this automatically for Intel GPUs, since older ones can be problematic.",
-		section = experimentalSettings
+		section = technicalSettings
 	)
 	default DefaultBoolean storageBuffers() {
+		return DefaultBoolean.DEFAULT;
+	}
+
+	String KEY_POINT_SPRITES = "pointSprites";
+	@ConfigItem(
+		keyName = KEY_POINT_SPRITES,
+		name = "Point sprites",
+		description = "Controls whether GL_POINT_SPRITE should be used. The fallback uses instanced triangles.",
+		section = technicalSettings
+	)
+	default DefaultBoolean pointSprites() {
 		return DefaultBoolean.DEFAULT;
 	}
 
@@ -1441,20 +1526,80 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_ASYNC_MODEL_PROCESSING,
 		name = "Multithreaded model processing",
 		description = "Process multiple models in parallel to improve performance for animated models.",
-		section = experimentalSettings
+		section = technicalSettings
 	)
 	default boolean multithreadedModelProcessing() {
 		return true;
 	}
 
-	String KEY_POINT_SPRITES = "experimentalPointSprites";
+	String KEY_WINDOWS_HDR_CORRECTION = "windowsHdrCorrection";
 	@ConfigItem(
-		keyName = KEY_POINT_SPRITES,
-		name = "Point sprites",
-		description = "Controls whether GL_POINT_SPRITE should be used. The fallback uses instanced triangles.",
-		section = experimentalSettings
+		keyName = KEY_WINDOWS_HDR_CORRECTION,
+		name = "Windows HDR correction",
+		description =
+			"Correctly simulates SDR gamma 2.2 when Windows is in HDR mode.<br>" +
+			"Note: this does not enable HDR. It only works around an issue within Windows' HDR implementation.",
+		section = technicalSettings
 	)
-	default DefaultBoolean pointSprites() {
+	default boolean windowsHdrCorrection() {
+		return false;
+	}
+
+	String KEY_MACOS_INTEL_WORKAROUND = "macosIntelWorkaround";
+	@ConfigItem(
+		keyName = KEY_MACOS_INTEL_WORKAROUND,
+		name = "Intel-based Mac workaround",
+		description = "Workaround for visual artifacts found on some Intel GPU drivers on macOS.",
+		warning =
+			"This setting can cause RuneLite to crash, and it can be difficult to undo.\n" +
+			"Only enable it if you are seeing broken colors. Are you sure you want to enable this setting?",
+		section = technicalSettings
+	)
+	default boolean macosIntelWorkaround() {
+		return false;
+	}
+
+	String KEY_CENTROID_QUALIFIER = "centroidQualifier";
+	@ConfigItem(
+		keyName = KEY_CENTROID_QUALIFIER,
+		name = "Centroid qualifier",
+		description = "Prevents artifacts when MSAA is enabled.",
+		section = technicalSettings
+	)
+	default DefaultBoolean centroidQualifier() {
+		return DefaultBoolean.DEFAULT;
+	}
+
+	String KEY_FRAME_SYNCHRONIZATION = "frameSynchronization";
+	@ConfigItem(
+		keyName = KEY_FRAME_SYNCHRONIZATION,
+		name = "Frame synchronization",
+		description = "Waits for prior frames to complete rendering, to avoid corruption artifacts.",
+		section = technicalSettings
+	)
+	default DefaultBoolean frameSynchronization() {
+		return DefaultBoolean.DEFAULT;
+	}
+
+	String KEY_REPLACE_VANILLA_SKYBOXES = "replaceVanillaSkyboxes";
+	@ConfigItem(
+		keyName = KEY_REPLACE_VANILLA_SKYBOXES,
+		name = "Replace vanilla skyboxes",
+		description = "Replace the game's built-in skybox models with 117 HD's own implementation.",
+		section = technicalSettings
+	)
+	default boolean replaceVanillaSkyboxes() {
+		return true;
+	}
+
+	String KEY_VALIDATE_SHADERS = "validateShaders";
+	@ConfigItem(
+		keyName = KEY_VALIDATE_SHADERS,
+		name = "Validate shaders",
+		description = "Validate shaders after compilation. Useful for debugging.",
+		section = technicalSettings
+	)
+	default DefaultBoolean validateShaders() {
 		return DefaultBoolean.DEFAULT;
 	}
 

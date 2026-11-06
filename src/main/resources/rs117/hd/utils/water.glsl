@@ -30,7 +30,12 @@
 #include <utils/constants.glsl>
 #include <utils/lights.glsl>
 #include <utils/misc.glsl>
-#include <utils/sky_sampling.glsl>
+
+#if WATER_PASS || LEGACY_RENDERER
+
+#if DAYLIGHT_CYCLE
+    #include <utils/sky_sampling.glsl>
+#endif
 
 vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     WaterType waterType = getWaterType(waterTypeIndex);
@@ -68,8 +73,13 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     float downDotNormals = -normals.y;
     float viewDotNormals = dot(viewDir, normals);
 
-    vec2 distortion = uvFlow * .00075;
-    float shadow = sampleShadowMap(IN.position, distortion, vec3(0.0), false, false);
+    vec3 distortion = mat3(uboGlobal.invLightProjectionMatrix) * vec3(uvFlow * .0015, 0);
+    vec3 lightAxis = uboGlobal.invLightProjectionMatrix[2].xyz;
+    vec2 surfaceDistortion = vec2(0);
+    if (abs(lightAxis.y) > .001 * length(lightAxis))
+        surfaceDistortion = distortion.xz - lightAxis.xz * (distortion.y / lightAxis.y);
+    vec3 shadowReceiver = IN.position + vec3(surfaceDistortion.x, 0, surfaceDistortion.y);
+    float shadow = sampleShadowMap(shadowReceiver, vec3(0, -1, 0), false, false, true);
     float inverseShadow = 1 - shadow;
 
     vec3 vSpecularStrength = vec3(waterType.specularStrength);
@@ -83,6 +93,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
 
     // directional light
     vec3 dirLightColor = uboGlobal.lightColor * uboGlobal.lightStrength;
+    vec3 unshadowedLightOut = max(lightDotNormals, 0.0) * dirLightColor;
 
     // apply shadows
     dirLightColor *= inverseShadow;
@@ -91,14 +102,18 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     vec3 lightOut = max(lightDotNormals, 0.0) * lightColor;
 
     // directional light specular
-    vec3 lightSpecularOut = vec3(0.0);
-    if (!uboSky.enabled)
-        lightSpecularOut = lightColor * specular(IN.texBlend, viewDir, reflect(-uboGlobal.lightDir, normals), vSpecularGloss, vSpecularStrength);
+    vec3 lightSpecularOut = vec3(0);
+    #if WATER_SPECULAR_REFLECTIONS
+        #if DAYLIGHT_CYCLE
+        if (!uboSky.enabled)
+        #endif
+            lightSpecularOut = lightColor * specular(fTexBlend, viewDir, reflect(-uboGlobal.lightDir, normals), vSpecularGloss, vSpecularStrength);
+    #endif
 
     // point lights
     vec3 pointLightsOut = vec3(0);
     vec3 pointLightsSpecularOut = vec3(0);
-    calculateLighting(IN.position, normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength,
+    calculateLighting(IN.position, normals, viewDir, fTexBlend, vSpecularGloss, vSpecularStrength,
         0.0, pointLightsOut, pointLightsSpecularOut);
 
     // sky light
@@ -124,8 +139,14 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     float fresnel = 1.0 - clamp(viewDotNormals, 0.0, 1.0);
     float finalFresnel = clamp(mix(baseOpacity, 1.0, fresnel * 1.2), 0.0, 1.0);
     vec3 surfaceColor = vec3(0);
+    #if DAYLIGHT_CYCLE && WATER_SPECULAR_REFLECTIONS
     vec3 celestialReflection = vec3(0);
+    #endif
+    #if REDUCE_GLARE_INTENSITY
+        vec3 surfaceWithoutGlare;
+    #endif
 
+    #if DAYLIGHT_CYCLE
     if (uboSky.enabled) {
         vec3 n = normals;
         n.y *= 0.16;
@@ -149,77 +170,157 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         vec3 diskViewDir = reflect(-viewDir, n);
         // Reduce only nebula emission to suit the deliberately strong legacy reflection.
         const float nebulaReflectionStrength = .25f;
-        SkySample sky = sampleSky(skyViewDir, diskViewDir, false, false, n, 0.07, nebulaReflectionStrength);
-        surfaceColor = linearToSrgb(sky.background * finalFresnel);
-        // Only the active source has a shadow map. Do not shadow the other disk
-        // with unrelated geometry projected along the active light's direction.
-        vec3 sunDir = uboSky.sunDir * vec3(1, -1, 1);
-        vec3 moonDir = uboSky.moonDir * vec3(1, -1, 1);
-        bool moonOwnsShadowMap = dot(uboGlobal.lightDir, moonDir) > dot(uboGlobal.lightDir, sunDir);
-        celestialReflection =
-            sky.sun * (moonOwnsShadowMap ? 1.0 : inverseShadow) +
-            sky.moon * uboSky.moonReflectionVisibility *
-                (moonOwnsShadowMap ? 1.0 - shadow * uboSky.moonShadowVisibility : 1.0);
-    } else if (finalFresnel < 0.5) {
+        SkySample sky = sampleSky(
+            skyViewDir,
+            diskViewDir,
+            false,
+            false,
+            n,
+            0.07,
+            nebulaReflectionStrength,
+            WATER_SPECULAR_REFLECTIONS != 0,
+            0
+        );
+
+        #if !DECOUPLE_WATER_FROM_SKY_COLOR
+            surfaceColor = linearToSrgb(sky.background * finalFresnel);
+            #if REDUCE_GLARE_INTENSITY
+                surfaceWithoutGlare = linearToSrgb(max(sky.background - sky.glare, vec3(0.0)) * finalFresnel);
+            #endif
+        #endif
+
+        #if WATER_SPECULAR_REFLECTIONS
+            // Only the active source has a shadow map. Do not shadow the other disk
+            // with unrelated geometry projected along the active light's direction.
+            vec3 sunDir = uboSky.sunDir * vec3(1, -1, 1);
+            vec3 moonDir = uboSky.moonDir * vec3(1, -1, 1);
+            bool moonOwnsShadowMap = dot(uboGlobal.lightDir, moonDir) > dot(uboGlobal.lightDir, sunDir);
+            vec3 shadowedReflection = moonOwnsShadowMap ?
+                sky.moon * uboSky.moonReflectionVisibility * uboSky.moonShadowVisibility : sky.sun;
+            float reflectionShadow = 0.0;
+            if (any(greaterThan(shadowedReflection, vec3(0.0))))
+                reflectionShadow = sampleShadowMap(shadowReceiver, vec3(0, -1, 0), false, false, false);
+            celestialReflection =
+                sky.sun * (moonOwnsShadowMap ? 1.0 : 1.0 - reflectionShadow) +
+                sky.moon * uboSky.moonReflectionVisibility *
+                    (moonOwnsShadowMap ? 1.0 - reflectionShadow * uboSky.moonShadowVisibility : 1.0);
+        #endif
+    }
+    #if !DECOUPLE_WATER_FROM_SKY_COLOR
+        // When not decoupling the water color, only run the old calculation when the sky is disabled
+        else
+    #endif
+    #endif // DAYLIGHT_CYCLE
+    if (finalFresnel < 0.5) {
         surfaceColor = mix(uboGlobal.waterColorDark, uboGlobal.waterColorMid, finalFresnel * 2);
     } else {
         surfaceColor = mix(uboGlobal.waterColorMid, uboGlobal.waterColorLight, (finalFresnel - 0.5) * 2);
     }
 
-    vec3 surfaceColorOut = surfaceColor * max(combinedSpecularStrength, 0.2);
+    #if REDUCE_GLARE_INTENSITY
+        #if DAYLIGHT_CYCLE && !DECOUPLE_WATER_FROM_SKY_COLOR
+        if (!uboSky.enabled)
+        #endif
+            surfaceWithoutGlare = surfaceColor;
+        vec4 waterWithoutGlare;
+    #endif
+
+    vec4 water;
+    float shoreLineMask = 1 - dot(fTexBlend, (fAlphaBiasHsl & 127) / 127.f);
+    float foamAmount = min(shoreLineMask, 0.8);
+    foamAmount = clamp(pow(1.0 - ((1.0 - foamAmount) / 0.7), 3), 0.0, 1.0) * waterType.hasFoam;
+    float opacityFresnel = max(finalFresnel, 1.0 - dot(viewDir, vec3(0, -1, 0)));
+
+    #if REDUCE_GLARE_INTENSITY
+    // With glare reduction enabled, first evaluate the glare-free baseline, then the normal water.
+    for (int pass = 0; pass <= REDUCE_GLARE_INTENSITY; pass++)
+    #endif
+    {
+        vec3 surface = surfaceColor;
+        vec3 directionalSpecular = lightSpecularOut;
+        #if REDUCE_GLARE_INTENSITY
+            if (pass == 0) {
+                surface = surfaceWithoutGlare;
+                directionalSpecular = vec3(0.0);
+            }
+        #endif
+
+        vec3 surfaceColorOut = surface * max(combinedSpecularStrength, 0.2);
 
 
-    // apply lighting
-    vec3 compositeLight =
-        ambientLightOut + lightOut + lightSpecularOut + skyLightOut + lightningOut +
-        underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut;
+        // apply lighting
+        vec3 compositeLight =
+            ambientLightOut + lightOut + directionalSpecular + skyLightOut + lightningOut +
+            underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut;
 
-    vec3 baseColor = waterType.surfaceColor * compositeLight;
-    baseColor = mix(baseColor, surfaceColor, waterType.fresnelAmount);
-    if (waterType.fresnelAmount == 0.85)
-        baseColor *= .75f; // Sailing hack
-    float shoreLineMask = 1 - dot(IN.texBlend, (fAlphaBiasHsl & 127) / 127.f);
-    float maxFoamAmount = 0.8;
-    float foamAmount = min(shoreLineMask, maxFoamAmount);
-    float foamDistance = 0.7;
-    vec3 foamColor = waterType.foamColor;
-    foamColor = foamColor * foamMask * compositeLight;
-    foamAmount = clamp(pow(1.0 - ((1.0 - foamAmount) / foamDistance), 3), 0.0, 1.0) * waterType.hasFoam;
-    foamAmount *= foamColor.r;
-    baseColor = mix(baseColor, foamColor, foamAmount);
-    vec3 specularComposite = mix(lightSpecularOut, vec3(0.0), foamAmount);
-    float flatFresnel = (1.0 - dot(viewDir, vec3(0, -1, 0))) * 1.0;
-    finalFresnel = max(finalFresnel, flatFresnel);
-    baseColor += pointLightsSpecularOut + lightSpecularOut / 3;
+        vec3 baseColor = waterType.surfaceColor * compositeLight;
 
-    float alpha = max(waterType.baseOpacity, max(foamAmount, max(finalFresnel, length(specularComposite / 3))));
-
-    if (waterType.isFlat) {
-        baseColor = mix(waterType.depthColor, baseColor, alpha);
-        alpha = 1;
-    }
-
-    if (uboSky.enabled) {
-        float reflectionLuminance = linearSrgbLuminance(celestialReflection);
-        if (reflectionLuminance > 0.0) {
-            celestialReflection *= 4.4; // looks about right
-            // Approximate the reflection's dominance over at most 18% linear-gray
-            // underwater light. Bright HDR highlights approach opaque before source-alpha
-            // blending; this is an artistic approximation to the actual sRGB composite.
-            float reflectionOpacity = reflectionLuminance / (reflectionLuminance + 0.18);
-            alpha = mix(alpha, 1.0, reflectionOpacity);
-            // Reconstruct approximate linear light, add the shadowed reflection, then tonemap them together.
-            vec3 light = inverse_tonemap_hue_preserving(srgbToLinear(baseColor));
-            light += celestialReflection;
-            light = tonemap_hue_preserving(light);
-            light = softClipColor(light);
-            light = linearToSrgb(light);
-            baseColor = light;
+        // Hacks to improve visibility between different sailing water types, based on unshadowed luminance
+        bool isHazardous = waterType.fresnelAmount == 0.86;
+        float fresnelAmount = isHazardous ? 0.85 : waterType.fresnelAmount;
+        baseColor = mix(baseColor, surface, fresnelAmount);
+        if (isHazardous) {
+            vec3 unshadowedBaseColor = waterType.surfaceColor *
+                (ambientLightOut + unshadowedLightOut + skyLightOut + underglowOut);
+            float waterLuminance = linearSrgbLuminance(srgbToLinear(max(unshadowedBaseColor, vec3(0))));
+            float skyLuminance = linearSrgbLuminance(srgbToLinear(max(surface, vec3(0))));
+            float reflectionDominance = skyLuminance / max(waterLuminance, 1e-6);
+            float reflectionAmount = mix(fresnelAmount, fresnelAmount * 0.65, smoothstep(1.0, 4.0, reflectionDominance));
+            baseColor += (fresnelAmount - reflectionAmount) * (unshadowedBaseColor - surface);
         }
+        if (fresnelAmount == 0.85)
+            baseColor *= .75f; // Sailing hack
+
+        vec3 foamColor = waterType.foamColor * foamMask * compositeLight;
+        float litFoamAmount = foamAmount * foamColor.r;
+        baseColor = mix(baseColor, foamColor, litFoamAmount);
+        vec3 specularComposite = mix(directionalSpecular, vec3(0.0), litFoamAmount);
+        baseColor += pointLightsSpecularOut + directionalSpecular / 3;
+
+        float alpha = max(waterType.baseOpacity, max(litFoamAmount, max(opacityFresnel, length(specularComposite / 3))));
+
+        if (waterType.isFlat) {
+            baseColor = mix(waterType.depthColor, baseColor, alpha);
+            alpha = 1;
+        }
+
+        water = vec4(baseColor, alpha);
+        #if REDUCE_GLARE_INTENSITY
+            if (pass == 0)
+                waterWithoutGlare = water;
+        #endif
     }
 
-    return vec4(baseColor, alpha);
+    #if DAYLIGHT_CYCLE && WATER_SPECULAR_REFLECTIONS
+        if (uboSky.enabled) {
+            float reflectionLuminance = linearSrgbLuminance(celestialReflection);
+            if (reflectionLuminance > 0.0) {
+                celestialReflection *= 4.4; // looks about right
+                // Approximate the reflection's dominance over at most 18% linear-gray
+                // underwater light. Bright HDR highlights approach opaque before source-alpha
+                // blending; this is an artistic approximation to the actual sRGB composite.
+                float reflectionOpacity = reflectionLuminance / (reflectionLuminance + 0.18);
+                water.a = mix(water.a, 1.0, reflectionOpacity);
+                // Reconstruct approximate linear light, add the shadowed reflection, then tonemap them together.
+                vec3 light = inverse_tonemap_hue_preserving(srgbToLinear(water.rgb));
+                light += celestialReflection;
+                light = tonemap_hue_preserving(light);
+                light = softClipColor(light);
+                light = linearToSrgb(light);
+                water.rgb = light;
+            }
+        }
+    #endif
+
+    #if REDUCE_GLARE_INTENSITY
+        water.rgb = linearToSrgb(reduceGlare(srgbToLinear(water.rgb), srgbToLinear(waterWithoutGlare.rgb)));
+        // Undo the reflection's opacity boost as it is suppressed, too.
+        water.a = mix(waterWithoutGlare.a, water.a, uboGlobal.glareIntensity);
+    #endif
+    return water;
 }
+
+#endif // WATER_PASS || LEGACY_RENDERER
 
 void sampleUnderwater(inout vec3 outputColor, WaterType waterType, float depth, float lightDotNormals) {
     // underwater terrain

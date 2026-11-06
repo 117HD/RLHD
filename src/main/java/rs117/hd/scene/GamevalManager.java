@@ -153,7 +153,11 @@ public class GamevalManager {
 							result.add(id);
 						}
 						break;
+					case NULL:
+						in.nextNull();
+						break;
 					default:
+						in.skipValue();
 						log.error("Unexpected {} gameval type: {} at {}", key, type, GsonUtils.location(in), new Throwable());
 						break;
 				}

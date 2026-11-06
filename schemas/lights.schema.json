@@ -149,7 +149,7 @@
       },
       "waitForAnimation": {
         "type": "boolean",
-        "description": "Whether the light should spawn only when an animation starts playing. Only works for `GraphicsObject`s and `Projectile`s. Defaults to false."
+        "description": "Whether the light should spawn only when an animation starts playing. `animationIds` and `excludeAnimationIds` are respected. Defaults to false."
       },
       "nightMultiplier": {
         "type": "number",
@@ -252,6 +252,13 @@
       "animationIds": {
         "type": "array",
         "description": "A set of animation gameval names to display the light for, or the special value `-1` for no animation. Must be specified alongside an NPC or other thing to watch for animations on.",
+        "items": {
+          "type": [ "string", "number" ]
+        }
+      },
+      "excludeAnimationIds": {
+        "type": "array",
+        "description": "A set of animation gameval names to hide the light during, or the special value `-1` for no animation. If animationIds is empty, the light displays for every other animation. Must be specified alongside an NPC or other thing to watch for animations on.",
         "items": {
           "type": [ "string", "number" ]
         }

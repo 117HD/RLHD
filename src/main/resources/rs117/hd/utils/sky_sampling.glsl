@@ -22,12 +22,15 @@ struct SkySample {
     vec3 background;
     vec3 sun;
     vec3 moon;
+    #if REDUCE_GLARE_INTENSITY
+        vec3 glare;
+    #endif
 };
 
 // Fade across the perceived horizon, then hide the body fully below -4°.
 // bodyUpAmount uses the unshifted celestial direction (positive Y up).
 float celestialHorizonFade(float viewUpAmount, float bodyUpAmount) {
-    return smoothstep(-0.09, 0.04, viewUpAmount + HORIZON_OFFSET) *
+    return smoothstep(-0.09, 0.04, viewUpAmount + 0.08) *
         smoothstep(sin(radians(-4.0)), sin(radians(-0.5)), bodyUpAmount);
 }
 
@@ -38,11 +41,28 @@ float celestialHorizonFade(float viewUpAmount, float bodyUpAmount) {
 // Camera projection correction is for direct viewing only, never reflected rays.
 // diskViewDir can follow stronger waves than viewDir for artistic water reflections.
 // roughness is the RMS slope of unresolved waves; normal is their mean normal.
-SkySample sampleSky(vec3 viewDir, vec3 diskViewDir, bool correctProjection, bool toneMap, vec3 normal, float roughness, float nebulaStrength) {
+// diskHorizonOffset allows reflections to tune disk placement independently of the background.
+SkySample sampleSky(
+    vec3 viewDir,
+    vec3 diskViewDir,
+    bool correctProjection,
+    bool toneMap,
+    vec3 normal,
+    float roughness,
+    float nebulaStrength,
+    bool includeSunGlow,
+    float diskHorizonOffset
+) {
+    SkySample result;
+    result.background = uboGlobal.fogColor;
+    result.sun = result.moon = vec3(0.0);
+    #if REDUCE_GLARE_INTENSITY
+        result.glare = vec3(0.0);
+    #endif
     if (!uboSky.enabled)
-        return SkySample(uboGlobal.fogColor, vec3(0.0), vec3(0.0));
+        return result;
 
-    SkyGradient sky = computeSkyGradient(viewDir);
+    SkyGradient sky = computeSkyGradient(viewDir, includeSunGlow);
     // A slope perturbation rotates the reflected ray by 2*slope in the
     // incidence plane, and by 2*slope*cos(incidence) across it. Projection
     // onto the water then produces the long reflection at grazing angles.
@@ -76,7 +96,8 @@ SkySample sampleSky(vec3 viewDir, vec3 diskViewDir, bool correctProjection, bool
             shootingStarColor = shootingStars(viewDir, uboGlobal.elapsedTime) * starBlend;
     #endif
 
-    float sunDot = dot(correctProjection ? celestialViewDirection(diskViewDir, sky.sunDir) : diskViewDir, sky.sunDir);
+    vec3 sunDir = normalize(vec3(uboSky.sunDir.x, -uboSky.sunDir.y + diskHorizonOffset, uboSky.sunDir.z));
+    float sunDot = dot(correctProjection ? celestialViewDirection(diskViewDir, sunDir) : diskViewDir, sunDir);
     float sunRadius = acos(0.99945);
     float sunEdge = cos(sunRadius);
     float sunAntialias = max(fwidth(sunDot), 1e-7);
@@ -85,7 +106,7 @@ SkySample sampleSky(vec3 viewDir, vec3 diskViewDir, bool correctProjection, bool
     if (roughness > 0.0) {
         vec3 local;
         // A full phase gives the same Gaussian disk coverage used for the moon.
-        vec2 coverage = blurredMoonDisk(local, diskViewDir, sky.sunDir, sky.sunDir,
+        vec2 coverage = blurredMoonDisk(local, diskViewDir, sunDir, sunDir,
             1.0, sunRadius, diskBlur, blurAxis);
         sunDisk = mix(sunDisk, coverage.x, sunBlurBlend);
     }
@@ -102,7 +123,7 @@ SkySample sampleSky(vec3 viewDir, vec3 diskViewDir, bool correctProjection, bool
     sunLight *= sunDisk * sunHorizon;
 
     // Apply the same perceived-horizon offset as the sun.
-    vec3 moonDir = normalize(vec3(uboSky.moonDir.x, -uboSky.moonDir.y + HORIZON_OFFSET, uboSky.moonDir.z));
+    vec3 moonDir = normalize(vec3(uboSky.moonDir.x, -uboSky.moonDir.y + diskHorizonOffset, uboSky.moonDir.z));
     vec3 moonCompositeColor = vec3(0.0);
     vec3 moonDiskLight = vec3(0.0);
     float moonCompositeAlpha = 0.0;
@@ -110,7 +131,7 @@ SkySample sampleSky(vec3 viewDir, vec3 diskViewDir, bool correctProjection, bool
     // Render the moon disk
     if (uboSky.moonVisibility > 0.001) {
         float moonHorizonFade = celestialHorizonFade(diskUpAmount, uboSky.moonDir.y);
-        vec3 moonIlluminationDir = normalize(vec3(uboSky.moonSurfaceLightDirection.x, -uboSky.moonSurfaceLightDirection.y + HORIZON_OFFSET, uboSky.moonSurfaceLightDirection.z));
+        vec3 moonIlluminationDir = normalize(vec3(uboSky.moonSurfaceLightDirection.x, -uboSky.moonSurfaceLightDirection.y + diskHorizonOffset, uboSky.moonSurfaceLightDirection.z));
 
         vec3 moonViewDir = correctProjection ? celestialViewDirection(diskViewDir, moonDir) : diskViewDir;
         float moonDot = dot(moonViewDir, moonDir);
@@ -118,7 +139,7 @@ SkySample sampleSky(vec3 viewDir, vec3 diskViewDir, bool correctProjection, bool
         // Suppress lunar contrast only near overlap of the artistically enlarged disks.
         const float moonBaseRadius = 0.03317f;
         float overlapRadius = sunRadius + moonBaseRadius * uboSky.moonSizeMult;
-        float sunMoonDot = dot(moonDir, sky.sunDir);
+        float sunMoonDot = dot(moonDir, sunDir);
         float sunProximityFade = 1.0 - smoothstep(cos(overlapRadius * 1.1), cos(overlapRadius * 0.5), sunMoonDot);
         float moonDayVisibility = sunProximityFade;
 
@@ -381,14 +402,31 @@ SkySample sampleSky(vec3 viewDir, vec3 diskViewDir, bool correctProjection, bool
     // Keep opaque moon coverage separate from the light it adds. This also
     // lets water shadow either disk without darkening the reflected background.
     skyColor = mix(skyColor, moonCompositeColor, moonCompositeAlpha);
-    skyColor += skyFogGlow(viewDir, sky.sunDir, moonDir, fogTransmittance);
+    vec3 fogMoonDir = normalize(vec3(uboSky.moonDir.x, -uboSky.moonDir.y + CELESTIAL_HORIZON_OFFSET, uboSky.moonDir.z));
+    vec3 fogGlow = skyFogGlow(viewDir, sky.sunDir, fogMoonDir, fogTransmittance);
+    skyColor += fogGlow;
     // Shooting stars and auroras are in front of the moon, but still attenuated by fog.
     skyColor += atmosphericForeground * fogTransmittance;
 
-    return SkySample(skyColor, sunLight * (1.0 - moonCompositeAlpha), moonDiskLight * moonCompositeAlpha);
+    result.background = skyColor;
+    result.sun = sunLight * (1.0 - moonCompositeAlpha);
+    result.moon = moonDiskLight * moonCompositeAlpha;
+    #if REDUCE_GLARE_INTENSITY
+        float backgroundBlend = nightFactor * nightSkyHorizonFade(sky.upAmount, horizonShift);
+        if (backgroundBlend <= 0.001)
+            backgroundBlend = 0.0;
+        result.glare =
+            sky.glare * mix(1.0, uboSky.customGradient, backgroundBlend) * fogTransmittance +
+            moonHalo * diskFogTransmittance * (1.0 - moonCompositeAlpha) +
+            fogGlow;
+    #endif
+    return result;
 }
 
 vec3 sampleSky(vec3 viewDir, bool correctProjection, bool toneMap) {
-    SkySample sky = sampleSky(viewDir, viewDir, correctProjection, toneMap, vec3(0, -1, 0), 0.0, 1.0);
+    SkySample sky = sampleSky(viewDir, viewDir, correctProjection, toneMap, vec3(0, -1, 0), 0.0, 1.0, true, CELESTIAL_HORIZON_OFFSET);
+    #if REDUCE_GLARE_INTENSITY
+        sky.background = reduceGlare(sky.background, max(sky.background - sky.glare, vec3(0.0)));
+    #endif
     return sky.background + sky.sun + sky.moon;
 }

@@ -15,9 +15,9 @@
         "type": "string",
         "description": "Optional description of what this applies to or is used for."
       },
-      "vanillaTextureIndex": {
-        "type": "integer",
-        "description": "Defines a fallback water type for a specific vanilla texture."
+      "material": {
+        "type": "string",
+        "description": "Name of a material whose vanilla texture this water type should be the fallback for."
       },
       "flat": {
         "type": "boolean",
@@ -92,6 +92,10 @@
       "fishingSpotRecolor": {
         "type": "integer",
         "description": "A Jagex HSL value to apply to fishing spot replacement models on this water type."
+      },
+      "skipUnderwaterTerrain": {
+        "type": "boolean",
+        "description": "Skip generating underwater terrain for this water type, drawing only the water surface."
       }
     }
   }
