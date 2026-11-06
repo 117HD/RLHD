@@ -1,5 +1,7 @@
 #version 330
 
+#include TILED_LIGHTING_DEPTH_CULLING
+#include TILED_LIGHTING_MSAA
 #include TILED_LIGHTING_LAYER
 #include TILED_IMAGE_STORE
 
@@ -17,6 +19,16 @@
 
 #include <utils/constants.glsl>
 
+#if TILED_LIGHTING_DEPTH_CULLING
+    #if TILED_LIGHTING_MSAA > 1
+        uniform sampler2DMS sceneDepthTexture;
+    #else
+        uniform sampler2D sceneDepthTexture;
+    #endif
+    uniform sampler2D alphaFirstLastDepth;
+    uniform bool hasAlphaDepth;
+#endif
+
 in vec2 fUv;
 
 #if TILED_IMAGE_STORE
@@ -31,6 +43,13 @@ struct SortedLight {
 };
 
 #define USE_LIGHTS_MASK !TILED_IMAGE_STORE
+
+float reconstructViewDepth(ivec2 pixel, float depth) {
+    vec2 ndcXY = (vec2(pixel) + 0.5) / vec2(uboGlobal.sceneResolution) * 2.0 - 1.0;
+    vec4 worldPos = uboGlobal.invProjectionMatrix * vec4(ndcXY, depth * 2.0 - 1.0, 1.0);
+    worldPos /= worldPos.w;
+    return abs((uboGlobal.viewMatrix * worldPos).z);
+}
 
 uint packLightIndices(in SortedLight bin[SORTING_BIN_SIZE], in int binSize, inout int binIdx) {
     if (binIdx >= binSize) return 0u;
@@ -101,6 +120,45 @@ void main() {
     vec2 bl = tileOrigin;                         // bottom-left
     vec2 br = tileOrigin + vec2(tileSize.x, 0.0); // bottom-right
 
+#if TILED_LIGHTING_DEPTH_CULLING
+    ivec2 tilePixelMin = ivec2(tileOrigin);
+    ivec2 tilePixelMax = min(tilePixelMin + ivec2(TILED_LIGHTING_TILE_SIZE), uboGlobal.sceneResolution);
+    float tileMinDepth = 1e30;
+    float tileMaxDepth = 0.0;
+
+    for (int y = tilePixelMin.y; y < tilePixelMax.y; y++) {
+        for (int x = tilePixelMin.x; x < tilePixelMax.x; x++) {
+            ivec2 pixel = ivec2(x, y);
+            #if TILED_LIGHTING_MSAA > 1
+                for (int sampleIdx = 0; sampleIdx < TILED_LIGHTING_MSAA; sampleIdx++) {
+                    float depth = texelFetch(sceneDepthTexture, pixel, sampleIdx).r;
+                    if (depth > 0.0) {
+                        float viewDepth = reconstructViewDepth(pixel, depth);
+                        tileMinDepth = min(tileMinDepth, viewDepth);
+                        tileMaxDepth = max(tileMaxDepth, viewDepth);
+                    }
+                }
+            #else
+                float depth = texelFetch(sceneDepthTexture, pixel, 0).r;
+                if (depth > 0.0) {
+                    float viewDepth = reconstructViewDepth(pixel, depth);
+                    tileMinDepth = min(tileMinDepth, viewDepth);
+                    tileMaxDepth = max(tileMaxDepth, viewDepth);
+                }
+            #endif
+
+            if (hasAlphaDepth) {
+                vec2 alphaDepth = texelFetch(alphaFirstLastDepth, pixel, 0).rg;
+                if (alphaDepth.x < 1e5) {
+                    float depthScale = uboGlobal.drawDistance * TILE_SIZE;
+                    tileMinDepth = min(tileMinDepth, alphaDepth.x * depthScale);
+                    tileMaxDepth = max(tileMaxDepth, -alphaDepth.y * depthScale);
+                }
+            }
+        }
+    }
+#endif
+
     vec2 ndcTL = (tl / uboGlobal.sceneResolution) * 2.0 - 1.0;
     vec2 ndcTR = (tr / uboGlobal.sceneResolution) * 2.0 - 1.0;
     vec2 ndcBL = (bl / uboGlobal.sceneResolution) * 2.0 - 1.0;
@@ -138,6 +196,15 @@ void main() {
         vec4 lightData = uboLightsCulling.PointLightPositionsArray[lightIdx];
         vec3 lightViewPos = lightData.xyz;
         float lightRadiusSqr = lightData.w;
+
+#if TILED_LIGHTING_DEPTH_CULLING
+        float lightDepth = abs(lightViewPos.z);
+        float lightRadius = sqrt(lightRadiusSqr);
+        if (tileMinDepth > tileMaxDepth ||
+            lightDepth + lightRadius < tileMinDepth ||
+            lightDepth - lightRadius > tileMaxDepth)
+            continue;
+#endif
 
         float lightDistSqr = dot(lightViewPos, lightViewPos);
 

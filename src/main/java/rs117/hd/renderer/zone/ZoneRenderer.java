@@ -917,10 +917,21 @@ public class ZoneRenderer implements Renderer {
 		renderState.viewport.set(0, 0, plugin.tiledLightingResolution[0], plugin.tiledLightingResolution[1]);
 		renderState.vao.setVao(plugin.vaoTri);
 
+		if (plugin.configUseOIT && plugin.configSceneDepth) {
+			glActiveTexture(HdPlugin.TEXTURE_UNIT_SCENE_DEPTH);
+			glBindTexture(
+				plugin.msaaSamples > 1 ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D,
+				plugin.getTexSceneDepth()
+			);
+			glActiveTexture(OitRenderer.TEXTURE_UNIT_FIRST_LAYER);
+			glBindTexture(GL_TEXTURE_2D, oitRenderer.getFirstLayerDepthTexture());
+		}
+
 		if (plugin.tiledLightingImageStoreProgram.isValid()) {
 			renderState.program.set(plugin.tiledLightingImageStoreProgram);
 			renderState.drawBuffer.set(GL_NONE);
 			renderState.apply();
+			plugin.tiledLightingImageStoreProgram.setHasAlphaDepth(oitRenderer.hasDepthLayers());
 			glDrawArrays(GL_TRIANGLES, 0, 3);
 		} else {
 			renderState.drawBuffer.set(GL_COLOR_ATTACHMENT0);
@@ -929,6 +940,7 @@ public class ZoneRenderer implements Renderer {
 				renderState.program.set(plugin.tiledLightingShaderPrograms.get(layer));
 				renderState.framebufferTextureLayer.set(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, plugin.texTiledLighting, 0, layer);
 				renderState.apply();
+				plugin.tiledLightingShaderPrograms.get(layer).setHasAlphaDepth(oitRenderer.hasDepthLayers());
 				glDrawArrays(GL_TRIANGLES, 0, 3);
 			}
 		}
@@ -1525,9 +1537,9 @@ public class ZoneRenderer implements Renderer {
 
 			frameTimer.begin(Timer.DRAW_SUBMIT);
 			if (shouldRenderScene) {
-				tiledLightingPass();
 				directionalShadowPass();
 				depthPass();
+				tiledLightingPass();
 				scenePass();
 				if(plugin.configUseOIT)
 					oitRenderer.render(renderState);

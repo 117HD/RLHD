@@ -307,6 +307,14 @@ public class OitRenderer {
 		waterCmd.reset();
 	}
 
+	public int getFirstLayerDepthTexture() {
+		return firstLayerDepthTex;
+	}
+
+	public boolean hasDepthLayers() {
+		return !transparentCmd.isEmpty() || !waterCmd.isEmpty();
+	}
+
 	private void alphaDiscardPass(RenderState renderState) {
 		if (alphaDiscardCmd.isEmpty())
 			return;

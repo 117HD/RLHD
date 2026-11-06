@@ -179,6 +179,7 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_TERRAIN_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_SCENE_DEPTH = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_NEBULA_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
@@ -990,6 +991,8 @@ public class HdPlugin extends Plugin {
 			.define("TILED_LIGHTING", configTiledLighting)
 			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getTiledLightingLayers())
 			.define("TILED_LIGHTING_TILE_SIZE", TILED_LIGHTING_TILE_SIZE)
+			.define("TILED_LIGHTING_DEPTH_CULLING", configUseOIT && configSceneDepth)
+			.define("TILED_LIGHTING_MSAA", msaaSamples)
 			.define("MAX_LIGHT_COUNT", configTiledLighting ? UBOLights.MAX_LIGHTS : configDynamicLights.getMaxSceneLights())
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
@@ -1452,6 +1455,7 @@ public class HdPlugin extends Plugin {
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneColor);
 		checkGLErrors();
 
+		glActiveTexture(TEXTURE_UNIT_SCENE_DEPTH);
 		texSceneDepth = glGenTextures();
 		if (msaaSamples > 1) {
 			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texSceneDepth);
@@ -1485,6 +1489,7 @@ public class HdPlugin extends Plugin {
 		}
 
 		// Reset
+		glActiveTexture(TEXTURE_UNIT_UI);
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -2020,6 +2025,8 @@ public class HdPlugin extends Plugin {
 							case KEY_LIGHTS:
 							case KEY_TILED_LIGHTING:
 							case KEY_IMAGE_LOAD_STORE:
+							case KEY_OIT:
+							case KEY_SCENE_DEPTH:
 							case KEY_NORMAL_MAPPING:
 							case KEY_PARALLAX_OCCLUSION_MAPPING:
 							case KEY_UI_SCALING_MODE:
