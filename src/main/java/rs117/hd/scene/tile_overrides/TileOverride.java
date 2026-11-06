@@ -20,6 +20,7 @@ import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.ExpressionParser;
 import rs117.hd.utils.ExpressionPredicate;
+import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.VariableSupplier;
 
@@ -30,6 +31,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 @NoArgsConstructor
 @AllArgsConstructor
+@GsonUtils.ExcludeDefaults
 public class TileOverride {
 	public static final int OVERLAY_FLAG = 1 << 31;
 	public static final TileOverride NONE = new TileOverride("NONE", GroundMaterial.DIRT);

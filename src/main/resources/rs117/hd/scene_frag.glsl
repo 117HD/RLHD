@@ -25,12 +25,14 @@
  */
 #version 330
 
-#define DISPLAY_BASE_COLOR 0
-#define DISPLAY_UV 0
-#define DISPLAY_NORMAL 0
-#define DISPLAY_TANGENT 0
-#define DISPLAY_SHADOWS 0
-#define DISPLAY_LIGHTING 0
+#include SCENE_SHADER_DEBUG_MODE
+
+#define DISPLAY_BASE_COLOR SCENE_SHADER_DEBUG_MODE == 1
+#define DISPLAY_UV SCENE_SHADER_DEBUG_MODE == 2
+#define DISPLAY_NORMAL SCENE_SHADER_DEBUG_MODE == 3
+#define DISPLAY_TANGENT SCENE_SHADER_DEBUG_MODE == 4
+#define DISPLAY_SHADOWS SCENE_SHADER_DEBUG_MODE == 5
+#define DISPLAY_LIGHTING SCENE_SHADER_DEBUG_MODE == 6
 
 #include <uniforms/global.glsl>
 #include <uniforms/sky.glsl>
@@ -111,6 +113,7 @@ void main() {
     vec3 viewDir = normalize(uboGlobal.cameraPos - IN.position);
     vec3 flatNormal = normalize(cross(dFdx(IN.position), dFdy(IN.position)));
 
+    int combinedMaterialData = fMaterialData[0] | fMaterialData[1] | fMaterialData[2];
     bool identicalMaterials = !isTerrain || (
         ((fMaterialData[0] ^ fMaterialData[1] | (fMaterialData[0] ^ fMaterialData[2]))
         >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK) == 0
@@ -170,7 +173,7 @@ void main() {
         // Vanilla tree textures rely on UVs being clamped horizontally, which HD doesn't do at the texture level.
         // Instead we manually clamp vanilla textures with transparency here. Including the transparency check
         // allows texture wrapping to work correctly for the mirror shield.
-        if ((fMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1 && getMaterialHasTransparency(material1))
+        if ((combinedMaterialData >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1 && getMaterialHasTransparency(material1))
             blendedUv.x = clamp(blendedUv.x, 0, .984375);
 
         vec2 uv1 = blendedUv;
@@ -220,7 +223,7 @@ void main() {
 
         #if DISPLAY_NORMAL
             FragColor = vec4(N * 0.5 + 0.5, 1.0);
-            if (DISPLAY_NORMAL == 1) // Redundant, for syntax highlighting in IntelliJ
+            if (DISPLAY_NORMAL) return; // Redundant, for syntax highlighting in IntelliJ
                 return;
         #endif
 
@@ -357,7 +360,7 @@ void main() {
 
         // normals
         vec3 normals;
-        if ((fMaterialData[0] >> MATERIAL_FLAG_UPWARDS_NORMALS & 1) == 1) {
+        if ((combinedMaterialData >> MATERIAL_FLAG_UPWARDS_NORMALS & 1) == 1) {
             normals = vec3(0, -1, 0);
         } else {
             mat3 TBN = cotangent_frame(N, IN.position, IN.uv * -1.0);
@@ -380,7 +383,7 @@ void main() {
         #endif
 
 		float shadow = 0;
-		if ((fMaterialData[0] >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0) {
+		if ((combinedMaterialData >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0) {
 			bool applyNormalBias = (fMaterialData[0] >> MATERIAL_FLAG_SHADOW_NORMAL_BIAS & 1) == 1;
 			shadow = sampleShadowMap(fragPos, flatNormal, true, applyNormalBias, true);
 		}
@@ -388,7 +391,7 @@ void main() {
 
         #if DISPLAY_SHADOWS
             FragColor = vec4(inverseShadow, inverseShadow, inverseShadow, 1.0);
-            if (DISPLAY_SHADOWS == 1) // Redundant, for syntax highlighting in IntelliJ
+            if (DISPLAY_SHADOWS) return; // Redundant, for syntax highlighting in IntelliJ
                 return;
         #endif
 
@@ -509,7 +512,7 @@ void main() {
 
         #if DISPLAY_LIGHTING
             FragColor = vec4(compositeLight, 1.0);
-            if (DISPLAY_LIGHTING == 1) // Redundant, for syntax highlighting in IntelliJ
+            if (DISPLAY_LIGHTING) return; // Redundant, for syntax highlighting in IntelliJ
                 return;
         #endif
 
@@ -541,6 +544,15 @@ void main() {
         if (isUnderwater) {
             sampleUnderwater(outputColor.rgb, waterType, waterDepth, lightDotNormals);
         }
+
+    #if HIGHLIGHT
+        if(!isTerrain && (combinedMaterialData >> MATERIAL_FLAG_HIGHLIGHT_MODELS_WITHOUT_OVERRIDE & 1) == 1) {
+            float mask = checkerboard(IN.position + vec3(uboGlobal.elapsedTime * 50.0), 16.0);
+            float str = sin(((mod(uboGlobal.elapsedTime, 2.5)) / 2.5) * PI) * 0.5;
+
+            outputColor.rgb += mix(vec3(0.59, 0.58, 0.94), vec3(0.98, 0.78, 0.83), mask) * str;
+        }
+    #endif
     }
     #endif // WATER_PASS
 

@@ -28,6 +28,9 @@ package rs117.hd;
 
 import com.google.gson.Gson;
 import com.google.inject.Binder;
+import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.Module;
 import com.google.inject.Provider;
 import com.google.inject.Provides;
 import java.awt.Canvas;
@@ -59,6 +62,7 @@ import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
@@ -80,6 +84,7 @@ import rs117.hd.config.DefaultBoolean;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.GroundBlending;
+import rs117.hd.config.SceneShaderDebugMode;
 import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
@@ -95,11 +100,11 @@ import rs117.hd.opengl.uniforms.UBOGlobal;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.opengl.uniforms.UBOSky;
 import rs117.hd.opengl.uniforms.UBOUI;
-import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.GammaCalibrationOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TiledLightingOverlay;
-import rs117.hd.overlays.Timer;
+import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.renderer.legacy.LegacyRenderer;
 import rs117.hd.renderer.zone.SceneManager;
@@ -259,6 +264,7 @@ public class HdPlugin extends Plugin {
 	@Inject
 	private PluginManager pluginManager;
 
+	@Getter
 	@Inject
 	private HdPluginConfig config;
 
@@ -305,7 +311,7 @@ public class HdPlugin extends Plugin {
 	private DeveloperTools developerTools;
 
 	@Inject
-	private FrameTimer frameTimer;
+	private Profiler profiler;
 
 	@Inject
 	private UIShaderProgram uiProgram;
@@ -465,9 +471,9 @@ public class HdPlugin extends Plugin {
 	public ShadingMode configShadingMode;
 	public ColorFilter configColorFilter = ColorFilter.NONE;
 	public ColorFilter configColorFilterPrevious;
+	public SceneShaderDebugMode configSceneShaderDebugMode = SceneShaderDebugMode.NONE;
 
 	public boolean useLowMemoryMode;
-	public boolean enableDetailedTimers;
 	public boolean enableFreezeFrame;
 	public boolean orthographicProjection;
 	public boolean freezeCulling;
@@ -493,17 +499,6 @@ public class HdPlugin extends Plugin {
 	public float[] viewMatrix = Mat4.zero();
 	public float[] viewProjMatrix = Mat4.zero();
 	public float[] invViewProjMatrix = Mat4.zero();
-
-	@Getter
-	public int drawnTileCount;
-	@Getter
-	public int drawnStaticRenderableCount;
-	@Getter
-	public int drawnTempRenderableCount;
-	@Getter
-	public int drawnDynamicRenderableCount;
-	@Getter
-	public long garbageCollectionCount;
 
 	private int startupCount;
 	public int frame;
@@ -539,6 +534,29 @@ public class HdPlugin extends Plugin {
 			}
 		}
 	}
+
+	@Override
+	protected Module getPublicModule() {
+		if (!Props.DEVELOPMENT)
+			return null;
+
+		Injector parent = injector.getParent();
+		return binder -> {
+			for (var binding : injector.getAllBindings().values()) {
+				var key = binding.getKey();
+				if (parent.getExistingBinding(key) != null)
+					continue;
+
+				var rawType = key.getTypeLiteral().getRawType();
+				if (!rawType.getName().startsWith("rs117.hd.") || Config.class.isAssignableFrom(rawType))
+					continue;
+				expose(binder, key, binding.getProvider());
+			}
+		};
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private static void expose(Binder binder, Key key, Provider provider) { binder.bind(key).toProvider(provider); }
 
 	@Override
 	protected void startUp() {
@@ -606,6 +624,8 @@ public class HdPlugin extends Plugin {
 				String glVendor = Objects.requireNonNullElse(glGetString(GL_VENDOR), "Unknown");
 				var runtime = Runtime.getRuntime();
 
+				boolean supportsThreadAllocationTracking = HDUtils.setupThreadAllocatedBytesMonitoring();
+
 				APPLE = osType == OSType.MacOS;
 				APPLE_ARM = APPLE && osArch.equals("aarch64");
 				AMD_GPU = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
@@ -633,6 +653,7 @@ public class HdPlugin extends Plugin {
 				log.info("Indirect draw:       {}", SUPPORTS_INDIRECT_DRAW);
 				log.info("Multi indirect draw: {}", SUPPORTS_MULTI_INDIRECT_DRAW);
 				log.info("Storage buffers:     {}", SUPPORTS_STORAGE_BUFFERS);
+				log.info("Allocation Tracking: {}", supportsThreadAllocationTracking);
 				log.info("Low memory mode:     {}", useLowMemoryMode);
 
 				renderer = injector.getInstance(rendererClass);
@@ -974,6 +995,8 @@ public class HdPlugin extends Plugin {
 		var includes = new ShaderIncludes()
 			.addIncludePath(SHADER_PATH)
 			.addInclude("VERSION_HEADER", OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER)
+			.define("DEVELOPMENT", Props.DEVELOPMENT)
+			.define("SCENE_SHADER_DEBUG_MODE", configSceneShaderDebugMode)
 			.define("UI_SCALING_MODE", config.uiScalingMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
@@ -1008,6 +1031,7 @@ public class HdPlugin extends Plugin {
 			.define("CHARACTER_DISPLACEMENT", configCharacterDisplacement)
 			.define("MAX_CHARACTER_POSITION_COUNT", max(1, UBOCompute.MAX_CHARACTER_POSITION_COUNT))
 			.define("WIREFRAME", config.wireframe())
+			.define("HIGHLIGHT", developerTools.isHighlightModelOverridesEnabled())
 			.define("WINDOWS_HDR_CORRECTION", config.windowsHdrCorrection())
 			.define("LEGACY_BOAT_SILHOUETTES", config.legacyBoatSilhouettes())
 			.define("REDUCE_GLARE_INTENSITY", configReduceGlareIntensity)
@@ -1661,10 +1685,10 @@ public class HdPlugin extends Plugin {
 		uiWidth = bufferProvider.getWidth();
 		uiHeight = bufferProvider.getHeight();
 
-		frameTimer.begin(Timer.MAP_UI_BUFFER);
+		profiler.begin(Timer.MAP_UI_BUFFER);
 		final GLBuffer pbo = pboUi[frame % 3];
 		pbo.map(MAP_WRITE, 0, uiWidth * uiHeight * 4L);
-		frameTimer.end(Timer.MAP_UI_BUFFER);
+		profiler.end(Timer.MAP_UI_BUFFER);
 		if (!pbo.isMapped()) {
 			log.error("Unable to map interface PBO. Skipping UI...");
 		} else if (uiWidth > uiResolution[0] || uiHeight > uiResolution[1]) {
@@ -1674,9 +1698,9 @@ public class HdPlugin extends Plugin {
 				.build(
 					"AsyncUICopy",
 					t -> {
-						long start = System.nanoTime();
+						long timestamp = profiler.getTimeStamp();
 						pbo.mapped().intView().put(pixels, 0, uiWidth * uiHeight);
-						frameTimer.add(Timer.COPY_UI_ASYNC, System.nanoTime() - start);
+						profiler.add(Timer.COPY_UI_ASYNC, timestamp);
 					}
 				)
 				.setExecuteAsync(!isPowerSaving)
@@ -1693,7 +1717,7 @@ public class HdPlugin extends Plugin {
 		if (client.getGameState().getState() < GameState.LOADING.getState())
 			overlayColor = 0;
 
-		frameTimer.begin(Timer.RENDER_UI);
+		profiler.begin(Timer.RENDER_UI);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 		// Disable alpha writes, just in case the default FBO has an alpha channel
@@ -1718,19 +1742,19 @@ public class HdPlugin extends Plugin {
 		glBindTexture(GL_TEXTURE_2D, texUi);
 
 		if (uiCopyJob != null) {
-			frameTimer.begin(Timer.COPY_UI);
+			profiler.begin(Timer.COPY_UI);
 			uiCopyJob.waitForCompletion(true);
 			uiCopyJob = null;
-			frameTimer.end(Timer.COPY_UI);
+			profiler.end(Timer.COPY_UI);
 
-			frameTimer.begin(Timer.UPLOAD_UI);
+			profiler.begin(Timer.UPLOAD_UI);
 			final GLBuffer pbo = pboUi[frame % 3];
 			pbo.unmap();
 			pbo.bind();
 
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, uiWidth, uiHeight, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
 			pbo.unbind();
-			frameTimer.end(Timer.UPLOAD_UI);
+			profiler.end(Timer.UPLOAD_UI);
 		}
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, function);
@@ -1749,7 +1773,7 @@ public class HdPlugin extends Plugin {
 		glDisable(GL_BLEND);
 		glColorMask(true, true, true, true);
 
-		frameTimer.end(Timer.RENDER_UI);
+		profiler.end(Timer.RENDER_UI);
 	}
 
 	/**
@@ -2114,7 +2138,7 @@ public class HdPlugin extends Plugin {
 				sceneManager.getLoadingLock().unlock();
 				log.trace("loadingLock unlocked - holdCount: {}", sceneManager.getLoadingLock().getHoldCount());
 				pendingConfigChanges.clear();
-				frameTimer.reset();
+				profiler.reset();
 			}
 		});
 	}
@@ -2124,7 +2148,7 @@ public class HdPlugin extends Plugin {
 		boolean unlockFps = config.unlockFps();
 		HdPluginConfig.SyncMode syncMode = unlockFps ? config.syncMode() : HdPluginConfig.SyncMode.OFF;
 
-		if (frameTimer.isActive()) {
+		if (profiler.isActive()) {
 			unlockFps = true;
 			syncMode = SyncMode.OFF;
 		}
@@ -2177,7 +2201,9 @@ public class HdPlugin extends Plugin {
 		if (handleShutdownRequest())
 			return;
 
-		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
+		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || profiler.isActive();
+
+		frame = (frame + 1) & Integer.MAX_VALUE;
 
 		if (lastFrameTimeMillis > 0) {
 			deltaTimeMs = System.currentTimeMillis() - lastFrameTimeMillis;

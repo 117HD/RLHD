@@ -25,8 +25,9 @@ import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
-import rs117.hd.overlays.FrameTimer;
-import rs117.hd.overlays.Timer;
+import rs117.hd.profiling.Event;
+import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Timer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
@@ -92,7 +93,7 @@ public class SceneManager {
 	private FishingSpotReplacer fishingSpotReplacer;
 
 	@Inject
-	private FrameTimer frameTimer;
+	private Profiler profiler;
 
 	private UBOWorldViews uboWorldViews;
 
@@ -187,9 +188,9 @@ public class SceneManager {
 
 	public void update() {
 		assert client.isClientThread();
-		frameTimer.begin(Timer.UPDATE_AREA_HIDING);
+		profiler.begin(Timer.UPDATE_AREA_HIDING);
 		updateAreaHiding();
-		frameTimer.end(Timer.UPDATE_AREA_HIDING);
+		profiler.end(Timer.UPDATE_AREA_HIDING);
 
 		if (root.sceneContext == null)
 			return;
@@ -382,6 +383,7 @@ public class SceneManager {
 			return;
 
 		zone.rebuild = true;
+		profiler.pushEvent(Event.ZONE_INVALIDATE);
 		log.trace("Zone invalidated: wx={} x={} z={}", scene.getWorldViewId(), zx, zz);
 	}
 
@@ -465,14 +467,16 @@ public class SceneManager {
 		try {
 			loadingLock.lock();
 			if (scene.getWorldViewId() != WorldView.TOPLEVEL) {
+				profiler.pushEvent(Event.ROOT_MAP_LOAD);
 				loadSubScene(worldView, scene);
 				return;
 			}
 
 			assert worldView.getId() == WorldView.TOPLEVEL;
 
+			profiler.pushEvent(Event.ROOT_MAP_LOAD);
+
 			Stopwatch sw = Stopwatch.createStarted();
-			root.loadTime = root.uploadTime = root.sceneSwapTime = 0;
 			root.isLoading = true;
 
 			root.sceneLoadGroup.complete();
@@ -709,6 +713,7 @@ public class SceneManager {
 			return;
 
 		if (scene.getWorldViewId() != WorldView.TOPLEVEL) {
+			profiler.pushEvent(Event.SUB_SWAP_SCENE);
 			swapSubScene(scene);
 			return;
 		}
@@ -717,6 +722,7 @@ public class SceneManager {
 			return; // Return early if scene loading failed
 
 		Stopwatch sw = Stopwatch.createStarted();
+		profiler.pushEvent(Event.ROOT_SWAP_SCENE);
 
 		fishingSpotReplacer.despawnRuneLiteObjects();
 		npcDisplacementCache.clear();

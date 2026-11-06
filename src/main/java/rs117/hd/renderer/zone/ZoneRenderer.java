@@ -50,8 +50,9 @@ import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.shader.TerrainShadowShaderProgram;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
-import rs117.hd.overlays.FrameTimer;
-import rs117.hd.overlays.Timer;
+import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Stat;
+import rs117.hd.profiling.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.renderer.SkyRenderer;
 import rs117.hd.scene.EnvironmentManager;
@@ -141,7 +142,7 @@ public class ZoneRenderer implements Renderer {
 	private SkyRenderer skyRenderer;
 
 	@Inject
-	private FrameTimer frameTimer;
+	private Profiler profiler;
 
 	@Inject
 	private SceneShaderProgram sceneProgram;
@@ -222,10 +223,10 @@ public class ZoneRenderer implements Renderer {
 		if (FacePrioritySorter.POOL == null)
 			FacePrioritySorter.POOL = new ConcurrentPool<>(() -> injector.getInstance(FacePrioritySorter.class));
 
-		sceneCmd.setFrameTimer(frameTimer);
-		gapFillerCmd.setFrameTimer(frameTimer);
-		directionalCmd.setFrameTimer(frameTimer);
-		terrainShadowCmd.setFrameTimer(frameTimer);
+		sceneCmd.setProfiler(profiler);
+		gapFillerCmd.setProfiler(profiler);
+		directionalCmd.setProfiler(profiler);
+		gapFillerCmd.setProfiler(profiler);
 
 		jobSystem.startUp(config.cpuUsageLimit());
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
@@ -272,7 +273,7 @@ public class ZoneRenderer implements Renderer {
 		if (fence == 0)
 			return;
 
-		try (var ignored = frameTimer.begin(Timer.FRAME_FENCE_WAIT)) {
+		try (var ignored = profiler.begin(Timer.FRAME_FENCE_WAIT)) {
 			final long deadline = System.nanoTime() + FENCE_SYNC_TIMEOUT_NS;
 			int flags = GL_SYNC_FLUSH_COMMANDS_BIT;
 			boolean waitFailed = false;
@@ -401,6 +402,7 @@ public class ZoneRenderer implements Renderer {
 	) {
 		if (plugin.isPluginStopPending())
 			return;
+		profiler.end(Timer.CLIENT);
 
 		try {
 			boolean isTopLevel = scene.getWorldViewId() == WorldView.TOPLEVEL;
@@ -431,7 +433,7 @@ public class ZoneRenderer implements Renderer {
 				return;
 			}
 
-			frameTimer.begin(Timer.DRAW_PRESCENE);
+			profiler.begin(Timer.DRAW_PRESCENE);
 			ctx.minLevel = minLevel;
 			ctx.level = level;
 			ctx.maxLevel = maxLevel;
@@ -485,13 +487,15 @@ public class ZoneRenderer implements Renderer {
 				sceneCmd.Disable(GL_BLEND);
 			}
 
-			frameTimer.end(Timer.DRAW_PRESCENE);
+			profiler.end(Timer.DRAW_PRESCENE);
 		} catch (Throwable ex) {
 			plugin.requestPluginStop(
 				String.format("Error in preSceneDraw(%s)", scene != null ? scene.getWorldViewId() : null),
 				ex
 			);
 		}
+
+		profiler.begin(Timer.CLIENT);
 	}
 
 	private void preSceneDrawTopLevel(
@@ -511,8 +515,8 @@ public class ZoneRenderer implements Renderer {
 
 		WorldViewContext ctx = sceneManager.getContext(scene);
 
-		frameTimer.begin(Timer.DRAW_FRAME);
-		frameTimer.begin(Timer.DRAW_SCENE);
+		profiler.begin(Timer.DRAW_FRAME);
+		profiler.begin(Timer.DRAW_SCENE);
 
 		boolean hasFocalPointChanged;
 		boolean hasSceneCameraChanged;
@@ -563,21 +567,18 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboGlobal.invProjectionMatrix.set(plugin.invViewProjMatrix);
 
 		if (!plugin.enableFreezeFrame) {
-			plugin.drawnTempRenderableCount = 0;
-			plugin.drawnDynamicRenderableCount = 0;
-
 			try {
-				frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
+				profiler.begin(Timer.UPDATE_ENVIRONMENT);
 				environmentManager.update(ctx.sceneContext);
-				frameTimer.end(Timer.UPDATE_ENVIRONMENT);
+				profiler.end(Timer.UPDATE_ENVIRONMENT);
 
-				frameTimer.begin(Timer.UPDATE_SKY);
+				profiler.begin(Timer.UPDATE_SKY);
 				skyManager.update();
-				frameTimer.end(Timer.UPDATE_SKY);
+				profiler.end(Timer.UPDATE_SKY);
 
-				frameTimer.begin(Timer.UPDATE_SCENE);
+				profiler.begin(Timer.UPDATE_SCENE);
 				sceneManager.update();
-				frameTimer.end(Timer.UPDATE_SCENE);
+				profiler.end(Timer.UPDATE_SCENE);
 			} catch (Exception ex) {
 				plugin.requestPluginStop("Error while updating environment, sky or scene", ex);
 				return;
@@ -772,10 +773,10 @@ public class ZoneRenderer implements Renderer {
 			if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
 				return;
 
-			frameTimer.begin(Timer.DRAW_POSTSCENE);
+			profiler.begin(Timer.DRAW_POSTSCENE);
 			if (scene.getWorldViewId() == WorldView.TOPLEVEL)
 				postDrawTopLevel();
-			frameTimer.end(Timer.DRAW_POSTSCENE);
+			profiler.end(Timer.DRAW_POSTSCENE);
 		} catch (Throwable ex) {
 			plugin.requestPluginStop(
 				String.format(
@@ -806,15 +807,12 @@ public class ZoneRenderer implements Renderer {
 				indirectDrawCmds.orphan();
 				indirectDrawCmds.upload(indirectDrawCmdsStaging);
 			}
-
-			// TODO: Add proper support for stat tracking to the FrameTimer or elsewhere
-			plugin.drawnDynamicRenderableCount += modelStreamingManager.getDrawnDynamicRenderableCount();
 		}
 
-		frameTimer.end(Timer.DRAW_SCENE);
+		profiler.end(Timer.DRAW_SCENE);
 
 		if (plugin.configDynamicLights != DynamicLights.NONE) {
-			frameTimer.begin(Timer.UPDATE_LIGHTS);
+			profiler.begin(Timer.UPDATE_LIGHTS);
 			try {
 				if (!plugin.enableFreezeFrame)
 					lightManager.update(ctx, plugin.cameraShift, plugin.cameraFrustum);
@@ -855,10 +853,11 @@ public class ZoneRenderer implements Renderer {
 			} catch (Exception ex) {
 				log.error("Error while updating lights:", ex);
 			}
-			frameTimer.end(Timer.UPDATE_LIGHTS);
+			profiler.setStat(Stat.VISIBLE_LIGHTS, lightManager.getNumVisibleLights(), lightManager.getLights().size());
+			profiler.end(Timer.UPDATE_LIGHTS);
 		}
 
-		frameTimer.begin(Timer.RENDER_FRAME);
+		profiler.begin(Timer.RENDER_FRAME);
 		shouldRenderScene = true;
 
 		checkGLErrors();
@@ -871,8 +870,8 @@ public class ZoneRenderer implements Renderer {
 		plugin.updateTiledLightingFbo();
 		assert plugin.fboTiledLighting != 0;
 
-		frameTimer.begin(Timer.DRAW_TILED_LIGHTING);
-		frameTimer.begin(Timer.RENDER_TILED_LIGHTING);
+		profiler.begin(Timer.DRAW_TILED_LIGHTING);
+		profiler.begin(Timer.RENDER_TILED_LIGHTING);
 
 		renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTiledLighting);
 		renderState.viewport.set(0, 0, plugin.tiledLightingResolution[0], plugin.tiledLightingResolution[1]);
@@ -894,8 +893,8 @@ public class ZoneRenderer implements Renderer {
 			}
 		}
 
-		frameTimer.end(Timer.RENDER_TILED_LIGHTING);
-		frameTimer.end(Timer.DRAW_TILED_LIGHTING);
+		profiler.end(Timer.RENDER_TILED_LIGHTING);
+		profiler.end(Timer.DRAW_TILED_LIGHTING);
 	}
 
 	private void directionalShadowPass() {
@@ -927,7 +926,7 @@ public class ZoneRenderer implements Renderer {
 		if (!shouldRenderShadows)
 			return;
 
-		frameTimer.begin(Timer.RENDER_SHADOWS);
+		profiler.begin(Timer.RENDER_SHADOWS);
 
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.disable.set(GL_CULL_FACE);
@@ -939,11 +938,11 @@ public class ZoneRenderer implements Renderer {
 
 		directionalCmd.execute(renderState);
 
-		frameTimer.end(Timer.RENDER_SHADOWS);
+		profiler.end(Timer.RENDER_SHADOWS);
 
 		// Render terrain-only shadow map
 		if (plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0) {
-			frameTimer.begin(Timer.RENDER_TERRAIN_SHADOWS);
+			profiler.begin(Timer.RENDER_TERRAIN_SHADOWS);
 
 			renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTerrainShadowMap);
 			renderState.viewport.set(0, 0, plugin.terrainShadowMapResolution, plugin.terrainShadowMapResolution);
@@ -955,7 +954,7 @@ public class ZoneRenderer implements Renderer {
 			terrainShadowProgram.use();
 			terrainShadowCmd.execute(renderState);
 
-			frameTimer.end(Timer.RENDER_TERRAIN_SHADOWS);
+			profiler.end(Timer.RENDER_TERRAIN_SHADOWS);
 		}
 
 		glBindVertexArray(0);
@@ -966,10 +965,10 @@ public class ZoneRenderer implements Renderer {
 		renderState.disable.set(GL_POLYGON_OFFSET_FILL);
 
 		shouldClearShadowFbo = true;
+		profiler.end(Timer.RENDER_SHADOWS);
 	}
 
 	private void scenePass() {
-		frameTimer.begin(Timer.DRAW_SCENE);
 		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
 		if (plugin.msaaSamples > 1) {
 			renderState.enable.set(GL_MULTISAMPLE);
@@ -983,7 +982,7 @@ public class ZoneRenderer implements Renderer {
 
 		skyRenderer.clear(shouldRenderVanillaSkybox);
 
-		frameTimer.begin(Timer.RENDER_SCENE_AND_SKY);
+		profiler.begin(Timer.RENDER_SCENE_AND_SKY);
 
 		renderState.enable.set(GL_CULL_FACE);
 		renderState.enable.set(GL_DEPTH_TEST);
@@ -1001,7 +1000,7 @@ public class ZoneRenderer implements Renderer {
 
 		sceneCmd.execute(renderState);
 
-		frameTimer.end(Timer.RENDER_SCENE_AND_SKY);
+		profiler.end(Timer.RENDER_SCENE_AND_SKY);
 
 		glBindVertexArray(0);
 
@@ -1011,7 +1010,7 @@ public class ZoneRenderer implements Renderer {
 		renderState.disable.set(GL_DEPTH_TEST);
 		renderState.apply();
 
-		frameTimer.end(Timer.DRAW_SCENE);
+		profiler.end(Timer.DRAW_SCENE);
 	}
 
 	@Override
@@ -1019,12 +1018,14 @@ public class ZoneRenderer implements Renderer {
 		if (plugin.enableFreezeFrame || plugin.isPluginStopPending())
 			return false;
 
-		try {
+		profiler.end(Timer.CLIENT);
+
+		try (var ignored = profiler.begin(Timer.VISIBILITY_CHECK)) {
 			if (!sceneManager.isTopLevelValid())
 				return false;
 
 			WorldViewContext ctx = sceneManager.getRoot();
-			if (plugin.enableDetailedTimers) frameTimer.begin(Timer.VISIBILITY_CHECK);
+			;
 			int minX = zx * CHUNK_SIZE - ctx.sceneContext.sceneOffset;
 			int minZ = zz * CHUNK_SIZE - ctx.sceneContext.sceneOffset;
 			if (ctx.sceneContext.currentArea != null) {
@@ -1032,10 +1033,8 @@ public class ZoneRenderer implements Renderer {
 				assert base != null;
 				boolean inArea = ctx.sceneContext.currentArea.intersects(
 					true, base[0] + minX, base[1] + minZ, base[0] + minX + 7, base[1] + minZ + 7);
-				if (!inArea) {
-					if (plugin.enableDetailedTimers) frameTimer.end(Timer.VISIBILITY_CHECK);
+				if (!inArea)
 					return false;
-				}
 			}
 
 			Zone zone = ctx.zones[zx][zz];
@@ -1062,19 +1061,15 @@ public class ZoneRenderer implements Renderer {
 
 			zone.inSceneFrustum = sceneCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
 
-			if (zone.inSceneFrustum) {
-				if (plugin.enableDetailedTimers)
-					frameTimer.end(Timer.VISIBILITY_CHECK);
+			if (zone.inSceneFrustum)
 				return zone.inShadowFrustum = true;
-			}
+
 
 			zone.inShadowFrustum =
 				plugin.configShadowsEnabled &&
 				directionalCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ) &&
 				directionalShadowCasterVolume.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
 
-			if (plugin.enableDetailedTimers)
-				frameTimer.end(Timer.VISIBILITY_CHECK);
 			if (plugin.orthographicProjection)
 				return zone.inSceneFrustum = true;
 			return zone.inShadowFrustum;
@@ -1083,6 +1078,8 @@ public class ZoneRenderer implements Renderer {
 				String.format("Error in zoneInFrustum(%d, %d, %d, %d)", zx, zz, maxY, minY),
 				ex
 			);
+		} finally {
+			profiler.begin(Timer.CLIENT);
 		}
 		return false;
 	}
@@ -1091,6 +1088,8 @@ public class ZoneRenderer implements Renderer {
 	public void drawZoneOpaque(Projection entityProjection, Scene scene, int zx, int zz) {
 		if (plugin.enableFreezeFrame || plugin.isPluginStopPending())
 			return;
+
+		profiler.end(Timer.CLIENT);
 
 		try {
 			WorldViewContext ctx = sceneManager.getContext(scene);
@@ -1101,7 +1100,7 @@ public class ZoneRenderer implements Renderer {
 			if (!z.initialized || z.sizeO == 0)
 				return;
 
-			frameTimer.begin(Timer.DRAW_ZONE_OPAQUE);
+			profiler.begin(Timer.DRAW_ZONE_OPAQUE);
 			boolean renderGroundLevel = ctx.minLevel == 0;
 			if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
 				sceneCmd.Disable(GL_BLEND);
@@ -1122,7 +1121,7 @@ public class ZoneRenderer implements Renderer {
 				if (renderGroundLevel && plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0)
 					z.renderOpaqueLevel(terrainShadowCmd, Zone.LEVEL_TERRAIN);
 			}
-			frameTimer.end(Timer.DRAW_ZONE_OPAQUE);
+			profiler.end(Timer.DRAW_ZONE_OPAQUE);
 
 			checkGLErrors();
 		} catch (Throwable ex) {
@@ -1133,6 +1132,8 @@ public class ZoneRenderer implements Renderer {
 				),
 				ex
 			);
+		} finally {
+			profiler.begin(Timer.CLIENT);
 		}
 	}
 
@@ -1140,6 +1141,8 @@ public class ZoneRenderer implements Renderer {
 	public void drawZoneAlpha(Projection entityProjection, Scene scene, int level, int zx, int zz) {
 		if (plugin.enableFreezeFrame || plugin.isPluginStopPending())
 			return;
+
+		profiler.end(Timer.CLIENT);
 
 		try {
 			final WorldViewContext ctx = sceneManager.getContext(scene);
@@ -1150,7 +1153,7 @@ public class ZoneRenderer implements Renderer {
 			if (!z.initialized)
 				return;
 
-			frameTimer.begin(Timer.DRAW_ZONE_ALPHA);
+			profiler.begin(Timer.DRAW_ZONE_ALPHA);
 			sceneCmd.Enable(GL_BLEND);
 
 			final boolean renderWater = z.inSceneFrustum && ctx.minLevel == 0 && level == 0 && z.hasWater;
@@ -1201,7 +1204,7 @@ public class ZoneRenderer implements Renderer {
 					}
 				}
 			}
-			frameTimer.end(Timer.DRAW_ZONE_ALPHA);
+			profiler.end(Timer.DRAW_ZONE_ALPHA);
 
 			checkGLErrors();
 		} catch (Throwable ex) {
@@ -1212,6 +1215,8 @@ public class ZoneRenderer implements Renderer {
 				),
 				ex
 			);
+		} finally {
+			profiler.begin(Timer.CLIENT);
 		}
 	}
 
@@ -1220,12 +1225,14 @@ public class ZoneRenderer implements Renderer {
 		if (plugin.enableFreezeFrame || plugin.isPluginStopPending())
 			return;
 
+		profiler.end(Timer.CLIENT);
+
 		try {
 			WorldViewContext ctx = sceneManager.getContext(scene);
 			if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
 				return;
 
-			frameTimer.begin(Timer.DRAW_PASS);
+			profiler.begin(Timer.DRAW_PASS);
 
 			switch (pass) {
 				case DrawCallbacks.PASS_OPAQUE:
@@ -1244,12 +1251,12 @@ public class ZoneRenderer implements Renderer {
 					modelStreamingManager.ensureAsyncUploadsComplete(null);
 
 					if (sceneManager.isRoot(ctx))
-						frameTimer.begin(Timer.UNMAP_ROOT_CTX);
+						profiler.begin(Timer.UNMAP_ROOT_CTX);
 
 					ctx.unmap();
 
 					if (sceneManager.isRoot(ctx))
-						frameTimer.end(Timer.UNMAP_ROOT_CTX);
+						profiler.end(Timer.UNMAP_ROOT_CTX);
 
 					// Draw opaque
 					ctx.drawAll(VAO_OPAQUE, ctx.vaoSceneCmd);
@@ -1279,7 +1286,7 @@ public class ZoneRenderer implements Renderer {
 					break;
 			}
 
-			frameTimer.end(Timer.DRAW_PASS);
+			profiler.end(Timer.DRAW_PASS);
 			checkGLErrors();
 		} catch (Throwable ex) {
 			plugin.requestPluginStop(
@@ -1289,6 +1296,8 @@ public class ZoneRenderer implements Renderer {
 				),
 				ex
 			);
+		} finally {
+			profiler.begin(Timer.CLIENT);
 		}
 	}
 
@@ -1308,13 +1317,20 @@ public class ZoneRenderer implements Renderer {
 		if (plugin.enableFreezeFrame || plugin.isPluginStopPending())
 			return;
 
-		final long start = System.nanoTime();
+		if(renderThreadId == -1)
+			profiler.end(Timer.CLIENT);
+
+		final long timestamp = profiler.getTimeStamp();
+		final long usedMemory = profiler.getUsedMemory();
 		try {
 			modelStreamingManager.drawTemp(renderThreadId, projection, scene, tileObject, r, m, orient, x, y, z);
 		} catch (Exception ex) {
 			log.error("Error in drawDynamic:", ex);
 		} finally {
-			frameTimer.add(renderThreadId == -1 ? Timer.DRAW_DYNAMIC : Timer.DRAW_DYNAMIC_ASYNC, System.nanoTime() - start);
+			profiler.add(renderThreadId == -1 ? Timer.DRAW_DYNAMIC : Timer.DRAW_DYNAMIC_ASYNC, timestamp, usedMemory);
+
+			if(renderThreadId == -1)
+				profiler.begin(Timer.CLIENT);
 		}
 	}
 
@@ -1322,14 +1338,16 @@ public class ZoneRenderer implements Renderer {
 	public void drawTemp(Projection worldProjection, Scene scene, GameObject gameObject, Model m, int orientation, int x, int y, int z) {
 		if (plugin.enableFreezeFrame || plugin.isPluginStopPending())
 			return;
+		profiler.end(Timer.CLIENT);
+		profiler.begin(Timer.DRAW_TEMP);
 
-		frameTimer.begin(Timer.DRAW_TEMP);
 		try {
 			modelStreamingManager.drawTemp(-1, worldProjection, scene, gameObject, gameObject.getRenderable(), m, orientation, x, y, z);
 		} catch (Exception ex) {
 			log.error("Error in drawTemp:", ex);
 		} finally {
-			frameTimer.end(Timer.DRAW_TEMP);
+			profiler.end(Timer.DRAW_TEMP);
+			profiler.begin(Timer.CLIENT);
 		}
 	}
 
@@ -1338,10 +1356,12 @@ public class ZoneRenderer implements Renderer {
 		if (plugin.isPluginStopPending())
 			return;
 
+		profiler.end(Timer.CLIENT);
+
 		try {
 			final GameState gameState = client.getGameState();
 			if (gameState == GameState.STARTING) {
-				frameTimer.end(Timer.DRAW_FRAME);
+				profiler.end(Timer.DRAW_FRAME);
 				return;
 			}
 
@@ -1358,7 +1378,7 @@ public class ZoneRenderer implements Renderer {
 				return;
 			}
 
-			frameTimer.begin(Timer.DRAW_SUBMIT);
+			profiler.begin(Timer.DRAW_SUBMIT);
 			if (shouldRenderScene) {
 				tiledLightingPass();
 				directionalShadowPass();
@@ -1409,12 +1429,14 @@ public class ZoneRenderer implements Renderer {
 			}
 
 			plugin.drawUi(overlayColor);
-			frameTimer.end(Timer.DRAW_SUBMIT);
+			profiler.end(Timer.DRAW_SUBMIT);
 
 			jobSystem.processPendingClientCallbacks();
 
-			frameTimer.end(Timer.DRAW_FRAME);
-			frameTimer.end(Timer.RENDER_FRAME);
+			profiler.end(Timer.DRAW_FRAME);
+			profiler.end(Timer.RENDER_FRAME);
+
+			CommandBuffer.recordStats(profiler);
 
 			try {
 				if (plugin.configFrameSynchronization) {
@@ -1432,9 +1454,9 @@ public class ZoneRenderer implements Renderer {
 					}
 				}
 
-				frameTimer.begin(Timer.SWAP_BUFFERS);
+				profiler.begin(Timer.SWAP_BUFFERS);
 				plugin.awtContext.swapBuffers();
-				frameTimer.end(Timer.SWAP_BUFFERS);
+				profiler.end(Timer.SWAP_BUFFERS);
 				drawManager.processDrawComplete(plugin::screenshot);
 			} catch (RuntimeException ex) {
 				// this is always fatal
@@ -1448,7 +1470,7 @@ public class ZoneRenderer implements Renderer {
 
 			glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
 
-			frameTimer.endFrameAndReset();
+			profiler.endFrameAndReset();
 			checkGLErrors();
 
 			shouldRenderScene = false;
@@ -1456,6 +1478,8 @@ public class ZoneRenderer implements Renderer {
 		} catch (Throwable ex) {
 			plugin.requestPluginStop(String.format("Error in draw(%08X)", overlayColor), ex);
 		}
+
+		profiler.begin(Timer.CLIENT);
 	}
 
 	@Subscribe

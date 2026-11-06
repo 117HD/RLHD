@@ -255,3 +255,8 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
         return mat3(T * invmax, B * invmax, N);
     }
 #endif
+
+float checkerboard(vec3 fragPos, float size) {
+    vec2 p = floor(fragPos.xz / size);
+    return mod(p.x + mod(p.y, 2.0), 2.0);
+}

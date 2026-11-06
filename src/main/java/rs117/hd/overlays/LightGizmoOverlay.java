@@ -15,6 +15,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -93,6 +94,8 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 	private final boolean[] frozenAxes = { false, true, false }; // by default, restrict movement to the same height
 	private final ArrayList<Light> selections = new ArrayList<>();
 	private final ArrayList<Light> hovers = new ArrayList<>();
+	private volatile List<Light> hoveredLights = List.of();
+	private volatile boolean active;
 	private boolean isProbablyRotatingCamera;
 
 	private static final int RELATIVE_TO_CAMERA = 0;
@@ -109,6 +112,8 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 	}
 
 	public void setActive(boolean activate) {
+		if (active == activate) return;
+		active = activate;
 		if (activate) {
 			overlayManager.add(this);
 			mouseManager.registerMouseListener(this);
@@ -119,14 +124,22 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 			keyManager.unregisterKeyListener(this);
 			action = Action.SELECT;
 			selections.clear();
+			hovers.clear();
+			hoveredLights = List.of();
 		}
+	}
+
+	public List<Light> getHoveredLights() {
+		return hoveredLights;
 	}
 
 	@Override
 	public Dimension render(Graphics2D g) {
 		var sceneContext = plugin.getSceneContext();
-		if (sceneContext == null)
+		if (sceneContext == null) {
+			hoveredLights = List.of();
 			return null;
+		}
 
 		if (selections.removeIf(light -> !lightManager.getLights().contains(light)))
 			action = Action.SELECT;
@@ -528,6 +541,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 			}
 		}
 
+		hoveredLights = List.copyOf(hovers);
 		return null;
 	}
 

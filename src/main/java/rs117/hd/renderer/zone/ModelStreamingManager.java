@@ -16,8 +16,9 @@ import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ShadowMode;
-import rs117.hd.overlays.FrameTimer;
-import rs117.hd.overlays.Timer;
+import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Stat;
+import rs117.hd.profiling.Timer;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -69,7 +70,7 @@ public class ModelStreamingManager {
 	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
-	private FrameTimer frameTimer;
+	private Profiler profiler;
 
 	@Inject
 	private ZoneRenderer renderer;
@@ -81,7 +82,6 @@ public class ModelStreamingManager {
 	static final class StreamingContext {
 		final int[] worldPos = new int[3];
 		final float[] objectWorldPos = new float[4];
-		int renderableCount;
 	}
 
 	public void initialize() {
@@ -134,17 +134,7 @@ public class ModelStreamingManager {
 
 	@Subscribe
 	public void onBeforeRender(BeforeRender event) {
-		for (int i = 0; i < streamingContexts.length; i++)
-			streamingContexts[i].renderableCount = 0;
-
 		updateRenderThreads();
-	}
-
-	public int getDrawnDynamicRenderableCount() {
-		int count = 0;
-		for (int i = 0; i < streamingContexts.length; i++)
-			count += streamingContexts[i].renderableCount;
-		return count;
 	}
 
 	private boolean isAlphaModel(Model m) {
@@ -240,7 +230,7 @@ public class ModelStreamingManager {
 		)) {
 			return;
 		}
-		streamingContext.renderableCount++;
+		profiler.incrementStat(Stat.VISIBLE_DYNAMIC_RENDERABLES);
 
 		final boolean hasAlpha =
 			(modelOverride.mightHaveTransparency || isAlphaModel(m)) &&
@@ -308,7 +298,8 @@ public class ModelStreamingManager {
 		int orientation,
 		int x, int y, int z
 	) {
-		final long t = System.nanoTime();
+		final long timestamp = profiler.getTimeStamp();
+		final long allocated = profiler.getUsedMemory();
 		uploadTempModel(
 			ctx,
 			projection,
@@ -324,7 +315,7 @@ public class ModelStreamingManager {
 			orientation,
 			x, y, z
 		);
-		frameTimer.add(renderable instanceof Actor ? Timer.DRAW_TEMP_ASYNC : Timer.DRAW_DYNAMIC_ASYNC, System.nanoTime() - t);
+		profiler.add(renderable instanceof Actor ? Timer.DRAW_TEMP_ASYNC : Timer.DRAW_DYNAMIC_ASYNC, timestamp, allocated);
 	}
 
 	public void uploadTempModel(
@@ -393,6 +384,7 @@ public class ModelStreamingManager {
 				final DynamicModelVAO.View shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
 				sceneUploader.uploadTempModel(
 					culledFaces,
+					renderable,
 					m,
 					modelOverride,
 					preOrientation,
@@ -419,6 +411,7 @@ public class ModelStreamingManager {
 
 				sceneUploader.uploadTempModel(
 					visibleFaces,
+					renderable,
 					m,
 					modelOverride,
 					preOrientation,
@@ -446,7 +439,7 @@ public class ModelStreamingManager {
 		if (AsyncCachedModel.POOL == null)
 			return;
 
-		frameTimer.begin(Timer.MODEL_UPLOAD_COMPLETE);
+		profiler.begin(Timer.MODEL_UPLOAD_COMPLETE);
 		pending.clear();
 		AsyncCachedModel model;
 		while ((model = (zone != null ? zone.pendingModelJobs.poll() : AsyncCachedModel.INFLIGHT.poll())) != null)
@@ -478,7 +471,7 @@ public class ModelStreamingManager {
 			}
 		}
 
-		frameTimer.end(Timer.MODEL_UPLOAD_COMPLETE);
+		profiler.end(Timer.MODEL_UPLOAD_COMPLETE);
 	}
 
 
