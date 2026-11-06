@@ -1384,7 +1384,7 @@ public class ZoneRenderer implements Renderer {
 
 					for (int zx = 0; zx < ctx.sizeX; ++zx)
 						for (int zz = 0; zz < ctx.sizeZ; ++zz)
-							ctx.zones[zx][zz].postAlphaPass();
+							ctx.zones[zx][zz].postAlphaPass(plugin.configUseOIT);
 					break;
 			}
 
