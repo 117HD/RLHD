@@ -259,6 +259,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         bool isHazardous = waterType.fresnelAmount == 0.86;
         float fresnelAmount = isHazardous ? 0.85 : waterType.fresnelAmount;
         baseColor = mix(baseColor, surface, fresnelAmount);
+        #if HAZARDOUS_WATER_VISIBILITY
         if (isHazardous) {
             vec3 unshadowedBaseColor = waterType.surfaceColor *
                 (ambientLightOut + unshadowedLightOut + skyLightOut + underglowOut);
@@ -268,6 +269,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
             float reflectionAmount = mix(fresnelAmount, fresnelAmount * 0.65, smoothstep(1.0, 4.0, reflectionDominance));
             baseColor += (fresnelAmount - reflectionAmount) * (unshadowedBaseColor - surface);
         }
+        #endif
         if (fresnelAmount == 0.85)
             baseColor *= .75f; // Sailing hack
 

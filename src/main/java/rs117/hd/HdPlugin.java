@@ -981,6 +981,7 @@ public class HdPlugin extends Plugin {
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
 			.define("WATER_SPECULAR_REFLECTIONS", config.waterSpecularReflections())
 			.define("DECOUPLE_WATER_FROM_SKY_COLOR", config.decoupleSkyAndWaterColor())
+			.define("HAZARDOUS_WATER_VISIBILITY", config.hazardousWaterVisibility())
 			.define("DYNAMIC_LIGHTS", configDynamicLights != DynamicLights.NONE)
 			.define("TILED_LIGHTING", configTiledLighting)
 			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getTiledLightingLayers())
@@ -2004,6 +2005,7 @@ public class HdPlugin extends Plugin {
 							case KEY_LEGACY_BOAT_SILHOUETTES:
 							case KEY_WATER_SPECULAR_REFLECTIONS:
 							case KEY_DECOUPLE_WATER_FROM_SKY_COLOR:
+							case KEY_HAZARDOUS_WATER_VISIBILITY:
 							case KEY_CENTROID_QUALIFIER:
 							case KEY_VALIDATE_SHADERS:
 								recompilePrograms = true;
@@ -2077,6 +2079,9 @@ public class HdPlugin extends Plugin {
 					} else if (reloadModelOverrides) {
 						modelOverrideManager.reload();
 					}
+
+					if (!reloadTexturesAndMaterials && pendingConfigChanges.contains(KEY_HAZARDOUS_WATER_VISIBILITY))
+						waterTypeManager.restart();
 
 					if (reloadTileOverrides)
 						tileOverrideManager.reload(reloadScene);
