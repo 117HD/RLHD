@@ -166,6 +166,9 @@ public class ZoneRenderer implements Renderer {
 	public SceneShaderProgram.Discard sceneDiscardProgram;
 
 	@Inject
+	public SceneShaderProgram.Dynamic sceneDynamicProgram;
+
+	@Inject
 	private SceneShaderProgram.Water waterProgram;
 
 	@Inject
@@ -304,6 +307,7 @@ public class ZoneRenderer implements Renderer {
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
 		sceneProgram.compile(includes);
 		sceneDiscardProgram.compile(includes);
+		sceneDynamicProgram.compile(includes);
 		waterProgram.compile(includes);
 		fastShadowProgram.compile(includes);
 		detailedShadowProgram.compile(includes);
@@ -315,6 +319,7 @@ public class ZoneRenderer implements Renderer {
 	public void destroyShaders() {
 		sceneProgram.destroy();
 		sceneDiscardProgram.destroy();
+		sceneDynamicProgram.destroy();
 		waterProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
@@ -1283,7 +1288,9 @@ public class ZoneRenderer implements Renderer {
 					directionalCmd.SetShader(fastShadowProgram);
 					directionalCmd.ExecuteSubCommandBuffer(ctx.vaoDirectionalCmd);
 
+					sceneCmd.SetShader(sceneDynamicProgram);
 					sceneCmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
+					sceneCmd.SetShader(sceneProgram);
 
 					if (skyRenderer.shouldRender(shouldRenderVanillaSkybox) && sceneManager.isRoot(ctx)) {
 						// Draw the sky after drawing top-level scene opaque
@@ -1304,21 +1311,17 @@ public class ZoneRenderer implements Renderer {
 					}
 
 					// Draw opaque
-					ctx.vaoSceneCmd.SetShader(sceneDiscardProgram);
 					ctx.drawAll(VAO_OPAQUE, ctx.vaoSceneCmd);
 
 					// Draw players with sorted alpha, without writing depth
-					ctx.vaoSceneCmd.SetShader(sceneProgram);
 					ctx.vaoSceneCmd.DepthMask(false);
 					ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
 					ctx.vaoSceneCmd.DepthMask(true);
-					ctx.vaoSceneCmd.SetShader(sceneDiscardProgram);
 
 					// Redraw players, this time only writing depth, for correct ordering with the background
 					ctx.vaoSceneCmd.ColorMask(false, false, false, false);
 					ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
 					ctx.vaoSceneCmd.ColorMask(true, true, true, true);
-					ctx.vaoSceneCmd.SetShader(sceneProgram);
 
 					if (sceneManager.isRoot(ctx)) {
 						frameTimer.begin(Timer.FRAME_CONTEXT_UNMAP);

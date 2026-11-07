@@ -44,6 +44,7 @@
 #include MATERIAL_CONSTANTS
 #include ALLOW_DISCARD
 #include WATER_PASS
+#include DYNAMIC_MODEL
 
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
@@ -108,7 +109,7 @@ vec2 worldUvs(float scale) {
 #include <utils/water.glsl>
 
 void main() {
-    bool isTerrain = (fTerrainData[0] & 1) != 0;
+    bool isTerrain = DYNAMIC_MODEL == 0 && (fTerrainData[0] & 1) != 0;
     bool isSquashed = isWorldViewSquashed(fWorldViewId);
     #if LEGACY_BOAT_SILHOUETTES
         isSquashed = false;

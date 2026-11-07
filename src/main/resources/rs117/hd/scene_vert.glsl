@@ -26,6 +26,7 @@
 #version 330
 
 #include SHADER_STORAGE_BUFFERS
+#include DYNAMIC_MODEL
 
 #if SHADER_STORAGE_BUFFERS
     #extension GL_ARB_shader_storage_buffer_object : enable
@@ -97,7 +98,7 @@ layout (location = 0) in vec3 vPosition;
 
         int materialData = 0;
         int alphaBiasHsl = 0;
-        if (isModelFace(vPackedTextureFace)) {
+        if ((DYNAMIC_MODEL == 1) || isModelFace(vPackedTextureFace)) {
             ModelFaceData faceData = getModelFaceData(getFaceOffset(vPackedTextureFace));
             fAlphaBiasHsl = faceData.AlphaBiasHsl;
             fMaterialData = ivec3(faceData.MaterialData);
@@ -157,6 +158,7 @@ layout (location = 0) in vec3 vPosition;
         }
         fWorldViewId = worldViewIdx;
 
+#if !DYNAMIC_MODEL
         // Clamp underwater vertices to the water surface along the draw distance border, excluding
         // waterDepth == 1, which is used when the geometry already sits flush with the surface
         int waterDepth = fTerrainData[vertex] >> 11 & 0xFFF;
@@ -167,6 +169,7 @@ layout (location = 0) in vec3 vPosition;
             if (max(d.x, d.y) > int(uboGlobal.drawDistance / 8) * 8 + 3)
                 worldPosition.y -= waterDepth;
         }
+#endif
 
         fTexBlend = vec3(0);
         fTexBlend[vertex] = 1.0;

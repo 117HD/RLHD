@@ -34,7 +34,8 @@ public class SceneShaderProgram extends ShaderProgram {
 	@Override
 	public void compile(ShaderIncludes includes) throws ShaderException, IOException {
 		super.compile(includes.copy()
-			.define("ALLOW_DISCARD", this instanceof Discard)
+			.define("ALLOW_DISCARD", this instanceof Discard || this instanceof Dynamic)
+				.define("DYNAMIC_MODEL", this instanceof Dynamic)
 			.define("WATER_PASS", this instanceof Water));
 	}
 
@@ -48,6 +49,8 @@ public class SceneShaderProgram extends ShaderProgram {
 		uniModelData.set(TEXTURE_UNIT_MODEL_DATA);
 		uniNebulaMap.set(TEXTURE_UNIT_NEBULA_MAP);
 	}
+
+	public static class Dynamic extends SceneShaderProgram {}
 
 	public static class Discard extends SceneShaderProgram {}
 
