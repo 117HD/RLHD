@@ -31,6 +31,7 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
+import rs117.hd.HdPluginConfig;
 import rs117.hd.opengl.uniforms.UBOWaterTypes;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.scene.materials.Material;
@@ -47,9 +48,13 @@ import static rs117.hd.utils.ResourcePath.path;
 public class WaterTypeManager {
 	private static final ResourcePath WATER_TYPES_PATH = Props
 		.getFile("rlhd.water-types-path", () -> path(WaterTypeManager.class, "water_types.json"));
+	private static final ResourcePath CLASSIC_WATER_COLORS_PATH = path(WaterTypeManager.class, "water_types_classic.json");
 
 	@Inject
 	private ClientThread clientThread;
+
+	@Inject
+	private HdPluginConfig config;
 
 	@Inject
 	private HdPlugin plugin;
@@ -83,6 +88,8 @@ public class WaterTypeManager {
 				if (rawWaterTypes == null)
 					throw new IOException("Empty or invalid: " + path);
 				log.debug("Loaded {} water types", rawWaterTypes.length);
+				if (!config.hazardousWaterVisibility())
+					applyClassicColors(rawWaterTypes);
 
 				var waterTypes = new WaterType[rawWaterTypes.length + 1];
 				waterTypes[0] = WaterType.NONE;
@@ -169,6 +176,21 @@ public class WaterTypeManager {
 	public void restart() {
 		shutDown();
 		startUp();
+	}
+
+	// Restores the surface colors from before the hazardous water visibility changes
+	private void applyClassicColors(WaterType[] waterTypes) {
+		try {
+			var classic = CLASSIC_WATER_COLORS_PATH.loadJson(plugin.getGson(), WaterType[].class);
+			if (classic == null)
+				return;
+			for (var override : classic)
+				for (var type : waterTypes)
+					if (override.name.equals(type.name))
+						type.copySurfaceColor(override);
+		} catch (IOException ex) {
+			log.error("Failed to load classic water colors:", ex);
+		}
 	}
 
 	private WaterType get(String name) {

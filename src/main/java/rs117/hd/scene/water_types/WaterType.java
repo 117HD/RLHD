@@ -59,6 +59,11 @@ public class WaterType {
 		this.name = name;
 	}
 
+	public void copySurfaceColor(WaterType other) {
+		if (other.surfaceColor != null)
+			surfaceColor = other.surfaceColor;
+	}
+
 	public void normalize(int index, Material fallbackNormalMap) {
 		this.index = index;
 		if (name == null)

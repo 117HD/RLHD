@@ -1426,6 +1426,19 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_HAZARDOUS_WATER_VISIBILITY = "experimentalHazardousWaterVisibility";
+	@ConfigItem(
+		keyName = KEY_HAZARDOUS_WATER_VISIBILITY,
+		name = "Hazardous water visibility",
+		description =
+			"Darker sailing water colors, with hazardous waters (stormy, sunbaked, etc.) adjusted<br>" +
+			"to stay distinguishable in different lighting conditions.",
+		section = experimentalSettings
+	)
+	default boolean hazardousWaterVisibility() {
+		return false;
+	}
+
 	String KEY_SIMPLE_BOAT_SILHOUETTES = "experimentalSimpleBoatSilhouettes";
 	@ConfigItem(
 		keyName = KEY_SIMPLE_BOAT_SILHOUETTES,
