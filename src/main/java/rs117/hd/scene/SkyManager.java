@@ -13,12 +13,16 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.Client;
+import net.runelite.api.gameval.VarbitID;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.MoonBehavior;
 import rs117.hd.config.MoonPhase;
+import rs117.hd.scene.areas.Area;
+import rs117.hd.scene.daylight_cycle.HouseLocation;
 import rs117.hd.scene.daylight_cycle.SkyConfiguration;
 import rs117.hd.scene.daylight_cycle.SkyState;
 import rs117.hd.scene.environments.Environment;
@@ -63,6 +67,12 @@ public class SkyManager {
 	private static final float LATITUDE_LIBRATION_DEG = 6.7f;
 	private static final float NIGHT_MOON_PHASE_TILT = -.35f;
 
+	// The Observatory is at 0 deg. Lat., 0 deg. Lon., per in-game sextant
+	// Referenced from SextantLocator by Krazune (BSD 2-Clause): https://github.com/Krazune/SextantLocator
+	private static final int OBSERVATORY_X = 2440, OBSERVATORY_Y = 3161;
+	private static final float DEGREES_PER_TILE = 15f / 8f / 60f;
+	private static final int MAX_WORLD_Y = 4223;
+
 	@Inject
 	private ClientThread clientThread;
 
@@ -75,6 +85,12 @@ public class SkyManager {
 	@Inject
 	private EnvironmentManager environmentManager;
 
+	@Inject
+	private AreaManager areaManager;
+
+	@Inject
+	private Client client;
+
 	private final Random random = new Random(SEED);
 
 	private FileWatcher.UnregisterCallback fileWatcher;
@@ -84,6 +100,9 @@ public class SkyManager {
 	private MoonBehavior configMoonBehavior;
 	private float configCycleDuration;
 	private final float[] configLatLon = new float[2];
+	private boolean configInGameLatLon;
+
+	private final float[] playerLatLon = new float[2];
 
 	private long frameUtcMillis;
 	private long lastDirectionalCameraUpdateMillis;
@@ -103,8 +122,38 @@ public class SkyManager {
 	private float interruptedRotation;
 	private float interruptedAurora;
 
+	private final int[] focalWorldPos = new int[3];
+
 	private final ResolvedEndpoint resolvedFrom = new ResolvedEndpoint();
 	private final ResolvedEndpoint resolvedTo = new ResolvedEndpoint();
+
+	private final MapShift[] mapShifts = {
+		new MapShift("PRIFDDINAS", 2239-3263, 3384-6136),
+		new MapShift("ISLE_OF_SOULS_INSTANCE", 2199-2007, 2842-5914),
+		new MapShift("DEFENDER_OF_VARROCK_CASTLE_UNDER_ATTACK", 3214-3918, 3483-4955),
+		new MapShift("KARAMJA_INSTANCE_SHIPYARD", 3004-2620, 3049-4585),
+		new MapShift("KARAMJA_INSTANCE_SOUTH_OF_MUSA_POINT", 2890-2506, 3116-4588),
+		new MapShift("TUTORIAL_ISLAND_INSTANCE", 3087-1679, 3102-6110),
+		new MapShift("LIGHTHOUSE_INSTANCE", 2509-2445, 3636-4596),
+		new MapShift("YANILLE_INSTANCE", 2538-2922, 3093-4693),
+		new MapShift("SOTE_LLETYA_MOSTLY_DONE_BURNING", 2356-2804, 3176-6120),
+		new MapShift("SOTE_LLETYA_ON_FIRE", 2356-2932, 3176-6184),
+		new MapShift("KEEP_LE_FAYE_INSTANCE", 2780-1706, 3402-4257),
+		new MapShift("TREE_GNOME_STRONGHOLD_INSTANCE", 2437-1989, 3463-5511),
+		new MapShift("LUMBRIDGE_CASTLE_INSTANCE", 3216-3424, 3219-4827),
+		new MapShift("AGILITY_PYRAMID_TOP", 3367-3047, 2857-4713),
+		new MapShift("FALADOR_INSTANCE", 2979-3467, 3384-4760),
+		new MapShift("GOBLIN_VILLAGE_INSTANCE", 2962-2450, 3504-5424),
+		// not actually on map, somewhat arbitrarily placed off edge of map, due East of Mos Le'Harmless
+		new MapShift("BRAINDEATH_ISLAND", 4225-2112, 2944-5056),
+		// not actually on map, not physically tied to it but put both Castle Drakans in same place
+		new MapShift("VAMPYRIUM", 3560-2516, 3358-7838),
+		// not actually on map, but should maybe be moved
+		// "FISHER_KINGS_REALM",
+	};
+
+	private Area[] cachedAreasRef;
+	private Area pohArea = Area.NONE;
 
 	private static final class ResolvedMoon {
 		private final float[] angles = new float[2];
@@ -131,6 +180,24 @@ public class SkyManager {
 			moon.visibility = state.moonVisibility;
 			moon.directionalStrength = state.moonDirectionalStrength;
 			copyTo(moonLibration, state.moonLibration);
+		}
+	}
+
+	// Some areas are stored far from where the world map shows them
+	// (Prifddinas, Soul Wars for example). Shift them to their map position first.
+	private static final class MapShift {
+		final String areaName;
+		final int dx, dy;
+		Area area = Area.NONE;
+
+		MapShift(String areaName, int dx, int dy) {
+			this.areaName = areaName;
+			this.dx = dx;
+			this.dy = dy;
+		}
+
+		private void loadArea(AreaManager areaManager) {
+			this.area = areaManager.getArea(this.areaName);
 		}
 	}
 
@@ -215,7 +282,9 @@ public class SkyManager {
 				log.warn("Ignoring invalid latitude & longitude coordinates: {}", latLonString);
 			latLon = vec(config.latitudeDegrees(), config.longitudeDegrees());
 		}
+
 		copyTo(configLatLon, latLon);
+		configInGameLatLon = config.enableInGameLatLon();
 	}
 
 	public boolean isCycleDisabled() {
@@ -234,6 +303,9 @@ public class SkyManager {
 			return;
 		}
 
+		if (configInGameLatLon)
+			updatePlayerLatLon();
+
 		if (configCycle == DaylightCycle.CUSTOM) {
 			if (customCycleStartMillis == 0) {
 				customCycleStartMillis = Instant
@@ -241,7 +313,7 @@ public class SkyManager {
 					.truncatedTo(ChronoUnit.DAYS)
 					.toEpochMilli();
 				// Start the custom cycle at 11 AM local mean solar time
-				customCycleElapsedDays = 11 / 24.0 - configLatLon[1] / 360.0;
+				customCycleElapsedDays = 11 / 24.0 - activeLatLon(configCycle, false)[1] / 360.0;
 			}
 			customCycleElapsedDays += plugin.deltaTimeMs / (configCycleDuration * MINUTE_MS);
 		}
@@ -274,6 +346,65 @@ public class SkyManager {
 		);
 	}
 
+	private void updateLatLon(SkyState out, DaylightCycle cycle, boolean fixedSunAngles) {
+		copyTo(out.latLon, activeLatLon(cycle, fixedSunAngles));
+	}
+
+	private float[] activeLatLon(DaylightCycle cycle, boolean fixedSunAngles) {
+		if (fixedSunAngles)
+			return DEFAULT_LATLON;
+		if (configInGameLatLon)
+			return playerLatLon;
+		if (cycle.useConfigLatLon)
+			return configLatLon;
+		return DEFAULT_LATLON;
+	}
+
+	private void applyMapShift(int[] worldPos) {
+		refreshAreas();
+		for (MapShift shift : mapShifts) {
+			if (shift.area.containsPoint(worldPos)) {
+				worldPos[0] += shift.dx;
+				worldPos[1] += shift.dy;
+				return;
+			}
+		}
+	}
+
+	private void updatePlayerLatLon() {
+		SceneContext ctx = plugin.getSceneContext();
+		if (ctx == null)
+			return;
+		ctx.localToWorld(
+			plugin.cameraFocalPoint[0],
+			plugin.cameraFocalPoint[1],
+			client.getTopLevelWorldView().getPlane(),
+			focalWorldPos);
+
+		if (pohArea.containsPoint(focalWorldPos)) {
+			// use the portal the house is attached to
+			var house = HouseLocation.fromVarbit(client.getVarbitValue(VarbitID.POH_HOUSE_LOCATION));
+			if (house == null)
+				return; // unknown location, so keep the last lat/lon
+			focalWorldPos[0] = house.portalX;
+			focalWorldPos[1] = house.portalY;
+		}
+
+		applyMapShift(focalWorldPos);
+		if (focalWorldPos[1] > MAX_WORLD_Y) return; // fall back to previous coords
+		playerLatLon[1] = (focalWorldPos[0] - OBSERVATORY_X) * DEGREES_PER_TILE;
+		playerLatLon[0] = (focalWorldPos[1] - OBSERVATORY_Y) * DEGREES_PER_TILE;
+	}
+
+	private void refreshAreas() {
+		if (cachedAreasRef == AreaManager.AREAS)
+			return;
+		cachedAreasRef = AreaManager.AREAS;
+		pohArea = areaManager.getArea("PLAYER_OWNED_HOUSE");
+		for (MapShift shift : mapShifts)
+			shift.loadArea(areaManager);
+	}
+
 	private void resolveSkyState(
 		SkyState out,
 		Environment from,
@@ -289,8 +420,7 @@ public class SkyManager {
 			configCycle.fixedSkyPreset != null && PRESETS.containsKey(configCycle.fixedSkyPreset);
 		DaylightCycle cycle = fixedSunAngles ? DaylightCycle.DEFAULT : configCycle;
 		long utcMillis = resolveCurrentUtcMillis(cycle);
-		out.latLon[0] = cycle.useConfigLatLon ? configLatLon[0] : DEFAULT_LATLON[0];
-		out.latLon[1] = cycle.useConfigLatLon ? configLatLon[1] : DEFAULT_LATLON[1];
+		updateLatLon(out, cycle, fixedSunAngles);
 		resolveEndpoint(resolvedTo, to, utcMillis, out.latLon);
 		ResolvedEndpoint toEndpoint = resolvedTo;
 		boolean interrupted = out == state && interruptedFrom != null && t < 1;
