@@ -47,15 +47,15 @@ import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
-import rs117.hd.opengl.uniforms.UBODisplacement;
 import rs117.hd.opengl.shader.TerrainShadowShaderProgram;
+import rs117.hd.opengl.uniforms.UBODisplacement;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
-import rs117.hd.scene.DisplacementManager;
 import rs117.hd.renderer.SkyRenderer;
+import rs117.hd.scene.DisplacementManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
@@ -77,8 +77,6 @@ import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.jobs.JobSystem;
 
-import static java.util.concurrent.TimeUnit.NANOSECONDS;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -99,7 +97,6 @@ import static rs117.hd.utils.MathUtils.*;
 @Singleton
 public class ZoneRenderer implements Renderer {
 	public static final int FRAMES_IN_FLIGHT = 3;
-	private static final long FENCE_SYNC_TIMEOUT_NS = SECONDS.toNanos(1);
 
 	private static int TEXTURE_UNIT_COUNT = HdPlugin.TEXTURE_UNIT_COUNT;
 	public static final int TEXTURE_UNIT_TEXTURED_FACES = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
@@ -220,15 +217,6 @@ public class ZoneRenderer implements Renderer {
 
 	private Scene pendingSceneSwap;
 
-	private final long[] frameFences = new long[FRAMES_IN_FLIGHT];
-	private long
-		lastFenceCreationWarningMs,
-		lastFenceWaitWarningMs,
-		lastFenceTimeoutWarningMs;
-	private int
-		fenceCreationFailureCount,
-		fenceWaitFailureCount,
-		fenceTimeoutCount;
 
 	@Override
 	public boolean supportsGpu(GLCapabilities glCaps) {
@@ -287,68 +275,11 @@ public class ZoneRenderer implements Renderer {
 		uboWorldViews.destroy();
 		uboDisplacement.destroy();
 
-		for (int i = 0; i < frameFences.length; i++) {
-			if (frameFences[i] != 0)
-				glDeleteSync(frameFences[i]);
-			frameFences[i] = 0;
-		}
-
 		if (SceneUploader.POOL != null)
 			SceneUploader.POOL.destroy();
 
 		if (FacePrioritySorter.POOL != null)
 			FacePrioritySorter.POOL.destroy();
-	}
-
-	private void waitForFrameFence() {
-		// Drain existing fences even if synchronization has been disabled
-		final int slot = plugin.frame % FRAMES_IN_FLIGHT;
-		final long fence = frameFences[slot];
-		if (fence == 0)
-			return;
-
-		try (var ignored = frameTimer.begin(Timer.FRAME_FENCE_WAIT)) {
-			final long deadline = System.nanoTime() + FENCE_SYNC_TIMEOUT_NS;
-			int flags = GL_SYNC_FLUSH_COMMANDS_BIT;
-			boolean waitFailed = false;
-			long remaining;
-
-			while ((remaining = deadline - System.nanoTime()) > 0) {
-				final int result = glClientWaitSync(fence, flags, remaining);
-				flags = 0; // only flush commands on the first sync
-
-				if (result == GL_ALREADY_SIGNALED || result == GL_CONDITION_SATISFIED)
-					return;
-
-				if (result == GL_WAIT_FAILED) {
-					waitFailed = true;
-					break;
-				}
-			}
-
-			long now = System.currentTimeMillis();
-			if (waitFailed) {
-				fenceWaitFailureCount++;
-				if (fenceWaitFailureCount == 1 || now - lastFenceWaitWarningMs >= 1000) {
-					log.warn("glClientWaitSync failed, count {}. Falling back to glFinish...", fenceWaitFailureCount);
-					lastFenceWaitWarningMs = now;
-				}
-			} else {
-				fenceTimeoutCount++;
-				if (fenceTimeoutCount == 1 || now - lastFenceTimeoutWarningMs >= 1000) {
-					log.warn(
-						"Timed out waiting {}ms for frame fence, count {}. Falling back to glFinish...",
-						NANOSECONDS.toMillis(FENCE_SYNC_TIMEOUT_NS), fenceTimeoutCount
-					);
-					lastFenceTimeoutWarningMs = now;
-				}
-			}
-
-			glFinish();
-		} finally {
-			glDeleteSync(fence);
-			frameFences[slot] = 0;
-		}
 	}
 
 	@Override
@@ -402,7 +333,7 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		for (int i = 0; i < FRAMES_IN_FLIGHT; i++) {
-			frameContexts[i] = new FrameContext();
+			frameContexts[i] = injector.getInstance(FrameContext.class);
 			frameContexts[i].initBuffers();
 		}
 	}
@@ -556,7 +487,8 @@ public class ZoneRenderer implements Renderer {
 	) {
 		scene.setDrawDistance(plugin.getDrawDistance());
 
-		waitForFrameFence();
+		FrameContext frameContext = frameContext();
+		frameContext.sync();
 
 		plugin.updateSceneFbo();
 
@@ -1471,7 +1403,8 @@ public class ZoneRenderer implements Renderer {
 			}
 
 			// Should only ever wait when not rendering the scene, since this will have been called in preSceneDraw
-			waitForFrameFence();
+			FrameContext frameContext = frameContext();
+			frameContext.sync();
 
 			try {
 				plugin.prepareInterfaceTexture();
@@ -1540,20 +1473,7 @@ public class ZoneRenderer implements Renderer {
 			frameTimer.end(Timer.RENDER_FRAME);
 
 			try {
-				if (plugin.configFrameSynchronization) {
-					final int slot = plugin.frame % FRAMES_IN_FLIGHT;
-					assert frameFences[slot] == 0 : "Frame fence already set, this should never happen";
-					frameFences[slot] = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
-					if (frameFences[slot] == 0) {
-						fenceCreationFailureCount++;
-						long now = System.currentTimeMillis();
-						if (fenceCreationFailureCount == 1 || now - lastFenceCreationWarningMs >= 1000) {
-							log.warn("Unable to create frame fence, count {}. Falling back to glFinish...", fenceCreationFailureCount);
-							lastFenceCreationWarningMs = now;
-						}
-						glFinish();
-					}
-				}
+				frameContext.fence();
 
 				frameTimer.begin(Timer.SWAP_BUFFERS);
 				plugin.awtContext.swapBuffers();
