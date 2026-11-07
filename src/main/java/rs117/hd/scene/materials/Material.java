@@ -55,6 +55,7 @@ public class Material {
 	@JsonAdapter(Reference.Adapter.class)
 	private Material shadowAlphaMap;
 	public boolean hasTransparency;
+	public boolean alphaDiscard;
 	public boolean doubleSidedFaces;
 	private boolean seasonalFoliage;
 	private boolean overrideBaseColor;

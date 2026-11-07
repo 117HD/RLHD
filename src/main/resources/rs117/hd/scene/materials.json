@@ -3337,6 +3337,7 @@
   {
     "name": "HD_IRON_BARS",
     "hasTransparency": true,
+    "alphaDiscard": true,
     "specularStrength": 0.6,
     "specularGloss": 30.0,
     "textureScale": [

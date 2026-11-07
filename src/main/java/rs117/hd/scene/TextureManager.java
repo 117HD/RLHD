@@ -28,13 +28,17 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.IOException;
 import java.nio.IntBuffer;
+import java.util.Arrays;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
+import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
@@ -52,6 +56,8 @@ import static rs117.hd.utils.ResourcePath.path;
 @Singleton
 public class TextureManager {
 	private static final String[] SUPPORTED_IMAGE_EXTENSIONS = { "png", "jpg" };
+	private static final boolean DEBUG_DUMP_TEXTURES = false;
+	private static final ResourcePath DEBUG_TEXTURE_DUMP_PATH = path("textures_dump");
 	private static final ResourcePath TEXTURE_PATH = Props
 		.getFolder("rlhd.texture-path", () -> path(TextureManager.class, "textures"));
 
@@ -73,7 +79,13 @@ public class TextureManager {
 	// Temporary variables for texture loading and generating material uniforms
 	private IntBuffer pixelBuffer;
 	private BufferedImage scaledImage;
+	private BufferedImage nearestNeighborImage;
 	private BufferedImage vanillaImage;
+	private int[] alphaMaskNearestOpaque;
+	private int[] alphaMaskFloodQueue;
+
+	@Getter
+	private boolean currentTextureIsAlphaMask;
 
 	private ScheduledFuture<?> debounce;
 
@@ -105,7 +117,11 @@ public class TextureManager {
 	public void shutDown() {
 		pixelBuffer = null;
 		scaledImage = null;
+		nearestNeighborImage = null;
 		vanillaImage = null;
+		alphaMaskNearestOpaque = null;
+		alphaMaskFloodQueue = null;
+		currentTextureIsAlphaMask = false;
 	}
 
 	public boolean vanillaTexturesAvailable() {
@@ -131,11 +147,16 @@ public class TextureManager {
 	}
 
 	@Nullable
-	public BufferedImage loadTexture(@Nullable String filename, int fallbackVanillaIndex) {
+	public BufferedImage loadTexture(@Nullable String filename, int fallbackVanillaIndex, boolean forcedAlphaDiscard) {
 		if (filename != null) {
 			var image = loadTexture(filename);
-			if (image != null)
+			if (image != null) {
+				if (forcedAlphaDiscard)
+					ensureAlphaMask(image);
+
+				currentTextureIsAlphaMask = forcedAlphaDiscard || isAlphaMaskTexture(image);
 				return image;
+			}
 			if (fallbackVanillaIndex == -1) {
 				log.warn("Missing texture: '{}'", filename);
 				return null;
@@ -164,12 +185,19 @@ public class TextureManager {
 			return null;
 		}
 
+		boolean hasTransparentPixel = false;
+		boolean hasOpaquePixel = false;
 		for (int j = 0; j < pixels.length; j++) {
 			int rgb = pixels[j];
 			// Black is considered transparent in vanilla, with anything else being fully opaque
 			int alpha = rgb == 0 ? 0 : 0xFF;
 			vanillaImage.setRGB(j % 128, j / 128, alpha << 24 | rgb & 0xFFFFFF);
+			hasTransparentPixel |= alpha == 0;
+			hasOpaquePixel |= alpha == 0xFF;
 		}
+
+		currentTextureIsAlphaMask = hasTransparentPixel && hasOpaquePixel;
+		currentTextureIsAlphaMask |= forcedAlphaDiscard;
 
 		return vanillaImage;
 	}
@@ -188,6 +216,16 @@ public class TextureManager {
 		return null;
 	}
 
+	private static void ensureAlphaMask(BufferedImage image) {
+		for (int y = 0; y < image.getHeight(); y++) {
+			for (int x = 0; x < image.getWidth(); x++) {
+				int argb = image.getRGB(x, y);
+				if ((argb & 0x00FFFFFF) == 0 && (argb >>> 24) != 0)
+					image.setRGB(x, y, argb & 0x00FFFFFF);
+			}
+		}
+	}
+
 	public void uploadTexture(int target, int textureLayer, int[] textureSize, BufferedImage image) {
 		assert client.isClientThread() : "Not thread safe";
 
@@ -195,8 +233,11 @@ public class TextureManager {
 		int numPixels = product(textureSize);
 		if (pixelBuffer == null || pixelBuffer.capacity() < numPixels)
 			pixelBuffer = BufferUtils.createIntBuffer(numPixels);
-		if (scaledImage == null || scaledImage.getWidth() != textureSize[0] || scaledImage.getHeight() != textureSize[1])
+
+		if (scaledImage == null || scaledImage.getWidth() != textureSize[0] || scaledImage.getHeight() != textureSize[1]) {
 			scaledImage = new BufferedImage(textureSize[0], textureSize[1], BufferedImage.TYPE_INT_ARGB);
+			nearestNeighborImage = new BufferedImage(textureSize[0], textureSize[1], BufferedImage.TYPE_INT_ARGB);
+		}
 
 		// TODO: scale and transform on the GPU for better performance (would save 400+ ms)
 		AffineTransform t = new AffineTransform();
@@ -209,8 +250,21 @@ public class TextureManager {
 		AffineTransformOp scaleOp = new AffineTransformOp(t, AffineTransformOp.TYPE_BICUBIC);
 		scaleOp.filter(image, scaledImage);
 
-		int[] pixels = ((DataBufferInt) scaledImage.getRaster().getDataBuffer()).getData();
-		pixelBuffer.clear().put(pixels).flip();
+		final int[] scaledPixels = ((DataBufferInt) scaledImage.getRaster().getDataBuffer()).getData();
+		if (currentTextureIsAlphaMask) {
+			AffineTransformOp alphaScaleOp = new AffineTransformOp(t, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+			alphaScaleOp.filter(image, nearestNeighborImage);
+
+			int[] nearestNeighborPixels = ((DataBufferInt) nearestNeighborImage.getRaster().getDataBuffer()).getData();
+			for (int i = 0; i < scaledPixels.length; i++)
+				scaledPixels[i] = (scaledPixels[i] & 0x00FFFFFF) | (nearestNeighborPixels[i] & 0xFF000000);
+
+			bleedAlphaMaskColors(scaledPixels, textureSize[0], textureSize[1]);
+		}
+		if (DEBUG_DUMP_TEXTURES)
+			dumpTexture(textureLayer, scaledImage);
+
+		pixelBuffer.clear().put(scaledPixels).flip();
 
 		// Go from TYPE_4BYTE_ABGR in the BufferedImage to RGBA
 		glTexSubImage3D(
@@ -218,6 +272,94 @@ public class TextureManager {
 			textureLayer, textureSize[0], textureSize[1], 1,
 			GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, pixelBuffer
 		);
+	}
+
+	private void dumpTexture(int textureLayer, BufferedImage image) {
+		try {
+			ResourcePath outputPath = DEBUG_TEXTURE_DUMP_PATH
+				.mkdirs()
+				.resolve(String.format("texture-%04d.png", textureLayer));
+			if (!ImageIO.write(image, "png", outputPath.toFile()))
+				log.warn("No PNG writer available for texture layer {}", textureLayer);
+		} catch (IOException ex) {
+			log.warn("Failed to dump texture layer {}", textureLayer, ex);
+		}
+	}
+
+	/**
+	 * Fill transparent texels with nearby opaque RGB while preserving their alpha. This prevents
+	 * bilinear filtering and generated mipmaps from pulling black RGB into alpha-tested edges.
+	 * The flood wraps at the texture boundaries to match GL_TEXTURE_WRAP_{S,T} = GL_REPEAT.
+	 */
+	private void bleedAlphaMaskColors(int[] pixels, int width, int height) {
+		final int pixelCount = width * height;
+		if (alphaMaskNearestOpaque == null || alphaMaskNearestOpaque.length < pixelCount)
+			alphaMaskNearestOpaque = new int[pixelCount];
+		if (alphaMaskFloodQueue == null || alphaMaskFloodQueue.length < pixelCount)
+			alphaMaskFloodQueue = new int[pixelCount];
+
+		Arrays.fill(alphaMaskNearestOpaque, 0, pixelCount, -1);
+		int queueHead = 0;
+		int queueTail = 0;
+		for (int i = 0; i < pixelCount; i++) {
+			if ((pixels[i] >>> 24) != 0) {
+				alphaMaskNearestOpaque[i] = i;
+				alphaMaskFloodQueue[queueTail++] = i;
+			}
+		}
+
+		// A completely transparent image has no color to bleed from.
+		if (queueTail == 0)
+			return;
+
+		while (queueHead < queueTail) {
+			final int index = alphaMaskFloodQueue[queueHead++];
+			final int x = index % width;
+			final int y = index / width;
+			final int source = alphaMaskNearestOpaque[index];
+
+			for (int dy = -1; dy <= 1; dy++) {
+				final int neighborY = (y + dy + height) % height;
+				for (int dx = -1; dx <= 1; dx++) {
+					if (dx == 0 && dy == 0)
+						continue;
+					if (dx != 0 && dy != 0) // Propagate only across edge-adjacent texels.
+						continue;
+
+					final int neighborX = (x + dx + width) % width;
+					final int neighbor = neighborY * width + neighborX;
+					if (alphaMaskNearestOpaque[neighbor] != -1)
+						continue;
+
+					alphaMaskNearestOpaque[neighbor] = source;
+					alphaMaskFloodQueue[queueTail++] = neighbor;
+				}
+			}
+		}
+
+		for (int i = 0; i < pixelCount; i++) {
+			if ((pixels[i] >>> 24) == 0)
+				pixels[i] = (pixels[i] & 0xFF000000) | (pixels[alphaMaskNearestOpaque[i]] & 0x00FFFFFF);
+		}
+	}
+
+	private static boolean isAlphaMaskTexture(BufferedImage image) {
+		boolean hasTransparentPixel = false;
+		boolean hasOpaquePixel = false;
+
+		for (int y = 0; y < image.getHeight(); y++) {
+			for (int x = 0; x < image.getWidth(); x++) {
+				int alpha = image.getRGB(x, y) >>> 24;
+				if (alpha == 0)
+					hasTransparentPixel = true;
+				else if (alpha == 0xFF)
+					hasOpaquePixel = true;
+				else
+					return false;
+			}
+		}
+
+		return hasTransparentPixel && hasOpaquePixel;
 	}
 
 	public void setAnisotropicFilteringLevel() {

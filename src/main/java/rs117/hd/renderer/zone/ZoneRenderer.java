@@ -84,12 +84,18 @@ import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
-import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.opengl.Utils.checkGLErrors;
+import static rs117.hd.renderer.zone.WorldViewContext.VAO_ALPHA;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PRESCENE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
+import static rs117.hd.renderer.zone.Zone.ALPHA_DRAW_ALL_LEVELS;
+import static rs117.hd.renderer.zone.Zone.ALPHA_DRAW_BLEND_ONLY;
+import static rs117.hd.renderer.zone.Zone.ALPHA_DRAW_DISCARD_ONLY;
+import static rs117.hd.renderer.zone.Zone.ALPHA_DRAW_ROOF;
+import static rs117.hd.renderer.zone.Zone.ALPHA_DRAW_VISIBLE_LEVELS_ONLY;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -147,7 +153,13 @@ public class ZoneRenderer implements Renderer {
 	private SceneShaderProgram sceneProgram;
 
 	@Inject
+	private SceneShaderProgram.Depth sceneDepthProgram;
+
+	@Inject
 	private SceneShaderProgram.Water waterProgram;
+
+	@Inject
+	private SceneShaderProgram.Opaque sceneOpaqueProgram;
 
 	@Inject
 	private ShadowShaderProgram.Fast fastShadowProgram;
@@ -157,6 +169,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private TerrainShadowShaderProgram terrainShadowProgram;
+
+	@Inject
+	private OitRenderer oitRenderer;
 
 	@Inject
 	private JobSystem jobSystem;
@@ -171,11 +186,13 @@ public class ZoneRenderer implements Renderer {
 
 	public final RenderState renderState = new RenderState();
 	public final CommandBuffer sceneCmd = new CommandBuffer("Scene");
+	public final CommandBuffer sceneDepthCmd = new CommandBuffer("SceneDepth");
 	public final CommandBuffer gapFillerCmd = new CommandBuffer("GapFiller");
-	public final CommandBuffer directionalCmd = new CommandBuffer("Directional");
+	public final CommandBuffer fastDirectionalCmd = new CommandBuffer("FastDirectional");
+	public final CommandBuffer detailedDirectionalCmd = new CommandBuffer("DetailedDirectional");
 	public final CommandBuffer terrainShadowCmd = new CommandBuffer("TerrainShadow");
 
-	private GLBuffer indirectDrawCmds;
+	public GLBuffer indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
 
 	public static GLBuffer.EBO eboAlpha;
@@ -224,7 +241,8 @@ public class ZoneRenderer implements Renderer {
 
 		sceneCmd.setFrameTimer(frameTimer);
 		gapFillerCmd.setFrameTimer(frameTimer);
-		directionalCmd.setFrameTimer(frameTimer);
+		fastDirectionalCmd.setFrameTimer(frameTimer);
+		detailedDirectionalCmd.setFrameTimer(frameTimer);
 		terrainShadowCmd.setFrameTimer(frameTimer);
 
 		jobSystem.startUp(config.cpuUsageLimit());
@@ -233,6 +251,7 @@ public class ZoneRenderer implements Renderer {
 		modelStreamingManager.initialize();
 
 		skyRenderer.initialize();
+		oitRenderer.initialize();
 
 		// Force updates that only run when the cameras change
 		sceneCamera.setDirty();
@@ -326,6 +345,7 @@ public class ZoneRenderer implements Renderer {
 	public void addShaderIncludes(ShaderIncludes includes) {
 		includes
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS)
+			.define("OIT_BIN_COUNT", OitRenderer.BIN_COUNT)
 			.addInclude(
 				"WORLD_VIEW_GETTER",
 				() -> plugin.generateGetter("WorldView", "uboWorldViews.Array", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS)
@@ -336,20 +356,26 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
 		sceneProgram.compile(includes);
+		sceneDepthProgram.compile(includes);
 		waterProgram.compile(includes);
+		sceneOpaqueProgram.compile(includes);
 		fastShadowProgram.compile(includes);
 		detailedShadowProgram.compile(includes);
 		terrainShadowProgram.compile(includes);
+		oitRenderer.initializeShaders(includes);
 		skyRenderer.initializeShaders(includes);
 	}
 
 	@Override
 	public void destroyShaders() {
 		sceneProgram.destroy();
+		sceneDepthProgram.destroy();
 		waterProgram.destroy();
+		sceneOpaqueProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
 		terrainShadowProgram.destroy();
+		oitRenderer.destroyShaders();
 		skyRenderer.destroyShaders();
 	}
 
@@ -380,6 +406,8 @@ public class ZoneRenderer implements Renderer {
 		if (indirectDrawCmdsStaging != null)
 			indirectDrawCmdsStaging.destroy();
 		indirectDrawCmdsStaging = null;
+
+		oitRenderer.destroyFBO();
 	}
 
 	@Override
@@ -437,6 +465,7 @@ public class ZoneRenderer implements Renderer {
 			ctx.maxLevel = maxLevel;
 			ctx.hideRoofIds = hideRoofIds;
 			ctx.vaoSceneCmd.reset();
+			ctx.vaoDepthCmd.reset();
 			ctx.vaoDirectionalCmd.reset();
 
 			if (isTopLevel) {
@@ -447,12 +476,16 @@ public class ZoneRenderer implements Renderer {
 
 			ctx.completeInvalidation();
 
-			int offset = ctx.sceneContext.sceneOffset >> 3;
-			for (int zx = 0; zx < ctx.sizeX; ++zx)
-				for (int zz = 0; zz < ctx.sizeZ; ++zz)
-					ctx.zones[zx][zz].multizoneLocs(ctx.sceneContext, zx - offset, zz - offset, sceneCamera, ctx.zones);
+			if(!plugin.configUseOIT) {
+				int offset = ctx.sceneContext.sceneOffset >> 3;
+				for (int zx = 0; zx < ctx.sizeX; ++zx)
+					for (int zz = 0; zz < ctx.sizeZ; ++zz)
+						ctx.zones[zx][zz].multizoneLocs(ctx.sceneContext, zx - offset, zz - offset, sceneCamera, ctx.zones);
 
-			ctx.sortStaticAlphaModels(sceneCamera);
+				ctx.sortStaticAlphaModels(sceneCamera);
+			} else {
+				oitRenderer.preSceneDraw(ctx, isTopLevel);
+			}
 
 			ctx.map();
 
@@ -482,8 +515,8 @@ public class ZoneRenderer implements Renderer {
 				sceneCmd.DepthMask(false);
 				ctx.drawAll(VAO_PRESCENE, sceneCmd);
 				sceneCmd.DepthMask(true);
-				sceneCmd.Disable(GL_BLEND);
 			}
+			sceneCmd.Disable(GL_BLEND);
 
 			frameTimer.end(Timer.DRAW_PRESCENE);
 		} catch (Throwable ex) {
@@ -504,7 +537,8 @@ public class ZoneRenderer implements Renderer {
 
 		waitForFrameFence();
 
-		plugin.updateSceneFbo();
+		boolean sceneResized = plugin.updateSceneFbo();
+		oitRenderer.updateFBO(sceneResized);
 
 		if (!sceneManager.isTopLevelValid() || plugin.sceneViewport == null)
 			return;
@@ -749,13 +783,18 @@ public class ZoneRenderer implements Renderer {
 		if (SUPPORTS_INDIRECT_DRAW)
 			indirectDrawCmdsStaging.clear();
 		sceneCmd.reset();
-		directionalCmd.reset();
+		sceneDepthCmd.reset();
+		fastDirectionalCmd.reset();
+		detailedDirectionalCmd.reset();
 		terrainShadowCmd.reset();
 		gapFillerCmd.reset();
 		renderState.reset();
 
-		eboAlpha.orphan();
-		eboAlphaWriter.map(true);
+		if(!plugin.configUseOIT) {
+			// OIT Doesn't use Elements Drawing since it doesn't need to sort the face indicies
+			eboAlpha.orphan();
+			eboAlphaWriter.map(true);
+		}
 
 		checkGLErrors();
 	}
@@ -878,10 +917,21 @@ public class ZoneRenderer implements Renderer {
 		renderState.viewport.set(0, 0, plugin.tiledLightingResolution[0], plugin.tiledLightingResolution[1]);
 		renderState.vao.setVao(plugin.vaoTri);
 
+		if (plugin.configUseOIT && plugin.configSceneDepth) {
+			glActiveTexture(HdPlugin.TEXTURE_UNIT_SCENE_DEPTH);
+			glBindTexture(
+				plugin.msaaSamples > 1 ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D,
+				plugin.getTexSceneDepth()
+			);
+			glActiveTexture(OitRenderer.TEXTURE_UNIT_FIRST_LAYER);
+			glBindTexture(GL_TEXTURE_2D, oitRenderer.getFirstLayerDepthTexture());
+		}
+
 		if (plugin.tiledLightingImageStoreProgram.isValid()) {
 			renderState.program.set(plugin.tiledLightingImageStoreProgram);
 			renderState.drawBuffer.set(GL_NONE);
 			renderState.apply();
+			plugin.tiledLightingImageStoreProgram.setHasAlphaDepth(oitRenderer.hasDepthLayers());
 			glDrawArrays(GL_TRIANGLES, 0, 3);
 		} else {
 			renderState.drawBuffer.set(GL_COLOR_ATTACHMENT0);
@@ -890,6 +940,7 @@ public class ZoneRenderer implements Renderer {
 				renderState.program.set(plugin.tiledLightingShaderPrograms.get(layer));
 				renderState.framebufferTextureLayer.set(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, plugin.texTiledLighting, 0, layer);
 				renderState.apply();
+				plugin.tiledLightingShaderPrograms.get(layer).setHasAlphaDepth(oitRenderer.hasDepthLayers());
 				glDrawArrays(GL_TRIANGLES, 0, 3);
 			}
 		}
@@ -937,7 +988,13 @@ public class ZoneRenderer implements Renderer {
 		if (SUPPORTS_INDIRECT_DRAW)
 			renderState.ido.set(indirectDrawCmds.id);
 
-		directionalCmd.execute(renderState);
+		fastShadowProgram.use();
+		fastDirectionalCmd.execute(renderState);
+
+		if(!detailedDirectionalCmd.isEmpty()) {
+			detailedShadowProgram.use();
+			detailedDirectionalCmd.execute(renderState);
+		}
 
 		frameTimer.end(Timer.RENDER_SHADOWS);
 
@@ -970,25 +1027,22 @@ public class ZoneRenderer implements Renderer {
 
 	private void scenePass() {
 		frameTimer.begin(Timer.DRAW_SCENE);
+		renderState.disable.set(GL_STENCIL_TEST);
 		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
-		if (plugin.msaaSamples > 1) {
-			renderState.enable.set(GL_MULTISAMPLE);
-		} else {
-			renderState.disable.set(GL_MULTISAMPLE);
-		}
+		renderState.toggle(GL_MULTISAMPLE, plugin.msaaSamples > 1);
 		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
 		if (SUPPORTS_INDIRECT_DRAW)
 			renderState.ido.set(indirectDrawCmds.id);
 		renderState.apply();
-
-		skyRenderer.clear(shouldRenderVanillaSkybox);
 
 		frameTimer.begin(Timer.RENDER_SCENE_AND_SKY);
 
 		renderState.enable.set(GL_CULL_FACE);
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.depthFunc.set(GL_GEQUAL);
+		renderState.depthMask.set(!plugin.configSceneDepth);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+		renderState.toggle(GL_BLEND, !plugin.configUseOIT);
 
 		sceneProgram.use();
 
@@ -998,6 +1052,9 @@ public class ZoneRenderer implements Renderer {
 			gapFillerCmd.execute(renderState);
 			glDepthRange(0, 1);
 		}
+
+		if (plugin.configUseOIT)
+			sceneOpaqueProgram.use();
 
 		sceneCmd.execute(renderState);
 
@@ -1012,6 +1069,49 @@ public class ZoneRenderer implements Renderer {
 		renderState.apply();
 
 		frameTimer.end(Timer.DRAW_SCENE);
+	}
+
+	private void depthPass() {
+		renderState.disable.set(GL_STENCIL_TEST);
+		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
+		renderState.toggle(GL_MULTISAMPLE, plugin.msaaSamples > 1);
+		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
+		renderState.depthMask.set(true);
+		renderState.colorMask.set(true, true, true, true);
+
+		if (SUPPORTS_INDIRECT_DRAW)
+			renderState.ido.set(indirectDrawCmds.id);
+		renderState.apply();
+
+		skyRenderer.clear(shouldRenderVanillaSkybox);
+
+		if (plugin.configSceneDepth) {
+			frameTimer.begin(Timer.DRAW_DEPTH);
+			frameTimer.begin(Timer.RENDER_SCENE_DEPTH);
+
+			renderState.enable.set(GL_CULL_FACE);
+			renderState.enable.set(GL_DEPTH_TEST);
+			renderState.disable.set(GL_BLEND);
+			renderState.depthFunc.set(GL_GEQUAL);
+			renderState.depthMask.set(true);
+			renderState.colorMask.set(false, false, false, false);
+			renderState.apply();
+
+			sceneDepthProgram.use();
+			sceneDepthCmd.execute(renderState);
+
+			renderState.colorMask.set(true, true, true, true);
+			renderState.disable.set(GL_CULL_FACE);
+			renderState.disable.set(GL_DEPTH_TEST);
+			renderState.depthMask.set(true);
+			renderState.apply();
+
+			frameTimer.end(Timer.RENDER_SCENE_DEPTH);
+			frameTimer.end(Timer.DRAW_DEPTH);
+		}
+
+		if (plugin.configUseOIT)
+			oitRenderer.depthPass(renderState);
 	}
 
 	@Override
@@ -1068,6 +1168,12 @@ public class ZoneRenderer implements Renderer {
 				return zone.inShadowFrustum = true;
 			}
 
+			if (plugin.configUseOIT) {
+				// when using OIT we don't need to multi loc unless the zone isn't visible
+				int offset = ctx.sceneContext.sceneOffset >> 3;
+				zone.multizoneLocs(ctx.sceneContext, zx - offset, zz - offset, sceneCamera, ctx.zones);
+			}
+
 			zone.inShadowFrustum =
 				plugin.configShadowsEnabled &&
 				directionalCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ) &&
@@ -1098,31 +1204,84 @@ public class ZoneRenderer implements Renderer {
 				return;
 
 			Zone z = ctx.zones[zx][zz];
-			if (!z.initialized || z.sizeO == 0)
+			if (!z.initialized)
 				return;
 
-			frameTimer.begin(Timer.DRAW_ZONE_OPAQUE);
-			boolean renderGroundLevel = ctx.minLevel == 0;
-			if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
-				sceneCmd.Disable(GL_BLEND);
-				if (renderGroundLevel)
-					z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_TERRAIN);
-				z.renderOpaque(sceneCmd, ctx, false);
+			if(z.sizeO != 0){
+				frameTimer.begin(Timer.DRAW_ZONE_OPAQUE);
+				boolean renderGroundLevel = ctx.minLevel == 0;
+				if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
+					if (renderGroundLevel)
+						z.appendOpaqueLevel(Zone.LEVEL_TERRAIN);
+					z.renderOpaque(null, ctx, false);
+					z.flush(sceneCmd);
 
-				if (renderGroundLevel && z.hasGapFiller)
-					z.renderOpaqueLevel(gapFillerCmd, Zone.LEVEL_GAP_FILLER);
-			}
+					z.renderOpaque(sceneDepthCmd, ctx, false);
+					if (renderGroundLevel)
+						z.renderOpaqueLevel(sceneDepthCmd, Zone.LEVEL_TERRAIN);
 
-			if (skyRenderer.castsShadows && !ctx.isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
-				if (!z.onlyWater || z.modelCount > 0) {
-					directionalCmd.SetShader(fastShadowProgram);
-					z.renderOpaque(directionalCmd, ctx, shouldDrawRoofShadows);
+					if (renderGroundLevel && z.hasGapFiller)
+						z.renderOpaqueLevel(gapFillerCmd, Zone.LEVEL_GAP_FILLER);
 				}
 
-				if (renderGroundLevel && plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0)
-					z.renderOpaqueLevel(terrainShadowCmd, Zone.LEVEL_TERRAIN);
+				if (skyRenderer.castsShadows && !ctx.isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
+					if (!z.onlyWater || z.modelCount > 0)
+						z.renderOpaque(fastDirectionalCmd, ctx, shouldDrawRoofShadows);
+
+					if (renderGroundLevel && plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0)
+						z.renderOpaqueLevel(terrainShadowCmd, Zone.LEVEL_TERRAIN);
+				}
+				frameTimer.end(Timer.DRAW_ZONE_OPAQUE);
 			}
-			frameTimer.end(Timer.DRAW_ZONE_OPAQUE);
+
+			if(plugin.configUseOIT && (z.sizeA != 0 || z.hasWater)) {
+				frameTimer.begin(Timer.DRAW_ZONE_ALPHA);
+				final int offset = ctx.sceneContext.sceneOffset >> 3;
+				final int zoneX = zx - offset;
+				final int zoneZ = zz - offset;
+
+				z.alphaSort(zoneX, zoneZ, sceneCamera, true);
+
+				if (skyRenderer.castsShadows && !ctx.isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
+					z.renderAlphaModels(
+						plugin.configShadowMode == ShadowMode.DETAILED ? detailedDirectionalCmd : fastDirectionalCmd,
+						zoneX,
+						zoneZ,
+						0,
+						ctx,
+						ALPHA_DRAW_ALL_LEVELS | (shouldDrawRoofShadows ? ALPHA_DRAW_ROOF : 0)
+					);
+				}
+
+				if((!sceneManager.isRoot(ctx) || z.inSceneFrustum)) {
+					final boolean renderWater = z.inSceneFrustum && ctx.minLevel == 0 && z.hasWater;
+					if (renderWater)
+						z.renderOpaqueLevel(oitRenderer.waterCmd, Zone.LEVEL_WATER_SURFACE);
+
+					if (!z.alphaModels.isEmpty()) {
+						// OIT is a Composite pass, so we don't need to sort alpha models or even write depth
+						// However Alpha Discard needs to be drawn as part of the Scene Pass since Opaque faces break OIT
+						z.renderAlphaModels(
+							oitRenderer.transparentCmd,
+							zoneX,
+							zoneZ,
+							0,
+							ctx,
+							ALPHA_DRAW_BLEND_ONLY | ALPHA_DRAW_ALL_LEVELS | ALPHA_DRAW_VISIBLE_LEVELS_ONLY
+						);
+						z.renderAlphaModels(
+							oitRenderer.alphaDiscardCmd,
+							zoneX,
+							zoneZ,
+							0,
+							ctx,
+							ALPHA_DRAW_DISCARD_ONLY | ALPHA_DRAW_ALL_LEVELS | ALPHA_DRAW_VISIBLE_LEVELS_ONLY
+						);
+					}
+				}
+
+				frameTimer.end(Timer.DRAW_ZONE_ALPHA);
+			}
 
 			checkGLErrors();
 		} catch (Throwable ex) {
@@ -1138,7 +1297,7 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void drawZoneAlpha(Projection entityProjection, Scene scene, int level, int zx, int zz) {
-		if (plugin.enableFreezeFrame || plugin.isPluginStopPending())
+		if (plugin.enableFreezeFrame || plugin.isPluginStopPending() || plugin.configUseOIT)
 			return;
 
 		try {
@@ -1151,7 +1310,6 @@ public class ZoneRenderer implements Renderer {
 				return;
 
 			frameTimer.begin(Timer.DRAW_ZONE_ALPHA);
-			sceneCmd.Enable(GL_BLEND);
 
 			final boolean renderWater = z.inSceneFrustum && ctx.minLevel == 0 && level == 0 && z.hasWater;
 			if (renderWater) {
@@ -1165,22 +1323,31 @@ public class ZoneRenderer implements Renderer {
 			final boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
 			if (hasAlpha) {
 				final int offset = ctx.sceneContext.sceneOffset >> 3;
+				final int zoneX = zx - offset;
+				final int zoneZ = zz - offset;
 				// Only sort if the alpha will be directly visible, since shadows don't require sorting
-				if (level == 0 && (!sceneManager.isRoot(ctx) || z.inSceneFrustum))
-					z.alphaSort(zx - offset, zz - offset, sceneCamera);
+				if(level == 0 && (!sceneManager.isRoot(ctx) || z.inSceneFrustum))
+					z.alphaSort(zoneX, zoneZ, sceneCamera, false);
 
 				if (skyRenderer.castsShadows && !ctx.isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
-					directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
-					z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, shouldDrawRoofShadows);
+					z.renderSortedAlpha(
+						plugin.configShadowMode == ShadowMode.DETAILED ? detailedDirectionalCmd : fastDirectionalCmd,
+						zoneX,
+						zoneZ,
+						level,
+						ctx,
+						true,
+						shouldDrawRoofShadows
+					);
 				}
 
-				if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
+				if((!sceneManager.isRoot(ctx) || z.inSceneFrustum)) {
 					if (!sceneManager.isRoot(ctx) || renderWater) {
 						// Alpha is currently drawn with depth writes & depth testing enabled, and as such, alpha models and the water plane
 						// can Z-fight depending on draw order. To avoid alpha models above water causing the water surface to fail its
 						// depth test, we disable depth writes for alpha models and rely on correct back to front ordering of the zones
 						sceneCmd.DepthMask(false);
-						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
+						z.renderSortedAlpha(sceneCmd, zoneX, zoneZ, level, ctx, false, false);
 						sceneCmd.DepthMask(true);
 					} else {
 						// Draw alpha models in two passes, first blending colors correctly, then writing depth for subsequent opaque models
@@ -1189,12 +1356,12 @@ public class ZoneRenderer implements Renderer {
 						// Write color without depth writes
 						sceneCmd.DepthMask(false);
 						sceneCmd.ColorMask(true, true, true, true);
-						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
+						z.renderSortedAlpha(sceneCmd, zoneX, zoneZ, level, ctx, false, false);
 
 						// Write depth without color
 						sceneCmd.DepthMask(true);
 						sceneCmd.ColorMask(false, false, false, false);
-						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, true, false);
+						z.renderSortedAlpha(sceneCmd, zoneX, zoneZ, level, ctx, true, false);
 
 						// Restore color writes
 						sceneCmd.ColorMask(true, true, true, true);
@@ -1229,16 +1396,20 @@ public class ZoneRenderer implements Renderer {
 
 			switch (pass) {
 				case DrawCallbacks.PASS_OPAQUE:
-					directionalCmd.SetShader(fastShadowProgram);
-					directionalCmd.ExecuteSubCommandBuffer(ctx.vaoDirectionalCmd);
+					fastDirectionalCmd.ExecuteSubCommandBuffer(ctx.vaoDirectionalCmd);
 
 					sceneCmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
+					sceneDepthCmd.ExecuteSubCommandBuffer(ctx.vaoDepthCmd);
 
 					if (skyRenderer.shouldRender(shouldRenderVanillaSkybox) && sceneManager.isRoot(ctx)) {
 						// Draw the sky after drawing top-level scene opaque
 						skyRenderer.appendTo(sceneCmd);
 						sceneCmd.SetShader(sceneProgram);
 					}
+					break;
+				case DrawCallbacks.PRE_PASS_ALPHA:
+					if(!plugin.configUseOIT)
+						sceneCmd.Enable(GL_BLEND);
 					break;
 				case DrawCallbacks.PASS_ALPHA:
 					modelStreamingManager.ensureAsyncUploadsComplete(null);
@@ -1253,6 +1424,7 @@ public class ZoneRenderer implements Renderer {
 
 					// Draw opaque
 					ctx.drawAll(VAO_OPAQUE, ctx.vaoSceneCmd);
+					ctx.drawAll(VAO_OPAQUE, ctx.vaoDepthCmd);
 
 					// Draw to shadow map
 					if (skyRenderer.castsShadows && !ctx.isSquashed) {
@@ -1261,6 +1433,11 @@ public class ZoneRenderer implements Renderer {
 
 						// Draw shadow-only models
 						ctx.drawAll(VAO_SHADOW, ctx.vaoDirectionalCmd);
+					}
+
+					if(plugin.configUseOIT) { // Draw all alpha-models regardless of order when using OIT
+						ctx.drawAll(VAO_ALPHA, oitRenderer.transparentCmd);
+						ctx.drawAll(VAO_ALPHA, plugin.configShadowMode == ShadowMode.DETAILED ? detailedDirectionalCmd : fastDirectionalCmd);
 					}
 
 					// Draw players with sorted alpha, without writing depth
@@ -1275,7 +1452,7 @@ public class ZoneRenderer implements Renderer {
 
 					for (int zx = 0; zx < ctx.sizeX; ++zx)
 						for (int zz = 0; zz < ctx.sizeZ; ++zz)
-							ctx.zones[zx][zz].postAlphaPass();
+							ctx.zones[zx][zz].postAlphaPass(plugin.configUseOIT);
 					break;
 			}
 
@@ -1360,9 +1537,12 @@ public class ZoneRenderer implements Renderer {
 
 			frameTimer.begin(Timer.DRAW_SUBMIT);
 			if (shouldRenderScene) {
-				tiledLightingPass();
 				directionalShadowPass();
+				depthPass();
+				tiledLightingPass();
 				scenePass();
+				if(plugin.configUseOIT)
+					oitRenderer.render(renderState);
 				sceneFboValid = true;
 			}
 

@@ -42,8 +42,9 @@ layout (location = 0) in vec3 vPosition;
 
 #if !TERRAIN_ONLY_PASS
     uniform isamplerBuffer textureFaces;
+    #include <scene_common.glsl>
 
-    #if SHADOW_MODE == SHADOW_MODE_DETAILED
+#if SHADOW_MODE == SHADOW_MODE_DETAILED
         out vec4 fUvw;
         flat out int fMaterialData;
     #endif
@@ -54,18 +55,18 @@ layout (location = 0) in vec3 vPosition;
 #endif
 
     void main() {
-        int faceIdx = vTextureFaceIdx & 0x7FFFFFFF;
+        #if TERRAIN_ONLY_PASS
         bool windingReversed = vTextureFaceIdx < 0;
+        #endif
 
         #if TERRAIN_ONLY_PASS
             bool isShadowDisabled = false;
         #else
-            int vertex = gl_VertexID % 3;
-            if (windingReversed)
-                vertex = 2 - vertex;
+            SceneVertex sv = resolveSceneVertex(vPosition, vTextureFaceIdx, vSceneBase, vWorldViewId, false);
+            int vertex = sv.vertex;
 
-            int alphaBiasHsl = texelFetch(textureFaces, faceIdx)[vertex];
-            int materialData = texelFetch(textureFaces, faceIdx + 1)[vertex];
+            int alphaBiasHsl = sv.faceAlphaBiasHsl[vertex];
+            int materialData = sv.faceMaterialData[vertex];
 
             float opacity = 1 - (alphaBiasHsl >> 24 & 0xFF) / float(0xFF);
 
@@ -102,12 +103,16 @@ layout (location = 0) in vec3 vPosition;
 
         int shouldCastShadow = isShadowDisabled ? 0 : 1;
 
+        #if TERRAIN_ONLY_PASS
         vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
         vec3 worldPosition = sceneOffset + vPosition;
         if (vWorldViewId != -1 && !isShadowDisabled) {
             mat4x3 worldViewProjection = mat4x3(getWorldViewProjection(vWorldViewId));
-            worldPosition = worldViewProjection * vec4(worldPosition, 1.0);;
+            worldPosition = worldViewProjection * vec4(worldPosition, 1.0);
         }
+        #else
+        vec3 worldPosition = isShadowDisabled ? sv.sceneOffset + vPosition : sv.worldPosition;
+        #endif
 
         #if TERRAIN_ONLY_PASS
             if (!isShadowDisabled)

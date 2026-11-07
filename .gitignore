@@ -16,3 +16,5 @@ hs_err_pid*
 shader-dumps/
 **/*.log
 bin/
+
+textures_dump/

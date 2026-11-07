@@ -255,3 +255,18 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
         return mat3(T * invmax, B * invmax, N);
     }
 #endif
+
+vec4 heatmap(float value, float maxValue) {
+    if (value > maxValue)
+       return vec4(1.0, 0.0, 1.0, 0.6);
+    float level = clamp(value / maxValue, 0.0, 1.0) * HALF_PI;
+    return vec4(sin(level), sin(level * 2.0), cos(level), 0.6);
+}
+
+float opaqueViewZ(float rawDepth) {
+	if (rawDepth <= 0.0)
+		return uboGlobal.drawDistance * 128.0;
+	vec4 worldPos = uboGlobal.invProjectionMatrix * vec4(0.0, 0.0, rawDepth * 2.0 - 1.0, 1.0);
+	worldPos /= worldPos.w;
+	return abs((uboGlobal.viewMatrix * worldPos).z);
+}

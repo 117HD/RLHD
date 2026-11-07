@@ -1390,6 +1390,38 @@ public interface HdPluginConfig extends Config
 	)
 	String experimentalSettings = "experimentalSettings";
 
+	String KEY_OIT = "experimentalOIT";
+	@ConfigItem(
+		keyName = KEY_OIT,
+		name = "Use Order Independent Transparency",
+		description = "Uses a layered weighted OIT algorithm to render transparent surfaces without sorting.",
+		section = experimentalSettings
+	)
+	default boolean useOIT() {
+		return true;
+	}
+
+	String KEY_SCENE_DEPTH = "experimentalSceneDepth";
+	@ConfigItem(
+		keyName = KEY_SCENE_DEPTH,
+		name = "Use scene depth pass",
+		description = "Renders opaque scene depth before scene color.",
+		section = experimentalSettings
+	)
+	default boolean useSceneDepth() {
+		return true;
+	}
+
+	String KEY_FASTER_MODEL_HASHING = "experimentalFasterModelHashing";
+	@ConfigItem(
+		keyName = KEY_FASTER_MODEL_HASHING,
+		name = "Use faster model hashing",
+		description = "Should increase performance at the expense of potential graphical issues.",
+		section = experimentalSettings
+	)
+	default boolean fasterModelHashing() {
+		return true;
+	}
 
 	String KEY_PRESERVE_VANILLA_NORMALS = "experimentalPreserveVanillaNormals";
 	@ConfigItem(
