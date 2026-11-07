@@ -168,7 +168,7 @@ public final class VertexWriteCache {
 		final int textureFaceIdx = outputOffset + outputBuffer.position() + stagingPosition;
 
 		final int[] stagingBuffer = this.stagingBuffer;
-		final int stagingPosition = this.stagingPosition;
+		final int p = stagingPosition;
 
 		stagingBuffer[stagingPosition] =
 			(hslA & 0xFFFF) |

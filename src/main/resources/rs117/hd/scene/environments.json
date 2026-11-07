@@ -3100,6 +3100,81 @@
     }
   },
   {
+    "description": "Environment for the final battle during The Blood Moon Rises",
+    "area": "VAMPYRIUM_CASTLE_DRAKAN_ROOF",
+    "nightExposure": 2,
+    "hideVanillaSkyboxes": true,
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
+    "fogDepth": 10,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 50,
+    "fogColor": "#330D0D",
+    "sky": {
+      "parent": "BLOOD_MOON",
+      "moonAngles": [
+        14.05,
+        89.85
+      ],
+      "moonSizeMult": 2.8,
+      "skyVisibility": 0.96,
+      "skyFogDensity": 0,
+      "nightHorizonColor": "#FF0000",
+      "nightHorizonStrength": 0.1,
+      "starVisibility": 0.642
+    }
+  },
+  {
+    "area": "VAMPYRIUM",
+    "description": "Environment for Vampyrium during the quest, set to fixed twilight to simulate being on the cusp of the blood moon rising",
+    "varbitCondition": "MYQ6 >= 80 && MYQ6 != 178",
+    "nightExposure": 2.6,
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
+    "sky": {
+      "parent": "DUSK",
+      "skyVisibility": 1,
+      "auroraVisibility": 0,
+      "sunriseSunsetStrength": 0.2,
+      "skyFogDensity": 2.69,
+      "moonVisibility": 0,
+      "nightHorizonColor": "#0F070E",
+      "nightHorizonStrength": 1,
+      "starVisibility": 0.604,
+      "skyFogHorizonAltitude": 90,
+      "skyFogColor": "#330e0e"
+    },
+    "fogDepth": 17.5,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 50,
+    "fogColor": "#330D0D"
+  },
+  {
+    "description": "Environment for Vampyrium post quest, normal cycle since the events of the quest are now past",
+    "area": "VAMPYRIUM",
+    "nightExposure": 2.6,
+    "directionalColor": "#ffa8a8",
+    "ambientColor": "#FFFFFF",
+    "ambientStrength": 1,
+    "fogDepth": 17.5,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 50,
+    "fogColor": "#330D0D",
+    "sky": {
+      "skyVisibility": 0.85,
+      "auroraVisibility": 0,
+      "skyFogDensity": 5.6,
+      "skyFogColor": "#2D0400",
+      "nightHorizonColor": "#FF0000",
+      "nightHorizonStrength": 0.01,
+      "skyFogHorizonAltitude": 90,
+      "starVisibility": 0.755
+    }
+  },
+  {
     "area": "PLAYER_OWNED_HOUSE_WILDY",
     "isPohTheme": true,
     "ambientColor": "#d7d2d2",

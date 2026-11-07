@@ -137,7 +137,7 @@ public class SceneUploader implements AutoCloseable {
 	private final int[] modelNormals = new int[9];
 	private final short[][] tileNormals = new short[4][3];
 
-	private int[] intModelVertices;
+	private int[] modelVertices;
 	private float[] floatModelVertices;
 	private float[] modelProjected;
 	public int tempModelAlphaFaces = 0;
@@ -176,11 +176,11 @@ public class SceneUploader implements AutoCloseable {
 		currentScene = null;
 		onBeforeProcessTile = null;
 
-		PooledArrayType.INT.release(intModelVertices);
+		PooledArrayType.INT.release(modelVertices);
 		PooledArrayType.FLOAT.release(floatModelVertices);
 		PooledArrayType.FLOAT.release(modelProjected);
 
-		intModelVertices = null;
+		modelVertices = null;
 		floatModelVertices = null;
 		modelProjected = null;
 
@@ -191,7 +191,7 @@ public class SceneUploader implements AutoCloseable {
 
 	private void ensureVerticesAllocated(boolean allocateInts, boolean allocateFloats, int vertexCount) {
 		if (allocateInts)
-			intModelVertices = PooledArrayType.INT.ensureCapacity(intModelVertices, vertexCount * 3);
+			modelVertices = PooledArrayType.INT.ensureCapacity(modelVertices, vertexCount * 3);
 
 		if (allocateFloats)
 			floatModelVertices = PooledArrayType.FLOAT.ensureCapacity(floatModelVertices, vertexCount * 3);
@@ -1731,9 +1731,9 @@ public class SceneUploader implements AutoCloseable {
 			zone.maxY = max(zone.maxY, vy);
 			zone.maxZ = max(zone.maxZ, vz);
 
-			intModelVertices[vertexOffset++] = vx;
-			intModelVertices[vertexOffset++] = vy;
-			intModelVertices[vertexOffset++] = vz;
+			modelVertices[vertexOffset++] = vx;
+			modelVertices[vertexOffset++] = vy;
+			modelVertices[vertexOffset++] = vz;
 		}
 
 		boolean isVanillaTextured = faceTextures != null;
@@ -1814,19 +1814,19 @@ public class SceneUploader implements AutoCloseable {
 			final int triangleC = indices3[face];
 
 			int vertexOffset = triangleA * 3;
-			final int vx1 = intModelVertices[vertexOffset];
-			final int vy1 = intModelVertices[vertexOffset + 1];
-			final int vz1 = intModelVertices[vertexOffset + 2];
+			final int vx1 = modelVertices[vertexOffset];
+			final int vy1 = modelVertices[vertexOffset + 1];
+			final int vz1 = modelVertices[vertexOffset + 2];
 
 			vertexOffset = triangleB * 3;
-			final int vx2 = intModelVertices[vertexOffset];
-			final int vy2 = intModelVertices[vertexOffset + 1];
-			final int vz2 = intModelVertices[vertexOffset + 2];
+			final int vx2 = modelVertices[vertexOffset];
+			final int vy2 = modelVertices[vertexOffset + 1];
+			final int vz2 = modelVertices[vertexOffset + 2];
 
 			vertexOffset = triangleC * 3;
-			final int vx3 = intModelVertices[vertexOffset];
-			final int vy3 = intModelVertices[vertexOffset + 1];
-			final int vz3 = intModelVertices[vertexOffset + 2];
+			final int vx3 = modelVertices[vertexOffset];
+			final int vy3 = modelVertices[vertexOffset + 1];
+			final int vz3 = modelVertices[vertexOffset + 2];
 
 			boolean keepShading = isTextured;
 			if (isTextured) {
@@ -2133,15 +2133,15 @@ public class SceneUploader implements AutoCloseable {
 
 			int vertexOffset = v * 3;
 			floatModelVertices[vertexOffset] = vertexX;
-			intModelVertices[vertexOffset] = float16(vertexX - x);
+			modelVertices[vertexOffset] = float16(vertexX - x);
 			modelProjected[vertexOffset] = pX / pZ;
 
 			floatModelVertices[vertexOffset + 1] = vertexY;
-			intModelVertices[vertexOffset + 1] = float16(vertexY - y);
+			modelVertices[vertexOffset + 1] = float16(vertexY - y);
 			modelProjected[vertexOffset + 1] = pY / pZ;
 
 			floatModelVertices[vertexOffset + 2] = vertexZ;
-			intModelVertices[vertexOffset + 2] = float16(vertexZ - z);
+			modelVertices[vertexOffset + 2] = float16(vertexZ - z);
 			modelProjected[vertexOffset + 2] = pZ;
 
 			shouldSort &= pZ >= 50;
@@ -2495,21 +2495,21 @@ public class SceneUploader implements AutoCloseable {
 			final int texturedFaceIdx = tb.putModelFace(color1, color2, color3, transparency, depthBias, materialData);
 
 			vb.putVertex(
-				intModelVertices[vertexOffsetA], intModelVertices[vertexOffsetA + 1], intModelVertices[vertexOffsetA + 2],
+				modelVertices[vertexOffsetA], modelVertices[vertexOffsetA + 1], modelVertices[vertexOffsetA + 2],
 				faceUVs[0], faceUVs[1], faceUVs[2],
 				faceNormals[0], faceNormals[1], faceNormals[2],
 				texturedFaceIdx, false, modelIdx
 			);
 
 			vb.putVertex(
-				intModelVertices[vertexOffsetB], intModelVertices[vertexOffsetB + 1], intModelVertices[vertexOffsetB + 2],
+				modelVertices[vertexOffsetB], modelVertices[vertexOffsetB + 1], modelVertices[vertexOffsetB + 2],
 				faceUVs[4], faceUVs[5], faceUVs[6],
 				faceNormals[3], faceNormals[4], faceNormals[5],
 				texturedFaceIdx, false, modelIdx
 			);
 
 			vb.putVertex(
-				intModelVertices[vertexOffsetC], intModelVertices[vertexOffsetC + 1], intModelVertices[vertexOffsetC + 2],
+				modelVertices[vertexOffsetC], modelVertices[vertexOffsetC + 1], modelVertices[vertexOffsetC + 2],
 				faceUVs[8], faceUVs[9], faceUVs[10],
 				faceNormals[6], faceNormals[7], faceNormals[8],
 				texturedFaceIdx, false, modelIdx
