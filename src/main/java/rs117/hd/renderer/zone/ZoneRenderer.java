@@ -1145,7 +1145,7 @@ public class ZoneRenderer implements Renderer {
 			}
 
 			if (skyRenderer.castsShadows && !ctx.isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
-				if (!z.onlyWater || z.modelCount > 0) {
+				if (!z.onlyWater || z.sizeM > 0) {
 					directionalCmd.SetShader(fastShadowProgram);
 					z.renderOpaque(directionalCmd, ctx, null, shouldDrawRoofShadows ? Zone.DRAW_INCLUDE_ROOFS : 0);
 				}

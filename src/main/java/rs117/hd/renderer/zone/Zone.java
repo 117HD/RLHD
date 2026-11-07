@@ -98,7 +98,6 @@ public class Zone implements Destructible {
 	public static final int LEVEL_GAP_FILLER = LEVEL_COUNT++;
 
 	public int glVao;
-	int modelCount;
 	int bufLen;
 	int dist;
 
