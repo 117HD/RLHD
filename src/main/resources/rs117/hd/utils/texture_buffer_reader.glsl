@@ -51,7 +51,7 @@
     }
 
     #define SETUP_BUFFER(name, bindingPoint) \
-        layout(std430, binding = bindingPoint) buffer name##Buffer { int data[]; } name;
+        layout(std430, binding = bindingPoint) readonly buffer name##Buffer { int data[]; } name;
 
     #ifdef GL_KHR_shader_subgroup_vote
         #define SSBO_LOAD(buf, reader, idx) \
