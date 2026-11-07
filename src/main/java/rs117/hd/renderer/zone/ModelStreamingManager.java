@@ -22,6 +22,7 @@ import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PooledArrayType;
@@ -39,8 +40,9 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 @Singleton
 public class ModelStreamingManager {
-	public static final ConcurrentPool<PrimitiveCharArray> FACE_INDICES = new ConcurrentPool<>(PrimitiveCharArray::new);
 	public static final int RL_RENDER_THREADS = 2;
+
+	private static final ConcurrentPool<PrimitiveCharArray> FACE_INDICES = new ConcurrentPool<>(PrimitiveCharArray::new);
 
 	@Inject
 	private Injector injector;
@@ -176,6 +178,7 @@ public class ModelStreamingManager {
 		WorldViewContext ctx = sceneManager.getContext(scene);
 		if (root == null || ctx == null ||
 			!sceneManager.isRoot(ctx) && ctx.isLoading ||
+			plugin.configSimpleBoatSilhouettes && ctx.isSquashed ||
 			!renderCallbackManager.drawObject(scene, tileObject))
 			return;
 
@@ -188,9 +191,9 @@ public class ModelStreamingManager {
 			return;
 
 		final StreamingContext streamingContext = context(renderThreadId);
-		final float[] objectWorldPos = vec4(streamingContext.objectWorldPos, x, y, z, 1.0f);
-		if (ctx.uboWorldViewStruct != null)
-			ctx.uboWorldViewStruct.project(objectWorldPos);
+		final float[] worldPos = vec4(streamingContext.objectWorldPos, x, y, z, 1.0f);
+		if (ctx.projection != null)
+			Mat4.mulVec(worldPos, ctx.projection, worldPos);
 
 		final int uuid;
 		final float modelFade;
@@ -202,11 +205,7 @@ public class ModelStreamingManager {
 			// Cull dynamic models based on detail draw distance
 			if (modelOverrideManager.allowDetailCulling(uuid)) {
 				final int detailDrawDistanceTiles = plugin.configDetailDrawDistance * LOCAL_TILE_SIZE;
-				final float squaredDistance = renderer.sceneCamera.squaredDistanceTo(
-					objectWorldPos[0],
-					objectWorldPos[1],
-					objectWorldPos[2]
-				);
+				final float squaredDistance = renderer.sceneCamera.squaredDistanceTo(worldPos[0], worldPos[1], worldPos[2]);
 				final float detailDrawDistanceTilesSquared = detailDrawDistanceTiles * detailDrawDistanceTiles;
 				if (squaredDistance > detailDrawDistanceTilesSquared)
 					return;
@@ -230,8 +229,8 @@ public class ModelStreamingManager {
 			var base = ctx.sceneContext.sceneBase;
 			assert base != null;
 			boolean inArea = ctx.sceneContext.currentArea.containsPoint(
-				base[0] + ((int) objectWorldPos[0] >> Perspective.LOCAL_COORD_BITS),
-				base[1] + ((int) objectWorldPos[2] >> Perspective.LOCAL_COORD_BITS),
+				base[0] + ((int) worldPos[0] >> Perspective.LOCAL_COORD_BITS),
+				base[1] + ((int) worldPos[2] >> Perspective.LOCAL_COORD_BITS),
 				base[2] + tileObject.getPlane()
 			);
 			if (!inArea)
@@ -245,17 +244,13 @@ public class ModelStreamingManager {
 
 		m.calculateBoundsCylinder();
 
-		final int modelClassification = renderer.sceneCamera.classifySphere(
-			objectWorldPos[0], objectWorldPos[1], objectWorldPos[2], m.getRadius());
+		final int modelClassification = renderer.sceneCamera.classifySphere(worldPos[0], worldPos[1], worldPos[2], m.getRadius());
 		boolean isOffScreen = modelClassification == -1;
-		// Additional Culling checks to help reduce dynamic object perf impact when off-screen
+		// Additional culling checks to help reduce dynamic object perf impact when off-screen
 		if (isOffScreen && (
 			!modelOverride.castShadows ||
-			!renderer.directionalShadowCasterVolume.intersectsPoint(
-				(int) objectWorldPos[0],
-				(int) objectWorldPos[1],
-				(int) objectWorldPos[2]
-			)
+			!renderer.directionalCamera.intersectsSphere(worldPos[0], worldPos[1], worldPos[2], m.getRadius()) ||
+			!renderer.directionalShadowCasterVolume.intersectsSphere(worldPos[0], worldPos[1], worldPos[2], m.getRadius())
 		)) {
 			return;
 		}
@@ -404,8 +399,7 @@ public class ModelStreamingManager {
 			);
 
 			final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
-			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
-			if (shouldSort && !isSquashed)
+			if (shouldSort && !ctx.isSquashed)
 				facePrioritySorter.sortModelFaces(visibleFaces, m, faceDistances, !isActor);
 
 			if (facePrioritySorter != null)
@@ -477,7 +471,7 @@ public class ModelStreamingManager {
 					orient,
 					opaqueModelIdx,
 					alphaModelIdx,
-					isSquashed,
+					ctx.isSquashed,
 					opaqueView,
 					alphaView
 				);

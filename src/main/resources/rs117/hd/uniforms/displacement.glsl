@@ -13,4 +13,6 @@ layout(std140) uniform UBODisplacement {
 
     int characterPositionCount;
     vec4 characterPositions[MAX_CHARACTER_POSITION_COUNT];
-};
+} uboDisplacement;
+
+#define DISPLACEMENT_UBO uboDisplacement

@@ -28,13 +28,13 @@ ObjectWindSample computeWindSample(vec3 modelPos, int height) {
     windSample.heightBasedStrength = 0.0;
 
 #if WIND_DISPLACEMENT
-    float modelNoise = noise((modelPos.xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION);
+    float modelNoise = noise((modelPos.xz + vec2(DISPLACEMENT_UBO.windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION);
     float angle = modelNoise * (PI / 2.0);
     float c = cos(angle);
     float s = sin(angle);
 
-    windSample.direction = normalize(vec3(windDirectionX * c + windDirectionZ * s, 0.0, -windDirectionX * s + windDirectionZ * c));
-    windSample.heightBasedStrength = saturate((abs(modelPos.y) + float(height)) / windCeiling) * windStrength;
+    windSample.direction = normalize(vec3(DISPLACEMENT_UBO.windDirectionX * c + DISPLACEMENT_UBO.windDirectionZ * s, 0.0, -DISPLACEMENT_UBO.windDirectionX * s + DISPLACEMENT_UBO.windDirectionZ * c));
+    windSample.heightBasedStrength = saturate((abs(modelPos.y) + float(height)) / DISPLACEMENT_UBO.windCeiling) * DISPLACEMENT_UBO.windStrength;
     windSample.displacement = windSample.direction.xyz * (windSample.heightBasedStrength * modelNoise);
 #endif
 
@@ -93,7 +93,7 @@ vec3 applyWindDisplacementVertex(
     if (windDisplacementMode >= WIND_DISPLACEMENT_VERTEX) {
         const float VertexSnapping = 150.0;
         const float VertexDisplacementMod = 0.2;
-        float windNoise = mix(-0.5, 0.5, noise((snap(localVertPos, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+        float windNoise = mix(-0.5, 0.5, noise((snap(localVertPos, VertexSnapping).xz + vec2(DISPLACEMENT_UBO.windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
 
         if (windDisplacementMode == WIND_DISPLACEMENT_VERTEX_WITH_HEMISPHERE_BLEND) {
             const float minDist = 50;
@@ -130,8 +130,8 @@ vec3 applyWindDisplacementVertex(
         vec2 worldVert = worldVertPos.xz;
         float fractAccum = 0.0;
 #if CHARACTER_DISPLACEMENT
-        for (int i = 0; i < characterPositionCount; i++) {
-            displacement += applyCharacterDisplacement(characterPositions[i], worldVert, modelHeight, strength, fractAccum);
+        for (int i = 0; i < DISPLACEMENT_UBO.characterPositionCount; i++) {
+            displacement += applyCharacterDisplacement(DISPLACEMENT_UBO.characterPositions[i], worldVert, modelHeight, strength, fractAccum);
             if (fractAccum >= 1.0)
                 break;
         }

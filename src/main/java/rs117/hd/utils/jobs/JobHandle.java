@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import rs117.hd.utils.collections.ConcurrentPool;
 
 import static rs117.hd.utils.HDUtils.getThreadStackTrace;
+import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.jobs.JobSystem.VALIDATE;
 
 @Slf4j
@@ -270,16 +271,22 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 		try {
 			if (!isDone()) {
 				if (isClientThread) {
-					long start = System.currentTimeMillis();
+					long start = System.nanoTime();
 					int seconds = 0;
-					do {
+					while (true) {
+						long waitNanos = TimeUnit.MILLISECONDS.toNanos(1);
+						if (timeoutNanos > 0)
+							waitNanos = clamp(timeoutNanos - (System.nanoTime() - start), 0, waitNanos);
+						if (tryAcquireSharedNanos(0, waitNanos))
+							break;
 						JOB_SYSTEM.processPendingClientCallbacks();
+						// Check if the job has completed during callback processing
+						if (isDone())
+							return true;
 						if (attemptProcessItem())
 							return true;
-
-						Thread.yield();
-						long elapsed = System.currentTimeMillis() - start;
-						int newSeconds = (int) (elapsed / 1000);
+						long elapsedNanos = System.nanoTime() - start;
+						int newSeconds = (int) TimeUnit.NANOSECONDS.toSeconds(elapsedNanos);
 						if (newSeconds > seconds) {
 							if (VALIDATE) {
 								log.debug(
@@ -292,15 +299,15 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 							}
 							seconds = newSeconds;
 						}
-						if (timeoutNanos > 0 && elapsed > timeoutNanos) {
-							return false;
-						} else {
-							if (elapsed > DEADLOCK_TIMEOUT_SECONDS * 1000) {
-								handleDeadlock();
+						if (timeoutNanos > 0) {
+							if (elapsedNanos >= timeoutNanos)
 								return false;
-							}
+						} else if (elapsedNanos >= TimeUnit.SECONDS.toNanos(DEADLOCK_TIMEOUT_SECONDS)) {
+							handleDeadlock();
+							return false;
 						}
-					} while (!tryAcquireSharedNanos(0, TimeUnit.MILLISECONDS.toNanos(1)));
+						Thread.yield();
+					}
 				} else {
 					if (attemptProcessItem())
 						return true;

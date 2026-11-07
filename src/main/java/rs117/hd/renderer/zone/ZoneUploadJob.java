@@ -51,6 +51,9 @@ public final class ZoneUploadJob extends Job {
 				if (shouldUnmap)
 					invokeClientCallback(zoneBeingUploaded::unmap);
 			}
+			// Ensure sensible bounds in empty zones
+			if (zoneBeingUploaded.minY == Integer.MAX_VALUE)
+				zoneBeingUploaded.minY = zoneBeingUploaded.maxY = 0;
 			zoneBeingUploaded.initialized = true;
 		}
 	}

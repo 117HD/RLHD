@@ -43,8 +43,8 @@ vec4 rotate(vec4 vertex, int orientation) {
  * Calculate the distance to a vertex given the camera angle
  */
 float distance(vec3 vertex) {
-  float j = vertex.z * cos(cameraYaw) - vertex.x * sin(cameraYaw);
-  float l = vertex.y * sin(cameraPitch) + j * cos(cameraPitch);
+  float j = vertex.z * cos(uboCompute.cameraYaw) - vertex.x * sin(uboCompute.cameraYaw);
+  float l = vertex.y * sin(uboCompute.cameraPitch) + j * cos(uboCompute.cameraPitch);
   return l;
 }
 
@@ -63,11 +63,11 @@ int face_distance(vec3 vA, vec3 vB, vec3 vC) {
  * Convert a vertex to screen space
  */
 vec3 toScreen(vec3 vertex) {
-  float yawSin = sin(cameraYaw);
-  float yawCos = cos(cameraYaw);
+  float yawSin = sin(uboCompute.cameraYaw);
+  float yawCos = cos(uboCompute.cameraYaw);
 
-  float pitchSin = sin(cameraPitch);
-  float pitchCos = cos(cameraPitch);
+  float pitchSin = sin(uboCompute.cameraPitch);
+  float pitchCos = cos(uboCompute.cameraPitch);
 
   float rotatedX = vertex.z * yawSin + vertex.x * yawCos;
   float rotatedZ = vertex.z * yawCos - vertex.x * yawSin;
@@ -75,8 +75,8 @@ vec3 toScreen(vec3 vertex) {
   float var13 = vertex.y * pitchCos - rotatedZ * pitchSin;
   float var12 = vertex.y * pitchSin + rotatedZ * pitchCos;
 
-  float x = rotatedX * zoom / var12 + centerX;
-  float y = var13 * zoom / var12 + centerY;
+  float x = rotatedX * uboCompute.zoom / var12 + uboCompute.centerX;
+  float y = var13 * uboCompute.zoom / var12 + uboCompute.centerY;
   float z = -var12; // in OpenGL depth is negative
 
   return vec3(x, y, z);
@@ -86,7 +86,7 @@ vec3 toScreen(vec3 vertex) {
  * Test if a face is visible (not backward facing)
  */
 bool face_visible(vec3 vA, vec3 vB, vec3 vC, vec3 position) {
-  vec3 cameraPos = vec3(cameraX, cameraY, cameraZ);
+  vec3 cameraPos = vec3(uboCompute.cameraX, uboCompute.cameraY, uboCompute.cameraZ);
   // Move model to scene location, and account for camera offset
   vA += position - cameraPos;
   vB += position - cameraPos;

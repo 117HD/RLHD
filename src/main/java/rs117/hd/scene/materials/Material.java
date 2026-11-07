@@ -56,10 +56,14 @@ public class Material {
 	private Material shadowAlphaMap;
 	public boolean hasTransparency;
 	public boolean doubleSidedFaces;
+	private boolean seasonalFoliage;
 	private boolean overrideBaseColor;
 	private boolean unlit;
+	private boolean voidShader;
+	private float voidStarDensity = 1;
 	@JsonAdapter(ColorUtils.LinearAdapter.class)
 	public float brightness = 1;
+	public float subsurface;
 	private float displacementScale = .1f;
 	private float flowMapStrength;
 	private float[] flowMapDuration = { 0, 0 };
@@ -120,18 +124,20 @@ public class Material {
 		if (!Props.DEVELOPMENT && replacementCondition instanceof ExpressionParser.SerializableExpressionPredicate)
 			replacementCondition = ((ExpressionParser.SerializableExpressionPredicate) replacementCondition).predicate;
 
-		// Determine whether the material contains some form of non-vanilla texture change
+		// Determine whether the material contains some form of non-vanilla texture change,
+		// and is not seasonal foliage, which ignores the model textures setting
 		var base = this;
 		while (base.parent != null)
 			base = base.parent;
-		modifiesVanillaTexture =
-			base != NONE ||
+		modifiesVanillaTexture = !seasonalFoliage && (
+			(base != NONE && base.vanillaTextureIndex == -1) ||
 			normalMap != null ||
 			displacementMap != null ||
 			roughnessMap != null ||
 			ambientOcclusionMap != null ||
 			flowMap != null ||
-			shadowAlphaMap != null;
+			shadowAlphaMap != null
+		);
 	}
 
 	@Override
@@ -186,6 +192,7 @@ public class Material {
 			   | ((modelOverride.windDisplacementModifier + 3) & 0x7) << 12
 			   | (modelOverride.windDisplacementMode.ordinal() & 0x7) << 9
 			   | (modelOverride.invertDisplacementStrength ? 1 : 0) << 8
+			   | (modelOverride.shadowNormalBias ? 1 : 0) << 7
 			   | (modelOverride.terrainVertexSnap ? 1 : 0) << 6
 			   | (!modelOverride.receiveShadows ? 1 : 0) << 5
 			   | (modelOverride.upwardsNormals ? 1 : 0) << 4
@@ -211,18 +218,23 @@ public class Material {
 		struct.flowMap.set(getTextureLayer(flowMap));
 		struct.shadowAlphaMap.set(getTextureLayer(shadowAlphaMap));
 		struct.flags.set(
+			(voidShader ? 1 : 0) << 3 |
 			(overrideBaseColor ? 1 : 0) << 2 |
 			(unlit ? 1 : 0) << 1 |
 			(hasTransparency ? 1 : 0)
 		);
 		struct.brightness.set(brightness);
+		struct.subsurface.set(subsurface);
 		struct.displacementScale.set(displacementScale);
 		struct.specularStrength.set(specularStrength);
 		struct.specularGloss.set(specularGloss);
 		struct.flowMapStrength.set(flowMapStrength);
 		struct.flowMapDuration.set(flowMapDuration);
 		struct.scrollDuration.set(scrollSpeedX, scrollSpeedY);
-		struct.textureScale.set(divide(vec(1), textureScale));
+		var texScale = divide(vec(1), textureScale);
+		if (voidShader)
+			texScale[0] = voidStarDensity;
+		struct.textureScale.set(texScale);
 	}
 
 	private Material resolveReference(@Nullable Material material, Map<String, Material> materials) {

@@ -69,7 +69,7 @@ void main() {
     for (int i = 0; i < 3; i++) {
         fUvw = vec4(uvw[i].xy, material.colorMap, material.shadowAlphaMap);
         // Scroll UVs
-        fUvw.xy += material.scrollDuration * elapsedTime;
+        fUvw.xy += material.scrollDuration * uboGlobal.elapsedTime;
         // Scale from the center
         fUvw.xy = .5 + (fUvw.xy - .5) * material.textureScale.xy;
 
@@ -77,7 +77,7 @@ void main() {
             fOpacity = gOpacity[i];
         #endif
 
-        gl_Position = lightProjectionMatrix * vec4(gPosition[i], 1);
+        gl_Position = uboGlobal.lightProjectionMatrix * vec4(gPosition[i], 1);
         EmitVertex();
     }
     EndPrimitive();

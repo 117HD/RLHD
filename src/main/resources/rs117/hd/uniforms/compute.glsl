@@ -20,4 +20,6 @@ layout(std140) uniform UBOCompute {
 
     int characterPositionCount;
     vec4 characterPositions[MAX_CHARACTER_POSITION_COUNT];
-};
+} uboCompute;
+
+#define DISPLACEMENT_UBO uboCompute

@@ -3,7 +3,6 @@ package rs117.hd.renderer.zone;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -30,6 +29,7 @@ import rs117.hd.utils.collections.IntHashSet;
 import rs117.hd.utils.collections.PooledArrayType;
 
 import static net.runelite.api.Constants.*;
+import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.SUPPORTS_MULTI_INDIRECT_DRAW;
@@ -40,7 +40,12 @@ import static rs117.hd.utils.collections.Util.quickSort;
 
 @Slf4j
 public class Zone implements Destructible {
+	private static final IntHashSet EMPTY_ROOF = new IntHashSet();
 	private static final ConcurrentPool<AlphaModel> ALPHA_MODEL_POOL = new ConcurrentPool<>(AlphaModel::new);
+
+	public static final int DRAW_FADING_ONLY = 1;
+	public static final int DRAW_INCLUDE_ROOFS = 2;
+	public static final int DRAW_DEPTH_ONLY = 4;
 
 	@Inject
 	private Client client;
@@ -88,10 +93,12 @@ public class Zone implements Destructible {
 	public static final int METADATA_NUM_INTS = METADATA_NUM_BYTES / Integer.BYTES;
 
 	public static int LEVEL_COUNT = MAX_Z;
+	public static final int LEVEL_TERRAIN = LEVEL_COUNT++;
 	public static final int LEVEL_WATER_SURFACE = LEVEL_COUNT++;
 	public static final int LEVEL_GAP_FILLER = LEVEL_COUNT++;
 
 	public int glVao;
+	int modelCount;
 	int bufLen;
 	int dist;
 
@@ -116,11 +123,17 @@ public class Zone implements Destructible {
 	public boolean sceneCameraIntersects; // whether the scene camera intersects the zone with a radius of 2 tiles
 	public boolean isFirstLoadingAttempt = true;
 
+	// Zone-relative bounds
+	int minX, maxX = CHUNK_SIZE * LOCAL_TILE_SIZE;
+	int minY = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE;
+	int minZ, maxZ = CHUNK_SIZE * LOCAL_TILE_SIZE;
+
 	public IntHashSet animatedDynamicObjectIds = new IntHashSet();
 
 	final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob();
 	ZoneUploadJob uploadJob;
 	float fadingAlpha;
+	ZoneRoofFades.State fade; // owned by ZoneRoofFades while the zone is being drawn
 
 	void setUploadJob(ZoneUploadJob uploadJob) {
 		this.uploadJob = uploadJob;
@@ -217,9 +230,11 @@ public class Zone implements Destructible {
 		}
 
 		if (uploadJob != null) {
-			uploadJob.cancel();
-			DestructibleHandler.destroy(uploadJob.zoneBeingUploaded);
+			ZoneUploadJob job = uploadJob;
 			uploadJob = null;
+			job.cancel();
+			DestructibleHandler.destroy(job.zoneBeingUploaded);
+			job.release();
 		}
 
 		sortedAlphaFacesUpload.release();
@@ -374,25 +389,43 @@ public class Zone implements Destructible {
 		copyTo(glDrawLength, drawEnd, 0, drawIdx);
 	}
 
-	void renderOpaque(CommandBuffer cmd, WorldViewContext ctx, boolean roofShadows) {
+	void renderOpaque(CommandBuffer cmd, WorldViewContext ctx, @Nullable ZoneRoofFades.Fade fade, int flags) {
 		if (fadingAlpha > 1.0)
 			return;
 		drawIdx = 0;
 
+		final boolean fadingOnly = (flags & DRAW_FADING_ONLY) != 0;
+
 		int currentLevel = ctx.level;
 		int maxLevel = ctx.maxLevel;
-		var hiddenRoofIds = ctx.hideRoofIds;
-		if (roofShadows) {
+		int fadedLevels = fade != null ? fade.levels : 0;
+		var hidden = fade != null && fade.roofs != null ? fade.roofs : ctx.hideRoofIds;
+		if ((flags & DRAW_INCLUDE_ROOFS) != 0) {
 			maxLevel = 3;
-			hiddenRoofIds = Collections.emptySet();
+			hidden = EMPTY_ROOF;
 		}
 
-		for (int level = ctx.minLevel; level <= maxLevel; ++level) {
+		// Fading levels can sit outside the visible range, so the fading pass checks all of them
+		int firstLevel = fadingOnly ? 0 : ctx.minLevel;
+		int lastLevel = fadingOnly ? 3 : maxLevel;
+
+		for (int level = firstLevel; level <= lastLevel; ++level) {
 			int[] rids = this.rids[level];
 			int[] roofStart = this.roofStart[level];
 			int[] roofEnd = this.roofEnd[level];
 
-			if (rids.length == 0 || hiddenRoofIds.isEmpty() || level <= currentLevel) {
+			boolean levelFading = (fadedLevels & (1 << level)) != 0;
+
+			if (levelFading) {
+				if (fadingOnly) {
+					int start = level == 0 ? 0 : this.levelOffsets[level - 1];
+					pushRange(start, this.levelOffsets[level]);
+				}
+				// The main pass leaves it to the fading pass, otherwise it would be drawn twice
+				continue;
+			}
+
+			if (!fadingOnly && (rids.length == 0 || hidden.isEmpty() || level <= currentLevel)) {
 				// draw the whole level
 				int start = level == 0 ? 0 : this.levelOffsets[level - 1];
 				int end = this.levelOffsets[level];
@@ -402,7 +435,7 @@ public class Zone implements Destructible {
 
 			for (int roofIdx = 0; roofIdx < rids.length; ++roofIdx) {
 				int rid = rids[roofIdx];
-				if (rid > 0 && !hiddenRoofIds.contains(rid)) {
+				if (rid > 0 && hidden.contains(rid) == fadingOnly) {
 					// draw the roof
 					assert roofEnd[roofIdx] >= roofStart[roofIdx];
 					if (roofEnd[roofIdx] > roofStart[roofIdx]) {
@@ -410,6 +443,9 @@ public class Zone implements Destructible {
 					}
 				}
 			}
+
+			if (fadingOnly)
+				continue;
 
 			// push from the end of the last roof to the end of the level
 			int endpos = level == 0 ? 0 : this.levelOffsets[level - 1];
@@ -440,7 +476,7 @@ public class Zone implements Destructible {
 
 		drawIdx = 0;
 
-		pushRange(this.levelOffsets[level - 1], this.levelOffsets[level]);
+		pushRange(level > 0 ? this.levelOffsets[level - 1] : 0, this.levelOffsets[level]);
 
 		if (drawIdx == 0)
 			return;
@@ -630,7 +666,8 @@ public class Zone implements Destructible {
 
 		Arrays.fill(doubleSidedBitSet, 0, bucketCapacity, 0);
 
-		final Material baseMaterial = modelOverride.baseMaterial;
+		final Material baseMaterial = modelOverride.material;
+		final ModelOverride[] faceOverrides = modelOverride.faceOverrides;
 		final Material textureMaterial = modelOverride.textureMaterial;
 
 		int radius = 0;
@@ -640,41 +677,48 @@ public class Zone implements Destructible {
 			if (color3[f] == -2)
 				continue;
 
-			// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
-			if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, f))
-				continue;
-
-			Material material = baseMaterial;
-			ModelOverride faceOverride = modelOverride;
-
 			int transparency = SceneUploader.readFaceTransparency(model.getTransparency(), transparencies, f);
 			if (transparency == 255)
 				continue;
 
+			Material material = baseMaterial;
+			ModelOverride faceOverride = modelOverride;
+			if (faceOverrides != null && f < faceOverrides.length) {
+				faceOverride = faceOverrides[f];
+				material = faceOverride.material;
+			}
 			int textureId = faceTextures != null ? faceTextures[f] : -1;
-			if (textureId != -1) {
-				if (modelOverride.textureMaterial != Material.NONE) {
-					material = textureMaterial;
-				} else {
-					material = materialManager.fromVanillaTexture(textureId);
-					if (modelOverride.materialOverrides != null) {
-						var override = modelOverride.materialOverrides.get(material);
-						if (override != null) {
-							faceOverride = override;
-							material = override.textureMaterial;
+			if (faceOverride == modelOverride) {
+				if (textureId != -1) {
+					if (modelOverride.textureMaterial != Material.NONE) {
+						material = textureMaterial;
+					} else {
+						material = materialManager.fromVanillaTexture(textureId);
+						if (modelOverride.materialOverrides != null) {
+							var override = modelOverride.materialOverrides.get(material);
+							if (override != null) {
+								faceOverride = override;
+								material = override.textureMaterial;
+							}
 						}
 					}
-				}
-			} else if (modelOverride.colorOverrides != null) {
-				final int ahsl = (0xFF - transparency) << 16 | (unlitColor != null ? unlitColor[f] & 0xFFFF : color1[f]);
-				final var override = modelOverride.testColorOverrides(ahsl);
-				if (override != null) {
-					faceOverride = override;
-					material = override.baseMaterial;
+				} else if (modelOverride.colorOverrides != null) {
+					final int ahsl = (0xFF - transparency) << 16 | (unlitColor != null ? unlitColor[f] & 0xFFFF : color1[f]);
+					final var override = modelOverride.testColorOverrides(ahsl);
+					if (override != null) {
+						faceOverride = override;
+						material = override.material;
+					}
 				}
 			}
 
 			if (faceOverride.hide)
+				continue;
+
+			if (textureId == -1 &&
+				plugin.configHideFakeShadows &&
+				faceOverride.hideVanillaShadows &&
+				HDUtils.isBakedGroundShading(model, f))
 				continue;
 
 			if (faceOverride.modifiesAlpha)
@@ -735,6 +779,7 @@ public class Zone implements Destructible {
 	synchronized void postAlphaPass() {
 		sortedAlphaFacesUpload.waitForCompletion();
 		alphaSortingJob.waitForCompletion();
+		alphaSortingJob.reset();
 
 		for (int i = alphaModels.size() - 1; i >= 0; --i) {
 			AlphaModel m = alphaModels.get(i);
@@ -816,19 +861,23 @@ public class Zone implements Destructible {
 		int zz,
 		int level,
 		WorldViewContext ctx,
-		boolean depthOnly,
-		boolean includeRoof
+		@Nullable ZoneRoofFades.Fade fade,
+		int flags
 	) {
 		if (alphaModels.isEmpty() || fadingAlpha > 1.0)
 			return;
 
+		final boolean fadingOnly = (flags & DRAW_FADING_ONLY) != 0;
+		final boolean depthOnly = (flags & DRAW_DEPTH_ONLY) != 0;
+
 		int minLevel = ctx.minLevel;
 		int currentLevel = ctx.level;
 		int maxLevel = ctx.maxLevel;
-		var hiddenRoofIds = ctx.hideRoofIds;
-		if (includeRoof) {
+		int fadedLevels = fade != null ? fade.levels : 0;
+		var hidden = fade != null && fade.roofs != null ? fade.roofs : ctx.hideRoofIds;
+		if ((flags & DRAW_INCLUDE_ROOFS) != 0) {
 			maxLevel = 3;
-			hiddenRoofIds = Collections.emptySet();
+			hidden = EMPTY_ROOF;
 		}
 
 		drawIdx = 0;
@@ -842,9 +891,23 @@ public class Zone implements Destructible {
 			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level || m.vao == -1)
 				continue;
 
-			if (level < minLevel || level > maxLevel ||
-				level > currentLevel && !hiddenRoofIds.isEmpty() && hiddenRoofIds.contains((int) m.rid))
+			boolean levelFading = (fadedLevels & (1 << m.level)) != 0;
+
+			if (levelFading) {
+				// The level is drawn in full by the fading pass, so the main pass leaves it alone
+				if (!fadingOnly)
+					continue;
+			} else if (fadingOnly) {
+				// Fading roofs are drawn separately, and may sit outside the visible level range, e.g. right after
+				// maxLevel was lowered, so the range is only enforced for the main pass
+				if (!hidden.contains(m.rid))
+					continue;
+			} else if (level < minLevel || level > maxLevel) {
 				continue;
+			} else if (level > currentLevel && hidden.contains(m.rid)) {
+				// Above the player's level, roofs being faded are excluded so they can be drawn separately
+				continue;
+			}
 
 			int drawMode = STATIC;
 			if (m.isTemp()) {

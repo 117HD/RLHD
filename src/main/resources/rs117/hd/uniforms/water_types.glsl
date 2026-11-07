@@ -18,7 +18,7 @@ struct WaterType {
 };
 
 layout(std140) uniform UBOWaterTypes {
-    WaterType WaterTypeArray[WATER_TYPE_COUNT];
-};
+    WaterType Array[WATER_TYPE_COUNT];
+} uboWaterTypes;
 
 #include WATER_TYPE_GETTER

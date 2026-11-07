@@ -4,7 +4,9 @@ import java.io.IOException;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_NEBULA_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_TERRAIN_SHADOW_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILED_LIGHTING_MAP;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_MODEL_DATA;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
@@ -12,36 +14,44 @@ import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 public class SceneShaderProgram extends ShaderProgram {
 	protected final UniformTexture uniTextureArray = addUniformTexture("textureArray");
 	protected final UniformTexture uniShadowMap = addUniformTexture("shadowMap");
+	protected final UniformTexture uniTerrainShadowMap = addUniformTexture("terrainShadowMap");
 	protected final UniformTexture uniTiledLightingTextureArray = addUniformTexture("tiledLightingArray");
 	protected final UniformTexture uniTextureFaces = addUniformTexBuffer("textureFaces");
 	protected final UniformTexture uniModelData = addUniformTexBuffer("modelData");
-
-	protected boolean allowDiscard = false;
+	protected final UniformTexture uniNebulaMap = addUniformTexture("nebulaMap");
+	public final Uniform1f uniRoofFade = addUniform1f("roofFade");
 
 	public SceneShaderProgram() {
 		super(t -> t
 			.add(GL_VERTEX_SHADER, "scene_vert.glsl")
 			.add(GL_FRAGMENT_SHADER, "scene_frag.glsl"));
 		uniTiledLightingTextureArray.ignoreMissing = true;
+		uniRoofFade.ignoreMissing = true;
+		uniTerrainShadowMap.ignoreMissing = true;
+		uniNebulaMap.ignoreMissing = true;
 	}
 
 	@Override
 	public void compile(ShaderIncludes includes) throws ShaderException, IOException {
-		super.compile(includes.copy().define("ALLOW_DISCARD", allowDiscard));
+		super.compile(includes.copy()
+			.define("ALLOW_DISCARD", this instanceof Discard)
+			.define("WATER_PASS", this instanceof Water));
 	}
 
 	@Override
 	protected void initialize() {
 		uniTextureArray.set(TEXTURE_UNIT_GAME);
 		uniShadowMap.set(TEXTURE_UNIT_SHADOW_MAP);
+		uniTerrainShadowMap.set(TEXTURE_UNIT_TERRAIN_SHADOW_MAP);
 		uniTiledLightingTextureArray.set(TEXTURE_UNIT_TILED_LIGHTING_MAP);
 		uniTextureFaces.set(TEXTURE_UNIT_TEXTURED_FACES);
 		uniModelData.set(TEXTURE_UNIT_MODEL_DATA);
+		uniNebulaMap.set(TEXTURE_UNIT_NEBULA_MAP);
 	}
 
-	public static class Discard extends SceneShaderProgram {
-		Discard() { allowDiscard = true; }
-	}
+	public static class Discard extends SceneShaderProgram {}
+
+	public static class Water extends SceneShaderProgram {}
 
 	public static class Legacy extends SceneShaderProgram {
 		Legacy() {
