@@ -152,6 +152,7 @@ void main() {
     float planeExtent   = 1.0;
     float planeMaxDev   = 0.0;
     float planeRayScale = 1.0;
+    vec3  planeCenter   = vec3(0.0); // surface point at the middle of the tile (view space)
     bool  tileHasAlpha  = false;
 
     // Screen-space plane for RAW depth: for a planar surface, post-projection depth is affine in
@@ -183,6 +184,7 @@ void main() {
                 if (dot(n, p0) > 0.0) n = -n; // face the camera (origin of view space)
                 planeN = n;
                 planeD = dot(n, p0);
+                planeCenter = p0 + 0.5 * (e1 + e2);
                 planeExtent = max(min(l1, l2), 1e-4);
 
                 anchorZ0 = z0;
@@ -375,6 +377,8 @@ void main() {
         vec3 lightCenterVec = (lightDist > 0.0) ? lightViewPos / lightDist : vec3(0.0);
 
         float lightSinSqr = clamp(lightRadiusSqr / max(lightDistSqr, 1e-6), 0.0, 1.0);
+        // Guard the sqrt: lightSinSqr reaches 1 as the camera approaches the light's radius, and
+        // sqrt of a negative yields NaN, which then propagates through sumCos below.
         float lightCos = sqrt(max(0.0, 0.999 - lightSinSqr));
         float lightTileCos = dot(lightCenterVec, tileCenterVec);
 
@@ -382,6 +386,20 @@ void main() {
         float combinedScore;
         const float PROXIMITY_WEIGHT = 0.75;
         float distanceScore = clamp(1.0 - lightDist / (lightRadius + 1e-6), 0.0, 1.0);
+
+        // With a valid plane, rank by distance to the tile's surface instead of to the camera.
+        // Subtracting roughly the tile's half-diagonal stops lights that only touch the tile's
+        // edge from all collapsing to a score of 0 (and tying). Every light in a tile uses the
+        // same method, since planeValid is per tile, so scores stay comparable.
+        bool  useSurfaceScore = false;
+        float surfaceScore = 0.0;
+#if TILED_LIGHTING_DEPTH_CULLING
+        if (planeValid) {
+            float surfDist = max(length(lightViewPos - planeCenter) - 0.71 * planeExtent, 0.0);
+            surfaceScore = clamp(1.0 - surfDist / (lightRadius + 1e-6), 0.0, 1.0);
+            useSurfaceScore = true;
+        }
+#endif
 
         if (uboGlobal.orthographicProjection) {
             vec4 lightClip = viewToClip * vec4(lightViewPos, 1.0);
@@ -393,7 +411,7 @@ void main() {
 
             vec2 closest = clamp(lightNDC, tileNDCMin, tileNDCMax);
             lightAffectsTile = length(lightNDC - closest) <= lightNDCRadius;
-            combinedScore = distanceScore;
+            combinedScore = useSurfaceScore ? surfaceScore : distanceScore;
         } else {
             // Once lightSinSqr passes 0.999 the camera is effectively inside the light's sphere of
             // influence, so the light can reach any tile - the same conclusion the old
@@ -410,7 +428,9 @@ void main() {
             // which is why master never showed this.)
             float sumCos = (lightSinSqr > 0.999) ? -1.0 : (tileCos * lightCos - tileSin * sqrt(lightSinSqr));
             lightAffectsTile = lightTileCos >= sumCos;
-            combinedScore = (lightTileCos * PROXIMITY_WEIGHT) + distanceScore * (1.0 - PROXIMITY_WEIGHT);
+            combinedScore = useSurfaceScore
+                ? surfaceScore
+                : (lightTileCos * PROXIMITY_WEIGHT) + distanceScore * (1.0 - PROXIMITY_WEIGHT);
         }
 
         if (!lightAffectsTile)
