@@ -229,15 +229,15 @@ public final class VertexWriteCache {
 		stagingBuffer[p + 6]  = (positions[offsetB + 1] & 0xFFFF) << 16 | (positions[offsetB] & 0xFFFF);
 		stagingBuffer[p + 7]  = (normals[3] & 0xFFFF) << 16 | (positions[offsetB + 2] & 0xFFFF);
 		stagingBuffer[p + 8] = (normals[5] & 0xFFFF) << 16 | (normals[4] & 0xFFFF);
-		stagingBuffer[p + 9] = (float16(uvs[3]) & 0xFFFF) << 16 | (modelIdx & 0xFFFF);
-		stagingBuffer[p + 10] = (float16(uvs[5]) & 0xFFFF) << 16 | (float16(uvs[4]) & 0xFFFF);
+		stagingBuffer[p + 9] = (float16(uvs[4]) & 0xFFFF) << 16 | (modelIdx & 0xFFFF);
+		stagingBuffer[p + 10] = (float16(uvs[6]) & 0xFFFF) << 16 | (float16(uvs[5]) & 0xFFFF);
 		stagingBuffer[p + 11] = textureFaceIdx;
 
 		stagingBuffer[p + 12]  = (positions[offsetC + 1] & 0xFFFF) << 16 | (positions[offsetC] & 0xFFFF);
 		stagingBuffer[p + 13]  = (normals[6] & 0xFFFF) << 16 | (positions[offsetC + 2] & 0xFFFF);
 		stagingBuffer[p + 14] = (normals[8] & 0xFFFF) << 16 | (normals[7] & 0xFFFF);
-		stagingBuffer[p + 15] = (float16(uvs[6]) & 0xFFFF) << 16 | (modelIdx & 0xFFFF);
-		stagingBuffer[p + 16] = (float16(uvs[8]) & 0xFFFF) << 16 | (float16(uvs[7]) & 0xFFFF);
+		stagingBuffer[p + 15] = (float16(uvs[8]) & 0xFFFF) << 16 | (modelIdx & 0xFFFF);
+		stagingBuffer[p + 16] = (float16(uvs[10]) & 0xFFFF) << 16 | (float16(uvs[9]) & 0xFFFF);
 		stagingBuffer[p + 17] = textureFaceIdx;
 
 		stagingPosition = p + 18;
