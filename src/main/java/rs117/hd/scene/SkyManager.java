@@ -144,6 +144,10 @@ public class SkyManager {
 		new MapShift("AGILITY_PYRAMID_TOP", 3367-3047, 2857-4713),
 		new MapShift("FALADOR_INSTANCE", 2979-3467, 3384-4760),
 		new MapShift("GOBLIN_VILLAGE_INSTANCE", 2962-2450, 3504-5424),
+		new MapShift("WATER_ALTAR", 3182-2725, 3162-4832),
+		new MapShift("AIR_ALTAR", 2983-2841, 3288-4830),
+		new MapShift("EARTH_ALTAR", 2983-2841, 3288-4830),
+		new MapShift("NATURE_ALTAR", 2865-2400, 3022-4835),
 		// not actually on map, somewhat arbitrarily placed off edge of map, due East of Mos Le'Harmless
 		new MapShift("BRAINDEATH_ISLAND", 4225-2112, 2944-5056),
 		// not actually on map, not physically tied to it but put both Castle Drakans in same place
