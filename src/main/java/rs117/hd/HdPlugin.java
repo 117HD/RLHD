@@ -336,12 +336,15 @@ public class HdPlugin extends Plugin {
 
 	public Renderer renderer;
 
-	public static boolean SKIP_GL_ERROR_CHECKS;
 	public static GLCapabilities GL_CAPS;
+	public static boolean SKIP_GL_ERROR_CHECKS;
+	public static boolean VALIDATE_SHADERS;
+
 	public static boolean AMD_GPU;
 	public static boolean INTEL_GPU;
 	public static boolean OLD_INTEL_GPU;
 	public static boolean NVIDIA_GPU;
+
 	public static boolean APPLE;
 	public static boolean APPLE_ARM;
 
@@ -1794,6 +1797,8 @@ public class HdPlugin extends Plugin {
 	}
 
 	private void updateCachedConfigs() {
+		VALIDATE_SHADERS = config.validateShaders().get(log.isDebugEnabled() && NVIDIA_GPU);
+
 		configExpandedMapLoadingChunks = useLowMemoryMode ? 0 : config.expandedMapLoadingChunks();
 		configNightBrightness = config.nightBrightness() / 100f;
 		configShadowMode = config.shadowMode();
@@ -2000,6 +2005,7 @@ public class HdPlugin extends Plugin {
 							case KEY_WATER_SPECULAR_REFLECTIONS:
 							case KEY_DECOUPLE_WATER_FROM_SKY_COLOR:
 							case KEY_CENTROID_QUALIFIER:
+							case KEY_VALIDATE_SHADERS:
 								recompilePrograms = true;
 								break;
 							case KEY_GLARE_INTENSITY:

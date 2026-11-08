@@ -12,7 +12,7 @@ import rs117.hd.utils.Destructible;
 import rs117.hd.utils.DestructibleHandler;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.HdPlugin.APPLE;
+import static rs117.hd.HdPlugin.VALIDATE_SHADERS;
 
 @Slf4j
 public class ShaderProgram implements Destructible {
@@ -67,7 +67,7 @@ public class ShaderProgram implements Destructible {
 		initialize();
 
 		// Shader validation can be horribly slow on macOS with AMD GPUs
-		if (!APPLE || log.isDebugEnabled()) {
+		if (VALIDATE_SHADERS) {
 			glValidateProgram(program);
 			if (glGetProgrami(program, GL_VALIDATE_STATUS) == GL_FALSE) {
 				String err = glGetProgramInfoLog(program);

@@ -345,7 +345,7 @@ public class SkyManager {
 			from,
 			to,
 			environmentManager.getTransitionProgress(),
-			environmentManager.getTargetEnvironment().isOverworld,
+			environmentManager.getTargetEnvironment().hasSky(),
 			environmentManager.getCurrentEnvironment().getShadowAngles()
 		);
 	}

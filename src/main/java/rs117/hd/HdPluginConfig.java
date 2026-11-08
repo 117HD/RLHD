@@ -1608,6 +1608,17 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_VALIDATE_SHADERS = "validateShaders";
+	@ConfigItem(
+		keyName = KEY_VALIDATE_SHADERS,
+		name = "Validate shaders",
+		description = "Validate shaders after compilation. Useful for debugging.",
+		section = technicalSettings
+	)
+	default DefaultBoolean validateShaders() {
+		return DefaultBoolean.DEFAULT;
+	}
+
 
 	/*====== Internal settings ======*/
 

@@ -1125,6 +1125,16 @@
     "doubleSidedFaces": true
   },
   {
+    "name": "TFA_VOID",
+    "vanillaTextureIndex": 215,
+    "voidShader": true
+  },
+  {
+    "name": "TFA_VOID_DENSE",
+    "parent": "TFA_VOID",
+    "voidStarDensity": 7.25
+  },
+  {
     "name": "GLASS_1",
     "parent": "NONE",
     "subsurface": 1

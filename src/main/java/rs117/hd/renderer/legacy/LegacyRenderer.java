@@ -67,7 +67,6 @@ import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
-import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILE_HEIGHT_MAP;
@@ -78,6 +77,8 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 @Singleton
 public class LegacyRenderer implements Renderer {
+	public static final int LEGACY_MAX_FACE_COUNT = 6144; // Ensure compute shader shared memory requirements are below 32 kB
+
 	public static final int GROUND_MIN_Y = 350; // how far below the ground models extend
 	public static final int VERTEX_SIZE = 4; // 4 ints per vertex
 	public static final int UV_SIZE = 4; // 4 floats per vertex
@@ -350,7 +351,7 @@ public class LegacyRenderer implements Renderer {
 			512,
 			2048,
 			4096,
-			MAX_FACE_COUNT
+			LEGACY_MAX_FACE_COUNT
 		};
 
 		int numBins = 0;
@@ -1041,6 +1042,8 @@ public class LegacyRenderer implements Renderer {
 			plugin.uboGlobal.useFog.set(fogDepth > 0 ? 1 : 0);
 			plugin.uboGlobal.fogDepth.set(fogDepth);
 
+			plugin.uboGlobal.voidShader.set(environmentManager.getTargetEnvironment().voidShader ? 1 : 0);
+
 			plugin.uboGlobal.sceneBase.set(
 				sceneContext.scene.getBaseX() * LOCAL_TILE_SIZE,
 				sceneContext.scene.getBaseY() * LOCAL_TILE_SIZE
@@ -1643,7 +1646,7 @@ public class LegacyRenderer implements Renderer {
 			// animated to also be uploaded. This results in the Renderable being converted to a DynamicObject, whose `getModel` returns the
 			// original static Model after the animation is done playing. One such example is in the POH, after it has been reuploaded in
 			// order to cache newly loaded static models, and you subsequently attempt to interact with a wardrobe triggering its animation.
-			faceCount = min(MAX_FACE_COUNT, offsetModel.getFaceCount());
+			faceCount = min(LEGACY_MAX_FACE_COUNT, offsetModel.getFaceCount());
 			int vertexOffset = offsetModel.getBufferOffset();
 			int uvOffset = offsetModel.getUvBufferOffset();
 			boolean hillskew = offsetModel != model;
@@ -1792,6 +1795,6 @@ public class LegacyRenderer implements Renderer {
 
 		throw new IllegalStateException(
 			"Ran into a model with more triangles than the plugin supports (" +
-			triangles + " > " + MAX_FACE_COUNT + ")");
+			triangles + " > " + LEGACY_MAX_FACE_COUNT + ")");
 	}
 }
