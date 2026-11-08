@@ -332,7 +332,7 @@ public class OitRenderer {
 		renderState.disable.set(GL_BLEND);
 
 		renderState.depthFunc.set(GL_GEQUAL);
-		renderState.depthMask.set(true);
+		renderState.depthMask.set(!plugin.configSceneDepth);
 
 		alphaDiscardCmd.execute(renderState);
 
@@ -345,6 +345,21 @@ public class OitRenderer {
 		frameTimer.end(Timer.DRAW_ALPHA_DISCARD);
 
 		checkGLErrors();
+	}
+
+	public void alphaDiscardDepthPass(RenderState renderState) {
+		if (alphaDiscardCmd.isEmpty())
+			return;
+
+		renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboScene);
+		renderState.toggle(GL_MULTISAMPLE, plugin.msaaSamples > 1);
+		renderState.toggle(GL_SAMPLE_ALPHA_TO_COVERAGE, samples > 1);
+		renderState.program.set(samples > 1 ? sceneAlphaDiscardMSAAProgram : sceneAlphaDiscardProgram);
+
+		alphaDiscardCmd.execute(renderState);
+
+		renderState.disable.set(GL_SAMPLE_ALPHA_TO_COVERAGE);
+		renderState.apply();
 	}
 
 	public void depthPass(RenderState renderState) {

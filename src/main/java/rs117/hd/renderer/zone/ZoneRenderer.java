@@ -1100,6 +1100,9 @@ public class ZoneRenderer implements Renderer {
 			sceneDepthProgram.use();
 			sceneDepthCmd.execute(renderState);
 
+			if (plugin.configUseOIT)
+				oitRenderer.alphaDiscardDepthPass(renderState);
+
 			renderState.colorMask.set(true, true, true, true);
 			renderState.disable.set(GL_CULL_FACE);
 			renderState.disable.set(GL_DEPTH_TEST);
