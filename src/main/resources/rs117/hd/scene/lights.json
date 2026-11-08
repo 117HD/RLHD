@@ -20198,7 +20198,7 @@
     ]
   },
   {
-    "description": "STANDING_TORCH",
+    "description": "STANDING_TORCH_TAVERLEY",
     "excludeAreas": [ "TAVERLEY_STONE_CIRCLE" ],
     "height": 200,
     "radius": 500,
@@ -21684,8 +21684,8 @@
   {
     "description": "STANDING_TORCH_LARGE_BLUE",
     "height": 250,
-    "radius": 600,
-    "strength": 12.5,
+    "radius": 475,
+    "strength": 13.5,
     "color": [
       0,
       220,
@@ -34366,19 +34366,19 @@
   },
   {
     "description": "KARUULM_LAVA_1_1",
-    "worldX": 1316,
+    "worldX": 1321,
     "worldY": 3784,
     "plane": 0,
-    "height": 600,
-    "radius": 2400,
-    "strength": 4,
+    "height": 200,
+    "radius": 1000,
+    "strength": 18,
     "color": [
       112,
       200,
       255
     ],
     "type": "PULSE",
-    "duration": 7000,
+    "duration": 6900,
     "range": 10
   },
   {
@@ -34386,33 +34386,33 @@
     "worldX": 1311,
     "worldY": 3790,
     "plane": 0,
-    "height": 600,
-    "radius": 2400,
-    "strength": 4,
+    "height": 200,
+    "radius": 1000,
+    "strength": 19,
     "color": [
       112,
       200,
       255
     ],
     "type": "PULSE",
-    "duration": 7000,
+    "duration": 7100,
     "range": 10
   },
   {
     "description": "KARUULM_LAVA_1_3",
     "worldX": 1305,
     "worldY": 3790,
+    "offset": [ -65, 200, 0 ],
     "plane": 0,
-    "height": 600,
-    "radius": 2400,
-    "strength": 4,
+    "radius": 1000,
+    "strength": 13.5,
     "color": [
       112,
       200,
       255
     ],
     "type": "PULSE",
-    "duration": 7000,
+    "duration": 7300,
     "range": 10
   },
   {
@@ -34420,42 +34420,93 @@
     "worldX": 1301,
     "worldY": 3784,
     "plane": 0,
-    "height": 600,
-    "radius": 2400,
-    "strength": 4,
+    "height": 250,
+    "radius": 1000,
+    "strength": 18,
     "color": [
       112,
       200,
       255
     ],
     "type": "PULSE",
-    "duration": 7000,
+    "duration": 7200,
+    "range": 10
+  },
+  {
+    "description": "KARUULM_LAVA_1_5",
+    "worldX": 1315,
+    "worldY": 3787,
+    "plane": 0,
+    "height": 250,
+    "radius": 1000,
+    "strength": 18,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 7100,
+    "range": 10
+  },
+  {
+    "description": "KARUULM_LAVA_1_6",
+    "worldX": 1316,
+    "worldY": 3783,
+    "plane": 0,
+    "height": 250,
+    "radius": 1000,
+    "strength": 15,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 6800,
+    "range": 10
+  },
+  {
+    "description": "KARUULM_LAVA_1_7",
+    "worldX": 1303,
+    "worldY": 3788,
+    "plane": 0,
+    "height": 250,
+    "radius": 1000,
+    "strength": 15,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 6900,
     "range": 10
   },
   {
     "description": "KARUULM_LAVA_2_1",
-    "worldX": 1345,
-    "worldY": 3773,
+    "worldX": 1341,
+    "worldY": 3776,
     "plane": 0,
     "height": 300,
-    "radius": 2400,
-    "strength": 4,
+    "radius": 1500,
+    "strength": 11,
     "color": [
       112,
       200,
       255
     ],
     "type": "PULSE",
-    "duration": 7000,
+    "duration": 7100,
     "range": 10
   },
   {
     "description": "KARUULM_LAVA_2_2",
     "worldX": 1341,
-    "worldY": 3775,
+    "worldY": 3772,
     "plane": 0,
-    "height": 600,
-    "radius": 2400,
+    "height": 300,
+    "radius": 1500,
     "strength": 10,
     "color": [
       112,
@@ -34463,7 +34514,41 @@
       255
     ],
     "type": "PULSE",
-    "duration": 7000,
+    "duration": 7200,
+    "range": 10
+  },
+  {
+    "description": "KARUULM_LAVA_2_3",
+    "worldX": 1345,
+    "worldY": 3773,
+    "plane": 0,
+    "height": 300,
+    "radius": 1500,
+    "strength": 10,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 6800,
+    "range": 10
+  },
+  {
+    "description": "KARUULM_LAVA_2_4",
+    "worldX": 1344,
+    "worldY": 3779,
+    "plane": 0,
+    "height": 200,
+    "radius": 1000,
+    "strength": 7.5,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 6900,
     "range": 10
   },
   {
@@ -34471,26 +34556,26 @@
     "worldX": 1348,
     "worldY": 3811,
     "plane": 0,
-    "height": 300,
-    "radius": 2400,
-    "strength": 10,
+    "height": 200,
+    "radius": 1700,
+    "strength": 17,
     "color": [
       112,
       200,
       255
     ],
     "type": "PULSE",
-    "duration": 7000,
-    "range": 10
+    "duration": 6900,
+    "range": 5
   },
   {
     "description": "KARUULM_LAVA_4_1",
     "worldX": 1327,
     "worldY": 3820,
     "plane": 0,
-    "height": 300,
-    "radius": 2400,
-    "strength": 7.5,
+    "height": 150,
+    "radius": 1000,
+    "strength": 20,
     "color": [
       112,
       200,
@@ -34505,43 +34590,43 @@
     "worldX": 1296,
     "worldY": 3792,
     "plane": 0,
-    "height": 600,
-    "radius": 2400,
-    "strength": 4,
+    "height": 100,
+    "radius": 1000,
+    "strength": 20,
     "color": [
       112,
       200,
       255
     ],
     "type": "PULSE",
-    "duration": 7000,
+    "duration": 7100,
     "range": 10
   },
   {
     "description": "KARUULM_LAVA_6_1",
     "worldX": 1299,
     "worldY": 3808,
+    "offset": [ -50, 150, -50 ],
     "plane": 0,
-    "height": 600,
-    "radius": 2400,
-    "strength": 4,
+    "radius": 1000,
+    "strength": 20,
     "color": [
       112,
       200,
       255
     ],
     "type": "PULSE",
-    "duration": 7000,
+    "duration": 7200,
     "range": 10
   },
   {
     "description": "KARUULM_LAVA_7_1",
     "worldX": 1288,
     "worldY": 3817,
+    "offset": [ 0, 150, 50 ],
     "plane": 0,
-    "height": 600,
-    "radius": 2400,
-    "strength": 4,
+    "radius": 1000,
+    "strength": 20,
     "color": [
       112,
       200,
@@ -34554,35 +34639,118 @@
   {
     "description": "KARUULM_LAVA_8_1",
     "worldX": 1283,
-    "worldY": 3796,
+    "worldY": 3797,
     "plane": 0,
-    "height": 300,
-    "radius": 2400,
-    "strength": 7.5,
+    "height": 200,
+    "radius": 1000,
+    "strength": 17.5,
     "color": [
       112,
       200,
       255
     ],
     "type": "PULSE",
-    "duration": 7000,
+    "duration": 6900,
     "range": 10
   },
   {
     "description": "KARUULM_LAVA_8_2",
-    "worldX": 1275,
-    "worldY": 3797,
+    "worldX": 1276,
+    "worldY": 3796,
     "plane": 0,
     "height": 250,
-    "radius": 2400,
-    "strength": 10,
+    "radius": 1250,
+    "strength": 17.5,
     "color": [
       112,
       200,
       255
     ],
     "type": "PULSE",
-    "duration": 7000,
+    "duration": 7300,
+    "range": 10
+  },
+  {
+    "description": "KARUULM_LAVA_8_3",
+    "worldX": 1273,
+    "worldY": 3799,
+    "plane": 0,
+    "height": 250,
+    "radius": 1250,
+    "strength": 12,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 7100,
+    "range": 10
+  },
+  {
+    "description": "KARUULM_LAVA_8_4",
+    "worldX": 1281,
+    "worldY": 3797,
+    "offset": [ 50, 300, 50 ],
+    "plane": 0,
+    "radius": 1500,
+    "strength": 18,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "KARUULM_LAVA_8_5",
+    "worldX": 1284,
+    "worldY": 3794,
+    "plane": 0,
+    "height": 200,
+    "radius": 1000,
+    "strength": 13,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 6900,
+    "range": 10
+  },
+  {
+    "description": "KARUULM_LAVA_8_6",
+    "worldX": 1277,
+    "worldY": 3799,
+    "plane": 0,
+    "height": 250,
+    "radius": 1250,
+    "strength": 7,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 7200,
+    "range": 10
+  },
+  {
+    "description": "KARUULM_LAVA_8_7",
+    "worldX": 1273,
+    "worldY": 3796,
+    "plane": 0,
+    "height": 250,
+    "radius": 1250,
+    "strength": 7,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 6800,
     "range": 10
   },
   {
@@ -34591,15 +34759,15 @@
     "worldY": 3800,
     "plane": 0,
     "height": 50,
-    "radius": 2400,
-    "strength": 11,
+    "radius": 1500,
+    "strength": 10,
     "color": [
       112,
       200,
       255
     ],
     "type": "PULSE",
-    "duration": 7000,
+    "duration": 7100,
     "range": 10
   },
   {
@@ -34608,15 +34776,15 @@
     "worldY": 3824,
     "plane": 0,
     "height": 50,
-    "radius": 2400,
-    "strength": 4,
+    "radius": 1500,
+    "strength": 10,
     "color": [
       112,
       200,
       255
     ],
     "type": "PULSE",
-    "duration": 7000,
+    "duration": 7200,
     "range": 10
   },
   {
@@ -34625,66 +34793,117 @@
     "worldY": 3848,
     "plane": 0,
     "height": 50,
-    "radius": 2400,
-    "strength": 4,
+    "radius": 1500,
+    "strength": 10,
     "color": [
       112,
       200,
       255
     ],
     "type": "PULSE",
-    "duration": 7000,
+    "duration": 6800,
     "range": 10
   },
   {
     "description": "KARUULM_LAVA_12_1",
-    "worldX": 1290,
+    "worldX": 1289,
     "worldY": 3828,
     "plane": 0,
-    "height": 300,
-    "radius": 2400,
-    "strength": 8,
+    "height": 200,
+    "radius": 1500,
+    "strength": 12,
     "color": [
       112,
       200,
       255
     ],
     "type": "PULSE",
-    "duration": 7000,
+    "duration": 6900,
     "range": 10
   },
   {
-    "description": "KARUULM_LAVA_12_1",
+    "description": "KARUULM_LAVA_12_2",
     "worldX": 1294,
-    "worldY": 3823,
+    "worldY": 3824,
     "plane": 0,
-    "height": 600,
-    "radius": 2400,
-    "strength": 7,
+    "height": 200,
+    "radius": 1500,
+    "strength": 12,
     "color": [
       112,
       200,
       255
     ],
     "type": "PULSE",
-    "duration": 7000,
+    "duration": 7100,
+    "range": 10
+  },
+  {
+    "description": "KARUULM_LAVA_12_3",
+    "worldX": 1290,
+    "worldY": 3824,
+    "plane": 0,
+    "height": 200,
+    "radius": 1000,
+    "strength": 12,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 7200,
+    "range": 10
+  },
+  {
+    "description": "KARUULM_LAVA_12_4",
+    "worldX": 1292,
+    "worldY": 3829,
+    "plane": 0,
+    "height": 200,
+    "radius": 1000,
+    "strength": 12,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 6800,
     "range": 10
   },
   {
     "description": "KARUULM_LAVA_13_1",
-    "worldX": 1306,
+    "worldX": 1308,
     "worldY": 3847,
     "plane": 0,
-    "height": 600,
-    "radius": 3200,
-    "strength": 4,
+    "height": 300,
+    "radius": 1500,
+    "strength": 10,
     "color": [
       112,
       200,
       255
     ],
     "type": "PULSE",
-    "duration": 7000,
+    "duration": 7300,
+    "range": 10
+  },
+  {
+    "description": "KARUULM_LAVA_13_2",
+    "worldX": 1304,
+    "worldY": 3847,
+    "plane": 0,
+    "height": 300,
+    "radius": 1500,
+    "strength": 10,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 6700,
     "range": 10
   },
   {
@@ -34693,59 +34912,25 @@
     "worldY": 3862,
     "plane": 0,
     "height": 50,
-    "radius": 2400,
-    "strength": 4,
+    "radius": 1500,
+    "strength": 10,
     "color": [
       112,
       200,
       255
     ],
     "type": "PULSE",
-    "duration": 7000,
+    "duration": 6500,
     "range": 10
   },
   {
-    "description": "KARUULM_LAVA_EDGE_1",
-    "objectIds": [
-      "BRIMSTONE_FALLOFF_1",
-      "BRIMSTONE_FALLOFF_T",
-      "BRIMSTONE_FALLOFF_2"
-    ],
-    "height": 75,
-    "radius": 230,
-    "strength": 23,
-    "color": [
-      112,
-      200,
-      255
-    ],
-    "type": "FLICKER",
-    "range": 20
-  },
-  {
-    "description": "KARUULM_LAVA_EDGE_2",
-    "objectIds": [
-      "BRIMSTONE_FALLOFF_4"
-    ],
-    "offset": [ -70, 75, 50 ],
-    "radius": 220,
-    "strength": 23,
-    "color": [
-      112,
-      200,
-      255
-    ],
-    "type": "FLICKER",
-    "range": 20
-  },
-  {
     "description": "KARUULM_LAVA_15_1",
-    "worldX": 1315,
-    "worldY": 3812,
+    "worldX": 1314,
+    "worldY": 3813,
     "plane": 0,
-    "height": 300,
-    "radius": 2400,
-    "strength": 4,
+    "height": 200,
+    "radius": 1250,
+    "strength": 20,
     "color": [
       112,
       200,
@@ -34757,46 +34942,97 @@
   },
   {
     "description": "KARUULM_LAVA_15_2",
-    "worldX": 1314,
-    "worldY": 3801,
+    "worldX": 1318,
+    "worldY": 3810,
     "plane": 0,
-    "height": 300,
-    "radius": 2400,
-    "strength": 10,
+    "height": 200,
+    "radius": 1250,
+    "strength": 20,
     "color": [
       112,
       200,
       255
     ],
     "type": "PULSE",
-    "duration": 7000,
+    "duration": 7500,
     "range": 10
   },
   {
     "description": "KARUULM_LAVA_15_3",
     "worldX": 1318,
-    "worldY": 3807,
+    "worldY": 3805,
     "plane": 0,
-    "height": 300,
-    "radius": 2400,
-    "strength": 10,
+    "height": 200,
+    "radius": 1250,
+    "strength": 20,
     "color": [
       112,
       200,
       255
     ],
     "type": "PULSE",
-    "duration": 7000,
+    "duration": 6500,
+    "range": 10
+  },
+  {
+    "description": "KARUULM_LAVA_15_4",
+    "worldX": 1315,
+    "worldY": 3807,
+    "plane": 0,
+    "height": 200,
+    "radius": 1000,
+    "strength": 15,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 7250,
+    "range": 10
+  },
+  {
+    "description": "KARUULM_LAVA_15_5",
+    "worldX": 1317,
+    "worldY": 3802,
+    "plane": 0,
+    "height": 200,
+    "radius": 1000,
+    "strength": 8,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 7100,
+    "range": 10
+  },
+  {
+    "description": "KARUULM_LAVA_15_6",
+    "worldX": 1314,
+    "worldY": 3801,
+    "plane": 0,
+    "height": 150,
+    "radius": 1000,
+    "strength": 17,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 6900,
     "range": 10
   },
   {
     "description": "KARUULM_LAVA_16_1",
-    "worldX": 1306,
+    "worldX": 1304,
     "worldY": 3811,
     "plane": 0,
-    "height": 300,
-    "radius": 2400,
-    "strength": 10,
+    "height": 200,
+    "radius": 1250,
+    "strength": 20,
     "color": [
       112,
       200,
@@ -34809,11 +35045,62 @@
   {
     "description": "KARUULM_LAVA_16_2",
     "worldX": 1307,
-    "worldY": 3803,
+    "worldY": 3801,
+    "offset": [ 0, 200,-50 ],
     "plane": 0,
-    "height": 300,
-    "radius": 2400,
-    "strength": 10,
+    "radius": 1250,
+    "strength": 20,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 7100,
+    "range": 10
+  },
+  {
+    "description": "KARUULM_LAVA_16_3",
+    "worldX": 1306,
+    "worldY": 3805,
+    "offset": [ 0, 200, 75 ],
+    "plane": 0,
+    "radius": 1250,
+    "strength": 20,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 7250,
+    "range": 10
+  },
+  {
+    "description": "KARUULM_LAVA_16_4",
+    "worldX": 1307,
+    "worldY": 3814,
+    "plane": 0,
+    "height": 200,
+    "radius": 1250,
+    "strength": 20,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 6800,
+    "range": 10
+  },
+  {
+    "description": "KARUULM_LAVA_16_5",
+    "worldX": 1308,
+    "worldY": 3809,
+    "plane": 0,
+    "height": 200,
+    "radius": 1000,
+    "strength": 12,
     "color": [
       112,
       200,
@@ -34824,10 +35111,27 @@
     "range": 10
   },
   {
+    "description": "KARUULM_LAVA_16_6",
+    "worldX": 1309,
+    "worldY": 3799,
+    "plane": 0,
+    "height": 200,
+    "radius": 1000,
+    "strength": 8,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 7500,
+    "range": 10
+  },
+  {
     "description": "KARUULM_SULPHUR_VENT",
-    "height": 120,
-    "radius": 300,
-    "strength": 18,
+    "height": 150,
+    "radius": 500,
+    "strength": 15,
     "color": [
       112,
       200,
@@ -34841,13 +35145,30 @@
     ]
   },
   {
+    "description": "KARUULM_FLAG_LIGHT",
+    "offset": [ 0, 135, -150 ],
+    "radius": 300,
+    "strength": 15,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "BRIMSTONE_ROCK_CLIFF_FLAG"
+    ]
+  },
+  {
     "description": "KARUULM_VOLCANIC_FURNACE_1",
     "worldX": 1326,
     "worldY": 3809,
     "plane": 0,
-    "height": 400,
-    "radius": 2400,
-    "strength": 10,
+    "height": 100,
+    "radius": 500,
+    "strength": 20,
     "color": [
       112,
       200,
@@ -34862,9 +35183,9 @@
     "worldX": 1326,
     "worldY": 3807,
     "plane": 0,
-    "height": 400,
-    "radius": 2400,
-    "strength": 4,
+    "height": 100,
+    "radius": 500,
+    "strength": 20,
     "color": [
       112,
       200,
@@ -34873,6 +35194,22 @@
     "type": "PULSE",
     "duration": 7000,
     "range": 10
+  },
+  {
+    "description": "KARUULM_VOLCANIC_FURNACE_3",
+    "worldX": 1325,
+    "worldY": 3808,
+    "plane": 0,
+    "height": 200,
+    "radius": 400,
+    "strength": 20,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 15
   },
   {
     "description": "KARUULM_DUNGEON_EXIT_NEAR",
@@ -49119,7 +49456,6 @@
     "spawnDelay": 300,
     "waitForAnimation": true,
     "fadeInDuration": 700,
-    "spawnDelay": 300,
     "range": 10,
     "graphicsObjectIds": [
       "TFA_DAGONHAI_SARADOMIN_DAMAGE_TELEGRAPH_150"
