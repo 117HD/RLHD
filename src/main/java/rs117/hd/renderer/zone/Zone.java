@@ -426,8 +426,9 @@ public class Zone implements Destructible {
 			maxLevel = 3;
 			hidden = EMPTY_ROOF;
 		}
-		// Roofs which are partway through fading in or out are drawn separately, so the main pass skips them too
-		final boolean anyRoofsExcluded = !hidden.isEmpty() || fade.hasRoofs();
+		// Roofs which are partway through fading in or out are drawn separately, and roofs waiting out their fade in
+		// delay are still hidden, so the main pass skips them too
+		final boolean anyRoofsExcluded = !hidden.isEmpty() || fade.hasRoofs() || fade.hasHeld();
 
 		// Fading levels can sit outside the visible range, so the fading pass checks all of them
 		int firstLevel = fadingOnly ? 0 : ctx.minLevel;
@@ -468,7 +469,7 @@ public class Zone implements Destructible {
 				if (fadingOnly) {
 					draw = fade.roofBucket(rid) == fadeBucket;
 				} else {
-					draw = !hidden.contains(rid) && fade.roofBucket(rid) == -1;
+					draw = !hidden.contains(rid) && !fade.isHeld(rid) && fade.roofBucket(rid) == -1;
 				}
 
 				if (draw) {
@@ -958,9 +959,9 @@ public class Zone implements Destructible {
 					continue;
 			} else if (level < minLevel || level > maxLevel) {
 				continue;
-			} else if (level > currentLevel && (hidden.contains(m.rid) || fade.roofBucket(m.rid) != -1)) {
-				// Above the player's level, hidden roofs and roofs being faded are excluded, the latter so they can be
-				// drawn separately
+			} else if (level > currentLevel && (hidden.contains(m.rid) || fade.isHeld(m.rid) || fade.roofBucket(m.rid) != -1)) {
+				// Above the player's level, hidden roofs, including those waiting out their fade in delay, and roofs being
+				// faded are excluded, the latter so they can be drawn separately
 				continue;
 			}
 

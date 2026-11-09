@@ -40,6 +40,10 @@ public class ZoneRoofFades {
 		int[] roofBuckets = new int[8];
 		final int[] levelBuckets = new int[MAX_Z];
 
+		// Roofs which are no longer supposed to be hidden, but are being kept hidden until their fade in delay has passed
+		int heldCount;
+		int[] heldIds = new int[8];
+
 		Fade() {
 			Arrays.fill(levelBuckets, -1);
 		}
@@ -55,6 +59,17 @@ public class ZoneRoofFades {
 
 		public int levelBucket(int level) {
 			return level >= 0 && level < MAX_Z ? levelBuckets[level] : -1;
+		}
+
+		public boolean isHeld(int rid) {
+			for (int i = 0; i < heldCount; ++i)
+				if (heldIds[i] == rid)
+					return true;
+			return false;
+		}
+
+		public boolean hasHeld() {
+			return heldCount > 0;
 		}
 
 		public boolean hasRoofs() {
@@ -77,6 +92,9 @@ public class ZoneRoofFades {
 		float[] roofFade = new float[8];
 		int[] roofTargets = new int[8];
 
+		// How long each held roof has been waiting, in seconds
+		float[] heldTime = new float[8];
+
 		// Levels in the middle of a fade
 		int levelMask;
 		final float[] levelFade = new float[MAX_Z];
@@ -96,9 +114,57 @@ public class ZoneRoofFades {
 
 		void clearFades() {
 			roofCount = 0;
+			heldCount = 0;
 			levelMask = 0;
 			buckets = 0;
 			Arrays.fill(levelBuckets, -1);
+		}
+
+		int indexOfRoof(int rid) {
+			for (int i = 0; i < roofCount; ++i)
+				if (roofIds[i] == rid)
+					return i;
+			return -1;
+		}
+
+		void holdRoof(int rid) {
+			if (isHeld(rid))
+				return;
+			if (heldCount == heldIds.length) {
+				heldIds = Arrays.copyOf(heldIds, heldCount * 2);
+				heldTime = Arrays.copyOf(heldTime, heldCount * 2);
+			}
+			heldIds[heldCount] = rid;
+			heldTime[heldCount] = 0;
+			++heldCount;
+		}
+
+		boolean releaseHeld(int rid) {
+			for (int i = 0; i < heldCount; ++i) {
+				if (heldIds[i] == rid) {
+					int last = --heldCount;
+					heldIds[i] = heldIds[last];
+					heldTime[i] = heldTime[last];
+					return true;
+				}
+			}
+			return false;
+		}
+
+		void advanceHeld(float deltaTime, float delay) {
+			for (int i = heldCount - 1; i >= 0; --i) {
+				float time = heldTime[i] + deltaTime;
+				if (time < delay) {
+					heldTime[i] = time;
+					continue;
+				}
+
+				int rid = heldIds[i];
+				int last = --heldCount;
+				heldIds[i] = heldIds[last];
+				heldTime[i] = heldTime[last];
+				setRoofTarget(rid, 0);
+			}
 		}
 
 		void setRoofTarget(int rid, int target) {
@@ -231,6 +297,7 @@ public class ZoneRoofFades {
 		state.lastLevel = ctx.level;
 
 		final float duration = plugin.configDitherFadeRoofDuration / 1000f;
+		final float delay = plugin.configDitherFadeRoofDelay / 1000f;
 
 		// Snap rather than fade on the first frame so that already hidden geometry doesn't flash, when the player changes
 		// level, since the roofs hiding is then a consequence of that rather than of walking under or out from one, and
@@ -242,6 +309,9 @@ public class ZoneRoofFades {
 		state.hidden = hidden;
 		state.prevHidden = prevHidden;
 
+		if (!snap && state.heldCount > 0)
+			state.advanceHeld(plugin.deltaTime, delay);
+
 		hidden.clear();
 		if (zone.rids != null && (!ctx.hideRoofIds.isEmpty() || !prevHidden.isEmpty())) {
 			for (int level = ctx.level + 1; level < MAX_Z; ++level) {
@@ -251,8 +321,20 @@ public class ZoneRoofFades {
 					boolean isHidden = ctx.hideRoofIds.contains(rid);
 					if (isHidden)
 						hidden.add(rid);
-					if (!snap && isHidden != prevHidden.contains(rid))
-						state.setRoofTarget(rid, isHidden ? 1 : 0);
+					if (snap || isHidden == prevHidden.contains(rid))
+						continue;
+
+					if (!isHidden) {
+						// Hold off on fading in a roof that's fully hidden. One that's already partway through fading out
+						// just turns around instead.
+						if (delay > 0 && state.indexOfRoof(rid) == -1)
+							state.holdRoof(rid);
+						else
+							state.setRoofTarget(rid, 0);
+					} else if (!state.releaseHeld(rid)) {
+						// Hidden again before the delay ran out, so it never stopped being hidden and there's nothing to fade
+						state.setRoofTarget(rid, 1);
+					}
 				}
 			}
 		}
@@ -281,7 +363,7 @@ public class ZoneRoofFades {
 			return Fade.NONE;
 		return state;
 	}
-
+	
 	public boolean claimAlpha(Zone zone) {
 		State state = zone.fade;
 		if (!plugin.configDitherFadeRoofs || state == null || !state.initialized)

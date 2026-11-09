@@ -1470,7 +1470,6 @@ public interface HdPluginConfig extends Config
 	}
 
 	String KEY_DITHER_FADE_ROOF_DURATION = "experimentalDitherFadeRoofDuration";
-	@Range(min = 0)
 	@Units(Units.MILLISECONDS)
 	@ConfigItem(
 		keyName = KEY_DITHER_FADE_ROOF_DURATION,
@@ -1482,6 +1481,17 @@ public interface HdPluginConfig extends Config
 		return 250;
 	}
 
+	String KEY_DITHER_FADE_ROOF_DELAY = "experimentalDitherFadeRoofDelay";
+	@Units(Units.MILLISECONDS)
+	@ConfigItem(
+		keyName = KEY_DITHER_FADE_ROOF_DELAY,
+		name = "Roof Fade Delay",
+		description = "How long it before roofs begin to fade in. Set to 0 to fade instantly.",
+		section = experimentalSettings
+	)
+	default int ditherFadeRoofDelay() {
+		return 500;
+	}
 
 	/*====== Technical settings ======*/
 

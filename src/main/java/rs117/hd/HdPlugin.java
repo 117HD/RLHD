@@ -475,6 +475,7 @@ public class HdPlugin extends Plugin {
 	public boolean configDitherFade;
 	public boolean configDitherFadeRoofs;
 	public int configDitherFadeRoofDuration;
+	public int configDitherFadeRoofDelay;
 
 	public boolean useLowMemoryMode;
 	public boolean enableDetailedTimers;
@@ -1848,6 +1849,7 @@ public class HdPlugin extends Plugin {
 		configDitherFade = config.ditherFade();
 		configDitherFadeRoofs = config.ditherFade() && config.ditherFadeRoofs();
 		configDitherFadeRoofDuration = config.ditherFadeRoofDuration();
+		configDitherFadeRoofDelay = config.ditherFadeRoofDelay();
 		configTiledLighting = config.tiledLighting().get(!OLD_INTEL_GPU);
 		configTiledLightingImageLoadStore = config.imageLoadStore().get(true);
 		configOverrideSky = config.overrideSky();
