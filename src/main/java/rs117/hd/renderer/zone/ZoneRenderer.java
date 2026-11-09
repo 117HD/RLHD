@@ -269,6 +269,7 @@ public class ZoneRenderer implements Renderer {
 		sceneFboValid = false;
 		pendingSceneSwap = null;
 
+		roofFades.destroy();
 		destroyBuffers();
 		skyRenderer.destroy();
 
@@ -751,8 +752,7 @@ public class ZoneRenderer implements Renderer {
 		directionalCmd.reset();
 		terrainShadowCmd.reset();
 		gapFillerCmd.reset();
-		if (plugin.configDitherFadeRoofs)
-			roofFades.reset();
+		roofFades.reset();
 		renderState.reset();
 
 		eboAlpha.orphan();
@@ -1116,17 +1116,18 @@ public class ZoneRenderer implements Renderer {
 
 			frameTimer.begin(Timer.DRAW_ZONE_OPAQUE);
 
-			// Partway geometry goes to its own buffer. At the start of a fade it's still fully visible, and at the end it's
-			// fully gone, so it stays in the normal pass.
+			// Roofs and levels partway through a fade go to their own buffers, one per fade amount. Once a fade finishes,
+			// the geometry is either fully visible or fully hidden, and is handled by the normal pass.
 			final ZoneRoofFades.Fade fade = roofFades.update(z, ctx);
-			final CommandBuffer roofCmd = fade.cmd;
 
 			boolean renderGroundLevel = ctx.minLevel == 0;
 			if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
 				final boolean allowDiscard = !sceneManager.isRoot(ctx) || z.sceneCameraIntersects;
 
-				if (roofCmd != null)
-					z.renderOpaque(roofCmd, ctx, fade, Zone.DRAW_FADING_ONLY);
+				for (int buckets = fade.buckets; buckets != 0; buckets &= buckets - 1) {
+					int bucket = Integer.numberOfTrailingZeros(buckets);
+					z.renderOpaque(roofFades.getCommandBuffer(bucket), ctx, fade, Zone.DRAW_FADING_ONLY, bucket);
+				}
 
 				if (allowDiscard) {
 					sceneCmd.SetShader(sceneDiscardProgram);
@@ -1201,7 +1202,6 @@ public class ZoneRenderer implements Renderer {
 			final boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
 			if (hasAlpha) {
 				final ZoneRoofFades.Fade fade = roofFades.current(z);
-				final CommandBuffer roofCmd = fade.cmd;
 				final int offset = ctx.sceneContext.sceneOffset >> 3;
 				final int lzx = zx - offset;
 				final int lzz = zz - offset;
@@ -1219,7 +1219,7 @@ public class ZoneRenderer implements Renderer {
 				}
 
 				// Called per visible level, but fading geometry can be outside the visible range, so draw it all here
-				final boolean drawFadingAlpha = roofCmd != null && roofFades.claimAlpha(z);
+				final boolean drawFadingAlpha = fade.buckets != 0 && roofFades.claimAlpha(z);
 
 				if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
 					if (!sceneManager.isRoot(ctx) || renderWater) {
@@ -1229,7 +1229,7 @@ public class ZoneRenderer implements Renderer {
 						sceneCmd.DepthMask(false);
 						z.renderAlpha(sceneCmd, lzx, lzz, level, ctx, fade, 0);
 						if (drawFadingAlpha)
-							renderFadingAlpha(roofCmd, z, lzx, lzz, ctx, fade);
+							renderFadingAlpha(z, lzx, lzz, ctx, fade);
 						sceneCmd.DepthMask(true);
 					} else {
 						// Draw alpha models in two passes, first blending colors correctly, then writing depth for subsequent opaque models
@@ -1240,7 +1240,7 @@ public class ZoneRenderer implements Renderer {
 						sceneCmd.ColorMask(true, true, true, true);
 						z.renderAlpha(sceneCmd, lzx, lzz, level, ctx, fade, 0);
 						if (drawFadingAlpha)
-							renderFadingAlpha(roofCmd, z, lzx, lzz, ctx, fade);
+							renderFadingAlpha(z, lzx, lzz, ctx, fade);
 
 						// Write depth without color
 						sceneCmd.DepthMask(true);
@@ -1266,9 +1266,13 @@ public class ZoneRenderer implements Renderer {
 		}
 	}
 
-	private static void renderFadingAlpha(CommandBuffer cmd, Zone z, int zx, int zz, WorldViewContext ctx, ZoneRoofFades.Fade fade) {
-		for (int l = 0; l <= 3; ++l)
-			z.renderAlpha(cmd, zx, zz, l, ctx, fade, Zone.DRAW_FADING_ONLY);
+	private void renderFadingAlpha(Zone z, int zx, int zz, WorldViewContext ctx, ZoneRoofFades.Fade fade) {
+		for (int buckets = fade.buckets; buckets != 0; buckets &= buckets - 1) {
+			int bucket = Integer.numberOfTrailingZeros(buckets);
+			CommandBuffer cmd = roofFades.getCommandBuffer(bucket);
+			for (int level = 0; level < MAX_Z; ++level)
+				z.renderAlpha(cmd, zx, zz, level, ctx, fade, Zone.DRAW_FADING_ONLY, bucket);
+		}
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package rs117.hd.renderer.zone;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -10,15 +11,13 @@ import rs117.hd.utils.RenderState;
 import rs117.hd.utils.collections.IntHashSet;
 
 import static net.runelite.api.Constants.*;
-import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
 public class ZoneRoofFades {
 	private static final int MAX_FADES = 16;
 	private static final int STALE_FRAMES = 120;
+	private static final int RESUME_GAP_FRAMES = 4;
 	private static final int LEVEL_MASK = (1 << MAX_Z) - 1;
-
-	private static final Fade NONE = new Fade();
 
 	private final CommandBuffer[] cmds = new CommandBuffer[MAX_FADES];
 	private final List<State> pool = new ArrayList<>();
@@ -31,37 +30,134 @@ public class ZoneRoofFades {
 	private ZoneRenderer renderer;
 
 	public static class Fade {
-		public CommandBuffer cmd;
-		public IntHashSet roofs;
-		public int levels;
+		public static final Fade NONE = new Fade();
+
+		// Bit mask of the buckets which contain something to draw
+		public int buckets;
+
+		int roofCount;
+		int[] roofIds = new int[8];
+		int[] roofBuckets = new int[8];
+		final int[] levelBuckets = new int[MAX_Z];
+
+		Fade() {
+			Arrays.fill(levelBuckets, -1);
+		}
+
+		public int roofBucket(int rid) {
+			if (rid <= 0)
+				return -1;
+			for (int i = 0; i < roofCount; ++i)
+				if (roofIds[i] == rid)
+					return roofBuckets[i];
+			return -1;
+		}
+
+		public int levelBucket(int level) {
+			return level >= 0 && level < MAX_Z ? levelBuckets[level] : -1;
+		}
+
+		public boolean hasRoofs() {
+			return roofCount > 0;
+		}
 	}
 
 	static class State extends Fade {
 		Zone zone;
-		float fade;
 		boolean initialized;
-		boolean fadingOut;
 		int lastUsedFrame;
-		int lastLevel = -1;
+		int updatedFrame = -1;
 		int alphaFrame = -1;
+		int lastLevel = -1;
 		int visibleLevels = LEVEL_MASK;
-		int fadingLevels;
 		IntHashSet hidden = new IntHashSet();
 		IntHashSet prevHidden = new IntHashSet();
-		final IntHashSet fadingRoofs = new IntHashSet();
+
+		// Roofs in the middle of a fade. fade: 0 = visible, 1 = hidden. target: the value it's heading towards.
+		float[] roofFade = new float[8];
+		int[] roofTargets = new int[8];
+
+		// Levels in the middle of a fade
+		int levelMask;
+		final float[] levelFade = new float[MAX_Z];
+		final int[] levelTargets = new int[MAX_Z];
 
 		void clear() {
 			zone = null;
-			fade = 0;
-			lastLevel = -1;
 			initialized = false;
-			fadingOut = false;
+			updatedFrame = -1;
 			alphaFrame = -1;
+			lastLevel = -1;
 			visibleLevels = LEVEL_MASK;
-			fadingLevels = 0;
 			hidden.clear();
 			prevHidden.clear();
-			fadingRoofs.clear();
+			clearFades();
+		}
+
+		void clearFades() {
+			roofCount = 0;
+			levelMask = 0;
+			buckets = 0;
+			Arrays.fill(levelBuckets, -1);
+		}
+
+		void setRoofTarget(int rid, int target) {
+			for (int i = 0; i < roofCount; ++i) {
+				if (roofIds[i] == rid) {
+					// Reverse from wherever it currently is
+					roofTargets[i] = target;
+					return;
+				}
+			}
+
+			if (roofCount == roofIds.length) {
+				int capacity = roofCount * 2;
+				roofIds = Arrays.copyOf(roofIds, capacity);
+				roofBuckets = Arrays.copyOf(roofBuckets, capacity);
+				roofFade = Arrays.copyOf(roofFade, capacity);
+				roofTargets = Arrays.copyOf(roofTargets, capacity);
+			}
+
+			roofIds[roofCount] = rid;
+			roofFade[roofCount] = 1 - target;
+			roofTargets[roofCount] = target;
+			++roofCount;
+		}
+
+		void setLevelTarget(int level, int target) {
+			if ((levelMask & (1 << level)) == 0) {
+				levelMask |= 1 << level;
+				levelFade[level] = 1 - target;
+			}
+			levelTargets[level] = target;
+		}
+
+		void advance(float step) {
+			for (int i = roofCount - 1; i >= 0; --i) {
+				int target = roofTargets[i];
+				float f = roofFade[i] + (target == 1 ? step : -step);
+				if (target == 1 ? f >= 1 : f <= 0) {
+					// Finished, so it's either fully hidden or fully visible again, and no longer needs tracking
+					int last = --roofCount;
+					roofIds[i] = roofIds[last];
+					roofFade[i] = roofFade[last];
+					roofTargets[i] = roofTargets[last];
+				} else {
+					roofFade[i] = f;
+				}
+			}
+
+			for (int level = 0; level < MAX_Z; ++level) {
+				if ((levelMask & (1 << level)) == 0)
+					continue;
+				int target = levelTargets[level];
+				float f = levelFade[level] + (target == 1 ? step : -step);
+				if (target == 1 ? f >= 1 : f <= 0) {
+					levelMask &= ~(1 << level);
+				} else {
+					levelFade[level] = f;
+				}
+			}
 		}
 	}
 
@@ -70,9 +166,21 @@ public class ZoneRoofFades {
 			cmds[i] = new CommandBuffer("FadingRoof" + i);
 	}
 
+	public void destroy() {
+		for (State state : inFlight) {
+			if (state.zone != null && state.zone.fade == state)
+				state.zone.fade = null;
+			state.clear();
+		}
+		inFlight.clear();
+		pool.clear();
+		Arrays.fill(cmds, null);
+	}
+
 	public void reset() {
 		for (CommandBuffer cmd : cmds)
-			cmd.reset();
+			if (cmd != null)
+				cmd.reset();
 
 		// Release states of zones that haven't been drawn in a while
 		for (int i = inFlight.size() - 1; i >= 0; --i) {
@@ -84,28 +192,50 @@ public class ZoneRoofFades {
 			inFlight.set(i, inFlight.get(last));
 			inFlight.remove(last);
 
-			state.zone.fade = null;
+			if (state.zone != null && state.zone.fade == state)
+				state.zone.fade = null;
 			state.clear();
 			pool.add(state);
 		}
 	}
 
+	public CommandBuffer getCommandBuffer(int bucket) {
+		return cmds[bucket];
+	}
+
 	public Fade update(Zone zone, WorldViewContext ctx) {
 		if (!plugin.configDitherFadeRoofs)
-			return NONE;
+			return Fade.NONE;
 
 		State state = zone.fade;
 		if (state == null) {
 			state = pool.isEmpty() ? new State() : pool.remove(pool.size() - 1);
 			state.zone = zone;
+			state.lastUsedFrame = plugin.frame;
 			zone.fade = state;
 			inFlight.add(state);
 		}
-		state.lastUsedFrame = plugin.frame;
+
+		// Don't advance twice in the same frame
+		if (state.updatedFrame == plugin.frame)
+			return state;
+
+		final boolean resumed = plugin.frame - state.lastUsedFrame > RESUME_GAP_FRAMES;
+		state.lastUsedFrame = state.updatedFrame = plugin.frame;
 
 		final int prevVisible = state.visibleLevels;
 		final int visible = LEVEL_MASK & ((1 << (ctx.maxLevel + 1)) - 1) & ~((1 << ctx.minLevel) - 1);
 		state.visibleLevels = visible;
+
+		final boolean levelChanged = state.lastLevel != ctx.level;
+		state.lastLevel = ctx.level;
+
+		final float duration = plugin.configDitherFadeRoofDuration / 1000f;
+
+		// Snap rather than fade on the first frame so that already hidden geometry doesn't flash, when the player changes
+		// level, since the roofs hiding is then a consequence of that rather than of walking under or out from one, and
+		// when the zone hasn't been drawn for a while, since what it was fading is out of date by then.
+		final boolean snap = !state.initialized || levelChanged || resumed || duration <= 0;
 
 		final IntHashSet prevHidden = state.hidden;
 		final IntHashSet hidden = state.prevHidden;
@@ -113,48 +243,33 @@ public class ZoneRoofFades {
 		state.prevHidden = prevHidden;
 
 		hidden.clear();
-		if (zone.rids != null && !ctx.hideRoofIds.isEmpty()) {
-			for (int level = ctx.level + 1; level < MAX_Z; ++level)
-				for (int rid : zone.rids[level])
-					if (rid > 0 && ctx.hideRoofIds.contains(rid))
+		if (zone.rids != null && (!ctx.hideRoofIds.isEmpty() || !prevHidden.isEmpty())) {
+			for (int level = ctx.level + 1; level < MAX_Z; ++level) {
+				for (int rid : zone.rids[level]) {
+					if (rid <= 0)
+						continue;
+					boolean isHidden = ctx.hideRoofIds.contains(rid);
+					if (isHidden)
 						hidden.add(rid);
+					if (!snap && isHidden != prevHidden.contains(rid))
+						state.setRoofTarget(rid, isHidden ? 1 : 0);
+				}
+			}
 		}
 
-		final float duration = plugin.configDitherFadeRoofDuration / 1000f;
-
-		final boolean levelChanged = state.lastLevel != ctx.level;
-		state.lastLevel = ctx.level;
-
-		// Snap on the first frame so already hidden geometry doesn't flash
-		if (!state.initialized || levelChanged || duration <= 0) {
+		if (snap) {
 			state.initialized = true;
-			state.fadingLevels = 0;
-			state.fadingRoofs.clear();
-			state.fadingRoofs.addAll(hidden);
-			state.fade = 0;
-			return publish(state);
-		}
-
-		final int entered = visible & ~prevVisible;
-		final int left = prevVisible & ~visible;
-		final boolean newlyHidden = left != 0 || !prevHidden.containsAll(hidden);
-		final boolean newlyVisible = entered != 0 || !hidden.containsAll(prevHidden);
-
-		if (newlyHidden || newlyVisible) {
-			// If both happen in the same frame, fade out
-			state.fadingOut = newlyHidden;
-			state.fadingRoofs.addAll(prevHidden);
-			state.fadingRoofs.addAll(hidden);
-			state.fadingLevels |= entered | left;
-		}
-
-		final float step = plugin.deltaTime / duration;
-		state.fade = saturate(state.fade + (state.fadingOut ? step : -step));
-
-		if (state.fade == 0 || state.fade == 1) {
-			state.fadingLevels = 0;
-			if (state.fade == 0)
-				state.fadingRoofs.clear();
+			state.clearFades();
+		} else {
+			final int entered = visible & ~prevVisible;
+			final int left = prevVisible & ~visible;
+			for (int level = 0; level < MAX_Z; ++level) {
+				if ((entered & (1 << level)) != 0)
+					state.setLevelTarget(level, 0);
+				if ((left & (1 << level)) != 0)
+					state.setLevelTarget(level, 1);
+			}
+			state.advance(plugin.deltaTime / duration);
 		}
 
 		return publish(state);
@@ -162,14 +277,16 @@ public class ZoneRoofFades {
 
 	public Fade current(Zone zone) {
 		State state = zone.fade;
-		return plugin.configDitherFadeRoofs && state != null && state.initialized ? state : NONE;
+		if (!plugin.configDitherFadeRoofs || state == null || !state.initialized || state.updatedFrame != plugin.frame)
+			return Fade.NONE;
+		return state;
 	}
 
 	public boolean claimAlpha(Zone zone) {
 		State state = zone.fade;
 		if (!plugin.configDitherFadeRoofs || state == null || !state.initialized)
 			return false;
-		if (state.fadingRoofs.isEmpty() && state.fadingLevels == 0 || state.alphaFrame == plugin.frame)
+		if (state.buckets == 0 || state.alphaFrame == plugin.frame)
 			return false;
 
 		state.alphaFrame = plugin.frame;
@@ -180,7 +297,7 @@ public class ZoneRoofFades {
 		boolean drew = false;
 		for (int step = 0; step < MAX_FADES; ++step) {
 			CommandBuffer cmd = cmds[step];
-			if (cmd.isEmpty())
+			if (cmd == null || cmd.isEmpty())
 				continue;
 
 			renderer.sceneDiscardProgram.use();
@@ -193,10 +310,30 @@ public class ZoneRoofFades {
 			renderer.sceneDiscardProgram.uniRoofFade.set(0.0f);
 	}
 
+	private static int bucketOf(float fade) {
+		return Math.max(0, Math.min(MAX_FADES - 1, (int) (fade * MAX_FADES)));
+	}
+
 	private State publish(State state) {
-		state.cmd = state.fade > 0 && state.fade < 1 ? cmds[min(MAX_FADES - 1, (int) (state.fade * MAX_FADES))] : null;
-		state.roofs = state.fadingRoofs.isEmpty() ? null : state.fadingRoofs;
-		state.levels = state.fadingLevels;
+		int buckets = 0;
+
+		for (int i = 0; i < state.roofCount; ++i) {
+			int bucket = bucketOf(state.roofFade[i]);
+			state.roofBuckets[i] = bucket;
+			buckets |= 1 << bucket;
+		}
+
+		for (int level = 0; level < MAX_Z; ++level) {
+			if ((state.levelMask & (1 << level)) != 0) {
+				int bucket = bucketOf(state.levelFade[level]);
+				state.levelBuckets[level] = bucket;
+				buckets |= 1 << bucket;
+			} else {
+				state.levelBuckets[level] = -1;
+			}
+		}
+
+		state.buckets = buckets;
 		return state;
 	}
 }

@@ -256,6 +256,8 @@ public class Zone implements Destructible {
 		rids = null;
 		roofStart = null;
 		roofEnd = null;
+		if (fade != null)
+			fade.initialized = false; // Roof ids are about to change, so don't fade between the old and new ones
 
 		// don't add permanent alphamodels to the cache as permanent alphamodels are always allocated
 		// to avoid having to synchronize the cache
@@ -363,6 +365,10 @@ public class Zone implements Destructible {
 
 		for (AlphaModel m : alphaModels)
 			m.rid = (short) updates.getOrDefault(m.rid, m.rid);
+
+		// Fades are keyed on roof ids, so they'd otherwise treat the renumbered roofs as having been hidden or revealed
+		if (fade != null)
+			fade.initialized = false;
 	}
 
 	private static final int NUM_DRAW_RANGES = 512;
@@ -389,20 +395,39 @@ public class Zone implements Destructible {
 	}
 
 	void renderOpaque(CommandBuffer cmd, WorldViewContext ctx, @Nullable ZoneRoofFades.Fade fade, int flags) {
+		renderOpaque(cmd, ctx, fade, flags, 0);
+	}
+
+	/**
+	 * @param fadeBucket which bucket of fading geometry to draw, when drawing with {@link #DRAW_FADING_ONLY}
+	 */
+	void renderOpaque(
+		CommandBuffer cmd,
+		WorldViewContext ctx,
+		@Nullable ZoneRoofFades.Fade fade,
+		int flags,
+		int fadeBucket
+	) {
 		if (fadingAlpha > 1.0)
 			return;
-		drawIdx = 0;
 
 		final boolean fadingOnly = (flags & DRAW_FADING_ONLY) != 0;
+		if (fade == null || (flags & DRAW_INCLUDE_ROOFS) != 0)
+			fade = ZoneRoofFades.Fade.NONE;
+		if (fadingOnly && fade.buckets == 0)
+			return;
+
+		drawIdx = 0;
 
 		int currentLevel = ctx.level;
 		int maxLevel = ctx.maxLevel;
-		int fadedLevels = fade != null ? fade.levels : 0;
-		var hidden = fade != null && fade.roofs != null ? fade.roofs : ctx.hideRoofIds;
+		IntHashSet hidden = ctx.hideRoofIds;
 		if ((flags & DRAW_INCLUDE_ROOFS) != 0) {
 			maxLevel = 3;
 			hidden = EMPTY_ROOF;
 		}
+		// Roofs which are partway through fading in or out are drawn separately, so the main pass skips them too
+		final boolean anyRoofsExcluded = !hidden.isEmpty() || fade.hasRoofs();
 
 		// Fading levels can sit outside the visible range, so the fading pass checks all of them
 		int firstLevel = fadingOnly ? 0 : ctx.minLevel;
@@ -413,18 +438,20 @@ public class Zone implements Destructible {
 			int[] roofStart = this.roofStart[level];
 			int[] roofEnd = this.roofEnd[level];
 
-			boolean levelFading = (fadedLevels & (1 << level)) != 0;
-
-			if (levelFading) {
-				if (fadingOnly) {
+			int levelBucket = fade.levelBucket(level);
+			if (levelBucket != -1) {
+				// The main pass leaves a fading level to the fading pass, otherwise it would be drawn twice
+				if (fadingOnly && levelBucket == fadeBucket) {
 					int start = level == 0 ? 0 : this.levelOffsets[level - 1];
 					pushRange(start, this.levelOffsets[level]);
 				}
-				// The main pass leaves it to the fading pass, otherwise it would be drawn twice
 				continue;
 			}
 
-			if (!fadingOnly && (rids.length == 0 || hidden.isEmpty() || level <= currentLevel)) {
+			if (fadingOnly) {
+				if (rids.length == 0 || !fade.hasRoofs())
+					continue;
+			} else if (rids.length == 0 || !anyRoofsExcluded || level <= currentLevel) {
 				// draw the whole level
 				int start = level == 0 ? 0 : this.levelOffsets[level - 1];
 				int end = this.levelOffsets[level];
@@ -434,7 +461,17 @@ public class Zone implements Destructible {
 
 			for (int roofIdx = 0; roofIdx < rids.length; ++roofIdx) {
 				int rid = rids[roofIdx];
-				if (rid > 0 && hidden.contains(rid) == fadingOnly) {
+				if (rid <= 0)
+					continue;
+
+				boolean draw;
+				if (fadingOnly) {
+					draw = fade.roofBucket(rid) == fadeBucket;
+				} else {
+					draw = !hidden.contains(rid) && fade.roofBucket(rid) == -1;
+				}
+
+				if (draw) {
 					// draw the roof
 					assert roofEnd[roofIdx] >= roofStart[roofIdx];
 					if (roofEnd[roofIdx] > roofStart[roofIdx]) {
@@ -863,17 +900,36 @@ public class Zone implements Destructible {
 		@Nullable ZoneRoofFades.Fade fade,
 		int flags
 	) {
+		renderAlpha(cmd, zx, zz, level, ctx, fade, flags, 0);
+	}
+
+	/**
+	 * @param fadeBucket which bucket of fading geometry to draw, when drawing with {@link #DRAW_FADING_ONLY}
+	 */
+	void renderAlpha(
+		CommandBuffer cmd,
+		int zx,
+		int zz,
+		int level,
+		WorldViewContext ctx,
+		@Nullable ZoneRoofFades.Fade fade,
+		int flags,
+		int fadeBucket
+	) {
 		if (alphaModels.isEmpty() || fadingAlpha > 1.0)
 			return;
 
 		final boolean fadingOnly = (flags & DRAW_FADING_ONLY) != 0;
 		final boolean depthOnly = (flags & DRAW_DEPTH_ONLY) != 0;
+		if (fade == null || (flags & DRAW_INCLUDE_ROOFS) != 0)
+			fade = ZoneRoofFades.Fade.NONE;
+		if (fadingOnly && fade.buckets == 0)
+			return;
 
 		int minLevel = ctx.minLevel;
 		int currentLevel = ctx.level;
 		int maxLevel = ctx.maxLevel;
-		int fadedLevels = fade != null ? fade.levels : 0;
-		var hidden = fade != null && fade.roofs != null ? fade.roofs : ctx.hideRoofIds;
+		IntHashSet hidden = ctx.hideRoofIds;
 		if ((flags & DRAW_INCLUDE_ROOFS) != 0) {
 			maxLevel = 3;
 			hidden = EMPTY_ROOF;
@@ -890,21 +946,21 @@ public class Zone implements Destructible {
 			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level || m.vao == -1)
 				continue;
 
-			boolean levelFading = (fadedLevels & (1 << m.level)) != 0;
-
-			if (levelFading) {
-				// The level is drawn in full by the fading pass, so the main pass leaves it alone
-				if (!fadingOnly)
+			int levelBucket = fade.levelBucket(m.level);
+			if (levelBucket != -1) {
+				// A fading level is drawn in full by the fading pass, so the main pass leaves it alone
+				if (!fadingOnly || levelBucket != fadeBucket)
 					continue;
 			} else if (fadingOnly) {
 				// Fading roofs are drawn separately, and may sit outside the visible level range, e.g. right after
 				// maxLevel was lowered, so the range is only enforced for the main pass
-				if (!hidden.contains(m.rid))
+				if (fade.roofBucket(m.rid) != fadeBucket)
 					continue;
 			} else if (level < minLevel || level > maxLevel) {
 				continue;
-			} else if (level > currentLevel && hidden.contains(m.rid)) {
-				// Above the player's level, roofs being faded are excluded so they can be drawn separately
+			} else if (level > currentLevel && (hidden.contains(m.rid) || fade.roofBucket(m.rid) != -1)) {
+				// Above the player's level, hidden roofs and roofs being faded are excluded, the latter so they can be
+				// drawn separately
 				continue;
 			}
 
