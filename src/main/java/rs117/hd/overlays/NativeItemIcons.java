@@ -382,6 +382,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private final boolean[] known = new boolean[GRID_SIZE];
 	private final boolean[] spread = new boolean[GRID_SIZE];
 	private final int[] shadeColors = new int[GRID_SIZE];
+	private final int[] underShadow = new int[GRID_SIZE];
 	private final int[] alphaCounts = new int[256];
 	private final int[] overlays = new int[GRID_SIZE];
 	private final boolean[] captured = new boolean[GRID_SIZE];
@@ -765,7 +766,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		}
 		slot.frame = frame;
 		slot.itemAlpha = dragged ? 256 : 256 - widget.getOpacity();
-		cutOut(buffer.getPixels(), buffer.getWidth(), bounds, drawn, gameIcon, slot, dragged);
+		cutOut(buffer.getPixels(), buffer.getWidth(), bounds, drawn, gameIcon, slot, dragged, itemShadows.getOrDefault(widget.getParentId(), 0));
 		var cutItem = new CutItem(dragged ? -1 : itemCount, bounds, drawn, gameIcon, slot);
 		uncaptured.add(cutItem);
 		if (dragged) {
@@ -1418,7 +1419,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, wrap);
 	}
 
-	private void cutOut(int[] pixels, int width, Rectangle bounds, Rectangle drawn, GameIcon gameIcon, Slot slot, boolean takenOut) {
+	private void cutOut(int[] pixels, int width, Rectangle bounds, Rectangle drawn, GameIcon gameIcon, Slot slot, boolean takenOut, int layerShadow) {
 		boolean unchanged = slot.kept;
 		for (int y = drawn.y; unchanged && y < drawn.y + drawn.height; y++) {
 			int i = y * width + drawn.x;
@@ -1426,10 +1427,25 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			unchanged = Arrays.equals(pixels, i, i + drawn.width, slot.behind, g, g + drawn.width);
 		}
 		if (!unchanged)
-			paintOver(pixels, width, bounds, drawn, gameIcon, slot, takenOut);
+			paintOver(pixels, width, bounds, drawn, gameIcon, slot, takenOut, layerShadow);
 
 		for (int y = drawn.y; y < drawn.y + drawn.height; y++)
 			System.arraycopy(slot.cut, GameIcon.grid(drawn.x - bounds.x, y - bounds.y), pixels, y * width + drawn.x, drawn.width);
+	}
+
+	// Whether every pixel of the game's see-through shadow could be taken out, which it then is
+	private boolean unblendShadow(int[] background, GameIcon gameIcon, int shadow, int alpha) {
+		for (int g = 0; g < GRID_SIZE; g++) {
+			if (!known[g] || !gameIcon.shadow[g])
+				continue;
+			underShadow[g] = unblend(background[g], shadow, alpha);
+			if (underShadow[g] == -1)
+				return false;
+		}
+		for (int g = 0; g < GRID_SIZE; g++)
+			if (known[g] && gameIcon.shadow[g])
+				background[g] = underShadow[g];
+		return true;
 	}
 
 	// The game draws an item at an alpha out of 256 as color = (item * alpha + under * (256 - alpha)) >> 8 and
@@ -1451,7 +1467,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	}
 
 	// What's under an item that's taken out is known all over, and its stack size is drawn half see-through over the native one
-	private void paintOver(int[] pixels, int width, Rectangle bounds, Rectangle drawn, GameIcon gameIcon, Slot slot, boolean takenOut) {
+	private void paintOver(int[] pixels, int width, Rectangle bounds, Rectangle drawn, GameIcon gameIcon, Slot slot, boolean takenOut,
+		int layerShadow) {
 		int[] background = slot.background;
 		Arrays.fill(background, 0);
 		Arrays.fill(known, false);
@@ -1490,13 +1507,19 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				shadow = shadeColors[i];
 			}
 		}
-		// A see-through item's shadow is just as see-through, with a colour that isn't known, so it stays as the game drew it
-		if (mostShaded < shaded * .8f || takenOut || slot.itemAlpha < 256)
+		if (mostShaded < shaded * .8f || takenOut)
 			shadow = 0;
-		if (shadow != 0)
+		if (slot.itemAlpha < 256 && !takenOut) {
+			// A see-through item's shadow is just as see-through, so what it's drawn over is found with the colour the layer's
+			// items are shaded with, known from when they weren't see-through, like the inventory's before an interface greys
+			// it out. The native shadow is drawn just as see-through instead. Without that colour it stays as the game drew it.
+			shadow = layerShadow != 0 && unblendShadow(background, gameIcon, layerShadow, slot.itemAlpha) ?
+				slot.itemAlpha * 255 / 256 << 24 | layerShadow : 0;
+		} else if (shadow != 0) {
 			for (int g = 0; g < GRID_SIZE; g++)
 				if (gameIcon.shadow[g])
 					known[g] = false;
+		}
 
 		// A see-through interface lets what's drawn under it show through, like tile markers, which aren't painted under the item
 		Arrays.fill(alphaCounts, 0);

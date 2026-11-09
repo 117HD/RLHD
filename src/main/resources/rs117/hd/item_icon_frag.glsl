@@ -75,8 +75,9 @@ void main() {
     ivec2 pixel = uiPixel - ivec2(round(uiPosition - gridPosition));
 
     vec4 icon = iconAt(gridUv);
+    float item = icon.a;
     float iconShadow = iconAt(gridUv - gamePixel).a;
-    vec4 overlays = otherOverlays(gridUv, pixel, icon.a, iconShadow);
+    vec4 overlays = otherOverlays(gridUv, pixel, item, iconShadow);
     icon *= fOpacity;
     vec4 background = slotTexel(pixel, int(fLayers.y));
     // Only fill in what the stretched interface lets through, and around the item only what the interface covers,
@@ -91,8 +92,10 @@ void main() {
     float shown = drawnOver + covered * (1 - drawnOver);
     background *= covered > 0 && shown > ui ? (shown - ui) / (background.a * (1 - ui)) : 0;
 
-    // A see-through shadow, like the dragged item's, shades by its alpha
-    float shadow = iconShadow * fShadow.a;
+    // A see-through shadow, like the dragged item's, shades by its alpha. The game only shades around the item, which
+    // matters where the item lets what's under it through
+    float seen = 1 - item * fOpacity;
+    float shadow = seen > 0 ? iconShadow * fShadow.a * (1 - item) / seen : 0;
     background = vec4(fShadow.rgb, 1) * shadow + background * (1 - shadow);
 
     vec4 c = icon + background * (1 - icon.a);
