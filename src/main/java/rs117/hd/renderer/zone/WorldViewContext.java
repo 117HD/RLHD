@@ -81,6 +81,7 @@ public class WorldViewContext {
 	private final List<Zone> alphaZones = new ArrayList<>();
 
 	CommandBuffer vaoSceneCmd;
+	CommandBuffer vaoDepthCmd;
 	CommandBuffer vaoDirectionalCmd;
 	final DynamicModelVAO[][] dynamicModelVaos = new DynamicModelVAO[FRAMES_IN_FLIGHT][VAO_COUNT];
 
@@ -112,6 +113,7 @@ public class WorldViewContext {
 		injector.injectMembers(this);
 
 		vaoSceneCmd = new CommandBuffer("WorldViewScene");
+		vaoDepthCmd = new CommandBuffer("WorldViewDepth");
 		vaoDirectionalCmd = new CommandBuffer("WorldViewDirectional");
 
 		for (int x = 0; x < sizeX; ++x)

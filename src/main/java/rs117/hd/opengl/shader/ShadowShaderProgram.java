@@ -27,7 +27,7 @@ public abstract class ShadowShaderProgram extends ShaderProgram {
 
 	@Override
 	public void compile(ShaderIncludes includes) throws ShaderException, IOException {
-		super.compile(includes.copy().define("SHADOW_MODE", mode));
+		super.compile(includes.copy().define("SHADOW_MODE", mode).define("WATER_PASS", false));
 	}
 
 	public static class Fast extends ShadowShaderProgram {

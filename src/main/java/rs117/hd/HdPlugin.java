@@ -28,7 +28,6 @@ package rs117.hd;
 
 import com.google.gson.Gson;
 import com.google.inject.Binder;
-import com.google.inject.Provider;
 import com.google.inject.Provides;
 import java.awt.Canvas;
 import java.awt.Dimension;
@@ -86,6 +85,7 @@ import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowFiltering;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.VanillaShadowMode;
+import rs117.hd.opengl.Utils;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.TiledLightingShaderProgram;
@@ -141,6 +141,8 @@ import rs117.hd.utils.jobs.JobSystem;
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.opengl.Utils.checkGLErrors;
+import static rs117.hd.opengl.Utils.clearGLErrors;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 import static rs117.hd.utils.buffer.GLBuffer.DEBUG_MAC_OS;
@@ -177,6 +179,7 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_TERRAIN_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_SCENE_DEPTH = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_NEBULA_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
@@ -392,7 +395,8 @@ public class HdPlugin extends Plugin {
 	public int[] sceneResolution;
 	public int fboScene;
 	private int rboSceneColor;
-	private int rboSceneDepth;
+	@Getter
+	private int texSceneDepth;
 	public int fboSceneResolve;
 	private int rboSceneResolveColor;
 
@@ -448,6 +452,8 @@ public class HdPlugin extends Plugin {
 	public boolean configHideVanillaWaterEffects;
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
+	public boolean configUseOIT;
+	public boolean configSceneDepth;
 	public boolean configOverrideSky;
 	public boolean configReduceGlareIntensity;
 	public boolean configFrameSynchronization;
@@ -573,7 +579,7 @@ public class HdPlugin extends Plugin {
 
 				fboScene = 0;
 				rboSceneColor = 0;
-				rboSceneDepth = 0;
+				texSceneDepth = 0;
 				fboSceneResolve = 0;
 				rboSceneResolveColor = 0;
 				fboShadowMap = 0;
@@ -589,7 +595,7 @@ public class HdPlugin extends Plugin {
 				// to be created.
 				Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("lwjgl-rl");
 
-				SKIP_GL_ERROR_CHECKS = false;
+				Utils.SKIP_GL_ERROR_CHECKS = false;
 				GL_CAPS = GL.createCapabilities();
 				useLowMemoryMode = config.lowMemoryMode();
 				BUFFER_GROWTH_MULTIPLIER = useLowMemoryMode ? 1.333f : 2;
@@ -985,6 +991,8 @@ public class HdPlugin extends Plugin {
 			.define("TILED_LIGHTING", configTiledLighting)
 			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getTiledLightingLayers())
 			.define("TILED_LIGHTING_TILE_SIZE", TILED_LIGHTING_TILE_SIZE)
+			.define("TILED_LIGHTING_DEPTH_CULLING", configUseOIT && configSceneDepth)
+			.define("TILED_LIGHTING_MSAA", msaaSamples)
 			.define("MAX_LIGHT_COUNT", configTiledLighting ? UBOLights.MAX_LIGHTS : configDynamicLights.getMaxSceneLights())
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
@@ -1014,6 +1022,7 @@ public class HdPlugin extends Plugin {
 			.define("CENTROID_QUALIFIER", config.centroidQualifier().get(true))
 			.define("LEGACY_RENDERER", renderer instanceof LegacyRenderer)
 			.define("ZONE_RENDERER", renderer instanceof ZoneRenderer)
+			.define("OIT_DEPTH_MERGE_MSAA", msaaSamples)
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", 0)
 			.define("WORLD_VIEW_GETTER", "")
 			.define("NEBULA_CLUSTER_COUNT", StarField.CLUSTER_COUNT)
@@ -1051,6 +1060,7 @@ public class HdPlugin extends Plugin {
 	}
 
 	private void initializeShaders() throws ShaderException, IOException {
+		updateMsaaSamples();
 		var includes = getShaderIncludes();
 
 		// Bind a valid VAO, otherwise validation may fail on older Intel-based Macs
@@ -1354,9 +1364,16 @@ public class HdPlugin extends Plugin {
 		texTiledLighting = 0;
 	}
 
-	public void updateSceneFbo() {
+	public void updateMsaaSamples() {
+		// Bind default FBO to check whether anti-aliasing is forced
+		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
+		final int forcedAASamples = glGetInteger(GL_SAMPLES);
+		msaaSamples = forcedAASamples != 0 ? forcedAASamples : min(config.antiAliasingMode().getSamples(), glGetInteger(GL_MAX_SAMPLES));
+	}
+
+	public boolean updateSceneFbo() {
 		if (uiResolution == null)
-			return;
+			return false;
 
 		int[] viewport = {
 			client.getViewportXOffset(),
@@ -1367,7 +1384,7 @@ public class HdPlugin extends Plugin {
 
 		// Skip rendering when there's no viewport to render to, which happens while world hopping
 		if (viewport[2] == 0 || viewport[3] == 0)
-			return;
+			return false;
 
 		// DPI scaling and stretched mode also affects the game's viewport
 		divide(sceneViewportScale, vec(actualUiResolution), vec(uiResolution));
@@ -1382,25 +1399,21 @@ public class HdPlugin extends Plugin {
 
 		// Check if scene FBO needs to be recreated
 		if (Arrays.equals(sceneViewport, viewport))
-			return;
+			return false;
 
 		destroySceneFbo();
 		sceneViewport = viewport;
 
-		// Bind default FBO to check whether anti-aliasing is forced
-		int defaultFramebuffer = awtContext.getFramebuffer(false);
-		glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);
-		final int forcedAASamples = glGetInteger(GL_SAMPLES);
-		msaaSamples = forcedAASamples != 0 ? forcedAASamples : min(config.antiAliasingMode().getSamples(), glGetInteger(GL_MAX_SAMPLES));
+		updateMsaaSamples();
 
-		// Since there's seemingly no reliable way to check if the default framebuffer will do sRGB conversions with GL_FRAMEBUFFER_SRGB
+		// Since there's seemingly no reliable way to check to check if the default framebuffer will do sRGB conversions with GL_FRAMEBUFFER_SRGB
 		// enabled, we always replace the default framebuffer with an sRGB one. We could technically support rendering to the default
 		// framebuffer when sRGB conversions aren't needed, but the goal is to transition to linear blending in the future anyway.
 		boolean sRGB = false; // This is currently unused
 
 		// Some implementations (*cough* Apple) complain when blitting from an FBO without an alpha channel to a (default) FBO with alpha.
 		// To work around this, we select a format which includes an alpha channel, even though we don't need it.
-		int defaultColorAttachment = defaultFramebuffer == 0 ? GL_BACK_LEFT : GL_COLOR_ATTACHMENT0;
+		int defaultColorAttachment = awtContext.getFramebuffer(false) == 0 ? GL_BACK_LEFT : GL_COLOR_ATTACHMENT0;
 		int alphaBits = glGetFramebufferAttachmentParameteri(GL_FRAMEBUFFER, defaultColorAttachment, GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE);
 		checkGLErrors();
 		boolean alpha = alphaBits > 0;
@@ -1442,11 +1455,26 @@ public class HdPlugin extends Plugin {
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneColor);
 		checkGLErrors();
 
-		// Create depth render buffer
-		rboSceneDepth = glGenRenderbuffers();
-		glBindRenderbuffer(GL_RENDERBUFFER, rboSceneDepth);
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, GL_DEPTH_COMPONENT32F, sceneResolution[0], sceneResolution[1]);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboSceneDepth);
+		glActiveTexture(TEXTURE_UNIT_SCENE_DEPTH);
+		texSceneDepth = glGenTextures();
+		if (msaaSamples > 1) {
+			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texSceneDepth);
+			glTexImage2DMultisample(
+				GL_TEXTURE_2D_MULTISAMPLE, msaaSamples, GL_DEPTH32F_STENCIL8,
+				sceneResolution[0], sceneResolution[1], true
+			);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, texSceneDepth, 0);
+		} else {
+			glBindTexture(GL_TEXTURE_2D, texSceneDepth);
+			glTexImage2D(
+				GL_TEXTURE_2D, 0, GL_DEPTH32F_STENCIL8,
+				sceneResolution[0], sceneResolution[1],
+				0, GL_DEPTH_STENCIL, GL_FLOAT_32_UNSIGNED_INT_24_8_REV, 0
+			);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, texSceneDepth, 0);
+		}
 		checkGLErrors();
 
 		// If necessary, create an FBO for resolving multisampling
@@ -1461,8 +1489,13 @@ public class HdPlugin extends Plugin {
 		}
 
 		// Reset
+		glActiveTexture(TEXTURE_UNIT_UI);
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+
+		return true;
 	}
 
 	private void destroySceneFbo() {
@@ -1476,9 +1509,9 @@ public class HdPlugin extends Plugin {
 			glDeleteRenderbuffers(rboSceneColor);
 		rboSceneColor = 0;
 
-		if (rboSceneDepth != 0)
-			glDeleteRenderbuffers(rboSceneDepth);
-		rboSceneDepth = 0;
+		if (texSceneDepth != 0)
+			glDeleteTextures(texSceneDepth);
+		texSceneDepth = 0;
 
 		if (fboSceneResolve != 0)
 			glDeleteFramebuffers(fboSceneResolve);
@@ -1827,6 +1860,8 @@ public class HdPlugin extends Plugin {
 		configDefaultSkyColor = config.defaultSkyColor();
 		configDynamicLights = config.dynamicLights();
 		configTiledLighting = config.tiledLighting().get(!OLD_INTEL_GPU);
+		configUseOIT = config.useOIT();
+		configSceneDepth = config.useSceneDepth();
 		configTiledLightingImageLoadStore = config.imageLoadStore().get(true);
 		configOverrideSky = config.overrideSky();
 		configDetailDrawDistance = config.detailDrawDistance();
@@ -1990,6 +2025,8 @@ public class HdPlugin extends Plugin {
 							case KEY_LIGHTS:
 							case KEY_TILED_LIGHTING:
 							case KEY_IMAGE_LOAD_STORE:
+							case KEY_OIT:
+							case KEY_SCENE_DEPTH:
 							case KEY_NORMAL_MAPPING:
 							case KEY_PARALLAX_OCCLUSION_MAPPING:
 							case KEY_UI_SCALING_MODE:
@@ -2012,6 +2049,12 @@ public class HdPlugin extends Plugin {
 								recompilePrograms |= configReduceGlareIntensity != previousReduceGlareIntensity;
 								break;
 							case KEY_ANTI_ALIASING_MODE:
+								// The OIT depth merge shader reduces all MSAA samples with a
+								// compile-time loop bound, so changing the sample count requires
+								// recompiling the programs before the scene FBO is recreated
+								recompilePrograms = true;
+								recreateSceneFbo = true;
+								break;
 							case KEY_SCENE_RESOLUTION_SCALE:
 								recreateSceneFbo = true;
 								break;
@@ -2174,10 +2217,9 @@ public class HdPlugin extends Plugin {
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
+		Utils.SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
 		if (handleShutdownRequest())
 			return;
-
-		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
 
 		if (lastFrameTimeMillis > 0) {
 			deltaTimeMs = System.currentTimeMillis() - lastFrameTimeMillis;
@@ -2234,63 +2276,6 @@ public class HdPlugin extends Plugin {
 	@Subscribe
 	public void onFocusChanged(FocusChanged event) {
 		isClientInFocus = event.isFocused();
-	}
-
-	@SuppressWarnings("StatementWithEmptyBody")
-	public static void clearGLErrors() {
-		// @formatter:off
-		while (glGetError() != GL_NO_ERROR);
-		// @formatter:on
-	}
-
-	public static boolean checkGLErrors() {
-		return checkGLErrors(null);
-	}
-
-	public static boolean checkGLErrors(@Nullable Provider<String> contextProvider) {
-		if (SKIP_GL_ERROR_CHECKS)
-			return false;
-
-		boolean hasGLError = false;
-		String context = null;
-		while (true) {
-			int err = glGetError();
-			if (err == GL_NO_ERROR)
-				return hasGLError;
-
-			String errStr;
-			switch (err) {
-				case GL_INVALID_ENUM:
-					errStr = "INVALID_ENUM";
-					break;
-				case GL_INVALID_VALUE:
-					errStr = "INVALID_VALUE";
-					break;
-				case GL_STACK_OVERFLOW:
-					errStr = "STACK_OVERFLOW";
-					break;
-				case GL_STACK_UNDERFLOW:
-					errStr = "STACK_UNDERFLOW";
-					break;
-				case GL_INVALID_OPERATION:
-					errStr = "INVALID_OPERATION";
-					break;
-				case GL_INVALID_FRAMEBUFFER_OPERATION:
-					errStr = "INVALID_FRAMEBUFFER_OPERATION";
-					break;
-				default:
-					errStr = String.format("Error code: %d", err);
-					break;
-			}
-			if (contextProvider != null && context == null)
-				context = contextProvider.get();
-			if (context != null) {
-				log.debug("glGetError({}):", context, new Exception(errStr));
-			} else {
-				log.debug("GL error:", new Exception(errStr));
-			}
-			hasGLError = true;
-		}
 	}
 
 	private void displayUpdateMessage() {

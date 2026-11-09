@@ -17,6 +17,7 @@ public class TerrainShadowShaderProgram extends ShaderProgram {
 		super.compile(includes.copy()
 			.define("SHADOW_MODE", ShadowMode.FAST)
 			.define("TERRAIN_ONLY_PASS", true)
-			.define("SHADOW_TRANSPARENCY", false));
+			.define("SHADOW_TRANSPARENCY", false)
+			.define("WATER_PASS", false));
 	}
 }

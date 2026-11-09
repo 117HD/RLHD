@@ -1,7 +1,11 @@
 #version 330
 
+#include TILED_LIGHTING_DEPTH_CULLING
+#include TILED_LIGHTING_MSAA
 #include TILED_LIGHTING_LAYER
 #include TILED_IMAGE_STORE
+
+#define USE_LIGHTS_MASK !TILED_IMAGE_STORE
 
 #if TILED_IMAGE_STORE
     #extension GL_EXT_shader_image_load_store : enable
@@ -17,6 +21,15 @@
 
 #include <utils/constants.glsl>
 
+#if TILED_LIGHTING_DEPTH_CULLING
+    #if TILED_LIGHTING_MSAA > 1
+        uniform sampler2DMS sceneDepthTexture;
+    #else
+        uniform sampler2D sceneDepthTexture;
+    #endif
+    uniform sampler2D alphaFirstLastDepth;
+#endif
+
 in vec2 fUv;
 
 #if TILED_IMAGE_STORE
@@ -25,40 +38,7 @@ in vec2 fUv;
     #define SORTING_BIN_SIZE 8
 #endif
 
-struct SortedLight {
-    int lightIdx;
-    float score;
-};
-
-#define USE_LIGHTS_MASK !TILED_IMAGE_STORE
-
-uint packLightIndices(in SortedLight bin[SORTING_BIN_SIZE], in int binSize, inout int binIdx) {
-    if (binIdx >= binSize) return 0u;
-
-    int idx0 = bin[binIdx].lightIdx;
-    if (idx0 < 0) return 0u;
-
-    idx0 += 1;
-    binIdx += 1;
-
-    if (binIdx < binSize) {
-        int idx1 = bin[binIdx].lightIdx;
-        if (idx1 >= 0) {
-            idx1 += 1;
-            // Try dual-pack: idx0 = 7 bits, idx1 = 8 bits
-            if (idx0 <= 127 && idx1 <= 255) {
-                binIdx += 1;
-                return 0x8000u | (uint(idx1 & 0xFF) << 7) | uint(idx0 & 0x7F); // MSB = 1
-            } else if (idx1 <= 127 && idx0 <= 255) {
-                binIdx += 1;
-                return 0x8000u | (uint(idx0 & 0xFF) << 7) | uint(idx1 & 0x7F); // MSB = 1
-            }
-        }
-    }
-
-    // Fallback: single 15-bit index
-    return (idx0 <= 32767) ? uint(idx0 & 0x7FFF) : 0u;
-}
+#include <utils/tiled_lighting.glsl>
 
 void main() {
     ivec2 pixelCoord = ivec2(fUv * uboGlobal.tiledLightingResolution);
@@ -101,6 +81,22 @@ void main() {
     vec2 bl = tileOrigin;                         // bottom-left
     vec2 br = tileOrigin + vec2(tileSize.x, 0.0); // bottom-right
 
+#if TILED_LIGHTING_DEPTH_CULLING
+    TileDepthInfo tile = computeTileDepthInfo(tileOrigin);
+
+    // Empty tile (sky only): every light would be depth-culled anyway, so skip the light loop.
+    if (tile.isEmpty) {
+    #if TILED_IMAGE_STORE
+        for (int layer = 0; layer < TILED_LIGHTING_LAYER_COUNT; layer++)
+            imageStore(tiledLightingImage, ivec3(pixelCoord, layer), uvec4(0u));
+        discard;
+    #else
+        TiledData = uvec4(0u);
+        return;
+    #endif
+    }
+#endif
+
     vec2 ndcTL = (tl / uboGlobal.sceneResolution) * 2.0 - 1.0;
     vec2 ndcTR = (tr / uboGlobal.sceneResolution) * 2.0 - 1.0;
     vec2 ndcBL = (bl / uboGlobal.sceneResolution) * 2.0 - 1.0;
@@ -137,11 +133,46 @@ void main() {
     for (int lightIdx = 0; lightIdx < uboGlobal.pointLightsCount; lightIdx++) {
         vec4 lightData = uboLightsCulling.PointLightPositionsArray[lightIdx];
         vec3 lightViewPos = lightData.xyz;
+
+        float lightDepth = abs(lightViewPos.z);
         float lightRadiusSqr = lightData.w;
+        float lightRadius = sqrt(lightRadiusSqr);
+
+#if TILED_LIGHTING_DEPTH_CULLING
+        if (lightDepth + lightRadius < tile.minDepth ||
+            lightDepth - lightRadius > tile.maxDepth)
+            continue;
+#endif
 
         float lightDistSqr = dot(lightViewPos, lightViewPos);
 
-        vec3 lightCenterVec = (lightDistSqr > 0.0) ? lightViewPos / sqrt(lightDistSqr) : vec3(0.0);
+#if TILED_LIGHTING_DEPTH_CULLING
+        // Signed distance from the light to the tile plane (positive = camera-facing side).
+        float planeS = 0.0;
+        if (tile.planeValid) {
+            planeS = dot(tile.planeN, lightViewPos) - tile.planeD;
+            // Slab cull: every surface point in the tile is within planeMaxDev of the plane, so a
+            // sphere that doesn't reach the plane can't touch any of them. Independent of N.L.
+            if (abs(planeS) > lightRadius + tile.planeMaxDev)
+                continue;
+        }
+#endif
+
+        float lightDist = sqrt(lightDistSqr);
+
+#if TILED_LIGHTING_DEPTH_CULLING
+        // Back-facing cull: light behind the plane means N.L < 0 across the whole tile.
+        // Slack covers deviation from the plane plus normal tilt (across the tile and from
+        // normal maps), scaled by how far the light can be from the tile.
+        if (tile.planeValid && planeS < -tile.planeMaxDev) {
+            float r = min(lightDist, lightRadius + tile.planeExtent);
+            float slack = PLANE_CULL_TILT_SLACK + 2.0 * tile.planeMaxDev / tile.planeExtent;
+            if (planeS < -(tile.planeMaxDev + r * slack))
+                continue;
+        }
+#endif
+
+        vec3 lightCenterVec = (lightDist > 0.0) ? lightViewPos / lightDist : vec3(0.0);
 
         float lightSinSqr = clamp(lightRadiusSqr / max(lightDistSqr, 1e-6), 0.0, 1.0);
         // Guard the sqrt: lightSinSqr reaches 1 as the camera approaches the light's radius, and
@@ -152,36 +183,45 @@ void main() {
         bool lightAffectsTile;
         float combinedScore;
         const float PROXIMITY_WEIGHT = 0.75;
-        float distanceScore = clamp(1.0 - sqrt(lightDistSqr) / (sqrt(lightRadiusSqr) + 1e-6), 0.0, 1.0);
+        float distanceScore = clamp(1.0 - lightDist / (lightRadius + 1e-6), 0.0, 1.0);
+
+        // With a valid plane, rank by distance to the tile's surface instead of to the camera.
+        // Subtracting roughly the tile's half-diagonal stops lights that only touch the tile's
+        // edge from all collapsing to a score of 0 (and tying). Every light in a tile uses the
+        // same method, since planeValid is per tile, so scores stay comparable.
+        bool  useSurfaceScore = false;
+        float surfaceScore = 0.0;
+#if TILED_LIGHTING_DEPTH_CULLING
+        if (tile.planeValid) {
+            float surfDist = max(length(lightViewPos - tile.planeCenter) - 0.71 * tile.planeExtent, 0.0);
+            surfaceScore = clamp(1.0 - surfDist / (lightRadius + 1e-6), 0.0, 1.0);
+            useSurfaceScore = true;
+        }
+#endif
 
         if (uboGlobal.orthographicProjection) {
             vec4 lightClip = viewToClip * vec4(lightViewPos, 1.0);
             vec2 lightNDC = lightClip.xy / max(abs(lightClip.w), 1e-5);
 
-            vec4 radiusClip = viewToClip * vec4(lightViewPos + vec3(sqrt(lightRadiusSqr), 0.0, 0.0), 1.0);
+            vec4 radiusClip = viewToClip * vec4(lightViewPos + vec3(lightRadius, 0.0, 0.0), 1.0);
             vec2 radiusNDC = radiusClip.xy / max(abs(radiusClip.w), 1e-5);
             float lightNDCRadius = length(radiusNDC - lightNDC);
 
             vec2 closest = clamp(lightNDC, tileNDCMin, tileNDCMax);
             lightAffectsTile = length(lightNDC - closest) <= lightNDCRadius;
-            combinedScore = distanceScore;
+            combinedScore = useSurfaceScore ? surfaceScore : distanceScore;
         } else {
             // Once lightSinSqr passes 0.999 the camera is effectively inside the light's sphere of
-            // influence, so the light can reach any tile - the same conclusion the old
-            // lightRadiusSqr > lightDistSqr test drew, widened to cover the whole range where the
-            // angular math degenerates. Testing lightSinSqr subsumes that case, since a ratio of 1
-            // or more clamps to exactly 1.
+            // influence, so the light can reach any tile. A ratio of 1 or more clamps to exactly 1.
             //
-            // This matters because a PULSE light's radius sweeps +/-10% every cycle: at a camera
-            // distance inside that sweep, the light crossed this window for a single frame twice
-            // per cycle. sumCos was NaN there, every comparison against NaN is false, so
-            // 'lightTileCos >= sumCos' rejected the light from EVERY tile at once - the light
-            // vanished entirely for a frame, on the pulse's period. (master used the inverted form
-            // 'if (lightTileCos < sumCos) continue', which fails open on NaN and keeps the light,
-            // which is why master never showed this.)
+            // A PULSE light's radius sweeps +/-10% every cycle: at a camera distance inside that
+            // sweep, sumCos was NaN, every comparison against NaN is false, and
+            // 'lightTileCos >= sumCos' rejected the light from EVERY tile for a frame.
             float sumCos = (lightSinSqr > 0.999) ? -1.0 : (tileCos * lightCos - tileSin * sqrt(lightSinSqr));
             lightAffectsTile = lightTileCos >= sumCos;
-            combinedScore = (lightTileCos * PROXIMITY_WEIGHT) + distanceScore * (1.0 - PROXIMITY_WEIGHT);
+            combinedScore = useSurfaceScore
+                ? surfaceScore
+                : (lightTileCos * PROXIMITY_WEIGHT) + distanceScore * (1.0 - PROXIMITY_WEIGHT);
         }
 
         if (!lightAffectsTile)
@@ -194,14 +234,19 @@ void main() {
                 continue;
         #endif
 
+        // Bin full and this light scores no better than the worst entry: nothing to do.
+        if (sortingBinSize == SORTING_BIN_SIZE &&
+            combinedScore <= sortingBin[SORTING_BIN_SIZE - 1].score)
+            continue;
+
+        // Find the insertion point (ties go after existing entries, as before).
         int idx = 0;
-        for (; idx < sortingBinSize; idx++) {
-            if (combinedScore > sortingBin[idx].score) {
-                for (int j = sortingBinSize; j > idx; j--)
-                    sortingBin[j] = sortingBin[j - 1];
-                break;
-            }
-        }
+        while (idx < sortingBinSize && combinedScore <= sortingBin[idx].score)
+            idx++;
+
+        // Shift down, dropping the last entry when the bin is full (never writes out of bounds).
+        for (int j = min(sortingBinSize, SORTING_BIN_SIZE - 1); j > idx; j--)
+            sortingBin[j] = sortingBin[j - 1];
 
         sortingBin[idx].score = combinedScore;
         sortingBin[idx].lightIdx = lightIdx;
