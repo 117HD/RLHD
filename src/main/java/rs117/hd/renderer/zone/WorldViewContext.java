@@ -251,6 +251,11 @@ public class WorldViewContext {
 				if (prevZone != curZone) {
 					curZone.inSceneFrustum = prevZone.inSceneFrustum;
 					curZone.inShadowFrustum = prevZone.inShadowFrustum;
+					if(prevZone.fade != null) {
+						curZone.fade = prevZone.fade;
+						curZone.fade.zone = curZone;
+					}
+
 					DestructibleHandler.queueDestruction(prevZone);
 				}
 
