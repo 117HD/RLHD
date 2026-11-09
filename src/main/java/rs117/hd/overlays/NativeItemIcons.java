@@ -11,7 +11,6 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -20,9 +19,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
@@ -40,13 +36,11 @@ import net.runelite.api.widgets.WidgetUtil;
 import net.runelite.client.RuneLite;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
-import net.runelite.client.events.ClientShutdown;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.WidgetItemOverlay;
-import net.runelite.client.util.Filepath;
 import org.lwjgl.BufferUtils;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.shader.ShaderException;
@@ -54,26 +48,24 @@ import rs117.hd.opengl.shader.ShaderProgram;
 import rs117.hd.utils.ShaderRecompile;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.HdPlugin.TEXTURE_UNIT_ITEM_BACKGROUNDS;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_ITEM_ICONS;
-import static rs117.hd.HdPlugin.TEXTURE_UNIT_ITEM_ICON_SURROUNDINGS;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_UI;
-import static rs117.hd.overlays.ItemIconRasterizer.ICON_HEIGHT;
-import static rs117.hd.overlays.ItemIconRasterizer.ICON_WIDTH;
+import static rs117.hd.overlays.ItemIconModel.ICON_HEIGHT;
+import static rs117.hd.overlays.ItemIconModel.ICON_WIDTH;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
 public class NativeItemIcons extends WidgetItemOverlay {
-	private static final int MAX_ICONS = 1024;
+	private static final int MAX_ICONS = 512;
 	private static final int MAX_GAME_ICONS = 2048;
 	private static final int MAX_ITEMS = 256;
 	// Slots are kept for the items of this frame and the last
 	private static final int MAX_SLOTS = 2 * MAX_ITEMS;
 	private static final int MAX_NEW_ITEMS_PER_FRAME = 16;
-	private static final int REMEMBERED_ICONS_PER_FRAME = 32;
-	private static final long REMEMBER_INTERVAL_MS = 30_000;
-	private static final long SCALE_SETTLE_MS = 1000;
+	// Icons that aren't shown yet, like the bank's before it's opened, are drawn a few at a time
+	private static final int MAX_ICONS_DRAWN_AHEAD_PER_FRAME = 16;
+	private static final long SCALE_SETTLE_MS = 300;
 	private static final int[] KEPT_CONTAINERS = { InventoryID.INV, InventoryID.WORN };
 	// Native icons can reach a little past the game's icons
 	private static final int MARGIN = 2;
@@ -81,6 +73,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private static final int GRID_HEIGHT = ICON_HEIGHT + 2 * MARGIN;
 	private static final int GRID_SIZE = GRID_WIDTH * GRID_HEIGHT;
 	private static final int LAYERS_PER_ITEM = 2;
+	private static final int SLOT_CELLS = (MAX_SLOTS + 1) * LAYERS_PER_ITEM;
 	private static final int[] NO_OVERLAYS = new int[GRID_SIZE];
 	private static final float MIN_SHAPE_COVERAGE = .9f;
 	private static final int[] VERTEX_ATTRIBUTE_SIZES = { 2, 2, 2, 1, 1, 4, 4, 4 };
@@ -94,9 +87,9 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 	private static class Shader extends ShaderProgram {
 		private final UniformTexture uniIcons = addUniformTexture("itemIcons");
-		private final UniformTexture uniIconSurroundings = addUniformTexture("itemIconSurroundings");
-		private final UniformTexture uniBackgrounds = addUniformTexture("itemBackgrounds");
 		private final UniformTexture uniUi = addUniformTexture("uiTexture");
+		private final Uniform1i uniSurroundingsLayer = addUniform1i("surroundingsLayer");
+		private final Uniform3i uniSlotCells = addUniform3i("slotCells");
 
 		Shader() {
 			super(t -> t
@@ -107,17 +100,21 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		@Override
 		protected void initialize() {
 			uniIcons.set(TEXTURE_UNIT_ITEM_ICONS);
-			uniIconSurroundings.set(TEXTURE_UNIT_ITEM_ICON_SURROUNDINGS);
-			uniBackgrounds.set(TEXTURE_UNIT_ITEM_BACKGROUNDS);
 			uniUi.set(TEXTURE_UNIT_UI);
 		}
 	}
 
+	// An icon drawn into a layer of the icon texture, from the model of an item, like the one a stack shows
+	@RequiredArgsConstructor
 	static class Icon {
-		volatile boolean failed;
-		volatile boolean uncached;
-		float[] surroundings;
-		volatile int[] pixels;
+		final int itemId;
+		final int border;
+		@Nullable
+		final RuneImage rune;
+		// What's drawn, until it's drawn
+		@Nullable
+		List<ItemIconRenderer.Layer> layers;
+		boolean drawn;
 		int layer = -1;
 		int frame;
 	}
@@ -134,7 +131,6 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		// How the game shows an animated one
 		@Nullable
 		SpritePixels shown;
-		int modelItemId = -1;
 		final long key;
 
 		GameIcon(int itemId, int border, int[] item, int[] withStackSize, boolean animated) {
@@ -218,15 +214,6 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		int frame;
 	}
 
-	@RequiredArgsConstructor
-	private static class Layer {
-		final ItemIconRasterizer.Mesh mesh;
-		final int pitch, yaw, roll;
-		final int[] gameIcon;
-		final int border;
-		final boolean matchColors;
-	}
-
 	// RuneLite's Rune Pouch plugin draws small images of the runes in the pouch over it, which are drawn natively too
 	@RequiredArgsConstructor
 	private static class RuneImage {
@@ -304,7 +291,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 	private static final int SHOWN = 1;
 	private static final int CLIPPED = 2;
-	private static final Icon PENDING = new Icon();
+	private static final Icon PENDING = new Icon(-1, 0, null);
+	private static final Icon FAILED = new Icon(-1, 0, null);
 	private static final GameIcon UNKNOWN = new GameIcon(-1, 0, new int[ICON_WIDTH * ICON_HEIGHT], new int[ICON_WIDTH * ICON_HEIGHT], false);
 	// Drawn over an item, with nothing behind it
 	private static final Slot NO_SLOT = new Slot(MAX_SLOTS * LAYERS_PER_ITEM);
@@ -325,14 +313,17 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private final OverlayCapture overlayCapture = new OverlayCapture();
 	private final DraggedItems draggedItemsOverlay = new DraggedItems();
 
-	private ExecutorService executor;
+	private final ItemIconRenderer renderer = new ItemIconRenderer(TEXTURE_UNIT_ITEM_ICONS, MARGIN);
 	private boolean active;
 	private boolean prepared;
 	private int vao;
 	private int vbo;
+	// Icons, how near their pixels are to them, and the slots' backgrounds and overlays, in one array texture
 	private int texIcons;
-	private int texIconSurroundings;
-	private int texBackgrounds;
+	private int iconWidth;
+	private int iconHeight;
+	private int slotCellsWide;
+	private int slotCellsPerLayer;
 
 	private float scaleX;
 	private float scaleY;
@@ -340,18 +331,9 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private float shownScaleY;
 	private long shownScaleSince;
 	private double brightness;
-	private Filepath cacheFolder;
-	private ItemIconCache cache;
-	@Nullable
-	private CompletableFuture<long[]> remembered;
-	private int rememberedLoaded;
-	private long account = -1;
-	private boolean iconsChanged;
-	private long lastRemembered;
 
 	private final Map<Long, Icon> icons = new HashMap<>();
 	private final ArrayDeque<Integer> freeLayers = new ArrayDeque<>();
-	private final List<Icon> uploads = new ArrayList<>();
 	private final Map<Long, GameIcon> gameIcons = new LinkedHashMap<>(MAX_GAME_ICONS, .75f, true) {
 		@Override
 		protected boolean removeEldestEntry(Map.Entry<Long, GameIcon> eldest) {
@@ -359,8 +341,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		}
 	};
 	private final Map<Integer, Boolean> animatedItems = new HashMap<>();
-	private final Map<Long, Integer> stackModels = new HashMap<>();
-	private final Map<Long, Integer> stackModelSearches = new HashMap<>();
+	private final Map<Integer, ItemIconDefinition> definitions = new HashMap<>();
 	private final Map<Integer, Item[]> containers = new HashMap<>();
 
 	// Where other item overlays draw, so they can be fitted to the native icons
@@ -409,9 +390,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private final int[] shownRows = new int[ICON_HEIGHT];
 	private final int[] shownColumns = new int[ICON_WIDTH];
 
-	private int[] palette;
-	private double paletteBrightness;
-	private volatile List<RuneImage> runeImages;
+	@Nullable
+	private List<RuneImage> runeImages;
 
 	public NativeItemIcons() {
 		showOnInventory();
@@ -422,11 +402,14 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		setPriority(PRIORITY_LOW - 1);
 	}
 
-	public void startUp(Filepath pluginDirectory) {
+	public void startUp() {
 		try {
 			shader.compile(plugin.getShaderIncludes());
+			renderer.startUp(plugin.getShaderIncludes());
 		} catch (ShaderException | IOException ex) {
-			log.error("Failed to compile the item icon shader, so item icons will not be drawn natively:", ex);
+			log.error("Failed to compile the item icon shaders, so item icons will not be drawn natively:", ex);
+			shader.destroy();
+			renderer.shutDown();
 			return;
 		}
 
@@ -442,26 +425,12 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			offset += VERTEX_ATTRIBUTE_SIZES[i];
 		}
 
-		texBackgrounds = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_ITEM_BACKGROUNDS);
-		glBindTexture(GL_TEXTURE_2D_ARRAY, texBackgrounds);
-		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, GRID_WIDTH, GRID_HEIGHT, (MAX_SLOTS + 1) * LAYERS_PER_ITEM, 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
-		setTextureParameters(GL_NEAREST, GL_CLAMP_TO_EDGE);
-		uploadSlotLayer(NO_SLOT.layer, NO_OVERLAYS);
-		uploadSlotLayer(NO_SLOT.layer + 1, NO_OVERLAYS);
 		freeSlotLayers.clear();
 		for (int i = 0; i < MAX_SLOTS; i++)
 			freeSlotLayers.push(i * LAYERS_PER_ITEM);
-
 		texIcons = glGenTextures();
-		texIconSurroundings = glGenTextures();
-		executor = Executors.newFixedThreadPool(2, r -> {
-			var thread = new Thread(r, "117 HD - Item icons");
-			thread.setDaemon(true);
-			return thread;
-		});
-		cacheFolder = pluginDirectory.joinSegment("item-icons");
-		executor.execute(() -> ItemIconCache.removeUnused(cacheFolder));
+		iconWidth = iconHeight = 0;
+		clearIcons();
 
 		showOnInterface(client.getTopLevelInterfaceId());
 		for (var node : client.getComponentTable())
@@ -487,36 +456,34 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		overlayManager.remove(this);
 		overlayManager.remove(overlayCapture);
 		overlayManager.remove(draggedItemsOverlay);
-		executor.shutdownNow();
-		executor = null;
 
 		glDeleteTextures(texIcons);
-		glDeleteTextures(texIconSurroundings);
-		glDeleteTextures(texBackgrounds);
 		glDeleteBuffers(vbo);
 		glDeleteVertexArrays(vao);
-		texIcons = texIconSurroundings = texBackgrounds = vbo = vao = 0;
+		texIcons = vbo = vao = 0;
+		iconWidth = iconHeight = 0;
 		shader.destroy();
+		renderer.shutDown();
 
 		icons.clear();
 		gameIcons.clear();
 		animatedItems.clear();
-		stackModels.clear();
-		stackModelSearches.clear();
+		definitions.clear();
 		slots.clear();
 		itemShadows.clear();
 		heldCount = 0;
 		containers.clear();
 		newItemLayers.clear();
 		visibleAreas.clear();
-		remembered = null;
-		account = -1;
+		runeImages = null;
 		scaleX = scaleY = shownScaleX = shownScaleY = 0;
+		brightness = 0;
 	}
 
 	@Subscribe
 	public void onShaderRecompile(ShaderRecompile event) throws ShaderException, IOException {
 		shader.compile(event.includes);
+		renderer.compile(event.includes);
 	}
 
 	@Subscribe
@@ -553,19 +520,6 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		uncaptured.clear();
 		draggedItems.clear();
 		draggedCuts.clear();
-	}
-
-	@Subscribe
-	public void onClientShutdown(ClientShutdown event) {
-		if (!iconsChanged)
-			return;
-		// Not on the client thread, which may still be drawing
-		try {
-			var written = remember();
-			if (written != null)
-				event.waitFor(written);
-		} catch (ConcurrentModificationException ignored) {
-		}
 	}
 
 	@Subscribe
@@ -952,7 +906,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	@Nullable
 	private Icon findIcon(WidgetItem widgetItem) {
 		var bounds = widgetItem.getCanvasBounds();
-		if (min(scaleX * scaleY, shownScaleX * shownScaleY) <= 1 || bounds.width != ICON_WIDTH || bounds.height != ICON_HEIGHT)
+		if (iconWidth == 0 || min(scaleX * scaleY, shownScaleX * shownScaleY) <= 1 || bounds.width != ICON_WIDTH || bounds.height != ICON_HEIGHT)
 			return null;
 
 		var widget = widgetItem.getWidget();
@@ -973,29 +927,22 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		if (icon == null) {
 			if (!lookInto(visible))
 				return PENDING;
-
-			icon = loadIcon(gameIcon.key);
-			icons.put(gameIcon.key, icon);
-			iconsChanged = true;
-		} else if (icon.uncached) {
-			int modelItemId = findModelItem(itemId, quantity, border, gameIcon);
-			if (modelItemId == -1)
-				return PENDING;
-			icon.uncached = false;
-			if (modelItemId == -2) {
-				icon.failed = true;
-				var cache = this.cache;
-				executor.execute(() -> cache.save(gameIcon.key, null, null));
-			} else {
-				try {
-					drawIcon(icon, modelItemId, border, gameIcon.key);
-				} catch (RuntimeException ex) {
-					log.warn("Unable to draw the icon of item {}:", modelItemId, ex);
-					icon.failed = true;
-				}
-			}
+			icon = newIcon(gameIcon.key, new Icon(findModelItem(itemId, quantity), border, null));
 		}
-		return icon.failed ? null : icon;
+		return icon == FAILED ? null : icon;
+	}
+
+	// Worked out on the client thread, and drawn on the GPU before the interface is, the same frame
+	private Icon newIcon(long key, Icon icon) {
+		icon.layers = layersOf(icon);
+		if (icon.layers == null) {
+			icons.put(key, FAILED);
+			return FAILED;
+		}
+		if ((icon.layer = takeLayer()) == -1)
+			return PENDING;
+		icons.put(key, icon);
+		return icon;
 	}
 
 	private boolean lookInto(boolean visible) {
@@ -1025,7 +972,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		boolean ready = true;
 		for (var items : containers.values()) {
 			for (var item : items) {
-				if (icons.size() >= MAX_ICONS - MAX_ITEMS)
+				// Room is left for what's shown
+				if (freeLayers.size() <= MAX_ITEMS)
 					return;
 				if (item.getId() == -1)
 					continue;
@@ -1146,47 +1094,24 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		});
 	}
 
-	// Stacks like coins and arrows show the model of an unnamed item, which the API does not expose. None of them is animated.
-	private int findModelItem(int itemId, int quantity, int border, GameIcon gameIcon) {
-		if (gameIcon.modelItemId == -1) {
-			var definition = client.getItemDefinition(itemId);
-			if (definition.getPlaceholderTemplateId() != -1)
-				gameIcon.modelItemId = definition.getPlaceholderId();
-			else if (quantity == 1 || gameIcon.animated || Arrays.equals(gameIcon.pixels, gamePixels(itemId, 1, border, ItemQuantityMode.NEVER, false)))
-				gameIcon.modelItemId = itemId;
-			else
-				return findStackModel(itemId, border, gameIcon.pixels);
-		}
-		return gameIcon.modelItemId;
+	// Stacks like coins and arrows show the model of another item, and placeholders the one of the item they stand for
+	private int findModelItem(int itemId, int quantity) {
+		var item = client.getItemDefinition(itemId);
+		if (item.getPlaceholderTemplateId() != -1)
+			return item.getPlaceholderId();
+		var definition = getDefinition(itemId);
+		return definition == null ? itemId : definition.stackItem(itemId, quantity);
 	}
 
-	private int findStackModel(int itemId, int border, int[] stackIcon) {
-		long key = (long) Arrays.hashCode(stackIcon) << 32 | (long) itemId << 2 | border;
-		var found = stackModels.get(key);
-		if (found != null)
-			return found == -1 ? -2 : found;
-
-		int itemCount = client.getItemCount();
-		int distance = stackModelSearches.getOrDefault(key, 0);
-		for (int checked = 0; checked < 256 && newItemsThisFrame < MAX_NEW_ITEMS_PER_FRAME; checked++) {
-			distance++;
-			if (itemId + distance / 2 >= itemCount && itemId - distance / 2 < 0) {
-				stackModels.put(key, -1);
-				stackModelSearches.remove(key);
-				return -2;
-			}
-			int candidate = itemId + (distance % 2 == 1 ? distance / 2 + 1 : -distance / 2);
-			if (candidate < 0 || candidate >= itemCount || !"null".equals(client.getItemDefinition(candidate).getName()))
-				continue;
-			newItemsThisFrame++;
-			if (Arrays.equals(stackIcon, gamePixels(candidate, 1, border, ItemQuantityMode.NEVER, false))) {
-				stackModels.put(key, candidate);
-				stackModelSearches.remove(key);
-				return candidate;
-			}
-		}
-		stackModelSearches.put(key, distance);
-		return -1;
+	@Nullable
+	private ItemIconDefinition getDefinition(int itemId) {
+		if (definitions.containsKey(itemId))
+			return definitions.get(itemId);
+		var definition = ItemIconDefinition.decode(client.getIndexConfig().loadData(10, itemId));
+		if (definition == null)
+			log.debug("Unable to read the definition of item {}, so it keeps the game's icon", itemId);
+		definitions.put(itemId, definition);
+		return definition;
 	}
 
 	@Nullable
@@ -1195,72 +1120,56 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		return sprite == null ? null : sprite.getPixels();
 	}
 
-	private Icon loadIcon(long key) {
-		var icon = new Icon();
-		var cache = this.cache;
-		executor.execute(() -> icon.uncached = !cache.load(key, icon));
-		return icon;
-	}
-
-	private void drawIcon(Icon icon, int itemId, int border, long key) {
-		var item = client.getItemDefinition(itemId);
-		// Notes are the note's paper with the item drawn smaller on top
-		var layers = item.getNote() == -1 ?
-			new Layer[] { loadLayer(itemId, 1, false, border) } :
-			new Layer[] { loadLayer(item.getNote(), 1, false, border), loadLayer(item.getLinkedNoteId(), 10, true, 1) };
-		for (var layer : layers) {
-			if (layer == null) {
-				icon.failed = true;
-				return;
-			}
-		}
-		drawIcon(icon, layers, itemId, key);
-	}
-
-	private void drawIcon(Icon icon, Layer[] layers, int itemId, long key) {
-		float scaleX = this.scaleX;
-		float scaleY = this.scaleY;
-		int width = iconWidth();
-		int height = iconHeight();
-		double brightness = this.brightness;
-		var cache = this.cache;
-		executor.execute(() -> {
-			try {
-				int[] palette = getPalette(brightness);
-				int[] pixels = null;
-				for (var layer : layers) {
-					var rasterizer = new ItemIconRasterizer(layer.mesh, layer.pitch, layer.yaw, layer.roll);
-					if (!rasterizer.lineUpWith(layer.gameIcon, palette, layer.matchColors)) {
-						icon.failed = true;
-						cache.save(key, null, null);
-						return;
-					}
-					int[] drawn = rasterizer.draw(scaleX, scaleY, MARGIN, layer.border, palette);
-					pixels = pixels == null ? drawn : ItemIconRasterizer.drawOver(drawn, pixels);
-				}
-				var surroundings = ItemIconRasterizer.surroundings(pixels, width, height, scaleX, scaleY);
-				icon.surroundings = surroundings;
-				icon.pixels = pixels;
-				cache.save(key, pixels, surroundings);
-			} catch (Throwable ex) {
-				log.warn("Unable to draw the icon of item {}:", itemId, ex);
-				icon.failed = true;
-			}
-		});
-	}
-
 	@Nullable
-	private Layer loadLayer(int itemId, int quantity, boolean noted, int border) {
-		var item = client.getItemDefinition(itemId);
-		var mesh = loadMesh(item);
+	private List<ItemIconRenderer.Layer> layersOf(Icon icon) {
+		try {
+			if (icon.rune != null)
+				return runeLayers(icon.rune);
+			var item = client.getItemDefinition(icon.itemId);
+			if (item.getNote() == -1) {
+				var layer = itemLayer(icon.itemId, 1, false, icon.border);
+				return layer == null ? null : List.of(layer);
+			}
+			// Notes are the note's paper with the item drawn smaller on top
+			var paper = itemLayer(item.getNote(), 1, false, icon.border);
+			var noted = itemLayer(item.getLinkedNoteId(), 10, true, 1);
+			return paper == null || noted == null ? null : List.of(paper, noted);
+		} catch (RuntimeException ex) {
+			log.warn("Unable to draw the icon of item {}:", icon.itemId, ex);
+			return null;
+		}
+	}
+
+	// Placed like the game places it on its icon, from what the cache says about it
+	@Nullable
+	private ItemIconRenderer.Layer itemLayer(int itemId, int quantity, boolean noted, int border) {
+		var definition = getDefinition(itemId);
+		if (definition == null)
+			return null;
+		int modelItemId = definition.stackItem(itemId, quantity);
+		var modelDefinition = getDefinition(modelItemId);
+		var item = client.getItemDefinition(modelItemId);
+		// Bought items draw another item over theirs, and the model can be changed by plugins
+		if (modelDefinition == null || modelDefinition.boughtTemplateId != -1 || modelDefinition.model != item.getInventoryModel())
+			return null;
+		var mesh = loadMesh(item, modelDefinition);
 		int[] gameIcon = gamePixels(itemId, quantity, 0, ItemQuantityMode.NEVER, noted);
 		if (mesh == null || gameIcon == null)
 			return null;
-		return new Layer(mesh, item.getXan2d(), item.getYan2d(), item.getZan2d(), gameIcon, border, true);
+		int zoom = noted ? (int) (modelDefinition.zoom2d * 1.5) : modelDefinition.zoom2d;
+		var model = new ItemIconModel(mesh, item.getXan2d(), item.getYan2d(), item.getZan2d(), zoom, modelDefinition.xOffset2d, modelDefinition.yOffset2d);
+		if (!model.fits(gameIcon))
+			return null;
+		if (border > 0)
+			model.hideWhatTheGameDoesNotDraw(gameIcon);
+		// Known before the item is cut out
+		if (!ItemIconRenderer.canDraw(model))
+			return null;
+		return new ItemIconRenderer.Layer(model, border, border > 0 ? gameIcon : null, 1, 0, 0);
 	}
 
 	@Nullable
-	private ItemIconRasterizer.Mesh loadMesh(ItemComposition item) {
+	private ItemIconModel.Mesh loadMesh(ItemComposition item, ItemIconDefinition definition) {
 		var data = client.loadModelData(item.getInventoryModel());
 		if (data == null)
 			return null;
@@ -1288,15 +1197,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 		// Lit like the game lights item models
 		var model = data.light(item.getAmbient() + 64, item.getContrast() + 768, -50, -10, -50);
-		return ItemIconRasterizer.Mesh.copyOf(model, client.getTextureProvider());
-	}
-
-	private synchronized int[] getPalette(double brightness) {
-		if (palette == null || paletteBrightness != brightness) {
-			palette = ItemIconRasterizer.palette(brightness);
-			paletteBrightness = brightness;
-		}
-		return palette;
+		return ItemIconModel.Mesh.copyOf(model, client.getTextureProvider(), definition.resizeX, definition.resizeY, definition.resizeZ);
 	}
 
 	public boolean hasItems() {
@@ -1307,24 +1208,13 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		if (!active)
 			return;
 
-		glActiveTexture(TEXTURE_UNIT_ITEM_ICON_SURROUNDINGS);
-		glBindTexture(GL_TEXTURE_2D_ARRAY, texIconSurroundings);
+		updateScale(uiResolution, actualUiResolution);
+		if (iconWidth == 0)
+			return;
+
 		glActiveTexture(TEXTURE_UNIT_ITEM_ICONS);
+		drawIcons();
 		glBindTexture(GL_TEXTURE_2D_ARRAY, texIcons);
-		for (var icon : icons.values())
-			if (icon.pixels != null)
-				uploads.add(icon);
-		for (var icon : uploads) {
-			if (icon.layer == -1 && (icon.layer = takeLayer()) == -1)
-				continue;
-			glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, icon.layer, iconWidth(), iconHeight(), 1, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, icon.pixels);
-			glActiveTexture(TEXTURE_UNIT_ITEM_ICON_SURROUNDINGS);
-			glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, icon.layer, iconWidth(), iconHeight(), 1, GL_RED, GL_FLOAT, icon.surroundings);
-			glActiveTexture(TEXTURE_UNIT_ITEM_ICONS);
-			icon.pixels = null;
-			icon.surroundings = null;
-		}
-		uploads.clear();
 
 		int count = itemCount;
 		if (count > 0) {
@@ -1339,19 +1229,19 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		}
 
 		if (count > 0) {
-			glActiveTexture(TEXTURE_UNIT_ITEM_BACKGROUNDS);
-			glBindTexture(GL_TEXTURE_2D_ARRAY, texBackgrounds);
 			// Only what changed is uploaded, right before it's drawn
 			for (int i = 0; i < itemCount; i++) {
 				var slot = itemSlots[i];
 				if (slot.backgroundChanged)
-					uploadSlotLayer(slot.layer, slot.background);
+					uploadSlotCell(slot.layer, slot.background);
 				if (slot.overlaysChanged)
-					uploadSlotLayer(slot.layer + 1, slot.overlaid ? slot.elsewhere : NO_OVERLAYS);
+					uploadSlotCell(slot.layer + 1, slot.overlaid ? slot.elsewhere : NO_OVERLAYS);
 				slot.backgroundChanged = slot.overlaysChanged = false;
 			}
 
 			shader.use();
+			shader.uniSurroundingsLayer.set(MAX_ICONS);
+			shader.uniSlotCells.set(MAX_ICONS + MAX_ICONS / 4, slotCellsWide, slotCellsPerLayer);
 			glBindVertexArray(vao);
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 			if (itemCount > 0)
@@ -1360,65 +1250,87 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 			glDrawArrays(GL_TRIANGLES, 0, count * 6);
 		}
+		glActiveTexture(TEXTURE_UNIT_UI);
 
-		// Rounded, so small window resizes don't invalidate the icons kept on disk
-		float roundedScaleX = round(8f * actualUiResolution[0] / uiResolution[0]) / 8f;
-		float roundedScaleY = round(8f * actualUiResolution[1] / uiResolution[1]) / 8f;
-		if (roundedScaleX != shownScaleX || roundedScaleY != shownScaleY) {
-			shownScaleX = roundedScaleX;
-			shownScaleY = roundedScaleY;
+		if (min(scaleX * scaleY, shownScaleX * shownScaleY) > 1)
+			prepareIcons();
+	}
+
+	private void updateScale(int[] uiResolution, int[] actualUiResolution) {
+		float newScaleX = (float) actualUiResolution[0] / uiResolution[0];
+		float newScaleY = (float) actualUiResolution[1] / uiResolution[1];
+		if (newScaleX != shownScaleX || newScaleY != shownScaleY) {
+			shownScaleX = newScaleX;
+			shownScaleY = newScaleY;
 			shownScaleSince = System.currentTimeMillis();
 		}
-		// Only once a new scale is kept for a moment, so passing sizes don't each fill a cache,
-		// and not on the login screen, which is scaled differently and has no items
-		boolean scaleSettled = scaleX == 0 || System.currentTimeMillis() - shownScaleSince >= SCALE_SETTLE_MS;
-		boolean loggedIn = client.getGameState().getState() >= GameState.LOADING.getState();
+
+		// Not on the login screen, which is scaled differently and has no items
+		if (client.getGameState().getState() < GameState.LOADING.getState())
+			return;
 		// The same brightness reads as 0.8 before logging in and as a float after
 		double newBrightness = (float) client.getTextureProvider().getBrightness();
-		// Icons are drawn at the largest scale shown so far and shrunk to fit, so only a screen larger than that draws them again
-		boolean grown = scaleSettled && (shownScaleX > scaleX || shownScaleY > scaleY);
-		if (loggedIn && (grown || newBrightness != brightness)) {
-			// The game's icons depend on the brightness too
-			if (newBrightness != brightness)
-				gameIcons.clear();
-			float[] drawn = scaleX == 0 || newBrightness != brightness ?
-				ItemIconCache.largestScale(cacheFolder, newBrightness) :
-				new float[] { scaleX, scaleY };
-			scaleX = max(shownScaleX, drawn[0]);
-			scaleY = max(shownScaleY, drawn[1]);
+		if (newBrightness != brightness) {
 			brightness = newBrightness;
-			remember();
-			cache = new ItemIconCache(cacheFolder, scaleX, scaleY, brightness, iconWidth(), iconHeight());
-			executor.execute(cache::markUsed);
-			account = client.getAccountHash();
-			startRemembered();
+			// The game's icons depend on the brightness too
+			gameIcons.clear();
 			clearIcons();
-			glActiveTexture(TEXTURE_UNIT_ITEM_ICONS);
-			glBindTexture(GL_TEXTURE_2D_ARRAY, texIcons);
-			glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, iconWidth(), iconHeight(), MAX_ICONS, 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
-			setTextureParameters(GL_LINEAR, GL_CLAMP_TO_BORDER);
-			glActiveTexture(TEXTURE_UNIT_ITEM_ICON_SURROUNDINGS);
-			glBindTexture(GL_TEXTURE_2D_ARRAY, texIconSurroundings);
-			glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_R8, iconWidth(), iconHeight(), MAX_ICONS, 0, GL_RED, GL_UNSIGNED_BYTE, 0);
-			setTextureParameters(GL_LINEAR, GL_CLAMP_TO_BORDER);
+		}
+		// Only once a new scale is kept for a moment, so the sizes passed while resizing the window aren't each drawn
+		boolean settled = iconWidth == 0 || System.currentTimeMillis() - shownScaleSince >= SCALE_SETTLE_MS;
+		if (settled && shownScaleX * shownScaleY > 1 && (shownScaleX != scaleX || shownScaleY != scaleY)) {
+			scaleX = shownScaleX;
+			scaleY = shownScaleY;
+			allocate();
+		}
+	}
+
+	// Icons are drawn again at the new size, and the slots' backgrounds and overlays uploaded again
+	private void allocate() {
+		int width = round(GRID_WIDTH * scaleX);
+		int height = round(GRID_HEIGHT * scaleY);
+		slotCellsWide = width / GRID_WIDTH;
+		slotCellsPerLayer = slotCellsWide * (height / GRID_HEIGHT);
+		int layers = MAX_ICONS + MAX_ICONS / 4 + (SLOT_CELLS + slotCellsPerLayer - 1) / slotCellsPerLayer;
+		if (layers > glGetInteger(GL_MAX_ARRAY_TEXTURE_LAYERS)) {
+			log.warn("The GPU can't hold {} item icons, so item icons will not be drawn natively", MAX_ICONS);
+			iconWidth = iconHeight = 0;
 			return;
 		}
+		iconWidth = width;
+		iconHeight = height;
+		glActiveTexture(TEXTURE_UNIT_ITEM_ICONS);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, texIcons);
+		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, iconWidth, iconHeight, layers, 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
+		setTextureParameters(GL_LINEAR, GL_CLAMP_TO_BORDER);
+		uploadSlotCell(NO_SLOT.layer, NO_OVERLAYS);
+		uploadSlotCell(NO_SLOT.layer + 1, NO_OVERLAYS);
+		for (var icon : icons.values())
+			icon.drawn = false;
+		for (var slot : slots.values())
+			slot.backgroundChanged = slot.overlaysChanged = true;
+		heldCount = 0;
+		glActiveTexture(TEXTURE_UNIT_UI);
+	}
 
-		// Not on the login screen, so a logout keeps the icons until another account logs in
-		long newAccount = client.getAccountHash();
-		if (newAccount != -1 && newAccount != account && cache != null) {
-			remember();
-			account = newAccount;
-			startRemembered();
-			clearIcons();
+	// What's shown this frame is drawn now, and a few others ahead of time
+	private void drawIcons() {
+		int ahead = MAX_ICONS_DRAWN_AHEAD_PER_FRAME;
+		for (var entry : icons.entrySet()) {
+			var icon = entry.getValue();
+			if (icon.drawn || icon.layer == -1 || icon.frame != frame && ahead-- <= 0)
+				continue;
+			if (icon.layers == null)
+				icon.layers = layersOf(icon);
+			icon.drawn = icon.layers != null && renderer.draw(
+				icon.layers, texIcons, icon.layer, MAX_ICONS + icon.layer / 4, icon.layer % 4, iconWidth, iconHeight, (float) brightness);
+			icon.layers = null;
+			if (!icon.drawn) {
+				freeLayers.push(icon.layer);
+				icon.layer = -1;
+				entry.setValue(FAILED);
+			}
 		}
-
-		if (min(scaleX * scaleY, shownScaleX * shownScaleY) > 1) {
-			loadRemembered();
-			prepareIcons();
-		}
-		if (iconsChanged && System.currentTimeMillis() - lastRemembered > REMEMBER_INTERVAL_MS)
-			remember();
 	}
 
 	// What the interface shows around each item now, to tell later whether the game drew it again
@@ -1460,45 +1372,6 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		return true;
 	}
 
-	private void startRemembered() {
-		long account = this.account;
-		var cache = this.cache;
-		remembered = account == -1 ? null : CompletableFuture.supplyAsync(() -> cache.loadRemembered(account), executor);
-		rememberedLoaded = 0;
-	}
-
-	// Icons shown last time are loaded from the start, so they don't pop in the first time they're shown
-	private void loadRemembered() {
-		if (remembered == null || !remembered.isDone())
-			return;
-		long[] keys = remembered.join();
-		for (int i = 0; i < REMEMBERED_ICONS_PER_FRAME && rememberedLoaded < keys.length; i++) {
-			if (icons.size() >= MAX_ICONS - MAX_ITEMS)
-				rememberedLoaded = keys.length;
-			else
-				icons.computeIfAbsent(keys[rememberedLoaded++], this::loadIcon);
-		}
-		if (rememberedLoaded == keys.length)
-			remembered = null;
-	}
-
-	@Nullable
-	private CompletableFuture<Void> remember() {
-		lastRemembered = System.currentTimeMillis();
-		// Not while still loading what was remembered, which would be forgotten
-		if (cache == null || account == -1 || remembered != null)
-			return null;
-		iconsChanged = false;
-		long[] keys = icons.entrySet().stream()
-			.filter(entry -> !entry.getValue().uncached)
-			.sorted((a, b) -> Integer.compare(b.getValue().frame, a.getValue().frame))
-			.mapToLong(Map.Entry::getKey)
-			.toArray();
-		var cache = this.cache;
-		long account = this.account;
-		return CompletableFuture.runAsync(() -> cache.remember(account, keys), executor);
-	}
-
 	private void clearIcons() {
 		prepared = false;
 		heldCount = 0;
@@ -1527,20 +1400,15 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		return layer;
 	}
 
-	private int iconWidth() {
-		return round(GRID_WIDTH * scaleX);
-	}
-
-	private int iconHeight() {
-		return round(GRID_HEIGHT * scaleY);
-	}
-
 	private static int halfSeeThrough(int color) {
 		return 128 << 24 | (color >> 16 & 0xFF) / 2 << 16 | (color >> 8 & 0xFF) / 2 << 8 | (color & 0xFF) / 2;
 	}
 
-	private static void uploadSlotLayer(int layer, int[] pixels) {
-		glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, layer, GRID_WIDTH, GRID_HEIGHT, 1, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, pixels);
+	// Several slots' cells share a layer of the icon texture, which is as large as an icon
+	private void uploadSlotCell(int cell, int[] pixels) {
+		int within = cell % slotCellsPerLayer;
+		glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, within % slotCellsWide * GRID_WIDTH, within / slotCellsWide * GRID_HEIGHT,
+			MAX_ICONS + MAX_ICONS / 4 + cell / slotCellsPerLayer, GRID_WIDTH, GRID_HEIGHT, 1, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, pixels);
 	}
 
 	private static void setTextureParameters(int filter, int wrap) {
@@ -1808,24 +1676,22 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		var paths = new HashMap<Integer, String>();
 		for (int itemId : runes.getIntVals())
 			paths.put(itemId, "/net/runelite/client/plugins/runepouch/" + client.getItemDefinition(itemId).getName().toLowerCase(Locale.ROOT).replace(' ', '_') + ".png");
-		executor.execute(() -> {
-			var images = new ArrayList<RuneImage>();
-			paths.forEach((itemId, path) -> {
-				try (var in = RuneLite.class.getResourceAsStream(path)) {
-					if (in == null)
-						return;
-					BufferedImage image;
-					synchronized (ImageIO.class) {
-						image = ImageIO.read(in);
-					}
-					if (image != null && image.getWidth() <= ICON_WIDTH && image.getHeight() <= ICON_HEIGHT)
-						images.add(runeImage(itemId, image));
-				} catch (IOException | RuntimeException ex) {
-					log.debug("Unable to load {}:", path, ex);
+		var images = new ArrayList<RuneImage>();
+		paths.forEach((itemId, path) -> {
+			try (var in = RuneLite.class.getResourceAsStream(path)) {
+				if (in == null)
+					return;
+				BufferedImage image;
+				synchronized (ImageIO.class) {
+					image = ImageIO.read(in);
 				}
-			});
-			runeImages = images;
+				if (image != null && image.getWidth() <= ICON_WIDTH && image.getHeight() <= ICON_HEIGHT)
+					images.add(runeImage(itemId, image));
+			} catch (IOException | RuntimeException ex) {
+				log.debug("Unable to load {}:", path, ex);
+			}
 		});
+		runeImages = images;
 	}
 
 	private static RuneImage runeImage(int itemId, BufferedImage image) {
@@ -1910,19 +1776,44 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	@Nullable
 	private Icon findRuneIcon(RuneImage image) {
 		var icon = icons.get(image.key);
-		if (icon == null) {
-			icon = loadIcon(image.key);
-			icons.put(image.key, icon);
-		} else if (icon.uncached) {
-			icon.uncached = false;
-			var item = client.getItemDefinition(image.itemId);
-			var mesh = loadMesh(item);
-			if (mesh == null)
-				icon.failed = true;
-			else
-				drawIcon(icon, new Layer[] { new Layer(mesh, item.getXan2d(), item.getYan2d(), item.getZan2d(), image.shape, 1, false) }, image.itemId, image.key);
+		if (icon == null)
+			icon = newIcon(image.key, new Icon(image.itemId, 1, image));
+		return icon == FAILED || icon == PENDING ? null : icon;
+	}
+
+	// The rune's icon, made as small as RuneLite's image of it and put in its place, with its own outline
+	@Nullable
+	private List<ItemIconRenderer.Layer> runeLayers(RuneImage image) {
+		var layer = itemLayer(image.itemId, 1, false, 1);
+		int[] gameIcon = gamePixels(image.itemId, 1, 0, ItemQuantityMode.NEVER, false);
+		if (layer == null || gameIcon == null)
+			return null;
+		float[] from = shapeBounds(gameIcon);
+		float[] to = shapeBounds(image.shape);
+		if (from == null || to == null)
+			return null;
+		float scale = ((to[2] - to[0]) / (from[2] - from[0]) + (to[3] - to[1]) / (from[3] - from[1])) / 2;
+		// Shrunk around the center the game projects the model at
+		float shiftX = (to[0] + to[2]) / 2 - ItemIconModel.CENTER - ((from[0] + from[2]) / 2 - ItemIconModel.CENTER) * scale;
+		float shiftY = (to[1] + to[3]) / 2 - ItemIconModel.CENTER - ((from[1] + from[3]) / 2 - ItemIconModel.CENTER) * scale;
+		return List.of(new ItemIconRenderer.Layer(layer.model, 1, layer.gameIcon, scale, shiftX, shiftY));
+	}
+
+	// Left, top, right and bottom edges of what's drawn on an icon
+	@Nullable
+	private static float[] shapeBounds(int[] icon) {
+		float[] bounds = { ICON_WIDTH, ICON_HEIGHT, 0, 0 };
+		for (int y = 0; y < ICON_HEIGHT; y++) {
+			for (int x = 0; x < ICON_WIDTH; x++) {
+				if (icon[y * ICON_WIDTH + x] == 0)
+					continue;
+				bounds[0] = min(bounds[0], x);
+				bounds[1] = min(bounds[1], y);
+				bounds[2] = max(bounds[2], x + 1);
+				bounds[3] = max(bounds[3], y + 1);
+			}
 		}
-		return icon.failed ? null : icon;
+		return bounds[2] == 0 ? null : bounds;
 	}
 
 	// Parts of the shape can be hidden by what's drawn over it after, like the charges Item Charges writes over the outline,

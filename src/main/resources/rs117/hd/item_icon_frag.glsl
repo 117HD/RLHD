@@ -2,16 +2,20 @@
 
 #include <uniforms/ui.glsl>
 
+// Icons, how near their pixels are to them, and the slots' cells of what's behind and over them, see NativeItemIcons
 uniform sampler2DArray itemIcons;
-uniform sampler2DArray itemIconSurroundings;
-uniform sampler2DArray itemBackgrounds;
 uniform sampler2D uiTexture;
+// The first layer of how near pixels are to the icons, four icons to a layer
+uniform int surroundingsLayer;
+// The first layer of the slots' cells, how many lie side by side in a layer, and how many a layer holds
+uniform ivec3 slotCells;
 
 #include <scaling/ui_scaling.glsl>
 #include <utils/color_blindness.glsl>
 #include <utils/misc.glsl>
 
 const ivec2 ICON_SIZE = ivec2(36, 32);
+const ivec2 GRID_SIZE = ivec2(40, 36);
 
 in vec2 fUv;
 flat in vec2 fLayers;
@@ -23,25 +27,32 @@ flat in vec4 fOutline;
 
 out vec4 FragColor;
 
-ivec2 gridSize() {
-    return textureSize(itemBackgrounds, 0).xy;
+float surroundingsAt(vec2 gridUv) {
+    int icon = int(fLayers.x);
+    return texture(itemIcons, vec3(gridUv, surroundingsLayer + icon / 4))[icon % 4];
+}
+
+vec4 slotTexel(ivec2 pixel, int cell) {
+    int within = cell % slotCells.z;
+    ivec2 origin = ivec2(within % slotCells.y, within / slotCells.y) * GRID_SIZE;
+    return texelFetch(itemIcons, ivec3(origin + clamp(pixel, ivec2(0), GRID_SIZE - 1), slotCells.x + cell / slotCells.z), 0);
 }
 
 vec4 iconAt(vec2 gridUv) {
     vec4 icon = texture(itemIcons, vec3(gridUv, fLayers.x));
     // Selected items have a white border around their black one
     if (fBorder == 2)
-        icon += texture(itemIconSurroundings, vec3(gridUv, fLayers.x)).r * (1 - icon.a);
+        icon += surroundingsAt(gridUv) * (1 - icon.a);
     return icon;
 }
 
 vec4 otherOverlays(vec2 gridUv, ivec2 pixel, float item, float shadow) {
     vec4 elsewhere = vec4(0);
-    if (all(greaterThanEqual(pixel, ivec2(0))) && all(lessThan(pixel, gridSize())))
-        elsewhere = texelFetch(itemBackgrounds, ivec3(pixel, fLayers.y + 1), 0);
+    if (all(greaterThanEqual(pixel, ivec2(0))) && all(lessThan(pixel, GRID_SIZE)))
+        elsewhere = slotTexel(pixel, int(fLayers.y) + 1);
 
     float filled = max(item, shadow);
-    float outlined = max(texture(itemIconSurroundings, vec3(gridUv, fLayers.x)).r - item, 0);
+    float outlined = max(surroundingsAt(gridUv) - item, 0);
     vec4 redrawn = fFill * filled;
     redrawn += fOutline * outlined * (1 - redrawn.a);
     return elsewhere + redrawn * (1 - elsewhere.a);
@@ -53,7 +64,7 @@ void main() {
     // and clamped like the UI pass's output is, since cubic scaling overshoots
     float ui = clamp(textureUi(uiTexture, uiUv).a, 0, 1);
 
-    vec2 grid = vec2(gridSize());
+    vec2 grid = vec2(GRID_SIZE);
     vec2 gridPosition = fUv * vec2(ICON_SIZE) + (grid - vec2(ICON_SIZE)) / 2;
     vec2 gridUv = gridPosition / grid;
     vec2 gamePixel = 1 / grid;
@@ -67,13 +78,13 @@ void main() {
     float iconShadow = iconAt(gridUv - gamePixel).a;
     vec4 overlays = otherOverlays(gridUv, pixel, icon.a, iconShadow);
     icon *= fOpacity;
-    vec4 background = texelFetch(itemBackgrounds, ivec3(clamp(pixel, ivec2(0), gridSize() - 1), fLayers.y), 0);
+    vec4 background = slotTexel(pixel, int(fLayers.y));
     // Only fill in what the stretched interface lets through, and around the item only what the interface covers,
     // since items next to it fill in their own cut out backgrounds. Within the item's own cut out area, what the
     // interface holds was drawn over the item afterwards, like Inventory Grid's slots, so the background stays under it.
     float covered = background.a;
     float drawnOver = 0;
-    if (any(lessThan(pixel, ivec2(0))) || any(greaterThanEqual(pixel, gridSize())))
+    if (any(lessThan(pixel, ivec2(0))) || any(greaterThanEqual(pixel, GRID_SIZE)))
         covered = min(covered, texelFetch(uiTexture, uiPixel, 0).a);
     else
         drawnOver = texelFetch(uiTexture, uiPixel, 0).a;
