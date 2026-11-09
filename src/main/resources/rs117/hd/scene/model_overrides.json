@@ -13107,6 +13107,9 @@
     "uvType": "MODEL_XY",
     "uvScale": 0.5,
     "upwardsNormals": true,
+    "windDisplacementMode": "OBJECT",
+    "invertDisplacementStrength": true,
+    "windDisplacementModifier": -2,
     "objectIds": [
       "STANDARD1_ASGARNIA",
       "STANDARD2_ASGARNIA"
