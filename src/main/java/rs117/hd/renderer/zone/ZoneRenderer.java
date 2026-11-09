@@ -931,7 +931,6 @@ public class ZoneRenderer implements Renderer {
 			renderState.program.set(plugin.tiledLightingImageStoreProgram);
 			renderState.drawBuffer.set(GL_NONE);
 			renderState.apply();
-			plugin.tiledLightingImageStoreProgram.setHasAlphaDepth(oitRenderer.hasDepthLayers());
 			glDrawArrays(GL_TRIANGLES, 0, 3);
 		} else {
 			renderState.drawBuffer.set(GL_COLOR_ATTACHMENT0);
@@ -940,7 +939,6 @@ public class ZoneRenderer implements Renderer {
 				renderState.program.set(plugin.tiledLightingShaderPrograms.get(layer));
 				renderState.framebufferTextureLayer.set(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, plugin.texTiledLighting, 0, layer);
 				renderState.apply();
-				plugin.tiledLightingShaderPrograms.get(layer).setHasAlphaDepth(oitRenderer.hasDepthLayers());
 				glDrawArrays(GL_TRIANGLES, 0, 3);
 			}
 		}

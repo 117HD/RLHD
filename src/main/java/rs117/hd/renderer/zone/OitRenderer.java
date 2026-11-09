@@ -311,10 +311,6 @@ public class OitRenderer {
 		return firstLayerDepthTex;
 	}
 
-	public boolean hasDepthLayers() {
-		return !transparentCmd.isEmpty() || !waterCmd.isEmpty();
-	}
-
 	private void alphaDiscardPass(RenderState renderState) {
 		if (alphaDiscardCmd.isEmpty())
 			return;
@@ -332,7 +328,7 @@ public class OitRenderer {
 		renderState.disable.set(GL_BLEND);
 
 		renderState.depthFunc.set(GL_GEQUAL);
-		renderState.depthMask.set(!plugin.configSceneDepth);
+		renderState.depthMask.set(plugin.configSceneDepth);
 
 		alphaDiscardCmd.execute(renderState);
 

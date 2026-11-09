@@ -11,7 +11,6 @@ public class TiledLightingShaderProgram extends ShaderProgram {
 	private final UniformImage uniTiledLightingTextureStore = addUniformImage("tiledLightingImage");
 	private final UniformTexture uniSceneDepth = addUniformTexture("sceneDepthTexture");
 	private final UniformTexture uniAlphaDepth = addUniformTexture("alphaFirstLastDepth");
-	private final UniformBool uniHasAlphaDepth = addUniformBool("hasAlphaDepth");
 
 	public TiledLightingShaderProgram() {
 		super(t -> t
@@ -21,7 +20,6 @@ public class TiledLightingShaderProgram extends ShaderProgram {
 		uniTiledLightingTextureStore.ignoreMissing = true;
 		uniSceneDepth.ignoreMissing = true;
 		uniAlphaDepth.ignoreMissing = true;
-		uniHasAlphaDepth.ignoreMissing = true;
 	}
 
 	@Override
@@ -30,9 +28,5 @@ public class TiledLightingShaderProgram extends ShaderProgram {
 		uniTiledLightingTextureStore.set(IMAGE_UNIT_TILED_LIGHTING);
 		uniSceneDepth.set(TEXTURE_UNIT_SCENE_DEPTH);
 		uniAlphaDepth.set(TEXTURE_UNIT_FIRST_LAYER);
-	}
-
-	public void setHasAlphaDepth(boolean hasAlphaDepth) {
-		uniHasAlphaDepth.set(hasAlphaDepth);
 	}
 }

@@ -9,9 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import rs117.hd.HdPlugin;
 import rs117.hd.config.DynamicLights;
+import rs117.hd.renderer.zone.OitRenderer;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_SCENE_DEPTH;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILED_LIGHTING_MAP;
+import static rs117.hd.renderer.zone.OitRenderer.TEXTURE_UNIT_FIRST_LAYER;
 import static rs117.hd.utils.HDUtils.drawStringCentered;
 import static rs117.hd.utils.HDUtils.drawStringShadowed;
 
@@ -20,6 +23,8 @@ import static rs117.hd.utils.HDUtils.drawStringShadowed;
 public class TiledLightingOverlay extends ShaderOverlay<TiledLightingOverlay.Shader> {
 	static class Shader extends ShaderOverlay.Shader {
 		private final UniformTexture uniTiledLightingTextureArray = addUniformTexture("tiledLightingArray");
+		private final UniformTexture uniSceneDepth = addUniformTexture("sceneDepthTexture");
+		private final UniformTexture uniAlphaDepth = addUniformTexture("alphaFirstLastDepth");
 
 		public Shader() {
 			super(t -> t.add(GL_FRAGMENT_SHADER, "overlays/tiled_lighting_overlay_frag.glsl"));
@@ -28,11 +33,16 @@ public class TiledLightingOverlay extends ShaderOverlay<TiledLightingOverlay.Sha
 		@Override
 		protected void initialize() {
 			uniTiledLightingTextureArray.set(TEXTURE_UNIT_TILED_LIGHTING_MAP);
+			uniSceneDepth.set(TEXTURE_UNIT_SCENE_DEPTH);
+			uniAlphaDepth.set(TEXTURE_UNIT_FIRST_LAYER);
 		}
 	}
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private OitRenderer renderer;
 
 	public TiledLightingOverlay() {
 		setLayer(OverlayLayer.ABOVE_SCENE);
