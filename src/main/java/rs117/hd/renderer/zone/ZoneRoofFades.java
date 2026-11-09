@@ -42,6 +42,7 @@ public class ZoneRoofFades {
 		boolean initialized;
 		boolean fadingOut;
 		int lastUsedFrame;
+		int lastLevel = -1;
 		int alphaFrame = -1;
 		int visibleLevels = LEVEL_MASK;
 		int fadingLevels;
@@ -52,6 +53,7 @@ public class ZoneRoofFades {
 		void clear() {
 			zone = null;
 			fade = 0;
+			lastLevel = -1;
 			initialized = false;
 			fadingOut = false;
 			alphaFrame = -1;
@@ -120,13 +122,16 @@ public class ZoneRoofFades {
 
 		final float duration = plugin.configDitherFadeRoofDuration / 1000f;
 
+		final boolean levelChanged = state.lastLevel != ctx.level;
+		state.lastLevel = ctx.level;
+
 		// Snap on the first frame so already hidden geometry doesn't flash
-		if (!state.initialized || duration <= 0) {
+		if (!state.initialized || levelChanged || duration <= 0) {
 			state.initialized = true;
 			state.fadingLevels = 0;
 			state.fadingRoofs.clear();
 			state.fadingRoofs.addAll(hidden);
-			state.fade = hidden.isEmpty() ? 0 : 1;
+			state.fade = 0;
 			return publish(state);
 		}
 
