@@ -182,9 +182,10 @@ public class ModelStreamingManager {
 			!renderCallbackManager.drawObject(scene, tileObject))
 			return;
 
-		int offset = ctx.sceneContext.sceneOffset >> 3;
-		int zx = (x >> 10) + offset;
-		int zz = (z >> 10) + offset;
+		final int level = tileObject.getPlane();
+		final int offset = ctx.sceneContext.sceneOffset >> 3;
+		final int zx = (x >> 10) + offset;
+		final int zz = (z >> 10) + offset;
 		Zone zone = ctx.zones[zx][zz];
 
 		if (!zone.initialized || zone.fadingAlpha > 1.0f)
@@ -196,7 +197,7 @@ public class ModelStreamingManager {
 			Mat4.mulVec(worldPos, ctx.projection, worldPos);
 
 		final int uuid;
-		final float modelFade;
+		float modelFade = 0;
 		if (r instanceof DynamicObject) {
 			int id = tileObject.getId();
 			int impostorId = root.sceneContext.animatedDynamicObjectImpostors.getOrDefault(id, id);
@@ -216,13 +217,38 @@ public class ModelStreamingManager {
 				final float fadeStart = max(0.0f, detailDrawDistanceTiles - fadeRange);
 				final float fadeStartSq = fadeStart * fadeStart;
 				modelFade = saturate((squaredDistance - fadeStartSq) / (fadeEndSq - fadeStartSq));
-			} else {
-				modelFade = 0;
 			}
 		} else {
 			uuid = ModelHash.generateUuid(client, tileObject.getHash(), r);
-			modelFade = 0;
 		}
+
+		final ZoneRoofFades.Fade fade = zone.fade;
+		if (fade != null) {
+			final int levelBucket = fade.levelBucket(level);
+			if (levelBucket != -1)
+				modelFade = max(modelFade, ZoneRoofFades.getBucketFade(levelBucket));
+
+			if(level != ctx.level) {
+				final int tx = (x >> 7) + ctx.sceneContext.sceneOffset;
+				final int ty = (z >> 7) + ctx.sceneContext.sceneOffset;
+
+				final int[][] roofs = ctx.sceneContext.scene.getRoofs()[level];
+				if (tx >= 0 && ty >= 0 && tx < roofs.length && ty < roofs[tx].length) {
+					final int rid = roofs[tx][ty];
+					if (rid > 0) {
+						final int bucket = fade.roofBucket(rid);
+						if (bucket != -1) {
+							modelFade = max(modelFade, ZoneRoofFades.getBucketFade(bucket));
+						} else if (level > ctx.level && (ctx.hideRoofIds.contains(rid) || fade.isHeld(rid))) {
+							return; // fully hidden
+						}
+					}
+				}
+			}
+		}
+
+		if (modelFade == 1.0f)
+			return;
 
 		// Hide everything outside the current area if area hiding is enabled
 		if (ctx.sceneContext.currentArea != null && scene.getWorldViewId() == WorldView.TOPLEVEL) {
@@ -231,13 +257,13 @@ public class ModelStreamingManager {
 			boolean inArea = ctx.sceneContext.currentArea.containsPoint(
 				base[0] + ((int) worldPos[0] >> Perspective.LOCAL_COORD_BITS),
 				base[1] + ((int) worldPos[2] >> Perspective.LOCAL_COORD_BITS),
-				base[2] + tileObject.getPlane()
+				base[2] + level
 			);
 			if (!inArea)
 				return;
 		}
 
-		ctx.sceneContext.localToWorld(x, z, tileObject.getPlane(), streamingContext.worldPos);
+		ctx.sceneContext.localToWorld(x, z, level, streamingContext.worldPos);
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, streamingContext.worldPos);
 		if (modelOverride.hide)
 			return;
@@ -262,7 +288,7 @@ public class ModelStreamingManager {
 		final Zone.AlphaModel alphaModel = hasAlpha ?
 			zone.requestTempAlphaModel(
 				modelOverride,
-				Math.min(ctx.maxLevel, tileObject.getPlane()),
+				Math.min(ctx.maxLevel, level),
 				x & 1023,
 				y - (r instanceof Actor ? r.getModelHeight() : 0), // order players over objects?
 				z & 1023

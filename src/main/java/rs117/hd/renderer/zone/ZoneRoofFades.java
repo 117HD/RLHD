@@ -265,6 +265,10 @@ public class ZoneRoofFades {
 		}
 	}
 
+	public static float getBucketFade(int bucket) {
+		return bucket / (float) (MAX_FADES - 1);
+	}
+
 	public CommandBuffer getCommandBuffer(int bucket) {
 		return cmds[bucket];
 	}
