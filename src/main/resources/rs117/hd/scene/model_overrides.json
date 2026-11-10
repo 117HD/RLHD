@@ -6598,10 +6598,10 @@
   },
   {
     "description": "TZHAAR_ROCK_GRADIENT",
-    "baseMaterial": "ROCK_1_LIGHT",
+    "baseMaterial": "ROCK_6",
+    "shiftLightness": 2,
     "uvType": "BOX",
     "uvScale": 0.8,
-    "tzHaarRecolorType": "GRADIENT",
     "objectIds": [
       "TZHAAR_CAVE_WALL_1",
       "TZHAAR_CAVE_WALL_2",
@@ -6634,7 +6634,8 @@
       },
       {
         "colors": "h == 6 || s == 7",
-        "baseMaterial": "GRAY_75"
+        "baseMaterial": "GRAY_75",
+        "tzHaarRecolorType": "GRADIENT"
       }
     ]
   },
@@ -6721,13 +6722,15 @@
       "MORULREK_FLOOR_CORNER_OUTER_01",
       "MORULREK_FLOOR_CORNER_OUTER_02",
       "MORULREK_FLOOR_CORNER_INSIDE_01",
-      "MORULREK_FLOOR_CORNER_INSIDE_02"
+      "MORULREK_FLOOR_CORNER_INSIDE_02",
+      "INFERNO_ENTRANCE_NOOP"
     ],
     "colorOverrides": [
       {
         "colors": "s == 7",
         "baseMaterial": "SMOOTH_STONE",
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "tzHaarRecolorType": "HUE_SHIFT"
       }
     ]
   },
