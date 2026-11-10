@@ -146,6 +146,9 @@ public class LightManager {
 	private final ListMultimap<Integer, LightDefinition> PROJECTILE_LIGHTS = ArrayListMultimap.create();
 	private final ListMultimap<Integer, LightDefinition> GRAPHICS_OBJECT_LIGHTS = ArrayListMultimap.create();
 
+	// Normalized once on load, so config-dependent filtering can be reapplied without reloading the file
+	private final ArrayList<LightDefinition> definitions = new ArrayList<>();
+
 	private boolean reloadLights;
 	private int currentPlane;
 	private final Renderable[] imposterRenderables = new Renderable[2];
@@ -165,12 +168,7 @@ public class LightManager {
 		}
 
 		clientThread.invoke(() -> {
-			WORLD_LIGHTS.clear();
-			NPC_LIGHTS.clear();
-			OBJECT_LIGHTS.clear();
-			PROJECTILE_LIGHTS.clear();
-			GRAPHICS_OBJECT_LIGHTS.clear();
-
+			definitions.clear();
 			for (int i = 0; i < lights.length; i++) {
 				LightDefinition def = lights[i];
 				try {
@@ -179,27 +177,48 @@ public class LightManager {
 					log.error("Ignoring invalid light at index {}: {}", i, ex.getMessage());
 					continue;
 				}
-
-				if (def.worldX != null && def.worldY != null) {
-					Light light = new Light(def);
-					light.worldLight = true;
-					light.persistent = true;
-					light.worldPos[0] = def.worldX;
-					light.worldPos[1] = def.worldY;
-					light.worldPos[2] = def.plane;
-					WORLD_LIGHTS.add(light);
-				}
-				def.npcIds.forEach(id -> NPC_LIGHTS.put(id, def));
-				def.objectIds.forEach(id -> OBJECT_LIGHTS.put(id, def));
-				def.projectileIds.forEach(id -> PROJECTILE_LIGHTS.put(id, def));
-				def.graphicsObjectIds.forEach(id -> GRAPHICS_OBJECT_LIGHTS.put(id, def));
+				definitions.add(def);
 			}
 
 			log.debug("Loaded {} lights", lights.length);
 
-			// Reload after startup or hot-swapping so existing NPCs receive lights
-			reloadLights = true;
+			registerDefinitions();
 		});
+	}
+
+	/**
+	 * Rebuild the light lookups from the loaded definitions, applying config-dependent filters.
+	 * Must be called on the client thread.
+	 */
+	public void registerDefinitions() {
+		WORLD_LIGHTS.clear();
+		NPC_LIGHTS.clear();
+		OBJECT_LIGHTS.clear();
+		PROJECTILE_LIGHTS.clear();
+		GRAPHICS_OBJECT_LIGHTS.clear();
+
+		for (int i = 0; i < definitions.size(); i++) {
+			LightDefinition def = definitions.get(i);
+			if (def.hdTzHaarReskin != null && def.hdTzHaarReskin != plugin.configHdTzHaarReskin)
+				continue;
+
+			if (def.worldX != null && def.worldY != null) {
+				Light light = new Light(def);
+				light.worldLight = true;
+				light.persistent = true;
+				light.worldPos[0] = def.worldX;
+				light.worldPos[1] = def.worldY;
+				light.worldPos[2] = def.plane;
+				WORLD_LIGHTS.add(light);
+			}
+			def.npcIds.forEach(id -> NPC_LIGHTS.put(id, def));
+			def.objectIds.forEach(id -> OBJECT_LIGHTS.put(id, def));
+			def.projectileIds.forEach(id -> PROJECTILE_LIGHTS.put(id, def));
+			def.graphicsObjectIds.forEach(id -> GRAPHICS_OBJECT_LIGHTS.put(id, def));
+		}
+
+		// Reload after startup or hot-swapping so existing NPCs receive lights
+		reloadLights = true;
 	}
 
 	public void startUp() {
@@ -210,6 +229,7 @@ public class LightManager {
 	public void shutDown() {
 		clearSceneLights();
 
+		definitions.clear();
 		WORLD_LIGHTS.clear();
 		NPC_LIGHTS.clear();
 		OBJECT_LIGHTS.clear();

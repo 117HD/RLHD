@@ -9298,7 +9298,7 @@
     "groundMaterial": "STONE_CAVE_FLOOR",
     "shiftLightness": 0,
     "heightOffset": 720,
-    "maxLightness": 2,
+    "maxLightness": 3,
     "blended": false
   },
   {

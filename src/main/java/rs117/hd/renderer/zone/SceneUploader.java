@@ -39,7 +39,6 @@ import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
-import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.scene.model_overrides.UvType;
 import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.scene.water_types.WaterType;
@@ -141,7 +140,6 @@ public class SceneUploader implements AutoCloseable {
 	private final PooledObjectArray<Material> faceMaterials = new PooledObjectArray<>();
 	private final PooledObjectArray<UvType> faceUVTypes = new PooledObjectArray<>();
 
-	private final int[] tzHaarRecolored = new int[3];
 	private final float[] projected = new float[4];
 
 	private final GpuIntBuffer zoneVboO = new GpuIntBuffer(false);
@@ -1796,21 +1794,6 @@ public class SceneUploader implements AutoCloseable {
 							}
 						}
 					}
-				}
-
-				if (plugin.configLegacyTzHaarReskin && faceOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
-					ProceduralGenerator.recolorTzHaar(
-						faceOverride,
-						model,
-						face,
-						color1,
-						color2,
-						color3,
-						tzHaarRecolored
-					);
-					color1 = tzHaarRecolored[0];
-					color2 = tzHaarRecolored[1];
-					color3 = tzHaarRecolored[2];
 				}
 			}
 
