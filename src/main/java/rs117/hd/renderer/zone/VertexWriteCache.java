@@ -219,25 +219,66 @@ public final class VertexWriteCache {
 		final int[] stagingBuffer = this.stagingBuffer;
 		final int p = stagingPosition;
 
-		stagingBuffer[p]     = (positions[offsetA + 1] & 0xFFFF) << 16 | (positions[offsetA] & 0xFFFF);
-		stagingBuffer[p + 1] = (normals[0] & 0xFFFF) << 16 | (positions[offsetA + 2] & 0xFFFF);
-		stagingBuffer[p + 2] = (normals[2] & 0xFFFF) << 16 | (normals[1] & 0xFFFF);
-		stagingBuffer[p + 3] = (float16(uvs[0]) & 0xFFFF) << 16 | (modelIdx & 0xFFFF);
-		stagingBuffer[p + 4] = (float16(uvs[2]) & 0xFFFF) << 16 | (float16(uvs[1]) & 0xFFFF);
+		// Vertex A
+		int v0 = positions[offsetA] & 0xFFFF;
+		int v1 = positions[offsetA + 1] & 0xFFFF;
+		int v2 = positions[offsetA + 2] & 0xFFFF;
+
+		int n0 = normals[0] & 0xFFFF;
+		int n1 = normals[1] & 0xFFFF;
+		int n2 = normals[2] & 0xFFFF;
+
+		int uv0 = float16(uvs[0]) & 0xFFFF;
+		int uv1 = float16(uvs[1]) & 0xFFFF;
+		int uv2 = float16(uvs[2]) & 0xFFFF;
+
+		modelIdx &= 0xFFFF;
+
+		stagingBuffer[p]     = v1 << 16  | v0;
+		stagingBuffer[p + 1] = n0 << 16  | v2;
+		stagingBuffer[p + 2] = n2 << 16  | n1;
+		stagingBuffer[p + 3] = uv0 << 16 | modelIdx;
+		stagingBuffer[p + 4] = uv2 << 16 | uv1;
 		stagingBuffer[p + 5] = textureFaceIdx;
 
-		stagingBuffer[p + 6]  = (positions[offsetB + 1] & 0xFFFF) << 16 | (positions[offsetB] & 0xFFFF);
-		stagingBuffer[p + 7]  = (normals[3] & 0xFFFF) << 16 | (positions[offsetB + 2] & 0xFFFF);
-		stagingBuffer[p + 8] = (normals[5] & 0xFFFF) << 16 | (normals[4] & 0xFFFF);
-		stagingBuffer[p + 9] = (float16(uvs[4]) & 0xFFFF) << 16 | (modelIdx & 0xFFFF);
-		stagingBuffer[p + 10] = (float16(uvs[6]) & 0xFFFF) << 16 | (float16(uvs[5]) & 0xFFFF);
+		// Vertex B
+		v0 = positions[offsetB] & 0xFFFF;
+		v1 = positions[offsetB + 1] & 0xFFFF;
+		v2 = positions[offsetB + 2] & 0xFFFF;
+
+		n0 = normals[3] & 0xFFFF;
+		n1 = normals[4] & 0xFFFF;
+		n2 = normals[5] & 0xFFFF;
+
+		uv0 = float16(uvs[4]) & 0xFFFF;
+		uv1 = float16(uvs[5]) & 0xFFFF;
+		uv2 = float16(uvs[6]) & 0xFFFF;
+
+		stagingBuffer[p + 6]  = v1 << 16  | v0;
+		stagingBuffer[p + 7]  = n0 << 16  | v2;
+		stagingBuffer[p + 8]  = n2 << 16  | n1;
+		stagingBuffer[p + 9]  = uv0 << 16 | modelIdx;
+		stagingBuffer[p + 10] = uv2 << 16 | uv1;
 		stagingBuffer[p + 11] = textureFaceIdx;
 
-		stagingBuffer[p + 12]  = (positions[offsetC + 1] & 0xFFFF) << 16 | (positions[offsetC] & 0xFFFF);
-		stagingBuffer[p + 13]  = (normals[6] & 0xFFFF) << 16 | (positions[offsetC + 2] & 0xFFFF);
-		stagingBuffer[p + 14] = (normals[8] & 0xFFFF) << 16 | (normals[7] & 0xFFFF);
-		stagingBuffer[p + 15] = (float16(uvs[8]) & 0xFFFF) << 16 | (modelIdx & 0xFFFF);
-		stagingBuffer[p + 16] = (float16(uvs[10]) & 0xFFFF) << 16 | (float16(uvs[9]) & 0xFFFF);
+		// Vertex C
+		v0 = positions[offsetC] & 0xFFFF;
+		v1 = positions[offsetC + 1] & 0xFFFF;
+		v2 = positions[offsetC + 2] & 0xFFFF;
+
+		n0 = normals[6] & 0xFFFF;
+		n1 = normals[7] & 0xFFFF;
+		n2 = normals[8] & 0xFFFF;
+
+		uv0 = float16(uvs[8]) & 0xFFFF;
+		uv1 = float16(uvs[9]) & 0xFFFF;
+		uv2 = float16(uvs[10]) & 0xFFFF;
+
+		stagingBuffer[p + 12] = v1 << 16  | v0;
+		stagingBuffer[p + 13] = n0 << 16  | v2;
+		stagingBuffer[p + 14] = n2 << 16  | n1;
+		stagingBuffer[p + 15] = uv0 << 16 | modelIdx;
+		stagingBuffer[p + 16] = uv2 << 16 | uv1;
 		stagingBuffer[p + 17] = textureFaceIdx;
 
 		stagingPosition = p + 18;
