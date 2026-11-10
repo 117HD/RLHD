@@ -1061,17 +1061,17 @@ public class LegacySceneUploader {
 						} else if (groundMaterial != null) {
 							materialA = groundMaterial.getRandomMaterial(
 								worldPos[0] + (localVertices[0][0] >> LOCAL_COORD_BITS),
-								worldPos[1] + (localVertices[0][1] >> LOCAL_COORD_BITS),
+								worldPos[1] + (localVertices[0][2] >> LOCAL_COORD_BITS),
 								worldPos[2]
 							);
 							materialB = groundMaterial.getRandomMaterial(
 								worldPos[0] + (localVertices[1][0] >> LOCAL_COORD_BITS),
-								worldPos[1] + (localVertices[1][1] >> LOCAL_COORD_BITS),
+								worldPos[1] + (localVertices[1][2] >> LOCAL_COORD_BITS),
 								worldPos[2]
 							);
 							materialC = groundMaterial.getRandomMaterial(
 								worldPos[0] + (localVertices[2][0] >> LOCAL_COORD_BITS),
-								worldPos[1] + (localVertices[2][1] >> LOCAL_COORD_BITS),
+								worldPos[1] + (localVertices[2][2] >> LOCAL_COORD_BITS),
 								worldPos[2]
 							);
 						}
