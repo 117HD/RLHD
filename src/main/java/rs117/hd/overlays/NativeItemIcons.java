@@ -192,10 +192,11 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private static class Slot {
 		final int layer;
 		final int[] behind = new int[GRID_SIZE];
-		final int[] cut = new int[GRID_SIZE];
 		final int[] background = new int[GRID_SIZE];
 		final int[] overlays = new int[GRID_SIZE];
 		final int[] elsewhere = new int[GRID_SIZE];
+		// The stack size's pixels, without their shadow, which is drawn smooth from them
+		final int[] stackSize = new int[GRID_SIZE];
 		final int[] shown = new int[GRID_SIZE];
 		final boolean[] taken = new boolean[GRID_SIZE];
 		final boolean[] others = new boolean[GRID_SIZE];
@@ -383,6 +384,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 	private final boolean[] spread = new boolean[GRID_SIZE];
 	private final int[] shadeColors = new int[GRID_SIZE];
 	private final int[] underShadow = new int[GRID_SIZE];
+	private final int[] overCell = new int[GRID_SIZE];
+	private final int[][] shadowGuesses = new int[3][GRID_SIZE];
 	private final int[] alphaCounts = new int[256];
 	private final int[] overlays = new int[GRID_SIZE];
 	private final boolean[] captured = new boolean[GRID_SIZE];
@@ -778,7 +781,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			return;
 		}
 		// The game shades the items of a layer alike, which the dragged one is drawn with too
-		if (slot.shadow != 0)
+		if (slot.shadow != 0 && slot.itemAlpha == 256)
 			itemShadows.put(widget.getParentId(), slot.shadow & 0xFFFFFF);
 		itemSlots[itemCount] = slot;
 		putQuad(bounds, drawn, icon.layer, slot.layer, opacity, widget.getBorderType(), slot.shadow);
@@ -795,8 +798,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				for (int x = overlap.x; x < overlap.x + overlap.width; x++) {
 					int g = GameIcon.grid(x - item.bounds.x, y - item.bounds.y);
 					int i = y * width + x;
-					if (pixels[i] == (back ? item.slot.cut[g] : item.slot.behind[g]))
-						pixels[i] = back ? item.slot.behind[g] : item.slot.cut[g];
+					if (pixels[i] == (back ? 0 : item.slot.behind[g]))
+						pixels[i] = back ? item.slot.behind[g] : 0;
 				}
 			}
 		}
@@ -1235,8 +1238,15 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				var slot = itemSlots[i];
 				if (slot.backgroundChanged)
 					uploadSlotCell(slot.layer, slot.background);
-				if (slot.overlaysChanged)
-					uploadSlotCell(slot.layer + 1, slot.overlaid ? slot.elsewhere : NO_OVERLAYS);
+				if (slot.overlaysChanged || slot.backgroundChanged) {
+					// The stack size shares the cell of what's drawn over the item, as colors without alpha where nothing is,
+					// so it doesn't take a cell of its own
+					for (int g = 0; g < GRID_SIZE; g++) {
+						int over = slot.overlaid ? slot.elsewhere[g] : 0;
+						overCell[g] = over >>> 24 != 0 ? over : slot.stackSize[g] & 0xFFFFFF;
+					}
+					uploadSlotCell(slot.layer + 1, overCell);
+				}
 				slot.backgroundChanged = slot.overlaysChanged = false;
 			}
 
@@ -1401,10 +1411,6 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		return layer;
 	}
 
-	private static int halfSeeThrough(int color) {
-		return 128 << 24 | (color >> 16 & 0xFF) / 2 << 16 | (color >> 8 & 0xFF) / 2 << 8 | (color & 0xFF) / 2;
-	}
-
 	// Several slots' cells share a layer of the icon texture, which is as large as an icon
 	private void uploadSlotCell(int cell, int[] pixels) {
 		int within = cell % slotCellsPerLayer;
@@ -1429,23 +1435,85 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		if (!unchanged)
 			paintOver(pixels, width, bounds, drawn, gameIcon, slot, takenOut, layerShadow);
 
+		// The stack size is taken out with the item, and drawn smooth over the native one
 		for (int y = drawn.y; y < drawn.y + drawn.height; y++)
-			System.arraycopy(slot.cut, GameIcon.grid(drawn.x - bounds.x, y - bounds.y), pixels, y * width + drawn.x, drawn.width);
+			Arrays.fill(pixels, y * width + drawn.x, y * width + drawn.x + drawn.width, 0);
 	}
 
-	// Whether every pixel of the game's see-through shadow could be taken out, which it then is
+	// Whether the game's see-through shadow could be taken out, which it then is. The few pixels that don't fit, with something
+	// else drawn over them, are painted over from around.
 	private boolean unblendShadow(int[] background, GameIcon gameIcon, int shadow, int alpha) {
+		int shaded = 0, fitting = 0;
 		for (int g = 0; g < GRID_SIZE; g++) {
 			if (!known[g] || !gameIcon.shadow[g])
 				continue;
 			underShadow[g] = unblend(background[g], shadow, alpha);
-			if (underShadow[g] == -1)
-				return false;
+			shaded++;
+			if (underShadow[g] != -1)
+				fitting++;
 		}
-		for (int g = 0; g < GRID_SIZE; g++)
-			if (known[g] && gameIcon.shadow[g])
+		if (fitting < shaded * .8f)
+			return false;
+		for (int g = 0; g < GRID_SIZE; g++) {
+			if (!known[g] || !gameIcon.shadow[g])
+				continue;
+			if (underShadow[g] == -1)
+				known[g] = false;
+			else
 				background[g] = underShadow[g];
+		}
 		return true;
+	}
+
+	// The colour of a see-through shadow, from what's next to it: the shadow lies over the same as what surrounds it, so each
+	// of its pixels beside the surroundings tells the colour, of which the middle one is taken. A colour another layer's items
+	// are shaded with is taken instead when it's that close, as the game shades nearly all items alike. 0 if it can't be told.
+	private int seeThroughShadow(int[] background, GameIcon gameIcon, int alpha) {
+		int rest = 256 - alpha;
+		int guesses = 0;
+		for (int g = 0; g < GRID_SIZE; g++) {
+			if (!known[g] || !gameIcon.shadow[g])
+				continue;
+			int x = g % GRID_WIDTH;
+			int y = g / GRID_WIDTH;
+			int count = 0, red = 0, green = 0, blue = 0;
+			for (int n = 0; n < 4; n++) {
+				int nx = x + NEIGHBOR_X[n];
+				int ny = y + NEIGHBOR_Y[n];
+				if (nx < 0 || nx >= GRID_WIDTH || ny < 0 || ny >= GRID_HEIGHT)
+					continue;
+				int ng = ny * GRID_WIDTH + nx;
+				if (!known[ng] || gameIcon.shadow[ng] || gameIcon.item[ng])
+					continue;
+				red += background[ng] >> 16 & 0xFF;
+				green += background[ng] >> 8 & 0xFF;
+				blue += background[ng] & 0xFF;
+				count++;
+			}
+			if (count == 0)
+				continue;
+			int pixel = background[g];
+			shadowGuesses[0][guesses] = ((pixel >> 16 & 0xFF) * 256 + 128 - red * rest / count) / alpha;
+			shadowGuesses[1][guesses] = ((pixel >> 8 & 0xFF) * 256 + 128 - green * rest / count) / alpha;
+			shadowGuesses[2][guesses++] = ((pixel & 0xFF) * 256 + 128 - blue * rest / count) / alpha;
+		}
+		if (guesses < 4)
+			return 0;
+		int color = 0;
+		for (int c = 0; c < 3; c++) {
+			Arrays.sort(shadowGuesses[c], 0, guesses);
+			color = color << 8 | clamp(shadowGuesses[c][guesses / 2], 0, 255);
+		}
+		if (color == 0)
+			color = 1;
+		for (int learned : itemShadows.values()) {
+			boolean close = true;
+			for (int shift = 0; shift < 24; shift += 8)
+				close &= Math.abs((learned >> shift & 0xFF) - (color >> shift & 0xFF)) <= 8;
+			if (close)
+				return learned;
+		}
+		return color;
 	}
 
 	// The game draws an item at an alpha out of 256 as color = (item * alpha + under * (256 - alpha)) >> 8 and
@@ -1466,7 +1534,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		return result;
 	}
 
-	// What's under an item that's taken out is known all over, and its stack size is drawn half see-through over the native one
+	// What's under an item that's taken out is known all over
 	private void paintOver(int[] pixels, int width, Rectangle bounds, Rectangle drawn, GameIcon gameIcon, Slot slot, boolean takenOut,
 		int layerShadow) {
 		int[] background = slot.background;
@@ -1477,7 +1545,6 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				int g = GameIcon.grid(x - bounds.x, y - bounds.y);
 				int pixel = pixels[y * width + x];
 				background[g] = slot.behind[g] = pixel;
-				slot.cut[g] = !gameIcon.stackSize[g] ? 0 : takenOut ? halfSeeThrough(gameIcon.stack[g]) : pixel;
 				known[g] = takenOut || !gameIcon.item[g] && !gameIcon.stackSize[g];
 				// Through a see-through item what's under it shows, which the native one is drawn over just as see-through
 				if (!known[g] && !gameIcon.stackSize[g] && slot.itemAlpha < 256) {
@@ -1512,9 +1579,14 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		if (slot.itemAlpha < 256 && !takenOut) {
 			// A see-through item's shadow is just as see-through, so what it's drawn over is found with the colour the layer's
 			// items are shaded with, known from when they weren't see-through, like the inventory's before an interface greys
-			// it out. The native shadow is drawn just as see-through instead. Without that colour it stays as the game drew it.
-			shadow = layerShadow != 0 && unblendShadow(background, gameIcon, layerShadow, slot.itemAlpha) ?
-				slot.itemAlpha * 255 / 256 << 24 | layerShadow : 0;
+			// it out, or else worked out from the shadow itself. The native shadow is drawn just as see-through instead.
+			// If neither gives it, the shadow stays as the game drew it.
+			if (layerShadow == 0 || !unblendShadow(background, gameIcon, layerShadow, slot.itemAlpha)) {
+				layerShadow = seeThroughShadow(background, gameIcon, slot.itemAlpha);
+				if (layerShadow != 0 && !unblendShadow(background, gameIcon, layerShadow, slot.itemAlpha))
+					layerShadow = 0;
+			}
+			shadow = layerShadow != 0 ? slot.itemAlpha * 255 / 256 << 24 | layerShadow : 0;
 		} else if (shadow != 0) {
 			for (int g = 0; g < GRID_SIZE; g++)
 				if (gameIcon.shadow[g])
@@ -1565,6 +1637,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 				System.arraycopy(spread, 0, known, 0, GRID_SIZE);
 			}
 		}
+		for (int g = 0; g < GRID_SIZE; g++)
+			slot.stackSize[g] = gameIcon.stackSize[g] && (gameIcon.stack[g] & 0xFFFFFF) > 1 ? 0xFF000000 | gameIcon.stack[g] : 0;
 		slot.shadow = shadow;
 		slot.kept = true;
 		slot.backgroundChanged = true;
@@ -1577,8 +1651,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		boolean overlaid = false;
 		for (int y = item.drawn.y; !overlaid && y < item.drawn.y + item.drawn.height; y++) {
 			int i = y * width + item.drawn.x;
-			int g = GameIcon.grid(item.drawn.x - item.bounds.x, y - item.bounds.y);
-			overlaid = !Arrays.equals(pixels, i, i + item.drawn.width, slot.cut, g, g + item.drawn.width);
+			overlaid = !Arrays.equals(pixels, i, i + item.drawn.width, NO_OVERLAYS, 0, item.drawn.width);
 		}
 		if (!overlaid) {
 			slot.overlaysChanged |= slot.overlaid;
@@ -1592,8 +1665,6 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			for (int x = item.drawn.x; x < item.drawn.x + item.drawn.width; x++) {
 				int i = y * width + x;
 				int g = GameIcon.grid(x - item.bounds.x, y - item.bounds.y);
-				if (item.gameIcon.stackSize[g])
-					continue;
 				overlays[g] = pixels[i];
 				captured[g] = true;
 			}
@@ -1623,8 +1694,8 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			}
 			// Fills and outlines, like those of Inventory Tags, are redrawn to fit the native icon. Fills cover the shadow too.
 			var gameIcon = item.gameIcon;
-			int fill = slot.fill = shapeColor(gameIcon.item, gameIcon.shadow, slot.cut);
-			int outline = slot.outline = shapeColor(gameIcon.outline, gameIcon.shadow, slot.cut);
+			int fill = slot.fill = shapeColor(gameIcon.item, gameIcon.shadow);
+			int outline = slot.outline = shapeColor(gameIcon.outline, gameIcon.shadow);
 			for (int g = 0; g < GRID_SIZE; g++) {
 				boolean redrawn =
 					fill != 0 && (gameIcon.item[g] && overlays[g] == fill || gameIcon.shadow[g]) ||
@@ -1841,7 +1912,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 
 	// Parts of the shape can be hidden by what's drawn over it after, like the charges Item Charges writes over the outline,
 	// and another item's shape can reach into it, with its own tag
-	private int shapeColor(boolean[] shape, boolean[] shared, int[] under) {
+	private int shapeColor(boolean[] shape, boolean[] shared) {
 		// Boyer-Moore majority vote
 		int color = 0, lead = 0, pixels = 0;
 		for (int g = 0; g < GRID_SIZE; g++) {
@@ -1860,7 +1931,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			if (!captured[g] || shared[g] || others[g])
 				continue;
 			if (overlays[g] != color) {
-				if (shape[g] && overlays[g] != under[g])
+				if (shape[g] && overlays[g] != 0)
 					hidden++;
 				continue;
 			}
