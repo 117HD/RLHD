@@ -29,6 +29,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.HdPlugin;
 import rs117.hd.renderer.legacy.LegacySceneContext;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -77,6 +78,9 @@ public class ProceduralGenerator {
 			/* 10 */ { true, true, true, false, false, false },
 			/* 11 */ { true, true, false, false, false, false },
 		};
+
+	@Inject
+	private HdPlugin plugin;
 
 	@Inject
 	private TileOverrideManager tileOverrideManager;
@@ -321,6 +325,18 @@ public class ProceduralGenerator {
 			return false;
 
 		return !override.blended;
+	}
+
+	/**
+	 * Whether a model tile face should skip ground blending. Vanilla textures only apply to
+	 * overlay faces, so underlay faces normally keep blending. When colors don't blend, underlay
+	 * faces also respect {@code blended: false}, so their texture can't spread onto neighbours
+	 * which keep their own unblended colors.
+	 */
+	public boolean skipFaceBlending(Tile tile, TileOverride override, boolean isOverlay) {
+		if (isOverlay)
+			return useDefaultColor(tile, override);
+		return !plugin.configGroundBlendingColors && override != TileOverride.NONE && !override.blended;
 	}
 
 	public WaterType seasonalWaterType(TileOverride override, int textureId) {
@@ -704,7 +720,7 @@ public class ProceduralGenerator {
 						vertexOverrides[base] = override;
 						vertexIsOverlay[base] = isOverlay;
 
-						if (isOverlay && useDefaultColor(tile, override))
+						if (skipFaceBlending(tile, override, isOverlay))
 							vertexDefaultColor[base] = true;
 					}
 				}

@@ -1342,7 +1342,7 @@ public class SceneUploader implements AutoCloseable {
 				boolean allowBlending =
 					plugin.configGroundBlending &&
 					textureId == -1 &&
-					!(isOverlay && proceduralGenerator.useDefaultColor(tile, override));
+					!proceduralGenerator.skipFaceBlending(tile, override, isOverlay);
 				boolean blendColors = plugin.configGroundBlendingColors && allowBlending;
 				boolean blendTextures = plugin.configGroundBlendingTextures && allowBlending;
 
