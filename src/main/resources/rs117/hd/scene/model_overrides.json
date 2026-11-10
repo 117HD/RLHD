@@ -6741,6 +6741,7 @@
   },
   {
     "description": "TZHAAR_FAIRY_RING",
+    "hdTzHaarReskin": true,
     "baseMaterial": "NONE",
     "shiftHue": 6,
     "objectIds": [
