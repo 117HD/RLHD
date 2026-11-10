@@ -14,7 +14,7 @@ import static net.runelite.api.Constants.*;
 
 @Singleton
 public class ZoneRoofFades {
-	private static final int MAX_FADES = 16;
+	private static final int MAX_FADES = 32;
 	private static final int STALE_FRAMES = 120;
 	private static final int RESUME_GAP_FRAMES = 4;
 	private static final int LEVEL_MASK = (1 << MAX_Z) - 1;
