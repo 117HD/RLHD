@@ -6683,7 +6683,7 @@
     "baseMaterial": "NONE",
     "hdTzHaarReskin": true,
     "upwardsNormals": true,
-    "setHue": 7,
+    "setHue": 5,
     "depthBias": 50,
     "objectIds": [
       "TZHAAR_CITY_PASSTHROUGH",
