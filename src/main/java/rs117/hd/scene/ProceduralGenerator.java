@@ -31,11 +31,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.renderer.legacy.LegacySceneContext;
 import rs117.hd.scene.materials.Material;
-import rs117.hd.scene.model_overrides.ModelOverride;
-import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.scene.water_types.WaterType;
-import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.Int2IntHashMap;
 import rs117.hd.utils.collections.Int2ObjectHashMap;
@@ -1109,57 +1106,5 @@ public class ProceduralGenerator {
 			int depth = DEPTH_LEVEL_SLOPE[depthLevel - 1];
 			return (int) (depth * .55f); // legacy weirdness
 		}
-	}
-
-	// used when calculating the gradient to apply to the walls of TzHaar
-	// to emulate the style from 2008 HD rework
-	private static final float[] gradientBaseColor = vec(3, 4, 26);
-	private static final float[] gradientDarkColor = vec(3, 4, 10);
-	private static final int gradientBottom = 200;
-	private static final int gradientTop = -200;
-
-	public static int[] recolorTzHaar(
-		ModelOverride modelOverride,
-		Model model,
-		int face,
-		int color1,
-		int color2,
-		int color3,
-		int[] out
-	) {
-		int[] hsl1 = ColorUtils.unpackRawHsl(color1);
-		int[] hsl2 = ColorUtils.unpackRawHsl(color2);
-		int[] hsl3 = ColorUtils.unpackRawHsl(color3);
-
-		// shift model hues from red->yellow
-		hsl1[0] = hsl2[0] = hsl3[0] = 7;
-
-		if (modelOverride.tzHaarRecolorType == TzHaarRecolorType.GRADIENT) {
-			final int triA = model.getFaceIndices1()[face];
-			final int triB = model.getFaceIndices2()[face];
-			final int triC = model.getFaceIndices3()[face];
-			final float[] yVertices = model.getVerticesY();
-			float height = (yVertices[triA] + yVertices[triB] + yVertices[triC]) / 3;
-			float pos = clamp((height - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
-
-			// apply coloring to the rocky walls
-			if (hsl1[2] < 20 || hsl2[2] < 20 || hsl3[2] < 20) {
-				round(hsl1, mix(gradientDarkColor, gradientBaseColor, pos));
-				round(hsl2, mix(gradientDarkColor, gradientBaseColor, pos));
-				round(hsl3, mix(gradientDarkColor, gradientBaseColor, pos));
-			}
-		} else if (modelOverride.tzHaarRecolorType == TzHaarRecolorType.HUE_SHIFT) {
-			// objects around the entrance to The Inferno only need a hue-shift
-			// and very slight lightening to match the lightened terrain
-			hsl1[2] += 1;
-			hsl2[2] += 1;
-			hsl3[2] += 1;
-		}
-
-		out[0] = ColorUtils.packRawHsl(hsl1);
-		out[1] = ColorUtils.packRawHsl(hsl2);
-		out[2] = ColorUtils.packRawHsl(hsl3);
-
-		return out;
 	}
 }

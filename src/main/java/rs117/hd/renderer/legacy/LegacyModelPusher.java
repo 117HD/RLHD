@@ -26,7 +26,6 @@ import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
-import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.scene.model_overrides.UvType;
 import rs117.hd.scene.model_overrides.WindDisplacement;
 import rs117.hd.scene.water_types.WaterType;
@@ -71,7 +70,6 @@ public class LegacyModelPusher {
 
 	private static final int[] ZEROED_INTS = new int[12];
 
-	private final int[] tzHaarRecolored = new int[3];
 	private ModelCache modelCache;
 
 	public void startUp() {
@@ -601,21 +599,6 @@ public class LegacyModelPusher {
 							}
 						}
 					}
-				}
-
-				if (plugin.configLegacyTzHaarReskin && modelOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
-					ProceduralGenerator.recolorTzHaar(
-						modelOverride,
-						model,
-						face,
-						color1,
-						color2,
-						color3,
-						tzHaarRecolored
-					);
-					color1 = tzHaarRecolored[0];
-					color2 = tzHaarRecolored[1];
-					color3 = tzHaarRecolored[2];
 				}
 			}
 		}

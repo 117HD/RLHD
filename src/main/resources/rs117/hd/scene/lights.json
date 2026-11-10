@@ -22939,7 +22939,27 @@
     ]
   },
   {
+    "description": "FIGHT_CAVES_ENTRANCE_HD",
+    "hdTzHaarReskin": true,
+    "offset": [ 0, 100, -25 ],
+    "radius": 800,
+    "strength": 20,
+    "color": [
+      240,
+      170,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "TZHAAR_FIGHTCAVE_WALL_ENTRANCE",
+      "TZHAAR_FIGHTCAVE_WALL_EXIT"
+    ]
+  },
+  {
     "description": "FIGHT_CAVES_ENTRANCE",
+    "hdTzHaarReskin": false,
     "offset": [ 0, 100, -25 ],
     "radius": 800,
     "strength": 35,
@@ -22957,7 +22977,24 @@
     ]
   },
   {
+    "description": "TZHAAR_VENT_HD",
+    "hdTzHaarReskin": true,
+    "offset": [ 0, 150, 0 ],
+    "radius": 300,
+    "strength": 20,
+    "color": [
+      240,
+      170,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "TZHAAR_SULPHAR_VENT"
+    ]
+  },
+  {
     "description": "TZHAAR_VENT",
+    "hdTzHaarReskin": false,
     "offset": [ 0, 150, 0 ],
     "radius": 300,
     "strength": 30,
@@ -22972,7 +23009,25 @@
     ]
   },
   {
+    "description": "TZHAAR_ALCOVE_LIGHT_HD",
+    "hdTzHaarReskin": true,
+    "offset": [ 0, 150, 0 ],
+    "radius": 600,
+    "strength": 15,
+    "color": [
+      240,
+      170,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "TZHAAR_CAVE_WALL_ALCOVE2",
+      "TZHAAR_CAVE_WALL_ALCOVE_LIGHT"
+    ]
+  },
+  {
     "description": "TZHAAR_ALCOVE_LIGHT",
+    "hdTzHaarReskin": false,
     "offset": [ 0, 150, 0 ],
     "radius": 400,
     "strength": 30,
@@ -22988,7 +23043,24 @@
     ]
   },
   {
-    "description": "TZHAAR_ALCOVE_LIGHT",
+    "description": "TZHAAR_FORGE_LIGHT_HD",
+    "hdTzHaarReskin": true,
+    "offset": [ -130, 170, 0 ],
+    "radius": 450,
+    "strength": 50,
+    "color": [
+      240,
+      170,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "TZHAAR_FORGE"
+    ]
+  },
+  {
+    "description": "TZHAAR_FORGE_LIGHT",
+    "hdTzHaarReskin": false,
     "offset": [ -130, 170, 0 ],
     "radius": 450,
     "strength": 50,
@@ -23003,7 +23075,24 @@
     ]
   },
   {
+    "description": "TZHAAR_CITY_PASSTHROUGH_HD",
+    "hdTzHaarReskin": true,
+    "offset": [ 0, 170, 0 ],
+    "radius": 450,
+    "strength": 50,
+    "color": [
+      240,
+      160,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "TZHAAR_CITY_PASSTHROUGH"
+    ]
+  },
+  {
     "description": "TZHAAR_CITY_PASSTHROUGH",
+    "hdTzHaarReskin": false,
     "offset": [ 0, 170, 0 ],
     "radius": 450,
     "strength": 50,
@@ -23035,7 +23124,28 @@
     ]
   },
   {
+    "description": "INFERNO_ENTRANCE_HD",
+    "hdTzHaarReskin": true,
+    "height": 600,
+    "radius": 2500,
+    "strength": 20,
+    "color": [
+      255,
+      155,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "INFERNO_ENTRANCE_NOOP",
+      "INFERNO_ENTRANCE_OP"
+    ]
+  },
+  {
     "description": "INFERNO_ENTRANCE",
+
+    "hdTzHaarReskin": false,
     "height": 600,
     "radius": 2500,
     "strength": 20,

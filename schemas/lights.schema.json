@@ -143,6 +143,10 @@
         "type": "boolean",
         "description": "Don't hide the light if its actor is hidden by another actor drawing on top. Defaults to false."
       },
+      "hdTzHaarReskin": {
+        "type": "boolean",
+        "description": "Limit the light to when the \"Legacy TzHaar city reskin\" option is enabled (true) or disabled (false). Defaults to applying either way."
+      },
       "renderableIndex": {
         "type": "integer",
         "description": "Specify which of the two possible `Renderable`s for `DecorativeObject`s and `WallObject`s the light should be added for. If not specified, a light will be added only for the first non-null `Renderable`."

@@ -6524,10 +6524,35 @@
     ]
   },
   {
-    "description": "TZHAAR_ROCK_GRADIENT_CAVE_ENTRANCE",
-    "baseMaterial": "ROCK_1",
+    "description": "TZHAAR_ROCK_GRADIENT_CAVE_ENTRANCE_HD",
+    "baseMaterial": "ROCK_6",
     "uvType": "BOX",
-    "tzHaarRecolorType": "GRADIENT",
+    "hdTzHaarReskin": true,
+    "shiftLightness": 7,
+    "setHue": 4,
+    "shiftSaturation": 2,
+    "objectIds": [
+      "TZHAAR_FIGHTCAVE_WALL_ENTRANCE",
+      "TZHAAR_FIGHTCAVE_WALL_EXIT",
+      "TZHAAR_KARAMJADUNGEON_WALL_EXIT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 1 || s == 3 || s == 7",
+        "baseMaterial": "GRAY_75",
+        "setHue": 7
+      },
+      {
+        "colors": "s == 0 && l > 10",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "TZHAAR_ROCK_GRADIENT_CAVE_ENTRANCE",
+    "baseMaterial": "ROCK_6",
+    "uvType": "BOX",
     "objectIds": [
       "TZHAAR_FIGHTCAVE_WALL_ENTRANCE",
       "TZHAAR_FIGHTCAVE_WALL_EXIT",
@@ -6562,6 +6587,61 @@
     ]
   },
   {
+    "description": "TZHAAR_FORGE_HD",
+    "baseMaterial": "STONE_NORMALED",
+    "setHue": 6,
+    "hdTzHaarReskin": true,
+    "uvType": "BOX",
+    "objectIds": [
+      "TZHAAR_FORGE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRAY_150",
+        "upwardsNormals": true
+      },
+      {
+        "colors": "h > 5 || h == 0 && s == 7 && l > 2",
+        "baseMaterial": "NONE",
+        "setHue": 5,
+        "upwardsNormals": true
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "TZHAAR_VENT_HD",
+    "baseMaterial": "STONE_NORMALED",
+    "hdTzHaarReskin": true,
+    "uvType": "BOX",
+    "objectIds": [
+      "TZHAAR_SULPHAR_VENT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRAY_150",
+        "upwardsNormals": true
+      },
+      {
+        "colors": "h > 0 || h == 0 && s == 7 && l > 2",
+        "baseMaterial": "NONE",
+        "setHue": 6,
+        "upwardsNormals": true
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
     "description": "TZHAAR_FORGE_AND_VENT",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
@@ -6588,6 +6668,42 @@
     ]
   },
   {
+    "description": "TZHAAR_CAVE_WALL_ALCOVE_LIGHT_HD",
+    "baseMaterial": "NONE",
+    "hdTzHaarReskin": true,
+    "upwardsNormals": true,
+    "setHue": 4,
+    "depthBias": 50,
+    "objectIds": [
+      "TZHAAR_CAVE_WALL_ALCOVE_LIGHT"
+    ]
+  },
+  {
+    "description": "TZHAAR_CITY_GATE_BARRIERS_HD",
+    "baseMaterial": "NONE",
+    "hdTzHaarReskin": true,
+    "upwardsNormals": true,
+    "setHue": 5,
+    "depthBias": 50,
+    "objectIds": [
+      "TZHAAR_CITY_PASSTHROUGH",
+      "TZHAAR_FIGHTPIT_DOOR_CLOSED",
+      "TZHAAR_FIGHTPIT_DOOR_ENTRANCE"
+    ]
+  },
+  {
+    "description": "HD_INFERNO_GLOW",
+    "baseMaterial": "NONE",
+    "hdTzHaarReskin": true,
+    "upwardsNormals": true,
+    "setHue": 7,
+    "depthBias": 50,
+    "objectIds": [
+      "INFERNO_ENTRANCE_NOOP",
+      "INFERNO_ENTRANCE_OP"
+    ]
+  },
+  {
     "description": "TZHAAR_CAVE_WALL_ALCOVE_LIGHT",
     "baseMaterial": "NONE",
     "upwardsNormals": true,
@@ -6597,11 +6713,95 @@
     ]
   },
   {
-    "description": "TZHAAR_ROCK_GRADIENT",
-    "baseMaterial": "ROCK_1_LIGHT",
+    "description": "TZHAAR_FIGHT_PIT_ORB",
+    "baseMaterial": "NONE",
+    "setHue": 7,
+    "shiftLightness": 2,
+    "receiveShadows": false,
+    "objectIds": [
+      "TZHAAR_FIGHTPIT_ORB",
+      "TZHAAR_FIGHTPIT_HIDDENORB"
+    ]
+  },
+  {
+    "description": "TZHAAR_GEM_AND_ORE_COUNTER",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "TZHAAR_SHOPCOUNTER_ORE",
+      "TZHAAR_SHOPCOUNTER_GEM",
+      "TZHAAR_SHOPCOUNTER_EMPTY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 7 && a == 255",
+        "baseMaterial": "NONE",
+        "setHue": 5
+      }
+    ]
+  },
+  {
+    "description": "TZHAAR_FAIRY_RING",
+    "hdTzHaarReskin": true,
+    "baseMaterial": "NONE",
+    "shiftHue": 6,
+    "objectIds": [
+      "TZHAAR_FAIRY_MUSHROOM_RING_CORNER",
+      "TZHAAR_FAIRY_MUSHROOM_RING_EDGE",
+      "TZHAAR_FAIRY_MUSHROOM_RING"
+    ]
+  },
+  {
+    "description": "TZHAAR_ROCK_HD",
+    "baseMaterial": "ROCK_6",
+    "hdTzHaarReskin": true,
+    "shiftLightness": 7,
+    "setHue": 4,
+    "shiftSaturation": 2,
+    "uvType": "BOX",
+    "objectIds": [
+      "TZHAAR_CAVE_WALL_1",
+      "TZHAAR_CAVE_WALL_2",
+      "TZHAAR_CAVE_WALL_3",
+      "TZHAAR_CAVE_WALL_4",
+      "TZHAAR_CAVE_WALL_5",
+      "TZHAAR_CAVE_WALL_6",
+      "TZHAAR_CAVE_WALL_7",
+      "TZHAAR_CAVE_WALL_8",
+      "TZHAAR_CAVE_WALL_9",
+      "TZHAAR_CAVE_WALL_10",
+      "TZHAAR_CAVE_WALL_ALCOVE",
+      "TZHAAR_CAVE_WALL_ALCOVE2",
+      "TZHAAR_CAVEWALL_TOP",
+      "TZHAAR_CAVE_WALL_OVERHANG_1",
+      "TZHAAR_CAVE_WALL_OVERHANG_2",
+      "TZHAAR_CAVE_WALL_OVERHANG_3",
+      "TZHAAR_WALL_CHARGING_STEPS",
+      "TZHAAR_STALAGMITE_1",
+      "TZHAAR_WALL_CHARGING_PILLAR",
+      "JAD_CHALLENGE_SCOREBOARD",
+      "TZHAAR_WALL_CHARGING_FULL",
+      "TZHAAR_WALL_CHARGING_EMPTY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "upwardsNormals": true,
+        "setHue": 4
+      },
+      {
+        "colors": "h == 6 || s == 7",
+        "baseMaterial": "GRAY_75",
+        "setHue": 6
+      }
+    ]
+  },
+  {
+    "description": "TZHAAR_ROCK",
+    "baseMaterial": "ROCK_6",
+    "shiftLightness": 1,
     "uvType": "BOX",
     "uvScale": 0.8,
-    "tzHaarRecolorType": "GRADIENT",
     "objectIds": [
       "TZHAAR_CAVE_WALL_1",
       "TZHAAR_CAVE_WALL_2",
@@ -6639,9 +6839,11 @@
     ]
   },
   {
-    "description": "TZHAAR_FENCES",
+    "description": "TZHAAR_FENCES_HD",
     "baseMaterial": "METALLIC_1_VERY_LIGHT",
-    "tzHaarRecolorType": "GRADIENT",
+    "hdTzHaarReskin": true,
+    "setHue": 5,
+    "shiftSaturation": -1,
     "objectIds": [
       "TZHAAR_CAVE_FENCE1",
       "TZHAAR_CAVE_FENCE2",
@@ -6651,6 +6853,64 @@
       "TZHAAR_CAVE_FENCE6"
     ],
     "depthBias": 100
+  },
+  {
+    "description": "TZHAAR_FENCES",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "objectIds": [
+      "TZHAAR_CAVE_FENCE1",
+      "TZHAAR_CAVE_FENCE2",
+      "TZHAAR_CAVE_FENCE3",
+      "TZHAAR_CAVE_FENCE4",
+      "TZHAAR_CAVE_FENCE5",
+      "TZHAAR_CAVE_FENCE6"
+    ],
+    "depthBias": 100
+  },
+  {
+    "description": "TZHAAR_BANK_DEPOSIT_BOX_HD",
+    "hdTzHaarReskin": true,
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.1,
+    "uvOrientation": 512,
+    "setHue": 6,
+    "objectIds": [
+      "TZHAAR_DEPOSIT_BOX"
+    ]
+  },
+  {
+    "description": "TZHAAR_BANK_DEPOSIT_BOX",
+    "hdTzHaarReskin": false,
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.1,
+    "uvOrientation": 512,
+    "objectIds": [
+      "TZHAAR_DEPOSIT_BOX"
+    ]
+  },
+  {
+    "description": "TZHAAR_BANK_CHEST_HD",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "hdTzHaarReskin": true,
+    "uvScale": 0.6,
+    "setHue": 6,
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "objectIds": [
+      "TZHAAR_BANK_CHEST"
+    ],
+    "depthBias": 100,
+    "colorOverrides": [
+      {
+        "colors": "s == 7",
+        "baseMaterial": "METALLIC_1_VERY_LIGHT",
+        "uvType": "BOX",
+        "depthBias": 101,
+        "setHue": 7
+      }
+    ]
   },
   {
     "description": "TZHAAR_BANK_CHEST",
@@ -6672,6 +6932,21 @@
     ]
   },
   {
+    "description": "TZHAAR_CRATE_HD",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "hdTzHaarReskin": true,
+    "setHue": 6,
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "TZHAAR_CRATE",
+      "TZHAAR_CRATES"
+    ],
+    "depthBias": 150,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512
+  },
+  {
     "description": "TZHAAR_CRATE",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
@@ -6683,6 +6958,210 @@
     "depthBias": 150,
     "uvOrientationZ": 512,
     "uvOrientationX": 512
+  },
+  {
+    "description": "TZHAAR_FLOOR_HD",
+    "hdTzHaarReskin": true,
+    "objectIds": [
+      "TZHAAR_CAVE_FLOOR_1",
+      "TZHAAR_CAVE_FLOOR_2",
+      "TZHAAR_CAVE_FLOOR_3",
+      "TZHAAR_CAVE_FLOOR_4",
+      "TZHAAR_MAGIC_STORE_ICON",
+      "TZHAAR_WEAPON_STORE_ICON",
+      "TZHAAR_BANK_STORE_ICON",
+      "TZHAAR_GEM_STORE_ICON",
+      "TZHAAR_MINIGAME_START_ICON"
+    ],
+    "depthBias": 100,
+    "setHue": 6,
+    "shiftLightness": 2,
+    "colorOverrides": [
+      {
+        "colors": "s != 7",
+        "baseMaterial": "ROCK_1",
+        "uvType": "BOX",
+        "setHue": 7,
+        "shiftLightness": 1,
+        "depthBias": 100,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "TZHAAR_XIL_HD",
+    "hdTzHaarReskin": true,
+    "npcIds": [
+      "TZHAAR_XIL1",
+      "TZHAAR_XIL2",
+      "TZHAAR_XIL3",
+      "TZHAAR_XIL4",
+      "TZHAAR_XIL5",
+      "TZHAAR_XIL6"
+    ],
+    "setHue": 6,
+    "shiftLightness": 15,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0 || h == 0 && s == 3",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "TZHAAR_ELDER_HD",
+    "hdTzHaarReskin": true,
+    "npcIds": [
+      "TZHAAR_ELDER1",
+      "TZHAAR_ELDER2"
+    ],
+    "setHue": 5,
+    "colorOverrides": [
+      {
+        "colors": "h == 2 && s == 7",
+        "baseMaterial": "NONE",
+        "setHue": 7
+      }
+    ]
+  },
+  {
+    "description": "TZHAAR_KET_HD",
+    "hdTzHaarReskin": true,
+    "npcIds": [
+      "TZHAAR_KET1",
+      "TZHAAR_KET2",
+      "TZHAAR_KET3",
+      "TZHAAR_KET4",
+      "TZHAAR_KET5",
+      "TZHAAR_KET6",
+      "TZHAAR_KET7",
+      "TZHAAR_GUARD_BORDER",
+      "TZHAAR_BANKER1",
+      "TZHAAR_BANKER2"
+    ],
+    "setHue": 6,
+    "shiftLightness": 15,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 0 || h == 3 && s == 4",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "TZHAAR_KET_STRONG_HD",
+    "hdTzHaarReskin": true,
+    "npcIds": [
+      "TZHAAR_KET_STRONG",
+      "INFERNO_MASTER_1OP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 7 && l > 15",
+        "baseMaterial": "NONE",
+        "setHue": 4,
+        "shiftLightness": 15
+      },
+      {
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "NONE",
+        "setHue": 4,
+        "shiftLightness": 3
+      }
+    ]
+  },
+  {
+    "description": "TZHAAR_HUR_HD",
+    "hdTzHaarReskin": true,
+    "npcIds": [
+      "TZHAAR_HUR1",
+      "TZHAAR_HUR2",
+      "TZHAAR_HUR3",
+      "TZHAAR_HUR4",
+      "TZHAAR_HUR5",
+      "TZHAAR_HUR6",
+      "TZHAAR_HUR_CITY1",
+      "TZHAAR_HUR_CITY2",
+      "TZHAAR_HUR_CITY3",
+      "TZHAAR_HUR_CITY4",
+      "TZHAAR_HUR_CITY5",
+      "TZHAAR_HUR_CITY6",
+      "TZHAAR_MERCHANT_OREANDGEM",
+      "TZHAAR_MERCHANT_EQUIPMENT",
+      "TZHAAR_MERCHANT_CITYOREANDGEM",
+      "TZHAAR_MERCHANT_CITYEQUIPMENT"
+    ],
+    "setHue": 7,
+    "shiftLightness": 15,
+    "colorOverrides": [
+      {
+        "colors": "h == 2 && s == 1 || h == 10 || h == 32 || h == 0 && s == 0",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "TZHAAR_JAD_CHALLENGE_HD",
+    "hdTzHaarReskin": true,
+    "setHue": 6,
+    "objectIds": [
+      "JAD_CHALLENGE_THRONE"
+    ],
+    "npcIds": [
+      "JAD_CHALLENGE_MASTER_1OP"
+    ]
+  },
+  {
+    "description": "TZHAAR_MEJ_ALT_HD",
+    "hdTzHaarReskin": true,
+    "npcIds": [
+      "TZHAAR_MEJ3",
+      "TZHAAR_MEJ4",
+      "TZHAAR_MEJ_RETIREDDIARYMASTER",
+      "TZHAAR_MERCHANT_RUNE",
+      "TZHAAR_FIGHTPIT_MASTER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "NONE",
+        "setHue": 4,
+        "shiftLightness": 3
+      },
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "TZHAAR_HUR_HD",
+    "hdTzHaarReskin": true,
+    "npcIds": [
+      "TZHAAR_MEJ1",
+      "TZHAAR_MEJ2",
+      "TZHAAR_MEJ5",
+      "TZHAAR_MEJ6",
+      "TZHAAR_MEJ7",
+      "TZHAAR_FIGHTCAVE_MASTER"
+    ],
+    "setHue": 6,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0 || h == 0 && s == 7",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 0 || h == 0 && s == 3",
+        "baseMaterial": "NONE",
+        "setHue": 3,
+        "shiftSaturation": -2
+      }
+    ]
   },
   {
     "description": "TZHAAR_FLOOR",
@@ -6699,7 +7178,6 @@
       "TZHAAR_MINIGAME_START_ICON"
     ],
     "depthBias": 100,
-    "tzHaarRecolorType": "HUE_SHIFT",
     "colorOverrides": [
       {
         "colors": "s != 7",
@@ -6711,10 +7189,12 @@
     ]
   },
   {
-    "description": "TZHAAR_ROCK_HUESHIFT",
-    "baseMaterial": "ROCK_2_LIGHT",
+    "description": "TZHAAR_ROCK_INFERNO_TRIM_HD",
+    "baseMaterial": "ROCK_6",
+    "hdTzHaarReskin": true,
     "uvType": "BOX",
-    "tzHaarRecolorType": "HUE_SHIFT",
+    "setHue": 7,
+    "shiftLightness": 1,
     "objectIds": [
       "MORULREK_FLOOR_EDGE_01",
       "MORULREK_FLOOR_EDGE_02",
@@ -6726,7 +7206,29 @@
     "colorOverrides": [
       {
         "colors": "s == 7",
-        "baseMaterial": "SMOOTH_STONE",
+        "baseMaterial": "ROCK_6_LIGHT",
+        "uvType": "BOX",
+        "setHue": 7,
+        "shiftLightness": 1
+      }
+    ]
+  },
+  {
+    "description": "TZHAAR_ROCK_INFERNO_TRIM",
+    "baseMaterial": "ROCK_6",
+    "uvType": "BOX",
+    "objectIds": [
+      "MORULREK_FLOOR_EDGE_01",
+      "MORULREK_FLOOR_EDGE_02",
+      "MORULREK_FLOOR_CORNER_OUTER_01",
+      "MORULREK_FLOOR_CORNER_OUTER_02",
+      "MORULREK_FLOOR_CORNER_INSIDE_01",
+      "MORULREK_FLOOR_CORNER_INSIDE_02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 7",
+        "baseMaterial": "ROCK_6_LIGHT",
         "uvType": "BOX"
       }
     ]
@@ -96626,7 +97128,28 @@
     ]
   },
   {
+    "description": "Poll Booth - Tzhaar HD",
+    "hdTzHaarReskin": true,
+    "baseMaterial": "GRAY_85",
+    "setHue": 6,
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      "POLLBOOTH_TZHAAR_STANDARD",
+      "POLLBOOTH_TZHAAR_HIGHLIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 61",
+        "setHue": 5,
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Poll Booth - Tzhaar",
+    "hdTzHaarReskin": false,
     "baseMaterial": "GRAY_85",
     "uvType": "BOX",
     "uvScale": 0.25,

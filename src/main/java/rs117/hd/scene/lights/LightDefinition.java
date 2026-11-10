@@ -33,6 +33,8 @@ public class LightDefinition {
 	public boolean despawnWithParent;
 	public boolean visibleFromOtherPlanes;
 	public boolean ignoreActorHiding;
+	@Nullable
+	public Boolean hdTzHaarReskin; // null applies regardless of the config
 	public int renderableIndex = -1;
 	public boolean waitForAnimation;
 	public float nightMultiplier = 1;

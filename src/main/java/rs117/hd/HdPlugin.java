@@ -421,7 +421,7 @@ public class HdPlugin extends Plugin {
 	public boolean configGroundBlendingColors;
 	public boolean configGroundBlendingTextures;
 	public boolean configModelTextures;
-	public boolean configLegacyTzHaarReskin;
+	public boolean configHdTzHaarReskin;
 	public boolean configProjectileLights;
 	public boolean configNpcLights;
 	public boolean configPetLights;
@@ -1812,7 +1812,7 @@ public class HdPlugin extends Plugin {
 		configGroundBlendingColors = groundBlending.colors;
 		configGroundBlendingTextures = groundBlending.textures;
 		configModelTextures = config.modelTextures();
-		configLegacyTzHaarReskin = config.legacyTzHaarReskin();
+		configHdTzHaarReskin = config.hdTzHaarReskin();
 		configProjectileLights = config.projectileLights();
 		configNpcLights = config.npcLights();
 		configPetLights = config.petLights();
@@ -2043,9 +2043,11 @@ public class HdPlugin extends Plugin {
 								// fall-through
 							case KEY_GROUND_BLENDING:
 							case KEY_FILL_GAPS_IN_TERRAIN:
-							case KEY_LEGACY_TZHAAR_RESKIN:
 								reloadScene = true;
 								break;
+							case KEY_HD_TZHAAR_RESKIN:
+								lightManager.registerDefinitions();
+								// fall-through
 							case KEY_HIDE_VANILLA_WATER_EFFECTS:
 							case KEY_RECOLOR_GROUND_OBJECTS:
 								reloadModelOverrides = true;

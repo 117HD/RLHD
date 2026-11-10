@@ -130,7 +130,9 @@ public class ModelOverrideManager {
 	}
 
 	private void addOverride(@Nullable ModelOverride override, GamevalManager.Handle gamevals) {
-		if (override == null || override.seasonalTheme != null && override.seasonalTheme != plugin.configSeasonalTheme)
+		if (override == null ||
+			override.seasonalTheme != null && override.seasonalTheme != plugin.configSeasonalTheme ||
+			override.hdTzHaarReskin && !plugin.configHdTzHaarReskin)
 			return;
 
 		for (int id : override.npcIds)
@@ -150,6 +152,13 @@ public class ModelOverrideManager {
 		if (current != null && !Objects.equals(current.seasonalTheme, entry.seasonalTheme)) {
 			// Seasonal theme overrides should take precedence
 			if (current.seasonalTheme != null)
+				return;
+			current = null;
+		}
+
+		if (current != null && current.hdTzHaarReskin != entry.hdTzHaarReskin) {
+			// Legacy TzHaar reskin overrides should take precedence
+			if (current.hdTzHaarReskin)
 				return;
 			current = null;
 		}
