@@ -1342,7 +1342,7 @@ public class SceneUploader implements AutoCloseable {
 				boolean allowBlending =
 					plugin.configGroundBlending &&
 					textureId == -1 &&
-					!(isOverlay && proceduralGenerator.useDefaultColor(tile, override));
+					!proceduralGenerator.skipFaceBlending(tile, override, isOverlay);
 				boolean blendColors = plugin.configGroundBlendingColors && allowBlending;
 				boolean blendTextures = plugin.configGroundBlendingTextures && allowBlending;
 
@@ -1374,17 +1374,17 @@ public class SceneUploader implements AutoCloseable {
 					} else if (groundMaterial != null) {
 						materialA = groundMaterial.getRandomMaterial(
 							worldPos[0] + (vertices[0][0] >> LOCAL_COORD_BITS),
-							worldPos[1] + (vertices[0][1] >> LOCAL_COORD_BITS),
+							worldPos[1] + (vertices[0][2] >> LOCAL_COORD_BITS),
 							worldPos[2]
 						);
 						materialB = groundMaterial.getRandomMaterial(
 							worldPos[0] + (vertices[1][0] >> LOCAL_COORD_BITS),
-							worldPos[1] + (vertices[1][1] >> LOCAL_COORD_BITS),
+							worldPos[1] + (vertices[1][2] >> LOCAL_COORD_BITS),
 							worldPos[2]
 						);
 						materialC = groundMaterial.getRandomMaterial(
 							worldPos[0] + (vertices[2][0] >> LOCAL_COORD_BITS),
-							worldPos[1] + (vertices[2][1] >> LOCAL_COORD_BITS),
+							worldPos[1] + (vertices[2][2] >> LOCAL_COORD_BITS),
 							worldPos[2]
 						);
 					}
