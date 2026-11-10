@@ -29,18 +29,10 @@
 
 uniform sampler2D uiTexture;
 
-#include <scaling/bicubic.glsl>
+#include <scaling/ui_scaling.glsl>
 #include <utils/constants.glsl>
 #include <utils/color_blindness.glsl>
 #include <utils/misc.glsl>
-
-#if UI_SCALING_MODE == UI_SCALING_MODE_XBR
-    #include <scaling/xbr_lv2_frag.glsl>
-
-    in XBRTable xbrTable;
-#elif UI_SCALING_MODE == UI_SCALING_MODE_HYBRID
-    #include <scaling/hybrid.glsl>
-#endif
 
 in vec2 fUv;
 
@@ -54,17 +46,7 @@ vec4 alphaBlend(vec4 src, vec4 dst) {
 }
 
 void main() {
-    vec4 c;
-    #if UI_SCALING_MODE == UI_SCALING_MODE_MITCHELL || UI_SCALING_MODE == UI_SCALING_MODE_CATROM
-        c = textureCubic(uiTexture, fUv);
-    #elif UI_SCALING_MODE == UI_SCALING_MODE_XBR
-        c = textureXBR(uiTexture, fUv, xbrTable, ceil(1.0 * uboUi.targetDimensions.x / uboUi.sourceDimensions.x));
-    #elif UI_SCALING_MODE == UI_SCALING_MODE_HYBRID
-        c = textureHybrid(uiTexture, fUv);
-    #else // NEAREST or LINEAR, which uses GL_TEXTURE_MIN_FILTER/GL_TEXTURE_MAG_FILTER to affect sampling
-        c = texture(uiTexture, fUv);
-    #endif
-
+    vec4 c = textureUi(uiTexture, fUv);
     c = alphaBlend(c, uboUi.alphaOverlay);
     c.rgb = colorBlindnessCompensation(c.rgb);
 
