@@ -1,5 +1,6 @@
 package rs117.hd.model.modelreplaceer.types;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import rs117.hd.utils.MathUtils;
 
@@ -27,7 +28,13 @@ public class ConditionalModel {
 
 	 */
 	@Getter
+	@SerializedName("chance")
 	private final int inclusionChancePercent;
+
+	private ConditionalModel() {
+		modelId = -1;
+		inclusionChancePercent = -1;
+	}
 
 	/**
 	 * Constructs a ConditionalModel with a given model ID and inclusion chance.

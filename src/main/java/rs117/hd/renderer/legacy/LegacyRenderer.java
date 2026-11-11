@@ -1536,7 +1536,7 @@ public class LegacyRenderer implements Renderer {
 			return originalModel;
 		}
 
-		ModelDefinition def = replacement.model.definition;
+		ModelDefinition def = replacement.definition;
 		if (def == null) {
 			frameTimer.end(Timer.MODEL_REPLACEMENTS);
 			return originalModel;

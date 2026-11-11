@@ -17,6 +17,7 @@ import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.VanillaShadowMode;
+import rs117.hd.model.modelreplaceer.ModelStore;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.materials.Material;
@@ -271,6 +272,12 @@ public class ModelOverride
 		if (modelReplacement != null) {
 			if (!modelReplacement.themes.contains(plugin.configSeasonalTheme.name())) {
 				modelReplacement = null;
+			} else {
+				modelReplacement.definition = ModelStore.get(modelReplacement.model);
+				if (modelReplacement.definition == null) {
+					log.warn("Unknown model replacement '{}' in override '{}'", modelReplacement.model, description);
+					modelReplacement = null;
+				}
 			}
 		}
 

@@ -1,29 +1,41 @@
 package rs117.hd.model.modelreplaceer.types.objects;
 
-import lombok.extern.slf4j.Slf4j;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.annotations.JsonAdapter;
+import java.lang.reflect.Type;
+import java.util.*;
 import net.runelite.api.Client;
 import net.runelite.api.Model;
 import net.runelite.api.ModelData;
 import net.runelite.api.Perspective;
 import rs117.hd.model.modelreplaceer.ModelStore;
 import rs117.hd.model.modelreplaceer.types.ConditionalModel;
+import rs117.hd.utils.ColorUtils;
 
-import java.util.*;
+import static rs117.hd.utils.ExpressionParser.asExpression;
+import static rs117.hd.utils.ExpressionParser.parseExpression;
 
-@Slf4j
-public abstract class ModelDefinition {
+
+public class ModelDefinition {
+	private static final int[] ZERO_OFFSETS = new int[4];
 
 	protected final List<ConditionalModel> conditionalModels = new ArrayList<>();
 	public int[] modelIds = new int[0];
-	public int[] models = null;
 
 	public int animationId = -1;
 	public int contrast = 0;
 	public int ambient = 0;
 
-	public int offsetX = 0;
-	public int offsetY = 0;
-	public int offsetZ = 0;
+	@JsonAdapter(OffsetAdapter.class)
+	private int[] offsetX = ZERO_OFFSETS;
+	@JsonAdapter(OffsetAdapter.class)
+	private int[] offsetY = ZERO_OFFSETS;
+	@JsonAdapter(OffsetAdapter.class)
+	private int[] offsetZ = ZERO_OFFSETS;
+	private int[] offsetXByOrientation = ZERO_OFFSETS;
 
 	public int modelSizeX = 128;
 	public int modelSizeY = 128;
@@ -31,10 +43,12 @@ public abstract class ModelDefinition {
 
 	public boolean rotated = false;
 
-	public int[] recolorFrom;
-	public int[] recolorTo;
-	public short[] retextureFrom;
-	public short[] retextureTo;
+	@JsonAdapter(ColorArrayAdapter.class)
+	public int[] recolorFrom = new int[0];
+	@JsonAdapter(ColorArrayAdapter.class)
+	public int[] recolorTo = new int[0];
+	public int[] retextureFrom = new int[0];
+	public int[] retextureTo = new int[0];
 
 	private static final int[] ROTATE_TYPE_INDICES = {6, 7, 8, 9, 13, 14, 19};
 
@@ -46,7 +60,7 @@ public abstract class ModelDefinition {
 		}
 	};
 
-	private final Map<Long, Model> rotatedModelCache = new LinkedHashMap<>(DATA_CACHE_SIZE, 0.75f, true) {
+	private final transient Map<Long, Model> rotatedModelCache = new LinkedHashMap<>(DATA_CACHE_SIZE, 0.75f, true) {
 		@Override
 		protected boolean removeEldestEntry(Map.Entry<Long, Model> eldest) {
 			return size() > DATA_CACHE_SIZE;
@@ -55,8 +69,108 @@ public abstract class ModelDefinition {
 
 	public static void release() {
 		modelDataCache.clear();
-		for (var model : ModelStore.values())
-			model.definition.rotatedModelCache.clear();
+		ModelStore.clearCachedModels();
+	}
+
+	public final void clearCachedModels() {
+		rotatedModelCache.clear();
+	}
+
+	public void validate(int textureCount) {
+		if (modelIds == null || modelIds.length == 0 || Arrays.stream(modelIds).anyMatch(id -> id < 0))
+			throw new IllegalArgumentException("modelIds must contain at least one nonnegative model ID");
+		if (conditionalModels == null || conditionalModels.stream().anyMatch(part ->
+			part == null || part.modelId < 0 || part.getInclusionChancePercent() < 0 || part.getInclusionChancePercent() > 100))
+			throw new IllegalArgumentException("Each conditional model needs a nonnegative modelId and a chance from 0 to 100");
+
+		requirePairs("recolor", recolorFrom, recolorTo);
+		requirePairs("retexture", retextureFrom, retextureTo);
+		int maxTextureId = Math.min(textureCount - 1, Short.MAX_VALUE);
+		validateTextureIds("retextureFrom", retextureFrom, maxTextureId);
+		validateTextureIds("retextureTo", retextureTo, maxTextureId);
+
+		if (offsetX == null || offsetY == null || offsetZ == null)
+			throw new IllegalArgumentException("Offsets must be integers or expressions");
+		if (offsetXByOrientation == null || offsetXByOrientation.length != 4)
+			throw new IllegalArgumentException("offsetXByOrientation must contain four offsets");
+		for (int ori = 0; ori < 4; ori++)
+			Math.addExact(offsetX[ori], offsetXByOrientation[ori]);
+	}
+
+	private static void requirePairs(String field, int[] from, int[] to) {
+		if (from == null || to == null || from.length != to.length)
+			throw new IllegalArgumentException(field + "From and " + field + "To must have the same length");
+	}
+
+	private static void validateTextureIds(String field, int[] ids, int maxTextureId) {
+		for (int i = 0; i < ids.length; i++) {
+			if (ids[i] < 0 || ids[i] > maxTextureId)
+				throw new IllegalArgumentException(field + "[" + i + "] must be in 0.." + maxTextureId);
+		}
+	}
+
+	private static class ColorArrayAdapter implements JsonDeserializer<int[]> {
+		@Override
+		public int[] deserialize(JsonElement json, Type type, JsonDeserializationContext context) {
+			if (!json.isJsonArray())
+				throw new JsonParseException("Expected an array of colors");
+			var array = json.getAsJsonArray();
+			var colors = new int[array.size()];
+			for (int i = 0; i < colors.length; i++) {
+				try {
+					colors[i] = readColor(array.get(i));
+				} catch (RuntimeException ex) {
+					throw new JsonParseException("Invalid color at index " + i + ": " + array.get(i), ex);
+				}
+			}
+			return colors;
+		}
+
+		private static int readColor(JsonElement color) {
+			var value = color.getAsJsonPrimitive();
+			if (value.isString()) {
+				String hex = value.getAsString();
+				if (!hex.matches("(?:#|0[xX])[0-9a-fA-F]{6}"))
+					throw new IllegalArgumentException("Expected #RRGGBB or 0xRRGGBB");
+				return ColorUtils.hsl("#" + hex.substring(hex.length() - 6));
+			}
+			if (!value.isNumber())
+				throw new IllegalArgumentException("Expected a packed HSL integer");
+			int packed = value.getAsBigDecimal().intValueExact();
+			if (packed < 0 || packed > 0xFFFF)
+				throw new IllegalArgumentException("Expected a packed HSL integer in 0..65535");
+			return packed;
+		}
+	}
+
+	private static class OffsetAdapter implements JsonDeserializer<int[]> {
+		@Override
+		public int[] deserialize(JsonElement json, Type type, JsonDeserializationContext context) {
+			var value = json.getAsJsonPrimitive();
+			var offsets = new int[4];
+			if (value.isNumber()) {
+				Arrays.fill(offsets, value.getAsBigDecimal().intValueExact());
+				return offsets;
+			}
+			if (!value.isString())
+				throw new JsonParseException("Expected an integer or offset expression");
+
+			var expression = asExpression(parseExpression(value.getAsString()));
+			if (expression.variables.stream().anyMatch(name -> !name.equals("ori")))
+				throw new JsonParseException("Offset expressions only support the variable ori");
+			var evaluate = expression.toFunction();
+			for (int ori = 0; ori < offsets.length; ori++) {
+				int orientation = ori;
+				Object result = evaluate.apply(name -> orientation);
+				if (!(result instanceof Number))
+					throw new JsonParseException("Offset expression must produce an integer for ori " + ori);
+				double offset = ((Number) result).doubleValue();
+				if (offset != Math.rint(offset) || offset < Integer.MIN_VALUE || offset > Integer.MAX_VALUE)
+					throw new JsonParseException("Offset expression must produce an integer for ori " + ori);
+				offsets[ori] = (int) offset;
+			}
+			return offsets;
+		}
 	}
 
 	public static boolean shouldRotateType(int config) {
@@ -134,6 +248,8 @@ public abstract class ModelDefinition {
 		}
 
 		ModelData result = prepareMergedModel(client.mergeModels(datas));
+		if (datas.length == 1)
+			result = result.shallowCopy().cloneVertices();
 
 		if (rotate45) {
 			result = rotate(result, 256).translate(45, 0, -45);
@@ -153,33 +269,28 @@ public abstract class ModelDefinition {
 
 		result = postProcessModel(result,type,orientation);
 
-		if (recolorFrom != null && recolorTo != null) {
-			if (recolorFrom.length != recolorTo.length) {
-				log.error("{}: Mismatched recolor arrays: from={}, to={}", getClass().getSimpleName(), recolorFrom.length, recolorTo.length);
-			} else {
-				for (int i = 0; i < recolorFrom.length; i++) {
-					result.recolor((short) recolorFrom[i], (short) recolorTo[i]);
-				}
-			}
+		if (recolorFrom.length != 0) {
+			result = result.cloneColors();
+			for (int i = 0; i < recolorFrom.length; i++)
+				result.recolor((short) recolorFrom[i], (short) recolorTo[i]);
 		}
 
-		if (retextureFrom != null && retextureTo != null) {
-			if (retextureFrom.length != retextureTo.length) {
-				log.error("{}: Mismatched retexture arrays: from={}, to={}", getClass().getSimpleName(), retextureFrom.length, retextureTo.length);
-			} else {
-				for (int i = 0; i < retextureFrom.length; i++) {
-					result.retexture(retextureFrom[i], retextureTo[i]);
-				}
-			}
+		if (retextureFrom.length != 0) {
+			result = result.cloneTextures();
+			for (int i = 0; i < retextureFrom.length; i++)
+				result.retexture((short) retextureFrom[i], (short) retextureTo[i]);
 		}
 
 		if (modelSizeX != 128 || modelHeight != 128 || modelSizeY != 128) {
 			result.scale(modelSizeX, modelHeight, modelSizeY);
 		}
 
-		if (offsetX != 0 || offsetY != 0 || offsetZ != 0) {
-			result.translate(offsetX, offsetZ, offsetY);
-		}
+		int ori = orientation & 3;
+		int x = offsetX[ori] + offsetXByOrientation[ori];
+		int y = offsetY[ori];
+		int z = offsetZ[ori];
+		if (x != 0 || y != 0 || z != 0)
+			result.translate(x, z, y);
 
 		return result;
 	}

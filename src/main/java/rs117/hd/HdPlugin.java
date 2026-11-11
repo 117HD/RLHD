@@ -86,6 +86,7 @@ import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowFiltering;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.VanillaShadowMode;
+import rs117.hd.model.modelreplaceer.ModelStore;
 import rs117.hd.model.modelreplaceer.types.objects.ModelDefinition;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
@@ -755,6 +756,7 @@ public class HdPlugin extends Plugin {
 				areaManager.startUp();
 				groundMaterialManager.startUp();
 				tileOverrideManager.startUp();
+				ModelStore.load(getGson(), client.getTextureProvider().getTextures().length);
 				modelOverrideManager.startUp();
 				lightManager.startUp();
 				skyManager.startUp();
