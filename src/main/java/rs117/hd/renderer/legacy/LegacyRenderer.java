@@ -43,6 +43,7 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.renderer.SkyRenderer;
+import rs117.hd.scene.AnimatedModelReplacer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
@@ -118,6 +119,9 @@ public class LegacyRenderer implements Renderer {
 
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
+
+	@Inject
+	private AnimatedModelReplacer animatedModelReplacer;
 
 	@Inject
 	private LegacySceneUploader sceneUploader;
@@ -1545,7 +1549,10 @@ public class LegacyRenderer implements Renderer {
 		return true;
 	}
 
-	public Model findModelReplacement(ModelReplacement replacement, Model originalModel, int id, int x, int z, long hash) {
+	private Model findModelReplacement(
+		ModelReplacement replacement, Model originalModel, int id, int x, int z, long hash,
+		int drawOrientation, int impostorId
+	) {
 		ModelDefinition def = replacement == null ? null : replacement.definition;
 		if (def == null)
 			return originalModel;
@@ -1557,13 +1564,17 @@ public class LegacyRenderer implements Renderer {
 		int plane = ModelHash.getPlane(hash);
 
 		Tile tile = sceneContext.scene.getExtendedTiles()[plane][tileX][tileY];
-		int config = HDUtils.getObjectConfig(tile, hash);
+		TileObject source = HDUtils.getTileObject(tile, hash);
+		int config = HDUtils.getObjectConfig(source);
 
 		int type = config & 0x3F;
 		int orientation = (config >> 6) & 0x3;
 
 		Model model = def.getModel(client, id, type, orientation);
 		frameTimer.end(Timer.MODEL_REPLACEMENTS);
+		if (model != null && source != null && animatedModelReplacer.request(
+			sceneContext.scene, source, replacement, def, model, drawOrientation, impostorId, false))
+			return null;
 		return model;
 	}
 
@@ -1617,12 +1628,16 @@ public class LegacyRenderer implements Renderer {
 		try {
 			// getModel may throw an exception from vanilla client code
 			if (renderable instanceof Model) {
-				model = findModelReplacement(modelOverride.modelReplacement,(Model) renderable,id,x,z,hash);
+				model = findModelReplacement(modelOverride.modelReplacement, (Model) renderable, id, x, z, hash, orientation, -1);
+				if (model == null)
+					return;
 				offsetModel = model.getUnskewedModel();
 				if (offsetModel == null)
 					offsetModel = model;
 			} else {
-				offsetModel = model =  findModelReplacement(modelOverride.modelReplacement,renderable.getModel(),id,x,z,hash);
+				int impostorId = renderable instanceof DynamicObject ? ModelHash.getUuidId(uuid) : -1;
+				offsetModel = model = findModelReplacement(
+					modelOverride.modelReplacement, renderable.getModel(), id, x, z, hash, orientation, impostorId);
 			}
 			if (model == null || model.getFaceCount() == 0) {
 				// skip models with zero faces

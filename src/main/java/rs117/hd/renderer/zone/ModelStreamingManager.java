@@ -21,6 +21,7 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.scene.AnimatedModelReplacer;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -74,6 +75,9 @@ public class ModelStreamingManager {
 
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
+
+	@Inject
+	private AnimatedModelReplacer animatedModelReplacer;
 
 	@Inject
 	private FrameTimer frameTimer;
@@ -242,8 +246,13 @@ public class ModelStreamingManager {
 			var replacementKey = config != -1 ? modelOverride.modelReplacement.key(tileObject.getId(), config) : null;
 			if (replacementKey != null) {
 				Model replacement = getReplacement(replacementKey);
-				if (replacement != null)
+				if (replacement != null) {
+					if (animatedModelReplacer.request(scene, tileObject, modelOverride.modelReplacement,
+						replacementKey.getDefinition(), replacement, orient,
+						r instanceof DynamicObject ? ModelHash.getUuidId(uuid) : -1, false))
+						return;
 					m = replacement;
+				}
 			}
 		}
 

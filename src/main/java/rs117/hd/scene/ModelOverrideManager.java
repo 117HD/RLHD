@@ -56,6 +56,9 @@ public class ModelOverrideManager {
 	private FishingSpotReplacer fishingSpotReplacer;
 
 	@Inject
+	private AnimatedModelReplacer animatedModelReplacer;
+
+	@Inject
 	private SkyManager skyManager;
 
 	private final List<ModelReplacement> scheduledReplacements = new ArrayList<>();
@@ -75,6 +78,7 @@ public class ModelOverrideManager {
 				if (parsedOverrides == null)
 					throw new IOException("Empty or invalid: " + path);
 
+				animatedModelReplacer.clear();
 				modelOverrides.clear();
 				scheduledReplacements.clear();
 				VariableSupplier replacementVars = replacementVariables();

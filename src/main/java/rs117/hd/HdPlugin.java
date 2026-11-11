@@ -108,6 +108,7 @@ import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
+import rs117.hd.scene.AnimatedModelReplacer;
 import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.GroundMaterialManager;
@@ -299,6 +300,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
+
+	@Inject
+	private AnimatedModelReplacer animatedModelReplacer;
 
 	@Inject
 	private NpcDisplacementCache npcDisplacementCache;
@@ -831,6 +835,7 @@ public class HdPlugin extends Plugin {
 			environmentManager.shutDown();
 			skyManager.shutDown();
 			fishingSpotReplacer.shutDown();
+			animatedModelReplacer.clear();
 			areaManager.shutDown();
 			gamevalManager.shutDown();
 			gammaCalibrationOverlay.destroy();
@@ -2233,6 +2238,7 @@ public class HdPlugin extends Plugin {
 			return;
 
 		modelOverrideManager.updateScheduledReplacements();
+		animatedModelReplacer.update();
 		fishingSpotReplacer.update();
 	}
 

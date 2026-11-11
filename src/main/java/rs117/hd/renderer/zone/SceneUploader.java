@@ -33,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.RenderCallbackManager;
 import rs117.hd.HdPlugin;
+import rs117.hd.scene.AnimatedModelReplacer;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
@@ -103,6 +104,9 @@ public class SceneUploader implements AutoCloseable {
 
 	@Inject
 	private Client client;
+
+	@Inject
+	private AnimatedModelReplacer animatedModelReplacer;
 
 	@Inject
 	public GamevalManager gamevalManager;
@@ -594,8 +598,7 @@ public class SceneUploader implements AutoCloseable {
 				-1,
 				-1,
 				-1,
-				wallObject.getId(),
-				wallObject.getConfig(),
+				wallObject,
 				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
@@ -618,8 +621,7 @@ public class SceneUploader implements AutoCloseable {
 				-1,
 				-1,
 				-1,
-				wallObject.getId(),
-				wallObject.getConfig(),
+				wallObject,
 				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
@@ -647,8 +649,7 @@ public class SceneUploader implements AutoCloseable {
 				-1,
 				-1,
 				-1,
-				decorativeObject.getId(),
-				decorativeObject.getConfig(),
+				decorativeObject,
 				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
@@ -671,8 +672,7 @@ public class SceneUploader implements AutoCloseable {
 				-1,
 				-1,
 				-1,
-				decorativeObject.getId(),
-				decorativeObject.getConfig(),
+				decorativeObject,
 				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
@@ -695,8 +695,7 @@ public class SceneUploader implements AutoCloseable {
 				-1,
 				-1, -1,
 				-1,
-				groundObject.getId(),
-				groundObject.getConfig(),
+				groundObject,
 				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
@@ -731,8 +730,7 @@ public class SceneUploader implements AutoCloseable {
 				min.getX(),
 				min.getY(), max.getX(),
 				max.getY(),
-				gameObject.getId(),
-				gameObject.getConfig(),
+				gameObject,
 				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
@@ -814,13 +812,14 @@ public class SceneUploader implements AutoCloseable {
 		int lz,
 		int ux,
 		int uz,
-		int id,
-		int config,
+		TileObject source,
 		int tileExX, int tileExY, int tileZ,
 		GpuIntBuffer opaqueBuffer,
 		GpuIntBuffer alphaBuffer,
 		GpuIntBuffer textureBuffer
 	) {
+		int id = source.getId();
+		int config = HDUtils.getObjectConfig(source);
 		Model model;
 		if (r instanceof Model) {
 			model = (Model) r;
@@ -849,8 +848,13 @@ public class SceneUploader implements AutoCloseable {
 			modelOverride.modelReplacement.key(id, config) : null;
 		if (replacementKey != null) {
 			Model replacement = replacementModels.get(replacementKey);
-			if (replacement != null)
+			if (replacement != null) {
+				if (animatedModelReplacer.request(ctx.scene, source, modelOverride.modelReplacement,
+					replacementKey.getDefinition(), replacement, orient,
+					r instanceof DynamicObject ? ModelHash.getUuidId(uuid) : -1, true))
+					return;
 				model = replacement;
+			}
 		}
 
 		int alphaStart = alphaBuffer != null ? alphaBuffer.position() : 0;
