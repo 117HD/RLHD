@@ -58,6 +58,9 @@ public class WorldViewContext {
 
 	Zone[][] zones;
 
+	// The scene's unmodified level range, before any fading levels are trimmed away
+	int baseMinLevel, baseMaxLevel;
+	// The effective level range and hidden roof ids, after fading levels/roofs have been culled
 	int minLevel, level, maxLevel;
 	final IntHashSet hideRoofIds = new IntHashSet();
 

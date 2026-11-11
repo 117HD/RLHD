@@ -222,11 +222,11 @@ public class ModelStreamingManager {
 			uuid = ModelHash.generateUuid(client, tileObject.getHash(), r);
 		}
 
-		final ZoneRoofFades.Fade fade = zone.fade;
+		final ZoneRoofRemoval.State fade = zone.fade;
 		if (fade != null) {
 			final int levelBucket = fade.levelBucket(level);
 			if (levelBucket != -1)
-				modelFade = max(modelFade, ZoneRoofFades.getBucketFade(levelBucket));
+				modelFade = max(modelFade, ZoneRoofRemoval.getBucketFade(levelBucket));
 
 			if(level != ctx.level) {
 				final int tx = (x >> 7) + ctx.sceneContext.sceneOffset;
@@ -238,9 +238,9 @@ public class ModelStreamingManager {
 					if (rid > 0) {
 						final int bucket = fade.roofBucket(rid);
 						if (bucket != -1) {
-							modelFade = max(modelFade, ZoneRoofFades.getBucketFade(bucket));
-						} else if (level > ctx.level && (ctx.hideRoofIds.contains(rid) || fade.isHeld(rid))) {
-							return; // fully hidden
+							modelFade = max(modelFade, ZoneRoofRemoval.getBucketFade(bucket));
+						} else if (level > ctx.level && ctx.hideRoofIds.contains(rid)) {
+							return; // fully hidden, including roofs still waiting on their fade in delay
 						}
 					}
 				}
@@ -288,7 +288,7 @@ public class ModelStreamingManager {
 		final Zone.AlphaModel alphaModel = hasAlpha ?
 			zone.requestTempAlphaModel(
 				modelOverride,
-				Math.min(ctx.maxLevel, level),
+				Math.min(ctx.baseMaxLevel, level),
 				x & 1023,
 				y - (r instanceof Actor ? r.getModelHeight() : 0), // order players over objects?
 				z & 1023

@@ -142,7 +142,7 @@ public class ZoneRenderer implements Renderer {
 	private ModelStreamingManager modelStreamingManager;
 
 	@Inject
-	private ZoneRoofFades roofFades;
+	private ZoneRoofRemoval roofRemoval;
 
 	@Inject
 	private DisplacementManager displacementManager;
@@ -244,7 +244,7 @@ public class ZoneRenderer implements Renderer {
 		if (FacePrioritySorter.POOL == null)
 			FacePrioritySorter.POOL = new ConcurrentPool<>(() -> injector.getInstance(FacePrioritySorter.class));
 
-		roofFades.initialize();
+		roofRemoval.initialize();
 
 		sceneCmd.setFrameTimer(frameTimer);
 		gapFillerCmd.setFrameTimer(frameTimer);
@@ -269,7 +269,7 @@ public class ZoneRenderer implements Renderer {
 		sceneFboValid = false;
 		pendingSceneSwap = null;
 
-		roofFades.destroy();
+		roofRemoval.destroy();
 		destroyBuffers();
 		skyRenderer.destroy();
 
@@ -418,9 +418,9 @@ public class ZoneRenderer implements Renderer {
 			}
 
 			frameTimer.begin(Timer.DRAW_PRESCENE);
-			ctx.minLevel = minLevel;
+			ctx.baseMinLevel = ctx.minLevel = minLevel;
 			ctx.level = level;
-			ctx.maxLevel = maxLevel;
+			ctx.baseMaxLevel = ctx.maxLevel = maxLevel;
 			ctx.vaoSceneCmd.reset();
 			ctx.vaoDirectionalCmd.reset();
 			ctx.resetDrawRanges();
@@ -436,6 +436,11 @@ public class ZoneRenderer implements Renderer {
 			}
 
 			ctx.completeInvalidation();
+
+			// Fading levels and roofs are culled from the normal draw range, and drawn separately. Only the top level
+			// drives this, since that is where roof fading applies.
+			if (isTopLevel)
+				roofRemoval.update(ctx);
 
 			int offset = ctx.sceneContext.sceneOffset >> 3;
 			for (int zx = 0; zx < ctx.sizeX; ++zx)
@@ -752,7 +757,7 @@ public class ZoneRenderer implements Renderer {
 		directionalCmd.reset();
 		terrainShadowCmd.reset();
 		gapFillerCmd.reset();
-		roofFades.reset();
+		roofRemoval.reset();
 		renderState.reset();
 
 		eboAlpha.orphan();
@@ -1002,7 +1007,7 @@ public class ZoneRenderer implements Renderer {
 
 		sceneCmd.execute(renderState);
 
-		roofFades.execute(renderState);
+		roofRemoval.execute(renderState);
 
 		frameTimer.end(Timer.RENDER_SCENE_AND_SKY);
 
@@ -1116,18 +1121,13 @@ public class ZoneRenderer implements Renderer {
 
 			frameTimer.begin(Timer.DRAW_ZONE_OPAQUE);
 
-			// Roofs and levels partway through a fade go to their own buffers, one per fade amount. Once a fade finishes,
-			// the geometry is either fully visible or fully hidden, and is handled by the normal pass.
-			final ZoneRoofFades.Fade fade = roofFades.update(z, ctx);
-
-			boolean renderGroundLevel = ctx.minLevel == 0;
+			boolean renderGroundLevel = ctx.baseMinLevel == 0;
 			if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
 				final boolean allowDiscard = !sceneManager.isRoot(ctx) || z.sceneCameraIntersects;
 
-				for (int buckets = fade.buckets; buckets != 0; buckets &= buckets - 1) {
-					int bucket = Integer.numberOfTrailingZeros(buckets);
-					z.renderOpaque(roofFades.getCommandBuffer(bucket), ctx, fade, Zone.DRAW_FADING_ONLY, bucket);
-				}
+				// Roofs and levels partway through a fade go to their own buffers, one per fade amount. Once a fade
+				// finishes, the geometry is either fully visible or fully hidden, and is handled by the normal pass.
+				roofRemoval.drawOpaque(z, ctx);
 
 				if (allowDiscard) {
 					sceneCmd.SetShader(sceneDiscardProgram);
@@ -1141,7 +1141,7 @@ public class ZoneRenderer implements Renderer {
 
 				if (renderGroundLevel)
 					z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_TERRAIN);
-				z.renderOpaque(sceneCmd, ctx, fade, 0);
+				z.renderOpaque(sceneCmd, ctx, 0);
 
 				if (allowDiscard)
 					sceneCmd.SetShader(sceneProgram);
@@ -1153,7 +1153,7 @@ public class ZoneRenderer implements Renderer {
 			if (skyRenderer.castsShadows && !ctx.isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 				if (!z.onlyWater || z.sizeM > 0) {
 					directionalCmd.SetShader(fastShadowProgram);
-					z.renderOpaque(directionalCmd, ctx, null, shouldDrawRoofShadows ? Zone.DRAW_INCLUDE_ROOFS : 0);
+					z.renderOpaque(directionalCmd, ctx, shouldDrawRoofShadows ? Zone.DRAW_INCLUDE_ROOFS : 0);
 				}
 
 				if (renderGroundLevel && plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0)
@@ -1190,7 +1190,7 @@ public class ZoneRenderer implements Renderer {
 			frameTimer.begin(Timer.DRAW_ZONE_ALPHA);
 			sceneCmd.Enable(GL_BLEND);
 
-			final boolean renderWater = z.inSceneFrustum && ctx.minLevel == 0 && level == 0 && z.hasWater;
+			final boolean renderWater = z.inSceneFrustum && ctx.baseMinLevel == 0 && level == 0 && z.hasWater;
 			if (renderWater) {
 				sceneCmd.SetShader(waterProgram);
 				z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
@@ -1201,7 +1201,6 @@ public class ZoneRenderer implements Renderer {
 
 			final boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
 			if (hasAlpha) {
-				final ZoneRoofFades.Fade fade = roofFades.current(z);
 				final int offset = ctx.sceneContext.sceneOffset >> 3;
 				final int lzx = zx - offset;
 				final int lzz = zz - offset;
@@ -1215,11 +1214,8 @@ public class ZoneRenderer implements Renderer {
 					int shadowFlags = Zone.DRAW_DEPTH_ONLY;
 					if (shouldDrawRoofShadows)
 						shadowFlags |= Zone.DRAW_INCLUDE_ROOFS;
-					z.renderAlpha(directionalCmd, lzx, lzz, level, ctx, null, shadowFlags);
+					z.renderAlpha(directionalCmd, lzx, lzz, level, ctx, shadowFlags);
 				}
-
-				// Called per visible level, but fading geometry can be outside the visible range, so draw it all here
-				final boolean drawFadingAlpha = fade.buckets != 0 && roofFades.claimAlpha(z);
 
 				if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
 					if (!sceneManager.isRoot(ctx) || renderWater) {
@@ -1227,9 +1223,10 @@ public class ZoneRenderer implements Renderer {
 						// can Z-fight depending on draw order. To avoid alpha models above water causing the water surface to fail its
 						// depth test, we disable depth writes for alpha models and rely on correct back to front ordering of the zones
 						sceneCmd.DepthMask(false);
-						z.renderAlpha(sceneCmd, lzx, lzz, level, ctx, fade, 0);
-						if (drawFadingAlpha)
-							renderFadingAlpha(z, lzx, lzz, ctx, fade);
+						z.renderAlpha(sceneCmd, lzx, lzz, level, ctx, 0);
+						// Called per visible level, but fading geometry can be outside the visible range, so draw it all
+						// the first time this zone's alpha is drawn this frame
+						roofRemoval.drawAlpha(z, lzx, lzz, ctx);
 						sceneCmd.DepthMask(true);
 					} else {
 						// Draw alpha models in two passes, first blending colors correctly, then writing depth for subsequent opaque models
@@ -1238,14 +1235,15 @@ public class ZoneRenderer implements Renderer {
 						// Write color without depth writes
 						sceneCmd.DepthMask(false);
 						sceneCmd.ColorMask(true, true, true, true);
-						z.renderAlpha(sceneCmd, lzx, lzz, level, ctx, fade, 0);
-						if (drawFadingAlpha)
-							renderFadingAlpha(z, lzx, lzz, ctx, fade);
+						z.renderAlpha(sceneCmd, lzx, lzz, level, ctx, 0);
+						// Called per visible level, but fading geometry can be outside the visible range, so draw it all
+						// the first time this zone's alpha is drawn this frame
+						roofRemoval.drawAlpha(z, lzx, lzz, ctx);
 
 						// Write depth without color
 						sceneCmd.DepthMask(true);
 						sceneCmd.ColorMask(false, false, false, false);
-						z.renderAlpha(sceneCmd, lzx, lzz, level, ctx, fade, Zone.DRAW_DEPTH_ONLY);
+						z.renderAlpha(sceneCmd, lzx, lzz, level, ctx, Zone.DRAW_DEPTH_ONLY);
 
 						// Restore color writes
 						sceneCmd.ColorMask(true, true, true, true);
@@ -1263,15 +1261,6 @@ public class ZoneRenderer implements Renderer {
 				),
 				ex
 			);
-		}
-	}
-
-	private void renderFadingAlpha(Zone z, int zx, int zz, WorldViewContext ctx, ZoneRoofFades.Fade fade) {
-		for (int buckets = fade.buckets; buckets != 0; buckets &= buckets - 1) {
-			int bucket = Integer.numberOfTrailingZeros(buckets);
-			CommandBuffer cmd = roofFades.getCommandBuffer(bucket);
-			for (int level = 0; level < MAX_Z; ++level)
-				z.renderAlpha(cmd, zx, zz, level, ctx, fade, Zone.DRAW_FADING_ONLY, bucket);
 		}
 	}
 
