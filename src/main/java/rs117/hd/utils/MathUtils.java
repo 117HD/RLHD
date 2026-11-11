@@ -507,14 +507,6 @@ public final class MathUtils {
 		return product;
 	}
 
-	public static int area2D(int aX, int aY, int bX, int bY, int cX, int cY) {
-		return (aX - cX) * (bY - cY) - (bX - cX) * (aY - cY);
-	}
-
-	public static int area2D(int[] a, int[] b, int[] c) {
-		return area2D(a[0], a[1], b[0], b[1], c[0], c[1]);
-	}
-
 	public static float angleDiff(float a, float b) {
 		return mod(a - b + PI, TWO_PI) - PI;
 	}
@@ -1003,7 +995,7 @@ public final class MathUtils {
 		return (short) round(clamp(f, -1, 1) * Short.MAX_VALUE);
 	}
 
-	public static int float16(float value) {
+	public static short float16(float value) {
 		if (value == 0)
 			return 0;
 		// float32: (-1)^sign * 2^(exponent - 127) * (1.mantissa)
@@ -1015,18 +1007,18 @@ public final class MathUtils {
 
 		if (exponent <= 0) { // Too small, subnormal
 			if (exponent < -10) // To small to represent, return signed zero
-				return sign;
+				return (short) sign;
 			mantissa |= 0x800000; // Add the leading 1 back in
 			mantissa >>= 1 - exponent; // Shift to represent the smaller exponent
 			// Round based on the last bit, before shifting it away
 			if ((mantissa & 0x1000) != 0)
 				mantissa += 0x2000;
-			return sign | mantissa >> 13;
+			return (short) (sign | mantissa >> 13);
 		}
 
 		if (exponent >= 0x1F) { // Too large to represent
 			if (mantissa == 0)
-				return sign | 0x7C00; // Infinity
+				return (short) (sign | 0x7C00); // Infinity
 			return 0x7E00; // NaN
 		}
 
@@ -1036,18 +1028,17 @@ public final class MathUtils {
 			mantissa += 0x2000;
 			// If rounding up caused the mantissa to overflow, increment the exponent
 			if ((mantissa & 0x800000) != 0) {
-				mantissa = 0;
 				exponent += 1;
 				if (exponent >= 0x1F) // Return infinity if it's too large to represent again
-					return sign | 0x7C00; // Infinity
-				return sign | exponent << 10;
+					return (short) (sign | 0x7C00); // Infinity
+				return (short) (sign | exponent << 10);
 			}
 		}
 
-		return sign | exponent << 10 | mantissa >> 13;
+		return (short) (sign | exponent << 10 | mantissa >> 13);
 	}
 
-	public static float unpackFloat16(int val) {
+	public static float unpackFloat16(short val) {
 		int h = val & 0xFFFF;
 
 		int sign     = (h & 0x8000) << 16;   // move sign into bit 31

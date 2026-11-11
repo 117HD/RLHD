@@ -123,8 +123,6 @@ public class CommandBuffer {
 	public void bindShaderStorage(@Nullable GLShaderStorage buffer) {
 		if (buffer == null)
 			return;
-
-		// The object is resolved on execution, so the buffer is always bound with the id it has by then
 		ensureCapacity(1);
 		cmd[writeHead++] = GL_BIND_SHADER_STORAGE_TYPE & 0xFF | (long) writeObject(buffer) << 8;
 	}

@@ -137,7 +137,7 @@ public class SceneUploader implements AutoCloseable {
 	private final int[] modelNormals = new int[9];
 	private final short[][] tileNormals = new short[4][3];
 
-	private int[] modelVertices;
+	private short[] modelVertices;
 	private float[] modelProjected;
 	public int tempModelAlphaFaces = 0;
 
@@ -175,7 +175,7 @@ public class SceneUploader implements AutoCloseable {
 		currentScene = null;
 		onBeforeProcessTile = null;
 
-		PooledArrayType.INT.release(modelVertices);
+		PooledArrayType.SHORT.release(modelVertices);
 		modelVertices = null;
 
 		PooledArrayType.FLOAT.release(modelProjected);
@@ -187,7 +187,7 @@ public class SceneUploader implements AutoCloseable {
 	}
 
 	private void ensureVerticesAllocated(int vertexCount) {
-		modelVertices = PooledArrayType.INT.ensureCapacity(modelVertices, vertexCount * 3);
+		modelVertices = PooledArrayType.SHORT.ensureCapacity(modelVertices, vertexCount * 3);
 	}
 
 	public void estimateZoneSize(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) throws InterruptedException {
@@ -1723,9 +1723,9 @@ public class SceneUploader implements AutoCloseable {
 			zone.maxY = max(zone.maxY, vy);
 			zone.maxZ = max(zone.maxZ, vz);
 
-			modelVertices[vertexOffset++] = vx;
-			modelVertices[vertexOffset++] = vy;
-			modelVertices[vertexOffset++] = vz;
+			modelVertices[vertexOffset++] = (short) vx;
+			modelVertices[vertexOffset++] = (short) vy;
+			modelVertices[vertexOffset++] = (short) vz;
 		}
 
 		boolean isVanillaTextured = faceTextures != null;
@@ -1806,19 +1806,19 @@ public class SceneUploader implements AutoCloseable {
 			final int triangleC = indices3[face];
 
 			int vertexOffset = triangleA * 3;
-			final int vx1 = modelVertices[vertexOffset];
-			final int vy1 = modelVertices[vertexOffset + 1];
-			final int vz1 = modelVertices[vertexOffset + 2];
+			final short vx1 = modelVertices[vertexOffset];
+			final short vy1 = modelVertices[vertexOffset + 1];
+			final short vz1 = modelVertices[vertexOffset + 2];
 
 			vertexOffset = triangleB * 3;
-			final int vx2 = modelVertices[vertexOffset];
-			final int vy2 = modelVertices[vertexOffset + 1];
-			final int vz2 = modelVertices[vertexOffset + 2];
+			final short vx2 = modelVertices[vertexOffset];
+			final short vy2 = modelVertices[vertexOffset + 1];
+			final short vz2 = modelVertices[vertexOffset + 2];
 
 			vertexOffset = triangleC * 3;
-			final int vx3 = modelVertices[vertexOffset];
-			final int vy3 = modelVertices[vertexOffset + 1];
-			final int vz3 = modelVertices[vertexOffset + 2];
+			final short vx3 = modelVertices[vertexOffset];
+			final short vy3 = modelVertices[vertexOffset + 1];
+			final short vz3 = modelVertices[vertexOffset + 2];
 
 			boolean keepShading = isTextured;
 			if (isTextured) {
@@ -2444,14 +2444,8 @@ public class SceneUploader implements AutoCloseable {
 					shouldCalculateFaceNormal &= (modelNormals[8] = zVertexNormals[triangleC]) == 0;
 				}
 
-				if (shouldCalculateFaceNormal) {
-					calculateFaceNormalFP16(
-						faceNormals,
-						modelVertices[vertexOffsetA], modelVertices[vertexOffsetA + 1], modelVertices[vertexOffsetA + 2],
-						modelVertices[vertexOffsetB], modelVertices[vertexOffsetB + 1], modelVertices[vertexOffsetB + 2],
-						modelVertices[vertexOffsetC], modelVertices[vertexOffsetC + 1], modelVertices[vertexOffsetC + 2]
-					);
-				}
+				if (shouldCalculateFaceNormal)
+					calculateFaceNormalFP16(faceNormals, modelVertices, vertexOffsetA, vertexOffsetB, vertexOffsetC);
 
 				if (undoFaceShading && material.vanillaTextureIndex == -1) {
 					color1 = undoVanillaShading(color1, plugin.configLegacyGreyColors, faceNormals[0], faceNormals[1], faceNormals[2]);
@@ -2689,16 +2683,11 @@ public class SceneUploader implements AutoCloseable {
 		vb.putVertex(x2, y2, z2, u2, v2, 0, 0, -1, 0, faceIdx, false, 0);
 	}
 
-	public static void calculateFaceNormalFP16(
-		int[] out,
-		int vx1, int vy1, int vz1,
-		int vx2, int vy2, int vz2,
-		int vx3, int vy3, int vz3
-	) {
+	public static void calculateFaceNormalFP16(int[] out, short[] modelVertices, int offsetA, int offsetB, int offsetC) {
 		calculateFaceNormal(out,
-			unpackFloat16(vx1), unpackFloat16(vy1), unpackFloat16(vz1),
-			unpackFloat16(vx2), unpackFloat16(vy2), unpackFloat16(vz2),
-			unpackFloat16(vx3), unpackFloat16(vy3), unpackFloat16(vz3)
+			unpackFloat16(modelVertices[offsetA]), unpackFloat16(modelVertices[offsetA + 1]), unpackFloat16(modelVertices[offsetA + 2]),
+			unpackFloat16(modelVertices[offsetB]), unpackFloat16(modelVertices[offsetB + 1]), unpackFloat16(modelVertices[offsetB + 2]),
+			unpackFloat16(modelVertices[offsetC]), unpackFloat16(modelVertices[offsetC + 1]), unpackFloat16(modelVertices[offsetC + 2])
 		);
 	}
 
