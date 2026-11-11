@@ -730,11 +730,13 @@
   },
   {
     "name": "LEAFYTREE_FROSTY",
-    "vanillaTextureIndex": 127
+    "vanillaTextureIndex": 127,
+    "hasTransparency": true
   },
   {
     "name": "LEAFYTREE_TILED_FROSTY",
-    "vanillaTextureIndex": 128
+    "vanillaTextureIndex": 128,
+    "hasTransparency": true
   },
   {
     "name": "TEXTURE_THATCHED02",

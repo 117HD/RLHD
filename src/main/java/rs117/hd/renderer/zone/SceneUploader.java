@@ -24,6 +24,9 @@
  */
 package rs117.hd.renderer.zone;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +42,7 @@ import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.model_overrides.ModelReplacement;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.scene.model_overrides.UvType;
 import rs117.hd.scene.tile_overrides.TileOverride;
@@ -98,6 +102,9 @@ public class SceneUploader implements AutoCloseable {
 	private HdPlugin plugin;
 
 	@Inject
+	private Client client;
+
+	@Inject
 	public GamevalManager gamevalManager;
 
 	@Inject
@@ -115,6 +122,14 @@ public class SceneUploader implements AutoCloseable {
 	}
 
 	public OnBeforeProcessTileFunc onBeforeProcessTile;
+
+	@FunctionalInterface
+	interface ClientCallback {
+		void invoke(Runnable callback) throws InterruptedException;
+	}
+
+	ClientCallback runOnClientThread;
+	private final Map<ModelReplacement.Key, Model> replacementModels = new HashMap<>();
 
 	private int basex, basez, rid, renderablePlane;
 
@@ -169,6 +184,8 @@ public class SceneUploader implements AutoCloseable {
 		tileHeights = null;
 		currentScene = null;
 		onBeforeProcessTile = null;
+		runOnClientThread = null;
+		replacementModels.clear();
 
 		PooledArrayType.INT.release(modelVertices);
 		modelVertices = null;
@@ -391,7 +408,7 @@ public class SceneUploader implements AutoCloseable {
 		}
 	}
 
-	private void estimateZoneTileSize(ZoneSceneContext ctx, Zone z, Tile t) {
+	private void estimateZoneTileSize(ZoneSceneContext ctx, Zone z, Tile t) throws InterruptedException {
 		var tilePoint = t.getSceneLocation();
 		ctx.sceneToWorld(tilePoint.getX(), tilePoint.getY(), t.getPlane(), worldPos);
 
@@ -462,27 +479,19 @@ public class SceneUploader implements AutoCloseable {
 
 		WallObject wallObject = t.getWallObject();
 		if (wallObject != null) {
-			ModelOverride modelOverride = modelOverrideManager.getOverride(wallObject, worldPos);
-			if (!modelOverride.hide) {
-				estimateRenderableSize(z, wallObject.getRenderable1(), modelOverride);
-				estimateRenderableSize(z, wallObject.getRenderable2(), modelOverride);
-			}
+			estimateRenderableSize(z, wallObject.getRenderable1(), wallObject);
+			estimateRenderableSize(z, wallObject.getRenderable2(), wallObject);
 		}
 
 		DecorativeObject decorativeObject = t.getDecorativeObject();
 		if (decorativeObject != null) {
-			ModelOverride modelOverride = modelOverrideManager.getOverride(decorativeObject, worldPos);
-			if (!modelOverride.hide) {
-				estimateRenderableSize(z, decorativeObject.getRenderable(), modelOverride);
-				estimateRenderableSize(z, decorativeObject.getRenderable2(), modelOverride);
-			}
+			estimateRenderableSize(z, decorativeObject.getRenderable(), decorativeObject);
+			estimateRenderableSize(z, decorativeObject.getRenderable2(), decorativeObject);
 		}
 
 		GroundObject groundObject = t.getGroundObject();
 		if (groundObject != null) {
-			ModelOverride modelOverride = modelOverrideManager.getOverride(groundObject, worldPos);
-			if (!modelOverride.hide)
-				estimateRenderableSize(z, groundObject.getRenderable(), modelOverride);
+			estimateRenderableSize(z, groundObject.getRenderable(), groundObject);
 		}
 
 		GameObject[] gameObjects = t.getGameObjects();
@@ -494,11 +503,7 @@ public class SceneUploader implements AutoCloseable {
 			if (ModelHash.isTemporaryObject(gameObject.getHash()))
 				continue;
 
-			ModelOverride modelOverride = modelOverrideManager.getOverride(gameObject, worldPos);
-			if (modelOverride.hide)
-				continue;
-
-			estimateRenderableSize(z, gameObject.getRenderable(), modelOverride);
+			estimateRenderableSize(z, gameObject.getRenderable(), gameObject);
 		}
 
 		Tile bridge = t.getBridge();
@@ -584,6 +589,7 @@ public class SceneUploader implements AutoCloseable {
 				-1,
 				-1,
 				wallObject.getId(),
+				wallObject.getConfig(),
 				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
@@ -607,6 +613,7 @@ public class SceneUploader implements AutoCloseable {
 				-1,
 				-1,
 				wallObject.getId(),
+				wallObject.getConfig(),
 				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
@@ -635,6 +642,7 @@ public class SceneUploader implements AutoCloseable {
 				-1,
 				-1,
 				decorativeObject.getId(),
+				decorativeObject.getConfig(),
 				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
@@ -658,6 +666,7 @@ public class SceneUploader implements AutoCloseable {
 				-1,
 				-1,
 				decorativeObject.getId(),
+				decorativeObject.getConfig(),
 				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
@@ -681,6 +690,7 @@ public class SceneUploader implements AutoCloseable {
 				-1, -1,
 				-1,
 				groundObject.getId(),
+				groundObject.getConfig(),
 				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
@@ -716,6 +726,7 @@ public class SceneUploader implements AutoCloseable {
 				min.getY(), max.getX(),
 				max.getY(),
 				gameObject.getId(),
+				gameObject.getConfig(),
 				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
@@ -724,23 +735,43 @@ public class SceneUploader implements AutoCloseable {
 		}
 	}
 
-	private void estimateRenderableSize(Zone z, Renderable r, ModelOverride modelOverride) {
-		boolean mightHaveTransparency = modelOverride.mightHaveTransparency;
-		boolean mightBeDoubleSided = modelOverride.mightBeDoubleSided;
+	private void estimateRenderableSize(Zone z, Renderable r, TileObject object) throws InterruptedException {
+		int uuid = ModelHash.packUuid(ModelHash.TYPE_OBJECT, object.getId());
+		boolean hasImpostor = false;
 		Model m = null;
 		if (r instanceof Model) {
 			m = (Model) r;
 		} else if (r instanceof DynamicObject) {
 			var dynamic = (DynamicObject) r;
 			m = dynamic.getModelZbuf();
-			if (dynamic.getRecordedObjectComposition() != null) {
-				mightHaveTransparency = true;
-				mightBeDoubleSided = true;
+			var composition = dynamic.getRecordedObjectComposition();
+			if (composition != null) {
+				hasImpostor = true;
+				uuid = ModelHash.packUuid(ModelHash.TYPE_OBJECT, composition.getId());
 			}
 		}
 		if (m == null)
 			return;
 
+		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
+		if (modelOverride.hide)
+			return;
+
+		int config = HDUtils.getObjectConfig(object);
+		if (modelOverride.modelReplacement != null && config != -1) {
+			var key = modelOverride.modelReplacement.key(object.getId(), config);
+			if (!replacementModels.containsKey(key)) {
+				var loaded = new AtomicReference<Model>();
+				runOnClientThread.invoke(() -> loaded.set(key.load(client)));
+				replacementModels.put(key, loaded.get());
+			}
+			Model replacement = replacementModels.get(key);
+			if (replacement != null)
+				m = replacement;
+		}
+
+		boolean mightHaveTransparency = hasImpostor || modelOverride.mightHaveTransparency;
+		boolean mightBeDoubleSided = hasImpostor || modelOverride.mightBeDoubleSided;
 		int faceCount = m.getFaceCount();
 		byte[] transparencies = m.getFaceTransparencies();
 		boolean isVanillaTextured = m.getFaceTextures() != null;
@@ -777,6 +808,7 @@ public class SceneUploader implements AutoCloseable {
 		int ux,
 		int uz,
 		int id,
+		int config,
 		int tileExX, int tileExY, int tileZ,
 		GpuIntBuffer opaqueBuffer,
 		GpuIntBuffer alphaBuffer,
@@ -805,6 +837,12 @@ public class SceneUploader implements AutoCloseable {
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 		if (modelOverride.hide)
 			return;
+
+		if (modelOverride.modelReplacement != null && config != -1) {
+			Model replacement = replacementModels.get(modelOverride.modelReplacement.key(id, config));
+			if (replacement != null)
+				model = replacement;
+		}
 
 		int alphaStart = alphaBuffer != null ? alphaBuffer.position() : 0;
 		try {

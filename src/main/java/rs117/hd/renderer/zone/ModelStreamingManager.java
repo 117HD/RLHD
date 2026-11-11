@@ -3,6 +3,8 @@ package rs117.hd.renderer.zone;
 import com.google.inject.Injector;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -10,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.callback.RenderCallbackManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
@@ -21,6 +24,7 @@ import rs117.hd.overlays.Timer;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.model_overrides.ModelReplacement;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
@@ -51,6 +55,9 @@ public class ModelStreamingManager {
 	private Client client;
 
 	@Inject
+	private ClientThread clientThread;
+
+	@Inject
 	private EventBus eventBus;
 
 	@Inject
@@ -77,6 +84,7 @@ public class ModelStreamingManager {
 	private final ArrayList<AsyncCachedModel> pending = new ArrayList<>();
 	private final StreamingContext[] streamingContexts = new StreamingContext[RL_RENDER_THREADS + 1];
 	private int numRenderThreads = -1;
+	private final ConcurrentHashMap<ModelReplacement.Key, CompletableFuture<Model>> replacements = new ConcurrentHashMap<>();
 
 	static final class StreamingContext {
 		final int[] worldPos = new int[3];
@@ -100,6 +108,7 @@ public class ModelStreamingManager {
 
 		eventBus.unregister(this);
 		AsyncCachedModel.destroy();
+		replacements.clear();
 		Arrays.fill(streamingContexts, null);
 		numRenderThreads = -1;
 	}
@@ -228,6 +237,15 @@ public class ModelStreamingManager {
 		if (modelOverride.hide)
 			return;
 
+		if (modelOverride.modelReplacement != null) {
+			int config = HDUtils.getObjectConfig(tileObject);
+			if (config != -1) {
+				Model replacement = getReplacement(modelOverride.modelReplacement.key(tileObject.getId(), config));
+				if (replacement != null)
+					m = replacement;
+			}
+		}
+
 		m.calculateBoundsCylinder();
 
 		final int modelClassification = renderer.sceneCamera.classifySphere(worldPos[0], worldPos[1], worldPos[2], m.getRadius());
@@ -292,6 +310,28 @@ public class ModelStreamingManager {
 			orient,
 			x, y, z
 		);
+	}
+
+	private Model getReplacement(ModelReplacement.Key key) {
+		CompletableFuture<Model> cached = replacements.computeIfAbsent(key, ignored -> {
+			var result = new CompletableFuture<Model>();
+			// Dynamic draw callbacks can run on RuneLite's render threads.
+			clientThread.invokeLater(() -> {
+				if (replacements.get(key) != result)
+					return;
+				try {
+					Model model = key.load(client);
+					if (model != null)
+						model.calculateBoundsCylinder();
+					result.complete(model);
+				} catch (Exception ex) {
+					log.warn("Unable to load model replacement {}", key, ex);
+					result.complete(null);
+				}
+			});
+			return result;
+		});
+		return cached.getNow(null);
 	}
 
 	private void uploadTempModelAsync(

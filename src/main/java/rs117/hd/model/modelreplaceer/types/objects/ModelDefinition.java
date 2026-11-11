@@ -5,6 +5,7 @@ import net.runelite.api.Client;
 import net.runelite.api.Model;
 import net.runelite.api.ModelData;
 import net.runelite.api.Perspective;
+import rs117.hd.model.modelreplaceer.ModelStore;
 import rs117.hd.model.modelreplaceer.types.ConditionalModel;
 
 import java.util.*;
@@ -45,7 +46,7 @@ public abstract class ModelDefinition {
 		}
 	};
 
-	private static final Map<Long, Model> rotatedModelCache = new LinkedHashMap<>(DATA_CACHE_SIZE, 0.75f, true) {
+	private final Map<Long, Model> rotatedModelCache = new LinkedHashMap<>(DATA_CACHE_SIZE, 0.75f, true) {
 		@Override
 		protected boolean removeEldestEntry(Map.Entry<Long, Model> eldest) {
 			return size() > DATA_CACHE_SIZE;
@@ -54,7 +55,8 @@ public abstract class ModelDefinition {
 
 	public static void release() {
 		modelDataCache.clear();
-		rotatedModelCache.clear();
+		for (var model : ModelStore.values())
+			model.definition.rotatedModelCache.clear();
 	}
 
 	public static boolean shouldRotateType(int config) {
@@ -72,8 +74,7 @@ public abstract class ModelDefinition {
 
 		long cacheKey = ((long) id << 12)
 						| ((type & 0xFF) << 4)
-						| (orientation & 0xF)
-						| (rotate45 ? 1L << 16 : 0);
+						| (orientation & 0xF);
 
 		Model cached = rotatedModelCache.get(cacheKey);
 		if (cached != null) {
@@ -127,12 +128,12 @@ public abstract class ModelDefinition {
 				return null;
 			}
 			if (rotate) {
-				model.rotateY90Ccw();
+				model = model.shallowCopy().cloneVertices().rotateY90Ccw();
 			}
-			datas[i] = model;
+			datas[i] = prepareModelPart(modelId, model);
 		}
 
-		ModelData result = client.mergeModels(datas);
+		ModelData result = prepareMergedModel(client.mergeModels(datas));
 
 		if (rotate45) {
 			result = rotate(result, 256).translate(45, 0, -45);
@@ -181,6 +182,15 @@ public abstract class ModelDefinition {
 		}
 
 		return result;
+	}
+
+	// These hooks run in model space, before applying the object's orientation.
+	protected ModelData prepareModelPart(int modelId, ModelData modelData) {
+		return modelData;
+	}
+
+	protected ModelData prepareMergedModel(ModelData modelData) {
+		return modelData;
 	}
 
 	/**

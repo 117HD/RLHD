@@ -32,6 +32,7 @@ public final class ZoneUploadJob extends Job {
 			workerHandleCancel();
 
 			sceneUploader.onBeforeProcessTile = this::onBeforeProcessTile;
+			sceneUploader.runOnClientThread = this::invokeClientCallback;
 			sceneUploader.setScene(sceneContext.scene);
 			sceneUploader.estimateZoneSize(sceneContext, zoneBeingUploaded, x, z);
 
