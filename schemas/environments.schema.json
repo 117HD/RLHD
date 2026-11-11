@@ -43,6 +43,11 @@
         "type": "boolean",
         "description": "Whether the area should have flashing lightning effects."
       },
+      "voidShader": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether materials with `voidShader` should activate in this environment. Defaults to false for performance reasons."
+      },
       "allowRoofShadows": {
         "type": "boolean",
         "description": "Whether the area should allow roof shadows to be drawn. Defaults to true."

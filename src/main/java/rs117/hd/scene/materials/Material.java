@@ -59,6 +59,8 @@ public class Material {
 	private boolean seasonalFoliage;
 	private boolean overrideBaseColor;
 	private boolean unlit;
+	private boolean voidShader;
+	private float voidStarDensity = 1;
 	@JsonAdapter(ColorUtils.LinearAdapter.class)
 	public float brightness = 1;
 	public float subsurface;
@@ -216,6 +218,7 @@ public class Material {
 		struct.flowMap.set(getTextureLayer(flowMap));
 		struct.shadowAlphaMap.set(getTextureLayer(shadowAlphaMap));
 		struct.flags.set(
+			(voidShader ? 1 : 0) << 3 |
 			(overrideBaseColor ? 1 : 0) << 2 |
 			(unlit ? 1 : 0) << 1 |
 			(hasTransparency ? 1 : 0)
@@ -228,7 +231,10 @@ public class Material {
 		struct.flowMapStrength.set(flowMapStrength);
 		struct.flowMapDuration.set(flowMapDuration);
 		struct.scrollDuration.set(scrollSpeedX, scrollSpeedY);
-		struct.textureScale.set(divide(vec(1), textureScale));
+		var texScale = divide(vec(1), textureScale);
+		if (voidShader)
+			texScale[0] = voidStarDensity;
+		struct.textureScale.set(texScale);
 	}
 
 	private Material resolveReference(@Nullable Material material, Map<String, Material> materials) {

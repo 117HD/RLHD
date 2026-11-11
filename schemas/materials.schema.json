@@ -70,6 +70,15 @@
         "type": "boolean",
         "description": "Whether 117 HD should skip lighting the material, largely preserving the vanilla look."
       },
+      "voidShader": {
+        "type": "boolean",
+        "description": "Replace the surface with a starry void shader."
+      },
+      "voidStarDensity": {
+        "type": "number",
+        "minimum": 0,
+        "description": "Controls the density of stars when `voidShader` is true. Defaults to 1."
+      },
       "brightness": {
         "type": "number",
         "description": "A brightness multiplier for the material's color."

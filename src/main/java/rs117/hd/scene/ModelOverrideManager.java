@@ -79,10 +79,13 @@ public class ModelOverrideManager {
 				scheduledReplacements.clear();
 				VariableSupplier replacementVars = replacementVariables();
 				for (ModelOverride override : parsedOverrides) {
+					// Ignore trailing commas in the JSON
+					if (override == null)
+						continue;
 					try {
 						override.normalize(plugin);
-					} catch (IllegalStateException ex) {
-						log.error("Invalid model override '{}': {}", override.description, ex.getMessage());
+					} catch (Exception ex) {
+						log.error("Invalid model override '{}':", override.description, ex);
 						continue;
 					}
 

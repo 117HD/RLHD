@@ -81,10 +81,10 @@ public abstract class Job {
 			} catch (InterruptedException e) {
 				log.warn("Job {} was interrupted while waiting for it to be cancelled", this);
 				throw new RuntimeException(e);
-			} finally {
-				handle.release();
 			}
 		}
+
+		waitForCompletion();
 	}
 
 	public final void release() {

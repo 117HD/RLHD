@@ -69,7 +69,6 @@ import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
-import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILE_HEIGHT_MAP;
@@ -80,6 +79,8 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 @Singleton
 public class LegacyRenderer implements Renderer {
+	public static final int LEGACY_MAX_FACE_COUNT = 6144; // Ensure compute shader shared memory requirements are below 32 kB
+
 	public static final int GROUND_MIN_Y = 350; // how far below the ground models extend
 	public static final int VERTEX_SIZE = 4; // 4 ints per vertex
 	public static final int UV_SIZE = 4; // 4 floats per vertex
@@ -188,6 +189,8 @@ public class LegacyRenderer implements Renderer {
 	private LegacySceneContext sceneContext;
 	private LegacySceneContext nextSceneContext;
 	private int gameTicksUntilSceneReload;
+	private boolean redrawPreviousFrame;
+	private Scene skipScene;
 
 	private UBOCompute uboCompute;
 
@@ -231,6 +234,9 @@ public class LegacyRenderer implements Renderer {
 
 	@Override
 	public synchronized void destroy() {
+		redrawPreviousFrame = false;
+		skipScene = null;
+
 		modelPusher.shutDown();
 		skyRenderer.destroy();
 
@@ -263,6 +269,12 @@ public class LegacyRenderer implements Renderer {
 		if (computeMode == ComputeMode.OPENCL)
 			clManager.finish();
 		glFinish();
+	}
+
+	@Subscribe
+	public void onClientTick(ClientTick clientTick) {
+		if (!plugin.enableFreezeFrame && skipScene != client.getScene())
+			redrawPreviousFrame = false;
 	}
 
 	@Subscribe
@@ -341,7 +353,7 @@ public class LegacyRenderer implements Renderer {
 			512,
 			2048,
 			4096,
-			MAX_FACE_COUNT
+			LEGACY_MAX_FACE_COUNT
 		};
 
 		int numBins = 0;
@@ -390,7 +402,7 @@ public class LegacyRenderer implements Renderer {
 
 	public void destroyModelSortingBins() {
 		// Don't allow redrawing the previous frame if the model sorting buffers are no longer valid
-		plugin.redrawPreviousFrame = false;
+		redrawPreviousFrame = false;
 
 		numSortingBins = 0;
 		modelSortingBinFaceCounts = null;
@@ -534,6 +546,8 @@ public class LegacyRenderer implements Renderer {
 
 	@Override
 	public void drawScene(double cameraX, double cameraY, double cameraZ, double cameraPitch, double cameraYaw, int plane) {
+		if (plugin.enableFreezeFrame)
+			redrawPreviousFrame = true;
 		plugin.updateSceneFbo();
 
 		if (sceneContext == null || plugin.sceneViewport == null)
@@ -590,7 +604,7 @@ public class LegacyRenderer implements Renderer {
 				// Reload the scene to reapply area hiding
 				client.setGameState(GameState.LOADING);
 				updateUniforms = false;
-				plugin.redrawPreviousFrame = true;
+				redrawPreviousFrame = true;
 			} else {
 				plugin.justChangedArea = false;
 			}
@@ -599,7 +613,7 @@ public class LegacyRenderer implements Renderer {
 		}
 
 		if (!plugin.enableFreezeFrame) {
-			if (!plugin.redrawPreviousFrame) {
+			if (!redrawPreviousFrame) {
 				// Only reset the target buffer offset right before drawing the scene. That way if there are frames
 				// after this that don't involve a scene draw, like during LOADING/HOPPING/CONNECTION_LOST, we can
 				// still redraw the previous frame's scene to emulate the client behavior of not painting over the
@@ -816,7 +830,7 @@ public class LegacyRenderer implements Renderer {
 		// but the compute shaders should still be executed in case the camera angle has changed.
 		// Technically we could skip compute shaders as well when the camera is unchanged,
 		// but it would only lead to micro stuttering when rotating the camera, compared to no rotation.
-		if (!plugin.redrawPreviousFrame) {
+		if (!redrawPreviousFrame) {
 			// Geometry buffers
 			sceneContext.stagingBufferVertices.flip();
 			sceneContext.stagingBufferUvs.flip();
@@ -899,7 +913,7 @@ public class LegacyRenderer implements Renderer {
 
 		checkGLErrors();
 
-		if (!plugin.redrawPreviousFrame) {
+		if (!redrawPreviousFrame) {
 			numPassthroughModels = 0;
 			Arrays.fill(numModelsToSort, 0);
 		}
@@ -907,7 +921,7 @@ public class LegacyRenderer implements Renderer {
 
 	@Override
 	public void drawScenePaint(Scene scene, SceneTilePaint paint, int plane, int tileX, int tileY) {
-		if (plugin.redrawPreviousFrame || paint.getBufferLen() <= 0)
+		if (redrawPreviousFrame || paint.getBufferLen() <= 0)
 			return;
 
 		int vertexCount = paint.getBufferLen();
@@ -931,7 +945,7 @@ public class LegacyRenderer implements Renderer {
 
 	@Override
 	public void drawSceneTileModel(Scene scene, SceneTileModel model, int tileX, int tileY) {
-		if (plugin.redrawPreviousFrame || model.getBufferLen() <= 0)
+		if (redrawPreviousFrame || model.getBufferLen() <= 0)
 			return;
 
 		final int localX = tileX * Perspective.LOCAL_TILE_SIZE;
@@ -1029,6 +1043,8 @@ public class LegacyRenderer implements Renderer {
 			fogDepth *= min(plugin.getDrawDistance(), 90) / 10.f;
 			plugin.uboGlobal.useFog.set(fogDepth > 0 ? 1 : 0);
 			plugin.uboGlobal.fogDepth.set(fogDepth);
+
+			plugin.uboGlobal.voidShader.set(environmentManager.getTargetEnvironment().voidShader ? 1 : 0);
 
 			plugin.uboGlobal.sceneBase.set(
 				sceneContext.scene.getBaseX() * LOCAL_TILE_SIZE,
@@ -1274,8 +1290,8 @@ public class LegacyRenderer implements Renderer {
 
 		Scene scene = client.getTopLevelWorldView().getScene();
 		loadScene(scene);
-		if (plugin.skipScene == scene)
-			plugin.skipScene = null;
+		if (skipScene == scene)
+			skipScene = null;
 		swapScene(scene);
 	}
 
@@ -1290,7 +1306,7 @@ public class LegacyRenderer implements Renderer {
 			// Reload once the POH is done loading, upon first entering the POH
 			if (sceneContext == null || !sceneContext.isInHouse)
 				reloadSceneIn(2);
-		} else if (plugin.skipScene != scene && HDUtils.sceneIntersects(
+		} else if (skipScene != scene && HDUtils.sceneIntersects(
 			scene,
 			expandedChunks,
 			areaManager.getArea("THE_GAUNTLET")
@@ -1298,7 +1314,7 @@ public class LegacyRenderer implements Renderer {
 			// Some game objects in The Gauntlet are spawned in too late for the initial scene load,
 			// so we skip the first scene load and trigger another scene load the next game tick
 			reloadSceneNextGameTick();
-			plugin.skipScene = scene;
+			skipScene = scene;
 			return;
 		}
 
@@ -1340,8 +1356,8 @@ public class LegacyRenderer implements Renderer {
 
 	@Override
 	public synchronized void swapScene(Scene scene) {
-		if (!plugin.isActive() || plugin.skipScene == scene) {
-			plugin.redrawPreviousFrame = true;
+		if (!plugin.isActive() || skipScene == scene) {
+			redrawPreviousFrame = true;
 			return;
 		}
 
@@ -1649,7 +1665,7 @@ public class LegacyRenderer implements Renderer {
 
 		client.checkClickbox(projection, model, orientation, x, y, z, hash);
 
-		if (plugin.redrawPreviousFrame)
+		if (redrawPreviousFrame)
 			return;
 
 		if (plugin.enableDetailedTimers)
@@ -1668,7 +1684,7 @@ public class LegacyRenderer implements Renderer {
 			// animated to also be uploaded. This results in the Renderable being converted to a DynamicObject, whose `getModel` returns the
 			// original static Model after the animation is done playing. One such example is in the POH, after it has been reuploaded in
 			// order to cache newly loaded static models, and you subsequently attempt to interact with a wardrobe triggering its animation.
-			faceCount = min(MAX_FACE_COUNT, offsetModel.getFaceCount());
+			faceCount = min(LEGACY_MAX_FACE_COUNT, offsetModel.getFaceCount());
 			int vertexOffset = offsetModel.getBufferOffset();
 			int uvOffset = offsetModel.getUvBufferOffset();
 			boolean hillskew = offsetModel != model;
@@ -1806,6 +1822,6 @@ public class LegacyRenderer implements Renderer {
 
 		throw new IllegalStateException(
 			"Ran into a model with more triangles than the plugin supports (" +
-			triangles + " > " + MAX_FACE_COUNT + ")");
+			triangles + " > " + LEGACY_MAX_FACE_COUNT + ")");
 	}
 }

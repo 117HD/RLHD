@@ -277,7 +277,8 @@ public class WorldViewContext {
 			return;
 
 		if (!uploadTask.isQueued()) {
-			if (queue && uploadTask.revealAfterTimestampMs < System.currentTimeMillis()) {
+			// Queue pending upload jobs only if we aren't already async loading another scene
+			if (queue && !isLoading && uploadTask.revealAfterTimestampMs < System.currentTimeMillis()) {
 				log.trace("queueing zone({}): [{}-{},{}]", uploadTask.zoneBeingUploaded.hashCode(), worldViewId, zx, zz);
 				uploadTask.revealAfterTimestampMs = 0;
 				uploadTask.queue(streamingGroup, sceneManager.getGenerateSceneDataTask());

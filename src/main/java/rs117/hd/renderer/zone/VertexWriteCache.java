@@ -86,28 +86,45 @@ public final class VertexWriteCache {
 		return textureFaceIdx;
 	}
 
-	public void putDynamicVertex(
-		int x, int y, int z,
-		float u, float v, float w,
-		int nx, int ny, int nz,
-		int textureFaceIdx
+	@SuppressWarnings("PointlessArithmeticExpression")
+	public void putDynamicTriangle(
+		int[] positions, int offsetA, int offsetB, int offsetC,
+		float[] uvs, int[] normals, int textureFaceIdx
 	) {
-		if (stagingPosition + 8 > stagingBuffer.length)
+		if (stagingPosition + 24 > stagingBuffer.length)
 			flushAndGrow();
 
 		final int[] stagingBuffer = this.stagingBuffer;
-		final int stagingPosition = this.stagingPosition;
+		final int p = stagingPosition;
 
-		stagingBuffer[stagingPosition] = x;
-		stagingBuffer[stagingPosition + 1] = y;
-		stagingBuffer[stagingPosition + 2] = z;
-		stagingBuffer[stagingPosition + 3] = float16(v) << 16 | float16(u);
-		stagingBuffer[stagingPosition + 4] = float16(w);
-		stagingBuffer[stagingPosition + 5] = (ny & 0xFFFF) << 16 | nx & 0xFFFF;
-		stagingBuffer[stagingPosition + 6] = nz & 0xFFFF;
-		stagingBuffer[stagingPosition + 7] = textureFaceIdx;
+		stagingBuffer[p + 0] = positions[offsetA];
+		stagingBuffer[p + 1] = positions[offsetA + 1];
+		stagingBuffer[p + 2] = positions[offsetA + 2];
+		stagingBuffer[p + 3] = float16(uvs[1]) << 16 | float16(uvs[0]);
+		stagingBuffer[p + 4] = float16(uvs[2]);
+		stagingBuffer[p + 5] = (normals[1] & 0xFFFF) << 16 | normals[0] & 0xFFFF;
+		stagingBuffer[p + 6] = normals[2] & 0xFFFF;
+		stagingBuffer[p + 7] = textureFaceIdx;
 
-		this.stagingPosition += 8;
+		stagingBuffer[p + 8] = positions[offsetB];
+		stagingBuffer[p + 9] = positions[offsetB + 1];
+		stagingBuffer[p + 10] = positions[offsetB + 2];
+		stagingBuffer[p + 11] = float16(uvs[5]) << 16 | float16(uvs[4]);
+		stagingBuffer[p + 12] = float16(uvs[6]);
+		stagingBuffer[p + 13] = (normals[4] & 0xFFFF) << 16 | normals[3] & 0xFFFF;
+		stagingBuffer[p + 14] = normals[5] & 0xFFFF;
+		stagingBuffer[p + 15] = textureFaceIdx;
+
+		stagingBuffer[p + 16] = positions[offsetC];
+		stagingBuffer[p + 17] = positions[offsetC + 1];
+		stagingBuffer[p + 18] = positions[offsetC + 2];
+		stagingBuffer[p + 19] = float16(uvs[9]) << 16 | float16(uvs[8]);
+		stagingBuffer[p + 20] = float16(uvs[10]);
+		stagingBuffer[p + 21] = (normals[7] & 0xFFFF) << 16 | normals[6] & 0xFFFF;
+		stagingBuffer[p + 22] = normals[8] & 0xFFFF;
+		stagingBuffer[p + 23] = textureFaceIdx;
+
+		stagingPosition = p + 24;
 	}
 
 	public void putStaticVertex(

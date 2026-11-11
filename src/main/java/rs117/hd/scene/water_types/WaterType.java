@@ -45,6 +45,7 @@ public class WaterType {
 	private boolean hasFoam = true;
 	private float duration = 1;
 	public int fishingSpotRecolor = -1;
+	public boolean skipUnderwaterTerrain = false;
 
 	public transient int index;
 
@@ -72,6 +73,7 @@ public class WaterType {
 			foamColor = NONE.foamColor;
 		if (depthColor == null)
 			depthColor = NONE.depthColor;
+		skipUnderwaterTerrain |= flat;
 	}
 
 	@Override

@@ -195,7 +195,7 @@ public class HdPlugin extends Plugin {
 	public static final int UNIFORM_BLOCK_UI = UNIFORM_BLOCK_COUNT++;
 
 	public static final float NEAR_PLANE = 50;
-	public static final int MAX_FACE_COUNT = 6144;
+	public static final int MAX_FACE_COUNT = 8192;
 	public static final int MAX_DISTANCE = EXTENDED_SCENE_SIZE;
 	public static final int MAX_FOG_DEPTH = 100;
 	public static final int TILED_LIGHTING_TILE_SIZE = 16;
@@ -338,13 +338,15 @@ public class HdPlugin extends Plugin {
 
 	public Renderer renderer;
 
-	public static boolean SKIP_GL_ERROR_CHECKS;
 	public static GLCapabilities GL_CAPS;
+	public static boolean SKIP_GL_ERROR_CHECKS;
+	public static boolean VALIDATE_SHADERS;
+
 	public static boolean AMD_GPU;
-	public static boolean OLD_AMD_GPU;
 	public static boolean INTEL_GPU;
 	public static boolean OLD_INTEL_GPU;
 	public static boolean NVIDIA_GPU;
+
 	public static boolean APPLE;
 	public static boolean APPLE_ARM;
 
@@ -425,6 +427,7 @@ public class HdPlugin extends Plugin {
 	public boolean configProjectileLights;
 	public boolean configNpcLights;
 	public boolean configPetLights;
+	public boolean configThrallLights;
 	public boolean configSpotanimLights;
 	public boolean configObjectLights;
 	public boolean configHideFakeShadows;
@@ -450,6 +453,7 @@ public class HdPlugin extends Plugin {
 	public boolean configOverrideSky;
 	public boolean configReduceGlareIntensity;
 	public boolean configFrameSynchronization;
+	public boolean configRecolorGroundObjects;
 	public int configDetailDrawDistance;
 	public int configExpandedMapLoadingChunks;
 	public float configNightBrightness;
@@ -477,9 +481,7 @@ public class HdPlugin extends Plugin {
 	private boolean isActive;
 	private boolean lwjglInitialized;
 	public boolean hasLoggedIn;
-	public boolean redrawPreviousFrame;
 	public boolean justChangedArea;
-	public Scene skipScene;
 	public int gpuFlags;
 
 	public final ConcurrentHashMap.KeySetView<String, ?> pendingConfigChanges = ConcurrentHashMap.newKeySet();
@@ -609,7 +611,6 @@ public class HdPlugin extends Plugin {
 				APPLE = osType == OSType.MacOS;
 				APPLE_ARM = APPLE && osArch.equals("aarch64");
 				AMD_GPU = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
-				OLD_AMD_GPU = glRenderer.equals("Radeon RX 580 Series");
 				INTEL_GPU = glRenderer.contains("Intel");
 				OLD_INTEL_GPU = glRenderer.equals("Intel(R) UHD Graphics");
 				NVIDIA_GPU = glRenderer.toLowerCase().contains("nvidia");
@@ -766,8 +767,6 @@ public class HdPlugin extends Plugin {
 				npcDisplacementCache.initialize();
 
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
-				redrawPreviousFrame = false;
-				skipScene = null;
 
 				// Force the client to reload the scene since we're changing GPU flags, and to restore any removed tiles
 				if (client.getGameState() == GameState.LOGGED_IN)
@@ -934,8 +933,8 @@ public class HdPlugin extends Plugin {
 	public void toggleFreezeFrame() {
 		clientThread.invoke(() -> {
 			enableFreezeFrame = !enableFreezeFrame;
-			if (enableFreezeFrame)
-				redrawPreviousFrame = true;
+			if (!enableFreezeFrame)
+				processPendingConfigChanges();
 		});
 	}
 
@@ -985,6 +984,7 @@ public class HdPlugin extends Plugin {
 			.define("MATERIAL_COUNT", MaterialManager.MATERIALS.length)
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
 			.define("WATER_SPECULAR_REFLECTIONS", config.waterSpecularReflections())
+			.define("DECOUPLE_WATER_FROM_SKY_COLOR", config.decoupleSkyAndWaterColor())
 			.define("DYNAMIC_LIGHTS", configDynamicLights != DynamicLights.NONE)
 			.define("TILED_LIGHTING", configTiledLighting)
 			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getTiledLightingLayers())
@@ -999,6 +999,7 @@ public class HdPlugin extends Plugin {
 			.define("SHADOW_FILTERING", config.shadowFiltering().filtering)
 			.define("SHADOW_FILTERING_KERNEL", config.shadowFiltering().kernelSize)
 			.define("STAR_MODE", config.starMode())
+			.define("DAYLIGHT_CYCLE", !skyManager.isCycleDisabled())
 			.define("POINT_SPRITES", config.pointSprites().get(true))
 			.define("NEBULAE", config.enableNebulae())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
@@ -1014,7 +1015,7 @@ public class HdPlugin extends Plugin {
 			.define("WINDOWS_HDR_CORRECTION", config.windowsHdrCorrection())
 			.define("LEGACY_BOAT_SILHOUETTES", config.legacyBoatSilhouettes())
 			.define("REDUCE_GLARE_INTENSITY", configReduceGlareIntensity)
-			.define("CENTROID_QUALIFIER", config.centroidQualifier().get(!OLD_AMD_GPU))
+			.define("CENTROID_QUALIFIER", config.centroidQualifier().get(true))
 			.define("LEGACY_RENDERER", renderer instanceof LegacyRenderer)
 			.define("ZONE_RENDERER", renderer instanceof ZoneRenderer)
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", 0)
@@ -1800,6 +1801,8 @@ public class HdPlugin extends Plugin {
 	}
 
 	private void updateCachedConfigs() {
+		VALIDATE_SHADERS = config.validateShaders().get(log.isDebugEnabled() && NVIDIA_GPU);
+
 		configExpandedMapLoadingChunks = useLowMemoryMode ? 0 : config.expandedMapLoadingChunks();
 		configNightBrightness = config.nightBrightness() / 100f;
 		configShadowMode = config.shadowMode();
@@ -1817,6 +1820,7 @@ public class HdPlugin extends Plugin {
 		configProjectileLights = config.projectileLights();
 		configNpcLights = config.npcLights();
 		configPetLights = config.petLights();
+		configThrallLights = config.thrallLights();
 		configSpotanimLights = config.spotanimLights();
 		configObjectLights = config.objectLights();
 		configVanillaShadowMode = config.vanillaShadowMode();
@@ -1846,6 +1850,7 @@ public class HdPlugin extends Plugin {
 		configSeasonalFoliage = config.seasonalFoliage();
 		configReduceGlareIntensity = config.glareIntensity() < 100;
 		configFrameSynchronization = config.frameSynchronization().get(true);
+		configRecolorGroundObjects = config.recolorGroundObjects();
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {
@@ -1915,7 +1920,7 @@ public class HdPlugin extends Plugin {
 
 	public void processPendingConfigChanges() {
 		clientThread.invoke(() -> {
-			if (pendingConfigChanges.isEmpty())
+			if (enableFreezeFrame || pendingConfigChanges.isEmpty())
 				return;
 
 			try {
@@ -1927,6 +1932,7 @@ public class HdPlugin extends Plugin {
 				// TODO: Move this synchronization into LegacyRenderer
 				synchronized (this) {
 					boolean previousReduceGlareIntensity = configReduceGlareIntensity;
+					boolean previousCycleDisabled = skyManager.isCycleDisabled();
 
 					updateCachedConfigs();
 
@@ -1934,7 +1940,7 @@ public class HdPlugin extends Plugin {
 
 					renderer.processConfigChanges(pendingConfigChanges);
 
-					boolean recompilePrograms = false;
+					boolean recompilePrograms = previousCycleDisabled != skyManager.isCycleDisabled();
 					boolean recreateSceneFbo = false;
 					boolean recreateShadowMapFbo = false;
 					boolean reloadTexturesAndMaterials = false;
@@ -2001,7 +2007,9 @@ public class HdPlugin extends Plugin {
 							case KEY_NEBULAE:
 							case KEY_LEGACY_BOAT_SILHOUETTES:
 							case KEY_WATER_SPECULAR_REFLECTIONS:
+							case KEY_DECOUPLE_WATER_FROM_SKY_COLOR:
 							case KEY_CENTROID_QUALIFIER:
+							case KEY_VALIDATE_SHADERS:
 								recompilePrograms = true;
 								break;
 							case KEY_GLARE_INTENSITY:
@@ -2043,6 +2051,7 @@ public class HdPlugin extends Plugin {
 								reloadScene = true;
 								break;
 							case KEY_HIDE_VANILLA_WATER_EFFECTS:
+							case KEY_RECOLOR_GROUND_OBJECTS:
 								reloadModelOverrides = true;
 								// fall-through
 							case KEY_VANILLA_SHADOW_MODE:
@@ -2216,9 +2225,6 @@ public class HdPlugin extends Plugin {
 	@Subscribe
 	public void onClientTick(ClientTick clientTick) {
 		elapsedClientTime += 1 / 50f;
-
-		if (!enableFreezeFrame && skipScene != client.getScene())
-			redrawPreviousFrame = false;
 	}
 
 	@Subscribe

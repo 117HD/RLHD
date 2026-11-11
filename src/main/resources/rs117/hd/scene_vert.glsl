@@ -55,15 +55,16 @@ layout (location = 0) in vec3 vPosition;
     flat out ivec3 fMaterialData;
     flat out ivec3 fTerrainData;
 
+    #if CENTROID_QUALIFIER
+        centroid out vec3 fTexBlend;
+    #else
+        out vec3 fTexBlend;
+    #endif
+
     out FragmentData {
         vec3 position;
         vec2 uv;
         vec3 normal;
-        #if CENTROID_QUALIFIER
-            centroid out vec3 texBlend;
-        #else
-            vec3 texBlend;
-        #endif
     } OUT;
 
     void main() {
@@ -114,11 +115,12 @@ layout (location = 0) in vec3 vPosition;
                 worldPosition.y -= waterDepth;
         }
 
+        fTexBlend = vec3(0);
+        fTexBlend[vertex] = 1.0;
+
         OUT.position = worldPosition;
         OUT.uv = computeVertexUvs(materialData, worldPosition, vUv.xyz);
         OUT.normal = worldNormal;
-        OUT.texBlend = vec3(0);
-        OUT.texBlend[vertex] = 1.0;
 
         vec4 clipPosition = uboGlobal.projectionMatrix * vec4(worldPosition, 1.0);
         int depthBias = (alphaBiasHsl >> 16) & 0xff;
