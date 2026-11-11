@@ -1187,7 +1187,7 @@
     },
     "modelReplacement": {
       "model": "XMAS_SNOW_TREE",
-      "themes": [ "WINTER" ]
+      "condition": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -14306,7 +14306,7 @@
     ],
     "modelReplacement": {
       "model": "HOLLY",
-      "themes": [ "WINTER" ]
+      "condition": "season == SeasonalTheme.WINTER && (date >= 1201 || date <= 0101)"
     }
   },
   {
@@ -14765,7 +14765,7 @@
     ],
     "modelReplacement": {
       "model": "XMAS_TREE",
-      "themes": [ "WINTER" ]
+      "condition": "season == SeasonalTheme.WINTER && (date >= 1111 || date <= 0101)"
     }
   },
   {
@@ -39112,7 +39112,7 @@
     ],
     "modelReplacement": {
       "model": "XMAS_BUSH",
-      "themes": [ "WINTER" ]
+      "condition": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -39148,7 +39148,7 @@
     ],
     "modelReplacement": {
       "model": "XMAS_BUSH",
-      "themes": [ "WINTER" ]
+      "condition": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -39245,7 +39245,7 @@
     },
     "modelReplacement": {
       "model": "XMAS_SNOW_OAK",
-      "themes": [ "WINTER" ]
+      "condition": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -39325,7 +39325,7 @@
     },
     "modelReplacement": {
       "model": "XMAS_SNOW_OAK",
-      "themes": [ "WINTER" ]
+      "condition": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -50153,9 +50153,7 @@
     ],
     "modelReplacement": {
       "model": "XMAS_LUMBRIDGE_STATUE",
-      "themes": [
-        "WINTER"
-      ]
+      "condition": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -50175,9 +50173,7 @@
     ],
     "modelReplacement": {
       "model": "XMAS_GARDEN_QUEEN_STATUE",
-      "themes": [
-        "WINTER"
-      ]
+      "condition": "season == SeasonalTheme.WINTER"
     },
     "castShadows": false
   },

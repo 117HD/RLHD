@@ -1530,18 +1530,11 @@ public class LegacyRenderer implements Renderer {
 	}
 
 	public Model findModelReplacement(ModelReplacement replacement, Model originalModel, int id, int x, int z, long hash) {
+		ModelDefinition def = replacement == null ? null : replacement.definition;
+		if (def == null)
+			return originalModel;
+
 		frameTimer.begin(Timer.MODEL_REPLACEMENTS);
-		if (replacement == null) {
-			frameTimer.end(Timer.MODEL_REPLACEMENTS);
-			return originalModel;
-		}
-
-		ModelDefinition def = replacement.definition;
-		if (def == null) {
-			frameTimer.end(Timer.MODEL_REPLACEMENTS);
-			return originalModel;
-		}
-
 
 		int tileX = (x >> Perspective.LOCAL_COORD_BITS) + sceneContext.sceneOffset;
 		int tileY = (z >> Perspective.LOCAL_COORD_BITS) + sceneContext.sceneOffset;

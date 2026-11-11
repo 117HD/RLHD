@@ -2226,6 +2226,7 @@ public class HdPlugin extends Plugin {
 		if (!isActive)
 			return;
 
+		modelOverrideManager.updateScheduledReplacements();
 		fishingSpotReplacer.update();
 	}
 

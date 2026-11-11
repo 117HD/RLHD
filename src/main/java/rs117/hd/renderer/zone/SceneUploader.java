@@ -757,15 +757,16 @@ public class SceneUploader implements AutoCloseable {
 		if (modelOverride.hide)
 			return;
 
-		int config = HDUtils.getObjectConfig(object);
-		if (modelOverride.modelReplacement != null && config != -1) {
-			var key = modelOverride.modelReplacement.key(object.getId(), config);
-			if (!replacementModels.containsKey(key)) {
+		int config = modelOverride.modelReplacement != null ? HDUtils.getObjectConfig(object) : -1;
+		var replacementKey = modelOverride.modelReplacement != null && config != -1 ?
+			modelOverride.modelReplacement.key(object.getId(), config) : null;
+		if (replacementKey != null) {
+			if (!replacementModels.containsKey(replacementKey)) {
 				var loaded = new AtomicReference<Model>();
-				runOnClientThread.invoke(() -> loaded.set(key.load(client)));
-				replacementModels.put(key, loaded.get());
+				runOnClientThread.invoke(() -> loaded.set(replacementKey.load(client)));
+				replacementModels.put(replacementKey, loaded.get());
 			}
-			Model replacement = replacementModels.get(key);
+			Model replacement = replacementModels.get(replacementKey);
 			if (replacement != null)
 				m = replacement;
 		}
@@ -838,8 +839,10 @@ public class SceneUploader implements AutoCloseable {
 		if (modelOverride.hide)
 			return;
 
-		if (modelOverride.modelReplacement != null && config != -1) {
-			Model replacement = replacementModels.get(modelOverride.modelReplacement.key(id, config));
+		var replacementKey = modelOverride.modelReplacement != null && config != -1 ?
+			modelOverride.modelReplacement.key(id, config) : null;
+		if (replacementKey != null) {
+			Model replacement = replacementModels.get(replacementKey);
 			if (replacement != null)
 				model = replacement;
 		}

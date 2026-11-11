@@ -239,8 +239,9 @@ public class ModelStreamingManager {
 
 		if (modelOverride.modelReplacement != null) {
 			int config = HDUtils.getObjectConfig(tileObject);
-			if (config != -1) {
-				Model replacement = getReplacement(modelOverride.modelReplacement.key(tileObject.getId(), config));
+			var replacementKey = config != -1 ? modelOverride.modelReplacement.key(tileObject.getId(), config) : null;
+			if (replacementKey != null) {
+				Model replacement = getReplacement(replacementKey);
 				if (replacement != null)
 					m = replacement;
 			}
