@@ -479,9 +479,7 @@ public final class AsyncCachedModel extends Job implements Model {
 
 		public T getValue() {
 			ensureCached();
-
-			// A non-null native buffer means cached data hasn't been materialized into a heap array yet. Once it has,
-			// the native copy is evicted, so the null check doubles as the "already materialized" flag.
+			
 			if (nativeBuffer != null) {
 				synchronized (this) {
 					if (nativeBuffer != null) {
@@ -492,7 +490,6 @@ public final class AsyncCachedModel extends Job implements Model {
 							NativeBufferPool.copyFromNative(arrayType, buffer, value, length);
 						} finally {
 							nativeLength = 0;
-							// Publish the materialized value before clearing the native buffer
 							nativeBuffer = null;
 							NativeBufferPool.release(arrayType, buffer);
 						}
