@@ -30,6 +30,7 @@ public class ModelHash {
 	public static final int TYPE_PROJECTILE = 4;
 	public static final int TYPE_GRAPHICS_OBJECT = 5;
 	public static final int TYPE_UNKNOWN = 0xF;
+	public static final int TYPE_CUSTOM = 99;
 
 	// 117 HD UUID sub object types
 	public static final int TYPE_WALL_OBJECT = 1 << 4 | TYPE_OBJECT;

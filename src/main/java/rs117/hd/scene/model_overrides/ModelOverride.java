@@ -58,6 +58,7 @@ public class ModelOverride
 	@JsonAdapter(GamevalManager.SpotanimAdapter.class)
 	public Set<Integer> graphicsObjectIds = EMPTY;
 
+	public Set<String> custom117 = new HashSet<>();
 	@SerializedName(value = "material", alternate = "baseMaterial")
 	public Material material = Material.NONE;
 	public Material textureMaterial = Material.NONE;
@@ -123,6 +124,7 @@ public class ModelOverride
 	public Map<Material, ModelOverride> materialOverrides;
 	public ModelOverride[] colorOverrides;
 
+	public ModelReplacement modelReplacement;
 	private JsonElement colors;
 
 	public transient boolean isDummy;
@@ -279,6 +281,7 @@ public class ModelOverride
 				castShadows = false;
 		}
 
+
 		if (!castShadows && shadowOpacityThreshold == 0)
 			shadowOpacityThreshold = 1;
 
@@ -350,6 +353,7 @@ public class ModelOverride
 			objectIds,
 			projectileIds,
 			graphicsObjectIds,
+			custom117,
 			material,
 			textureMaterial,
 			uvType,
@@ -408,6 +412,7 @@ public class ModelOverride
 			hideInAreas,
 			materialOverrides,
 			colorOverrides,
+			modelReplacement,
 			colors,
 			isDummy,
 			isGenerated,

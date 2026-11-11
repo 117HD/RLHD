@@ -1250,6 +1250,10 @@
         "windDisplacementMode": "VERTEX",
         "textureMaterial": "MAPLE_LEAVES"
       }
+    },
+    "modelReplacement": {
+      "model": "XMAS_SNOW_TREE",
+      "condition": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -14383,10 +14387,23 @@
     "objectIds": [
       "WALLSHIELD3_WHITE",
       "FAI_VARROCK_WALLSHIELD",
-      "WALLSHIELD",
       "QIP_DS_COATOFARMS1",
       "WALLSHIELD_DARKKNIGHT"
     ]
+  },
+  {
+    "description": "WALL_SHIELD",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "objectIds": [
+      "WALLSHIELD"
+    ],
+    "modelReplacement": {
+      "model": "HOLLY",
+      "condition": "season == SeasonalTheme.WINTER && (date >= 1201 || date <= 0101)"
+    }
   },
   {
     "description": "MARBLE_STATUE_OF_KING",
@@ -14843,7 +14860,11 @@
     "terrainVertexSnap": true,
     "objectIds": [
       "FOUNTAIN"
-    ]
+    ],
+    "modelReplacement": {
+      "model": "XMAS_TREE",
+      "condition": "season == SeasonalTheme.WINTER && (date >= 1111 || date <= 0101)"
+    }
   },
   {
     "description": "Stone Fountain",
@@ -39309,15 +39330,27 @@
       "MYREQUE_BUSH1",
       "MYREQUE_BUSH2",
       "SOTN_HUNTING_BUSH_OP",
-      "SOTN_HUNTING_BUSH_NOOP"
+      "SOTN_HUNTING_BUSH_NOOP",
+      "SOTN_HUNTING_BUSH_NOOP","PVPW_BANKCHEST_BUSH",
+      "WILDY_HUB_LOOT_CHEST_PVPW_BUSH1"
     ]
+  },
+  {
+    "description": "Textured Bushes",
+    "windDisplacementMode": "VERTEX_JIGGLE",
+    "objectIds": [
+      "PVPW_ARMOURSTAND_BUSH"
+    ],
+    "modelReplacement": {
+      "model": "XMAS_BUSH",
+      "condition": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "description": "Bushes - Alternate Wind Displacement",
     "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "windDisplacementModifier": -2,
     "objectIds": [
-      "BUSH1",
       "DIGSITEBUSH",
       "DIGSITEBUSHSAMPLE",
       "WATCHTOWERBUSH",
@@ -39336,6 +39369,18 @@
       "DOV_HUNTING_BUSH2_OP",
       "DOV_HUNTING_BUSH1_OP"
     ]
+  },
+  {
+    "description": "Bushes - Alternate Wind Displacement",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -2,
+    "objectIds": [
+      "BUSH1"
+    ],
+    "modelReplacement": {
+      "model": "XMAS_BUSH",
+      "condition": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "description": "Evergreen Trees",
@@ -39394,7 +39439,6 @@
       "OAK_TREE_FULLYGROWN_2",
       "OAK_TREE_FULLYGROWN_NARROWTOP",
       "OAK_TREE_FULLYGROWN_TOP",
-      "OAKTREE",
       "DRILL_OAKTREE",
       "TUT2_OAK",
       "TUT2_OAK_NOOP",
@@ -39414,6 +39458,30 @@
         "windDisplacementMode": "VERTEX",
         "textureMaterial": "LEAVES_RED_TOP"
       }
+    }
+  },
+  {
+    "description": "Oak Tree",
+    "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "OAKTREE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_RED_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_RED_TOP"
+      }
+    },
+    "modelReplacement": {
+      "model": "XMAS_SNOW_OAK",
+      "condition": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -39454,7 +39522,6 @@
       "OAK_TREE_FULLYGROWN_2",
       "OAK_TREE_FULLYGROWN_NARROWTOP",
       "OAK_TREE_FULLYGROWN_TOP",
-      "OAKTREE",
       "DRILL_OAKTREE",
       "TUT2_OAK",
       "TUT2_OAK_NOOP",
@@ -39475,6 +39542,31 @@
         "windDisplacementMode": "VERTEX",
         "textureMaterial": "SEASONLESS_LEAVES_TOP"
       }
+    }
+  },
+  {
+    "description": "Warm Region Oak Tree",
+    "areas": [ "WARM_REGIONS" ],
+    "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "OAKTREE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_TOP"
+      }
+    },
+    "modelReplacement": {
+      "model": "XMAS_SNOW_OAK",
+      "condition": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -50311,6 +50403,47 @@
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": 144
+  },
+  {
+    "description": "Lumbridge statue - Santa hat",
+    "seasonalTheme": "WINTER",
+    "objectIds": [
+      "STATUE_LUMBRIDGE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "MARBLE_2_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 144
+      }
+    ],
+    "modelReplacement": {
+      "model": "XMAS_LUMBRIDGE_STATUE",
+      "condition": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "description": "Garden queen statue - Santa hat",
+    "seasonalTheme": "WINTER",
+    "objectIds": [
+      "GARDEN_QUEEN_STATUE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "MARBLE_2_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 144
+      }
+    ],
+    "modelReplacement": {
+      "model": "XMAS_GARDEN_QUEEN_STATUE",
+      "condition": "season == SeasonalTheme.WINTER"
+    },
+    "castShadows": false
   },
   {
     "description": "Metal lamp post with candle lanturn",
@@ -74953,6 +75086,17 @@
         "uvScale": 0.6
       }
     ]
+  },
+  {
+    "description": "TREES CUSTOM",
+    "baseMaterial": "ROCK_1",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "terrainVertexSnap": true,
+    "custom117": [
+      "XMAS_SNOW_TREE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Barbarian Assault - Spike Mushrooms",

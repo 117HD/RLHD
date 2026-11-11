@@ -18,6 +18,82 @@
           "type": "string",
           "description": "Description of which objects the properties apply to."
         },
+        "modelReplacement": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Replace the rendered model. The first matching variant takes precedence over the base model.",
+          "anyOf": [
+            {
+              "required": [
+                "model"
+              ]
+            },
+            {
+              "required": [
+                "variants"
+              ]
+            }
+          ],
+          "properties": {
+            "model": {
+              "type": "string",
+              "minLength": 1
+            },
+            "condition": {
+              "type": [
+                "string",
+                "boolean",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              },
+              "description": "RLHD expression. Variables include season, date (YYMMDD, local calendar; MMDD literals in direct date comparisons recur annually), night, and skyHour.",
+              "examples": [
+                "season == SeasonalTheme.WINTER && (date >= 1201 || date <= 0101)"
+              ]
+            },
+            "variants": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "model",
+                  "condition"
+                ],
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "condition": {
+                    "type": [
+                      "string",
+                      "boolean",
+                      "array"
+                    ],
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "RLHD expression. Variables include season, date (YYMMDD, local calendar; MMDD literals in direct date comparisons recur annually), night, and skyHour.",
+                    "examples": [
+                      "season == SeasonalTheme.WINTER && (date >= 1201 || date <= 0101)"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "custom117": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Names of custom replacement models."
+        },
         "seasonalTheme": {
           "type": "string",
           "description": "Which seasonal theme the model override should be active for, or null for all. Defaults to null.",
