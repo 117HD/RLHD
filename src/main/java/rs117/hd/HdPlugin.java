@@ -27,6 +27,8 @@
 package rs117.hd;
 
 import com.google.gson.Gson;
+import com.google.inject.Binder;
+import com.google.inject.Provider;
 import com.google.inject.Provides;
 import java.awt.Canvas;
 import java.awt.Dimension;
@@ -47,6 +49,8 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -60,28 +64,29 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
-import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.PluginInstantiationException;
 import net.runelite.client.plugins.PluginManager;
-import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.Version;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.ColorFilter;
+import rs117.hd.config.DefaultBoolean;
+import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
+import rs117.hd.config.GroundBlending;
 import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
+import rs117.hd.config.ShadowFiltering;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.model.modelreplaceer.types.objects.ModelDefinition;
-import rs117.hd.opengl.AsyncUICopy;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.TiledLightingShaderProgram;
@@ -89,6 +94,7 @@ import rs117.hd.opengl.shader.UIShaderProgram;
 import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.opengl.uniforms.UBOGlobal;
 import rs117.hd.opengl.uniforms.UBOLights;
+import rs117.hd.opengl.uniforms.UBOSky;
 import rs117.hd.opengl.uniforms.UBOUI;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.GammaCalibrationOverlay;
@@ -97,6 +103,7 @@ import rs117.hd.overlays.TiledLightingOverlay;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.renderer.legacy.LegacyRenderer;
+import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
@@ -106,36 +113,51 @@ import rs117.hd.scene.GroundMaterialManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
+import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
+import rs117.hd.scene.SkyManager;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.WaterTypeManager;
+import rs117.hd.scene.daylight_cycle.StarField;
 import rs117.hd.utils.ColorUtils;
+import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.HDVariables;
+import rs117.hd.utils.Mat4;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.PopupUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.ShaderRecompile;
+import rs117.hd.utils.buffer.GLBuffer;
+import rs117.hd.utils.collections.ConcurrentPool;
+import rs117.hd.utils.collections.PooledArrayType;
+import rs117.hd.utils.jobs.GenericJob;
+import rs117.hd.utils.jobs.JobSystem;
 
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
+import static rs117.hd.utils.buffer.GLBuffer.DEBUG_MAC_OS;
+import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
+import static rs117.hd.utils.buffer.GLBuffer.STORAGE_IMMUTABLE;
+import static rs117.hd.utils.buffer.GLBuffer.STORAGE_PERSISTENT;
+import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
 
+@Slf4j
+@Singleton
 @PluginDescriptor(
 	name = "117 HD",
 	description = "GPU renderer with a suite of graphical enhancements",
 	tags = { "hd", "high", "detail", "graphics", "shaders", "textures", "gpu", "shadows", "lights" },
 	conflicts = "GPU"
 )
-@PluginDependency(EntityHiderPlugin.class)
-@Slf4j
 public class HdPlugin extends Plugin {
 	public static final ResourcePath PLUGIN_DIR = Props
 		.getFolder("rlhd.plugin-dir", () -> path(RuneLite.RUNELITE_DIR, "117hd"));
@@ -146,13 +168,17 @@ public class HdPlugin extends Plugin {
 	public static final String INTEL_DRIVER_URL = "https://www.intel.com/content/www/us/en/support/detect.html";
 	public static final String NVIDIA_DRIVER_URL = "https://www.nvidia.com/en-us/geforce/drivers/";
 
+	public static final long SEED = 0x313137204844L;
+
 	public static int MAX_TEXTURE_UNITS;
 	public static int TEXTURE_UNIT_COUNT = 0;
 	public static final int TEXTURE_UNIT_UI = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_TERRAIN_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_NEBULA_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -160,6 +186,7 @@ public class HdPlugin extends Plugin {
 
 	public static int UNIFORM_BLOCK_COUNT = 0;
 	public static final int UNIFORM_BLOCK_GLOBAL = UNIFORM_BLOCK_COUNT++;
+	public static final int UNIFORM_BLOCK_SKY = UNIFORM_BLOCK_COUNT++;
 	public static final int UNIFORM_BLOCK_MATERIALS = UNIFORM_BLOCK_COUNT++;
 	public static final int UNIFORM_BLOCK_WATER_TYPES = UNIFORM_BLOCK_COUNT++;
 	public static final int UNIFORM_BLOCK_LIGHTS = UNIFORM_BLOCK_COUNT++;
@@ -179,23 +206,41 @@ public class HdPlugin extends Plugin {
 
 	public static final float COLOR_FILTER_FADE_DURATION = 500;
 
-	private static final int[] RENDERBUFFER_FORMATS_SRGB = {
+	public static final int[] RENDERBUFFER_FORMATS_SRGB = {
 		GL_SRGB8,
 		GL_SRGB8_ALPHA8 // should be guaranteed
 	};
-	private static final int[] RENDERBUFFER_FORMATS_SRGB_WITH_ALPHA = {
+	public static final int[] RENDERBUFFER_FORMATS_SRGB_WITH_ALPHA = {
 		GL_SRGB8_ALPHA8 // should be guaranteed
 	};
-	private static final int[] RENDERBUFFER_FORMATS_LINEAR = {
+	public static final int[] RENDERBUFFER_FORMATS_LINEAR = {
 		GL_RGB8,
 		GL_RGBA8,
 		GL_RGB, // should be guaranteed
 		GL_RGBA // should be guaranteed
 	};
-	private static final int[] RENDERBUFFER_FORMATS_LINEAR_WITH_ALPHA = {
+	public static final int[] RENDERBUFFER_FORMATS_LINEAR_WITH_ALPHA = {
 		GL_RGBA8,
 		GL_RGBA // should be guaranteed
 	};
+
+	public static final int PROCESSOR_COUNT = Runtime.getRuntime().availableProcessors();
+
+	// Manually instantiate singletons and lazily inject them to avoid circular dependencies
+	private static final List<Class<?>> LAZY_SINGLETONS = List.of(
+		AreaManager.class,
+		EnvironmentManager.class,
+		GamevalManager.class,
+		GroundMaterialManager.class,
+		LightManager.class,
+		MaterialManager.class,
+		ModelOverrideManager.class,
+		ProceduralGenerator.class,
+		TextureManager.class,
+		TileOverrideManager.class,
+		WaterTypeManager.class,
+		SceneManager.class
+	);
 
 	@Getter
 	private Gson gson;
@@ -228,6 +273,9 @@ public class HdPlugin extends Plugin {
 	private LightManager lightManager;
 
 	@Inject
+	private SkyManager skyManager;
+
+	@Inject
 	private EnvironmentManager environmentManager;
 
 	@Inject
@@ -249,9 +297,6 @@ public class HdPlugin extends Plugin {
 	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
-	private AsyncUICopy asyncUICopy;
-
-	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
 
 	@Inject
@@ -265,6 +310,12 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private UIShaderProgram uiProgram;
+
+	@Inject
+	private SceneManager sceneManager;
+
+	@Inject
+	private JobSystem jobSystem;
 
 	@Getter
 	@Inject
@@ -289,14 +340,19 @@ public class HdPlugin extends Plugin {
 	public static boolean SKIP_GL_ERROR_CHECKS;
 	public static GLCapabilities GL_CAPS;
 	public static boolean AMD_GPU;
+	public static boolean OLD_AMD_GPU;
 	public static boolean INTEL_GPU;
+	public static boolean OLD_INTEL_GPU;
 	public static boolean NVIDIA_GPU;
 	public static boolean APPLE;
 	public static boolean APPLE_ARM;
 
 	public static boolean SUPPORTS_INDIRECT_DRAW;
+	public static boolean SUPPORTS_MULTI_INDIRECT_DRAW;
+	public static boolean SUPPORTS_STORAGE_BUFFERS;
 
 	public Canvas canvas;
+	public JFrame clientJFrame;
 	public AWTContext awtContext;
 	private Callback debugCallback;
 
@@ -320,12 +376,16 @@ public class HdPlugin extends Plugin {
 	@Nullable
 	private int[] uiResolution;
 	private final int[] actualUiResolution = { 0, 0 }; // Includes stretched mode and DPI scaling
+	private final GLBuffer[] pboUi = new GLBuffer[3];
 	private int texUi;
-	private int pboUi;
+	private int uiWidth;
+	private int uiHeight;
+	private GenericJob uiCopyJob;
 
 	@Nullable
 	public int[] sceneViewport;
 	public final float[] sceneViewportScale = { 1, 1 };
+
 	public int msaaSamples;
 
 	public int[] sceneResolution;
@@ -339,43 +399,67 @@ public class HdPlugin extends Plugin {
 	public int fboShadowMap;
 	private int texShadowMap;
 
+	public int terrainShadowMapResolution;
+	public int fboTerrainShadowMap;
+	private int texTerrainShadowMap;
+
 	public int[] tiledLightingResolution;
 	public int tiledLightingLayerCount;
 	public int fboTiledLighting;
 	public int texTiledLighting;
 
-	public final UBOGlobal uboGlobal = new UBOGlobal();
-	public final UBOLights uboLights = new UBOLights(false);
-	public final UBOLights uboLightsCulling = new UBOLights(true);
-	public final UBOUI uboUI = new UBOUI();
+	public UBOGlobal uboGlobal;
+	public UBOSky uboSky;
+	public UBOUI uboUi;
+	public UBOLights uboLights;
+	public UBOLights uboLightsCulling;
 
 	// Configs used frequently enough to be worth caching
 	public boolean configGroundTextures;
 	public boolean configGroundBlending;
+	public boolean configGroundBlendingColors;
+	public boolean configGroundBlendingTextures;
 	public boolean configModelTextures;
-	public boolean configTzhaarHD;
+	public boolean configLegacyTzHaarReskin;
 	public boolean configProjectileLights;
 	public boolean configNpcLights;
+	public boolean configPetLights;
+	public boolean configSpotanimLights;
+	public boolean configObjectLights;
 	public boolean configHideFakeShadows;
 	public boolean configLegacyGreyColors;
 	public boolean configModelBatching;
 	public boolean configModelCaching;
 	public boolean configShadowsEnabled;
+	public boolean configShadowTransparency;
 	public boolean configRoofShadows;
-	public boolean configExpandShadowDraw;
-	public boolean configUseFasterModelHashing;
+	public boolean configTerrainShadows;
+	public boolean configConservativeShadowCulling;
+	public boolean configZoneStreaming;
+	public boolean configSimpleBoatSilhouettes;
+	public boolean configPowerSaving;
+	public boolean configUnlitFaceColors;
 	public boolean configUndoVanillaShading;
 	public boolean configPreserveVanillaNormals;
-	public boolean configAsyncUICopy;
 	public boolean configWindDisplacement;
 	public boolean configCharacterDisplacement;
+	public boolean configHideVanillaWaterEffects;
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
+	public boolean configOverrideSky;
+	public boolean configReduceGlareIntensity;
+	public boolean configFrameSynchronization;
+	public int configDetailDrawDistance;
+	public int configExpandedMapLoadingChunks;
+	public float configNightBrightness;
+	public DefaultSkyColor configDefaultSkyColor;
 	public DynamicLights configDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
 	public SeasonalHemisphere configSeasonalHemisphere;
+	public boolean configSeasonalFoliage;
 	public VanillaShadowMode configVanillaShadowMode;
+	public ShadingMode configShadingMode;
 	public ColorFilter configColorFilter = ColorFilter.NONE;
 	public ColorFilter configColorFilterPrevious;
 
@@ -383,16 +467,19 @@ public class HdPlugin extends Plugin {
 	public boolean enableDetailedTimers;
 	public boolean enableFreezeFrame;
 	public boolean orthographicProjection;
+	public boolean freezeCulling;
 
+	@Getter
+	private boolean isPluginStopPending;
+	private Throwable pluginStopReason;
 	@Getter
 	private boolean isActive;
 	private boolean lwjglInitialized;
 	public boolean hasLoggedIn;
 	public boolean redrawPreviousFrame;
-	public boolean isInChambersOfXeric;
-	public boolean isInHouse;
 	public boolean justChangedArea;
 	public Scene skipScene;
+	public int gpuFlags;
 
 	public final ConcurrentHashMap.KeySetView<String, ?> pendingConfigChanges = ConcurrentHashMap.newKeySet();
 
@@ -402,25 +489,37 @@ public class HdPlugin extends Plugin {
 	public final int[] cameraFocalPoint = new int[2];
 	public final float[] cameraOrientation = new float[2];
 	public final float[][] cameraFrustum = new float[6][4];
-	public float[] viewMatrix = new float[16];
-	public float[] viewProjMatrix = new float[16];
-	public float[] invViewProjMatrix = new float[16];
+	public float[] viewMatrix = Mat4.zero();
+	public float[] viewProjMatrix = Mat4.zero();
+	public float[] invViewProjMatrix = Mat4.zero();
 
 	@Getter
 	public int drawnTileCount;
 	@Getter
 	public int drawnStaticRenderableCount;
 	@Getter
+	public int drawnTempRenderableCount;
+	@Getter
 	public int drawnDynamicRenderableCount;
+	@Getter
+	public long garbageCollectionCount;
 
+	private int startupCount;
+	public int frame;
 	public double elapsedTime;
 	public double elapsedClientTime;
 	public float deltaTime;
+	public long deltaTimeMs;
 	public float deltaClientTime;
-	public long lastFrameTimeMillis;
-	public double lastFrameClientTime;
+	private long lastFrameTimeMillis;
+	private double lastFrameClientTime;
 	public float windOffset;
 	public long colorFilterChangedAt;
+
+	public float clientUnfocusedTime;
+	public boolean isClientInFocus = true;
+	public boolean isClientMinimized;
+	public boolean isPowerSaving;
 
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
@@ -428,7 +527,24 @@ public class HdPlugin extends Plugin {
 	}
 
 	@Override
+	public void configure(Binder binder) {
+		// Bind manually constructed instances of singletons to avoid recursive loading issues
+		for (var clazz : LAZY_SINGLETONS) {
+			try {
+				// noinspection unchecked
+				binder.bind((Class<Object>) clazz).toInstance(clazz.getDeclaredConstructor().newInstance());
+			} catch (Exception ex) {
+				throw new RuntimeException("Failed to instantiate singleton " + clazz, ex);
+			}
+		}
+	}
+
+	@Override
 	protected void startUp() {
+		// Lazily inject members into our singletons
+		for (var clazz : LAZY_SINGLETONS)
+			injector.injectMembers(injector.getInstance(clazz));
+
 		gson = GsonUtils.wrap(injector.getInstance(Gson.class));
 
 		clientThread.invoke(() -> {
@@ -436,22 +552,8 @@ public class HdPlugin extends Plugin {
 				if (!textureManager.vanillaTexturesAvailable())
 					return false;
 
-				fboScene = 0;
-				rboSceneColor = 0;
-				rboSceneDepth = 0;
-				fboSceneResolve = 0;
-				rboSceneResolveColor = 0;
-				fboShadowMap = 0;
-				elapsedTime = 0;
-				elapsedClientTime = 0;
-				deltaTime = 0;
-				deltaClientTime = 0;
-				lastFrameTimeMillis = 0;
-				lastFrameClientTime = 0;
-
 				AWTContext.loadNatives();
 				canvas = client.getCanvas();
-
 				synchronized (canvas.getTreeLock()) {
 					// Delay plugin startup until the client's canvas is valid
 					if (!canvas.isValid())
@@ -460,10 +562,27 @@ public class HdPlugin extends Plugin {
 					awtContext = new AWTContext(canvas);
 					awtContext.configurePixelFormat(0, 0, 0);
 				}
-
 				awtContext.createGLContext();
-
 				canvas.setIgnoreRepaint(true);
+				clientJFrame = HDUtils.getJFrame(canvas);
+
+				isPluginStopPending = false;
+				isActive = true;
+				startupCount++;
+
+				fboScene = 0;
+				rboSceneColor = 0;
+				rboSceneDepth = 0;
+				fboSceneResolve = 0;
+				rboSceneResolveColor = 0;
+				fboShadowMap = 0;
+				frame = 0;
+				elapsedTime = 0;
+				elapsedClientTime = 0;
+				deltaTime = 0;
+				deltaClientTime = 0;
+				lastFrameTimeMillis = 0;
+				lastFrameClientTime = 0;
 
 				// lwjgl defaults to lwjgl- + user.name, but this breaks if the username would cause an invalid path
 				// to be created.
@@ -474,31 +593,49 @@ public class HdPlugin extends Plugin {
 				useLowMemoryMode = config.lowMemoryMode();
 				BUFFER_GROWTH_MULTIPLIER = useLowMemoryMode ? 1.333f : 2;
 
+				var rendererClass = config.legacyRenderer() ? LegacyRenderer.class : ZoneRenderer.class;
+				String rlawtVersion = System.getProperty("runelite.rlawtpath", "Release");
+				String javaVmName = System.getProperty("java.vm.name", "Unknown");
+				String javaVersion = System.getProperty("java.version", "Unknown");
 				OSType osType = OSType.getOSType();
-				String arch = System.getProperty("os.arch", "Unknown");
+				String osArch = System.getProperty("os.arch", "Unknown");
+				String osVersion = System.getProperty("os.version", "Unknown");
 				String wordSize = System.getProperty("sun.arch.data.model", "Unknown");
-				log.info("Operating system: {}", osType);
-				log.info("Architecture: {}", arch);
-				log.info("Client is {}-bit", wordSize);
-				APPLE = osType == OSType.MacOS;
-				APPLE_ARM = APPLE && arch.equals("aarch64");
-
 				String glRenderer = Objects.requireNonNullElse(glGetString(GL_RENDERER), "Unknown");
 				String glVendor = Objects.requireNonNullElse(glGetString(GL_VENDOR), "Unknown");
-				log.info("Using device: {} ({})", glRenderer, glVendor);
-				log.info("Using driver: {}", glGetString(GL_VERSION));
+				var runtime = Runtime.getRuntime();
+
+				APPLE = osType == OSType.MacOS;
+				APPLE_ARM = APPLE && osArch.equals("aarch64");
 				AMD_GPU = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
+				OLD_AMD_GPU = glRenderer.equals("Radeon RX 580 Series");
 				INTEL_GPU = glRenderer.contains("Intel");
+				OLD_INTEL_GPU = glRenderer.equals("Intel(R) UHD Graphics");
 				NVIDIA_GPU = glRenderer.toLowerCase().contains("nvidia");
 
-				SUPPORTS_INDIRECT_DRAW = NVIDIA_GPU && !APPLE || config.forceIndirectDraw();
+				SUPPORTS_INDIRECT_DRAW =
+					(GL_CAPS.OpenGL40 || GL_CAPS.GL_ARB_draw_indirect) &&
+					config.indirectDraw().get(NVIDIA_GPU && !APPLE);
+				SUPPORTS_MULTI_INDIRECT_DRAW = SUPPORTS_INDIRECT_DRAW && (GL_CAPS.OpenGL43 || GL_CAPS.GL_ARB_multi_draw_indirect);
+				SUPPORTS_STORAGE_BUFFERS = GL_CAPS.GL_ARB_buffer_storage && !DEBUG_MAC_OS && config.storageBuffers().get(!INTEL_GPU);
 
-				renderer = config.legacyRenderer() ?
-					injector.getInstance(LegacyRenderer.class) :
-					injector.getInstance(ZoneRenderer.class);
-				log.info("Using renderer: {}", renderer.getClass().getSimpleName());
+				log.info("Starting 117 HD... (count: {})", startupCount);
+				log.info("Renderer:            {}", rendererClass.getSimpleName());
+				log.info("rlawt version:       {}", rlawtVersion);
+				log.info("LWJGL Version:       {}", Version.getVersion());
+				log.info("Java version:        {} ({})", javaVmName, javaVersion);
+				log.info("Java memory limit:   {} (free: {})", formatBytes(runtime.maxMemory()), formatBytes(runtime.freeMemory()));
+				log.info("Operating system:    {} {} ({}-bit {})", osType, osVersion, wordSize, osArch);
+				log.info("CPU:                 {} ({} threads)", HDUtils.getCpuName(), runtime.availableProcessors());
+				log.info("Memory:              {}", formatBytes(HDUtils.getTotalSystemMemory()));
+				log.info("GPU:                 {} ({})", glRenderer, glVendor);
+				log.info("GPU driver:          {}", glGetString(GL_VERSION));
+				log.info("Indirect draw:       {}", SUPPORTS_INDIRECT_DRAW);
+				log.info("Multi indirect draw: {}", SUPPORTS_MULTI_INDIRECT_DRAW);
+				log.info("Storage buffers:     {}", SUPPORTS_STORAGE_BUFFERS);
+				log.info("Low memory mode:     {}", useLowMemoryMode);
 
-				log.info("Low memory mode: {}", useLowMemoryMode);
+				renderer = injector.getInstance(rendererClass);
 
 				if (!Props.has("rlhd.skipGpuChecks")) {
 					List<String> fallbackDevices = List.of(
@@ -509,7 +646,7 @@ public class HdPlugin extends Plugin {
 					boolean isFallbackGpu = fallbackDevices.contains(glRenderer);
 					if (isFallbackGpu || !renderer.supportsGpu(GL_CAPS)) {
 						log.error("Unsupported GPU. Stopping the plugin...");
-						displayUnsupportedGpuMessage(isFallbackGpu, glRenderer);
+						displayUnsupportedGpuMessage(isFallbackGpu, glRenderer, renderer);
 						stopPlugin();
 						return true;
 					}
@@ -589,12 +726,19 @@ public class HdPlugin extends Plugin {
 				textureManager.startUp();
 				materialManager.startUp();
 				waterTypeManager.startUp();
+				gamevalManager.startUp();
 
-				renderer.initialize();
-				eventBus.register(renderer);
-				int gpuFlags = DrawCallbacks.GPU | renderer.gpuFlags();
+				gpuFlags = DrawCallbacks.GPU | renderer.gpuFlags();
 				if (config.removeVertexSnapping())
 					gpuFlags |= DrawCallbacks.NO_VERTEX_SNAPPING;
+				if (configShadingMode.unlitFaceColors)
+					gpuFlags |= DrawCallbacks.UNLIT_FACE_COLORS;
+				client.setGpuFlags(gpuFlags);
+
+				// Initialize the renderer after setting initial GPU flags,
+				// to let the renderer override GPU flags even during startup
+				renderer.initialize();
+				eventBus.register(renderer);
 
 				initializeShaders();
 				initializeShaderHotswapping();
@@ -604,28 +748,24 @@ public class HdPlugin extends Plugin {
 				checkGLErrors();
 
 				client.setDrawCallbacks(renderer);
-				client.setGpuFlags(gpuFlags);
-				client.setExpandedMapLoading(getExpandedMapLoadingChunks());
+				client.setExpandedMapLoading(configExpandedMapLoadingChunks);
 				// force rebuild of main buffer provider to enable alpha channel
 				client.resizeCanvas();
 
-				gamevalManager.startUp();
 				areaManager.startUp();
 				groundMaterialManager.startUp();
 				tileOverrideManager.startUp();
 				modelOverrideManager.startUp();
 				lightManager.startUp();
+				skyManager.startUp();
 				environmentManager.startUp();
 				fishingSpotReplacer.startUp();
 				gammaCalibrationOverlay.initialize();
 				npcDisplacementCache.initialize();
 
-				isActive = true;
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
 				redrawPreviousFrame = false;
 				skipScene = null;
-				isInHouse = false;
-				isInChambersOfXeric = false;
 
 				// Force the client to reload the scene since we're changing GPU flags, and to restore any removed tiles
 				if (client.getGameState() == GameState.LOGGED_IN)
@@ -634,6 +774,8 @@ public class HdPlugin extends Plugin {
 				checkGLErrors();
 
 				clientThread.invokeLater(this::displayUpdateMessage);
+
+				log.info("117 HD started successfully!");
 			} catch (Throwable err) {
 				log.error("Error while starting 117 HD", err);
 				stopPlugin();
@@ -644,10 +786,15 @@ public class HdPlugin extends Plugin {
 
 	@Override
 	protected void shutDown() {
-		isActive = false;
-		FileWatcher.destroy();
-
 		clientThread.invoke(() -> {
+			if (!isActive)
+				return;
+			isActive = false;
+			FileWatcher.destroy();
+
+			if (renderer != null)
+				renderer.waitUntilIdle();
+
 			var scene = client.getScene();
 			if (scene != null)
 				scene.setMinLevel(0);
@@ -657,27 +804,8 @@ public class HdPlugin extends Plugin {
 			client.setUnlockedFps(false);
 			client.setExpandedMapLoading(0);
 
-			asyncUICopy.complete();
-			developerTools.deactivate();
-			tileOverrideManager.shutDown();
-			groundMaterialManager.shutDown();
-			modelOverrideManager.shutDown();
-			lightManager.shutDown();
-			environmentManager.shutDown();
-			fishingSpotReplacer.shutDown();
-			areaManager.shutDown();
-			gamevalManager.shutDown();
-			gammaCalibrationOverlay.destroy();
-			ModelDefinition.release();
-			npcDisplacementCache.destroy();
-
 			if (lwjglInitialized) {
 				lwjglInitialized = false;
-				renderer.waitUntilIdle();
-
-				waterTypeManager.shutDown();
-				materialManager.shutDown();
-				textureManager.shutDown();
 
 				destroyUiTexture();
 				destroyShaders();
@@ -693,6 +821,27 @@ public class HdPlugin extends Plugin {
 				}
 				renderer = null;
 			}
+
+			developerTools.deactivate();
+			tileOverrideManager.shutDown();
+			groundMaterialManager.shutDown();
+			modelOverrideManager.shutDown();
+			lightManager.shutDown();
+			environmentManager.shutDown();
+			skyManager.shutDown();
+			fishingSpotReplacer.shutDown();
+			areaManager.shutDown();
+			gamevalManager.shutDown();
+			gammaCalibrationOverlay.destroy();
+			ModelDefinition.release();
+			npcDisplacementCache.destroy();
+			waterTypeManager.shutDown();
+			materialManager.shutDown();
+			textureManager.shutDown();
+
+			ConcurrentPool.destroyAll();
+			PooledArrayType.shutdown();
+			DestructibleHandler.flushPendingDestruction(true);
 
 			if (awtContext != null)
 				awtContext.destroy();
@@ -711,17 +860,59 @@ public class HdPlugin extends Plugin {
 		});
 	}
 
+	public void requestPluginStop(String message) {
+		requestPluginStop(message, new Throwable());
+	}
+
+	public void requestPluginStop(String message, Throwable reason) {
+		if (isPluginStopPending)
+			return;
+		isPluginStopPending = true;
+		pluginStopReason = new RuntimeException(message, reason);
+		log.error("Scheduling plugin stop due to:", pluginStopReason);
+	}
+
+	private boolean handleShutdownRequest() {
+		if (!isPluginStopPending)
+			return false;
+
+		try {
+			log.debug("Stopping plugin...");
+			stopPlugin();
+
+			Throwable ex = pluginStopReason;
+			if (ex != null) {
+				clientThread.invoke((Runnable) () -> {
+					log.debug("Reporting exception to RuneLite");
+					throw new RuntimeException("117 HD shutdown", ex);
+				});
+			}
+
+			return true;
+		} finally {
+			isPluginStopPending = false;
+			pluginStopReason = null;
+		}
+	}
+
 	public void stopPlugin() {
-		SwingUtilities.invokeLater(() -> {
+		clientThread.invoke(() -> {
 			try {
-				pluginManager.setPluginEnabled(this, false);
-				pluginManager.stopPlugin(this);
-			} catch (PluginInstantiationException ex) {
+				// Shut the plugin down immediately, making RuneLite's call to shutDown() a no-op
+				shutDown();
+			} catch (Throwable ex) {
 				log.error("Error while stopping 117HD:", ex);
 			}
-		});
 
-		shutDown();
+			SwingUtilities.invokeLater(() -> {
+				try {
+					pluginManager.setPluginEnabled(this, false);
+					pluginManager.stopPlugin(this);
+				} catch (Throwable ex) {
+					log.error("Error while stopping 117HD:", ex);
+				}
+			});
+		});
 	}
 
 	public void restartPlugin() {
@@ -735,7 +926,7 @@ public class HdPlugin extends Plugin {
 
 	@Nullable
 	public SceneContext getSceneContext() {
-		return renderer.getSceneContext();
+		return renderer == null ? null : renderer.getSceneContext();
 	}
 
 	public void toggleFreezeFrame() {
@@ -756,7 +947,7 @@ public class HdPlugin extends Plugin {
 			" : " + generateFetchCases(array, middle, to);
 	}
 
-	public String generateGetter(String type, int arrayLength) {
+	public String generateGetter(String type, String array, int arrayLength) {
 		StringBuilder include = new StringBuilder();
 
 		if (config.macosIntelWorkaround() && !APPLE_ARM) {
@@ -768,15 +959,15 @@ public class HdPlugin extends Plugin {
 				.append("get")
 				.append(type)
 				.append("(int i) { return ")
-				.append(generateFetchCases(type + "Array", 0, arrayLength))
+				.append(generateFetchCases(array, 0, arrayLength))
 				.append("; }\n");
 		} else {
 			include
 				.append("#define get")
 				.append(type)
 				.append("(i) ")
-				.append(type)
-				.append("Array[i]\n");
+				.append(array)
+				.append("[i]\n");
 		}
 
 		return include.toString();
@@ -791,6 +982,7 @@ public class HdPlugin extends Plugin {
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
 			.define("MATERIAL_COUNT", MaterialManager.MATERIALS.length)
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
+			.define("WATER_SPECULAR_REFLECTIONS", config.waterSpecularReflections())
 			.define("DYNAMIC_LIGHTS", configDynamicLights != DynamicLights.NONE)
 			.define("TILED_LIGHTING", configTiledLighting)
 			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getTiledLightingLayers())
@@ -799,12 +991,18 @@ public class HdPlugin extends Plugin {
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
 			.define("SHADOW_MODE", configShadowMode)
-			.define("SHADOW_TRANSPARENCY", config.enableShadowTransparency())
-			.define("PIXELATED_SHADOWS", config.pixelatedShadows())
+			.define("TERRAIN_SHADOWS", configTerrainShadows)
+			.define("TERRAIN_ONLY_PASS", false)
+			.define("SHADOW_TRANSPARENCY", configShadowTransparency)
+			.define("SHADOW_FILTERING", config.shadowFiltering().filtering)
+			.define("SHADOW_FILTERING_KERNEL", config.shadowFiltering().kernelSize)
+			.define("STAR_MODE", config.starMode())
+			.define("POINT_SPRITES", config.pointSprites().get(true))
+			.define("NEBULAE", config.enableNebulae())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
-			.define("UNDO_VANILLA_SHADING", configUndoVanillaShading)
+			.define("UNDO_VANILLA_SHADING", configShadingMode.undoVanillaShading)
 			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)
-			.define("DISABLE_DIRECTIONAL_SHADING", config.shadingMode() != ShadingMode.DEFAULT)
+			.define("DISABLE_DIRECTIONAL_SHADING", !configShadingMode.directionalShading)
 			.define("FLAT_SHADING", config.flatShading())
 			.define("WIND_DISPLACEMENT", configWindDisplacement)
 			.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", WIND_DISPLACEMENT_NOISE_RESOLUTION)
@@ -812,10 +1010,14 @@ public class HdPlugin extends Plugin {
 			.define("MAX_CHARACTER_POSITION_COUNT", max(1, UBOCompute.MAX_CHARACTER_POSITION_COUNT))
 			.define("WIREFRAME", config.wireframe())
 			.define("WINDOWS_HDR_CORRECTION", config.windowsHdrCorrection())
+			.define("LEGACY_BOAT_SILHOUETTES", config.legacyBoatSilhouettes())
+			.define("REDUCE_GLARE_INTENSITY", configReduceGlareIntensity)
+			.define("CENTROID_QUALIFIER", config.centroidQualifier().get(!OLD_AMD_GPU))
 			.define("LEGACY_RENDERER", renderer instanceof LegacyRenderer)
 			.define("ZONE_RENDERER", renderer instanceof ZoneRenderer)
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", 0)
 			.define("WORLD_VIEW_GETTER", "")
+			.define("NEBULA_CLUSTER_COUNT", StarField.CLUSTER_COUNT)
 			.addInclude(
 				"MATERIAL_CONSTANTS", () -> {
 					StringBuilder include = new StringBuilder();
@@ -830,12 +1032,19 @@ public class HdPlugin extends Plugin {
 					return include.toString();
 				}
 			)
-			.addInclude("MATERIAL_GETTER", () -> generateGetter("Material", MaterialManager.MATERIALS.length))
-			.addInclude("WATER_TYPE_GETTER", () -> generateGetter("WaterType", waterTypeManager.uboWaterTypes.getCount()))
+			.addInclude(
+				"MATERIAL_GETTER",
+				() -> generateGetter("Material", "uboMaterials.Array", MaterialManager.MATERIALS.length)
+			)
+			.addInclude(
+				"WATER_TYPE_GETTER",
+				() -> generateGetter("WaterType", "uboWaterTypes.Array", waterTypeManager.uboWaterTypes.getCount())
+			)
 			.addUniformBuffer(uboGlobal)
+			.addUniformBuffer(uboSky)
 			.addUniformBuffer(uboLights)
 			.addUniformBuffer(uboLightsCulling)
-			.addUniformBuffer(uboUI)
+			.addUniformBuffer(uboUi)
 			.addUniformBuffer(materialManager.uboMaterials)
 			.addUniformBuffer(waterTypeManager.uboWaterTypes);
 		renderer.addShaderIncludes(includes);
@@ -879,7 +1088,7 @@ public class HdPlugin extends Plugin {
 					log.warn("Disabling TILED_LIGHTING_LAYERED due to:", ex);
 					// If both tiled lighting implementations fail, fall back to the old lighting, and warn about it
 					if (!Props.DEVELOPMENT) {
-						config.tiledLighting(false);
+						config.tiledLighting(DefaultBoolean.OFF);
 						PopupUtils.displayPopupMessage(
 							client, "117 HD Error",
 							"Tiled lighting has been automatically disabled, since it failed to compile on your GPU.<br>" +
@@ -1010,21 +1219,54 @@ public class HdPlugin extends Plugin {
 	}
 
 	private void initializeUbos() {
-		uboGlobal.initialize(HdPlugin.UNIFORM_BLOCK_GLOBAL);
-		uboLights.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS);
-		uboLightsCulling.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS_CULLING);
-		uboUI.initialize(HdPlugin.UNIFORM_BLOCK_UI);
+		uboGlobal = new UBOGlobal();
+		uboGlobal.initialize(UNIFORM_BLOCK_GLOBAL);
+
+		uboSky = new UBOSky();
+		uboSky.initialize(UNIFORM_BLOCK_SKY);
+
+		uboUi = new UBOUI();
+		uboUi.initialize(UNIFORM_BLOCK_UI);
+
+		uboLights = new UBOLights(false);
+		uboLights.initialize(UNIFORM_BLOCK_LIGHTS);
+
+		uboLightsCulling = new UBOLights(true);
+		uboLightsCulling.initialize(UNIFORM_BLOCK_LIGHTS_CULLING);
 	}
 
 	private void destroyUbos() {
-		uboGlobal.destroy();
-		uboLights.destroy();
-		uboLightsCulling.destroy();
-		uboUI.destroy();
+		if (uboGlobal != null)
+			uboGlobal.destroy();
+		uboGlobal = null;
+
+		if (uboSky != null)
+			uboSky.destroy();
+		uboSky = null;
+
+		if (uboUi != null)
+			uboUi.destroy();
+		uboUi = null;
+
+		if (uboLights != null)
+			uboLights.destroy();
+		uboLights = null;
+
+		if (uboLightsCulling != null)
+			uboLightsCulling.destroy();
+		uboLightsCulling = null;
 	}
 
 	private void initializeUiTexture() {
-		pboUi = glGenBuffers();
+		for (int i = 0; i < 3; i++) {
+			pboUi[i] = new GLBuffer(
+				"PBO::UI",
+				GL_PIXEL_UNPACK_BUFFER,
+				GL_STREAM_DRAW,
+				STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE
+			);
+			pboUi[i].initialize();
+		}
 
 		texUi = glGenTextures();
 		glActiveTexture(TEXTURE_UNIT_UI);
@@ -1033,14 +1275,18 @@ public class HdPlugin extends Plugin {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		checkGLErrors();
 	}
 
 	private void destroyUiTexture() {
 		uiResolution = null;
 
-		if (pboUi != 0)
-			glDeleteBuffers(pboUi);
-		pboUi = 0;
+		for (int i = 0; i < 3; i++) {
+			if (pboUi[i] != null)
+				pboUi[i].destroy();
+			pboUi[i] = null;
+		}
 
 		if (texUi != 0)
 			glDeleteTextures(texUi);
@@ -1094,6 +1340,7 @@ public class HdPlugin extends Plugin {
 		checkGLErrors();
 
 		uboGlobal.tiledLightingResolution.set(tiledLightingResolution);
+		uboGlobal.upload(); // Ensure this is up to date with rendering
 	}
 
 	private void destroyTiledLightingFbo() {
@@ -1166,6 +1413,7 @@ public class HdPlugin extends Plugin {
 		float resolutionScale = config.sceneResolutionScale() / 100f;
 		sceneResolution = round(max(vec(1), multiply(slice(vec(sceneViewport), 2), resolutionScale)));
 		uboGlobal.sceneResolution.set(sceneResolution);
+		uboGlobal.upload(); // Ensure this is up to date with rendering
 
 		// Create and bind the FBO
 		fboScene = glGenFramebuffers();
@@ -1244,7 +1492,7 @@ public class HdPlugin extends Plugin {
 
 	private void initializeShadowMapFbo() {
 		if (!configShadowsEnabled) {
-			initializeDummyShadowMap();
+			initializeDummyShadowMaps();
 			return;
 		}
 
@@ -1267,7 +1515,7 @@ public class HdPlugin extends Plugin {
 		glTexImage2D(
 			GL_TEXTURE_2D,
 			0,
-			GL_DEPTH_COMPONENT24,
+			configShadowTransparency ? GL_DEPTH_COMPONENT24 : GL_DEPTH_COMPONENT16,
 			shadowMapResolution,
 			shadowMapResolution,
 			0,
@@ -1288,15 +1536,68 @@ public class HdPlugin extends Plugin {
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
 
+		// Create terrain shadow map FBO and texture
+		if (configTerrainShadows) {
+			fboTerrainShadowMap = glGenFramebuffers();
+			glBindFramebuffer(GL_FRAMEBUFFER, fboTerrainShadowMap);
+
+			texTerrainShadowMap = glGenTextures();
+			glActiveTexture(TEXTURE_UNIT_TERRAIN_SHADOW_MAP);
+			glBindTexture(GL_TEXTURE_2D, texTerrainShadowMap);
+
+			terrainShadowMapResolution = shadowMapResolution;
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_DEPTH_COMPONENT16,
+				terrainShadowMapResolution,
+				terrainShadowMapResolution,
+				0,
+				GL_DEPTH_COMPONENT,
+				GL_FLOAT,
+				0
+			);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(
+				GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE,
+				// PCSS needs raw depths for the blocker search
+				config.shadowFiltering() == ShadowFiltering.PCSS ? GL_NONE : GL_COMPARE_REF_TO_TEXTURE
+			);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_GREATER);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+			glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
+
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texTerrainShadowMap, 0);
+			glDrawBuffer(GL_NONE);
+			glReadBuffer(GL_NONE);
+		} else {
+			initializeDummyTerrainShadowMap();
+		}
+
 		// Reset FBO
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 	}
 
-	private void initializeDummyShadowMap() {
+	private void initializeDummyShadowMaps() {
 		// Create dummy texture
 		texShadowMap = glGenTextures();
 		glActiveTexture(TEXTURE_UNIT_SHADOW_MAP);
 		glBindTexture(GL_TEXTURE_2D, texShadowMap);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1, 1, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+		initializeDummyTerrainShadowMap();
+	}
+
+	private void initializeDummyTerrainShadowMap() {
+		texTerrainShadowMap = glGenTextures();
+		glActiveTexture(TEXTURE_UNIT_TERRAIN_SHADOW_MAP);
+		glBindTexture(GL_TEXTURE_2D, texTerrainShadowMap);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1, 1, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -1312,6 +1613,14 @@ public class HdPlugin extends Plugin {
 		if (fboShadowMap != 0)
 			glDeleteFramebuffers(fboShadowMap);
 		fboShadowMap = 0;
+
+		if (texTerrainShadowMap != 0)
+			glDeleteTextures(texTerrainShadowMap);
+		texTerrainShadowMap = 0;
+
+		if (fboTerrainShadowMap != 0)
+			glDeleteFramebuffers(fboTerrainShadowMap);
+		fboTerrainShadowMap = 0;
 	}
 
 	public void initializeShaderHotswapping() {
@@ -1322,6 +1631,10 @@ public class HdPlugin extends Plugin {
 	}
 
 	public void prepareInterfaceTexture() {
+		if (uiCopyJob != null)
+			uiCopyJob.waitForCompletion(true);
+		uiCopyJob = null;
+
 		int[] resolution = {
 			max(1, client.getCanvasWidth()),
 			max(1, client.getCanvasHeight())
@@ -1329,10 +1642,6 @@ public class HdPlugin extends Plugin {
 		boolean resize = !Arrays.equals(uiResolution, resolution);
 		if (resize) {
 			uiResolution = resolution;
-
-			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pboUi);
-			glBufferData(GL_PIXEL_UNPACK_BUFFER, uiResolution[0] * uiResolution[1] * 4L, GL_STREAM_DRAW);
-			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
 			glActiveTexture(TEXTURE_UNIT_UI);
 			glBindTexture(GL_TEXTURE_2D, texUi);
@@ -1348,41 +1657,33 @@ public class HdPlugin extends Plugin {
 		}
 		round(actualUiResolution, multiply(vec(actualUiResolution), getDpiScaling()));
 
-		if (configAsyncUICopy) {
-			// Start copying the UI on a different thread, to be uploaded during the next frame
-			asyncUICopy.prepare(pboUi, texUi);
-			// If the window was just resized, upload once synchronously so there is something to show
-			if (resize)
-				asyncUICopy.complete();
-			return;
-		}
-
 		final BufferProvider bufferProvider = client.getBufferProvider();
 		final int[] pixels = bufferProvider.getPixels();
-		final int width = bufferProvider.getWidth();
-		final int height = bufferProvider.getHeight();
+		uiWidth = bufferProvider.getWidth();
+		uiHeight = bufferProvider.getHeight();
 
 		frameTimer.begin(Timer.MAP_UI_BUFFER);
-		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pboUi);
-		ByteBuffer mappedBuffer = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
+		final GLBuffer pbo = pboUi[frame % 3];
+		pbo.map(MAP_WRITE, 0, uiWidth * uiHeight * 4L);
 		frameTimer.end(Timer.MAP_UI_BUFFER);
-		if (mappedBuffer == null) {
+		if (!pbo.isMapped()) {
 			log.error("Unable to map interface PBO. Skipping UI...");
-		} else if (width > uiResolution[0] || height > uiResolution[1]) {
-			log.error("UI texture resolution mismatch ({}x{} > {}). Skipping UI...", width, height, uiResolution);
+		} else if (uiWidth > uiResolution[0] || uiHeight > uiResolution[1]) {
+			log.error("UI texture resolution mismatch ({}x{} > {}). Skipping UI...", uiWidth, uiHeight, uiResolution);
 		} else {
-			frameTimer.begin(Timer.COPY_UI);
-			mappedBuffer.asIntBuffer().put(pixels, 0, width * height);
-			frameTimer.end(Timer.COPY_UI);
-
-			frameTimer.begin(Timer.UPLOAD_UI);
-			glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
-			glActiveTexture(TEXTURE_UNIT_UI);
-			glBindTexture(GL_TEXTURE_2D, texUi);
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
-			frameTimer.end(Timer.UPLOAD_UI);
+			uiCopyJob = GenericJob
+				.build(
+					"AsyncUICopy",
+					t -> {
+						long start = System.nanoTime();
+						pbo.mapped().intView().put(pixels, 0, uiWidth * uiHeight);
+						frameTimer.add(Timer.COPY_UI_ASYNC, System.nanoTime() - start);
+					}
+				)
+				.setExecuteAsync(!isPowerSaving)
+				.queue();
 		}
-		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+		pbo.unbind();
 	}
 
 	public void drawUi(int overlayColor) {
@@ -1404,10 +1705,10 @@ public class HdPlugin extends Plugin {
 		tiledLightingOverlay.render();
 
 		uiProgram.use();
-		uboUI.sourceDimensions.set(uiResolution);
-		uboUI.targetDimensions.set(actualUiResolution);
-		uboUI.alphaOverlay.set(ColorUtils.srgba(overlayColor));
-		uboUI.upload();
+		uboUi.sourceDimensions.set(uiResolution);
+		uboUi.targetDimensions.set(actualUiResolution);
+		uboUi.alphaOverlay.set(ColorUtils.srgba(overlayColor));
+		uboUi.upload();
 
 		// Set the sampling function used when stretching the UI.
 		// This is probably better done with sampler objects instead of texture parameters, but this is easier and likely more portable.
@@ -1416,6 +1717,23 @@ public class HdPlugin extends Plugin {
 		final int function = config.uiScalingMode().glSamplingFunction;
 		glActiveTexture(TEXTURE_UNIT_UI);
 		glBindTexture(GL_TEXTURE_2D, texUi);
+
+		if (uiCopyJob != null) {
+			frameTimer.begin(Timer.COPY_UI);
+			uiCopyJob.waitForCompletion(true);
+			uiCopyJob = null;
+			frameTimer.end(Timer.COPY_UI);
+
+			frameTimer.begin(Timer.UPLOAD_UI);
+			final GLBuffer pbo = pboUi[frame % 3];
+			pbo.unmap();
+			pbo.bind();
+
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, uiWidth, uiHeight, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
+			pbo.unbind();
+			frameTimer.end(Timer.UPLOAD_UI);
+		}
+
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, function);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, function);
 
@@ -1453,10 +1771,8 @@ public class HdPlugin extends Plugin {
 		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 
-		for (int y = 0; y < height; ++y)
-		{
-			for (int x = 0; x < width; ++x)
-			{
+		for (int y = 0; y < height; ++y) {
+			for (int x = 0; x < width; ++x) {
 				int r = buffer.get() & 0xff;
 				int g = buffer.get() & 0xff;
 				int b = buffer.get() & 0xff;
@@ -1482,32 +1798,52 @@ public class HdPlugin extends Plugin {
 	}
 
 	private void updateCachedConfigs() {
+		configExpandedMapLoadingChunks = useLowMemoryMode ? 0 : config.expandedMapLoadingChunks();
+		configNightBrightness = config.nightBrightness() / 100f;
 		configShadowMode = config.shadowMode();
 		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
+		configShadowTransparency = config.shadowTransparency();
 		configRoofShadows = config.roofShadows();
+		configTerrainShadows = config.terrainShadows() && renderer instanceof ZoneRenderer;
 		configGroundTextures = config.groundTextures();
-		configGroundBlending = config.groundBlending();
+		var groundBlending = config.groundBlending();
+		configGroundBlending = groundBlending != GroundBlending.OFF;
+		configGroundBlendingColors = groundBlending.colors;
+		configGroundBlendingTextures = groundBlending.textures;
 		configModelTextures = config.modelTextures();
-		configTzhaarHD = config.hdTzHaarReskin();
+		configLegacyTzHaarReskin = config.legacyTzHaarReskin();
 		configProjectileLights = config.projectileLights();
 		configNpcLights = config.npcLights();
+		configPetLights = config.petLights();
+		configSpotanimLights = config.spotanimLights();
+		configObjectLights = config.objectLights();
 		configVanillaShadowMode = config.vanillaShadowMode();
 		configHideFakeShadows = configVanillaShadowMode != VanillaShadowMode.SHOW;
 		configLegacyGreyColors = config.legacyGreyColors();
 		configModelBatching = config.modelBatching();
 		configModelCaching = config.modelCaching();
+		configDefaultSkyColor = config.defaultSkyColor();
 		configDynamicLights = config.dynamicLights();
-		configTiledLighting = config.tiledLighting();
-		configTiledLightingImageLoadStore = config.tiledLightingImageLoadStore();
-		configExpandShadowDraw = config.expandShadowDraw();
-		configUseFasterModelHashing = config.fasterModelHashing();
-		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
+		configTiledLighting = config.tiledLighting().get(!OLD_INTEL_GPU);
+		configTiledLightingImageLoadStore = config.imageLoadStore().get(true);
+		configOverrideSky = config.overrideSky();
+		configDetailDrawDistance = config.detailDrawDistance();
+		configConservativeShadowCulling = config.conservativeShadowCulling();
+		configZoneStreaming = config.zoneStreaming();
+		configSimpleBoatSilhouettes = config.simpleBoatSilhouettes();
+		configPowerSaving = config.powerSaving();
+		configShadingMode = config.shadingMode();
+		configUnlitFaceColors = configShadingMode.unlitFaceColors;
+		configUndoVanillaShading = configShadingMode.undoVanillaShading;
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
-		configAsyncUICopy = config.asyncUICopy();
 		configWindDisplacement = config.windDisplacement();
 		configCharacterDisplacement = config.characterDisplacement();
+		configHideVanillaWaterEffects = config.hideVanillaWaterEffects();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
+		configSeasonalFoliage = config.seasonalFoliage();
+		configReduceGlareIntensity = config.glareIntensity() < 100;
+		configFrameSynchronization = config.frameSynchronization().get(true);
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {
@@ -1557,6 +1893,9 @@ public class HdPlugin extends Plugin {
 				}
 			}
 		}
+
+		skyManager.updateConfig();
+		developerTools.updateConfig();
 	}
 
 	@Subscribe
@@ -1578,8 +1917,15 @@ public class HdPlugin extends Plugin {
 				return;
 
 			try {
+				// TODO: Move this synchronization into ZoneRenderer
+				sceneManager.getLoadingLock().lock();
+				sceneManager.completeAllStreaming();
+
 				// Synchronize with scene loading
+				// TODO: Move this synchronization into LegacyRenderer
 				synchronized (this) {
+					boolean previousReduceGlareIntensity = configReduceGlareIntensity;
+
 					updateCachedConfigs();
 
 					log.debug("Processing {} pending config changes: {}", pendingConfigChanges.size(), pendingConfigChanges);
@@ -1600,7 +1946,9 @@ public class HdPlugin extends Plugin {
 							case KEY_LOW_MEMORY_MODE:
 							case KEY_REMOVE_VERTEX_SNAPPING:
 							case KEY_LEGACY_RENDERER:
-							case KEY_FORCE_INDIRECT_DRAW:
+							case KEY_INDIRECT_DRAW:
+							case KEY_STORAGE_BUFFERS:
+							case KEY_SHADING_MODE:
 								restartPlugin();
 								// since we'll be restarting the plugin anyway, skip pending changes
 								return;
@@ -1616,14 +1964,18 @@ public class HdPlugin extends Plugin {
 								if (configColorFilter == ColorFilter.CEL_SHADING || configColorFilterPrevious == ColorFilter.CEL_SHADING)
 									reloadScene = true;
 								break;
-							case KEY_ASYNC_UI_COPY:
-								asyncUICopy.complete();
+							case KEY_CPU_USAGE_LIMIT:
+								if (jobSystem.isActive()) {
+									// Restart the job system with the new worker count
+									jobSystem.shutDown();
+									jobSystem.startUp(config.cpuUsageLimit());
+								}
 								break;
 						}
 
 						switch (key) {
 							case KEY_EXPANDED_MAP_LOADING_CHUNKS:
-								client.setExpandedMapLoading(getExpandedMapLoadingChunks());
+								client.setExpandedMapLoading(configExpandedMapLoadingChunks);
 								// fall-through
 							case KEY_HIDE_UNRELATED_AREAS:
 								if (client.getGameState() == GameState.LOGGED_IN)
@@ -1631,9 +1983,9 @@ public class HdPlugin extends Plugin {
 								break;
 							case KEY_COLOR_BLINDNESS:
 							case KEY_MACOS_INTEL_WORKAROUND:
-							case KEY_DYNAMIC_LIGHTS:
+							case KEY_LIGHTS:
 							case KEY_TILED_LIGHTING:
-							case KEY_TILED_LIGHTING_IMAGE_STORE:
+							case KEY_IMAGE_LOAD_STORE:
 							case KEY_NORMAL_MAPPING:
 							case KEY_PARALLAX_OCCLUSION_MAPPING:
 							case KEY_UI_SCALING_MODE:
@@ -1641,22 +1993,32 @@ public class HdPlugin extends Plugin {
 							case KEY_WIND_DISPLACEMENT:
 							case KEY_CHARACTER_DISPLACEMENT:
 							case KEY_WIREFRAME:
-							case KEY_PIXELATED_SHADOWS:
 							case KEY_WINDOWS_HDR_CORRECTION:
+							case KEY_STARS:
+							case KEY_POINT_SPRITES:
+							case KEY_NEBULAE:
+							case KEY_LEGACY_BOAT_SILHOUETTES:
+							case KEY_WATER_SPECULAR_REFLECTIONS:
+							case KEY_CENTROID_QUALIFIER:
 								recompilePrograms = true;
+								break;
+							case KEY_GLARE_INTENSITY:
+								recompilePrograms |= configReduceGlareIntensity != previousReduceGlareIntensity;
 								break;
 							case KEY_ANTI_ALIASING_MODE:
 							case KEY_SCENE_RESOLUTION_SCALE:
 								recreateSceneFbo = true;
 								break;
 							case KEY_SHADOW_MODE:
-							case KEY_SHADOW_TRANSPARENCY:
-								recompilePrograms = true;
-								// fall-through
 							case KEY_SHADOW_RESOLUTION:
+							case KEY_SHADOW_FILTERING:
+							case KEY_SHADOW_TRANSPARENCY:
+							case KEY_TERRAIN_SHADOWS:
+								recompilePrograms = true;
 								recreateShadowMapFbo = true;
 								break;
-							case KEY_ATMOSPHERIC_LIGHTING:
+							case KEY_LEGACY_DISABLE_ENVIRONMENTAL_LIGHTING:
+							case KEY_POH_THEME_ENVIRONMENTS:
 							case KEY_LEGACY_TOB_ENVIRONMENT:
 								reloadEnvironments = true;
 								break;
@@ -1665,25 +2027,27 @@ public class HdPlugin extends Plugin {
 								reloadEnvironments = true;
 								reloadModelOverrides = true;
 								// fall-through
+							case KEY_SEASONAL_FOLIAGE:
 							case KEY_ANISOTROPIC_FILTERING_LEVEL:
 							case KEY_GROUND_TEXTURES:
 							case KEY_MODEL_TEXTURES:
 							case KEY_TEXTURE_RESOLUTION:
-							case KEY_HD_INFERNAL_CAPE:
+							case KEY_INFERNAL_CAPE:
 								reloadTexturesAndMaterials = true;
 								// fall-through
 							case KEY_GROUND_BLENDING:
 							case KEY_FILL_GAPS_IN_TERRAIN:
-							case KEY_HD_TZHAAR_RESKIN:
+							case KEY_LEGACY_TZHAAR_RESKIN:
 								reloadScene = true;
 								break;
-							case KEY_VANILLA_SHADOW_MODE:
+							case KEY_HIDE_VANILLA_WATER_EFFECTS:
 								reloadModelOverrides = true;
+								// fall-through
+							case KEY_VANILLA_SHADOW_MODE:
 								reloadScene = true;
 								break;
 							case KEY_LEGACY_GREY_COLORS:
 							case KEY_PRESERVE_VANILLA_NORMALS:
-							case KEY_SHADING_MODE:
 							case KEY_FLAT_SHADING:
 								recompilePrograms = true;
 								reloadScene = true;
@@ -1693,11 +2057,6 @@ public class HdPlugin extends Plugin {
 							case KEY_VSYNC_MODE:
 								setupSyncMode();
 								break;
-							case KEY_FISHING_SPOT_STYLE:
-								reloadModelOverrides = true;
-								fishingSpotReplacer.despawnRuneLiteObjects();
-								clientThread.invokeLater(fishingSpotReplacer::update);
-								break;
 						}
 					}
 
@@ -1705,17 +2064,15 @@ public class HdPlugin extends Plugin {
 						renderer.waitUntilIdle();
 
 					if (reloadTexturesAndMaterials) {
-						materialManager.reload(false);
+						materialManager.reload(reloadScene);
 						modelOverrideManager.reload();
 						recompilePrograms = true;
 					} else if (reloadModelOverrides) {
 						modelOverrideManager.reload();
 					}
 
-					if (reloadTileOverrides) {
-						tileOverrideManager.reload(false);
-						reloadScene = true;
-					}
+					if (reloadTileOverrides)
+						tileOverrideManager.reload(reloadScene);
 
 					if (recompilePrograms)
 						recompilePrograms();
@@ -1735,13 +2092,20 @@ public class HdPlugin extends Plugin {
 						initializeShadowMapFbo();
 					}
 
-					if (reloadEnvironments)
-						environmentManager.reload();
+					if (reloadEnvironments) {
+						if (pendingConfigChanges.contains(KEY_LEGACY_DISABLE_ENVIRONMENTAL_LIGHTING)) {
+							environmentManager.reload();
+						} else {
+							environmentManager.reloadAndSmoothlyTransition();
+						}
+					}
 				}
 			} catch (Throwable ex) {
 				log.error("Error while changing settings:", ex);
 				stopPlugin();
 			} finally {
+				sceneManager.getLoadingLock().unlock();
+				log.trace("loadingLock unlocked - holdCount: {}", sceneManager.getLoadingLock().getHoldCount());
 				pendingConfigChanges.clear();
 				frameTimer.reset();
 			}
@@ -1760,8 +2124,7 @@ public class HdPlugin extends Plugin {
 
 		client.setUnlockedFps(unlockFps);
 		int swapInterval;
-		switch (syncMode)
-		{
+		switch (syncMode) {
 			case ON:
 				swapInterval = 1;
 				break;
@@ -1802,24 +2165,50 @@ public class HdPlugin extends Plugin {
 		return 100f / config.brightness();
 	}
 
-	public int getExpandedMapLoadingChunks() {
-		if (useLowMemoryMode)
-			return 0;
-		return config.expandedMapLoadingChunks();
-	}
-
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
+		if (handleShutdownRequest())
+			return;
+
 		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
 
-		// Upload the UI which we began copying during the previous frame
-		if (configAsyncUICopy)
-			asyncUICopy.complete();
+		if (lastFrameTimeMillis > 0) {
+			deltaTimeMs = System.currentTimeMillis() - lastFrameTimeMillis;
+			deltaTime = (float) (deltaTimeMs / 1000.);
 
-		if (client.getScene() == null)
-			return;
+			// Restart the to avoid potential buffer corruption if the computer has likely resumed from suspension
+			if (deltaTime > 300) {
+				log.debug("Restarting the after probable OS suspend ({} second delta)", deltaTime);
+				restartPlugin();
+			}
+
+			// If system time changes between frames, clamp the delta to a more sensible value
+			if (abs(deltaTime) > 10)
+				deltaTime = 1 / 60.f;
+			// The client delta doesn't need clamping
+			deltaClientTime = (float) (elapsedClientTime - lastFrameClientTime);
+
+			elapsedTime += deltaTime;
+			windOffset += deltaTime * environmentManager.getCurrentEnvironment().windSpeed;
+		}
+		lastFrameTimeMillis = System.currentTimeMillis();
+		lastFrameClientTime = elapsedClientTime;
+
+		isClientMinimized = HDUtils.isJFrameMinimized(clientJFrame);
+		if (isClientInFocus) {
+			clientUnfocusedTime = 0;
+		} else {
+			clientUnfocusedTime += deltaTime;
+		}
+		isPowerSaving = isClientMinimized || configPowerSaving && clientUnfocusedTime >= 15;
+
 		// The game runs significantly slower with lower planes in Chambers of Xeric
-		client.getScene().setMinLevel(isInChambersOfXeric ? client.getPlane() : client.getScene().getMinLevel());
+		var ctx = getSceneContext();
+		if (ctx != null)
+			ctx.scene.setMinLevel(ctx.isInChambersOfXeric ? client.getPlane() : ctx.scene.getMinLevel());
+
+		gamevalManager.update();
+		DestructibleHandler.flushPendingDestruction();
 	}
 
 	@Subscribe
@@ -1838,6 +2227,11 @@ public class HdPlugin extends Plugin {
 		fishingSpotReplacer.update();
 	}
 
+	@Subscribe
+	public void onFocusChanged(FocusChanged event) {
+		isClientInFocus = event.isFocused();
+	}
+
 	@SuppressWarnings("StatementWithEmptyBody")
 	public static void clearGLErrors() {
 		// @formatter:off
@@ -1845,14 +2239,20 @@ public class HdPlugin extends Plugin {
 		// @formatter:on
 	}
 
-	public static void checkGLErrors() {
-		if (SKIP_GL_ERROR_CHECKS)
-			return;
+	public static boolean checkGLErrors() {
+		return checkGLErrors(null);
+	}
 
+	public static boolean checkGLErrors(@Nullable Provider<String> contextProvider) {
+		if (SKIP_GL_ERROR_CHECKS)
+			return false;
+
+		boolean hasGLError = false;
+		String context = null;
 		while (true) {
 			int err = glGetError();
 			if (err == GL_NO_ERROR)
-				return;
+				return hasGLError;
 
 			String errStr;
 			switch (err) {
@@ -1878,8 +2278,14 @@ public class HdPlugin extends Plugin {
 					errStr = String.format("Error code: %d", err);
 					break;
 			}
-
-			log.debug("glGetError:", new Exception(errStr));
+			if (contextProvider != null && context == null)
+				context = contextProvider.get();
+			if (context != null) {
+				log.debug("glGetError({}):", context, new Exception(errStr));
+			} else {
+				log.debug("GL error:", new Exception(errStr));
+			}
+			hasGLError = true;
 		}
 	}
 
@@ -1900,7 +2306,7 @@ public class HdPlugin extends Plugin {
 //		);
 	}
 
-	private void displayUnsupportedGpuMessage(boolean isFallbackGpu, String glRenderer) {
+	private void displayUnsupportedGpuMessage(boolean isFallbackGpu, String glRenderer, Renderer renderer) {
 		String hint32Bit = "";
 		if (HDUtils.is32Bit()) {
 			hint32Bit =
@@ -1924,8 +2330,12 @@ public class HdPlugin extends Plugin {
 					+ "&nbsp;• Reinstall the drivers for <b>both</b> your processor's integrated graphics <b>and</b> your graphics card.<br>"
 				) :
 					(
-						"Your GPU is currently not supported by 117 HD.<br><br>GPU name: " + glRenderer + "<br>"
-						+ "<br>"
+						(
+							renderer instanceof LegacyRenderer && GL_CAPS.OpenGL31 ?
+								"The legacy renderer does not support your GPU. Try disabling it in the Legacy settings section." :
+								"Your GPU is currently not supported by 117 HD."
+						)
+						+ "<br><br>GPU name: " + glRenderer + "<br><br>"
 						+ "Your computer might not be letting RuneLite access your most powerful GPU.<br>"
 						+ "To find out if your system is supported, try the following steps:<br>"
 						+ "&nbsp;• Reinstall the drivers for your graphics card. You can find a link below.<br>"
@@ -1975,7 +2385,8 @@ public class HdPlugin extends Plugin {
 		} else {
 			errorMessage =
 				"The plugin ran out of memory. "
-				+ "Try " + (useLowMemoryMode ? "" : "reducing your model cache size from " + config.modelCacheSizeMiB() + " or ") + "closing other programs.<br>"
+				+ "Try " + (useLowMemoryMode ? "" : "reducing your model cache size from " + config.modelCacheSizeMiB() + " or ")
+				+ "closing other programs.<br>"
 				+ "<br>"
 				+ "If the issue persists, please join our "
 				+ "<a href=\"" + HdPlugin.DISCORD_URL + "\">Discord</a> server, and click the \"Open logs folder\" button<br>"

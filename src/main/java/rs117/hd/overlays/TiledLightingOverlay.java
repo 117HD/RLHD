@@ -12,6 +12,8 @@ import rs117.hd.config.DynamicLights;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILED_LIGHTING_MAP;
+import static rs117.hd.utils.HDUtils.drawStringCentered;
+import static rs117.hd.utils.HDUtils.drawStringShadowed;
 
 @Slf4j
 @Singleton

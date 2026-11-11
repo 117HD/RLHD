@@ -135,11 +135,15 @@ public class AABB {
 	}
 
 	public boolean contains(int... worldPos) {
-		assert worldPos.length >= 2 : "Expected X, Y & possibly a plane, got: " + Arrays.toString(worldPos);
+		final int length = worldPos.length;
+		assert length >= 2 : "Expected X, Y & possibly a plane, got: " + Arrays.toString(worldPos);
+		final int x = worldPos[0];
+		final int y = worldPos[1];
+		final int z = length > 2 ? worldPos[2] : 0;
 		return
-			minX <= worldPos[0] && worldPos[0] <= maxX &&
-			minY <= worldPos[1] && worldPos[1] <= maxY &&
-			(worldPos.length < 3 || minZ <= worldPos[2] && worldPos[2] <= maxZ);
+			minX <= x && x <= maxX &&
+			minY <= y && y <= maxY &&
+			(length < 3 || minZ <= z && z <= maxZ);
 	}
 
 	public boolean contains(WorldPoint location) {
@@ -191,6 +195,12 @@ public class AABB {
 		};
 	}
 
+	public int distanceToPoint(int x, int y) {
+		int dx = Math.max(Math.max(minX - x, 0), x - maxX);
+		int dy = Math.max(Math.max(minY - y, 0), y - maxY);
+		return dx * dx + dy * dy;
+	}
+
 	@Override
 	public String toString() {
 		if (hasZ())
@@ -209,6 +219,17 @@ public class AABB {
 		if (isPoint())
 			return String.format("[ %d, %d ]", minX, minY);
 		return String.format("[ %d, %d, %d, %d ]", minX, minY, maxX, maxY);
+	}
+
+	@Override
+	public int hashCode() {
+		int h = minX;
+		h = h * 31 + maxX;
+		h = h * 31 + minY;
+		h = h * 31 + maxY;
+		h = h * 31 + minZ;
+		h = h * 31 + maxZ;
+		return h;
 	}
 
 	@Override

@@ -42,36 +42,39 @@ in vec3 gNormal[3];
 in int gAlphaBiasHsl[3];
 in int gMaterialData[3];
 in int gTerrainData[3];
-in int gWorldViewId[3];
 
-flat out ivec3 vAlphaBiasHsl;
-flat out ivec3 vMaterialData;
-flat out ivec3 vTerrainData;
-flat out vec3 T;
-flat out vec3 B;
+flat out int fWorldViewId;
+flat out ivec3 fAlphaBiasHsl;
+flat out ivec3 fMaterialData;
+flat out ivec3 fTerrainData;
 
 out FragmentData {
     vec3 position;
     vec2 uv;
     vec3 normal;
-    vec3 texBlend;
+    #if CENTROID_QUALIFIER
+        centroid out vec3 texBlend;
+    #else
+        vec3 texBlend;
+    #endif
 } OUT;
 
 void main() {
-    vec3 vUv[3];
+    fWorldViewId = -1;
 
     // MacOS doesn't allow assigning these arrays directly.
     // One of the many wonders of Apple software...
+    vec3 vUv[3];
     for (int i = 0; i < 3; i++) {
-        vAlphaBiasHsl[i] = gAlphaBiasHsl[i];
+        fAlphaBiasHsl[i] = gAlphaBiasHsl[i];
         vUv[i] = gUv[i];
-        vMaterialData[i] = gMaterialData[i];
-        vTerrainData[i] = gTerrainData[i];
+        fMaterialData[i] = gMaterialData[i];
+        fTerrainData[i] = gTerrainData[i];
     }
 
-    int materialData = vMaterialData[0];
+    int materialData = fMaterialData[0];
 
-    computeUvs(materialData, gWorldViewId[0], vec3[](gPosition[0], gPosition[1], gPosition[2]), vUv);
+    computeUvs(materialData, -1, vec3[](gPosition[0], gPosition[1], gPosition[2]), vUv);
 
     // Calculate tangent-space vectors
     mat2 triToUv = mat2(
@@ -80,31 +83,11 @@ void main() {
     );
     if (determinant(triToUv) == 0)
         triToUv = mat2(1);
-    mat2 uvToTri = inverse(triToUv) * -1; // Flip UV direction, since OSRS UVs are oriented strangely
     mat2x3 triToWorld = mat2x3(
         gPosition[1] - gPosition[0],
         gPosition[2] - gPosition[0]
     );
-    mat2x3 TB = triToWorld * uvToTri; // Preserve scale in order for displacement to interact properly with shadow mapping
-    T = TB[0];
-    B = TB[1];
     vec3 N = normalize(cross(triToWorld[0], triToWorld[1]));
-
-    #if UNDO_VANILLA_SHADING && ZONE_RENDERER
-        if ((materialData >> MATERIAL_FLAG_UNDO_VANILLA_SHADING & 1) == 1) {
-            for (int i = 0; i < 3; i++) {
-                vec3 normal = gNormal[i];
-                float magnitude = length(normal);
-                if (magnitude == 0) {
-                    normal = N;
-                } else {
-                    normal /= magnitude;
-                }
-                // TODO: Rotate normal for player shading reversal
-                undoVanillaShading(vAlphaBiasHsl[i], normal);
-            }
-        }
-    #endif
 
     for (int i = 0; i < 3; i++) {
         vec4 pos = vec4(gPosition[i], 1);
@@ -113,19 +96,11 @@ void main() {
 
         OUT.position = pos.xyz;
         OUT.uv = vUv[i].xy;
-        #if FLAT_SHADING
-            OUT.normal = N;
-        #else
-            OUT.normal = length(normal) == 0 ? N : normalize(normal);
-        #endif
+        OUT.normal = length(normal) == 0 ? N : normalize(normal);
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
 
-        pos = projectionMatrix * pos;
-        #if ZONE_RENDERER
-            int depthBias = (gAlphaBiasHsl[i] >> 16) & 0xff;
-            pos.z += depthBias / 128.0;
-        #endif
+        pos = uboGlobal.projectionMatrix * pos;
         gl_Position = pos;
         EmitVertex();
     }

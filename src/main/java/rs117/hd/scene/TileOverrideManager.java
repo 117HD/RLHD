@@ -1,7 +1,5 @@
 package rs117.hd.scene;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -18,12 +16,14 @@ import net.runelite.api.*;
 import net.runelite.api.coords.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
+import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
+import rs117.hd.utils.collections.Int2ObjectHashMap;
 
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.localToWorld;
@@ -35,6 +35,10 @@ public class TileOverrideManager {
 	private static final ResourcePath TILE_OVERRIDES_PATH = Props
 		.getFile("rlhd.tile-overrides-path", () -> path(TileOverrideManager.class, "tile_overrides.json"));
 
+	private static final ThreadLocal<int[]> OVERLAY_UNDERLAY_IDS = ThreadLocal.withInitial(() -> new int[2]);
+
+	public static TileOverride[] OVERRIDES;
+
 	@Inject
 	private Client client;
 
@@ -44,27 +48,34 @@ public class TileOverrideManager {
 	@Inject
 	private HdPlugin plugin;
 
+	@Inject
+	private SceneManager sceneManager;
+
 	private FileWatcher.UnregisterCallback fileWatcher;
 	private boolean trackReplacements;
-	private List<Map.Entry<Area, TileOverride>> anyMatchOverrides;
-	private ListMultimap<Integer, Map.Entry<Area, TileOverride>> idMatchOverrides;
+	private List<TileOverride> anyMatchOverrides;
+	private Int2ObjectHashMap<List<TileOverride>> idMatchOverrides;
 
 	public void startUp() {
-		fileWatcher = TILE_OVERRIDES_PATH.watch((path, first) -> clientThread.invoke(() -> reload(!first)));
+		fileWatcher = TILE_OVERRIDES_PATH.watch((path, first) -> clientThread.invoke(() -> reload(first)));
 	}
 
 	public void shutDown() {
 		if (fileWatcher != null)
 			fileWatcher.unregister();
+		OVERRIDES = null;
 		fileWatcher = null;
 		anyMatchOverrides = null;
 		idMatchOverrides = null;
 	}
 
-	public void reload(boolean reloadScene) {
+	public void reload(boolean skipSceneReload) {
 		assert client.isClientThread();
 
 		try {
+			sceneManager.getLoadingLock().lock();
+			sceneManager.completeAllStreaming();
+
 			TileOverride[] allOverrides = TILE_OVERRIDES_PATH.loadJson(plugin.getGson(), TileOverride[].class);
 			if (allOverrides == null)
 				throw new IOException("Empty or invalid: " + TILE_OVERRIDES_PATH);
@@ -81,8 +92,8 @@ public class TileOverrideManager {
 
 			checkForReplacementLoops(allOverrides);
 
-			List<Map.Entry<Area, TileOverride>> anyMatch = new ArrayList<>();
-			ListMultimap<Integer, Map.Entry<Area, TileOverride>> idMatch = ArrayListMultimap.create();
+			List<TileOverride> anyMatch = new ArrayList<>();
+			Int2ObjectHashMap<List<TileOverride>> idMatch = new Int2ObjectHashMap<>();
 
 			var tileOverrideVars = plugin.vars.aliases(Map.of(
 				"textures", "groundTextures"
@@ -101,28 +112,35 @@ public class TileOverrideManager {
 				if (override.area == Area.NONE)
 					continue;
 
-				var replacement = trackReplacements ? override : override.resolveConstantReplacements();
-				var entry = Map.entry(override.area, replacement);
+				override.replacement = trackReplacements ? override : override.resolveConstantReplacements();
 				if (override.ids != null) {
-					for (int id : override.ids)
-						idMatch.put(id, entry);
+					for (int id : override.ids) {
+						List<TileOverride> overrides = idMatch.get(id);
+						if (overrides == null)
+							idMatch.put(id, overrides = new ArrayList<>());
+						overrides.add(override);
+					}
 				} else {
-					anyMatch.add(entry);
+					anyMatch.add(override);
 				}
 			}
 
 			anyMatchOverrides = anyMatch;
 			idMatchOverrides = idMatch;
+			OVERRIDES = allOverrides;
 
 			log.debug("Loaded {} tile overrides", allOverrides.length);
 		} catch (IOException ex) {
 			log.error("Failed to load tile overrides:", ex);
+		} finally {
+			sceneManager.getLoadingLock().unlock();
+			log.trace("loadingLock unlocked - holdCount: {}", sceneManager.getLoadingLock().getHoldCount());
 		}
 
 		// Update the reference, since the underlying dirt materials may have changed
 		TileOverride.NONE.groundMaterial = GroundMaterial.DIRT;
 
-		if (reloadScene) {
+		if (!skipSceneReload) {
 			plugin.renderer.clearCaches();
 			plugin.renderer.reloadScene();
 		}
@@ -197,7 +215,7 @@ public class TileOverrideManager {
 		clientThread.invoke(() -> {
 			trackReplacements = shouldTrackReplacements;
 			if (plugin.isActive())
-				reload(true);
+				reload(false);
 		});
 	}
 
@@ -217,47 +235,54 @@ public class TileOverrideManager {
 			int z = tile.getRenderLevel();
 			int overlayId = OVERLAY_FLAG | sceneContext.scene.getOverlayIds()[z][x][y];
 			int underlayId = sceneContext.scene.getUnderlayIds()[z][x][y];
-			ids = new int[] { overlayId, underlayId };
+			ids = OVERLAY_UNDERLAY_IDS.get();
+			ids[0] = overlayId;
+			ids[1] = underlayId;
 		}
-		var override = getOverrideBeforeReplacements(worldPos, ids);
+
+		final TileOverride override = getOverrideBeforeReplacements(worldPos, ids);
 		if (override.isConstant())
 			return override;
 
-		sceneContext.tileOverrideVars.setTile(tile);
-		var replacement = override.resolveReplacements(sceneContext.tileOverrideVars);
-		sceneContext.tileOverrideVars.setTile(null); // Avoid accidentally keeping the old scene in memory
+		final var vars = SceneContext.TILE_OVERRIDE_VARIABLES.get();
+		vars.setTile(tile);
+		TileOverride replacement = override.resolveReplacements(vars);
+		vars.setTile(null); // Avoid accidentally keeping the old scene in memory
 		return replacement;
 	}
 
 	@Nonnull
 	public TileOverride getOverrideBeforeReplacements(@Nonnull int[] worldPos, int... ids) {
 		var match = TileOverride.NONE;
+		int index = match.index;
 
 		outer:
-		for (int id : ids) {
-			var entries = idMatchOverrides.get(id);
-			for (var entry : entries) {
-				var area = entry.getKey();
-				if (area.containsPoint(worldPos)) {
-					match = entry.getValue();
+		for (int i = 0; i < ids.length; i++) {
+			final int id = ids[i];
+			final var entries = idMatchOverrides.get(id);
+			if (entries == null)
+				continue;
+			for (int j = 0; j < entries.size(); j++) {
+				final var entry = entries.get(j);
+				if (entry.area.containsPoint(worldPos)) {
+					index = entry.index;
+					match = entry.replacement;
 					match.queriedAsOverlay = (id & OVERLAY_FLAG) != 0;
 					break outer;
 				}
 			}
 		}
 
-		for (var entry : anyMatchOverrides) {
-			var anyMatch = entry.getValue();
-			if (anyMatch.index > match.index)
+		for (int i = 0; i < anyMatchOverrides.size(); i++)  {
+			final var entry = anyMatchOverrides.get(i);
+			if (entry.index > index)
 				break;
-			var area = entry.getKey();
-			if (area.containsPoint(worldPos)) {
-				match = anyMatch;
+			if (entry.area.containsPoint(worldPos)) {
+				match = entry.replacement;
 				break;
 			}
 		}
 
 		return match;
 	}
-
 }

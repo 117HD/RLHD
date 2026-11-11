@@ -35,107 +35,54 @@ public class ModelHasher {
 	public void setModel(Model model, ModelOverride modelOverride, int preOrientation) {
 		this.model = model;
 		faceCount = model.getFaceCount();
-		if (plugin.configUseFasterModelHashing) {
-			faceColorsOneHash = fastHash(model.getFaceColors1());
-			faceColorsTwoHash = 0;
-			faceColorsThreeHash = 0;
-			faceTransparenciesHash = fastByteHash(model.getFaceTransparencies());
-			faceTexturesHash = fastShortHash(model.getFaceTextures());
-			xVerticesHash = fastFloatHash(model.getVerticesX(), model.getVerticesCount());
-			yVerticesHash = fastFloatHash(model.getVerticesY(), model.getVerticesCount());
-			zVerticesHash = fastFloatHash(model.getVerticesZ(), model.getVerticesCount());
-			faceIndicesOneHash = fastHash(model.getFaceIndices1());
-			faceIndicesTwoHash = 0;
-			faceIndicesThreeHash = 0;
-			textureTrianglesHash = 0;
-			final byte[] textureFaces = model.getTextureFaces();
-			if (textureFaces != null) {
-				boolean hasVanillaTexturedFaces = false;
-				for (int textureId : textureFaces) {
-					if (textureId != -1) {
-						hasVanillaTexturedFaces = true;
-						break;
-					}
-				}
-				if (hasVanillaTexturedFaces) {
-					final int[] texIndices1 = model.getTexIndices1();
-					final int[] texIndices2 = model.getTexIndices2();
-					final int[] texIndices3 = model.getTexIndices3();
-					final float[] vertexX = model.getVerticesX();
-					final float[] vertexY = model.getVerticesY();
-					final float[] vertexZ = model.getVerticesZ();
-					long h = 0;
-					for (int i = 0; i < model.getFaceCount(); i++) {
-						int texFace = textureFaces[i];
-						if (texFace == -1)
-							continue;
-						texFace &= 0xff;
-						final int texA = texIndices1[texFace];
-						final int texB = texIndices2[texFace];
-						final int texC = texIndices3[texFace];
-						h = h * 31L + Float.floatToIntBits(vertexX[texA]);
-						h = h * 31L + Float.floatToIntBits(vertexY[texA]);
-						h = h * 31L + Float.floatToIntBits(vertexZ[texA]);
-						h = h * 31L + Float.floatToIntBits(vertexX[texB]);
-						h = h * 31L + Float.floatToIntBits(vertexY[texB]);
-						h = h * 31L + Float.floatToIntBits(vertexZ[texB]);
-						h = h * 31L + Float.floatToIntBits(vertexX[texC]);
-						h = h * 31L + Float.floatToIntBits(vertexY[texC]);
-						h = h * 31L + Float.floatToIntBits(vertexZ[texC]);
-					}
-					textureTrianglesHash = h;
+		faceColorsOneHash = fastHash(model.getFaceColors1());
+		faceColorsTwoHash = 0;
+		faceColorsThreeHash = 0;
+		faceTransparenciesHash = fastByteHash(model.getFaceTransparencies());
+		faceTexturesHash = fastShortHash(model.getFaceTextures());
+		xVerticesHash = fastFloatHash(model.getVerticesX(), model.getVerticesCount());
+		yVerticesHash = fastFloatHash(model.getVerticesY(), model.getVerticesCount());
+		zVerticesHash = fastFloatHash(model.getVerticesZ(), model.getVerticesCount());
+		faceIndicesOneHash = fastHash(model.getFaceIndices1());
+		faceIndicesTwoHash = 0;
+		faceIndicesThreeHash = 0;
+		textureTrianglesHash = 0;
+		final byte[] textureFaces = model.getTextureFaces();
+		if (textureFaces != null) {
+			boolean hasVanillaTexturedFaces = false;
+			for (int textureId : textureFaces) {
+				if (textureId != -1) {
+					hasVanillaTexturedFaces = true;
+					break;
 				}
 			}
-		} else {
-			faceColorsOneHash = fastHash(model.getFaceColors1());
-			faceColorsTwoHash = fastHash(model.getFaceColors2());
-			faceColorsThreeHash = fastHash(model.getFaceColors3());
-			faceTransparenciesHash = fastByteHash(model.getFaceTransparencies());
-			faceTexturesHash = fastShortHash(model.getFaceTextures());
-			xVerticesHash = fastFloatHash(model.getVerticesX(), model.getVerticesCount());
-			yVerticesHash = fastFloatHash(model.getVerticesY(), model.getVerticesCount());
-			zVerticesHash = fastFloatHash(model.getVerticesZ(), model.getVerticesCount());
-			faceIndicesOneHash = fastHash(model.getFaceIndices1());
-			faceIndicesTwoHash = fastHash(model.getFaceIndices2());
-			faceIndicesThreeHash = fastHash(model.getFaceIndices3());
-			textureTrianglesHash = 0;
-			final byte[] textureFaces = model.getTextureFaces();
-			if (textureFaces != null) {
-				boolean hasVanillaTexturedFaces = false;
-				for (int textureId : textureFaces) {
-					if (textureId != -1) {
-						hasVanillaTexturedFaces = true;
-						break;
-					}
+			if (hasVanillaTexturedFaces) {
+				final int[] texIndices1 = model.getTexIndices1();
+				final int[] texIndices2 = model.getTexIndices2();
+				final int[] texIndices3 = model.getTexIndices3();
+				final float[] vertexX = model.getVerticesX();
+				final float[] vertexY = model.getVerticesY();
+				final float[] vertexZ = model.getVerticesZ();
+				long h = 0;
+				for (int i = 0; i < model.getFaceCount(); i++) {
+					int texFace = textureFaces[i];
+					if (texFace == -1)
+						continue;
+					texFace &= 0xff;
+					final int texA = texIndices1[texFace];
+					final int texB = texIndices2[texFace];
+					final int texC = texIndices3[texFace];
+					h = h * 31L + Float.floatToIntBits(vertexX[texA]);
+					h = h * 31L + Float.floatToIntBits(vertexY[texA]);
+					h = h * 31L + Float.floatToIntBits(vertexZ[texA]);
+					h = h * 31L + Float.floatToIntBits(vertexX[texB]);
+					h = h * 31L + Float.floatToIntBits(vertexY[texB]);
+					h = h * 31L + Float.floatToIntBits(vertexZ[texB]);
+					h = h * 31L + Float.floatToIntBits(vertexX[texC]);
+					h = h * 31L + Float.floatToIntBits(vertexY[texC]);
+					h = h * 31L + Float.floatToIntBits(vertexZ[texC]);
 				}
-				if (hasVanillaTexturedFaces) {
-					final int[] texIndices1 = model.getTexIndices1();
-					final int[] texIndices2 = model.getTexIndices2();
-					final int[] texIndices3 = model.getTexIndices3();
-					final float[] vertexX = model.getVerticesX();
-					final float[] vertexY = model.getVerticesY();
-					final float[] vertexZ = model.getVerticesZ();
-					long h = 0;
-					for (int i = 0; i < model.getFaceCount(); i++) {
-						int texFace = textureFaces[i];
-						if (texFace == -1)
-							continue;
-						texFace &= 0xff;
-						final int texA = texIndices1[texFace];
-						final int texB = texIndices2[texFace];
-						final int texC = texIndices3[texFace];
-						h = h * 31L + Float.floatToIntBits(vertexX[texA]);
-						h = h * 31L + Float.floatToIntBits(vertexY[texA]);
-						h = h * 31L + Float.floatToIntBits(vertexZ[texA]);
-						h = h * 31L + Float.floatToIntBits(vertexX[texB]);
-						h = h * 31L + Float.floatToIntBits(vertexY[texB]);
-						h = h * 31L + Float.floatToIntBits(vertexZ[texB]);
-						h = h * 31L + Float.floatToIntBits(vertexX[texC]);
-						h = h * 31L + Float.floatToIntBits(vertexY[texC]);
-						h = h * 31L + Float.floatToIntBits(vertexZ[texC]);
-					}
-					textureTrianglesHash = h;
-				}
+				textureTrianglesHash = h;
 			}
 		}
 

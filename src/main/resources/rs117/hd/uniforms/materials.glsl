@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utils/misc.glsl>
+
 #include MATERIAL_COUNT
 
 struct Material {
@@ -9,7 +11,9 @@ struct Material {
     int roughnessMap;
     int ambientOcclusionMap;
     int flowMap;
+    int shadowAlphaMap;
     int flags; // overrideBaseColor << 2 | unlit << 1 | hasTransparency
+    float subsurface;
     float brightness;
     float displacementScale;
     float specularStrength;
@@ -21,8 +25,8 @@ struct Material {
 };
 
 layout(std140) uniform UBOMaterials {
-    Material MaterialArray[MATERIAL_COUNT];
-};
+    Material Array[MATERIAL_COUNT];
+} uboMaterials;
 
 #include MATERIAL_GETTER
 

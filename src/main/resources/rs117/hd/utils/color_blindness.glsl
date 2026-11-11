@@ -3,6 +3,8 @@
 // https://web.archive.org/web/20090731011248/http://scien.stanford.edu/class/psych221/projects/05/ofidaner/project_report.pdf
 //
 
+#include <uniforms/global.glsl>
+
 #include COLOR_BLINDNESS
 
 #define NONE 0
@@ -64,7 +66,7 @@ vec3 colorBlindnessCompensation(vec3 color)
   vec3 compensation = error * protanopiaDaltonization;
 
   // Add compensation to original values
-  compensation = color + compensation * colorBlindnessIntensity;
+  compensation = color + compensation * uboGlobal.colorBlindnessIntensity;
 
   return compensation;
 }

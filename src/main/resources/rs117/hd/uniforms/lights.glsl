@@ -10,11 +10,11 @@ struct PointLight {
 
 layout(std140) uniform UBOLights {
     PointLight PointLightArray[MAX_LIGHT_COUNT];
-};
+} uboLights;
 
 layout(std140) uniform UBOLightsCulling {
     vec4 PointLightPositionsArray[MAX_LIGHT_COUNT];
-};
+} uboLightsCulling;
 
 bool isDualPacked(uint packedValue) {
     return (packedValue & 0x8000u) != 0u;

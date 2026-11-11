@@ -22,7 +22,6 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ProceduralGenerator;
-import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
@@ -72,6 +71,7 @@ public class LegacyModelPusher {
 
 	private static final int[] ZEROED_INTS = new int[12];
 
+	private final int[] tzHaarRecolored = new int[3];
 	private ModelCache modelCache;
 
 	public void startUp() {
@@ -149,8 +149,8 @@ public class LegacyModelPusher {
 	}
 
 	/**
-	 * Pushes model data to staging buffers in the provided {@link SceneContext}, and writes the pushed number of
-	 * vertices and UVs to {@link SceneContext#modelPusherResults}.
+	 * Pushes model data to staging buffers in the provided {@link LegacySceneContext}, and writes the pushed number of
+	 * vertices and UVs to {@link LegacySceneContext#modelPusherResults}.
 	 *
 	 * @param sceneContext   object for the scene to push model data for
 	 * @param tile           that the model is associated with, if any
@@ -192,7 +192,7 @@ public class LegacyModelPusher {
 
 		boolean skipUVs =
 			!isVanillaTextured &&
-			baseMaterial.packMaterialData(modelOverride, UvType.GEOMETRY, false, false) == 0 &&
+			baseMaterial.packMaterialData(modelOverride, UvType.GEOMETRY, false) == 0 &&
 			modelOverride.colorOverrides == null;
 
 		// ensure capacity upfront
@@ -346,13 +346,16 @@ public class LegacyModelPusher {
 					}
 				}
 
+				if (faceOverride.hide)
+					continue;
+
 				if (material != Material.NONE) {
 					uvType = faceOverride.uvType;
 					if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs))
 						uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 				}
 
-				int materialData = material.packMaterialData(faceOverride, uvType, false, textureId != -1);
+				int materialData = material.packMaterialData(faceOverride, uvType, false);
 
 				final float[] uvData = sceneContext.modelFaceUvs;
 				if (materialData == 0) {
@@ -384,7 +387,7 @@ public class LegacyModelPusher {
 		sceneContext.modelPusherResults[1] = texturedFaceCount;
 	}
 
-	private void getNormalDataForFace(SceneContext sceneContext, Model model, @Nonnull ModelOverride modelOverride, int face) {
+	private void getNormalDataForFace(LegacySceneContext sceneContext, Model model, @Nonnull ModelOverride modelOverride, int face) {
 		assert packTerrainData(false, 0, WaterType.NONE, 0) == 0;
 		if (modelOverride.flatNormals || !plugin.configPreserveVanillaNormals && model.getFaceColors3()[face] == -1) {
 			Arrays.fill(sceneContext.modelFaceNormals, 0);
@@ -419,28 +422,9 @@ public class LegacyModelPusher {
 		sceneContext.modelFaceNormals[11] = terrainData;
 	}
 
-	private boolean isBakedGroundShading(Model model, int face) {
-		final byte[] faceTransparencies = model.getFaceTransparencies();
-		if (faceTransparencies == null || (faceTransparencies[face] & 0xFF) <= 100)
-			return false;
-
-		final short[] faceTextures = model.getFaceTextures();
-		if (faceTextures != null && faceTextures[face] != -1)
-			return false;
-
-		final float[] yVertices = model.getVerticesY();
-		float heightA = yVertices[model.getFaceIndices1()[face]];
-		if (heightA < -8)
-			return false;
-
-		float heightB = yVertices[model.getFaceIndices2()[face]];
-		float heightC = yVertices[model.getFaceIndices3()[face]];
-		return heightA == heightB && heightA == heightC;
-	}
-
 	@SuppressWarnings({ "ReassignedVariable" })
 	private int[] getFaceVertices(
-		SceneContext sceneContext,
+		LegacySceneContext sceneContext,
 		Tile tile,
 		int uuid,
 		Model model,
@@ -451,7 +435,7 @@ public class LegacyModelPusher {
 			return ZEROED_INTS; // Hide the face
 
 		// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
-		if (plugin.configHideFakeShadows && isBakedGroundShading(model, face)) {
+		if (plugin.configHideFakeShadows && HDUtils.isBakedGroundShading(model, face)) {
 			if (modelOverride.hideVanillaShadows)
 				return ZEROED_INTS; // Hide the face
 
@@ -602,20 +586,19 @@ public class LegacyModelPusher {
 					}
 				}
 
-				if (plugin.configTzhaarHD && modelOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
-					int[] tzHaarRecolored = ProceduralGenerator.recolorTzHaar(
-						uuid,
+				if (plugin.configLegacyTzHaarReskin && modelOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
+					ProceduralGenerator.recolorTzHaar(
 						modelOverride,
 						model,
 						face,
 						color1,
 						color2,
-						color3
+						color3,
+						tzHaarRecolored
 					);
 					color1 = tzHaarRecolored[0];
 					color2 = tzHaarRecolored[1];
 					color3 = tzHaarRecolored[2];
-					packedAlphaPriorityFlags |= tzHaarRecolored[3] << 24;
 				}
 			}
 		}

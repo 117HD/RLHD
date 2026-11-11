@@ -11,6 +11,14 @@
         "type": "string",
         "description": "Identifier used to refer to the water type."
       },
+      "description": {
+        "type": "string",
+        "description": "Optional description of what this applies to or is used for."
+      },
+      "material": {
+        "type": "string",
+        "description": "Name of a material whose vanilla texture this water type should be the fallback for."
+      },
       "flat": {
         "type": "boolean",
         "description": "Whether the water type should be opaque, i.e. not show any underwater geometry."

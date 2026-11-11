@@ -52,11 +52,16 @@ public class Material {
 	private Material ambientOcclusionMap;
 	@JsonAdapter(Reference.Adapter.class)
 	private Material flowMap;
+	@JsonAdapter(Reference.Adapter.class)
+	private Material shadowAlphaMap;
 	public boolean hasTransparency;
+	public boolean doubleSidedFaces;
+	private boolean seasonalFoliage;
 	private boolean overrideBaseColor;
 	private boolean unlit;
 	@JsonAdapter(ColorUtils.LinearAdapter.class)
-	private float brightness = 1;
+	public float brightness = 1;
+	public float subsurface;
 	private float displacementScale = .1f;
 	private float flowMapStrength;
 	private float[] flowMapDuration = { 0, 0 };
@@ -76,7 +81,8 @@ public class Material {
 
 	public static final int MAX_MATERIAL_INDEX = (1 << 12) - 1;
 	public static final Material NONE = new Material().name("NONE");
-	public static final Material[] REQUIRED_MATERIALS = { NONE };
+	public static final Material UNLIT = new Material().name("UNLIT").parent(NONE).unlit(true);
+	public static final Material[] REQUIRED_MATERIALS = { NONE, UNLIT };
 
 	public static int getTextureLayer(@Nullable Material material) {
 		return material == null ? -1 : material.textureLayer;
@@ -101,6 +107,7 @@ public class Material {
 		roughnessMap = resolveReference(roughnessMap, materials);
 		ambientOcclusionMap = resolveReference(ambientOcclusionMap, materials);
 		flowMap = resolveReference(flowMap, materials);
+		shadowAlphaMap = resolveReference(shadowAlphaMap, materials);
 
 		if (displacementScale == 0)
 			displacementMap = NONE.displacementMap;
@@ -115,17 +122,20 @@ public class Material {
 		if (!Props.DEVELOPMENT && replacementCondition instanceof ExpressionParser.SerializableExpressionPredicate)
 			replacementCondition = ((ExpressionParser.SerializableExpressionPredicate) replacementCondition).predicate;
 
-		// Determine whether the material contains some form of non-vanilla texture change
+		// Determine whether the material contains some form of non-vanilla texture change,
+		// and is not seasonal foliage, which ignores the model textures setting
 		var base = this;
 		while (base.parent != null)
 			base = base.parent;
-		modifiesVanillaTexture =
-			base != NONE ||
+		modifiesVanillaTexture = !seasonalFoliage && (
+			(base != NONE && base.vanillaTextureIndex == -1) ||
 			normalMap != null ||
 			displacementMap != null ||
 			roughnessMap != null ||
 			ambientOcclusionMap != null ||
-			flowMap != null;
+			flowMap != null ||
+			shadowAlphaMap != null
+		);
 	}
 
 	@Override
@@ -170,7 +180,7 @@ public class Material {
 		return replacementCondition.test(vars);
 	}
 
-	public int packMaterialData(@Nonnull ModelOverride modelOverride, UvType uvType, boolean isOverlay, boolean isTextured) {
+	public final int packMaterialData(@Nonnull ModelOverride modelOverride, UvType uvType, boolean isOverlay) {
 		// This needs to return zero by default, since we often fall back to writing all zeroes to UVs
 		assert isValid : String.format("Material %s used after invalidation", this);
 		int materialIndex = uboIndex;
@@ -180,7 +190,7 @@ public class Material {
 			   | ((modelOverride.windDisplacementModifier + 3) & 0x7) << 12
 			   | (modelOverride.windDisplacementMode.ordinal() & 0x7) << 9
 			   | (modelOverride.invertDisplacementStrength ? 1 : 0) << 8
-			   | (modelOverride.undoVanillaShading && !isTextured ? 1 : 0) << 7
+			   | (modelOverride.shadowNormalBias ? 1 : 0) << 7
 			   | (modelOverride.terrainVertexSnap ? 1 : 0) << 6
 			   | (!modelOverride.receiveShadows ? 1 : 0) << 5
 			   | (modelOverride.upwardsNormals ? 1 : 0) << 4
@@ -204,12 +214,14 @@ public class Material {
 		struct.roughnessMap.set(getTextureLayer(roughnessMap));
 		struct.ambientOcclusionMap.set(getTextureLayer(ambientOcclusionMap));
 		struct.flowMap.set(getTextureLayer(flowMap));
+		struct.shadowAlphaMap.set(getTextureLayer(shadowAlphaMap));
 		struct.flags.set(
 			(overrideBaseColor ? 1 : 0) << 2 |
 			(unlit ? 1 : 0) << 1 |
 			(hasTransparency ? 1 : 0)
 		);
 		struct.brightness.set(brightness);
+		struct.subsurface.set(subsurface);
 		struct.displacementScale.set(displacementScale);
 		struct.specularStrength.set(specularStrength);
 		struct.specularGloss.set(specularGloss);

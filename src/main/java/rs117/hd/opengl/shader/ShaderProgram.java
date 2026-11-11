@@ -8,11 +8,14 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.opengl.uniforms.UniformBuffer;
+import rs117.hd.utils.Destructible;
+import rs117.hd.utils.DestructibleHandler;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.APPLE;
 
 @Slf4j
-public class ShaderProgram {
+public class ShaderProgram implements Destructible {
 	@RequiredArgsConstructor
 	private static class UniformBufferBlockPair {
 		public final UniformBuffer<?> buffer;
@@ -63,10 +66,13 @@ public class ShaderProgram {
 		use();
 		initialize();
 
-		glValidateProgram(program);
-		if (glGetProgrami(program, GL_VALIDATE_STATUS) == GL_FALSE) {
-			String err = glGetProgramInfoLog(program);
-			log.error("Failed to validate shader program: {}", getClass().getSimpleName(), new ShaderException(err));
+		// Shader validation can be horribly slow on macOS with AMD GPUs
+		if (!APPLE || log.isDebugEnabled()) {
+			glValidateProgram(program);
+			if (glGetProgrami(program, GL_VALIDATE_STATUS) == GL_FALSE) {
+				String err = glGetProgramInfoLog(program);
+				log.error("Failed to validate shader program: {}", getClass().getSimpleName(), new ShaderException(err));
+			}
 		}
 	}
 
@@ -97,6 +103,14 @@ public class ShaderProgram {
 			glUniformBlockBinding(program, pair.uboProgramIndex, pair.buffer.getBindingIndex());
 	}
 
+	@Override
+	@SuppressWarnings("deprecation")
+	protected void finalize() {
+		if (program != 0)
+			DestructibleHandler.queueLeakedDestruction(this);
+	}
+
+	@Override
 	public void destroy() {
 		viable = true;
 		if (program == 0)
@@ -144,7 +158,8 @@ public class ShaderProgram {
 		public void set(int textureUnit) {
 			assert textureUnit >= GL_TEXTURE0 : "Did you accidentally pass in an image unit?";
 			assert program.isActive();
-			glUniform1i(uniformIndex, textureUnit - GL_TEXTURE0);
+			if (uniformIndex != -1)
+				glUniform1i(uniformIndex, textureUnit - GL_TEXTURE0);
 		}
 	}
 

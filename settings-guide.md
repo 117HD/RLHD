@@ -134,4 +134,4 @@ Adds lighting effects to underwater environments to simulate sunlight passing th
 
 ### HD TzHaar Reskin (default: true)
 
-Reskins the TzHaar environment to match the orange graphics that were introduced with the HD update in RS3. 
+Reskins the TzHaar environment to match the orange graphics that were introduced with the HD update in 2008. 

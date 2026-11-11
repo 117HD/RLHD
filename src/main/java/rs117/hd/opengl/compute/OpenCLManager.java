@@ -423,10 +423,10 @@ public class OpenCLManager {
 				glBuffers.put(buffer.clId);
 			glBuffers.flip();
 
-			PointerBuffer acquireEvent = stack.mallocPointer(1);
+			PointerBuffer acquireEvent = stack.callocPointer(1);
 			CL10GL.clEnqueueAcquireGLObjects(commandQueue, glBuffers, null, acquireEvent);
 
-			PointerBuffer computeEvents = stack.mallocPointer(1 + modelSortingBuffers.length);
+			PointerBuffer computeEvents = stack.callocPointer(1 + modelSortingBuffers.length);
 			if (numPassthroughModels > 0) {
 				clSetKernelArg1p(passthroughKernel, 0, modelPassthroughBuffer.clId);
 				clSetKernelArg1p(passthroughKernel, 1, stagingBufferVertices.clId);
@@ -472,11 +472,19 @@ public class OpenCLManager {
 				computeEvents.position(computeEvents.position() + 1);
 			}
 
-			if (computeEvents.position() == 0) {
-				CL10GL.clEnqueueReleaseGLObjects(commandQueue, glBuffers, null, null);
-			} else {
-				computeEvents.flip();
-				CL10GL.clEnqueueReleaseGLObjects(commandQueue, glBuffers, computeEvents, null);
+			computeEvents.flip();
+			CL10GL.clEnqueueReleaseGLObjects(commandQueue, glBuffers, computeEvents.hasRemaining() ? computeEvents : null, null);
+
+			// Release OpenCL events to prevent memory leak
+			// Events are reference-counted host memory objects that must be explicitly freed
+			long pointer = acquireEvent.get(0);
+			if (pointer != 0L)
+				clReleaseEvent(pointer);
+
+			for (int i = 0; i < computeEvents.limit(); ++i) {
+				pointer = computeEvents.get(i);
+				if (pointer != 0L)
+					clReleaseEvent(pointer);
 			}
 		}
 	}

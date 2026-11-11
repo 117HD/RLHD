@@ -31,8 +31,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum TextureResolution
 {
-	RES_128("128", 128),
-	RES_256("256", 256);
+	RES_128("128 px", 128),
+	RES_256("256 px", 256);
 
 	private final String name;
 	private final int size;
