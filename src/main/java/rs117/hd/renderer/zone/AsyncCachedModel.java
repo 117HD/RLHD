@@ -2,6 +2,7 @@ package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
 import java.lang.reflect.Array;
+import java.nio.Buffer;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.LockSupport;
@@ -16,6 +17,7 @@ import net.runelite.api.*;
 import rs117.hd.renderer.zone.Zone.AlphaModel;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.collections.ConcurrentPool;
+import rs117.hd.utils.collections.NativeBufferPool;
 import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.Job;
 
@@ -34,7 +36,7 @@ public final class AsyncCachedModel extends Job implements Model {
 
 	public static void initialize(Injector injector) {
 		if (AsyncCachedModel.POOL == null)
-			AsyncCachedModel.POOL = new ConcurrentPool<>(() -> injector.getInstance(AsyncCachedModel.class), 32);
+			AsyncCachedModel.POOL = new ConcurrentPool<>(() -> injector.getInstance(AsyncCachedModel.class));
 	}
 
 	public static void destroy() {
@@ -42,9 +44,8 @@ public final class AsyncCachedModel extends Job implements Model {
 		if (AsyncCachedModel.POOL != null)
 			AsyncCachedModel.POOL.destroy();
 		AsyncCachedModel.POOL = null;
+		NativeBufferPool.destroy();
 	}
-
-	private static final Runtime RUNTIME = Runtime.getRuntime();
 
 	private int sceneId;
 	private int bufferOffset;
@@ -120,7 +121,6 @@ public final class AsyncCachedModel extends Job implements Model {
 	private int y;
 	private int z;
 	private UploadModelFunc uploadFunc;
-	private long availableMemory;
 
 	@SuppressWarnings("unchecked")
 	private <T> CachedArrayField<T> addField(PooledArrayType arrayType, int fieldType) {
@@ -197,7 +197,6 @@ public final class AsyncCachedModel extends Job implements Model {
 		// Wait for completion so that the job has cleared the job system before clearing the isProcessing flag
 		waitForCompletion(true);
 
-		availableMemory = RUNTIME.freeMemory();
 		if (processCachedFields(model, false))
 			return true;
 
@@ -465,6 +464,8 @@ public final class AsyncCachedModel extends Job implements Model {
 		private final int fieldType;
 
 		private T value;
+		private volatile Buffer nativeBuffer;
+		private int nativeLength;
 		private final AtomicBoolean cached = new AtomicBoolean(false);
 
 		public boolean isCached() {
@@ -478,17 +479,43 @@ public final class AsyncCachedModel extends Job implements Model {
 
 		public T getValue() {
 			ensureCached();
+
+			// A non-null native buffer means cached data hasn't been materialized into a heap array yet. Once it has,
+			// the native copy is evicted, so the null check doubles as the "already materialized" flag.
+			if (nativeBuffer != null) {
+				synchronized (this) {
+					if (nativeBuffer != null) {
+						final Buffer buffer = nativeBuffer;
+						final int length = nativeLength;
+						try {
+							value = arrayType.borrow(length);
+							NativeBufferPool.copyFromNative(arrayType, buffer, value, length);
+						} finally {
+							nativeLength = 0;
+							// Publish the materialized value before clearing the native buffer
+							nativeBuffer = null;
+							NativeBufferPool.release(arrayType, buffer);
+						}
+					}
+				}
+			}
+
 			return value;
 		}
 
 		public void reset() {
-			if (value != null)
+			if (value != null) {
 				arrayType.release(value);
-			value = null;
+				value = null;
+			}
+			final Buffer buffer = nativeBuffer;
+			nativeBuffer = null;
+			nativeLength = 0;
+			if (buffer != null)
+				NativeBufferPool.release(arrayType, buffer);
 			cached.set(false);
 		}
 
-		@SuppressWarnings("SuspiciousSystemArraycopy")
 		public boolean cache(final Model m, T src, boolean cache) {
 			if (src == null) {
 				if (cache)
@@ -510,22 +537,34 @@ public final class AsyncCachedModel extends Job implements Model {
 			}
 
 			if (!cache) {
-				// Attempt to get an array from the pool, if we fail check if enough memory is available before creating
-				final long requested = (long) arraySize * arrayType.stride;
-				value = arrayType.borrow(arraySize, false);
-
-				if (value == null && requested < availableMemory) {
-					availableMemory -= requested;
-					value = arrayType.create(arraySize);
-				}
-
-				return value != null;
+				// Reserve native storage rather than a pooled heap array, so queued models don't pin JVM heap memory
+				nativeBuffer = NativeBufferPool.borrow(arrayType, arraySize);
+				nativeLength = nativeBuffer != null ? arraySize : 0;
+				return nativeBuffer != null;
 			}
 
-			if (!model.isCompleted.get())
-				System.arraycopy(src, 0, value, 0, arraySize);
+			if (nativeBuffer == null || nativeBuffer.capacity() < arraySize) {
+				// The source field was either not present during setup, or grew afterwards, so reserve storage now
+				if (nativeBuffer != null)
+					NativeBufferPool.release(arrayType, nativeBuffer);
+				nativeBuffer = NativeBufferPool.borrow(arrayType, arraySize);
+				nativeLength = nativeBuffer != null ? arraySize : 0;
+				if (nativeBuffer == null) {
+					// Avoid leaving the job waiting forever if the native memory budget is exhausted
+					cached.set(true);
+					return false;
+				}
+			} else {
+				nativeLength = arraySize;
+			}
 
-			cached.set(true);
+			try {
+				if (!model.isCompleted.get())
+					NativeBufferPool.copyToNative(arrayType, nativeBuffer, src, 0, arraySize);
+			} finally {
+				// Always mark the field as cached, even if copying failed, so the job can't wait forever
+				cached.set(true);
+			}
 			return true;
 		}
 	}
