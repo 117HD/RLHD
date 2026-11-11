@@ -520,9 +520,8 @@ public class CommandBuffer {
 		if (obj == null)
 			return -1;
 
-		for (int i = 0; i < objectCount; i++)
-			if (objects[i] == obj)
-				return i;
+		if(objectCount > 0 && objects[objectCount - 1] == obj)
+			return objectCount - 1;
 
 		if (objectCount == objects.length)
 			objects = Arrays.copyOf(objects, objects.length * 2);
