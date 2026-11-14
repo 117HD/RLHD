@@ -1357,12 +1357,14 @@ public class HdPlugin extends Plugin {
 		// Most environments don't set a wind strength, so treat 0 as the overworld's
 		float overworldWind = environmentManager.getOverworldEnvironment().windStrength;
 		float wind = env.windStrength > 0 ? env.windStrength : overworldWind;
-		float target = (1 + wind * WATER_ROUGHNESS_PER_WIND_STRENGTH) / (1 + overworldWind * WATER_ROUGHNESS_PER_WIND_STRENGTH);
+		float target = (1 + wind * WATER_ROUGHNESS_PER_WIND_STRENGTH) /
+			(1 + overworldWind * WATER_ROUGHNESS_PER_WIND_STRENGTH);
 		target = min(target * max(env.waterRoughness, 0), WATER_ROUGHNESS_MAX);
 		if (Float.isNaN(waterRoughness)) {
 			waterRoughness = target;
 		} else {
-			waterRoughness += (target - waterRoughness) * (1 - (float) Math.exp(-deltaTime / (target > waterRoughness ? WATER_ROUGHNESS_RISE_SECONDS : WATER_ROUGHNESS_FALL_SECONDS)));
+			float easing = target > waterRoughness ? WATER_ROUGHNESS_RISE_SECONDS : WATER_ROUGHNESS_FALL_SECONDS;
+			waterRoughness += (target - waterRoughness) * (1 - (float) Math.exp(-deltaTime / easing));
 		}
 		waterChurnTime = (waterChurnTime + deltaTime * waterRoughness) % MAX_FLOAT_WITH_128TH_PRECISION;
 	}
