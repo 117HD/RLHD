@@ -72,7 +72,7 @@ layout(std140) uniform UBOGlobal {
 
     float lightningBrightness;
     float elapsedTime;
-    vec2 windDirection; // along local X and Z
+    vec2 windDirection; // along local X and Z, unit length
     vec2 windDrift; // total drift along local X and Z, in seconds at the default wind speed
     vec4 windHistory[WIND_HISTORY_LENGTH / 4]; // wind angle at the start of each recent second, indexed by the second
     vec4 roughnessHistory[WIND_HISTORY_LENGTH / 4]; // and the water's roughness
@@ -84,5 +84,5 @@ layout(std140) uniform UBOGlobal {
     vec4 boatWakeHeadings[BOAT_WAKE_MAX_BOATS]; // direction each boat faces, x and z, then its stern, x and z
     vec4 boatWakeHulls[BOAT_WAKE_MAX_BOATS]; // for each boat, its number of points, seconds since it stopped, seconds since it moved off, and 1 going backwards
     vec4 boatWakeSizes[BOAT_WAKE_MAX_BOATS]; // each boat's length and width in tiles, 1 for a square front, then 1 for a big NPC ship
-    float detailDrawDistance; // in tiles, 0 until first set
+    float detailDrawDistance; // in tiles
 } uboGlobal;

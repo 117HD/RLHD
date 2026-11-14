@@ -987,8 +987,6 @@ public class HdPlugin extends Plugin {
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
 			.define("WATER_SPECULAR_REFLECTIONS", config.waterSpecularReflections())
 			.define("DECOUPLE_WATER_FROM_SKY_COLOR", config.decoupleSkyAndWaterColor())
-			.define("IMPROVED_SHORE_FOAM",
-				config.improvedShoreFoam() || config.oceanLace() || config.oceanWaves() || config.boatWakes())
 			.define("SHORE_FOAM", config.improvedShoreFoam())
 			.define("OCEAN_LACE", config.oceanLace())
 			.define("OCEAN_WAVES", config.oceanWaves())
@@ -1001,7 +999,6 @@ public class HdPlugin extends Plugin {
 			.define("WATER_SQUARE_TILE_BIT", SceneContext.WATER_SQUARE_TILE_BIT)
 			.define("WATER_ENCLOSURE_SHIFT", SceneContext.WATER_ENCLOSURE_SHIFT)
 			.define("WATER_ENCLOSURE_STEPS", SceneContext.WATER_ENCLOSURE_STEPS)
-			.define("WATER_ROOM_MAX", SceneContext.SHORE_DISTANCE_MAX)
 			.define("WIND_HISTORY_LENGTH", WaterSurfaceManager.WIND_HISTORY_LENGTH)
 			.define("BOAT_WAKE_MAX_BOATS", BoatWakes.MAX_BOATS)
 			.define("BOAT_WAKE_MAX_POINTS", BoatWakes.MAX_POINTS)
