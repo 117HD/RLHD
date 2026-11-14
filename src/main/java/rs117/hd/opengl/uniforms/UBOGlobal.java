@@ -3,9 +3,9 @@ package rs117.hd.opengl.uniforms;
 import rs117.hd.utils.buffer.GLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.HdPlugin.WIND_HISTORY_LENGTH;
 import static rs117.hd.scene.BoatWakes.MAX_BOATS;
 import static rs117.hd.scene.BoatWakes.MAX_POINTS;
+import static rs117.hd.scene.WaterSurfaceManager.WIND_HISTORY_LENGTH;
 
 public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public UBOGlobal() {

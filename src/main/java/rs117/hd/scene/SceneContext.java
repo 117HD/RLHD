@@ -60,7 +60,7 @@ public class SceneContext {
 	// - Bits 11-14: square tile sides bordering land (west, east, south, north)
 	// - Bit 15: WATER_SQUARE_TILE_BIT
 	// - Bits 24-29: how enclosed the water is, in the unused alpha bits
-	// Matches WATER_ROOM_MAX
+	// Furthest distance from land measured, in tiles, for both the distance to land and the room for waves
 	public static final int SHORE_DISTANCE_MAX = 12;
 	public static final int SHORE_DISTANCE_STEPS = 0x7F;
 	public static final int SHORE_DIRECTION_SHIFT = 7;
@@ -71,8 +71,6 @@ public class SceneContext {
 	 * square tile, and the first marks the south-west triangle
 	 */
 	public static final int WATER_SQUARE_TILE_BIT = 1 << 15;
-	// Furthest distance from land measured, in tiles
-	public static final int WATER_ROOM_MAX = 12;
 	/**
 	 * How enclosed the water around a vertex is, from 0 for open water to WATER_ENCLOSURE_STEPS
 	 */
@@ -159,7 +157,7 @@ public class SceneContext {
 	public void setVertexShoreData(int hash, float distance, float directionX, float directionZ, float room) {
 		int distanceSteps = round(saturate(distance / SHORE_DISTANCE_MAX) * SHORE_DISTANCE_STEPS);
 		int directionSteps = round(atan(directionZ, directionX) / TWO_PI * SHORE_DIRECTION_STEPS);
-		int enclosure = round((1 - saturate(room / WATER_ROOM_MAX)) * WATER_ENCLOSURE_STEPS);
+		int enclosure = round((1 - saturate(room / SHORE_DISTANCE_MAX)) * WATER_ENCLOSURE_STEPS);
 		int value =
 			(SHORE_DISTANCE_STEPS - distanceSteps) << VERTEX_SHORE_DISTANCE_SHIFT |
 			(directionSteps & SHORE_DIRECTION_STEPS - 1) << VERTEX_SHORE_DIRECTION_SHIFT |
@@ -207,10 +205,6 @@ public class SceneContext {
 
 	public boolean isVertexLand(int hash) {
 		return vertexTerrainData.test(hash, VERTEX_IS_LAND);
-	}
-
-	public boolean isVertexWater(int hash) {
-		return vertexTerrainData.test(hash, VERTEX_IS_WATER);
 	}
 
 	public boolean isVertexOverlay(int hash) {

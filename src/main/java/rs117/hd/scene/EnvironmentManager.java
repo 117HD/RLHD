@@ -489,7 +489,7 @@ public class EnvironmentManager {
 	/**
 	 * Resolved environment at the end of the current transition.
 	 */
-	public Environment getToEnvironment() {
+	Environment getToEnvironment() {
 		return state.to;
 	}
 

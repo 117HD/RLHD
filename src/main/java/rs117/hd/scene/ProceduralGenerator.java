@@ -43,6 +43,7 @@ import rs117.hd.utils.collections.PooledArrayType;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.scene.SceneContext.SHORE_DISTANCE_MAX;
 import static rs117.hd.scene.SceneContext.TILE_HAS_LAND_FLAG;
 import static rs117.hd.scene.SceneContext.TILE_LAND_EAST_FLAG;
 import static rs117.hd.scene.SceneContext.TILE_LAND_NORTH_FLAG;
@@ -54,7 +55,6 @@ import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_OVERLAY;
 import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_UNDERLAY;
 import static rs117.hd.scene.SceneContext.TILE_SKIP_FLAG;
 import static rs117.hd.scene.SceneContext.TILE_WATER_FLAG;
-import static rs117.hd.scene.SceneContext.WATER_ROOM_MAX;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 import static rs117.hd.utils.HDUtils.calculateSurfaceNormals;
@@ -794,7 +794,7 @@ public class ProceduralGenerator {
 		private final int[] hashes = new int[4];
 
 		private final byte[][][] underwaterDepthLevels = new byte[MAX_Z][EXTENDED_SCENE_SIZE + 1][EXTENDED_SCENE_SIZE + 1];
-		// Distance from each grid vertex to land, up to WATER_ROOM_MAX tiles, in fifths of a tile (7 per diagonal)
+		// Distance from each grid vertex to land, up to SHORE_DISTANCE_MAX tiles, in fifths of a tile (7 per diagonal)
 		private static final int SHORE_GRID_STEP = 5;
 		private static final int SHORE_GRID_DIAGONAL = 7;
 		private final byte[][][] shoreDistances = new byte[MAX_Z][EXTENDED_SCENE_SIZE + 1][EXTENDED_SCENE_SIZE + 1];
@@ -837,7 +837,7 @@ public class ProceduralGenerator {
 				}
 				// Land vertices are set to 0 below
 				for (byte[] column : shoreDistances[z])
-					Arrays.fill(column, (byte) (WATER_ROOM_MAX * SHORE_GRID_STEP));
+					Arrays.fill(column, (byte) (SHORE_DISTANCE_MAX * SHORE_GRID_STEP));
 			}
 
 			int minZ = MAX_Z, maxZ = 0;

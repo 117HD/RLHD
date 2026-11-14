@@ -43,13 +43,13 @@ import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.renderer.SkyRenderer;
 import rs117.hd.scene.AreaManager;
-import rs117.hd.scene.BoatWakes;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SkyManager;
+import rs117.hd.scene.WaterSurfaceManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.daylight_cycle.SkyState;
 import rs117.hd.scene.environments.Environment;
@@ -101,7 +101,7 @@ public class LegacyRenderer implements Renderer {
 	private HdPluginConfig config;
 
 	@Inject
-	private BoatWakes boatWakes;
+	private WaterSurfaceManager waterSurfaceManager;
 
 	@Inject
 	private OpenCLManager clManager;
@@ -1071,16 +1071,7 @@ public class LegacyRenderer implements Renderer {
 			// Lights & lightning
 			plugin.uboGlobal.pointLightsCount.set(lightManager.getNumVisibleLights());
 			plugin.uboGlobal.lightningBrightness.set(environmentManager.getLightningBrightness());
-			plugin.uboGlobal.windDirection.set((float) Math.cos(plugin.waterWindAngle), (float) Math.sin(plugin.waterWindAngle));
-			plugin.uboGlobal.windDrift.set(plugin.windDrift);
-			plugin.uboGlobal.waterRoughness.set(plugin.waterRoughness);
-			plugin.uboGlobal.waterChurnTime.set(plugin.waterChurnTime);
-			if (config.boatWakes())
-				boatWakes.update(client, sceneContext.scene, plugin.uboGlobal, (float) plugin.elapsedTime);
-			for (int i = 0; i < plugin.uboGlobal.windHistory.length; i++) {
-				plugin.uboGlobal.windHistory[i].set(plugin.windHistory[i * 4], plugin.windHistory[i * 4 + 1], plugin.windHistory[i * 4 + 2], plugin.windHistory[i * 4 + 3]);
-				plugin.uboGlobal.roughnessHistory[i].set(plugin.roughnessHistory[i * 4], plugin.roughnessHistory[i * 4 + 1], plugin.roughnessHistory[i * 4 + 2], plugin.roughnessHistory[i * 4 + 3]);
-			}
+			waterSurfaceManager.upload(sceneContext.scene);
 
 			plugin.uboGlobal.saturation.set(config.saturation() / 100f);
 			plugin.uboGlobal.contrast.set(config.contrast() / 100f);

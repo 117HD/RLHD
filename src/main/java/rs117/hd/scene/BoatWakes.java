@@ -66,9 +66,6 @@ public class BoatWakes {
 	// jumped to a new spot, rather than sailed there through a slow frame
 	private static final float JUMP_DISTANCE = 4;
 	private static final float JUMP_SPEED = 20;
-	// Seconds an old wake is kept once its boat moves off again, to finish fading out where it was, and a stopped boat's
-	// wake is kept in a slot. Longer than BOAT_WAKE_STOP_TIME in water.glsl, which decides when it's gone.
-	private static final float OLD_WAKE_TIME = 8;
 	// How far a boat has to move over a game tick, in tiles, to tell which way it's going
 	private static final float DIRECTION_MIN_MOVE = 0.1f;
 	// How near a point's position and distance back, in tiles, and age, in seconds, have to be to the straight line
@@ -92,6 +89,9 @@ public class BoatWakes {
 	private static final float WAKE_SPREAD = 0.5f;
 	private static final float WAKE_RAGGEDNESS = 0.35f;
 	private static final float WAKE_STOP_AGEING = 0.5f;
+	// Seconds a wake takes to break up once its boat slows. After that it's gone, so it's no longer sent: neither a
+	// stopped boat's, nor an old one left to finish fading where it was after its boat moved off again.
+	private static final float WAKE_STOP_TIME = 2.5f;
 	private static final float WASH_WIDTH = 3;
 	private static final float WASH_SPREAD = 0.5f;
 	private static final float SHIP_FORWARD = -0.25f;
@@ -268,7 +268,7 @@ public class BoatWakes {
 				// Moving off again after a stop, or changing direction, starts a new wake. The old one, as it was last
 				// drawn, is left where it was to carry on fading out, so it doesn't vanish or follow the boat.
 				if (!wasMaking || turnedAround) {
-					if (count > 0 && now - lastMoving < OLD_WAKE_TIME) {
+					if (count > 0 && now - lastMoving < WAKE_STOP_TIME) {
 						oldWake = new Wake();
 						oldWake.copy(wake);
 					}
@@ -461,8 +461,15 @@ public class BoatWakes {
 	// Old wakes left fading out where they were after their boats moved off again
 	private final List<Wake> oldWakes = new ArrayList<>();
 	private final List<Wake> active = new ArrayList<>();
-	// The time of the last update, to notice the plugin's clock restarting
-	private float lastNow = Float.NEGATIVE_INFINITY;
+
+	/**
+	 * Forget every path. This outlives the plugin, whose clock starts again from 0 when it restarts, which would
+	 * leave every recorded time in the future.
+	 */
+	public void reset() {
+		trails.clear();
+		oldWakes.clear();
+	}
 
 	/**
 	 * Record the paths of visible boats, skipping flattened ones, and fill in the wake uniforms
@@ -470,13 +477,6 @@ public class BoatWakes {
 	 * @param drawnScene the scene being drawn, which can lag behind the client's across loading lines
 	 */
 	public void update(Client client, Scene drawnScene, UBOGlobal ubo, float now) {
-		// This outlives the plugin, whose clock starts again from 0 when it restarts, which would leave every recorded time in
-		// the future
-		if (now < lastNow) {
-			trails.clear();
-			oldWakes.clear();
-		}
-		lastNow = now;
 		WorldView topLevel = client.getTopLevelWorldView();
 		Scene scene = topLevel == null ? null : topLevel.getScene();
 		active.clear();
@@ -508,11 +508,11 @@ public class BoatWakes {
 				trail.build();
 				trail.seen = true;
 				// Stopped boats whose wakes have faded don't take up a slot
-				if (!entity.isHiddenForOverlap() && now - trail.wake.fadeStart <= OLD_WAKE_TIME)
+				if (!entity.isHiddenForOverlap() && now - trail.wake.fadeStart <= WAKE_STOP_TIME)
 					active.add(trail.wake);
 			}
 			trails.values().removeIf(trail -> !trail.seen);
-			oldWakes.removeIf(wake -> now - wake.fadeStart > OLD_WAKE_TIME);
+			oldWakes.removeIf(wake -> now - wake.fadeStart > WAKE_STOP_TIME);
 
 			// Only the wakes nearest the camera are drawn, up to MAX_BOATS. Boats' own wakes come first, then old ones
 			// left fading, which may already be gone.
