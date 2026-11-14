@@ -12,6 +12,7 @@ import net.runelite.api.coords.*;
 import rs117.hd.opengl.uniforms.UBOGlobal;
 
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.utils.MathUtils.DEG_TO_RAD;
 import static rs117.hd.utils.MathUtils.JAU_TO_RAD;
 
 /**
@@ -70,6 +71,33 @@ public class BoatWakes {
 	private static final float OLD_WAKE_TIME = 8;
 	// How far a boat has to move over a game tick, in tiles, to tell which way it's going
 	private static final float DIRECTION_MIN_MOVE = 0.1f;
+	// How near a point's position and distance back, in tiles, and age, in seconds, have to be to the straight line
+	// between the points kept either side of it for it to be left out of the wake as drawn. Too small to show.
+	private static final float THIN_TOLERANCE = 0.01f;
+
+	// The wake's shape, for working out how far its foam can reach from its path. These have to match the settings of
+	// the same names in water.glsl, without their BOAT_ prefix. If the shader's are raised without these, the foam is
+	// cut off at the edge of the bounds sent to it.
+	private static final float REFERENCE_LENGTH = 10;
+	private static final float REFERENCE_WIDTH = 3;
+	private static final float WAKE_SIZE_FORWARD = 0.1f;
+	private static final float HULL_LENGTH = 5;
+	private static final float HULL_WIDTH = 2.4f;
+	private static final float WAKE_BOW_LENGTH = HULL_LENGTH + 0.25f; // BOAT_HULL_LENGTH + BOAT_WAKE_FORWARD
+	private static final float WAKE_LIFETIME = 2;
+	private static final float WAKE_WIDTH = 0.35f;
+	private static final float WAKE_ANGLE_SLOPE = (float) Math.tan(7 * DEG_TO_RAD); // BOAT_WAKE_ANGLE
+	private static final float WAKE_HULL_SPREAD = 0.08f;
+	private static final float WAKE_DRIFT = 0.6f;
+	private static final float WAKE_SPREAD = 0.5f;
+	private static final float WAKE_RAGGEDNESS = 0.35f;
+	private static final float WAKE_STOP_AGEING = 0.5f;
+	private static final float WASH_WIDTH = 3;
+	private static final float WASH_SPREAD = 0.5f;
+	private static final float SHIP_FORWARD = -0.25f;
+	private static final float SHIP_ANGLE = 0.3f;
+	private static final float SHIP_LIFETIME = 1.8f;
+	private static final float SHIP_WASH_WIDTH = 0.85f;
 
 	/**
 	 * A wake as it's drawn, in world local units: the boat's stern and heading, then the points of its path from the
@@ -377,6 +405,55 @@ public class BoatWakes {
 				w.x[i] += (headX - headingX * back - w.x[i]) * bend;
 				w.z[i] += (headZ - headingZ * back - w.z[i]) * bend;
 			}
+
+			thin(w);
+		}
+
+		/**
+		 * Leave out the points along straight, steady stretches of the wake, which the shader would only interpolate
+		 * back, so it has fewer to check for every pixel near the boat. The first and last points always stay.
+		 */
+		private static void thin(Wake w) {
+			int kept = 1;
+			int from = 0;
+			while (from < w.count - 1) {
+				// The furthest point a line from here reaches with every point between near enough to it
+				int to = from + 1;
+				while (to + 1 < w.count && isStraight(w, from, to + 1))
+					to++;
+				w.x[kept] = w.x[to];
+				w.z[kept] = w.z[to];
+				w.age[kept] = w.age[to];
+				w.distance[kept] = w.distance[to];
+				kept++;
+				from = to;
+			}
+			w.count = kept;
+		}
+
+		/**
+		 * Whether every point between two others is within THIN_TOLERANCE of the line between them, measured where the
+		 * shader would: at the nearest spot on the line, with the age and distance interpolated along it
+		 */
+		private static boolean isStraight(Wake w, int start, int end) {
+			double dx = w.x[end] - w.x[start];
+			double dz = w.z[end] - w.z[start];
+			double length2 = dx * dx + dz * dz;
+			double tolerance = THIN_TOLERANCE * LOCAL_TILE_SIZE;
+			for (int i = start + 1; i < end; i++) {
+				double t = 0;
+				if (length2 > 0)
+					t = Math.max(0, Math.min(1, ((w.x[i] - w.x[start]) * dx + (w.z[i] - w.z[start]) * dz) / length2));
+				double offX = w.x[i] - (w.x[start] + dx * t);
+				double offZ = w.z[i] - (w.z[start] + dz * t);
+				if (offX * offX + offZ * offZ > tolerance * tolerance)
+					return false;
+				if (Math.abs(w.age[i] - (w.age[start] + (w.age[end] - w.age[start]) * t)) > THIN_TOLERANCE)
+					return false;
+				if (Math.abs(w.distance[i] - (w.distance[start] + (w.distance[end] - w.distance[start]) * t)) > THIN_TOLERANCE)
+					return false;
+			}
+			return true;
 		}
 	}
 
@@ -471,7 +548,8 @@ public class BoatWakes {
 	/**
 	 * Send a wake's heading and stern, and its path relative to the drawn scene, in tiles. Each point has its position,
 	 * age in seconds and distance back from the stern. The seconds since the boat slowed go with the hull, so how it fades
-	 * is decided in the shader, and reloads live. The bounds are just the path's: the shader adds the room the foam needs.
+	 * is decided in the shader. The bounds are the path's and the bow's, with room for the foam, worked out here once
+	 * per wake rather than for every pixel of water.
 	 */
 	private static void upload(UBOGlobal ubo, int boat, Wake wake, int baseX, int baseZ, float now) {
 		float sinceSlowed = now - wake.fadeStart;
@@ -493,6 +571,32 @@ public class BoatWakes {
 			minZ = Math.min(minZ, pz);
 			maxZ = Math.max(maxZ, pz);
 		}
-		ubo.boatWakeBounds[boat].set(minX, minZ, maxX, maxZ);
+
+		// The bow, placed as the shader places it: shorter boats' wakes sit a little further forward and longer ones'
+		// further back, except rafts', which are centred on their positions
+		float lengthScale = wake.length > 0 ? wake.length / REFERENCE_LENGTH : 1;
+		float sideScale = wake.width > 0 ? wake.width / REFERENCE_WIDTH : 1;
+		float forward = wake.squareBow ? 0 : (REFERENCE_LENGTH - wake.length) * WAKE_SIZE_FORWARD;
+		if (wake.bigShip)
+			forward += SHIP_FORWARD;
+		float toBow = forward + WAKE_BOW_LENGTH * lengthScale;
+		float bowX = sternX + wake.headingX * toBow;
+		float bowZ = sternZ + wake.headingZ * toBow;
+		minX = Math.min(minX, bowX);
+		maxX = Math.max(maxX, bowX);
+		minZ = Math.min(minZ, bowZ);
+		maxZ = Math.max(maxZ, bowZ);
+
+		// The furthest out from its path this wake's foam can reach, in tiles, from the age of its oldest point, the end
+		// of its path, plus the ageing after the boat stops. The arms are gone sooner.
+		float oldest = wake.age[wake.count - 1] + sinceSlowed * WAKE_STOP_AGEING;
+		float armAge = Math.min(WAKE_LIFETIME * (wake.bigShip ? SHIP_LIFETIME : 1), oldest);
+		float band = HULL_WIDTH * 0.5f +
+			(WAKE_BOW_LENGTH * WAKE_ANGLE_SLOPE + armAge * WAKE_DRIFT) * (wake.bigShip ? SHIP_ANGLE : 1) +
+			0.5f * (WAKE_WIDTH + HULL_LENGTH * WAKE_HULL_SPREAD + armAge * WAKE_SPREAD);
+		float washReach = (WASH_WIDTH * 0.5f + oldest * WASH_SPREAD) * (wake.bigShip ? SHIP_WASH_WIDTH : 1);
+		float ragged = 0.5f * WAKE_RAGGEDNESS * (0.3f + HULL_LENGTH * 0.15f + oldest);
+		float reach = (Math.max(band, washReach) + ragged) * Math.max(lengthScale, sideScale);
+		ubo.boatWakeBounds[boat].set(minX - reach, minZ - reach, maxX + reach, maxZ + reach);
 	}
 }
