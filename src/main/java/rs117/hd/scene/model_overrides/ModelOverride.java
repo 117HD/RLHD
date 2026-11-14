@@ -91,6 +91,7 @@ public class ModelOverride
 	public WindDisplacement windDisplacementMode = WindDisplacement.DISABLED;
 	public int windDisplacementModifier = 0;
 	public boolean invertDisplacementStrength = false;
+	public int positionTileSnapping = -1;
 	public int depthBias = -1;
 	public boolean disablePrioritySorting = false;
 	public int heightOffset = 0;
@@ -382,6 +383,7 @@ public class ModelOverride
 			windDisplacementMode,
 			windDisplacementModifier,
 			invertDisplacementStrength,
+			positionTileSnapping,
 			depthBias,
 			disablePrioritySorting,
 			heightOffset,

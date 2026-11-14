@@ -32,14 +32,19 @@
 #define DISPLAY_SHADOWS 0
 #define DISPLAY_LIGHTING 0
 
+#define NEAR_PLANE_DITHER_START 0.2
+
 #include <uniforms/global.glsl>
 #include <uniforms/sky.glsl>
 #include <uniforms/world_views.glsl>
 #include <uniforms/materials.glsl>
 #include <uniforms/water_types.glsl>
+#include <uniforms/displacement.glsl>
 
 #include MATERIAL_CONSTANTS
+#include ALLOW_DISCARD
 #include WATER_PASS
+#include DYNAMIC_MODEL
 
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
@@ -58,6 +63,10 @@ flat in int fWorldViewId;
 flat in ivec3 fAlphaBiasHsl;
 flat in ivec3 fMaterialData;
 flat in ivec3 fTerrainData;
+
+#if ZONE_RENDERER && DITHER_FADE
+    flat in float fFade;
+#endif
 
 #if CENTROID_QUALIFIER
     // Prevent negative components due to MSAA
@@ -100,13 +109,32 @@ vec2 worldUvs(float scale) {
 #include <utils/water.glsl>
 
 void main() {
-    bool isTerrain = (fTerrainData[0] & 1) != 0;
+    bool isTerrain = DYNAMIC_MODEL == 0 && (fTerrainData[0] & 1) != 0;
     bool isSquashed = isWorldViewSquashed(fWorldViewId);
     #if LEGACY_BOAT_SILHOUETTES
         isSquashed = false;
     #endif
 
     vec3 downDir = vec3(0, -1, 0);
+    float alphaFrac = 1.0;
+
+    #if ZONE_RENDERER && DITHER_FADE
+        float viewZ = 1.0 - gl_FragCoord.z;
+        if (fFade > 0.0 || viewZ < NEAR_PLANE_DITHER_START) {
+            float fadeAmount = mix(1.0 - saturate(viewZ / NEAR_PLANE_DITHER_START), fFade, saturate(fFade));
+            float threshold = smoothstep(0.0, 1.0, pow(fadeAmount, 1.35));
+            float noise = interleavedGradientNoise(gl_FragCoord.xy);
+
+            if (noise < threshold) {
+                #if ALLOW_DISCARD
+                    discard;
+                #else
+                    alphaFrac = 0.0;
+                #endif
+            }
+        }
+    #endif
+
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(uboGlobal.cameraPos - IN.position);
     vec3 flatNormal = normalize(cross(dFdx(IN.position), dFdy(IN.position)));
@@ -612,6 +640,7 @@ void main() {
 
     outputColor.rgb = applyColorAdjustments(outputColor.rgb);
     outputColor.rgb = applyOutputCorrection(outputColor.rgb);
+    outputColor.a *= alphaFrac;
 
     FragColor = outputColor;
 }

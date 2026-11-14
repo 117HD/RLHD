@@ -19,5 +19,7 @@ layout(std140) uniform UBOCompute {
     float windOffset;
 
     int characterPositionCount;
-    vec3 characterPositions[MAX_CHARACTER_POSITION_COUNT];
+    vec4 characterPositions[MAX_CHARACTER_POSITION_COUNT];
 } uboCompute;
+
+#define DISPLACEMENT_UBO uboCompute

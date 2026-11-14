@@ -1,17 +1,14 @@
 package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
-import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
@@ -19,31 +16,16 @@ import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.Mat4;
-import rs117.hd.utils.buffer.GLBuffer;
-import rs117.hd.utils.collections.ConcurrentPool;
+import rs117.hd.utils.collections.IntHashSet;
 import rs117.hd.utils.jobs.JobGroup;
 
-import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.renderer.zone.DynamicModelVAO.METADATA_SIZE;
+import static rs117.hd.renderer.zone.FrameContext.VAO_COUNT;
 import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
-import static rs117.hd.renderer.zone.ZoneRenderer.FRAMES_IN_FLIGHT;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.collections.Util.quickSort;
 
 @Slf4j
 public class WorldViewContext {
-	public static final int VAO_OPAQUE = 0;
-	public static final int VAO_ALPHA = 1;
-	public static final int VAO_PLAYER = 2;
-	public static final int VAO_SHADOW = 3;
-	public static final int VAO_PRESCENE = 4;
-	public static final int VAO_COUNT = 5;
-
-	public static final ConcurrentPool<DynamicModelVAO> DYNAMIC_MODEL_VAO_STAGING_POOL =
-		new ConcurrentPool<>(() -> new DynamicModelVAO("DynamicModelVAO::Staging", true));
-	public static final ConcurrentPool<DynamicModelVAO> DYNAMIC_MODEL_VAO_POOL =
-		new ConcurrentPool<>(() -> new DynamicModelVAO("DynamicModelVAO", false));
-
 	@Inject
 	private Injector injector;
 
@@ -52,6 +34,9 @@ public class WorldViewContext {
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private ZoneRenderer zoneRenderer;
 
 	@Inject
 	private SceneManager sceneManager;
@@ -72,17 +57,20 @@ public class WorldViewContext {
 	private int lastOrientation;
 
 	Zone[][] zones;
-	GLBuffer vboM;
 
+	// The scene's unmodified level range, before any fading levels are trimmed away
+	int baseMinLevel, baseMaxLevel;
+	// The effective level range and hidden roof ids, after fading levels/roofs have been culled
 	int minLevel, level, maxLevel;
-	Set<Integer> hideRoofIds;
+	final IntHashSet hideRoofIds = new IntHashSet();
 
 	private final Comparator<Zone> alphaSortComparator = Comparator.comparingInt((Zone z) -> z.dist).reversed();
 	private final List<Zone> alphaZones = new ArrayList<>();
 
+	private final int[] dynamicDrawRanges = new int[VAO_COUNT * 2];
+
 	CommandBuffer vaoSceneCmd;
 	CommandBuffer vaoDirectionalCmd;
-	final DynamicModelVAO[][] dynamicModelVaos = new DynamicModelVAO[FRAMES_IN_FLIGHT][VAO_COUNT];
 
 	public long loadTime;
 	public long uploadTime;
@@ -180,69 +168,6 @@ public class WorldViewContext {
 		}
 	}
 
-	private static ConcurrentPool<DynamicModelVAO> getDynamicModelVaoPool(int type) {
-		// Choose a pool to both acquire from and release back into, irrespective of the storage buffers setting.
-		// Without this, buffers allocated during acquisition from the staging pool may be erroneously released
-		// back into the non-staging pool, leading to buffers accumulating with unnecessary allocations.
-		return type == VAO_OPAQUE || type == VAO_PLAYER || type == VAO_SHADOW ?
-			DYNAMIC_MODEL_VAO_STAGING_POOL : DYNAMIC_MODEL_VAO_POOL;
-	}
-
-	void initBuffers() {
-		if (vboM != null)
-			return;
-
-		vboM = new GLBuffer("WorldViewMetadata", GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW, 0);
-		vboM.initialize(METADATA_SIZE);
-		try (MemoryStack stack = MemoryStack.stackPush()) {
-			IntBuffer buf = stack.mallocInt(3);
-			buf.put(uboWorldViewStruct == null ? 0 : uboWorldViewStruct.worldViewIdx + 1);
-			buf.put(0).put(0);
-			buf.flip();
-			vboM.upload(buf);
-		}
-
-		long start = System.nanoTime();
-		for (int i = 0; i < VAO_COUNT; i++) {
-			var pool = getDynamicModelVaoPool(i);
-			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {
-				DynamicModelVAO dynamicModelVao = dynamicModelVaos[k][i] = pool.acquire();
-				if (dynamicModelVao.getVao() == 0)
-					dynamicModelVao.initialize();
-				dynamicModelVao.bindMetadataVAO(vboM);
-			}
-		}
-		log.trace("WorldViewContext - WorldViewId: {} initBuffers took {}ms", worldViewId, (System.nanoTime() - start) / 1000000);
-	}
-
-	void map() {
-		for (int i = 0; i < VAO_COUNT; i++)
-			dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][i].map();
-	}
-
-	DynamicModelVAO.View beginDraw(int type, int faces) {
-		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].beginDraw(faces);
-	}
-
-	DynamicModelVAO.View beginDraw(int type, int playerDrawIndex, int faces) {
-		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].beginDraw(playerDrawIndex, faces);
-	}
-
-	int obtainDrawIndex(int type) {
-		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].obtainDrawIndex();
-	}
-
-	void drawAll(int type, CommandBuffer cmd) {
-		dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].draw(cmd);
-	}
-
-	void unmap() {
-		for (int i = 0; i < VAO_COUNT; i++) {
-			final boolean shouldCoalesce = i == VAO_OPAQUE || i == VAO_PLAYER || i == VAO_SHADOW;
-			dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][i].unmap(shouldCoalesce);
-		}
-	}
-
 	void sortStaticAlphaModels(Camera camera) {
 		alphaZones.clear();
 
@@ -269,22 +194,40 @@ public class WorldViewContext {
 		}
 	}
 
-	// Synchronize creation of delayed upload jobs with zone swaps and invalidation
-	synchronized void handleZoneSwap(int zx, int zz, boolean queue) {
+	void resetDrawRanges() {
+		for (int i = 0; i < VAO_COUNT; i++)
+			dynamicDrawRanges[i * 2] = dynamicDrawRanges[i * 2 + 1] = 0;
+	}
+
+	synchronized void trackDrawRange(DynamicModelVAO.View view, int type) {
+		dynamicDrawRanges[type * 2] = min(dynamicDrawRanges[type * 2], view.getDrawIdx());
+		dynamicDrawRanges[type * 2 + 1] = max(dynamicDrawRanges[type * 2 + 1], view.getDrawIdx() + 1);
+	}
+
+	DynamicModelVAO.View beginDraw(int type, int faces) {
+		FrameContext ctx = zoneRenderer.frameContext();
+		DynamicModelVAO.View view = ctx.dynamicModelVaos[type].beginDraw(faces);
+		trackDrawRange(view, type);
+		return view;
+	}
+
+	DynamicModelVAO.View beginDraw(int type, int playerDrawIndex, int faces) {
+		FrameContext ctx = zoneRenderer.frameContext();
+		DynamicModelVAO.View view = ctx.dynamicModelVaos[type].beginDraw(playerDrawIndex, faces);
+		trackDrawRange(view, type);
+		return view;
+	}
+
+	void drawAll(int type, CommandBuffer cmd) {
+		FrameContext ctx = zoneRenderer.frameContext();
+		ctx.dynamicModelVaos[type].draw(cmd, dynamicDrawRanges[type * 2], dynamicDrawRanges[type * 2 + 1]);
+	}
+
+	void handleZoneSwap(int zx, int zz) {
 		Zone curZone = zones[zx][zz];
 		ZoneUploadJob uploadTask = curZone.uploadJob;
 		if (uploadTask == null)
 			return;
-
-		if (!uploadTask.isQueued()) {
-			// Queue pending upload jobs only if we aren't already async loading another scene
-			if (queue && !isLoading && uploadTask.revealAfterTimestampMs < System.currentTimeMillis()) {
-				log.trace("queueing zone({}): [{}-{},{}]", uploadTask.zoneBeingUploaded.hashCode(), worldViewId, zx, zz);
-				uploadTask.revealAfterTimestampMs = 0;
-				uploadTask.queue(streamingGroup, sceneManager.getGenerateSceneDataTask());
-			}
-			return;
-		}
 
 		if (uploadTask.isDone()) {
 			curZone.uploadJob = null;
@@ -311,6 +254,11 @@ public class WorldViewContext {
 				if (prevZone != curZone) {
 					curZone.inSceneFrustum = prevZone.inSceneFrustum;
 					curZone.inShadowFrustum = prevZone.inShadowFrustum;
+					if(prevZone.fade != null) {
+						curZone.fade = prevZone.fade;
+						curZone.fade.zone = curZone;
+					}
+
 					DestructibleHandler.queueDestruction(prevZone);
 				}
 
@@ -337,9 +285,18 @@ public class WorldViewContext {
 	}
 
 	void processZoneSwaps() {
-		for (int x = 0; x < sizeX; x++)
-			for (int z = 0; z < sizeZ; z++)
-				handleZoneSwap(x, z, true);
+		for (int x = 0; x < sizeX; x++) {
+			for (int z = 0; z < sizeZ; z++) {
+				handleZoneSwap(x, z);
+
+				final Zone zone = zones[x][z];
+				if (zone.fadingAlpha <= 0)
+					continue;
+
+				zone.fadingAlpha = max(0.0f, zone.fadingAlpha - plugin.deltaTime);
+				zone.setMetadata(this, sceneContext, x, z);
+			}
+		}
 	}
 
 	void processZoneRebuilds() {
@@ -361,7 +318,7 @@ public class WorldViewContext {
 
 		for (int x = 0; x < sizeX; x++)
 			for (int z = 0; z < sizeZ; z++)
-				handleZoneSwap(x, z, false);
+				handleZoneSwap(x, z);
 	}
 
 	void free() {
@@ -380,23 +337,9 @@ public class WorldViewContext {
 		projection = null;
 		isSquashed = false;
 
-		for (int i = 0; i < VAO_COUNT; i++) {
-			var pool = getDynamicModelVaoPool(i);
-			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {
-				if (dynamicModelVaos[k][i] == null)
-					continue;
-				pool.recycle(dynamicModelVaos[k][i]);
-				dynamicModelVaos[k][i] = null;
-			}
-		}
-
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)
 				zones[x][z].destroy();
-
-		if (vboM != null)
-			vboM.destroy();
-		vboM = null;
 
 		isLoading = true;
 	}
@@ -411,7 +354,6 @@ public class WorldViewContext {
 	// Synchronize creation of delayed upload jobs with zone swaps and invalidation
 	synchronized void invalidateZone(int zx, int zz) {
 		Zone curZone = zones[zx][zz];
-		long revealAfterTimestampMs = 0;
 		ZoneUploadJob previousUpload = curZone.uploadJob;
 		if (previousUpload != null) {
 			curZone.uploadJob = null;
@@ -424,7 +366,7 @@ public class WorldViewContext {
 				zz,
 				pendingZone.hashCode()
 			);
-			revealAfterTimestampMs = previousUpload.revealAfterTimestampMs;
+
 			previousUpload.cancel();
 			previousUpload.release();
 
@@ -436,10 +378,6 @@ public class WorldViewContext {
 		newZone.dirty = zones[zx][zz].dirty;
 
 		curZone.setUploadJob(ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz));
-		curZone.uploadJob.revealAfterTimestampMs = revealAfterTimestampMs;
-
-		// Queue right away, so we can wait for it while in the POH in order to hide building mode placeholders
-		if (sceneContext.isInHouse || revealAfterTimestampMs <= 0)
-			curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
+		curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
 	}
 }

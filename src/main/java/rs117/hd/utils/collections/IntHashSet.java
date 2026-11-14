@@ -146,6 +146,17 @@ public final class IntHashSet implements Iterable<Integer> {
 		}
 	}
 
+	public boolean containsAll(IntHashSet other) {
+		if (other == null)
+			return true;
+		for (int i = 0; i < other.keys.length; i++) {
+			int k = other.keys[i];
+			if (k != EMPTY && !contains(k))
+				return false;
+		}
+		return true;
+	}
+
 	public boolean contains(int key) {
 		return findIndex(key, mask, keys, distances) >= 0;
 	}

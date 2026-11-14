@@ -53,7 +53,7 @@ public enum PooledArrayType {
 		}
 	}
 
-	private static int bucket(int size) {
+	public static int bucket(int size) {
 		if (size <= 1) return 0;
 		int b = 32 - numberOfLeadingZeros(size - 1);
 		return min(b, MAX_BUCKET);

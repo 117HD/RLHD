@@ -12,6 +12,7 @@ import rs117.hd.utils.Destructible;
 import rs117.hd.utils.DestructibleHandler;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.SUPPORTS_SHADER_STORAGE;
 import static rs117.hd.HdPlugin.VALIDATE_SHADERS;
 
 @Slf4j
@@ -165,6 +166,12 @@ public class ShaderProgram implements Destructible {
 
 	public UniformTexture addUniformTexture(String uniformName) {
 		return addUniform(new UniformTexture(), uniformName);
+	}
+
+	public UniformTexture addUniformTexBuffer(String uniformName) {
+		UniformTexture uniform = addUniform(new UniformTexture(), uniformName);
+		uniform.ignoreMissing = SUPPORTS_SHADER_STORAGE;
+		return uniform;
 	}
 
 	public static class UniformImage extends UniformProperty {
