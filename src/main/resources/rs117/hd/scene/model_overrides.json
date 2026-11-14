@@ -76375,6 +76375,7 @@
     "baseMaterial": "GRASS_BLADE",
     "uvType": "MODEL_XY",
     "inheritTileColorType": "UNDERLAY",
+    "windDisplacementMode": "OBJECT",
     "uvOrientation": 512,
     "flatNormals": true,
     "castShadows": false,
