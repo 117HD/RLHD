@@ -553,7 +553,6 @@ vec2 oceanWaves(vec2 drifted, float shoreDist, vec2 towardsShore) {
 struct WakeNoise {
     bool foamReady;
     float breakup; // which foam fades out first, as foamBreakupNoise, finer than the ocean waves'
-    float ragged; // the foam's ragged edges, from 0 to 1
     bool fadeReady;
     float endRagged; // the tail's ragged end, from 0 to 1
     float stopBreakup; // which foam turns see-through first once the boat slows, as foamBreakupNoise
@@ -570,9 +569,10 @@ struct WakeNoise {
 //  arms: false for just the wash, for a boat going backwards
 //  squareBow: true for a boat with a square front, like a raft, whose foam starts at full width
 //  bigShip: true for the big NPC ships, whose wakes are shaped by the BOAT_SHIP settings
+//  outward: the way the foam drifts here, away from the path, in world tiles per tile of side
 //  wakeNoise: the noise at this spot, with its foam noise worked out here the first time it's needed
 vec3 boatWakeFoam(vec2 world, float side, float fromBow, float age, bool arms, bool squareBow, bool bigShip,
-    inout WakeNoise wakeNoise) {
+    vec2 outward, inout WakeNoise wakeNoise) {
     // The big ships' arms' angle, how long the arms last, how far the wash reaches and how wide it is, relative to
     // other boats', then how much further back the wash starts, in tiles
     float armAngle = bigShip ? BOAT_SHIP_ANGLE : 1.0;
@@ -605,10 +605,11 @@ vec3 boatWakeFoam(vec2 world, float side, float fromBow, float age, bool arms, b
     if (!wakeNoise.foamReady) {
         wakeNoise.foamReady = true;
         wakeNoise.breakup = foamBreakupNoise(world * BOAT_WAKE_BREAKUP_SCALE / OCEAN_WAVE_SIZE, uboGlobal.elapsedTime);
-        wakeNoise.ragged = noise(world * 1.3);
     }
     float breakup = wakeNoise.breakup;
-    float ragged = (wakeNoise.ragged - 0.5) * raggedness;
+    // Ragged edges, carried outwards with the foam, so they keep their shape as the edge drifts rather than the
+    // edge sliding across them
+    float ragged = (noise((world - outward * foamLine) * 1.3) - 0.5) * raggedness;
     // Across each band, from 0 in its middle to 1 at its edge
     float offset = side - foamLine + ragged;
     float across = abs(offset) / (spread * 0.5 * (offset < 0.0 ? BOAT_WAKE_INNER_REACH : 1.0));
@@ -635,7 +636,7 @@ vec3 boatWakes(vec2 p) {
     // In world tiles, so the noise doesn't jump when the scene's base moves at loading lines
     vec2 world = p + vec2(uboGlobal.sceneBase) / 128.0;
     vec3 wake = vec3(0.0);
-    WakeNoise wakeNoise = WakeNoise(false, 0.0, 0.0, false, 0.0, 0.0);
+    WakeNoise wakeNoise = WakeNoise(false, 0.0, false, 0.0, 0.0);
     for (int boat = 0; boat < BOAT_WAKE_MAX_BOATS; boat++) {
         vec4 hull = uboGlobal.boatWakeHulls[boat];
         int count = int(hull.x);
@@ -670,6 +671,7 @@ vec3 boatWakes(vec2 p) {
         // The nearest point on the path, how far back from the bow it is, and how long ago the stern passed it. Points
         // hold their position, age, then distance back from the bow.
         float nearest = 1e9;
+        vec2 nearestOffset = vec2(0.0);
         float fromBow = 0.0;
         float age = 0.0;
         bool outside = false;
@@ -692,6 +694,7 @@ vec3 boatWakes(vec2 p) {
                 float dist2 = dot(offset, offset);
                 if (dist2 < nearest) {
                     nearest = dist2;
+                    nearestOffset = offset;
                     fromBow = mix(a.w, b.w, t);
                     age = mix(a.z, b.z, t);
                     // In front of the bow, or past the end of the path
@@ -707,8 +710,10 @@ vec3 boatWakes(vec2 p) {
         // Shaped as for the boat it's tuned for, scaled to this one. Ages are sent as of when the boat slowed, so the
         // time since is added, more slowly, to keep the foam ageing after it stops without the tail wiping away
         // towards the boat too fast.
-        vec3 foamLife = boatWakeFoam(world, sqrt(nearest) / sideScale, fromBow / lengthScale,
-            age + hull.y * BOAT_WAKE_STOP_AGEING, hull.w < 0.5, squareBow, bigShip, wakeNoise);
+        float side = sqrt(nearest);
+        vec2 outward = nearestOffset / max(side, 1e-4) * sideScale;
+        vec3 foamLife = boatWakeFoam(world, side / sideScale, fromBow / lengthScale,
+            age + hull.y * BOAT_WAKE_STOP_AGEING, hull.w < 0.5, squareBow, bigShip, outward, wakeNoise);
         float foam = foamLife.x;
         // The fades only take foam away, so skip them where another wake already has more
         if (foam <= wake.x)
