@@ -658,7 +658,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			return false;
 		var buffer = client.getBufferProvider();
 		var bounds = draggedBounds(dragged);
-		var visible = bounds.intersection(widget.getParent().getBounds()).intersection(new Rectangle(buffer.getWidth(), buffer.getHeight()));
+		var visible = bounds.intersection(draggedArea(widget));
 		return !visible.isEmpty() && takeOut(buffer.getPixels(), buffer.getWidth(), bounds, visible, gameIcon, shadow);
 	}
 
@@ -707,6 +707,18 @@ public class NativeItemIcons extends WidgetItemOverlay {
 		return widgetItem.getDraggingCanvasBounds() != null ? widgetItem.getDraggingCanvasBounds() : widgetItem.getCanvasBounds();
 	}
 
+	// The game draws the dragged item over its whole interface, like a bank item over the tabs above its layer,
+	// within what the interface is shown in
+	private Rectangle draggedArea(Widget widget) {
+		var buffer = client.getBufferProvider();
+		var area = new Rectangle(buffer.getWidth(), buffer.getHeight());
+		int groupId = WidgetUtil.componentToInterface(widget.getId());
+		for (var ancestor = widget.getParent(); ancestor != null; ancestor = ancestor.getParent())
+			if (WidgetUtil.componentToInterface(ancestor.getId()) != groupId)
+				area = area.intersection(ancestor.getBounds());
+		return area;
+	}
+
 	// Layers only show their children within their own bounds, and their parents'
 	private Rectangle visibleArea(Widget widget) {
 		var parent = widget.getParent();
@@ -742,7 +754,7 @@ public class NativeItemIcons extends WidgetItemOverlay {
 			putBackMargins(buffer.getPixels(), buffer.getWidth(), around, true);
 		// The parents can still be where they were a frame ago, like when an interface is shown or scrolled, so where the game
 		// drew the item tells how far it's clipped, unless it's see-through, animated, or a dragged item is drawn over it
-		var visible = dragged ? bounds.intersection(widget.getParent().getBounds()) : coveredItems.contains(widgetItem) ? new Rectangle() :
+		var visible = dragged ? bounds.intersection(draggedArea(widget)) : coveredItems.contains(widgetItem) ? new Rectangle() :
 			widget.getOpacity() == 0 && !gameIcon.animated && client.getDraggedWidget() == null ? shownArea(gameIcon, bounds) :
 			bounds.intersection(visibleArea(widget));
 		if (visible.isEmpty()) {
