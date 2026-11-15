@@ -37,6 +37,7 @@
 #define SHORE_FOAM_STRENGTH 0.31           // peak opacity before lighting
 #define FOAM_WATER_BRIGHTNESS 5.0          // all foam is at least this much brighter than the water under it
 #define FOAM_LOW_SUN_OPACITY 1.0           // extra foam opacity under a low sun, 1 for double near the horizon
+#define OCEAN_FOAM_DEFAULT_COLOR vec3(0.690, 0.643, 0.573) // WaterType's default foam color, whose brightness open water foam has
 #define SHORE_FOAM_SOFTNESS 0.3            // width of the eroded edge, in texture space
 #define SHORE_FOAM_EDGE_NOISE 0.35         // how far the foam line wanders, in tiles
 #define SHORE_FOAM_REACH 0.8               // how far the solid foam reaches between waves, in tiles
@@ -1026,6 +1027,8 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     if (bool(BOAT_WAKES) && waterType.hasFoam != 0)
         wake = boatWakes(IN.position.xz / 128.0, swept);
     float waveAmount = 0.0;
+    // Lace, ocean waves and boat wakes, kept apart from the shore foam for their color
+    float oceanAmount = 0.0;
     if (waterType.hasFoam != 0 && (nearShore || openWater)) {
         float shoreDist = dot(fTexBlend, vec3(shoreDistances)) / SHORE_DISTANCE_STEPS * SHORE_DISTANCE_MAX;
         // Blended corners read 0 across one tile channels, so measure to land within square tiles instead.
@@ -1153,13 +1156,13 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
                 float lace = oceanLace(drifted, uboGlobal.windDirection, uboGlobal.waterChurnTime);
                 lace = saturate(lace * sqrt(roughness)) * oceanRoom * (1.0 - wake.w);
                 float laceStrength = OCEAN_LACE_STRENGTH * roughness;
-                foamAmount = max(foamAmount, oceanSpecks(lace, OCEAN_LACE_SOFTNESS, oceanMask) * laceStrength);
+                oceanAmount = max(oceanAmount, oceanSpecks(lace, OCEAN_LACE_SOFTNESS, oceanMask) * laceStrength);
             }
             if (bool(OCEAN_WAVES) && wake.w < 1.0) {
                 vec2 waves = oceanWaves(drifted, shoreDist, towardsShore, swept);
                 float amount = oceanSpecks(waves.x * oceanRoom * (1.0 - wake.w), OCEAN_WAVE_SOFTNESS, oceanMask);
                 waveAmount = amount * waveStrength * waves.y;
-                foamAmount = max(foamAmount, waveAmount);
+                oceanAmount = max(oceanAmount, waveAmount);
             }
         }
     }
@@ -1171,9 +1174,11 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         float rimBrightness = mix(1.0, BOAT_WAKE_RIM_BRIGHTNESS, wake.z);
         amount *= wake.y * waveStrength * BOAT_WAKE_STRENGTH * rimBrightness;
         // Where an ocean wave runs into an arm, their foam adds up
-        foamAmount = max(foamAmount, amount + waveAmount * BOAT_WAKE_WAVE_MERGE);
+        oceanAmount = max(oceanAmount, amount + waveAmount * BOAT_WAKE_WAVE_MERGE);
         foamMask = max(foamMask, specks);
     }
+    float shoreAmount = foamAmount;
+    foamAmount = max(foamAmount, oceanAmount);
     // The original fade along shore tile edges, when the new shore foam is off
     float originalFoam = 0.0;
     float originalMask = 0.0;
@@ -1185,6 +1190,18 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     }
     float opacityFresnel = max(finalFresnel, 1.0 - dot(viewDir, vec3(0, -1, 0)));
     // Extra foam opacity under a low sun, where the sky's reflection would wash it out
+    // Open water foam takes only the hue of the water type's foam color, at the default's brightness, since the colors'
+    // brightness was tuned for the original shore fade, where it also sets how strong the foam is. Blended by how much of
+    // the foam here is open water foam rather than shore foam.
+    vec3 oceanFoamColor = OCEAN_FOAM_DEFAULT_COLOR;
+    float foamColorLuminance = linearSrgbLuminance(waterType.foamColor);
+    if (foamColorLuminance > 1e-3) {
+        oceanFoamColor = waterType.foamColor * (linearSrgbLuminance(OCEAN_FOAM_DEFAULT_COLOR) / foamColorLuminance);
+        // Strong hues can't reach that brightness without going past white
+        oceanFoamColor /= max(1.0, max(oceanFoamColor.r, max(oceanFoamColor.g, oceanFoamColor.b)));
+    }
+    float oceanShare = oceanAmount / max(oceanAmount + shoreAmount, 1e-4);
+    vec3 foamBaseColor = mix(waterType.foamColor, oceanFoamColor, oceanShare);
     float foamLowSun = 0.0;
     if (foamAmount > 0) {
         float sunHeight = -uboGlobal.lightDir.y;
@@ -1240,7 +1257,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         vec3 foamColor = vec3(0);
         float litFoamAmount = 0;
         if (foamAmount > 0) {
-            vec3 foamAlbedo = waterType.foamColor * mix(0.5, 0.7, foamMask);
+            vec3 foamAlbedo = foamBaseColor * mix(0.5, 0.7, foamMask);
             foamColor = foamAlbedo * compositeLight;
             // At least FOAM_WATER_BRIGHTNESS times the water's brightness, since at sunrise and sunset the water is
             // lit mostly by the sky's reflection. Tinted by the light, so it isn't grey then.
