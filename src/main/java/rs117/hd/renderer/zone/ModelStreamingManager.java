@@ -224,7 +224,9 @@ public class ModelStreamingManager {
 		}
 
 		ctx.sceneContext.localToWorld(x, z, tileObject.getPlane(), streamingContext.worldPos);
-		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, streamingContext.worldPos);
+		// Models another plugin asked to have drawn unlit keep exactly their own colors
+		ModelOverride modelOverride = plugin.isUnlitModel(m) ?
+			ModelOverride.UNLIT : modelOverrideManager.getOverride(uuid, streamingContext.worldPos);
 		if (modelOverride.hide)
 			return;
 
