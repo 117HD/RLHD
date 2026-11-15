@@ -21,8 +21,7 @@ import static rs117.hd.utils.MathUtils.JAU_TO_RAD;
 @Singleton
 public class BoatWakes {
 	public static final int MAX_BOATS = 16;
-	// The world entity config IDs of boats, from https://oldschool.runescape.wiki/w/World_entity, so other things that
-	// move around like trawling shoals (4) don't get wakes. NPC boats have no category, so this lists them exactly.
+	// World entity config IDs of boats (https://oldschool.runescape.wiki/w/World_entity), excluding shoals (4)
 	private static final Set<Integer> BOAT_CONFIGS = Set.of(
 		1, // raft
 		2, // skiff
@@ -37,44 +36,35 @@ public class BoatWakes {
 		13, // The Bark of the Bight
 		14 // The Four of a Kind
 	);
-	// The big NPC ships, whose wash starts well behind them, so their paths are kept longer, and the shader shapes their
-	// wakes differently
+	// Big NPC ships, whose wash starts well behind them
 	private static final Set<Integer> BIG_SHIP_CONFIGS = Set.of(6, 7, 8);
-	// Long enough for the big ships' paths. With MAX_BOATS, the wakes take about 11 KB of the global uniform block, which
-	// only has to fit in 16 KB.
+	// Enough for the big ships' paths. Uses about 11 KB of the 16 KB global UBO.
 	public static final int MAX_POINTS = 40;
-	// Points curving from the stern into the recorded path, so the hull and tail meet without a corner
+	// Points curving from the stern into the recorded path
 	private static final int CURVE_POINTS = 3;
-	// Recorded points, leaving room for the curve and the path's start
 	private static final int RECORDED_POINTS = MAX_POINTS - CURVE_POINTS - 1;
 	private static final float POINT_INTERVAL = 0.25f;
 	private static final float LIFETIME = RECORDED_POINTS * POINT_INTERVAL;
-	// Age the path is cut off at, sliding smoothly back along it, rather than ending at its oldest point, which steps
-	// back each time one is dropped. Early enough that the point it's cut between is never dropped first.
+	// Cut off by age rather than at the oldest point, so the tail doesn't step back each time a point is dropped
 	private static final float SHIP_TAIL_AGE = LIFETIME - 2 * POINT_INTERVAL;
-	// Other boats' paths are cut off sooner, which is all their wakes need, so the shader has less path to check
+	// Shorter for other boats, which is all their wakes need
 	private static final float TAIL_AGE = 4.5f;
-	// Seconds of the boat's movement averaged into the recorded path, a game tick
+	// Seconds of movement averaged into the path, one game tick
 	private static final float SMOOTHING = 0.6f;
 	private static final int RAW_SAMPLES = 512;
-	// Seconds the hull's position and heading take to mostly catch up with the boat's, smoothing out its jitter
+	// Time constant easing the hull's position and heading, in seconds
 	private static final float HULL_EASING = 0.1f;
-	// Seconds a boat's position has to stay exactly the same for it to count as stopped, long enough to cover frames
-	// between the client's position updates
+	// Seconds without moving before a boat counts as stopped, covering frames between position updates
 	private static final float STOP_DELAY = 0.1f;
-	// How far, in tiles, and how fast, in tiles per second, a boat has to move between frames to be treated as having
-	// jumped to a new spot, rather than sailed there through a slow frame
+	// Tiles and tiles per second a boat must move between frames to count as teleporting
 	private static final float JUMP_DISTANCE = 4;
 	private static final float JUMP_SPEED = 20;
-	// How far a boat has to move over a game tick, in tiles, to tell which way it's going
+	// Tiles moved over a game tick needed to tell which way a boat is going
 	private static final float DIRECTION_MIN_MOVE = 0.1f;
-	// How near a point's position and distance back, in tiles, and age, in seconds, have to be to the straight line
-	// between the points kept either side of it for it to be left out of the wake as drawn. Too small to show.
+	// How far off a straight line (tiles, seconds) a point can be and still be thinned out
 	private static final float THIN_TOLERANCE = 0.01f;
 
-	// The wake's shape, for working out how far its foam can reach from its path. These have to match the settings of
-	// the same names in water.glsl, without their BOAT_ prefix. If the shader's are raised without these, the foam is
-	// cut off at the edge of the bounds sent to it.
+	// Must match the BOAT_ settings in water.glsl, or the foam gets clipped by the bounds
 	private static final float REFERENCE_LENGTH = 10;
 	private static final float REFERENCE_WIDTH = 3;
 	private static final float WAKE_SIZE_FORWARD = 0.1f;
@@ -89,8 +79,7 @@ public class BoatWakes {
 	private static final float WAKE_SPREAD = 0.5f;
 	private static final float WAKE_RAGGEDNESS = 0.35f;
 	private static final float WAKE_STOP_AGEING = 0.5f;
-	// Seconds a wake takes to break up once its boat slows. After that it's gone, so it's no longer sent: neither a
-	// stopped boat's, nor an old one left to finish fading where it was after its boat moved off again.
+	// Seconds a wake takes to break up once its boat stops
 	private static final float WAKE_STOP_TIME = 2.5f;
 	private static final float WASH_WIDTH = 3;
 	private static final float WASH_SPREAD = 0.5f;
@@ -100,8 +89,7 @@ public class BoatWakes {
 	private static final float SHIP_WASH_WIDTH = 0.85f;
 
 	/**
-	 * A wake as it's drawn, in world local units: the boat's stern and heading, then the points of its path from the
-	 * stern back, each with its age in seconds and its distance back from the stern in tiles
+	 * A wake as drawn, in local units. Points run from the stern back, with age in seconds and distance in tiles.
 	 */
 	private static class Wake {
 		double sternX, sternZ;
@@ -111,19 +99,15 @@ public class BoatWakes {
 		final float[] age = new float[MAX_POINTS];
 		final float[] distance = new float[MAX_POINTS];
 		int count;
-		// When the boat moved off and started this wake
 		float startTime;
-		// When the boat slowed and the wake started breaking up, which is now while it's still making foam
+		// When the boat stopped making foam, or now while it still is
 		float fadeStart;
-		// Whether the boat is going backwards, so it leaves only its wash, and its heading is the way it's going
+		// Reversing boats leave only their wash, with the heading flipped
 		boolean reversing;
-		// The boat's length and width, in tiles
+		// In tiles
 		float length, width;
-		// Whether the boat has a square front, like a raft, rather than a pointed bow
 		boolean squareBow;
-		// Whether it's one of the big NPC ships, BIG_SHIP_CONFIGS
 		boolean bigShip;
-		// Squared distance from the camera's focal point, to pick the nearest wakes
 		double focusDistance;
 
 		void copy(Wake other) {
@@ -147,48 +131,42 @@ public class BoatWakes {
 	}
 
 	private static class Trail {
-		// Positions in world local units, and when they were recorded, newest last
+		// Newest last
 		final double[] x = new double[MAX_POINTS];
 		final double[] z = new double[MAX_POINTS];
 		final float[] time = new float[MAX_POINTS];
 		int count;
-		// The wake as it's drawn, built every frame
 		final Wake wake = new Wake();
-		// The boat's position and the direction it faces, eased so the foam along its hull doesn't jitter
+		// Eased, so the foam along the hull doesn't jitter
 		double headX, headZ;
 		double headingX, headingZ;
-		// The boat's position averaged over a game tick, and the average time, where the path starts
+		// Averaged over SMOOTHING, where the recorded path starts
 		double averageX, averageZ;
 		float averageTime;
-		// The boat's raw positions over the last SMOOTHING seconds, as a ring, and their running sums
+		// Ring of raw positions over the last SMOOTHING seconds, with running sums
 		final double[] rawX = new double[RAW_SAMPLES];
 		final double[] rawZ = new double[RAW_SAMPLES];
 		final float[] rawTime = new float[RAW_SAMPLES];
 		int rawStart, rawCount;
 		double rawSumX, rawSumZ, rawSumTime;
 		float lastUpdate = Float.NaN;
-		// When the boat's raw position last changed
 		float lastMoved = Float.NEGATIVE_INFINITY;
-		// When the boat last made foam, so its wake ages from then once it stops
+		// When the boat last made foam. Its wake ages from then once it stops.
 		float lastMoving;
-		// When the boat moved off and started its current wake
 		float startedMoving;
-		// Whether it was making foam last frame, and whether it's going backwards
 		boolean wasMaking;
 		boolean reversing;
 		boolean seen;
 
 		/**
-		 * @return the old wake, left where it was to finish fading out, when the boat moves off again before it's gone or
-		 * jumps to a new spot, or null
+		 * @return the previous wake, left to fade out in place, if this update started a new one, otherwise null
 		 */
 		Wake update(double posX, double posZ, int orientation, float now) {
 			// JAU orientation 0 faces south, and turns anticlockwise seen from above
 			double angle = orientation * JAU_TO_RAD;
 			double faceX = -Math.sin(angle);
 			double faceZ = -Math.cos(angle);
-			// A boat that jumps to a new spot starts afresh there, rather than drawing foam across the gap. Its old wake is
-			// left to fade out where it was.
+			// Start afresh after a teleport, rather than drawing foam across the gap
 			Wake oldWake = null;
 			if (rawCount > 0) {
 				int last = (rawStart + rawCount - 1) % RAW_SAMPLES;
@@ -204,12 +182,10 @@ public class BoatWakes {
 					rawCount = 0;
 					rawSumX = rawSumZ = rawSumTime = 0;
 					lastUpdate = Float.NaN;
-					// The new wake fades in, like one started by moving off
 					startedMoving = now;
 				}
 			}
-			// The wake starts right at the boat, eased a little. The path behind it averages the boat's position over a
-			// game tick, so the steps it takes while turning don't zigzag the path.
+			// The hull is eased a little, while the path averages over a game tick so turning steps don't zigzag it
 			if (Float.isNaN(lastUpdate)) {
 				headX = posX;
 				headZ = posZ;
@@ -247,13 +223,11 @@ public class BoatWakes {
 			rawSumX += posX;
 			rawSumZ += posZ;
 			rawSumTime += now;
-			// Stamped with the average time too, since that's when the boat was at the average position. Stamping it
-			// with now would make the foam's age jump each time a point is added.
+			// Use the average time too, or the foam's age would jump each time a point is added
 			posX = rawSumX / rawCount;
 			posZ = rawSumZ / rawCount;
 			float pointTime = (float) (rawSumTime / rawCount);
 			lastUpdate = now;
-			// Which way it's going, against the way it faces, over the last game tick
 			boolean turnedAround = false;
 			double moveX = rawX[slot] - rawX[rawStart];
 			double moveZ = rawZ[slot] - rawZ[rawStart];
@@ -262,11 +236,9 @@ public class BoatWakes {
 				turnedAround = backwards != reversing;
 				reversing = backwards;
 			}
-			// Making foam until it stops, which is when its position stops changing
 			boolean making = now - lastMoved < STOP_DELAY;
 			if (making) {
-				// Moving off again after a stop, or changing direction, starts a new wake. The old one, as it was last
-				// drawn, is left where it was to carry on fading out, so it doesn't vanish or follow the boat.
+				// Moving off or changing direction starts a new wake, leaving the old one to fade in place
 				if (!wasMaking || turnedAround) {
 					if (count > 0 && now - lastMoving < WAKE_STOP_TIME) {
 						oldWake = new Wake();
@@ -281,11 +253,9 @@ public class BoatWakes {
 			averageX = posX;
 			averageZ = posZ;
 			averageTime = pointTime;
-			// Once the boat slows, its path stays as it was while its wake fades out, so new points don't push old ones
-			// out
+			// Freeze the path while the wake fades out
 			if (!making)
 				return oldWake;
-			// Forget points too old to have any wake left
 			int expired = 0;
 			while (expired < count && lastMoving - time[expired] > LIFETIME)
 				expired++;
@@ -311,12 +281,10 @@ public class BoatWakes {
 		}
 
 		/**
-		 * Build the wake as it's drawn: a curve from the stern into the recorded path, then the path back from the boat's
-		 * averaged position
+		 * Build the wake: a curve from the stern into the recorded path, then the path itself
 		 */
 		void build() {
 			Wake w = wake;
-			// Going backwards, the wake is built facing the way it's going, so its path trails off ahead of the bow
 			double headingX = reversing ? -this.headingX : this.headingX;
 			double headingZ = reversing ? -this.headingZ : this.headingZ;
 			w.reversing = reversing;
@@ -326,11 +294,10 @@ public class BoatWakes {
 			w.sternZ = headZ;
 			w.startTime = startedMoving;
 			w.fadeStart = lastMoving;
-			// Ages stop once the boat stops making foam, and the shader adds the time since
+			// Ages freeze once the boat stops, and the shader adds the time since
 			float ageNow = lastMoving;
 			float startAge = Math.max(ageNow - averageTime, 0);
 
-			// The direction the path runs towards its start
 			double forwardX = headingX, forwardZ = headingZ;
 			if (count > 0) {
 				double dx = averageX - x[count - 1];
@@ -342,7 +309,7 @@ public class BoatWakes {
 				}
 			}
 
-			// Curve from the stern, leaving along the boat's heading, into the path's start, arriving along the path
+			// Bezier from the stern along the heading, into the path along its direction
 			double handle = Math.hypot(averageX - headX, averageZ - headZ) / 3;
 			double c1X = headX - headingX * handle, c1Z = headZ - headingZ * handle;
 			double c2X = averageX + forwardX * handle, c2Z = averageZ + forwardZ * handle;
@@ -356,7 +323,6 @@ public class BoatWakes {
 				n++;
 			}
 
-			// The recorded path, newest first, from the path's start
 			w.x[n] = averageX;
 			w.z[n] = averageZ;
 			w.age[n] = startAge;
@@ -365,7 +331,6 @@ public class BoatWakes {
 			for (int i = count - 1; i >= 0; i--) {
 				float age = Math.max(ageNow - time[i], 0);
 				if (age > tailAge) {
-					// Cut off between this point and the one before, where the age reaches tailAge
 					float before = w.age[n - 1];
 					double t = age > before ? (tailAge - before) / (age - before) : 0;
 					w.x[n] = w.x[n - 1] + (x[i] - w.x[n - 1]) * t;
@@ -381,7 +346,7 @@ public class BoatWakes {
 			}
 			w.count = n;
 
-			// How far back from the stern each point is, so the shader needn't measure every segment for every pixel
+			// Precomputed so the shader needn't measure every segment per pixel
 			double distance = 0;
 			double prevX = headX, prevZ = headZ;
 			for (int i = 0; i < n; i++) {
@@ -391,10 +356,8 @@ public class BoatWakes {
 				prevZ = w.z[i];
 			}
 
-			// The client's position is the boat's middle, so the path's first stretch runs alongside the back half of the
-			// hull. While turning, it lags behind the hull, which turns with the boat, leaving a step in the foam halfway
-			// along. So that stretch is bent onto the hull's centre line, fully at the middle, easing off to none at the
-			// stern, keeping its ages and distances. Going straight, it's already there.
+			// The path starts at the boat's middle, so while turning it lags behind the back half of the hull. Bend that
+			// stretch onto the hull's centre line to avoid a step in the foam.
 			double halfLength = w.length * 0.5 * LOCAL_TILE_SIZE;
 			for (int i = 0; i < n; i++) {
 				double back = w.distance[i] * LOCAL_TILE_SIZE;
@@ -410,14 +373,12 @@ public class BoatWakes {
 		}
 
 		/**
-		 * Leave out the points along straight, steady stretches of the wake, which the shader would only interpolate
-		 * back, so it has fewer to check for every pixel near the boat. The first and last points always stay.
+		 * Drop points the shader could interpolate back, keeping the first and last
 		 */
 		private static void thin(Wake w) {
 			int kept = 1;
 			int from = 0;
 			while (from < w.count - 1) {
-				// The furthest point a line from here reaches with every point between near enough to it
 				int to = from + 1;
 				while (to + 1 < w.count && isStraight(w, from, to + 1))
 					to++;
@@ -432,8 +393,7 @@ public class BoatWakes {
 		}
 
 		/**
-		 * Whether every point between two others is within THIN_TOLERANCE of the line between them, measured where the
-		 * shader would: at the nearest spot on the line, with the age and distance interpolated along it
+		 * Whether every point between start and end is within THIN_TOLERANCE of the line between them
 		 */
 		private static boolean isStraight(Wake w, int start, int end) {
 			double dx = w.x[end] - w.x[start];
@@ -458,13 +418,12 @@ public class BoatWakes {
 	}
 
 	private final Map<Integer, Trail> trails = new HashMap<>();
-	// Old wakes left fading out where they were after their boats moved off again
+	// Wakes left fading in place after their boats moved off again
 	private final List<Wake> oldWakes = new ArrayList<>();
 	private final List<Wake> active = new ArrayList<>();
 
 	/**
-	 * Forget every path. This outlives the plugin, whose clock starts again from 0 when it restarts, which would
-	 * leave every recorded time in the future.
+	 * Forget every path, since the plugin's clock restarts from 0
 	 */
 	public void reset() {
 		trails.clear();
@@ -472,8 +431,6 @@ public class BoatWakes {
 	}
 
 	/**
-	 * Record the paths of visible boats, skipping flattened ones, and fill in the wake uniforms
-	 *
 	 * @param drawnScene the scene being drawn, which can lag behind the client's across loading lines
 	 */
 	public void update(Client client, Scene drawnScene, UBOGlobal ubo, float now) {
@@ -481,7 +438,6 @@ public class BoatWakes {
 		Scene scene = topLevel == null ? null : topLevel.getScene();
 		active.clear();
 		if (scene != null && drawnScene != null) {
-			// Boats are placed in the client's scene, but drawn relative to the scene being drawn
 			int clientBaseX = scene.getBaseX() * LOCAL_TILE_SIZE;
 			int clientBaseZ = scene.getBaseY() * LOCAL_TILE_SIZE;
 			int baseX = drawnScene.getBaseX() * LOCAL_TILE_SIZE;
@@ -492,10 +448,9 @@ public class BoatWakes {
 				var config = entity.getConfig();
 				if (!BOAT_CONFIGS.contains(config.getId()))
 					continue;
-				// Flattened boats keep their paths, so they don't restart if they're only flattened briefly
+				// Flattened boats keep their paths, in case they're only hidden briefly
 				LocalPoint location = entity.getLocalLocation();
 				var trail = trails.computeIfAbsent(entity.getWorldView().getId(), id -> new Trail());
-				// The boat's size, in tiles, so its wake fits it
 				trail.wake.length = (float) config.getBoundsHeight() / LOCAL_TILE_SIZE;
 				trail.wake.width = (float) config.getBoundsWidth() / LOCAL_TILE_SIZE;
 				// Rafts are the only boats a single tile wide, and the only ones with a square front
@@ -507,15 +462,13 @@ public class BoatWakes {
 					oldWakes.add(oldWake);
 				trail.build();
 				trail.seen = true;
-				// Stopped boats whose wakes have faded don't take up a slot
 				if (!entity.isHiddenForOverlap() && now - trail.wake.fadeStart <= WAKE_STOP_TIME)
 					active.add(trail.wake);
 			}
 			trails.values().removeIf(trail -> !trail.seen);
 			oldWakes.removeIf(wake -> now - wake.fadeStart > WAKE_STOP_TIME);
 
-			// Only the wakes nearest the camera are drawn, up to MAX_BOATS. Boats' own wakes come first, then old ones
-			// left fading, which may already be gone.
+			// Nearest first, preferring live wakes over fading ones
 			double focusX = client.getCameraFocalPointX() + clientBaseX;
 			double focusZ = client.getCameraFocalPointZ() + clientBaseZ;
 			sortByDistance(active, focusX, focusZ);
@@ -528,7 +481,6 @@ public class BoatWakes {
 				upload(ubo, boat, active.get(boat), baseX, baseZ, now);
 		}
 
-		// Unused slots have no points
 		for (int boat = active.size(); boat < MAX_BOATS; boat++)
 			ubo.boatWakeHulls[boat].set(0, 0, 0, 0);
 	}
@@ -546,10 +498,7 @@ public class BoatWakes {
 	private static final Comparator<Wake> BY_FOCUS_DISTANCE = Comparator.comparingDouble(wake -> wake.focusDistance);
 
 	/**
-	 * Send a wake's heading and stern, and its path relative to the drawn scene, in tiles. Each point has its position,
-	 * age in seconds and distance back from the stern. The seconds since the boat slowed go with the hull, so how it fades
-	 * is decided in the shader. The bounds are the path's and the bow's, with room for the foam, worked out here once
-	 * per wake rather than for every pixel of water.
+	 * Upload a wake relative to the drawn scene, in tiles, with bounds covering everywhere its foam can reach
 	 */
 	private static void upload(UBOGlobal ubo, int boat, Wake wake, int baseX, int baseZ, float now) {
 		float sinceSlowed = now - wake.fadeStart;
@@ -572,8 +521,7 @@ public class BoatWakes {
 			maxZ = Math.max(maxZ, pz);
 		}
 
-		// The bow, placed as the shader places it: shorter boats' wakes sit a little further forward and longer ones'
-		// further back, except rafts', which are centred on their positions
+		// Placed as the shader places the bow
 		float lengthScale = wake.length > 0 ? wake.length / REFERENCE_LENGTH : 1;
 		float sideScale = wake.width > 0 ? wake.width / REFERENCE_WIDTH : 1;
 		float forward = wake.squareBow ? 0 : (REFERENCE_LENGTH - wake.length) * WAKE_SIZE_FORWARD;
@@ -587,8 +535,7 @@ public class BoatWakes {
 		minZ = Math.min(minZ, bowZ);
 		maxZ = Math.max(maxZ, bowZ);
 
-		// The furthest out from its path this wake's foam can reach, in tiles, from the age of its oldest point, the end
-		// of its path, plus the ageing after the boat stops. The arms are gone sooner.
+		// The furthest the foam can reach from the path, in tiles, based on the oldest point's age
 		float oldest = wake.age[wake.count - 1] + sinceSlowed * WAKE_STOP_AGEING;
 		float armAge = Math.min(WAKE_LIFETIME * (wake.bigShip ? SHIP_LIFETIME : 1), oldest);
 		float band = HULL_WIDTH * 0.5f +

@@ -54,13 +54,13 @@ public class SceneContext {
 	private static final int VERTEX_SHORE_DISTANCE_SHIFT = 21;
 	private static final int VERTEX_SHORE_DIRECTION_SHIFT = 28;
 
-	// Shore data in water surface vertex colors. The step counts double as bit masks.
+	// Shore data in water surface vertex colors. Step counts double as bit masks.
 	// - Bits 0-6: distance to land, 0 only on the shore, up to SHORE_DISTANCE_MAX tiles
 	// - Bits 7-10: direction to land
 	// - Bits 11-14: square tile sides bordering land (west, east, south, north)
 	// - Bit 15: WATER_SQUARE_TILE_BIT
 	// - Bits 24-29: how enclosed the water is, in the unused alpha bits
-	// Furthest distance from land measured, in tiles, for both the distance to land and the room for waves
+	// In tiles
 	public static final int SHORE_DISTANCE_MAX = 12;
 	public static final int SHORE_DISTANCE_STEPS = 0x7F;
 	public static final int SHORE_DIRECTION_SHIFT = 7;
@@ -169,16 +169,10 @@ public class SceneContext {
 		vertexTerrainData.setBits(hash, value, mask, 0);
 	}
 
-	/**
-	 * A water vertex which also touches land
-	 */
 	public boolean isVertexShore(int hash) {
 		return vertexTerrainData.test(hash, VERTEX_IS_WATER | VERTEX_IS_LAND);
 	}
 
-	/**
-	 * The vertex's shore data, packed for a water surface vertex color
-	 */
 	public int getVertexShoreData(int hash) {
 		int data = vertexTerrainData.getOrDefault(hash, 0);
 		int direction = data >>> VERTEX_SHORE_DIRECTION_SHIFT & SHORE_DIRECTION_STEPS - 1;
