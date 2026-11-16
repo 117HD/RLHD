@@ -17,7 +17,11 @@ public class UBOWaterTypes extends UniformBuffer<GLBuffer> {
 		public final Property duration = addProperty(PropertyType.Float, "duration");
 		public final Property fresnelAmount = addProperty(PropertyType.Float, "fresnelAmount");
 		public final Property surfaceColor = addProperty(PropertyType.FVec3, "surfaceColor");
+		// In surfaceColor's padding, so it doesn't move the other fields. Inverted, so the padding reads as having waves.
+		public final Property noWaves = addProperty(PropertyType.Int, "noWaves");
 		public final Property foamColor = addProperty(PropertyType.FVec3, "foamColor");
+		// In foamColor's padding, inverted like noWaves
+		public final Property noScroll = addProperty(PropertyType.Int, "noScroll");
 		public final Property depthColor = addProperty(PropertyType.FVec3, "depthColor");
 		public final Property normalMap = addProperty(PropertyType.Int, "normalMap");
 	}
