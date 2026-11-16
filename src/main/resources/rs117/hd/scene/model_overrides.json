@@ -33744,6 +33744,7 @@
   },
   {
     "description": "Waterfalls - Replace Vanilla Droplets",
+    "hideInAreas": [ "FISHING_TRAWLER" ],
     "textureMaterial": "WATER_DROPS",
     "objectIds": [
       "WATERFALL_OVERLAY_1",
@@ -33776,6 +33777,25 @@
       "WATERFALL_OVERLAY_1_BRIGHTER",
       "MYARM_WATER_MOVING_1"
     ]
+  },
+  {
+    "description": "Inactive Fishing Spot - Hide in Fishing Trawler",
+    "hideInAreas": [ "FISHING_TRAWLER" ],
+    "objectIds": [
+      "INACTIVEFISHSPOT"
+    ]
+  },
+  {
+    "description": "Fishing Trawler - Lower Sacks into water",
+    "heightOffset": 17,
+    "areas": [ "FISHING_TRAWLER" ],
+    "baseMaterial": "BURLAP",
+    "objectIds": [
+      "SACKS"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.6
   },
   {
     "description": "Enchanted Valley - Fix Waterfall Position",
@@ -85065,6 +85085,23 @@
         "description": "Fake Ripples",
         "colors": "a < 255 || h == 37 && l == 71 || h == 42",
         "baseMaterial": "GRAY_75",
+        "hideAsWaterEffect": true
+      }
+    ]
+  },
+  {
+    "description": "Shark Fin - Hide Ripples",
+    "npcIds": [
+      "FIN1",
+      "FIN2"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Fake Ripples",
+        "colors": "l == 122",
+        "baseMaterial": "GRAY_50",
+        "shiftAlpha": -150,
+        "depthBias": 20,
         "hideAsWaterEffect": true
       }
     ]

@@ -194,12 +194,14 @@
   {
     "name": "PLAIN_WATER",
     "flat": true,
-    "foamColor": [
-      13.07,
-      13.07,
-      13.07
-    ],
-    "depthColor": "#000000"
+    "depthColor": "#000000",
+    "foamColor": "#000000"
+  },
+  {
+    "name": "PLAIN_WATER_NO_WAVES",
+    "parent": "PLAIN_WATER",
+    "hasWaves": false,
+    "scrolls": false
   },
   {
     "name": "WHISPERER_WATER",
