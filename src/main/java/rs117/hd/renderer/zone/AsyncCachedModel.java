@@ -458,7 +458,7 @@ public final class AsyncCachedModel extends Job implements Model {
 	private static final int TEX_TYPE = 2;
 
 	@RequiredArgsConstructor
-	private final class CachedArrayField<T> {
+	private static final class CachedArrayField<T> {
 		private final AsyncCachedModel model;
 		private final PooledArrayType arrayType;
 		private final int fieldType;
@@ -478,21 +478,21 @@ public final class AsyncCachedModel extends Job implements Model {
 		}
 
 		public T getValue() {
-			ensureCached();
-			
-			if (nativeBuffer != null) {
-				synchronized (this) {
-					if (nativeBuffer != null) {
-						final Buffer buffer = nativeBuffer;
-						final int length = nativeLength;
-						try {
-							value = arrayType.borrow(length);
-							NativeBufferPool.copyFromNative(arrayType, buffer, value, length);
-						} finally {
-							nativeLength = 0;
-							nativeBuffer = null;
-							NativeBufferPool.release(arrayType, buffer);
-						}
+			if(nativeBuffer == null)
+				return value;
+
+			synchronized (this) {
+				if (nativeBuffer != null) {
+					final Buffer buffer = nativeBuffer;
+					final int length = nativeLength;
+					try {
+						value = arrayType.borrow(length);
+						ensureCached();
+						NativeBufferPool.copyFromNative(arrayType, buffer, value, length);
+					} finally {
+						nativeLength = 0;
+						nativeBuffer = null;
+						NativeBufferPool.release(arrayType, buffer);
 					}
 				}
 			}
