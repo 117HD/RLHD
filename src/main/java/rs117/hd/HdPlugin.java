@@ -995,7 +995,7 @@ public class HdPlugin extends Plugin {
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
 			.define("WATER_SPECULAR_REFLECTIONS", config.waterSpecularReflections())
 			.define("DECOUPLE_WATER_FROM_SKY_COLOR", config.decoupleSkyAndWaterColor())
-			.define("SHORE_FOAM", config.improvedShoreFoam())
+			.define("SHORE_FOAM", config.shoreFoam())
 			.define("OCEAN_LACE", config.oceanLace())
 			.define("OCEAN_WAVES", config.oceanWaves())
 			.define("BOAT_WAKES", config.boatWakes())
@@ -2061,7 +2061,7 @@ public class HdPlugin extends Plugin {
 							case KEY_LEGACY_BOAT_SILHOUETTES:
 							case KEY_WATER_SPECULAR_REFLECTIONS:
 							case KEY_DECOUPLE_WATER_FROM_SKY_COLOR:
-							case KEY_IMPROVED_SHORE_FOAM:
+							case KEY_SHORE_FOAM:
 							case KEY_OCEAN_LACE:
 							case KEY_OCEAN_WAVES:
 							case KEY_BOAT_WAKES:
