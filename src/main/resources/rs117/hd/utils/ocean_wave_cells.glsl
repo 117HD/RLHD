@@ -16,6 +16,7 @@
 #define OCEAN_WAVE_RATE_RANDOMNESS 0.4     // how much faster some waves live, from 0 to 1
 #define OCEAN_WAVE_WIGGLE 1.0              // how wiggly the fronts are
 #define OCEAN_WAVE_RAGGEDNESS 1.5          // how ragged the edges and breakup are
+#define SHORE_WAVE_MIN_ROOM 5.0            // open water needed nearby for shore and ocean waves, in tiles
 
 // How far from a water face's last vertex its pixels can be and still use its list, in wave cells. A little more than a
 // tile's diagonal.
@@ -174,6 +175,15 @@ vec2 oceanWaveCellPosition(vec2 tiles) {
     vec2 regionOffset = uboGlobal.waveRegionRepeat != 0 ? floor(tiles / 64.0) * 64.0 : vec2(0.0);
     vec2 drifted = tiles - regionOffset - uboGlobal.windDrift * OCEAN_FOAM_DRIFT_SPEED - uboGlobal.waveScroll;
     return drifted / OCEAN_WAVE_SIZE;
+}
+
+// Whether waves can form anywhere on a water face, from its vertices' shore data. Its pixels blend their room for
+// waves from these, so with none of them over SHORE_WAVE_MIN_ROOM, no pixel is.
+bool oceanWaveFaceHasRoom(ivec3 alphaBiasHsl) {
+    ivec3 enclosure = alphaBiasHsl >> WATER_ENCLOSURE_SHIFT & WATER_ENCLOSURE_STEPS;
+    // From this much enclosure on, as SceneContext stores it, the room is at most SHORE_WAVE_MIN_ROOM
+    const int noRoom = int(ceil((1.0 - SHORE_WAVE_MIN_ROOM / SHORE_DISTANCE_MAX) * WATER_ENCLOSURE_STEPS));
+    return any(lessThan(enclosure, ivec3(noRoom)));
 }
 
 // The waves that may reach anywhere within OCEAN_WAVE_FACE_REACH of a spot, as a bit for each of the 5x5 cells around

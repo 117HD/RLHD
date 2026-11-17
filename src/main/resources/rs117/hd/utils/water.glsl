@@ -70,8 +70,8 @@
 #define SHORE_WAVE_MAX_STOP 0.85           // and the furthest, short of the shore
 #define SHORE_WAVE_FULL_OPACITY 0.3        // distance from the shore of full opacity, in tiles
 #define SHORE_WAVE_OPACITY_CURVE 1.5       // how late waves fade in, 1 for linear
-#define SHORE_WAVE_MIN_ROOM 5.0            // open water needed nearby for waves, in tiles
-#define SHORE_WAVE_FULL_ROOM 6.0           // and for full strength, up to SHORE_DISTANCE_MAX
+#define SHORE_WAVE_FULL_ROOM 6.0           // open water for full strength waves, up to SHORE_DISTANCE_MAX. The
+                                           // least they need, SHORE_WAVE_MIN_ROOM, is in ocean_wave_cells.glsl.
 
 // Open water foam, shared by the lace and ocean waves. OCEAN_FOAM_DRIFT_SPEED is in ocean_wave_cells.glsl.
 #define OCEAN_FOAM_TEXTURE_SCALE 2.5       // tiles per speck texture repeat
@@ -980,12 +980,13 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
             smoothstep(OCEAN_LACE_SHORE_GAP, OCEAN_LACE_SHORE_FADE, shoreDist);
         if (max(oceanRoom, laceRoom) > 0.0) {
             vec2 drifted = -worldUvs(1.0) - regionOffset - uboGlobal.windDrift * OCEAN_FOAM_DRIFT_SPEED - waveScroll;
-            if (bool(OCEAN_LACE) && churned < 1.0) {
+            // Fading towards the shore in opacity, keeping its specks as dense
+            float laceStrength = OCEAN_LACE_STRENGTH * roughness * laceRoom;
+            // Skipped where too faint to change a pixel's color, as across narrow rivers
+            if (bool(OCEAN_LACE) && churned < 1.0 && laceStrength >= 1.0 / 255.0) {
                 // Stronger in proportion to the roughness, and denser too, up to solid line cores
                 float lace = oceanLace(drifted, uboGlobal.windDirection, uboGlobal.waterChurnTime);
                 lace = saturate(lace * sqrt(roughness)) * (1.0 - churned);
-                // Fading towards the shore in opacity, keeping its specks as dense
-                float laceStrength = OCEAN_LACE_STRENGTH * roughness * laceRoom;
                 oceanAmount = max(oceanAmount, oceanSpecks(lace, OCEAN_LACE_SOFTNESS, oceanMask) * laceStrength);
             }
             if (bool(OCEAN_WAVES) && churned < 1.0 && oceanRoom > 0.0) {

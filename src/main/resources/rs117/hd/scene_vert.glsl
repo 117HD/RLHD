@@ -133,7 +133,9 @@ layout (location = 0) in vec3 vPosition;
             fOceanWaveList = 0;
             if (isProvoking) {
                 fOceanWaveOrigin = oceanWaveCellPosition((uboGlobal.sceneBase + worldPosition.xz) / 128.0);
-                fOceanWaveList = oceanWaveList(fOceanWaveOrigin);
+                // Faces too enclosed for waves, as along rivers, never draw any
+                if (oceanWaveFaceHasRoom(fAlphaBiasHsl))
+                    fOceanWaveList = oceanWaveList(fOceanWaveOrigin);
             }
         #endif
 
