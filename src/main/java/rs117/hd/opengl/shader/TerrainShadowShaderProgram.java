@@ -4,12 +4,20 @@ import java.io.IOException;
 import rs117.hd.config.ShadowMode;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_FACE_INDICES;
 
 public class TerrainShadowShaderProgram extends ShaderProgram {
+	private final UniformTexture uniFaceIndices = addUniformTexBuffer("faceIndices");
+
 	public TerrainShadowShaderProgram() {
 		super(t -> t
 			.add(GL_VERTEX_SHADER, "shadow_vert.glsl")
 			.add(GL_FRAGMENT_SHADER, "stub_frag.glsl"));
+	}
+
+	@Override
+	protected void initialize() {
+		uniFaceIndices.set(TEXTURE_UNIT_FACE_INDICES);
 	}
 
 	@Override

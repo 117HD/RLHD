@@ -4,11 +4,20 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.buffer.GLBuffer;
-import rs117.hd.utils.buffer.GLTextureBuffer;
+import rs117.hd.utils.buffer.GLShaderStorage;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.jobs.Job;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.renderer.zone.Zone.MODEL_DATA_NUM_BYTES;
+import static rs117.hd.renderer.zone.Zone.STATIC_FACE_NUM_BYTES;
+import static rs117.hd.renderer.zone.Zone.ZONE_VERTEX_NUM_BYTES;
+import static rs117.hd.renderer.zone.ZoneRenderer.SHADER_STORAGE_BUFFER_FACE_INDICES;
+import static rs117.hd.renderer.zone.ZoneRenderer.SHADER_STORAGE_BUFFER_MODEL_DATA;
+import static rs117.hd.renderer.zone.ZoneRenderer.SHADER_STORAGE_BUFFER_TEXTURED_FACES;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_FACE_INDICES;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_MODEL_DATA;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
 
 @Slf4j
@@ -21,7 +30,6 @@ public final class ZoneUploadJob extends Job {
 	Zone zoneToBeReplaced;
 	Zone zoneBeingUploaded;
 	int x, z;
-	long revealAfterTimestampMs;
 	boolean shouldUnmap;
 
 	@Override
@@ -59,29 +67,54 @@ public final class ZoneUploadJob extends Job {
 	private void mapZoneVertexBuffers() {
 		try {
 			GLBuffer o = null, a = null;
-			int sz = zoneBeingUploaded.sizeO * Zone.VERT_SIZE * 3;
+			int sz = zoneBeingUploaded.sizeO * ZONE_VERTEX_NUM_BYTES * 3;
 			if (sz > 0) {
 				o = new GLBuffer("Zone::VBO::Opaque", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 				o.initialize(sz);
 				o.map(MAP_WRITE);
 			}
 
-			sz = zoneBeingUploaded.sizeA * Zone.VERT_SIZE * 3;
+			sz = zoneBeingUploaded.sizeA * ZONE_VERTEX_NUM_BYTES * 3;
 			if (sz > 0) {
 				a = new GLBuffer("Zone::VBO::Alpha", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 				a.initialize(sz);
 				a.map(MAP_WRITE);
 			}
 
-			GLTextureBuffer f = null;
-			sz = zoneBeingUploaded.sizeF * Zone.TEXTURE_SIZE;
+			// One packed texture face index per triangle, read via gl_VertexID / 3
+			GLShaderStorage fi = null;
+			sz = zoneBeingUploaded.sizeO * Integer.BYTES;
 			if (sz > 0) {
-				f = new GLTextureBuffer("Zone::TBO", GL_STATIC_DRAW);
-				f.initialize(sz);
+				fi = new GLShaderStorage("Zone::FaceIndices::Opaque", GL_STATIC_DRAW);
+				fi.initialize(sz, SHADER_STORAGE_BUFFER_FACE_INDICES, TEXTURE_UNIT_FACE_INDICES);
+				fi.map(MAP_WRITE);
+			}
+
+			GLShaderStorage fia = null;
+			sz = zoneBeingUploaded.sizeA * Integer.BYTES;
+			if (sz > 0) {
+				fia = new GLShaderStorage("Zone::FaceIndices::Alpha", GL_STATIC_DRAW);
+				fia.initialize(sz, SHADER_STORAGE_BUFFER_FACE_INDICES, TEXTURE_UNIT_FACE_INDICES);
+				fia.map(MAP_WRITE);
+			}
+
+			GLShaderStorage f = null;
+			sz = zoneBeingUploaded.sizeF * STATIC_FACE_NUM_BYTES;
+			if (sz > 0) {
+				f = new GLShaderStorage("Zone::TexturedFaces", GL_STATIC_DRAW);
+				f.initialize(sz, SHADER_STORAGE_BUFFER_TEXTURED_FACES, TEXTURE_UNIT_TEXTURED_FACES);
 				f.map(MAP_WRITE);
 			}
 
-			zoneBeingUploaded.initialize(o, a, f);
+			GLShaderStorage m = null;
+			sz = zoneBeingUploaded.sizeM * MODEL_DATA_NUM_BYTES;
+			if (sz > 0) {
+				m = new GLShaderStorage("Zone::ModelData", GL_STATIC_DRAW);
+				m.initialize(sz, SHADER_STORAGE_BUFFER_MODEL_DATA, TEXTURE_UNIT_MODEL_DATA);
+				m.map(MAP_WRITE);
+			}
+
+			zoneBeingUploaded.initialize(o, a, f, fi, fia, m);
 			zoneBeingUploaded.setMetadata(viewContext, sceneContext, x, z);
 		} catch (Throwable ex) {
 			log.warn(
@@ -116,7 +149,6 @@ public final class ZoneUploadJob extends Job {
 		if (zoneBeingUploaded != null && zoneBeingUploaded.uploadJob == this)
 			zoneBeingUploaded.uploadJob = null;
 		zoneBeingUploaded = null;
-		revealAfterTimestampMs = 0;
 		POOL.recycle(this);
 	}
 

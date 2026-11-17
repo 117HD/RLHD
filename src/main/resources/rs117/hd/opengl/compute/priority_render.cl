@@ -58,7 +58,7 @@ int tile_height(read_only image3d_t tileHeightMap, int z, int x, int y);
 void hillskew_vertex(read_only image3d_t tileHeightMap, float4 *v, int hillskew, int modelPosY, float modelHeight, int plane);
 void undoVanillaShading(struct VertexData *vertex, float3 unrotatedNormal);
 float3 applyCharacterDisplacement(
-    float3 characterPos,
+    float4 characterPos,
     float2 vertPos,
     float height,
     float strength,
@@ -357,7 +357,7 @@ void undoVanillaShading(struct VertexData *vertex, float3 unrotatedNormal) {
 }
 
 float3 applyCharacterDisplacement(
-    float3 characterPos,
+    float4 characterPos,
     float2 vertPos,
     float height,
     float strength,
@@ -370,7 +370,7 @@ float3 applyCharacterDisplacement(
         return (float3)(0.0f, 0.0f, 0.0f);
 
     float offsetFrac = clamp(1.0f - (offsetLen / fabs(characterPos.z)), 0.0f, 1.0f);
-    float displacementFrac = offsetFrac * offsetFrac;
+    float displacementFrac = offsetFrac * offsetFrac * characterPos.w;
 
     float3 horizontalDisplacement = normalize((float3)(offset.x, 0.0f, offset.y)) * (height * strength * displacementFrac * 0.5f);
     float3 verticalDisplacement = (float3)(0.0f, height * strength * displacementFrac, 0.0f);

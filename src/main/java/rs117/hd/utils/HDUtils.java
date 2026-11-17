@@ -479,6 +479,24 @@ public final class HDUtils {
 		return true;
 	}
 
+	public static boolean isSphereIntersectingAABB(
+		float sx, float sy, float sz, float radius,
+		float minX, float minY, float minZ,
+		float maxX, float maxY, float maxZ
+	) {
+		// Find the closest point on the AABB to the sphere center by clamping
+		final float closestX = Math.max(minX, Math.min(sx, maxX));
+		final float closestY = Math.max(minY, Math.min(sy, maxY));
+		final float closestZ = Math.max(minZ, Math.min(sz, maxZ));
+
+		final float dx = sx - closestX;
+		final float dy = sy - closestY;
+		final float dz = sz - closestZ;
+
+		final float distSq = dx * dx + dy * dy + dz * dz;
+		return distSq <= radius * radius;
+	}
+
 	public static int packTerrainData(boolean isTerrain, int waterDepth, WaterType waterType, int plane) {
 		// Up to 12-bit water depth | 8-bit water type | 2-bit plane | terrain flag
 		assert waterType.index < 1 << 7 : "Too many water types";

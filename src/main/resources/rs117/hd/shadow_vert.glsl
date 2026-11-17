@@ -25,24 +25,41 @@
  */
 #version 330
 
+#include SHADER_STORAGE_BUFFERS
+
+#if SHADER_STORAGE_BUFFERS
+    #extension GL_ARB_shader_storage_buffer_object : enable
+    #extension GL_ARB_shading_language_420pack : enable
+#endif
+
+#include FACE_INDICES_SSBO_BINDING
+#include TEXTURE_FACES_SSBO_BINDING
+#include MODEL_DATA_SSBO_BINDING
+
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
 #include <uniforms/materials.glsl>
+#include <uniforms/model_data.glsl>
+#include <uniforms/texture_faces.glsl>
+#include <uniforms/displacement.glsl>
 
 #include <utils/constants.glsl>
+#include <utils/wind_character_displacement.glsl>
+#include <utils/misc.glsl>
 
 layout (location = 0) in vec3 vPosition;
 
 #if ZONE_RENDERER
-    layout (location = 1) in vec4 vUv;
-    layout (location = 2) in vec4 vNormal;
-    layout (location = 3) in int vTextureFaceIdx;
+    layout (location = 1) in vec2 vUv;
+    layout (location = 2) in ivec2 vNormalOct;
+    layout (location = 3) in int vModelIdx;
     layout (location = 6) in int vWorldViewId;
     layout (location = 7) in ivec2 vSceneBase;
+    #if DITHER_FADE
+        layout (location = 8) in float vFade;
+    #endif
 
 #if !TERRAIN_ONLY_PASS
-    uniform isamplerBuffer textureFaces;
-
     #if SHADOW_MODE == SHADOW_MODE_DETAILED
         out vec4 fUvw;
         flat out int fMaterialData;
@@ -54,20 +71,67 @@ layout (location = 0) in vec3 vPosition;
 #endif
 
     void main() {
-        int faceIdx = vTextureFaceIdx & 0x7FFFFFFF;
-        bool windingReversed = vTextureFaceIdx < 0;
+        vec3 worldNormal = decodeOct16(vNormalOct);
+
+        int worldViewIdx = vWorldViewId;
+        vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
+
+        bool windingReversed = false;
 
         #if TERRAIN_ONLY_PASS
+            // Terrain is always static geometry, so its face data is read through the faceIndices buffer
+            int vPackedTextureFace = getPackedTextureFace(gl_VertexID / 3);
+            windingReversed = isFaceWindingReversed(vPackedTextureFace);
             bool isShadowDisabled = false;
         #else
             int vertex = gl_VertexID % 3;
-            if (windingReversed)
-                vertex = 2 - vertex;
+            int modelIdx = vModelIdx;
+            // Dynamic models pack face data in lockstep with the vertex buffer and have no faceIndices buffer
+            bool dynamicFace = modelIdx > 0 && isModelDynamic(getModelData(modelIdx));
 
-            int alphaBiasHsl = texelFetch(textureFaces, faceIdx)[vertex];
-            int materialData = texelFetch(textureFaces, faceIdx + 1)[vertex];
+            int alphaBiasHsl;
+            int materialData;
+            if (dynamicFace) {
+                ModelFaceData faceData = getModelFaceData(getDynamicFaceOffset(gl_VertexID));
+                alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
+                materialData = faceData.MaterialData;
+            } else {
+                int vPackedTextureFace = getPackedTextureFace(gl_VertexID / 3);
+                if (isFaceWindingReversed(vPackedTextureFace))
+                    vertex = 2 - vertex;
+
+                if (isModelFace(vPackedTextureFace)) {
+                    ModelFaceData faceData = getModelFaceData(getFaceOffset(vPackedTextureFace));
+                    alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
+                    materialData = faceData.MaterialData;
+                } else {
+                    StaticFaceData faceData = getStaticFaceData(getFaceOffset(vPackedTextureFace));
+                    alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
+                    materialData = faceData.MaterialData[vertex];
+                }
+            }
 
             float opacity = 1 - (alphaBiasHsl >> 24 & 0xFF) / float(0xFF);
+
+            #if DITHER_FADE
+                float fade = vFade;
+            #endif
+
+            ModelData modelData;
+            if (modelIdx > 0) {
+                modelData = getModelData(modelIdx);
+                #if DITHER_FADE
+                    fade = modelData.fade;
+                #endif
+                if (isModelDynamic(modelData)) {
+                    worldViewIdx = modelData.worldViewIdx;
+                    sceneOffset = modelData.position;
+                }
+            }
+
+            #if DITHER_FADE
+                opacity *= saturate(1 - fade);
+            #endif
 
             float opacityThreshold = float(materialData >> MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT & 0x3F) / 0x3F;
             if (opacityThreshold == 0)
@@ -78,7 +142,7 @@ layout (location = 0) in vec3 vPosition;
             Material material = getMaterial(materialData >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
             #if SHADOW_MODE == SHADOW_MODE_DETAILED
                 if (!isShadowDisabled) {
-                    fUvw = vec4(vUv.xy, material.colorMap, material.shadowAlphaMap);
+                    fUvw = vec4(vUv, material.colorMap, material.shadowAlphaMap);
                     // Scroll UVs
                     fUvw.xy += material.scrollDuration * uboGlobal.elapsedTime;
                     // Scale from the center
@@ -102,16 +166,27 @@ layout (location = 0) in vec3 vPosition;
 
         int shouldCastShadow = isShadowDisabled ? 0 : 1;
 
-        vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
         vec3 worldPosition = sceneOffset + vPosition;
-        if (vWorldViewId != -1 && !isShadowDisabled) {
-            mat4x3 worldViewProjection = mat4x3(getWorldViewProjection(vWorldViewId));
-            worldPosition = worldViewProjection * vec4(worldPosition, 1.0);;
+        if (worldViewIdx != -1 && !isShadowDisabled) {
+            mat4x3 worldViewProjection = mat4x3(getWorldViewProjection(worldViewIdx));
+            worldPosition = worldViewProjection * vec4(worldPosition, 1.0);
         }
 
         #if TERRAIN_ONLY_PASS
             if (!isShadowDisabled)
-                worldPosition += vNormal.xyz * 0.0002 * (windingReversed ? 1 : -1);
+                worldPosition += worldNormal * 0.0002 * (windingReversed ? 1 : -1);
+        #else
+            if (modelIdx > 0 && isDisplacementEnabled(materialData)) {
+                ObjectWindSample windSample = computeWindSample(modelData.position, modelData.height);
+                worldPosition += applyWindDisplacementVertex(
+                    windSample,
+                    materialData,
+                    float(modelData.height),
+                    worldPosition,
+                    worldPosition - modelData.position,
+                    worldNormal
+                );
+            }
         #endif
 
         vec4 clipPosition = uboGlobal.lightProjectionMatrix * vec4(worldPosition, shouldCastShadow);

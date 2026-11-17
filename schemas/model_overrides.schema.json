@@ -259,6 +259,10 @@
           "type": "boolean",
           "description": "Will invert the strength blend applied to the model, where vertices near the top will be effected less."
         },
+        "positionTileSnapping": {
+          "type": "integer",
+          "description": "Specify the amount of tiles that the model's position should be snapped to."
+        },
         "depthBias": {
           "type": "integer",
           "description": "Specify our own depth bias, replacing the bias set by Jagex. Between 0-255."

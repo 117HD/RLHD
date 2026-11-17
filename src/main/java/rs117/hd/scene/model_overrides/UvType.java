@@ -58,44 +58,52 @@ public enum UvType {
 		uvw[i + 1] = 1 - uvw[i + 1];
 		mirrorDiagonally(uvw, i);
 	}),
-	WORLD_XY(new float[] { 0, 0, -1 }),
-	WORLD_XZ(new float[] { 0, -1, 0 }),
-	WORLD_YZ(new float[] { -1, 0, 0 }),
+	WORLD_XY(1),
+	WORLD_XZ(2),
+	WORLD_YZ(3),
 	BOX,
 	;
 
 	public final boolean worldUvs;
 	public final boolean orientationDependent;
+	/** 0 for non-world UVs, otherwise the variant packed into MaterialData: 1 = WORLD_XY, 2 = WORLD_XZ, 3 = WORLD_YZ */
+	public final int worldUvVariant;
 	private final UvGenerator generator;
 
 	UvType() {
 		worldUvs = false;
 		orientationDependent = false;
+		worldUvVariant = 0;
 		generator = null;
 	}
 
 	UvType(boolean orientationDependent, UvGenerator generator) {
 		this.worldUvs = false;
 		this.orientationDependent = orientationDependent;
+		this.worldUvVariant = 0;
 		this.generator = generator;
 	}
 
 	UvType(UvType inherit, UvProcessor processor) {
 		worldUvs = inherit.worldUvs;
 		orientationDependent = inherit.orientationDependent;
+		worldUvVariant = inherit.worldUvVariant;
 		generator = (uvw, i, x, y, z) -> {
 			inherit.generator.computeUvw(uvw, i, x, y, z);
 			processor.processUvw(uvw, i);
 		};
 	}
 
-	UvType(float[] normal) {
+	UvType(int worldUvVariant) {
 		worldUvs = true;
 		orientationDependent = false;
+		this.worldUvVariant = worldUvVariant;
+		// World UVs only store their scale in the first component; the plane's normal is
+		// derived from the variant packed into MaterialData
 		generator = (uvw, i, scale, _1, _2) -> {
-			uvw[i] = scale * normal[0];
-			uvw[i + 1] = scale * normal[1];
-			uvw[i + 2] = scale * normal[2];
+			uvw[i] = scale;
+			uvw[i + 1] = 0;
+			uvw[i + 2] = 0;
 		};
 	}
 

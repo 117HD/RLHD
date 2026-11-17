@@ -23,6 +23,7 @@ import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.scene.LightManager;
 import rs117.hd.utils.FrameTimingsRecorder;
 import rs117.hd.utils.NpcDisplacementCache;
+import rs117.hd.utils.collections.NativeBufferPool;
 import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.JobSystem;
 
@@ -163,6 +164,12 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			children.add(LineComponent.builder()
 				.left("Pooled array size:")
 				.right(formatBytes(PooledArrayType.getCurrentTotalCacheSize()))
+				.build());
+
+
+			children.add(LineComponent.builder()
+				.left("Pooled native size:")
+				.right(formatBytes(NativeBufferPool.getCurrentBytes()))
 				.build());
 
 			children.add(LineComponent.builder()

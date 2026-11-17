@@ -242,6 +242,24 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 	boolean isCancelled() { return jobState.get() == STATE_CANCELLED; }
 	boolean isCompleted() { return jobState.get() == STATE_COMPLETED; }
 
+	private boolean attemptProcessItem() throws InterruptedException {
+		if (worker != null || !isInQueue() || depCount.get() != 0 || !item.canStart() || !setRunning(null))
+			return false;
+
+		try {
+			item.onRun();
+			item.ranToCompletion.set(true);
+		} catch (Throwable ex) {
+			log.warn("Encountered an error whilst processing: {}", hashCode(), ex);
+			item.encounteredError.set(true);
+			cancel(false);
+		} finally {
+			setCompleted();
+		}
+
+		return true;
+	}
+
 	boolean await() throws InterruptedException {
 		return await(-1);
 	}
@@ -264,6 +282,8 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 						JOB_SYSTEM.processPendingClientCallbacks();
 						// Check if the job has completed during callback processing
 						if (isDone())
+							return true;
+						if (attemptProcessItem())
 							return true;
 						long elapsedNanos = System.nanoTime() - start;
 						int newSeconds = (int) TimeUnit.NANOSECONDS.toSeconds(elapsedNanos);
@@ -289,6 +309,9 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 						Thread.yield();
 					}
 				} else {
+					if (attemptProcessItem())
+						return true;
+
 					if (timeoutNanos > 0) {
 						if (!tryAcquireSharedNanos(0, timeoutNanos))
 							return false;

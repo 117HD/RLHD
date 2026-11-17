@@ -81,7 +81,7 @@ public class Material {
 	public transient boolean isFallbackVanillaMaterial;
 	public transient boolean isValid = true;
 
-	public static final int MAX_MATERIAL_INDEX = (1 << 12) - 1;
+	public static final int MAX_MATERIAL_INDEX = (1 << 10) - 1;
 	public static final Material NONE = new Material().name("NONE");
 	public static final Material UNLIT = new Material().name("UNLIT").parent(NONE).unlit(true);
 	public static final Material[] REQUIRED_MATERIALS = { NONE, UNLIT };
@@ -187,17 +187,17 @@ public class Material {
 		assert isValid : String.format("Material %s used after invalidation", this);
 		int materialIndex = uboIndex;
 		assert materialIndex <= MAX_MATERIAL_INDEX;
-		return (materialIndex & MAX_MATERIAL_INDEX) << 21
-			   | ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 15
-			   | ((modelOverride.windDisplacementModifier + 3) & 0x7) << 12
-			   | (modelOverride.windDisplacementMode.ordinal() & 0x7) << 9
-			   | (modelOverride.invertDisplacementStrength ? 1 : 0) << 8
-			   | (modelOverride.shadowNormalBias ? 1 : 0) << 7
-			   | (modelOverride.terrainVertexSnap ? 1 : 0) << 6
-			   | (!modelOverride.receiveShadows ? 1 : 0) << 5
-			   | (modelOverride.upwardsNormals ? 1 : 0) << 4
-			   | (modelOverride.flatNormals ? 1 : 0) << 3
-			   | (uvType.worldUvs ? 1 : 0) << 2
+		return (materialIndex & MAX_MATERIAL_INDEX) << 22
+			   | ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 16
+			   | ((modelOverride.windDisplacementModifier + 3) & 0x7) << 13
+			   | (modelOverride.windDisplacementMode.ordinal() & 0x7) << 10
+			   | (modelOverride.invertDisplacementStrength ? 1 : 0) << 9
+			   | (modelOverride.shadowNormalBias ? 1 : 0) << 8
+			   | (modelOverride.terrainVertexSnap ? 1 : 0) << 7
+			   | (!modelOverride.receiveShadows ? 1 : 0) << 6
+			   | (modelOverride.upwardsNormals ? 1 : 0) << 5
+			   | (modelOverride.flatNormals ? 1 : 0) << 4
+			   | (uvType.worldUvVariant & 0x3) << 2
 			   | (uvType == UvType.VANILLA ? 1 : 0) << 1
 			   | (isOverlay ? 1 : 0);
 	}
