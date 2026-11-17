@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -180,6 +181,10 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_NEBULA_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_WATER_NOISE = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+
+	// Matches WATER_NOISE_SIZE in water.glsl
+	private static final int WATER_NOISE_SIZE = 256;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -384,6 +389,7 @@ public class HdPlugin extends Plugin {
 	private final int[] actualUiResolution = { 0, 0 }; // Includes stretched mode and DPI scaling
 	private final GLBuffer[] pboUi = new GLBuffer[3];
 	private int texUi;
+	private int texWaterNoise;
 	private int uiWidth;
 	private int uiHeight;
 	private GenericJob uiCopyJob;
@@ -748,6 +754,7 @@ public class HdPlugin extends Plugin {
 				initializeShaders();
 				initializeShaderHotswapping();
 				initializeUiTexture();
+				initializeWaterNoiseTexture();
 				initializeShadowMapFbo();
 
 				checkGLErrors();
@@ -812,6 +819,7 @@ public class HdPlugin extends Plugin {
 				lwjglInitialized = false;
 
 				destroyUiTexture();
+				destroyWaterNoiseTexture();
 				destroyShaders();
 				destroyVaos();
 				destroyUbos();
@@ -1311,6 +1319,33 @@ public class HdPlugin extends Plugin {
 		if (texUi != 0)
 			glDeleteTextures(texUi);
 		texUi = 0;
+	}
+
+	// Two random values per texel, tiling, for the water's foam patterns to read with filtering rather than hash
+	private void initializeWaterNoiseTexture() {
+		ByteBuffer noise = BufferUtils.createByteBuffer(WATER_NOISE_SIZE * WATER_NOISE_SIZE * 2);
+		Random random = new Random(SEED);
+		while (noise.hasRemaining())
+			noise.put((byte) random.nextInt(256));
+		noise.flip();
+
+		texWaterNoise = glGenTextures();
+		glActiveTexture(TEXTURE_UNIT_WATER_NOISE);
+		glBindTexture(GL_TEXTURE_2D, texWaterNoise);
+		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RG8, WATER_NOISE_SIZE, WATER_NOISE_SIZE, 0, GL_RG, GL_UNSIGNED_BYTE, noise);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		checkGLErrors();
+	}
+
+	private void destroyWaterNoiseTexture() {
+		if (texWaterNoise != 0)
+			glDeleteTextures(texWaterNoise);
+		texWaterNoise = 0;
 	}
 
 	public void updateTiledLightingFbo() {

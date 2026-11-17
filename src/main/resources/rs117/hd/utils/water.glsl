@@ -195,6 +195,24 @@ vec2 noise2(vec2 st) {
     return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
 }
 
+// Two random values per texel, tiling, made by HdPlugin
+#define WATER_NOISE_SIZE 256 // texels across, matching HdPlugin
+uniform sampler2D waterNoise;
+
+// As noise2, but with its random values read from waterNoise, repeating every WATER_NOISE_SIZE. Moving the read by the
+// smoothstep curve within each cell turns the texture's linear filtering into noise2's smooth blend, in one read.
+vec2 waterNoise2(vec2 st) {
+    vec2 i = floor(st);
+    vec2 f = fract(st);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return textureLod(waterNoise, (i + u + 0.5) / float(WATER_NOISE_SIZE), 0.0).xy;
+}
+
+// As noise, but read from waterNoise like waterNoise2
+float waterNoise1(vec2 st) {
+    return waterNoise2(st).x;
+}
+
 // Distance to the nearest edge of a churning Voronoi pattern, as the difference between the two nearest points,
 // measured stretched along the wind
 //  wind: unit length
@@ -211,7 +229,7 @@ float cellEdges(vec2 p, float time, vec2 wind) {
     for (int y = 0; y <= 1; y++) {
         for (int x = 0; x <= 1; x++) {
             vec2 offset = lo + vec2(x, y);
-            vec2 h = hash22(i + offset);
+            vec2 h = texelFetch(waterNoise, ivec2(i + offset) & (WATER_NOISE_SIZE - 1), 0).xy;
             vec2 point = offset + 0.5 + 0.4 * sin(time + h * TAU);
             // Squashed along the wind, which stretches the cells along it. Only local offsets are stretched, since
             // rotating the whole pattern with the wind would swing distant parts of it around wildly.
@@ -228,7 +246,7 @@ float cellEdges(vec2 p, float time, vec2 wind) {
 // Noise that decides which foam fades out first, from 0 to 1, shared by the ocean waves and boat wakes
 //  q: position in ocean wave cells
 float foamBreakupNoise(vec2 q, float time) {
-    return noise(q * 3.7 + time * vec2(-0.09, -0.05) + 21.7);
+    return waterNoise1(q * 3.7 + time * vec2(-0.09, -0.05) + 21.7);
 }
 
 // How much life a patch of foam has left as it fades out unevenly, from 1 down, shared by the ocean waves and boat wakes
@@ -270,7 +288,7 @@ float shoreWaves(float shoreDist, vec2 shorePoint, vec2 world, float foamMask, f
     // Three trains of waves, each arriving every third interval and out of step along the shore in its own way, so
     // neighbouring waves don't come in together. Each wave is over before its train's next arrives.
     for (int k = 0; k < 3; k++) {
-        float lag = noise(shorePoint * 0.11 + 3.7 + float(k) * vec2(17.3, 9.1)) * 1.2;
+        float lag = waterNoise1(shorePoint * 0.11 + 3.7 + float(k) * vec2(17.3, 9.1)) * 1.2;
         float cycle = time / (3.0 * SHORE_WAVE_INTERVAL) - lag;
         // Numbered across all the trains, so each wave has its own pieces
         float n = floor(cycle) * 3.0 + float(k);
@@ -287,9 +305,9 @@ float shoreWaves(float shoreDist, vec2 shorePoint, vec2 world, float foamMask, f
             SHORE_WAVE_FADE_TIME * (1.0 + 0.5 * foamBreakupSpread))
             continue;
         // Its own stretches of shore, strength and reach
-        vec2 r = noise2(shorePoint / SHORE_WAVE_PIECE_SIZE + n * vec2(7.31, 3.17));
+        vec2 r = waterNoise2(shorePoint / SHORE_WAVE_PIECE_SIZE + n * vec2(7.31, 3.17));
         // Sets and lulls, rolling along the coast together
-        float sets = noise(vec2(n * SHORE_WAVE_INTERVAL / SHORE_WAVE_SET_PERIOD, dot(shorePoint, vec2(0.037, 0.021))));
+        float sets = waterNoise1(vec2(n * SHORE_WAVE_INTERVAL / SHORE_WAVE_SET_PERIOD, dot(shorePoint, vec2(0.037, 0.021))));
         // Capped, so even during sets the waves break into pieces rather than running along the whole shore
         float spawnChance = clamp(SHORE_WAVE_CHANCE * (1.0 + (sets - 0.5) * 2.0 * SHORE_WAVE_SET_CONTRAST), 0.0, 0.65);
         // Value noise is rarely near 0 or 1, so the chance is spread over its middle
@@ -297,7 +315,7 @@ float shoreWaves(float shoreDist, vec2 shorePoint, vec2 world, float foamMask, f
         if (present <= 0.0)
             continue;
         // Where it stops, from part way in to the shore, changing only gradually along it so the front stays smooth
-        float stopNoise = noise(shorePoint * 0.2 + n * vec2(3.91, 8.27));
+        float stopNoise = waterNoise1(shorePoint * 0.2 + n * vec2(3.91, 8.27));
         float stop = shoreWaveStartTravel *
             mix(SHORE_WAVE_MIN_STOP, SHORE_WAVE_MAX_STOP, saturate((stopNoise - 0.2) * 1.6));
         if (inward >= stop)
@@ -385,10 +403,10 @@ vec2 oceanWaveCells(vec2 q, float time, float shoreDist, vec2 towardsShore, vec4
             if (!raggedReady) {
                 raggedReady = true;
                 // From broad lumps to fine tears. oceanWaveMaxRagged must cover these.
-                ragged = (noise(q * 2.2 + time * vec2(0.05, -0.04)) - 0.5) * 0.3;
-                ragged += (noise(q * 5.1 + time * vec2(-0.07, 0.06) + 9.3) - 0.5) * 0.18;
-                ragged += (noise(q * 11.3 + time * vec2(0.09, 0.08) + 4.1) - 0.5) * 0.14;
-                ragged += (noise(q * 23.7 + time * vec2(-0.12, 0.1) + 17.9) - 0.5) * 0.1;
+                ragged = (waterNoise1(q * 2.2 + time * vec2(0.05, -0.04)) - 0.5) * 0.3;
+                ragged += (waterNoise1(q * 5.1 + time * vec2(-0.07, 0.06) + 9.3) - 0.5) * 0.18;
+                ragged += (waterNoise1(q * 11.3 + time * vec2(0.09, 0.08) + 4.1) - 0.5) * 0.14;
+                ragged += (waterNoise1(q * 23.7 + time * vec2(-0.12, 0.1) + 17.9) - 0.5) * 0.1;
                 ragged *= OCEAN_WAVE_RAGGEDNESS;
             }
             // Less ragged at the front
@@ -413,7 +431,7 @@ vec2 oceanWaveCells(vec2 q, float time, float shoreDist, vec2 towardsShore, vec4
             cover *= smoothstep(0.0, 0.4, lasting);
             // The trail breaks into streaks, more so further behind the front
             if (cover > 0.0) {
-                float streaks = noise(vec2(u * 1.6, v * 7.0) + wave.r.zw * 50.0);
+                float streaks = waterNoise1(vec2(u * 1.6, v * 7.0) + wave.r.zw * 50.0);
                 streaks = smoothstep(0.25, 0.7, streaks);
                 cover *= mix(1.0, streaks, saturate(behind * 1.5) * OCEAN_WAVE_TAIL_NOISE);
             }
@@ -456,14 +474,15 @@ float oceanLace(vec2 drifted, vec2 wind, float churnTime) {
 
     // Bend and curl the straight cell edges
     float swirlTime = churnTime * OCEAN_LACE_SWIRL_SPEED;
-    vec2 swirl = noise2(p * 1.3 + swirlTime * vec2(0.02, -0.015));
-    vec2 curl = noise2(p * 3.3 + swirlTime * vec2(0.031, 0.024) + 7.1);
+    vec2 swirl = waterNoise2(p * 1.3 + swirlTime * vec2(0.02, -0.015));
+    vec2 curl = waterNoise2(p * 3.3 + swirlTime * vec2(0.031, 0.024) + 7.1);
     p += ((swirl - 0.5) + (curl - 0.5) * OCEAN_LACE_CURL) * OCEAN_LACE_SWIRL;
 
     // Width variation, and gaps breaking the lines into strands
     float width = OCEAN_LACE_LINE_WIDTH * (1.0 + (swirl.x - 0.5) * 2.0 * OCEAN_LACE_WIDTH_VARIATION);
     float gapStart = OCEAN_LACE_GAPS * 0.85;
-    float gaps = smoothstep(gapStart - 0.12, gapStart + 0.12, noise2(p * 1.8 + time * vec2(-0.023, 0.019) + 13.1).x);
+    float gaps = smoothstep(gapStart - 0.12, gapStart + 0.12,
+        waterNoise2(p * 1.8 + time * vec2(-0.023, 0.019) + 13.1).x);
 
     // Lines, skipped where broken off
     if (gaps <= 0.0)
@@ -475,7 +494,7 @@ float oceanLace(vec2 drifted, vec2 wind, float churnTime) {
 
     // Denser areas come and go
     float wt = time * OCEAN_LACE_DENSE_SPEED;
-    float dense = noise(drifted / OCEAN_LACE_DENSE_SIZE + vec2(wt, -0.7 * wt));
+    float dense = waterNoise2(drifted / OCEAN_LACE_DENSE_SIZE + vec2(wt, -0.7 * wt)).y;
     dense = smoothstep(1.0 - OCEAN_LACE_DENSE_AMOUNT - 0.15, 1.0 - OCEAN_LACE_DENSE_AMOUNT + 0.15, dense);
 
     lace *= mix(OCEAN_LACE_COVERAGE, OCEAN_LACE_DENSE_COVERAGE, dense) * laceFade;
@@ -549,7 +568,7 @@ vec4 boatWakeFoam(vec2 world, float side, float fromBow, float age, bool arms, b
     }
     float breakup = wakeNoise.breakup;
     // Ragged edges carried outwards with the foam, rather than the edge sliding across them
-    float ragged = (noise((world - outward * foamLine) * 1.3) - 0.5) * raggedness;
+    float ragged = (waterNoise1((world - outward * foamLine) * 1.3) - 0.5) * raggedness;
     // Across each band, from 0 in its middle to 1 at its edge
     float offset = side - foamLine + ragged;
     float across = abs(offset) / (spread * 0.5 * (offset < 0.0 ? BOAT_WAKE_INNER_REACH : 1.0));
@@ -753,7 +772,7 @@ vec4 boatWakes(vec2 p, out vec4 swept) {
             continue;
         if (!wakeNoise.fadeReady) {
             wakeNoise.fadeReady = true;
-            wakeNoise.endRagged = noise(world * 1.3 + 7.1);
+            wakeNoise.endRagged = waterNoise1(world * 1.3 + 7.1);
             wakeNoise.stopBreakup =
                 foamBreakupNoise(world * BOAT_WAKE_STOP_ALPHA_SCALE / OCEAN_WAVE_SIZE, uboGlobal.elapsedTime);
         }
@@ -875,7 +894,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         }
         // Hide tile edges in the foam line
         if (nearShore) {
-            float edgeNoise = noise(worldUvs(0.4) + uboGlobal.elapsedTime * vec2(0.03, -0.02));
+            float edgeNoise = waterNoise1(worldUvs(0.4) + uboGlobal.elapsedTime * vec2(0.03, -0.02));
             shoreDist += (edgeNoise - 0.5) * SHORE_FOAM_EDGE_NOISE;
         }
 
@@ -907,7 +926,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         // Shore foam and waves
         if (nearShore) {
             // Churning in place
-            vec2 foamWarp = noise2(worldUvs(1.5) + uboGlobal.elapsedTime * vec2(0.07, 0.03)) - 0.5;
+            vec2 foamWarp = waterNoise2(worldUvs(1.5) + uboGlobal.elapsedTime * vec2(0.07, 0.03)) - 0.5;
             foamWarp = foamWarp * SHORE_FOAM_CHURN + uvFlow * flowMapStrength;
             vec2 foamUv = worldUvs(SHORE_FOAM_SCALE) + foamWarp;
 
