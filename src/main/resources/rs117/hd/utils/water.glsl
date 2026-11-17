@@ -30,6 +30,7 @@
 #include <utils/constants.glsl>
 #include <utils/lights.glsl>
 #include <utils/misc.glsl>
+#include <utils/ocean_wave_cells.glsl>
 
 #if WATER_PASS || LEGACY_RENDERER
 
@@ -70,8 +71,7 @@
 #define SHORE_WAVE_MIN_ROOM 5.0            // open water needed nearby for waves, in tiles
 #define SHORE_WAVE_FULL_ROOM 6.0           // and for full strength, up to SHORE_DISTANCE_MAX
 
-// Open water foam, shared by the lace and ocean waves
-#define OCEAN_FOAM_DRIFT_SPEED 0.08        // in tiles per second, scaled by the wind speed
+// Open water foam, shared by the lace and ocean waves. OCEAN_FOAM_DRIFT_SPEED is in ocean_wave_cells.glsl.
 #define OCEAN_FOAM_TEXTURE_SCALE 2.5       // tiles per speck texture repeat
 #define OCEAN_FOAM_SHORE_GAP 1.8           // clear water along the shore for the ocean waves, in tiles
 #define OCEAN_FOAM_SHORE_FADE 3.9          // distance of full strength from the shore, in tiles. At most 12.
@@ -99,19 +99,12 @@
 #define OCEAN_LACE_DENSE_COVERAGE 0.9      // speck density there, from 0 to 1
 #define OCEAN_LACE_DENSE_SPEED 0.04        // how fast they come and go
 
-// Ocean waves, breaking out at sea
+// Ocean waves, breaking out at sea. The settings for where and when they form are in ocean_wave_cells.glsl.
 #define OCEAN_WAVE_STRENGTH 0.13           // opacity before lighting
 #define OCEAN_WAVE_FRONT_BRIGHTNESS 1.45   // brightness at the front, relative to the rest
 #define OCEAN_WAVE_EDGE_BRIGHTNESS 0.4     // extra brightness right at the crest's edge, on top of the front
 #define OCEAN_WAVE_EDGE_WIDTH 0.03         // distance behind the crest of half edge brightness, as a share of the wave
 #define OCEAN_WAVE_SOFTNESS 0.45           // speck softness, in texture space
-#define OCEAN_WAVE_STRETCH 1.5             // along the wind, 1 for none
-#define OCEAN_WAVE_SIZE 7.0                // spacing, in tiles
-#define OCEAN_WAVE_AMOUNT 0.55             // chance of each spot having a wave each lifetime, from 0 to 1
-#define OCEAN_WAVE_LIFETIME 14.0           // longest life, in seconds
-#define OCEAN_WAVE_RATE_RANDOMNESS 0.4     // how much faster some waves live, from 0 to 1
-#define OCEAN_WAVE_WIGGLE 1.0              // how wiggly the fronts are
-#define OCEAN_WAVE_RAGGEDNESS 1.5          // how ragged the edges and breakup are
 #define OCEAN_WAVE_COVERAGE 0.85           // speck density, from 0 to 1
 #define OCEAN_WAVE_TAIL_NOISE 0.8          // how much the trails break into streaks, from 0 to 1
 
@@ -242,7 +235,7 @@ float foamBreakupNoise(vec2 q, float time) {
 //  foamLife: from 0 when fresh to 1 when it's due to be gone
 //  breakup: from foamBreakupNoise
 float foamLifeLeft(float foamLife, float breakup) {
-    return 1.0 - foamLife + (breakup - 0.5) * min(0.55 * OCEAN_WAVE_RAGGEDNESS, 0.8);
+    return 1.0 - foamLife + (breakup - 0.5) * foamBreakupSpread;
 }
 
 // How much of a patch of foam is left as it fades out unevenly, from 0 to 1
@@ -270,8 +263,9 @@ float shoreWaves(float shoreDist, vec2 shorePoint, vec2 world, float foamMask, f
     if (inward <= 0.0)
         return 0.0;
 
-    // Which foam goes first as it breaks up, finer than the ocean waves'
-    float breakup = foamBreakupNoise(world / 2.5, time);
+    // Which foam goes first as it breaks up, finer than the ocean waves', worked out once a wave needs it
+    bool breakupReady = false;
+    float breakup = 0.0;
     float wave = 0.0;
     // Three trains of waves, each arriving every third interval and out of step along the shore in its own way, so
     // neighbouring waves don't come in together. Each wave is over before its train's next arrives.
@@ -290,7 +284,7 @@ float shoreWaves(float shoreDist, vec2 shorePoint, vec2 world, float foamMask, f
             continue;
         float nearestStop = shoreWaveStartTravel * SHORE_WAVE_MIN_STOP;
         if (inward < nearestStop && age - SHORE_WAVE_TRAVEL_TIME * (1.0 - sqrt(1.0 - inward / nearestStop)) >=
-            SHORE_WAVE_FADE_TIME * (1.0 + 0.5 * min(0.55 * OCEAN_WAVE_RAGGEDNESS, 0.8)))
+            SHORE_WAVE_FADE_TIME * (1.0 + 0.5 * foamBreakupSpread))
             continue;
         // Its own stretches of shore, strength and reach
         vec2 r = noise2(shorePoint / SHORE_WAVE_PIECE_SIZE + n * vec2(7.31, 3.17));
@@ -313,6 +307,10 @@ float shoreWaves(float shoreDist, vec2 shorePoint, vec2 world, float foamMask, f
         float foamAge = age - passed;
         if (foamAge <= 0.0)
             continue;
+        if (!breakupReady) {
+            breakupReady = true;
+            breakup = foamBreakupNoise(world / 2.5, time);
+        }
         // Breaking up where it was laid, like the ocean waves' foam, with the whole wave gone by the end of its life
         float lasting = foamLasting(foamAge / SHORE_WAVE_FADE_TIME, breakup) *
             foamEndFade(age / (SHORE_WAVE_TRAVEL_TIME + SHORE_WAVE_FADE_TIME * 1.5));
@@ -324,6 +322,14 @@ float shoreWaves(float shoreDist, vec2 shorePoint, vec2 world, float foamMask, f
     return wave;
 }
 
+// Whether the vertex shader lists the waves near each water face, as only the zone renderer's does
+#define OCEAN_WAVE_FACE_LIST (OCEAN_WAVES && ZONE_RENDERER && WATER_PASS)
+#if OCEAN_WAVE_FACE_LIST
+    // Position of the face's last vertex in wave cells, and the waves near it, from oceanWaveList
+    flat in vec2 fOceanWaveOrigin;
+    flat in int fOceanWaveList;
+#endif
+
 // Ocean wave coverage and foam age, from 0 to 1. Each crest sweeps downwind, leaving a trail that breaks up from the
 // back. Each grid cell has a wave some of the time.
 //  q:            position in wave cells
@@ -332,12 +338,6 @@ float shoreWaves(float shoreDist, vec2 shorePoint, vec2 world, float foamMask, f
 //  swept:        the most a boat has swept over here, from 0 to 1, and the latest time it did that much, then how
 //                much the last boat to sweep over here did, and when
 vec2 oceanWaveCells(vec2 q, float time, float shoreDist, vec2 towardsShore, vec4 swept) {
-    // In wave radii
-    const float maxSweep = 1.7;
-    // In wave cells
-    const float maxReach = 1.8;
-    // The furthest the ragged edges can move the foam, in wave radii, from the sizes of their four noises below
-    const float maxRagged = 0.5 * (0.3 + 0.18 + 0.14 + 0.1) * OCEAN_WAVE_RAGGEDNESS;
     // Shared noise, each worked out once a wave needs it
     bool raggedReady = false;
     bool breakupReady = false;
@@ -346,85 +346,45 @@ vec2 oceanWaveCells(vec2 q, float time, float shoreDist, vec2 towardsShore, vec4
     vec2 cell0 = floor(q);
     float result = 0.0;
     float age = 0.0;
+    // Which of the 3x3 cells around this one may have a wave reaching here, as a bit each, row by row from the lowest
+    int nearby = 0x1FF;
+    #if OCEAN_WAVE_FACE_LIST
+        // Most water is clear of every wave, and the vertex shader has already found the waves near this face, so only
+        // those cells are searched. The list holds wherever is near its vertex, in the waves' own space.
+        vec2 fromVertex = q - fOceanWaveOrigin;
+        if (dot(fromVertex, fromVertex) <= OCEAN_WAVE_FACE_REACH * OCEAN_WAVE_FACE_REACH) {
+            // Its 5x5 cells always hold these 3x3, being within a cell of each other
+            ivec2 first = ivec2(cell0) - ivec2(floor(fOceanWaveOrigin)) + 1;
+            int rows = fOceanWaveList >> (first.y * 5 + first.x);
+            nearby = (rows & 7) | ((rows >> 5) & 7) << 3 | ((rows >> 10) & 7) << 6;
+            if (nearby == 0)
+                return vec2(0.0);
+        }
+    #endif
     for (int y = -1; y <= 1; y++) {
         for (int x = -1; x <= 1; x++) {
-            vec2 cell = cell0 + vec2(x, y);
-            vec2 h = hash22(cell + 0.31);
-            // One chance per lifetime, using the roughness at spawn so existing waves don't pop as it changes
-            float cycle = time / OCEAN_WAVE_LIFETIME + h.x;
-            float n = floor(cycle);
-            // Cheapest checks first, against the roughest water any wave still going could have spawned in, before
-            // reading the roughness this one spawned with. More waves the rougher the water.
-            float spawnHash = hash12(cell * 5.3 + n * vec2(2.71, 6.13));
-            if (spawnHash >= saturate(OCEAN_WAVE_AMOUNT * uboGlobal.waveMaxRoughness))
+            if ((nearby >> ((y + 1) * 3 + x + 1) & 1) == 0)
                 continue;
-            // Centers lie in the middle half of each cell. Below, a wave is skipped beyond maxSweep stretched radii
-            // downwind and 1.6 crest half-lengths across, with its radius at most that roughness allows. So nothing
-            // further than this from its center can be part of it.
-            vec2 center = cell + 0.25 + 0.5 * hash22(cell * 1.7 + n * vec2(7.31, 3.17));
-            vec2 offset = q - center;
-            float maxRadius = mix(0.13, 0.42, h.y) * sqrt(uboGlobal.waveMaxRoughness);
-            float reach = min(maxReach,
-                length(vec2(OCEAN_WAVE_STRETCH * maxSweep * maxRadius, 1.6 * min(maxRadius * 4.0, 0.9))));
-            if (dot(offset, offset) > reach * reach)
+            OceanWave wave;
+            if (!oceanWaveNear(cell0 + vec2(x, y), q, time, 0.0, wave))
                 continue;
-            float spawnTime = (n - h.x) * OCEAN_WAVE_LIFETIME;
             // Waves a boat swept over stay broken up for the rest of their lives
-            float unswept = 1.0 - max(spawnTime < swept.y ? swept.x : 0.0, spawnTime < swept.w ? swept.z : 0.0);
+            float unswept = 1.0 - max(wave.spawnTime < swept.y ? swept.x : 0.0, wave.spawnTime < swept.w ? swept.z : 0.0);
             if (unswept <= 0.0)
                 continue;
-            // Every second's the same unless the wind or roughness changed recently, so read the first, which is cheaper
-            int historySecond = uboGlobal.waveHistorySteady != 0 ? 0 : int(mod(floor(spawnTime), float(WIND_HISTORY_LENGTH)));
-            float spawnRoughness = uboGlobal.roughnessHistory[historySecond >> 2][historySecond & 3];
-            float chance = saturate(OCEAN_WAVE_AMOUNT * spawnRoughness);
-            if (spawnHash >= chance)
-                continue;
-            vec4 r = hash42(cell * 2.9 + n * vec2(1.73, 9.21));
-            float life = fract(cycle) * (1.0 + r.x * OCEAN_WAVE_RATE_RANDOMNESS * 1.5);
-            if (life >= 1.0)
-                continue;
-            // Keep the wind from spawn, so wind changes only affect new waves
-            float windAngle = uboGlobal.windHistory[historySecond >> 2][historySecond & 3];
-            float radius = mix(0.13, 0.42, h.y);
-            float angle = windAngle + (r.y - 0.5) * (PI / 7.0);
-            vec2 downwind = vec2(cos(angle), sin(angle));
-            vec4 shape = hash42(cell * 4.13 + n * vec2(5.31, 2.87));
-            float sweep = maxSweep * mix(0.6, 1.0, shape.x);
-            // Long crests are slimmer, to fit the neighbouring cells
-            float crestLength = mix(2.4, 4.0, r.z);
-            // Bigger in rougher water, while still fitting the neighbouring cells
-            radius = min(radius * sqrt(spawnRoughness), 0.9 / crestLength);
-            // Downwind in radii, stretched along the way it travels, which is near enough the wind, and along the crest
-            // from -1 to 1, one side longer
-            float u = dot(offset, downwind) / (radius * OCEAN_WAVE_STRETCH);
-            float v = dot(offset, vec2(-downwind.y, downwind.x)) / (radius * crestLength);
-            v /= v > 0.0 ? mix(0.6, 1.0, shape.z) : mix(1.0, 0.6, shape.z);
-            if (abs(u) > maxSweep || abs(v) > 1.6)
-                continue;
-
-            // The crest eases up to speed and back to a stop, its ends lagging so it curves
-            const float breakEnd = 0.65;
-            float travelled = smoothstep(0.0, 1.0, saturate(life / breakEnd)) * sweep;
-            float crest = travelled - 0.5 * sweep;
-            float curve = mix(0.05, 0.7, shape.y) * v * v;
-            // Wiggles along the front at three scales
-            vec3 wiggleRates = mix(vec3(2.0, 5.0, 11.0), vec3(4.0, 9.0, 17.0), vec3(shape.w, r.y, shape.x));
-            vec3 wiggles = sin(v * wiggleRates + vec3(r.y, shape.w, r.x) * TAU);
-            float waver = dot(wiggles, vec3(0.16, 0.09, 0.05)) * OCEAN_WAVE_WIGGLE;
-            // A sharp front, and a trail as long as the crest has travelled, fanning out as it spreads
-            float trail = travelled + 0.05;
-            float behind = crest - (u + curve + waver);
-            // Thinner towards the ends
-            float thickness = trail * (1.0 - 0.75 * saturate(v * v));
-            // Less ragged while the trail is short
-            float raggedness = saturate(trail * 1.5);
-            // Skip spots out of reach even with the ragged edges, before working out the noise
-            if (behind + maxRagged * raggedness <= -0.06 || behind - maxRagged * raggedness >= thickness)
-                continue;
+            float life = wave.life;
+            float sweep = wave.sweep;
+            float travelled = wave.travelled;
+            float trail = wave.trail;
+            float u = wave.u;
+            float v = wave.v;
+            float behind = wave.behind;
+            float thickness = wave.thickness;
+            float raggedness = wave.raggedness;
 
             if (!raggedReady) {
                 raggedReady = true;
-                // From broad lumps to fine tears. maxRagged must cover these.
+                // From broad lumps to fine tears. oceanWaveMaxRagged must cover these.
                 ragged = (noise(q * 2.2 + time * vec2(0.05, -0.04)) - 0.5) * 0.3;
                 ragged += (noise(q * 5.1 + time * vec2(-0.07, 0.06) + 9.3) - 0.5) * 0.18;
                 ragged += (noise(q * 11.3 + time * vec2(0.09, 0.08) + 4.1) - 0.5) * 0.14;
@@ -432,7 +392,7 @@ vec2 oceanWaveCells(vec2 q, float time, float shoreDist, vec2 towardsShore, vec4
                 ragged *= OCEAN_WAVE_RAGGEDNESS;
             }
             // Less ragged at the front
-            behind += ragged * mix(0.3, 1.0, saturate(behind / trail)) * raggedness;
+            behind += ragged * mix(oceanWaveFrontRagged, 1.0, saturate(behind / trail)) * raggedness;
             float foamAge = saturate(behind / trail);
             float ends = 1.0 - smoothstep(0.5, 1.0, abs(v) + ragged * 0.8 - foamAge * 0.3);
             float cover = ends * (1.0 - smoothstep(0.0, 0.06, -behind)) * (1.0 - smoothstep(0.7, 1.0, behind / thickness));
@@ -446,15 +406,14 @@ vec2 oceanWaveCells(vec2 q, float time, float shoreDist, vec2 towardsShore, vec4
 
             // Foam fades from when the crest passed it, found by inverting the crest's smoothstep
             float passedTravel = saturate((travelled - max(behind, 0.0)) / sweep);
-            float passed = (0.5 - sin(asin(1.0 - 2.0 * passedTravel) / 3.0)) * breakEnd;
+            float passed = (0.5 - sin(asin(1.0 - 2.0 * passedTravel) / 3.0)) * oceanWaveBreakEnd;
             float foamLife = max(life - passed, 0.0);
-            // Faster waves fade sooner, so their trails don't stretch too far
-            float fadeTime = mix(0.3, 0.55, r.w) * (maxSweep * 0.6 / sweep);
-            float lasting = foamLifeLeft(foamLife / fadeTime, breakup);
+            // The longest it can last is worked into oceanWaveNear, so change that with this
+            float lasting = foamLifeLeft(foamLife / wave.fadeTime, breakup);
             cover *= smoothstep(0.0, 0.4, lasting);
             // The trail breaks into streaks, more so further behind the front
             if (cover > 0.0) {
-                float streaks = noise(vec2(u * 1.6, v * 7.0) + r.zw * 50.0);
+                float streaks = noise(vec2(u * 1.6, v * 7.0) + wave.r.zw * 50.0);
                 streaks = smoothstep(0.25, 0.7, streaks);
                 cover *= mix(1.0, streaks, saturate(behind * 1.5) * OCEAN_WAVE_TAIL_NOISE);
             }
@@ -464,8 +423,8 @@ vec2 oceanWaveCells(vec2 q, float time, float shoreDist, vec2 towardsShore, vec4
             // Skip waves that would start or end too near the shore, estimating its distance at each end
             if (shoreDist < SHORE_DISTANCE_MAX - 0.3) {
                 // The crest's path, in tiles
-                vec2 path = downwind * (sweep * radius * OCEAN_WAVE_STRETCH);
-                vec2 startOffset = (center - q - 0.5 * path) * OCEAN_WAVE_SIZE;
+                vec2 path = wave.downwind * (sweep * wave.radius * OCEAN_WAVE_STRETCH);
+                vec2 startOffset = (wave.center - q - 0.5 * path) * OCEAN_WAVE_SIZE;
                 vec2 endOffset = startOffset + path * OCEAN_WAVE_SIZE;
                 float pathShoreDist = shoreDist - max(dot(startOffset, towardsShore), dot(endOffset, towardsShore));
                 fade *= smoothstep(OCEAN_FOAM_SHORE_GAP, OCEAN_FOAM_SHORE_FADE, pathShoreDist);
@@ -617,7 +576,7 @@ vec4 boatWakeFoam(vec2 world, float side, float fromBow, float age, bool arms, b
 float boatWakeSwept(float side, float fromBow, float age, bool arms, bool squareBow, bool bigShip, float breakup) {
     float hullEdge = BOAT_HULL_WIDTH * 0.5 * (squareBow ? 1.0 : sqrt(saturate(fromBow / BOAT_HULL_BOW_LENGTH)));
     // Life at which the foam here is half faded, as foamLasting
-    float goneLife = 0.8 + (breakup - 0.5) * min(0.55 * OCEAN_WAVE_RAGGEDNESS, 0.8);
+    float goneLife = 0.8 + (breakup - 0.5) * foamBreakupSpread;
     float edge;
     if (arms) {
         float armLifetime = bigShip ? BOAT_SHIP_LIFETIME : 1.0;
@@ -804,7 +763,7 @@ vec4 boatWakes(vec2 p, out vec4 swept) {
         foam *= smoothstep(0.0, 1.0, endEdge / BOAT_WAKE_END_SOFTNESS - breakup * BOAT_WAKE_END_BREAKUP);
         // Break up once the boat stops, like the waves' foam but softer, starting where the most ragged parts go
         if (fadeOut > 0.0) {
-            float start = 1.0 - BOAT_WAKE_BREAKUP_SOFTNESS - 0.5 * min(0.55 * OCEAN_WAVE_RAGGEDNESS, 0.8);
+            float start = 1.0 - BOAT_WAKE_BREAKUP_SOFTNESS - 0.5 * foamBreakupSpread;
             float life = mix(start, 1.0, fadeOut);
             foam *= smoothstep(0.0, BOAT_WAKE_BREAKUP_SOFTNESS, foamLifeLeft(life, breakup)) * foamEndFade(life);
         }
