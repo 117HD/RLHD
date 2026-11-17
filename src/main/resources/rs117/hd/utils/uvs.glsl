@@ -28,13 +28,25 @@
 
 #include <utils/constants.glsl>
 
-void computeUvs(const int materialData, const int worldViewIndex, const vec3 pos[3], inout vec3 uvw[3]) {
-    if ((materialData >> MATERIAL_FLAG_WORLD_UVS & 1) == 1) {
-        // Treat the input uvw as a normal vector for a plane that goes through origo,
-        // and find the distance from the point to the plane
-        float scale = 1. / length(uvw[0]);
+// Returns the plane normal for a world-UV variant packed into MaterialData.
+vec3 getWorldUvNormal(int variant) {
+    if (variant == 1) // WORLD_XY
+        return vec3(0, 0, -1);
+    if (variant == 2) // WORLD_XZ
+        return vec3(0, -1, 0);
+    if (variant == 3) // WORLD_YZ
+        return vec3(-1, 0, 0);
+    return vec3(0);
+}
 
-        vec3 N = uvw[0] * scale;
+void computeUvs(const int materialData, const int worldViewIndex, const vec3 pos[3], inout vec3 uvw[3]) {
+    int worldUvVariant = materialData >> MATERIAL_WORLD_UV_SHIFT & MATERIAL_WORLD_UV_MASK;
+    if (worldUvVariant != 0) {
+        // The input uvw stores the UV scale in its first component, and the plane's normal is
+        // determined by the world-UV variant
+        float scale = 1. / uvw[0].x;
+
+        vec3 N = getWorldUvNormal(worldUvVariant);
         vec3 C1 = cross(vec3(0, 0, 1), N);
         vec3 C2 = cross(vec3(0, 1, 0), N);
         vec3 T = normalize(length(C1) > length(C2) ? C1 : C2);
@@ -79,13 +91,14 @@ void computeUvs(const int materialData, const int worldViewIndex, const vec3 pos
     }
 }
 
-vec2 computeVertexUvs(int materialData, const vec3 pos, const vec3 uvw) {
-    if ((materialData >> MATERIAL_FLAG_WORLD_UVS & 1) == 1) {
-        // Treat the input uvw as a normal vector for a plane that goes through origo,
-        // and find the distance from the point to the plane
-        float scale = 1. / length(uvw);
+vec2 computeVertexUvs(int materialData, const vec3 pos, const vec2 uv) {
+    int worldUvVariant = materialData >> MATERIAL_WORLD_UV_SHIFT & MATERIAL_WORLD_UV_MASK;
+    if (worldUvVariant != 0) {
+        // The input uv stores the UV scale in its first component, and the plane's normal is
+        // determined by the world-UV variant
+        float scale = 1. / uv.x;
 
-        vec3 N = uvw * scale;
+        vec3 N = getWorldUvNormal(worldUvVariant);
         vec3 C1 = cross(vec3(0, 0, 1), N);
         vec3 C2 = cross(vec3(0, 1, 0), N);
         vec3 T = normalize(length(C1) > length(C2) ? C1 : C2);
@@ -95,5 +108,5 @@ vec2 computeVertexUvs(int materialData, const vec3 pos, const vec3 uvw) {
         return (TBN * pos).xy / 128. * scale;
     }
 
-    return uvw.xy;
+    return uv;
 }

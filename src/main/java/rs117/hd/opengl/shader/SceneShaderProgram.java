@@ -8,6 +8,7 @@ import static rs117.hd.HdPlugin.TEXTURE_UNIT_NEBULA_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TERRAIN_SHADOW_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILED_LIGHTING_MAP;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_FACE_INDICES;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_MODEL_DATA;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 
@@ -18,6 +19,7 @@ public class SceneShaderProgram extends ShaderProgram {
 	protected final UniformTexture uniTiledLightingTextureArray = addUniformTexture("tiledLightingArray");
 	protected final UniformTexture uniTextureFaces = addUniformTexBuffer("textureFaces");
 	protected final UniformTexture uniModelData = addUniformTexBuffer("modelData");
+	protected final UniformTexture uniFaceIndices = addUniformTexBuffer("faceIndices");
 	protected final UniformTexture uniNebulaMap = addUniformTexture("nebulaMap");
 	public final Uniform1f uniRoofFade = addUniform1f("roofFade");
 
@@ -47,6 +49,7 @@ public class SceneShaderProgram extends ShaderProgram {
 		uniTiledLightingTextureArray.set(TEXTURE_UNIT_TILED_LIGHTING_MAP);
 		uniTextureFaces.set(TEXTURE_UNIT_TEXTURED_FACES);
 		uniModelData.set(TEXTURE_UNIT_MODEL_DATA);
+		uniFaceIndices.set(TEXTURE_UNIT_FACE_INDICES);
 		uniNebulaMap.set(TEXTURE_UNIT_NEBULA_MAP);
 	}
 
@@ -61,6 +64,7 @@ public class SceneShaderProgram extends ShaderProgram {
 			shaderTemplate.add(GL_GEOMETRY_SHADER, "scene_geom.glsl");
 			uniTextureFaces.ignoreMissing = true;
 			uniModelData.ignoreMissing = true;
+			uniFaceIndices.ignoreMissing = true;
 		}
 	}
 }

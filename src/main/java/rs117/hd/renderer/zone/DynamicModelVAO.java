@@ -40,17 +40,14 @@ public class DynamicModelVAO implements Destructible {
 	@Getter
 	private int vao;
 
-	private final GLBuffer vboRender;
-	private final GLBuffer vboStaging;
+	private final StagedBuffer vertexBuffer;
+	private final StagedBuffer faceBuffer;
 	private final GLBuffer stubMetadata;
-	private final GLShaderStorage tboF;
 	private final GLShaderStorage tboM;
 
 	private final ArrayDeque<View> usedViews = new ArrayDeque<>();
 	private final ArrayDeque<View> freeViews = new ArrayDeque<>();
 
-	private final GLMappedBufferIntWriter vboWriter;
-	private final GLMappedBufferIntWriter tboFWriter;
 	private final GLMappedBufferIntWriter tboMWriter;
 
 	private boolean isMapped = false;
@@ -62,10 +59,6 @@ public class DynamicModelVAO implements Destructible {
 	private int[] mergedOffsets = new int[16];
 	private int[] mergedCounts = new int[16];
 
-	private long[] pendingCopySrcOffsets = new long[16];
-	private long[] pendingCopyDstOffsets = new long[16];
-	private long[] pendingCopyNumBytes = new long[16];
-	private int pendingCopyCount;
 	private int nextPackedOffset;
 
 	private int allocatedDrawCount;
@@ -73,49 +66,44 @@ public class DynamicModelVAO implements Destructible {
 
 	DynamicModelVAO(String name, boolean useStagingBuffer) {
 		int storageFlags = SUPPORTS_STORAGE_BUFFERS ? STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE : STORAGE_NONE;
-		if (useStagingBuffer) {
-			this.vboRender = new GLBuffer("DynamicModel::VBO::" + name, GL_ARRAY_BUFFER, GL_STATIC_DRAW, 0);
-			this.vboStaging = new GLBuffer(
-				"DynamicModel::VBO_STAGING::" + name,
-				GL_ARRAY_BUFFER,
-				GL_STREAM_DRAW,
-				storageFlags
-			);
-		} else {
-			this.vboRender = this.vboStaging = new GLBuffer(
-				"DynamicModel::VBO::" + name,
-				GL_ARRAY_BUFFER,
-				GL_STREAM_DRAW
-			);
-		}
-		this.stubMetadata = new GLBuffer("DynamicModel::Metadata", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-		this.vboWriter = new GLMappedBufferIntWriter(this.vboStaging);
 
-		this.tboF = new GLShaderStorage(
-			"DynamicModel::TexturedFaces::" + name,
-			GL_STREAM_DRAW,
-			storageFlags
-		);
+		GLBuffer vboRender, vboStaging;
+		if (useStagingBuffer) {
+			vboRender = new GLBuffer("DynamicModel::VBO::" + name, GL_ARRAY_BUFFER, GL_STATIC_DRAW, 0);
+			vboStaging = new GLBuffer("DynamicModel::VBO_STAGING::" + name, GL_ARRAY_BUFFER, GL_STREAM_DRAW, storageFlags);
+		} else {
+			vboRender = vboStaging = new GLBuffer("DynamicModel::VBO::" + name, GL_ARRAY_BUFFER, GL_STREAM_DRAW);
+		}
+		vertexBuffer = new StagedBuffer(vboRender, vboStaging, ZONE_VERTEX_NUM_BYTES);
+
+		GLShaderStorage tboFRender, tboFStaging;
+		if (useStagingBuffer) {
+			tboFRender = new GLShaderStorage("DynamicModel::TexturedFaces::" + name, GL_STATIC_DRAW, 0);
+			tboFStaging = new GLShaderStorage("DynamicModel::TexturedFaces_STAGING::" + name, GL_STREAM_DRAW, storageFlags);
+		} else {
+			tboFRender = tboFStaging = new GLShaderStorage("DynamicModel::TexturedFaces::" + name, GL_STREAM_DRAW);
+		}
+		faceBuffer = new StagedBuffer(tboFRender, tboFStaging, Integer.BYTES);
+
+		this.stubMetadata = new GLBuffer("DynamicModel::Metadata", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+
 		this.tboM = new GLShaderStorage(
 			"DynamicModel::ModelData::" + name,
 			GL_STREAM_DRAW,
 			storageFlags
 		);
-		this.tboFWriter = new GLMappedBufferIntWriter(this.tboF);
 		this.tboMWriter = new GLMappedBufferIntWriter(this.tboM);
 
 		Arrays.fill(packedOffsets, -1);
 	}
 
-	public boolean hasStagingBuffer() { return vboRender != vboStaging; }
+	public boolean hasStagingBuffer() { return vertexBuffer.hasStaging(); }
 
 	void initialize() {
 		vao = glGenVertexArrays();
-		tboF.initialize(INITIAL_SIZE, SHADER_STORAGE_BUFFER_TEXTURED_FACES, TEXTURE_UNIT_TEXTURED_FACES);
+		faceBuffer.initialize(SHADER_STORAGE_BUFFER_TEXTURED_FACES, TEXTURE_UNIT_TEXTURED_FACES);
 		tboM.initialize(INITIAL_SIZE, SHADER_STORAGE_BUFFER_MODEL_DATA, TEXTURE_UNIT_MODEL_DATA);
-		vboRender.initialize(INITIAL_SIZE);
-		if (vboRender != vboStaging)
-			vboStaging.initialize(INITIAL_SIZE);
+		vertexBuffer.initialize();
 
 		// Build stub metadata
 		stubMetadata.initialize(METADATA_NUM_BYTES);
@@ -132,23 +120,23 @@ public class DynamicModelVAO implements Destructible {
 
 	void bindRenderVAO() {
 		glBindVertexArray(vao);
-		glBindBuffer(GL_ARRAY_BUFFER, vboRender.id);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.render.id);
 
 		// Position
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 4, GL_HALF_FLOAT, false, ZONE_VERTEX_NUM_BYTES, 0);
+		glVertexAttribPointer(0, 3, GL_HALF_FLOAT, false, ZONE_VERTEX_NUM_BYTES, 0);
 
-		// UVs (u, v, w)
+		// UVs (float16 vec2)
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 4, GL_HALF_FLOAT, false, ZONE_VERTEX_NUM_BYTES, 14);
+		glVertexAttribPointer(1, 2, GL_HALF_FLOAT, false, ZONE_VERTEX_NUM_BYTES, 10);
 
-		// Normals + modelIdx (nx, ny, nz, modelIdx)
+		// Normal (oct16 int16 vec2)
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 4, GL_SHORT, false, ZONE_VERTEX_NUM_BYTES, 6);
+		glVertexAttribIPointer(2, 2, GL_SHORT, ZONE_VERTEX_NUM_BYTES, 6);
 
-		// TextureFaceIdx
+		// Model index (uint16)
 		glEnableVertexAttribArray(3);
-		glVertexAttribIPointer(3, 1, GL_INT, ZONE_VERTEX_NUM_BYTES, 20);
+		glVertexAttribIPointer(3, 1, GL_UNSIGNED_SHORT, ZONE_VERTEX_NUM_BYTES, 14);
 
 		glBindBuffer(GL_ARRAY_BUFFER, stubMetadata.id);
 
@@ -173,11 +161,10 @@ public class DynamicModelVAO implements Destructible {
 	}
 
 	void map() {
-		if (!vboRender.isStorageBuffer())
-			vboRender.orphan();
+		vertexBuffer.orphanRender();
 
-		vboWriter.map(false);
-		tboFWriter.map(false);
+		vertexBuffer.map();
+		faceBuffer.map();
 		tboMWriter.map(false);
 
 		reset();
@@ -185,28 +172,24 @@ public class DynamicModelVAO implements Destructible {
 	}
 
 	synchronized void unmap() {
-		final int renderVBOId = vboRender.id;
-		vboWriter.flush();
-		tboFWriter.flush();
+		final int renderVBOId = vertexBuffer.render.id;
+		vertexBuffer.flush();
+		faceBuffer.flush();
 		tboMWriter.flush();
 
-		if (pendingCopyCount > 0)
-			vboStaging.copyMultiTo(vboRender, pendingCopySrcOffsets, pendingCopyDstOffsets, pendingCopyNumBytes, pendingCopyCount);
-		pendingCopyCount = 0;
+		vertexBuffer.copyToRender();
+		faceBuffer.copyToRender();
 
-		if (renderVBOId != vboRender.id)
+		if (renderVBOId != vertexBuffer.render.id)
 			bindRenderVAO();
 		isMapped = false;
 	}
 
 	@Override
 	public void destroy() {
-		vboWriter.destroy();
-		tboFWriter.destroy();
 		tboMWriter.destroy();
-		vboRender.destroy();
-		vboStaging.destroy();
-		tboF.destroy();
+		vertexBuffer.destroy();
+		faceBuffer.destroy();
 		tboM.destroy();
 
 		if (vao != 0)
@@ -247,11 +230,11 @@ public class DynamicModelVAO implements Destructible {
 		View view = freeViews.poll();
 		if (view == null)
 			view = new View();
-		view.vbo = vboWriter.reserve(faceCount * 3 * ZONE_VERTEX_NUM_INTS);
-		view.tboF = tboFWriter.reserve(faceCount * MODEL_FACE_NUM_INTS);
+		view.vbo = vertexBuffer.reserve(faceCount * 3 * ZONE_VERTEX_NUM_INTS);
+		view.tboF = faceBuffer.reserve(faceCount * MODEL_FACE_NUM_INTS);
 		view.tboM = tboMWriter.reserve(MODEL_DATA_NUM_INTS);
 		view.vao = vao;
-		view.tboFBuffer = tboF;
+		view.tboFBuffer = (GLShaderStorage) faceBuffer.render;
 		view.tboMBuffer = tboM;
 		view.drawIdx = drawIdx;
 
@@ -277,34 +260,6 @@ public class DynamicModelVAO implements Destructible {
 		view.tboMBuffer = null;
 
 		usedViews.add(view);
-	}
-
-	private void addPendingCopy(int srcOffsetInts, int dstOffsetInts, int countInts) {
-		long srcBytes = srcOffsetInts * (long) ZONE_VERTEX_NUM_BYTES;
-		long dstBytes = dstOffsetInts * (long) ZONE_VERTEX_NUM_BYTES;
-		long numBytes = countInts * (long) ZONE_VERTEX_NUM_BYTES;
-
-		if (pendingCopyCount > 0) {
-			int last = pendingCopyCount - 1;
-			if (
-				pendingCopySrcOffsets[last] + pendingCopyNumBytes[last] == srcBytes &&
-				pendingCopyDstOffsets[last] + pendingCopyNumBytes[last] == dstBytes
-			) {
-				pendingCopyNumBytes[last] += numBytes;
-				return;
-			}
-		}
-
-		if (pendingCopyCount >= pendingCopySrcOffsets.length) {
-			pendingCopySrcOffsets = Arrays.copyOf(pendingCopySrcOffsets, pendingCopySrcOffsets.length * 2);
-			pendingCopyDstOffsets = Arrays.copyOf(pendingCopyDstOffsets, pendingCopyDstOffsets.length * 2);
-			pendingCopyNumBytes = Arrays.copyOf(pendingCopyNumBytes, pendingCopyNumBytes.length * 2);
-		}
-
-		pendingCopySrcOffsets[pendingCopyCount] = srcBytes;
-		pendingCopyDstOffsets[pendingCopyCount] = dstBytes;
-		pendingCopyNumBytes[pendingCopyCount] = numBytes;
-		pendingCopyCount++;
 	}
 
 	void draw(CommandBuffer cmd, int fromDrawIdx, int toDrawIdx) {
@@ -335,7 +290,10 @@ public class DynamicModelVAO implements Destructible {
 			if (packed == -1) {
 				packed = nextPackedOffset;
 				nextPackedOffset += c;
-				addPendingCopy(drawOffsets[i], packed, c);
+				// Both buffers are packed in lockstep: one face record per vertex, so the same
+				// vertex-unit offsets address the matching byte ranges in each buffer.
+				vertexBuffer.addPendingCopy(drawOffsets[i], packed, c);
+				faceBuffer.addPendingCopy(drawOffsets[i], packed, c);
 				packedOffsets[i] = packed;
 			}
 			offset = packed;
@@ -358,7 +316,7 @@ public class DynamicModelVAO implements Destructible {
 			return;
 
 		cmd.BindVertexArray(vao);
-		cmd.bindShaderStorage(tboF);
+		cmd.bindShaderStorage((GLShaderStorage) faceBuffer.render);
 		cmd.bindShaderStorage(tboM);
 
 		if (rangeCount == 1) {
@@ -383,9 +341,108 @@ public class DynamicModelVAO implements Destructible {
 		allocatedDrawCount = 0;
 		writtenRangeCount = 0;
 		nextPackedOffset = 0;
-		pendingCopyCount = 0;
+		vertexBuffer.resetPending();
+		faceBuffer.resetPending();
 		freeViews.addAll(usedViews);
 		usedViews.clear();
+	}
+
+	private static final class StagedBuffer {
+		final GLBuffer render;
+		final GLBuffer staging;
+		final GLMappedBufferIntWriter writer;
+		/** Number of bytes per reserved unit, used to convert reserved offsets into byte ranges. */
+		final int bytesPerUnit;
+
+		long[] pendingSrcOffsets = new long[16];
+		long[] pendingDstOffsets = new long[16];
+		long[] pendingNumBytes = new long[16];
+		int pendingCount;
+
+		StagedBuffer(GLBuffer render, GLBuffer staging, int bytesPerUnit) {
+			this.render = render;
+			this.staging = staging;
+			this.bytesPerUnit = bytesPerUnit;
+			this.writer = new GLMappedBufferIntWriter(staging);
+		}
+
+		boolean hasStaging() {
+			return render != staging;
+		}
+
+		void initialize() {
+			render.initialize(INITIAL_SIZE);
+			if (hasStaging())
+				staging.initialize(INITIAL_SIZE);
+		}
+
+		void initialize(int bindingIndex, int textureUnit) {
+			((GLShaderStorage) render).initialize(INITIAL_SIZE, bindingIndex, textureUnit);
+			if (hasStaging())
+				staging.initialize(INITIAL_SIZE);
+		}
+
+		void orphanRender() {
+			if (!render.isStorageBuffer())
+				render.orphan();
+		}
+
+		void map() {
+			writer.map(false);
+		}
+
+		void flush() {
+			writer.flush();
+		}
+
+		ReservedView reserve(int sizeInts) {
+			return writer.reserve(sizeInts);
+		}
+
+		void addPendingCopy(int srcOffsetInts, int dstOffsetInts, int countInts) {
+			long srcBytes = srcOffsetInts * (long) bytesPerUnit;
+			long dstBytes = dstOffsetInts * (long) bytesPerUnit;
+			long numBytes = countInts * (long) bytesPerUnit;
+
+			if (pendingCount > 0) {
+				int last = pendingCount - 1;
+				if (
+					pendingSrcOffsets[last] + pendingNumBytes[last] == srcBytes &&
+					pendingDstOffsets[last] + pendingNumBytes[last] == dstBytes
+				) {
+					pendingNumBytes[last] += numBytes;
+					return;
+				}
+			}
+
+			if (pendingCount >= pendingSrcOffsets.length) {
+				pendingSrcOffsets = Arrays.copyOf(pendingSrcOffsets, pendingSrcOffsets.length * 2);
+				pendingDstOffsets = Arrays.copyOf(pendingDstOffsets, pendingDstOffsets.length * 2);
+				pendingNumBytes = Arrays.copyOf(pendingNumBytes, pendingNumBytes.length * 2);
+			}
+
+			pendingSrcOffsets[pendingCount] = srcBytes;
+			pendingDstOffsets[pendingCount] = dstBytes;
+			pendingNumBytes[pendingCount] = numBytes;
+			pendingCount++;
+		}
+
+		void copyToRender() {
+			if (pendingCount > 0)
+				staging.copyMultiTo(render, pendingSrcOffsets, pendingDstOffsets, pendingNumBytes, pendingCount);
+			pendingCount = 0;
+		}
+
+		void resetPending() {
+			pendingCount = 0;
+		}
+
+		void destroy() {
+			writer.destroy();
+			render.destroy();
+			if (hasStaging())
+				staging.destroy();
+		}
 	}
 
 	public final class View {

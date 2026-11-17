@@ -51,14 +51,15 @@ public class Zone implements Destructible {
 
 	// ZONE_VERTEX_FORMAT
 	// position: int16 vec3
-	// normal: int16 vec3
-	// modelIdx: int16
-	// uvw: float16 vec3
-	// texturedFaceIdx: int32 (windingReversed << 31 | modelface << 30 | idx)
-	public static final int ZONE_VERTEX_NUM_BYTES = 24;
+	// normal: oct16 (int16 vec2)
+	// uv: float16 vec2
+	// modelIdx: uint16
+	public static final int ZONE_VERTEX_NUM_BYTES = 16;
 	public static final int ZONE_VERTEX_NUM_INTS = ZONE_VERTEX_NUM_BYTES / Integer.BYTES;
 	public static final int TEXTURE_FACE_IS_WINDING_REVERSED = 1 << 31;
 	public static final int TEXTURE_FACE_IS_MODEL = 1 << 30;
+	// Sentinel oct16 encoding for a zero normal (EMPTY_NORMALS / shadow casters)
+	public static final int ZERO_NORMAL_OCT = 0x8000;
 
 	// STATIC_FACE_FORMAT
 	// alphaBiasHsl: int32 vec3
@@ -106,7 +107,7 @@ public class Zone implements Destructible {
 	public int sizeO, sizeA, sizeF, sizeM;
 	@Nullable
 	public GLBuffer vboO, vboA, vboM;
-	public GLShaderStorage tboF, tboM;
+	public GLShaderStorage tboF, tboFI, tboFIA, tboM;
 
 	public boolean initialized; // whether the zone vao and vbos are ready
 	public boolean cull; // whether the zone is queued for deletion
@@ -148,7 +149,7 @@ public class Zone implements Destructible {
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 	final ConcurrentLinkedQueue<AsyncCachedModel> pendingModelJobs = new ConcurrentLinkedQueue<>();
 
-	public void initialize(GLBuffer o, GLBuffer a, GLShaderStorage f, GLShaderStorage m) {
+	public void initialize(GLBuffer o, GLBuffer a, GLShaderStorage f, GLShaderStorage fi, GLShaderStorage fia, GLShaderStorage m) {
 		assert glVao == 0;
 		assert glVaoA == 0;
 		if (o == null && a == null || f == null)
@@ -159,12 +160,14 @@ public class Zone implements Destructible {
 
 		if (o != null) {
 			vboO = o;
+			tboFI = fi;
 			glVao = glGenVertexArrays();
 			setupVao(glVao, o.id, vboM.id);
 		}
 
 		if (a != null) {
 			vboA = a;
+			tboFIA = fia;
 			glVaoA = glGenVertexArrays();
 			setupVao(glVaoA, a.id, vboM.id);
 		}
@@ -210,6 +213,16 @@ public class Zone implements Destructible {
 		if (tboF != null) {
 			tboF.destroy();
 			tboF = null;
+		}
+
+		if (tboFI != null) {
+			tboFI.destroy();
+			tboFI = null;
+		}
+
+		if (tboFIA != null) {
+			tboFIA.destroy();
+			tboFIA = null;
 		}
 
 		if (tboM != null) {
@@ -280,6 +293,10 @@ public class Zone implements Destructible {
 			vboA.unmap();
 		if (tboF != null)
 			tboF.unmap();
+		if (tboFI != null)
+			tboFI.unmap();
+		if (tboFIA != null)
+			tboFIA.unmap();
 		if (tboM != null)
 			tboM.unmap();
 
@@ -298,19 +315,19 @@ public class Zone implements Destructible {
 
 		// Position
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 4, GL_SHORT, false, ZONE_VERTEX_NUM_BYTES, 0);
+		glVertexAttribPointer(0, 3, GL_SHORT, false, ZONE_VERTEX_NUM_BYTES, 0);
 
-		// UVs (u, v, w)
+		// UVs (float16 vec2)
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 4, GL_HALF_FLOAT, false, ZONE_VERTEX_NUM_BYTES, 14);
+		glVertexAttribPointer(1, 2, GL_HALF_FLOAT, false, ZONE_VERTEX_NUM_BYTES, 10);
 
-		// Normals + modelIdx (nx, ny, nz, modelIdx)
+		// Normal (oct16 int16 vec2)
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 4, GL_SHORT, false, ZONE_VERTEX_NUM_BYTES, 6);
+		glVertexAttribIPointer(2, 2, GL_SHORT, ZONE_VERTEX_NUM_BYTES, 6);
 
-		// TextureFaceIdx
+		// Model index (uint16)
 		glEnableVertexAttribArray(3);
-		glVertexAttribIPointer(3, 1, GL_INT, ZONE_VERTEX_NUM_BYTES, 20);
+		glVertexAttribIPointer(3, 1, GL_UNSIGNED_SHORT, ZONE_VERTEX_NUM_BYTES, 14);
 
 		glBindBuffer(GL_ARRAY_BUFFER, metadata);
 
@@ -452,6 +469,7 @@ public class Zone implements Destructible {
 		lastDrawMode = STATIC_UNSORTED;
 		lastVao = glVao;
 		lastTboF = tboF;
+		lastTboFI = tboFI;
 		lastTboM = tboM;
 		flush(cmd);
 	}
@@ -470,6 +488,7 @@ public class Zone implements Destructible {
 		lastDrawMode = STATIC_UNSORTED;
 		lastVao = glVao;
 		lastTboF = tboF;
+		lastTboFI = tboFI;
 		lastTboM = tboM;
 		flush(cmd);
 	}
@@ -503,6 +522,7 @@ public class Zone implements Destructible {
 		lastDrawMode = STATIC_UNSORTED;
 		lastVao = glVao;
 		lastTboF = tboF;
+		lastTboFI = tboFI;
 		lastTboM = tboM;
 		flush(cmd);
 	}
@@ -531,7 +551,7 @@ public class Zone implements Destructible {
 		short rid;
 		int vao;
 		@Nullable
-		GLShaderStorage tboF, tboM;
+		GLShaderStorage tboF, tboFI, tboM;
 		byte level;
 		byte lx, lz, ux, uz; // lower/upper zone coords
 		byte zofx, zofz; // for temp alpha models, offset of source zone from target zone
@@ -573,6 +593,8 @@ public class Zone implements Destructible {
 		void setView(DynamicModelVAO.View view) {
 			vao = view.vao;
 			tboF = view.tboFBuffer;
+			// Dynamic models derive face data from the vertex index, so there are no face indices
+			tboFI = null;
 			tboM = view.tboMBuffer;
 			startpos = view.getStartOffset();
 			endpos = view.getEndOffset();
@@ -584,6 +606,7 @@ public class Zone implements Destructible {
 		MaterialManager materialManager,
 		int vao,
 		GLShaderStorage tboF,
+		GLShaderStorage tboFI,
 		GLShaderStorage tboM,
 		Model model,
 		ModelOverride modelOverride,
@@ -610,6 +633,7 @@ public class Zone implements Destructible {
 		m.z = (short) z;
 		m.vao = vao;
 		m.tboF = tboF;
+		m.tboFI = tboFI;
 		m.tboM = tboM;
 		m.rid = (short) rid;
 		m.level = (byte) level;
@@ -788,7 +812,7 @@ public class Zone implements Destructible {
 		m.z = (short) z;
 		m.level = (byte) level;
 		m.vao = m.rid = m.lx = m.lz = m.ux = m.uz = -1;
-		m.tboF = m.tboM = null;
+		m.tboF = m.tboFI = m.tboM = null;
 		m.flags = 0;
 		m.zofx = m.zofz = 0;
 		alphaModels.add(m);
@@ -809,7 +833,7 @@ public class Zone implements Destructible {
 				alphaModels.remove(i);
 				m.packedFaces = null;
 				m.doubleSidedBitSet = null;
-				m.tboF = m.tboM = null;
+				m.tboF = m.tboFI = m.tboM = null;
 				ALPHA_MODEL_POOL.recycle(m);
 			}
 
@@ -828,7 +852,7 @@ public class Zone implements Destructible {
 	private static int lastDrawMode;
 	private static int lastVao;
 	@Nullable
-	private static GLShaderStorage lastTboF, lastTboM;
+	private static GLShaderStorage lastTboF, lastTboFI, lastTboM;
 	private static int lastzx, lastzz;
 
 	static class AlphaModelComparator implements Comparator<AlphaModel> {
@@ -949,6 +973,7 @@ public class Zone implements Destructible {
 			if (lastDrawMode != drawMode ||
 				lastVao != m.vao ||
 				lastTboF != m.tboF ||
+				lastTboFI != m.tboFI ||
 				lastTboM != m.tboM ||
 				lastzx != (zx - m.zofx) ||
 				lastzz != (zz - m.zofz)
@@ -957,6 +982,7 @@ public class Zone implements Destructible {
 				lastDrawMode = drawMode;
 				lastVao = m.vao;
 				lastTboF = m.tboF;
+				lastTboFI = m.tboFI;
 				lastTboM = m.tboM;
 				lastzx = zx - m.zofx;
 				lastzz = zz - m.zofz;
@@ -999,6 +1025,7 @@ public class Zone implements Destructible {
 				long byteOffset = 4L * (eboAlphaOffset - vertexCount);
 				cmd.BindVertexArray(lastVao, eboAlpha);
 				cmd.bindShaderStorage(lastTboF);
+				cmd.bindShaderStorage(lastTboFI);
 				cmd.bindShaderStorage(lastTboM);
 				// The EBO & IDO is bound by in ZoneRenderer
 				if (SUPPORTS_INDIRECT_DRAW) {
@@ -1012,6 +1039,7 @@ public class Zone implements Destructible {
 			convertForDraw(ZONE_VERTEX_NUM_BYTES);
 			cmd.BindVertexArray(lastVao);
 			cmd.bindShaderStorage(lastTboF);
+			cmd.bindShaderStorage(lastTboFI);
 			cmd.bindShaderStorage(lastTboM);
 			if (drawIdx == 1) {
 				if (SUPPORTS_INDIRECT_DRAW) {
@@ -1082,6 +1110,7 @@ public class Zone implements Destructible {
 				m2.z = m.z;
 				m2.vao = m.vao;
 				m2.tboF = m.tboF;
+				m2.tboFI = m.tboFI;
 				m2.tboM = m.tboM;
 				m2.rid = m.rid;
 				m2.level = m.level;

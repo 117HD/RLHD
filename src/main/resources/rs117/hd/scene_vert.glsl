@@ -33,6 +33,7 @@
     #extension GL_ARB_shading_language_420pack : enable
 #endif
 
+#include FACE_INDICES_SSBO_BINDING
 #include TEXTURE_FACES_SSBO_BINDING
 #include MODEL_DATA_SSBO_BINDING
 
@@ -54,9 +55,9 @@
 layout (location = 0) in vec3 vPosition;
 
 #if ZONE_RENDERER
-    layout (location = 1) in vec4 vUv;
-    layout (location = 2) in vec4 vNormal;
-    layout (location = 3) in int vPackedTextureFace;
+    layout (location = 1) in vec2 vUv;
+    layout (location = 2) in ivec2 vNormalOct;
+    layout (location = 3) in int vModelIdx;
     layout (location = 6) in int vWorldViewId;
     layout (location = 7) in ivec2 vSceneBase;
     #if DITHER_FADE
@@ -93,25 +94,40 @@ layout (location = 0) in vec3 vPosition;
 
     void main() {
         int vertex = gl_VertexID % 3;
-        if (isFaceWindingReversed(vPackedTextureFace))
-            vertex = 2 - vertex;
+        int modelIdx = vModelIdx;
 
         int materialData = 0;
         int alphaBiasHsl = 0;
-        if ((DYNAMIC_MODEL == 1) || isModelFace(vPackedTextureFace)) {
-            ModelFaceData faceData = getModelFaceData(getFaceOffset(vPackedTextureFace));
+
+        // Dynamic models pack face data in lockstep with the vertex buffer and have no faceIndices buffer
+        if (modelIdx > 0 && isModelDynamic(getModelData(modelIdx))) {
+            ModelFaceData faceData = getModelFaceData(getDynamicFaceOffset(gl_VertexID));
             fAlphaBiasHsl = faceData.AlphaBiasHsl;
             fMaterialData = ivec3(faceData.MaterialData);
             fTerrainData = ivec3(0);
             alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
             materialData = faceData.MaterialData;
         } else {
-            StaticFaceData faceData = getStaticFaceData(getFaceOffset(vPackedTextureFace));
-            fAlphaBiasHsl = faceData.AlphaBiasHsl;
-            fMaterialData = faceData.MaterialData;
-            fTerrainData = faceData.TerrainData;
-            alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
-            materialData = faceData.MaterialData[vertex];
+            int vPackedTextureFace = getPackedTextureFace(gl_VertexID / 3);
+            int faceOffset = getFaceOffset(vPackedTextureFace);
+            if (isFaceWindingReversed(vPackedTextureFace))
+                vertex = 2 - vertex;
+
+            if (isModelFace(vPackedTextureFace)) {
+                ModelFaceData faceData = getModelFaceData(faceOffset);
+                fAlphaBiasHsl = faceData.AlphaBiasHsl;
+                fMaterialData = ivec3(faceData.MaterialData);
+                fTerrainData = ivec3(0);
+                alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
+                materialData = faceData.MaterialData;
+            } else {
+                StaticFaceData faceData = getStaticFaceData(faceOffset);
+                fAlphaBiasHsl = faceData.AlphaBiasHsl;
+                fMaterialData = faceData.MaterialData;
+                fTerrainData = faceData.TerrainData;
+                alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
+                materialData = faceData.MaterialData[vertex];
+            }
         }
 
         #if DITHER_FADE
@@ -122,7 +138,6 @@ layout (location = 0) in vec3 vPosition;
         vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
         ModelData modelData;
 
-        int modelIdx = int(vNormal.w);
         if (modelIdx > 0) {
             modelData = getModelData(modelIdx);
             #if DITHER_FADE
@@ -134,7 +149,7 @@ layout (location = 0) in vec3 vPosition;
             }
         }
 
-        vec3 worldNormal = vNormal.xyz;
+        vec3 worldNormal = decodeOct16(vNormalOct);
         vec3 worldPosition = vPosition + sceneOffset;
 
         if (modelIdx > 0) {
@@ -146,7 +161,7 @@ layout (location = 0) in vec3 vPosition;
                     float(modelData.height),
                     worldPosition,
                     worldPosition - modelData.position,
-                    vNormal.xyz
+                    worldNormal
                 );
             }
         }
@@ -175,7 +190,7 @@ layout (location = 0) in vec3 vPosition;
         fTexBlend[vertex] = 1.0;
 
         OUT.position = worldPosition;
-        OUT.uv = computeVertexUvs(materialData, worldPosition, vUv.xyz);
+        OUT.uv = computeVertexUvs(materialData, worldPosition, vUv);
         OUT.normal = worldNormal;
 
         vec4 clipPosition = uboGlobal.projectionMatrix * vec4(worldPosition, 1.0);

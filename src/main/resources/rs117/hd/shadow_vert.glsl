@@ -32,6 +32,7 @@
     #extension GL_ARB_shading_language_420pack : enable
 #endif
 
+#include FACE_INDICES_SSBO_BINDING
 #include TEXTURE_FACES_SSBO_BINDING
 #include MODEL_DATA_SSBO_BINDING
 
@@ -49,9 +50,9 @@
 layout (location = 0) in vec3 vPosition;
 
 #if ZONE_RENDERER
-    layout (location = 1) in vec4 vUv;
-    layout (location = 2) in vec4 vNormal;
-    layout (location = 3) in int vPackedTextureFace;
+    layout (location = 1) in vec2 vUv;
+    layout (location = 2) in ivec2 vNormalOct;
+    layout (location = 3) in int vModelIdx;
     layout (location = 6) in int vWorldViewId;
     layout (location = 7) in ivec2 vSceneBase;
     #if DITHER_FADE
@@ -70,28 +71,44 @@ layout (location = 0) in vec3 vPosition;
 #endif
 
     void main() {
-        bool windingReversed = isFaceWindingReversed(vPackedTextureFace);
+        vec3 worldNormal = decodeOct16(vNormalOct);
 
         int worldViewIdx = vWorldViewId;
         vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
 
+        bool windingReversed = false;
+
         #if TERRAIN_ONLY_PASS
+            // Terrain is always static geometry, so its face data is read through the faceIndices buffer
+            int vPackedTextureFace = getPackedTextureFace(gl_VertexID / 3);
+            windingReversed = isFaceWindingReversed(vPackedTextureFace);
             bool isShadowDisabled = false;
         #else
             int vertex = gl_VertexID % 3;
-            if (windingReversed)
-                vertex = 2 - vertex;
+            int modelIdx = vModelIdx;
+            // Dynamic models pack face data in lockstep with the vertex buffer and have no faceIndices buffer
+            bool dynamicFace = modelIdx > 0 && isModelDynamic(getModelData(modelIdx));
 
             int alphaBiasHsl;
             int materialData;
-            if (isModelFace(vPackedTextureFace)) {
-                ModelFaceData faceData = getModelFaceData(getFaceOffset(vPackedTextureFace));
+            if (dynamicFace) {
+                ModelFaceData faceData = getModelFaceData(getDynamicFaceOffset(gl_VertexID));
                 alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
                 materialData = faceData.MaterialData;
             } else {
-                StaticFaceData faceData = getStaticFaceData(getFaceOffset(vPackedTextureFace));
-                alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
-                materialData = faceData.MaterialData[vertex];
+                int vPackedTextureFace = getPackedTextureFace(gl_VertexID / 3);
+                if (isFaceWindingReversed(vPackedTextureFace))
+                    vertex = 2 - vertex;
+
+                if (isModelFace(vPackedTextureFace)) {
+                    ModelFaceData faceData = getModelFaceData(getFaceOffset(vPackedTextureFace));
+                    alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
+                    materialData = faceData.MaterialData;
+                } else {
+                    StaticFaceData faceData = getStaticFaceData(getFaceOffset(vPackedTextureFace));
+                    alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
+                    materialData = faceData.MaterialData[vertex];
+                }
             }
 
             float opacity = 1 - (alphaBiasHsl >> 24 & 0xFF) / float(0xFF);
@@ -101,7 +118,6 @@ layout (location = 0) in vec3 vPosition;
             #endif
 
             ModelData modelData;
-            int modelIdx = int(vNormal.w);
             if (modelIdx > 0) {
                 modelData = getModelData(modelIdx);
                 #if DITHER_FADE
@@ -126,7 +142,7 @@ layout (location = 0) in vec3 vPosition;
             Material material = getMaterial(materialData >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
             #if SHADOW_MODE == SHADOW_MODE_DETAILED
                 if (!isShadowDisabled) {
-                    fUvw = vec4(vUv.xy, material.colorMap, material.shadowAlphaMap);
+                    fUvw = vec4(vUv, material.colorMap, material.shadowAlphaMap);
                     // Scroll UVs
                     fUvw.xy += material.scrollDuration * uboGlobal.elapsedTime;
                     // Scale from the center
@@ -158,7 +174,7 @@ layout (location = 0) in vec3 vPosition;
 
         #if TERRAIN_ONLY_PASS
             if (!isShadowDisabled)
-                worldPosition += vNormal.xyz * 0.0002 * (windingReversed ? 1 : -1);
+                worldPosition += worldNormal * 0.0002 * (windingReversed ? 1 : -1);
         #else
             if (modelIdx > 0 && isDisplacementEnabled(materialData)) {
                 ObjectWindSample windSample = computeWindSample(modelData.position, modelData.height);
@@ -168,7 +184,7 @@ layout (location = 0) in vec3 vPosition;
                     float(modelData.height),
                     worldPosition,
                     worldPosition - modelData.position,
-                    vNormal.xyz
+                    worldNormal
                 );
             }
         #endif

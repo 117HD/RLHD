@@ -58,6 +58,7 @@ import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.renderer.zone.Zone.MODEL_DATA_IS_STATIC;
 import static rs117.hd.renderer.zone.Zone.MODEL_DATA_NUM_INTS;
+import static rs117.hd.renderer.zone.Zone.ZERO_NORMAL_OCT;
 import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_MAIN;
 import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_OVERLAY;
 import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_UNDERLAY;
@@ -141,6 +142,11 @@ public class SceneUploader implements AutoCloseable {
 	private float[] modelProjected;
 	public int tempModelAlphaFaces = 0;
 
+	// Consecutive gap-filler triangles usually share identical face data, so reuse the last face index
+	private int lastTerrainFaceIdx = -1;
+	private int lastTerrainFaceColorA, lastTerrainFaceColorB, lastTerrainFaceColorC;
+	private int lastTerrainFaceMaterial, lastTerrainFaceTerrainData;
+
 	private final PooledObjectArray<ModelOverride> faceOverrides = new PooledObjectArray<>();
 	private final PooledObjectArray<Material> faceMaterials = new PooledObjectArray<>();
 	private final PooledObjectArray<UvType> faceUVTypes = new PooledObjectArray<>();
@@ -152,6 +158,8 @@ public class SceneUploader implements AutoCloseable {
 	private final GpuIntBuffer zoneVboA = new GpuIntBuffer(false);
 	private final GpuIntBuffer zoneTboF = new GpuIntBuffer(false);
 	private final GpuIntBuffer zoneTboM = new GpuIntBuffer(false);
+	private final GpuIntBuffer zoneTboFI = new GpuIntBuffer(false);
+	private final GpuIntBuffer zoneTboFIA = new GpuIntBuffer(false);
 
 	// Lazily initialized staging buffers
 	public VertexWriteCache.Collection writeCache;
@@ -230,6 +238,12 @@ public class SceneUploader implements AutoCloseable {
 		var fb = zone.tboF != null ? zoneTboF.setBuffer(zone.tboF.mapped()) : null;
 		var md = zone.tboM != null ? zoneTboM.setBuffer(zone.tboM.mapped()) : null;
 		assert zone.tboF != null;
+
+		if (zone.tboFI != null)
+			zoneTboFI.setBuffer(zone.tboFI.mapped());
+
+		if (zone.tboFIA != null)
+			zoneTboFIA.setBuffer(zone.tboFIA.mapped());
 
 		roofIds.length = 0;
 		for (int level = 0; level <= 3; ++level) {
@@ -877,6 +891,7 @@ public class SceneUploader implements AutoCloseable {
 					materialManager,
 					zone.glVaoA,
 					zone.tboF,
+					zone.tboFIA,
 					zone.tboM,
 					model, modelOverride, alphaStart, alphaEnd,
 					x - basex, y + modelOverride.heightOffset, z - basez,
@@ -917,7 +932,7 @@ public class SceneUploader implements AutoCloseable {
 	) {
 		if (writeCache == null)
 			writeCache = new VertexWriteCache.Collection();
-		writeCache.setOutputBuffers(opaqueBuffer, opaqueBuffer, textureBuffer);
+		writeCache.setOutputBuffers(opaqueBuffer, opaqueBuffer, textureBuffer, zoneTboFI, zoneTboFI);
 
 		int swColor = paint.getSwColor();
 		int seColor = paint.getSeColor();
@@ -1132,46 +1147,46 @@ public class SceneUploader implements AutoCloseable {
 
 		vb.putVertex(
 			lx2, neHeight, lz2,
-			uvx, uvy, 0,
-			neNormals[0], neNormals[1], neNormals[2],
-			texturedFaceIdx, false, 0
+			uvx, uvy,
+			packOct16(neNormals[0], neNormals[1], neNormals[2]),
+			texturedFaceIdx, false
 		);
 
 		vb.putVertex(
 			lx3, nwHeight, lz3,
-			uvx - uvcos, uvy - uvsin, 0,
-			nwNormals[0], nwNormals[1], nwNormals[2],
-			texturedFaceIdx, false, 0
+			uvx - uvcos, uvy - uvsin,
+			packOct16(nwNormals[0], nwNormals[1], nwNormals[2]),
+			texturedFaceIdx, false
 		);
 
 		vb.putVertex(
 			lx1, seHeight, lz1,
-			uvx + uvsin, uvy - uvcos, 0,
-			seNormals[0], seNormals[1], seNormals[2],
-			texturedFaceIdx, false, 0
+			uvx + uvsin, uvy - uvcos,
+			packOct16(seNormals[0], seNormals[1], seNormals[2]),
+			texturedFaceIdx, false
 		);
 
 		boolean isDoubleSided = !onlyWaterSurface && (!isTileVisBelow && tileZ != 0 || override.doubleSidedFaces);
 		if (isDoubleSided) {
 			vb.putVertex(
 				lx1, seHeight, lz1,
-				uvx + uvsin, uvy - uvcos, 0,
-				-seNormals[0], -seNormals[1], -seNormals[2],
-				texturedFaceIdx, true, 0
+				uvx + uvsin, uvy - uvcos,
+				packOct16(-seNormals[0], -seNormals[1], -seNormals[2]),
+				texturedFaceIdx, true
 			);
 
 			vb.putVertex(
 				lx3, nwHeight, lz3,
-				uvx - uvcos, uvy - uvsin, 0,
-				-nwNormals[0], -nwNormals[1], -nwNormals[2],
-				texturedFaceIdx, true, 0
+				uvx - uvcos, uvy - uvsin,
+				packOct16(-nwNormals[0], -nwNormals[1], -nwNormals[2]),
+				texturedFaceIdx, true
 			);
 
 			vb.putVertex(
 				lx2, neHeight, lz2,
-				uvx, uvy, 0,
-				-neNormals[0], -neNormals[1], -neNormals[2],
-				texturedFaceIdx, true, 0
+				uvx, uvy,
+				packOct16(-neNormals[0], -neNormals[1], -neNormals[2]),
+				texturedFaceIdx, true
 			);
 		}
 
@@ -1190,45 +1205,45 @@ public class SceneUploader implements AutoCloseable {
 
 		vb.putVertex(
 			lx0, swHeight, lz0,
-			uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0,
-			swNormals[0], swNormals[1], swNormals[2],
-			texturedFaceIdx, false, 0
+			uvx - uvcos + uvsin, uvy - uvsin - uvcos,
+			packOct16(swNormals[0], swNormals[1], swNormals[2]),
+			texturedFaceIdx, false
 		);
 
 		vb.putVertex(
 			lx1, seHeight, lz1,
-			uvx + uvsin, uvy - uvcos, 0,
-			seNormals[0], seNormals[1], seNormals[2],
-			texturedFaceIdx, false, 0
+			uvx + uvsin, uvy - uvcos,
+			packOct16(seNormals[0], seNormals[1], seNormals[2]),
+			texturedFaceIdx, false
 		);
 
 		vb.putVertex(
 			lx3, nwHeight, lz3,
-			uvx - uvcos, uvy - uvsin, 0,
-			nwNormals[0], nwNormals[1], nwNormals[2],
-			texturedFaceIdx, false, 0
+			uvx - uvcos, uvy - uvsin,
+			packOct16(nwNormals[0], nwNormals[1], nwNormals[2]),
+			texturedFaceIdx, false
 		);
 
 		if (isDoubleSided) {
 			vb.putVertex(
 				lx3, nwHeight, lz3,
-				uvx - uvcos, uvy - uvsin, 0,
-				-nwNormals[0], -nwNormals[1], -nwNormals[2],
-				texturedFaceIdx, true, 0
+				uvx - uvcos, uvy - uvsin,
+				packOct16(-nwNormals[0], -nwNormals[1], -nwNormals[2]),
+				texturedFaceIdx, true
 			);
 
 			vb.putVertex(
 				lx1, seHeight, lz1,
-				uvx + uvsin, uvy - uvcos, 0,
-				-seNormals[0], -seNormals[1], -seNormals[2],
-				texturedFaceIdx, true, 0
+				uvx + uvsin, uvy - uvcos,
+				packOct16(-seNormals[0], -seNormals[1], -seNormals[2]),
+				texturedFaceIdx, true
 			);
 
 			vb.putVertex(
 				lx0, swHeight, lz0,
-				uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0,
-				-swNormals[0], -swNormals[1], -swNormals[2],
-				texturedFaceIdx, true, 0
+				uvx - uvcos + uvsin, uvy - uvsin - uvcos,
+				packOct16(-swNormals[0], -swNormals[1], -swNormals[2]),
+				texturedFaceIdx, true
 			);
 		}
 
@@ -1248,7 +1263,7 @@ public class SceneUploader implements AutoCloseable {
 	) {
 		if (writeCache == null)
 			writeCache = new VertexWriteCache.Collection();
-		writeCache.setOutputBuffers(opaqueBuffer, opaqueBuffer, textureBuffer);
+		writeCache.setOutputBuffers(opaqueBuffer, opaqueBuffer, textureBuffer, zoneTboFI, zoneTboFI);
 
 		final int[] triangleTextures = model.getTriangleTextureId();
 		boolean isFallbackWater = false;
@@ -1523,46 +1538,46 @@ public class SceneUploader implements AutoCloseable {
 
 			vb.putVertex(
 				lx0, ly0, lz0,
-				uvAx, uvAy, 0,
-				normalsA[0], normalsA[1], normalsA[2],
-				texturedFaceIdx, false, 0
+				uvAx, uvAy,
+				packOct16(normalsA[0], normalsA[1], normalsA[2]),
+				texturedFaceIdx, false
 			);
 
 			vb.putVertex(
 				lx1, ly1, lz1,
-				uvBx, uvBy, 0,
-				normalsB[0], normalsB[1], normalsB[2],
-				texturedFaceIdx, false, 0
+				uvBx, uvBy,
+				packOct16(normalsB[0], normalsB[1], normalsB[2]),
+				texturedFaceIdx, false
 			);
 
 			vb.putVertex(
 				lx2, ly2, lz2,
-				uvCx, uvCy, 0,
-				normalsC[0], normalsC[1], normalsC[2],
-				texturedFaceIdx, false, 0
+				uvCx, uvCy,
+				packOct16(normalsC[0], normalsC[1], normalsC[2]),
+				texturedFaceIdx, false
 			);
 
 			boolean isDoubleSided = !onlyWaterSurface && (!isTileVisBelow && tileZ != 0 || override.doubleSidedFaces);
 			if (isDoubleSided) {
 				vb.putVertex(
 					lx2, ly2, lz2,
-					uvCx, uvCy, 0,
-					-normalsC[0], -normalsC[1], -normalsC[2],
-					texturedFaceIdx, true, 0
+					uvCx, uvCy,
+					packOct16(-normalsC[0], -normalsC[1], -normalsC[2]),
+					texturedFaceIdx, true
 				);
 
 				vb.putVertex(
 					lx1, ly1, lz1,
-					uvBx, uvBy, 0,
-					-normalsB[0], -normalsB[1], -normalsB[2],
-					texturedFaceIdx, true, 0
+					uvBx, uvBy,
+					packOct16(-normalsB[0], -normalsB[1], -normalsB[2]),
+					texturedFaceIdx, true
 				);
 
 				vb.putVertex(
 					lx0, ly0, lz0,
-					uvAx, uvAy, 0,
-					-normalsA[0], -normalsA[1], -normalsA[2],
-					texturedFaceIdx, true, 0
+					uvAx, uvAy,
+					packOct16(-normalsA[0], -normalsA[1], -normalsA[2]),
+					texturedFaceIdx, true
 				);
 			}
 		}
@@ -1637,7 +1652,7 @@ public class SceneUploader implements AutoCloseable {
 	) {
 		if (writeCache == null)
 			writeCache = new VertexWriteCache.Collection();
-		writeCache.setOutputBuffers(opaqueBuffer, alphaBuffer, textureBuffer);
+		writeCache.setOutputBuffers(opaqueBuffer, alphaBuffer, textureBuffer, zoneTboFI, zoneTboFIA);
 
 		final int faceCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();
@@ -2000,44 +2015,44 @@ public class SceneUploader implements AutoCloseable {
 
 			vb.putVertex(
 				vx1, vy1, vz1,
-				faceUVs[0], faceUVs[1], faceUVs[2],
-				modelNormals[0], modelNormals[1], modelNormals[2],
+				faceUVs[0], faceUVs[1],
+				packOct16(modelNormals[0], modelNormals[1], modelNormals[2]),
 				texturedFaceIdx, false, modelIdx
 			);
 
 			vb.putVertex(
 				vx2, vy2, vz2,
-				faceUVs[4], faceUVs[5], faceUVs[6],
-				modelNormals[3], modelNormals[4], modelNormals[5],
+				faceUVs[4], faceUVs[5],
+				packOct16(modelNormals[3], modelNormals[4], modelNormals[5]),
 				texturedFaceIdx, false, modelIdx
 			);
 
 			vb.putVertex(
 				vx3, vy3, vz3,
-				faceUVs[8], faceUVs[9], faceUVs[10],
-				modelNormals[6], modelNormals[7], modelNormals[8],
+				faceUVs[8], faceUVs[9],
+				packOct16(modelNormals[6], modelNormals[7], modelNormals[8]),
 				texturedFaceIdx, false, modelIdx
 			);
 
 			if (faceOverride.doubleSidedFaces || material.doubleSidedFaces) {
 				vb.putVertex(
 					vx3, vy3, vz3,
-					faceUVs[8], faceUVs[9], faceUVs[10],
-					-modelNormals[6], -modelNormals[7], -modelNormals[8],
+					faceUVs[8], faceUVs[9],
+					packOct16(-modelNormals[6], -modelNormals[7], -modelNormals[8]),
 					texturedFaceIdx, true, modelIdx
 				);
 
 				vb.putVertex(
 					vx2, vy2, vz2,
-					faceUVs[4], faceUVs[5], faceUVs[6],
-					-modelNormals[3], -modelNormals[4], -modelNormals[5],
+					faceUVs[4], faceUVs[5],
+					packOct16(-modelNormals[3], -modelNormals[4], -modelNormals[5]),
 					texturedFaceIdx, true, modelIdx
 				);
 
 				vb.putVertex(
 					vx1, vy1, vz1,
-					faceUVs[0], faceUVs[1], faceUVs[2],
-					-modelNormals[0], -modelNormals[1], -modelNormals[2],
+					faceUVs[0], faceUVs[1],
+					packOct16(-modelNormals[0], -modelNormals[1], -modelNormals[2]),
 					texturedFaceIdx, true, modelIdx
 				);
 			}
@@ -2475,12 +2490,16 @@ public class SceneUploader implements AutoCloseable {
 			final VertexWriteCache tb = writeCache.getTextureBuffer(hasAlpha);
 
 			final int modelIdx = hasAlpha ? alphaModelIdx : opaqueModelIdx;
-			final int texturedFaceIdx = tb.putModelFace(color1, color2, color3, transparency, depthBias, materialData);
+			tb.putModelFace(color1, color2, color3, transparency, depthBias, materialData);
 
 			vb.putDynamicTriangle(
 				modelVertices,
 				vertexOffsetA, vertexOffsetB, vertexOffsetC,
-				faceUVs, faceNormals, texturedFaceIdx, modelIdx
+				faceUVs,
+				packOct16(faceNormals[0], faceNormals[1], faceNormals[2]),
+				packOct16(faceNormals[3], faceNormals[4], faceNormals[5]),
+				packOct16(faceNormals[6], faceNormals[7], faceNormals[8]),
+				modelIdx
 			);
 		}
 
@@ -2515,7 +2534,8 @@ public class SceneUploader implements AutoCloseable {
 		assert vb != null && fb != null;
 		if (writeCache == null)
 			writeCache = new VertexWriteCache.Collection();
-		writeCache.setOutputBuffers(vb, vb, fb);
+		writeCache.setOutputBuffers(vb, vb, fb, zoneTboFI, zoneTboFI);
+		lastTerrainFaceIdx = -1;
 
 		int basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		int basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
@@ -2673,14 +2693,32 @@ public class SceneUploader implements AutoCloseable {
 	) {
 		final var vb = writeCache.getVertexBuffer();
 		final var tb = writeCache.getTextureBuffer();
-		int faceIdx = tb.putStaticFace(
-			colorA, colorB, colorC,
-			packedMaterial, packedMaterial, packedMaterial,
-			terrainData, terrainData, terrainData
-		);
-		vb.putVertex(x0, y0, z0, u0, v0, 0, 0, -1, 0, faceIdx, false, 0);
-		vb.putVertex(x1, y1, z1, u1, v1, 0, 0, -1, 0, faceIdx, false, 0);
-		vb.putVertex(x2, y2, z2, u2, v2, 0, 0, -1, 0, faceIdx, false, 0);
+
+		// Reuse the previous face index if the face data is unchanged
+		int faceIdx = lastTerrainFaceIdx;
+		if (faceIdx == -1 ||
+			colorA != lastTerrainFaceColorA ||
+			colorB != lastTerrainFaceColorB ||
+			colorC != lastTerrainFaceColorC ||
+			packedMaterial != lastTerrainFaceMaterial ||
+			terrainData != lastTerrainFaceTerrainData
+		) {
+			faceIdx = tb.putStaticFace(
+				colorA, colorB, colorC,
+				packedMaterial, packedMaterial, packedMaterial,
+				terrainData, terrainData, terrainData
+			);
+			lastTerrainFaceIdx = faceIdx;
+			lastTerrainFaceColorA = colorA;
+			lastTerrainFaceColorB = colorB;
+			lastTerrainFaceColorC = colorC;
+			lastTerrainFaceMaterial = packedMaterial;
+			lastTerrainFaceTerrainData = terrainData;
+		}
+
+		vb.putVertex(x0, y0, z0, u0, v0, packOct16(0, -1, 0), faceIdx, false);
+		vb.putVertex(x1, y1, z1, u1, v1, packOct16(0, -1, 0), faceIdx, false);
+		vb.putVertex(x2, y2, z2, u2, v2, packOct16(0, -1, 0), faceIdx, false);
 	}
 
 	public static void calculateFaceNormalFP16(int[] out, short[] modelVertices, int offsetA, int offsetB, int offsetC) {
@@ -2947,6 +2985,28 @@ public class SceneUploader implements AutoCloseable {
 		nz = normals[8];
 		normals[6] = (nz * orientSin + nx * orientCos) >> 16;
 		normals[8] = (nz * orientCos - nx * orientSin) >> 16;
+	}
+
+	public static int packOct16(int x, int y, int z) {
+		if (x == 0 && y == 0 && z == 0)
+			return ZERO_NORMAL_OCT;
+
+		// Sum in float to avoid int overflow for large components
+		float l1Norm = abs((float) x) + abs((float) y) + abs((float) z);
+		float px = x / l1Norm;
+		float py = y / l1Norm;
+		float pz = z / l1Norm;
+
+		if (pz < 0) {
+			float fx = (1 - abs(py)) * sign(px);
+			float fy = (1 - abs(px)) * sign(py);
+			px = fx;
+			py = fy;
+		}
+
+		int ex = clamp(round(px * 32767), -32767, 32767);
+		int ey = clamp(round(py * 32767), -32767, 32767);
+		return (ex & 0xFFFF) | (ey << 16);
 	}
 
 	@Override

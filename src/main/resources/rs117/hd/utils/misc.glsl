@@ -332,6 +332,33 @@ bool insideQuad(vec2 p, vec2 a, vec2 b, vec2 c, vec2 d) {
            cross2D(a - d, p - d) >= 0.0;
 }
 
+vec2 sign_not_zero(vec2 v) {
+#if __VERSION__ >= 400
+    // Branch-less version (fma requires GLSL 4.00)
+    return fma(step(vec2(0.0), v), vec2(2.0), vec2(-1.0));
+#else
+    return vec2(
+        v.x >= 0.0 ? 1.0 : -1.0,
+        v.y >= 0.0 ? 1.0 : -1.0
+    );
+#endif
+}
+
+vec3 unpack_normal_octahedron(vec2 packed_nrm) {
+    vec3 v = vec3(packed_nrm.xy, 1.0 - abs(packed_nrm.x) - abs(packed_nrm.y));
+    if (v.z < 0.0)
+        v.xy = (1.0 - abs(v.yx)) * sign_not_zero(v.xy);
+    return normalize(v);
+}
+
+// Decodes a normal from the oct16 encoding used by the zone vertex format (two int16s).
+// The sentinel value (0x8000, 0) decodes back to a zero normal.
+vec3 decodeOct16(ivec2 oct) {
+    if (oct.x == -32768 && oct.y == 0)
+        return vec3(0);
+    return unpack_normal_octahedron(vec2(oct) / 32767.0);
+}
+
 float unpackFloat16(int val) {
     uint h = uint(val) & 0xFFFFu;
 

@@ -12,8 +12,10 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.renderer.zone.Zone.MODEL_DATA_NUM_BYTES;
 import static rs117.hd.renderer.zone.Zone.STATIC_FACE_NUM_BYTES;
 import static rs117.hd.renderer.zone.Zone.ZONE_VERTEX_NUM_BYTES;
+import static rs117.hd.renderer.zone.ZoneRenderer.SHADER_STORAGE_BUFFER_FACE_INDICES;
 import static rs117.hd.renderer.zone.ZoneRenderer.SHADER_STORAGE_BUFFER_MODEL_DATA;
 import static rs117.hd.renderer.zone.ZoneRenderer.SHADER_STORAGE_BUFFER_TEXTURED_FACES;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_FACE_INDICES;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_MODEL_DATA;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
@@ -79,6 +81,23 @@ public final class ZoneUploadJob extends Job {
 				a.map(MAP_WRITE);
 			}
 
+			// One packed texture face index per triangle, read via gl_VertexID / 3
+			GLShaderStorage fi = null;
+			sz = zoneBeingUploaded.sizeO * Integer.BYTES;
+			if (sz > 0) {
+				fi = new GLShaderStorage("Zone::FaceIndices::Opaque", GL_STATIC_DRAW);
+				fi.initialize(sz, SHADER_STORAGE_BUFFER_FACE_INDICES, TEXTURE_UNIT_FACE_INDICES);
+				fi.map(MAP_WRITE);
+			}
+
+			GLShaderStorage fia = null;
+			sz = zoneBeingUploaded.sizeA * Integer.BYTES;
+			if (sz > 0) {
+				fia = new GLShaderStorage("Zone::FaceIndices::Alpha", GL_STATIC_DRAW);
+				fia.initialize(sz, SHADER_STORAGE_BUFFER_FACE_INDICES, TEXTURE_UNIT_FACE_INDICES);
+				fia.map(MAP_WRITE);
+			}
+
 			GLShaderStorage f = null;
 			sz = zoneBeingUploaded.sizeF * STATIC_FACE_NUM_BYTES;
 			if (sz > 0) {
@@ -95,7 +114,7 @@ public final class ZoneUploadJob extends Job {
 				m.map(MAP_WRITE);
 			}
 
-			zoneBeingUploaded.initialize(o, a, f, m);
+			zoneBeingUploaded.initialize(o, a, f, fi, fia, m);
 			zoneBeingUploaded.setMetadata(viewContext, sceneContext, x, z);
 		} catch (Throwable ex) {
 			log.warn(

@@ -6,9 +6,15 @@
 #define TEXTURE_FACE_IS_MODEL (1 << 30)
 #define TEXTURE_FACE_OFFSET_MASK 0x3FFFFFFF
 
+// MODEL_FACE_FORMAT: the number of ints per model face record
+#define MODEL_FACE_NUM_INTS 3
+
 #define PARSER_TARGET_BUFFER textureFaces
 
 SETUP_BUFFER(textureFaces, TEXTURE_FACES_SSBO_BINDING)
+
+// One packed texture face index per triangle, read via gl_VertexID / 3
+SETUP_BUFFER(faceIndices, FACE_INDICES_SSBO_BINDING)
 
 struct StaticFaceData {
     // STATIC_FACE_FORMAT
@@ -33,6 +39,17 @@ bool isModelFace(int packedFaceData) {
 
 int getFaceOffset(int packedFaceData) {
     return packedFaceData & TEXTURE_FACE_OFFSET_MASK;
+}
+
+int getPackedTextureFace(int triangleIdx) {
+    TexBufferReader reader = buildTexBufferReader(triangleIdx, false);
+    return readInt(faceIndices, reader);
+}
+
+// Dynamic models pack their face data in lockstep with the vertex buffer, so the face
+// offset is derived directly from the vertex index instead of the faceIndices buffer.
+int getDynamicFaceOffset(int vertexId) {
+    return (vertexId / 3) * MODEL_FACE_NUM_INTS;
 }
 
 // STATIC_FACE_FORMAT
