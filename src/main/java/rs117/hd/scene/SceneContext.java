@@ -48,32 +48,26 @@ public class SceneContext {
 	public static final int VERTEX_UNDER_WATER_DEPTH_SHIFT = 5;
 	// Depth slope 1380 * .55 = 9.6 bits
 	public static final int VERTEX_UNDER_WATER_DEPTH_MASK = 0x3FF;
-	// How enclosed the water around a vertex is, from 0 to WATER_ENCLOSURE_STEPS
+	// Shore data kept per vertex, in the same steps as below. Distance is stored inverted, so unset vertices read as far
+	// from land.
 	private static final int VERTEX_WATER_ENCLOSURE_SHIFT = 15;
-	// Per-vertex shore data. Distance is stored inverted, so unset vertices read as far from land.
 	private static final int VERTEX_SHORE_DISTANCE_SHIFT = 21;
 	private static final int VERTEX_SHORE_DIRECTION_SHIFT = 28;
 
-	// Shore data in water surface vertex colors. Step counts double as bit masks.
-	// - Bits 0-6: distance to land, 0 only on the shore, up to SHORE_DISTANCE_MAX tiles
-	// - Bits 7-10: direction to land
+	// Shore data in water surface vertex colors:
+	// - Bits 0-6: distance to land, 0 only on the shore, up to SHORE_DISTANCE_MAX tiles at SHORE_DISTANCE_STEPS
+	// - Bits 7-10: direction to land, in SHORE_DIRECTION_STEPS around the circle
 	// - Bits 11-14: square tile sides bordering land (west, east, south, north)
 	// - Bit 15: WATER_SQUARE_TILE_BIT
-	// - Bits 24-29: how enclosed the water is, in the unused alpha bits
-	// In tiles
+	// - Bits 24-29: how enclosed the water is, from 0 for open water to WATER_ENCLOSURE_STEPS, in the unused alpha bits
 	public static final int SHORE_DISTANCE_MAX = 12;
 	public static final int SHORE_DISTANCE_STEPS = 0x7F;
 	public static final int SHORE_DIRECTION_SHIFT = 7;
 	public static final int SHORE_DIRECTION_STEPS = 16;
 	public static final int SHORE_SIDES_SHIFT = 11;
-	/**
-	 * Set on every corner of a square water tile except the north-east, so the second vertex of each triangle marks a
-	 * square tile, and the first marks the south-west triangle
-	 */
+	// Set on every corner of a square water tile except the north-east, so the second vertex of each triangle marks a
+	// square tile, and the first marks the south-west triangle
 	public static final int WATER_SQUARE_TILE_BIT = 1 << 15;
-	/**
-	 * How enclosed the water around a vertex is, from 0 for open water to WATER_ENCLOSURE_STEPS
-	 */
 	public static final int WATER_ENCLOSURE_SHIFT = 24;
 	public static final int WATER_ENCLOSURE_STEPS = 0x3F;
 

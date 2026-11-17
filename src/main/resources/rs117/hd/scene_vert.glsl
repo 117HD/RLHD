@@ -72,7 +72,7 @@ layout (location = 0) in vec3 vPosition;
     #if WATER_PASS && OCEAN_WAVES
         #include <utils/ocean_wave_cells.glsl>
 
-        // The ocean waves near each water face, for its pixels to search rather than every cell around them
+        // The ocean waves near each water face, so its pixels search only those. See oceanWaveCells.
         flat out vec2 fOceanWaveOrigin;
         flat out int fOceanWaveList;
     #endif

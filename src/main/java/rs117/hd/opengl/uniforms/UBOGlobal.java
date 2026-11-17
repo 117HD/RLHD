@@ -91,7 +91,7 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public final Property[] boatWakePoints = addPropertyArray(PropertyType.FVec4, "boatWakePoints", MAX_BOATS * MAX_POINTS);
 	public final Property[] boatWakeBounds = addPropertyArray(PropertyType.FVec4, "boatWakeBounds", MAX_BOATS);
 	public final Property[] boatWakeHeadings = addPropertyArray(PropertyType.FVec4, "boatWakeHeadings", MAX_BOATS);
-	public final Property[] boatWakeHulls = addPropertyArray(PropertyType.FVec4, "boatWakeHulls", MAX_BOATS);
+	public final Property[] boatWakeStates = addPropertyArray(PropertyType.FVec4, "boatWakeStates", MAX_BOATS);
 	public final Property[] boatWakeSizes = addPropertyArray(PropertyType.FVec4, "boatWakeSizes", MAX_BOATS);
 	public final Property detailDrawDistance = addProperty(PropertyType.Float, "detailDrawDistance");
 	public final Property waveScroll = addProperty(PropertyType.FVec2, "waveScroll");

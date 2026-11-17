@@ -976,12 +976,13 @@ public class ProceduralGenerator {
 								int textureId = tileModel.getTriangleTextureId() == null ? -1 :
 									tileModel.getTriangleTextureId()[face];
 								if (seasonalWaterType(override, textureId) == WaterType.NONE) {
+									boolean isLand = tileModel.getTriangleColorA()[face] != HIDDEN_HSL || override.forced;
+									if (isLand)
+										sceneContext.setTileFlag(z, x, y, TILE_HAS_LAND_FLAG);
+
 									for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
-										boolean isLand = tileModel.getTriangleColorA()[face] != HIDDEN_HSL || override.forced;
-										if (isLand) {
+										if (isLand)
 											sceneContext.setVertexIsLand(hashes[vertex]);
-											sceneContext.setTileFlag(z, x, y, TILE_HAS_LAND_FLAG);
-										}
 
 										if (vertices[vertex][0] % LOCAL_TILE_SIZE == 0 && vertices[vertex][2] % LOCAL_TILE_SIZE == 0) {
 											int vX = (vertices[vertex][0] >> LOCAL_COORD_BITS) + sceneContext.sceneOffset;

@@ -725,6 +725,8 @@ public class ZoneRenderer implements Renderer {
 
 		// Lights & lightning
 		plugin.uboGlobal.lightningBrightness.set(environmentManager.getLightningBrightness());
+
+		// Wind, roughness and boat wakes for the water's foam
 		waterSurfaceManager.upload(scene);
 
 		plugin.uboGlobal.saturation.set(config.saturation() / 100f);

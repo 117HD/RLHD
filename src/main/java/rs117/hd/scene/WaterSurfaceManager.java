@@ -69,7 +69,7 @@ public class WaterSurfaceManager {
 		float deltaTime = plugin.deltaTime;
 		var env = environmentManager.getCurrentEnvironment();
 		boolean first = Float.isNaN(windAngle);
-		// The waves turn to the new wind straight away when the environment changes instantly, rather than easing round
+		// An instant environment change turns the waves to the new wind straight away
 		boolean instant = false;
 		if (transitionId != environmentManager.getTransitionId()) {
 			transitionId = environmentManager.getTransitionId();
@@ -143,8 +143,8 @@ public class WaterSurfaceManager {
 		for (float r : roughnessHistory)
 			maxRoughness = max(maxRoughness, r);
 		ubo.waveMaxRoughness.set(maxRoughness);
-		// Whether every second of the history is the same, which it is unless the wind or roughness changed recently,
-		// so the shader can read the first instead of each wave's own
+		// Every second of the history is the same unless the wind or roughness changed recently. The shader then reads
+		// the first, which is cheaper than each wave's own.
 		boolean steady = true;
 		for (int i = 1; i < WIND_HISTORY_LENGTH && steady; i++)
 			steady = windHistory[i] == windHistory[0] && roughnessHistory[i] == roughnessHistory[0];

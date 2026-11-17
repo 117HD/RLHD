@@ -5,8 +5,8 @@
 #include <utils/constants.glsl>
 #include <utils/hash.glsl>
 
-// The ocean waves' cells, shared by the water's fragment shader, which draws the waves, and the scene's vertex shader,
-// which lists the waves near each water face so that its pixels needn't search every cell around them
+// Where and when the ocean waves form. Shared by the water's fragment shader, which draws them, and the scene's vertex
+// shader, which lists the waves near each water face, so the two always agree.
 
 #define OCEAN_FOAM_DRIFT_SPEED 0.08        // in tiles per second, scaled by the wind speed
 #define OCEAN_WAVE_STRETCH 1.5             // along the wind, 1 for none

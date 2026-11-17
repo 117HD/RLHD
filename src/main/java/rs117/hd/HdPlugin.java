@@ -183,7 +183,7 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_NEBULA_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_WATER_NOISE = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
-	// Matches WATER_NOISE_SIZE in water.glsl
+	// Texels across the water's noise texture. A power of two, which the water shader relies on to wrap it.
 	private static final int WATER_NOISE_SIZE = 256;
 
 	public static int MAX_IMAGE_UNITS;
@@ -1010,6 +1010,7 @@ public class HdPlugin extends Plugin {
 			.define("WIND_HISTORY_LENGTH", WaterSurfaceManager.WIND_HISTORY_LENGTH)
 			.define("BOAT_WAKE_MAX_BOATS", BoatWakes.MAX_BOATS)
 			.define("BOAT_WAKE_MAX_POINTS", BoatWakes.MAX_POINTS)
+			.define("WATER_NOISE_SIZE", WATER_NOISE_SIZE)
 			.define("DYNAMIC_LIGHTS", configDynamicLights != DynamicLights.NONE)
 			.define("TILED_LIGHTING", configTiledLighting)
 			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getTiledLightingLayers())
@@ -1321,7 +1322,7 @@ public class HdPlugin extends Plugin {
 		texUi = 0;
 	}
 
-	// Two random values per texel, tiling, for the water's foam patterns to read with filtering rather than hash
+	// Two random values per texel, tiling, which the water shader filters into smooth noise for its foam
 	private void initializeWaterNoiseTexture() {
 		ByteBuffer noise = BufferUtils.createByteBuffer(WATER_NOISE_SIZE * WATER_NOISE_SIZE * 2);
 		Random random = new Random(SEED);
