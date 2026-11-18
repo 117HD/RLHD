@@ -223,8 +223,7 @@ public class Environment {
 		windCeiling = mix(from.windCeiling, to.windCeiling, t);
 		waveRoughness = mix(from.waveRoughness, to.waveRoughness, t);
 		// The short way round, so 350° to 10° doesn't swing through south
-		waveScrollDirection = from.waveScrollDirection +
-			(float) Math.IEEEremainder(to.waveScrollDirection - from.waveScrollDirection, TWO_PI) * t;
+		waveScrollDirection = from.waveScrollDirection + angleDiff(to.waveScrollDirection, from.waveScrollDirection) * t;
 		waveScrollSpeed = mix(from.waveScrollSpeed, to.waveScrollSpeed, t);
 		waveRegionRepeat = t == 1 ? to.waveRegionRepeat : from.waveRegionRepeat;
 		sky = t == 1 ? to.sky : from.sky;

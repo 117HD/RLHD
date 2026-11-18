@@ -982,7 +982,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
             vec2 drifted = -worldUvs(1.0) - regionOffset - uboGlobal.windDrift * OCEAN_FOAM_DRIFT_SPEED - waveScroll;
             // Fading towards the shore in opacity, keeping its specks as dense
             float laceStrength = OCEAN_LACE_STRENGTH * roughness * laceRoom;
-            // Skipped where too faint to change a pixel's color, as across narrow rivers
+            // Skipped under 1/255 opacity, too faint to see, as across narrow rivers
             if (bool(OCEAN_LACE) && churned < 1.0 && laceStrength >= 1.0 / 255.0) {
                 // Stronger in proportion to the roughness, and denser too, up to solid line cores
                 float lace = oceanLace(drifted, uboGlobal.windDirection, uboGlobal.waterChurnTime);

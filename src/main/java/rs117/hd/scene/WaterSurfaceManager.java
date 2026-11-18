@@ -12,7 +12,8 @@ import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
 import static rs117.hd.utils.MathUtils.*;
 
 /**
- * Eases the wind and roughness of open water for the foam, and uploads them with the boat wakes
+ * Eases the wind and roughness of open water for the foam, keeps their recent history and the camera's, and uploads them
+ * with the boat wakes
  */
 @Singleton
 public class WaterSurfaceManager {
@@ -30,6 +31,9 @@ public class WaterSurfaceManager {
 	// Match OCEAN_FOAM_DRIFT_SPEED and OCEAN_WAVE_SIZE in ocean_wave_cells.glsl
 	private static final float OCEAN_FOAM_DRIFT_SPEED = 0.08f;
 	private static final float OCEAN_WAVE_SIZE = 7;
+	// A camera move further than this in one frame, like a teleport, refills its history. OCEAN_WAVE_FAR_START in
+	// ocean_wave_cells.glsl, since a shorter jump can't leave the waves around the camera counting as far.
+	private static final float CAMERA_JUMP_TILES = 32;
 
 	@Inject
 	private Client client;
@@ -64,6 +68,7 @@ public class WaterSurfaceManager {
 	// was when they spawned
 	private final float[] cameraHistory = new float[WIND_HISTORY_LENGTH * 2];
 	private int cameraHistorySecond = -1;
+	private float lastCameraX, lastCameraZ;
 	private long transitionId = -1;
 
 	/**
@@ -90,8 +95,8 @@ public class WaterSurfaceManager {
 			windAngle = windEasing = environmentManager.getToEnvironment().windAngle;
 		} else {
 			float rate = 1 - (float) Math.exp(-deltaTime / WIND_EASING_SECONDS);
-			windEasing += (float) Math.IEEEremainder(env.windAngle - windEasing, 2 * Math.PI) * rate;
-			windAngle += (float) Math.IEEEremainder(windEasing - windAngle, 2 * Math.PI) * rate;
+			windEasing += angleDiff(env.windAngle, windEasing) * rate;
+			windAngle += angleDiff(windEasing, windAngle) * rate;
 		}
 
 		{
@@ -165,19 +170,26 @@ public class WaterSurfaceManager {
 			ubo.roughnessHistory[i].set(
 				roughnessHistory[j], roughnessHistory[j + 1], roughnessHistory[j + 2], roughnessHistory[j + 3]);
 		}
-		uploadCameraHistory(drawnScene, ubo);
+		updateCameraHistory(ubo, drawnScene);
 		if (config.boatWakes())
 			boatWakes.update(client, drawnScene, ubo, (float) plugin.elapsedTime);
 	}
 
-	private void uploadCameraHistory(Scene drawnScene, UBOGlobal ubo) {
-		// In wave cells, as the shader's oceanWaveCellPosition works them out, from world tiles
+	/**
+	 * Record the camera's position for the current second, then upload the history
+	 */
+	private void updateCameraHistory(UBOGlobal ubo, Scene drawnScene) {
+		// In world tiles, then wave cells, as the shader's oceanWaveCellPosition works them out
 		float tilesX = drawnScene.getBaseX() + plugin.cameraPosition[0] / LOCAL_TILE_SIZE;
 		float tilesZ = drawnScene.getBaseY() + plugin.cameraPosition[2] / LOCAL_TILE_SIZE;
 		float cellX = (tilesX - windDrift[0] * OCEAN_FOAM_DRIFT_SPEED - waveScroll[0]) / OCEAN_WAVE_SIZE;
 		float cellZ = (tilesZ - windDrift[1] * OCEAN_FOAM_DRIFT_SPEED - waveScroll[1]) / OCEAN_WAVE_SIZE;
 		int second = (int) Math.floor(plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION);
-		if (cameraHistorySecond == -1) {
+		// Refilled after a jump, or the waves around the camera would count as far until they respawn
+		boolean jumped = Math.hypot(tilesX - lastCameraX, tilesZ - lastCameraZ) > CAMERA_JUMP_TILES;
+		lastCameraX = tilesX;
+		lastCameraZ = tilesZ;
+		if (cameraHistorySecond == -1 || jumped) {
 			for (int i = 0; i < WIND_HISTORY_LENGTH; i++) {
 				cameraHistory[i * 2] = cellX;
 				cameraHistory[i * 2 + 1] = cellZ;

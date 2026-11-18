@@ -17,7 +17,7 @@
 #define OCEAN_WAVE_WIGGLE 1.0              // how wiggly the fronts are
 #define OCEAN_WAVE_RAGGEDNESS 1.5          // how ragged the edges and breakup are
 #define SHORE_WAVE_MIN_ROOM 5.0            // open water needed nearby for shore and ocean waves, in tiles
-// Fewer waves spawn far from the camera, where they're small on screen but cost as much per pixel
+// Fewer waves spawn far from the camera, where faces are tiny and their pixels cost the most
 #define OCEAN_WAVE_FAR_START 32.0          // distance from the camera where they start thinning out, in tiles
 #define OCEAN_WAVE_FAR_END 80.0            // and where they're thinnest
 #define OCEAN_WAVE_FAR_KEEP 0.325          // share of waves still spawning fully far away
@@ -77,11 +77,11 @@ bool oceanWaveNear(vec2 cell, vec2 q, float time, float margin, out OceanWave wa
     if (spawnHash >= clamp(OCEAN_WAVE_AMOUNT * uboGlobal.waveMaxRoughness, 0.0, 1.0) + leeway)
         return false;
     // Centers lie near the middle of each cell, so neighbours rarely overlap. The grid doesn't show, since the waves
-    // vary in size, direction and timing. Below, a wave is skipped beyond maxSweep stretched radii
-    // downwind and 1.6 crest half-lengths across, with its radius at most that roughness allows. So nothing
-    // further than this from its center can be part of it.
+    // vary in size, direction and timing.
     wave.center = cell + 0.4 + 0.2 * hash22(cell * 1.7 + n * vec2(7.31, 3.17));
     vec2 offset = q - wave.center;
+    // Below, a wave is skipped beyond maxSweep stretched radii downwind and 1.6 crest half-lengths across, with its
+    // radius at most that roughness allows. So nothing further than this from its center can be part of it.
     float maxRadius = mix(0.13, 0.42, h.y) * sqrt(uboGlobal.waveMaxRoughness);
     float reach = min(maxReach,
         length(vec2(OCEAN_WAVE_STRETCH * maxSweep * maxRadius, 1.6 * min(maxRadius * 4.0, 0.9)))) + margin;

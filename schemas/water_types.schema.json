@@ -87,7 +87,7 @@
       },
       "hasFoam": {
         "type": "boolean",
-        "description": "Whether shoreline foam should be drawn for the water type."
+        "description": "Whether the water type has foam: along its shores, and its lace, ocean waves and boat wakes."
       },
       "hasWaves": {
         "type": "boolean",
