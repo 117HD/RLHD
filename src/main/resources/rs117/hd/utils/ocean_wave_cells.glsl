@@ -89,16 +89,17 @@ bool oceanWaveNear(vec2 cell, vec2 q, float time, float margin, out OceanWave wa
         return false;
     wave.spawnTime = (n - h.x) * OCEAN_WAVE_LIFETIME;
     // Every second's the same unless the wind or roughness changed recently, so read the first, which is cheaper
-    int historySecond = uboGlobal.waveHistorySteady != 0 ? 0 :
-        int(mod(floor(wave.spawnTime), float(WIND_HISTORY_LENGTH)));
+    int spawnSecond = int(mod(floor(wave.spawnTime), float(WIND_HISTORY_LENGTH)));
+    int historySecond = uboGlobal.waveHistorySteady != 0 ? 0 : spawnSecond;
     float spawnRoughness = uboGlobal.roughnessHistory[historySecond >> 2][historySecond & 3];
     float chance = clamp(OCEAN_WAVE_AMOUNT * spawnRoughness, 0.0, 1.0);
     // Fewer far from where the camera was when the wave spawned, so moving it never changes a wave already going.
-    // Not where the waves repeat in every region, since the same wave is then at many distances.
-    if (uboGlobal.waveRegionRepeat == 0) {
-        int cameraSecond = int(mod(floor(wave.spawnTime), float(WIND_HISTORY_LENGTH)));
-        vec4 cameraPair = uboGlobal.waveCameraHistory[cameraSecond >> 1];
-        vec2 camera = (cameraSecond & 1) == 0 ? cameraPair.xy : cameraPair.zw;
+    // Not where the waves repeat in every region, since the same wave is then at many distances. Only waves the
+    // distance could decide need the camera: under the share kept they spawn anywhere, and at the full chance nowhere.
+    if (uboGlobal.waveRegionRepeat == 0 && spawnHash >= chance * OCEAN_WAVE_FAR_KEEP + leeway &&
+        spawnHash < chance + leeway) {
+        vec4 cameraPair = uboGlobal.waveCameraHistory[spawnSecond >> 1];
+        vec2 camera = (spawnSecond & 1) == 0 ? cameraPair.xy : cameraPair.zw;
         float cameraDistance = length(cell + 0.5 - camera) * OCEAN_WAVE_SIZE;
         float farness = smoothstep(OCEAN_WAVE_FAR_START, OCEAN_WAVE_FAR_END, cameraDistance);
         chance *= mix(1.0, OCEAN_WAVE_FAR_KEEP, farness);
