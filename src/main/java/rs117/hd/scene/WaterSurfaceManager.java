@@ -6,7 +6,9 @@ import javax.inject.Singleton;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.opengl.uniforms.UBOGlobal;
 
+import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
 import static rs117.hd.utils.MathUtils.*;
 
 /**
@@ -25,6 +27,9 @@ public class WaterSurfaceManager {
 	private static final float ROUGHNESS_MAX = 2;
 	private static final float ROUGHNESS_RISE_SECONDS = 1.5f;
 	private static final float ROUGHNESS_FALL_SECONDS = 0.75f;
+	// Match OCEAN_FOAM_DRIFT_SPEED and OCEAN_WAVE_SIZE in ocean_wave_cells.glsl
+	private static final float OCEAN_FOAM_DRIFT_SPEED = 0.08f;
+	private static final float OCEAN_WAVE_SIZE = 7;
 
 	@Inject
 	private Client client;
@@ -55,6 +60,10 @@ public class WaterSurfaceManager {
 	private final float[] windHistory = new float[WIND_HISTORY_LENGTH];
 	private final float[] roughnessHistory = new float[WIND_HISTORY_LENGTH];
 	private int historySecond;
+	// The camera's position in wave cells at each recent second, x and z, so far waves can thin out by where the camera
+	// was when they spawned
+	private final float[] cameraHistory = new float[WIND_HISTORY_LENGTH * 2];
+	private int cameraHistorySecond = -1;
 	private long transitionId = -1;
 
 	/**
@@ -62,6 +71,7 @@ public class WaterSurfaceManager {
 	 */
 	public void startUp() {
 		windAngle = Float.NaN;
+		cameraHistorySecond = -1;
 		boatWakes.reset();
 	}
 
@@ -155,7 +165,33 @@ public class WaterSurfaceManager {
 			ubo.roughnessHistory[i].set(
 				roughnessHistory[j], roughnessHistory[j + 1], roughnessHistory[j + 2], roughnessHistory[j + 3]);
 		}
+		uploadCameraHistory(drawnScene, ubo);
 		if (config.boatWakes())
 			boatWakes.update(client, drawnScene, ubo, (float) plugin.elapsedTime);
+	}
+
+	private void uploadCameraHistory(Scene drawnScene, UBOGlobal ubo) {
+		// In wave cells, as the shader's oceanWaveCellPosition works them out, from world tiles
+		float tilesX = drawnScene.getBaseX() + plugin.cameraPosition[0] / LOCAL_TILE_SIZE;
+		float tilesZ = drawnScene.getBaseY() + plugin.cameraPosition[2] / LOCAL_TILE_SIZE;
+		float cellX = (tilesX - windDrift[0] * OCEAN_FOAM_DRIFT_SPEED - waveScroll[0]) / OCEAN_WAVE_SIZE;
+		float cellZ = (tilesZ - windDrift[1] * OCEAN_FOAM_DRIFT_SPEED - waveScroll[1]) / OCEAN_WAVE_SIZE;
+		int second = (int) Math.floor(plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION);
+		if (cameraHistorySecond == -1) {
+			for (int i = 0; i < WIND_HISTORY_LENGTH; i++) {
+				cameraHistory[i * 2] = cellX;
+				cameraHistory[i * 2 + 1] = cellZ;
+			}
+		} else if (second != cameraHistorySecond) {
+			int i = second % WIND_HISTORY_LENGTH;
+			cameraHistory[i * 2] = cellX;
+			cameraHistory[i * 2 + 1] = cellZ;
+		}
+		cameraHistorySecond = second;
+		for (int i = 0; i < ubo.waveCameraHistory.length; i++) {
+			int j = i * 4;
+			ubo.waveCameraHistory[i].set(
+				cameraHistory[j], cameraHistory[j + 1], cameraHistory[j + 2], cameraHistory[j + 3]);
+		}
 	}
 }

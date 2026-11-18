@@ -11,12 +11,16 @@
 #define OCEAN_FOAM_DRIFT_SPEED 0.08        // in tiles per second, scaled by the wind speed
 #define OCEAN_WAVE_STRETCH 1.5             // along the wind, 1 for none
 #define OCEAN_WAVE_SIZE 7.0                // spacing, in tiles
-#define OCEAN_WAVE_AMOUNT 0.55             // chance of each spot having a wave each lifetime, from 0 to 1
+#define OCEAN_WAVE_AMOUNT 0.45             // chance of each spot having a wave each lifetime, from 0 to 1
 #define OCEAN_WAVE_LIFETIME 14.0           // longest life, in seconds
 #define OCEAN_WAVE_RATE_RANDOMNESS 0.4     // how much faster some waves live, from 0 to 1
 #define OCEAN_WAVE_WIGGLE 1.0              // how wiggly the fronts are
 #define OCEAN_WAVE_RAGGEDNESS 1.5          // how ragged the edges and breakup are
 #define SHORE_WAVE_MIN_ROOM 5.0            // open water needed nearby for shore and ocean waves, in tiles
+// Fewer waves spawn far from the camera, where they're small on screen but cost as much per pixel
+#define OCEAN_WAVE_FAR_START 32.0          // distance from the camera where they start thinning out, in tiles
+#define OCEAN_WAVE_FAR_END 80.0            // and where they're thinnest
+#define OCEAN_WAVE_FAR_KEEP 0.325          // share of waves still spawning fully far away
 
 // How far from a water face's last vertex its pixels can be and still use its list, in wave cells. A little more than a
 // tile's diagonal.
@@ -72,10 +76,11 @@ bool oceanWaveNear(vec2 cell, vec2 q, float time, float margin, out OceanWave wa
     float spawnHash = hash12(cell * 5.3 + n * vec2(2.71, 6.13));
     if (spawnHash >= clamp(OCEAN_WAVE_AMOUNT * uboGlobal.waveMaxRoughness, 0.0, 1.0) + leeway)
         return false;
-    // Centers lie in the middle half of each cell. Below, a wave is skipped beyond maxSweep stretched radii
+    // Centers lie near the middle of each cell, so neighbours rarely overlap. The grid doesn't show, since the waves
+    // vary in size, direction and timing. Below, a wave is skipped beyond maxSweep stretched radii
     // downwind and 1.6 crest half-lengths across, with its radius at most that roughness allows. So nothing
     // further than this from its center can be part of it.
-    wave.center = cell + 0.25 + 0.5 * hash22(cell * 1.7 + n * vec2(7.31, 3.17));
+    wave.center = cell + 0.4 + 0.2 * hash22(cell * 1.7 + n * vec2(7.31, 3.17));
     vec2 offset = q - wave.center;
     float maxRadius = mix(0.13, 0.42, h.y) * sqrt(uboGlobal.waveMaxRoughness);
     float reach = min(maxReach,
@@ -88,6 +93,16 @@ bool oceanWaveNear(vec2 cell, vec2 q, float time, float margin, out OceanWave wa
         int(mod(floor(wave.spawnTime), float(WIND_HISTORY_LENGTH)));
     float spawnRoughness = uboGlobal.roughnessHistory[historySecond >> 2][historySecond & 3];
     float chance = clamp(OCEAN_WAVE_AMOUNT * spawnRoughness, 0.0, 1.0);
+    // Fewer far from where the camera was when the wave spawned, so moving it never changes a wave already going.
+    // Not where the waves repeat in every region, since the same wave is then at many distances.
+    if (uboGlobal.waveRegionRepeat == 0) {
+        int cameraSecond = int(mod(floor(wave.spawnTime), float(WIND_HISTORY_LENGTH)));
+        vec4 cameraPair = uboGlobal.waveCameraHistory[cameraSecond >> 1];
+        vec2 camera = (cameraSecond & 1) == 0 ? cameraPair.xy : cameraPair.zw;
+        float cameraDistance = length(cell + 0.5 - camera) * OCEAN_WAVE_SIZE;
+        float farness = smoothstep(OCEAN_WAVE_FAR_START, OCEAN_WAVE_FAR_END, cameraDistance);
+        chance *= mix(1.0, OCEAN_WAVE_FAR_KEEP, farness);
+    }
     if (spawnHash >= chance + leeway)
         return false;
     wave.r = hash42(cell * 2.9 + n * vec2(1.73, 9.21));

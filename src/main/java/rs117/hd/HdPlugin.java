@@ -995,9 +995,10 @@ public class HdPlugin extends Plugin {
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
 			.define("WATER_SPECULAR_REFLECTIONS", config.waterSpecularReflections())
 			.define("DECOUPLE_WATER_FROM_SKY_COLOR", config.decoupleSkyAndWaterColor())
-			.define("SHORE_FOAM", config.shoreFoam())
-			.define("OCEAN_LACE", config.oceanLace())
-			.define("OCEAN_WAVES", config.oceanWaves())
+			// One setting for all the water's foam but the boat wakes. Kept apart in the shaders, which test each.
+			.define("SHORE_FOAM", config.waterFoam())
+			.define("OCEAN_LACE", config.waterFoam())
+			.define("OCEAN_WAVES", config.waterFoam())
 			.define("BOAT_WAKES", config.boatWakes())
 			.define("SHORE_DISTANCE_MAX", SceneContext.SHORE_DISTANCE_MAX)
 			.define("SHORE_DISTANCE_STEPS", SceneContext.SHORE_DISTANCE_STEPS)
@@ -2061,9 +2062,7 @@ public class HdPlugin extends Plugin {
 							case KEY_LEGACY_BOAT_SILHOUETTES:
 							case KEY_WATER_SPECULAR_REFLECTIONS:
 							case KEY_DECOUPLE_WATER_FROM_SKY_COLOR:
-							case KEY_SHORE_FOAM:
-							case KEY_OCEAN_LACE:
-							case KEY_OCEAN_WAVES:
+							case KEY_WATER_FOAM:
 							case KEY_BOAT_WAKES:
 							case KEY_CENTROID_QUALIFIER:
 							case KEY_VALIDATE_SHADERS:

@@ -98,4 +98,5 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public final Property waveRegionRepeat = addProperty(PropertyType.Int, "waveRegionRepeat");
 	public final Property waveMaxRoughness = addProperty(PropertyType.Float, "waveMaxRoughness");
 	public final Property waveHistorySteady = addProperty(PropertyType.Int, "waveHistorySteady");
+	public final Property[] waveCameraHistory = addPropertyArray(PropertyType.FVec4, "waveCameraHistory", WIND_HISTORY_LENGTH / 2);
 }

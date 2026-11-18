@@ -91,4 +91,6 @@ layout(std140) uniform UBOGlobal {
     int waveRegionRepeat; // 1 to repeat the ocean waves and lace in every region
     float waveMaxRoughness; // the most of roughnessHistory
     int waveHistorySteady; // 1 when every second of windHistory and roughnessHistory is the same
+    // The camera's position in wave cells at each recent second, two seconds to each, to thin out far waves
+    vec4 waveCameraHistory[WIND_HISTORY_LENGTH / 2];
 } uboGlobal;
