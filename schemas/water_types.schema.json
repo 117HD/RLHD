@@ -15,6 +15,10 @@
         "type": "string",
         "description": "Optional description of what this applies to or is used for."
       },
+      "parent": {
+        "type": "string",
+        "description": "The water type which this water type should inherit default values from, except its vanillaTextureIndex."
+      },
       "material": {
         "type": "string",
         "description": "Name of a material whose vanilla texture this water type should be the fallback for."
@@ -83,7 +87,15 @@
       },
       "hasFoam": {
         "type": "boolean",
-        "description": "Whether shoreline foam should be drawn for the water type."
+        "description": "Whether the water type has foam: along its shores, and its lace, ocean waves and boat wakes."
+      },
+      "hasWaves": {
+        "type": "boolean",
+        "description": "Whether ocean waves and lace can appear on the water type's open water. Defaults to true. Use it with a tile override to keep them out of an area."
+      },
+      "scrolls": {
+        "type": "boolean",
+        "description": "Whether the water's ripples, waves and lace move with the environment's `waveScrollSpeed`. Defaults to true. Turn it off for water that moves along with a scrolling scene, like inside the Fishing Trawler's boat."
       },
       "duration": {
         "type": "number",

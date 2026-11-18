@@ -1035,20 +1035,20 @@ public class SceneUploader implements AutoCloseable {
 			if (ctx.isVertexOverlay(swVertexKey) && ctx.isVertexUnderlay(swVertexKey))
 				swVertexIsOverlay = true;
 		} else if (onlyWaterSurface) {
-			// set colors for the shoreline to create a foam effect in the water shader
-			swColor = seColor = nwColor = neColor = 127;
+			// Shore data for the water shader's foam
+			swColor = ctx.getSquareWaterTileShoreData(swVertexKey, tileZ, tileExX, tileExY, false);
+			seColor = ctx.getSquareWaterTileShoreData(seVertexKey, tileZ, tileExX, tileExY, false);
+			nwColor = ctx.getSquareWaterTileShoreData(nwVertexKey, tileZ, tileExX, tileExY, false);
+			neColor = ctx.getSquareWaterTileShoreData(neVertexKey, tileZ, tileExX, tileExY, true);
 
-			if (ctx.isVertexWater(swVertexKey) && ctx.isVertexLand(swVertexKey))
-				swColor = 0;
-			if (ctx.isVertexWater(seVertexKey) && ctx.isVertexLand(seVertexKey))
-				seColor = 0;
-			if (ctx.isVertexWater(nwVertexKey) && ctx.isVertexLand(nwVertexKey))
-				nwColor = 0;
-			if (ctx.isVertexWater(neVertexKey) && ctx.isVertexLand(neVertexKey))
-				neColor = 0;
-
-			if (seColor == 0 && nwColor == 0 && (neColor == 0 || swColor == 0))
-				swColor = seColor = nwColor = neColor = 1 << 16; // Bias depth a bit if it's flush with underwater geometry
+			if (ctx.isVertexShore(seVertexKey) && ctx.isVertexShore(nwVertexKey) &&
+				(ctx.isVertexShore(neVertexKey) || ctx.isVertexShore(swVertexKey))) {
+				// Bias depth if flush with underwater geometry, keeping each corner's shore data
+				swColor |= 1 << 16;
+				seColor |= 1 << 16;
+				nwColor |= 1 << 16;
+				neColor |= 1 << 16;
+			}
 		} else {
 			// Underwater geometry
 			swColor = seColor = neColor = nwColor = UNDERWATER_HSL;
@@ -1390,16 +1390,16 @@ public class SceneUploader implements AutoCloseable {
 					}
 				}
 			} else if (onlyWaterSurface) {
-				// set colors for the shoreline to create a foam effect in the water shader
-				colorA = colorB = colorC = 127;
-				if (ctx.isVertexWater(vertexKeyA) && ctx.isVertexLand(vertexKeyA))
-					colorA = 0;
-				if (ctx.isVertexWater(vertexKeyB) && ctx.isVertexLand(vertexKeyB))
-					colorB = 0;
-				if (ctx.isVertexWater(vertexKeyC) && ctx.isVertexLand(vertexKeyC))
-					colorC = 0;
-				if (colorA == 0 && colorB == 0 && colorC == 0)
-					colorA = colorB = colorC = 1 << 16; // Bias depth a bit if it's flush with underwater geometry
+				// Shore data for the water shader's foam
+				colorA = ctx.getVertexShoreData(vertexKeyA);
+				colorB = ctx.getVertexShoreData(vertexKeyB);
+				colorC = ctx.getVertexShoreData(vertexKeyC);
+				if (ctx.isVertexShore(vertexKeyA) && ctx.isVertexShore(vertexKeyB) && ctx.isVertexShore(vertexKeyC)) {
+					// Bias depth a bit if it's flush with underwater geometry
+					colorA |= 1 << 16;
+					colorB |= 1 << 16;
+					colorC |= 1 << 16;
+				}
 			} else {
 				// Underwater geometry
 				colorA = colorB = colorC = UNDERWATER_HSL;

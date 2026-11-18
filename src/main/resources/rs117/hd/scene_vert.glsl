@@ -31,6 +31,8 @@
 #include <utils/constants.glsl>
 #include <utils/uvs.glsl>
 
+#include WATER_PASS
+
 layout (location = 0) in vec3 vPosition;
 
 #if ZONE_RENDERER
@@ -66,6 +68,14 @@ layout (location = 0) in vec3 vPosition;
         vec2 uv;
         vec3 normal;
     } OUT;
+
+    #if WATER_PASS && OCEAN_WAVES
+        #include <utils/ocean_wave_cells.glsl>
+
+        // The ocean waves near each water face, so its pixels search only those. See oceanWaveCells.
+        flat out vec2 fOceanWaveOrigin;
+        flat out int fOceanWaveList;
+    #endif
 
     void main() {
         int vertex = gl_VertexID % 3;
@@ -117,6 +127,17 @@ layout (location = 0) in vec3 vPosition;
 
         fTexBlend = vec3(0);
         fTexBlend[vertex] = 1.0;
+
+        #if WATER_PASS && OCEAN_WAVES
+            fOceanWaveOrigin = vec2(0);
+            fOceanWaveList = 0;
+            if (isProvoking) {
+                fOceanWaveOrigin = oceanWaveCellPosition((uboGlobal.sceneBase + worldPosition.xz) / 128.0);
+                // Faces too enclosed for waves, as along rivers, never draw any
+                if (oceanWaveFaceHasRoom(fAlphaBiasHsl))
+                    fOceanWaveList = oceanWaveList(fOceanWaveOrigin);
+            }
+        #endif
 
         OUT.position = worldPosition;
         OUT.uv = computeVertexUvs(materialData, worldPosition, vUv.xyz);

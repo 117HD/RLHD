@@ -94,6 +94,8 @@ public class EnvironmentManager {
 	private double transitionStartTime = 0;
 	@Getter
 	private long transitionId;
+	@Getter
+	private boolean transitionInstant;
 	private int[] previousPosition = new int[3];
 
 	private static final class State {
@@ -334,6 +336,7 @@ public class EnvironmentManager {
 		log.debug("changing environment from {} to {} (instant: {})", state.target, newEnvironment, skipTransition);
 		state.target = newEnvironment;
 		transitionId++;
+		transitionInstant = skipTransition;
 		transitionComplete = false;
 		transitionProgress = 0;
 		transitionStartTime = plugin.elapsedTime - (skipTransition ? TRANSITION_DURATION : 0);

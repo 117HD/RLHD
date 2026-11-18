@@ -3,6 +3,9 @@ package rs117.hd.opengl.uniforms;
 import rs117.hd.utils.buffer.GLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.scene.BoatWakes.MAX_BOATS;
+import static rs117.hd.scene.BoatWakes.MAX_POINTS;
+import static rs117.hd.scene.WaterSurfaceManager.WIND_HISTORY_LENGTH;
 
 public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public UBOGlobal() {
@@ -79,4 +82,21 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 
 	public final Property lightningBrightness = addProperty(PropertyType.Float, "lightningBrightness");
 	public final Property elapsedTime = addProperty(PropertyType.Float, "elapsedTime");
+	public final Property windDirection = addProperty(PropertyType.FVec2, "windDirection");
+	public final Property windDrift = addProperty(PropertyType.FVec2, "windDrift");
+	public final Property[] windHistory = addPropertyArray(PropertyType.FVec4, "windHistory", WIND_HISTORY_LENGTH / 4);
+	public final Property[] roughnessHistory = addPropertyArray(PropertyType.FVec4, "roughnessHistory", WIND_HISTORY_LENGTH / 4);
+	public final Property waterRoughness = addProperty(PropertyType.Float, "waterRoughness");
+	public final Property waterChurnTime = addProperty(PropertyType.Float, "waterChurnTime");
+	public final Property[] boatWakePoints = addPropertyArray(PropertyType.FVec4, "boatWakePoints", MAX_BOATS * MAX_POINTS);
+	public final Property[] boatWakeBounds = addPropertyArray(PropertyType.FVec4, "boatWakeBounds", MAX_BOATS);
+	public final Property[] boatWakeHeadings = addPropertyArray(PropertyType.FVec4, "boatWakeHeadings", MAX_BOATS);
+	public final Property[] boatWakeStates = addPropertyArray(PropertyType.FVec4, "boatWakeStates", MAX_BOATS);
+	public final Property[] boatWakeSizes = addPropertyArray(PropertyType.FVec4, "boatWakeSizes", MAX_BOATS);
+	public final Property detailDrawDistance = addProperty(PropertyType.Float, "detailDrawDistance");
+	public final Property waveScroll = addProperty(PropertyType.FVec2, "waveScroll");
+	public final Property waveRegionRepeat = addProperty(PropertyType.Int, "waveRegionRepeat");
+	public final Property waveMaxRoughness = addProperty(PropertyType.Float, "waveMaxRoughness");
+	public final Property waveHistorySteady = addProperty(PropertyType.Int, "waveHistorySteady");
+	public final Property[] waveCameraHistory = addPropertyArray(PropertyType.FVec4, "waveCameraHistory", WIND_HISTORY_LENGTH / 2);
 }

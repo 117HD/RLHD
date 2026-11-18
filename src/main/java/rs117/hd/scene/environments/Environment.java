@@ -92,6 +92,11 @@ public class Environment {
 	public float windSpeed = 15.0f;
 	public float windStrength = 0.0f;
 	public float windCeiling = 1280.0f;
+	public float waveRoughness = 1;
+	@JsonAdapter(DegreesToRadians.class)
+	public float waveScrollDirection = 0;
+	public float waveScrollSpeed = 0;
+	public boolean waveRegionRepeat = false;
 	@JsonAdapter(SkyConfiguration.Adapter.class)
 	@Nullable
 	private SkyConfiguration sky;
@@ -216,6 +221,11 @@ public class Environment {
 		windSpeed = mix(from.windSpeed, to.windSpeed, t);
 		windStrength = mix(from.windStrength, to.windStrength, t);
 		windCeiling = mix(from.windCeiling, to.windCeiling, t);
+		waveRoughness = mix(from.waveRoughness, to.waveRoughness, t);
+		// The short way round, so 350° to 10° doesn't swing through south
+		waveScrollDirection = from.waveScrollDirection + angleDiff(to.waveScrollDirection, from.waveScrollDirection) * t;
+		waveScrollSpeed = mix(from.waveScrollSpeed, to.waveScrollSpeed, t);
+		waveRegionRepeat = t == 1 ? to.waveRegionRepeat : from.waveRegionRepeat;
 		sky = t == 1 ? to.sky : from.sky;
 		return this;
 	}

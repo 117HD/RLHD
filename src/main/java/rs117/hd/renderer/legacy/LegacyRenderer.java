@@ -49,6 +49,7 @@ import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SkyManager;
+import rs117.hd.scene.WaterSurfaceManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.daylight_cycle.SkyState;
 import rs117.hd.scene.environments.Environment;
@@ -98,6 +99,9 @@ public class LegacyRenderer implements Renderer {
 
 	@Inject
 	private HdPluginConfig config;
+
+	@Inject
+	private WaterSurfaceManager waterSurfaceManager;
 
 	@Inject
 	private OpenCLManager clManager;
@@ -1050,6 +1054,7 @@ public class LegacyRenderer implements Renderer {
 			);
 
 			plugin.uboGlobal.drawDistance.set((float) plugin.getDrawDistance());
+			plugin.uboGlobal.detailDrawDistance.set((float) plugin.configDetailDrawDistance);
 			plugin.uboGlobal.expandedMapLoadingChunks.set(sceneContext.expandedMapLoadingChunks);
 			plugin.uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
 			plugin.uboGlobal.glareIntensity.set(config.glareIntensity() / 100f);
@@ -1066,6 +1071,9 @@ public class LegacyRenderer implements Renderer {
 			// Lights & lightning
 			plugin.uboGlobal.pointLightsCount.set(lightManager.getNumVisibleLights());
 			plugin.uboGlobal.lightningBrightness.set(environmentManager.getLightningBrightness());
+
+			// Wind, roughness and boat wakes for the water's foam
+			waterSurfaceManager.upload(sceneContext.scene);
 
 			plugin.uboGlobal.saturation.set(config.saturation() / 100f);
 			plugin.uboGlobal.contrast.set(config.contrast() / 100f);

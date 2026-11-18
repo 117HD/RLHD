@@ -59,6 +59,7 @@ import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SkyManager;
+import rs117.hd.scene.WaterSurfaceManager;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -109,6 +110,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private Client client;
+
+	@Inject
+	private WaterSurfaceManager waterSurfaceManager;
 
 	@Inject
 	private ClientThread clientThread;
@@ -705,6 +709,7 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboGlobal.fogDepth.set(fogDepth);
 
 		plugin.uboGlobal.drawDistance.set((float) plugin.getDrawDistance());
+		plugin.uboGlobal.detailDrawDistance.set((float) plugin.configDetailDrawDistance);
 		plugin.uboGlobal.expandedMapLoadingChunks.set(ctx.sceneContext.expandedMapLoadingChunks);
 		plugin.uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
 		plugin.uboGlobal.glareIntensity.set(config.glareIntensity() / 100f);
@@ -720,6 +725,9 @@ public class ZoneRenderer implements Renderer {
 
 		// Lights & lightning
 		plugin.uboGlobal.lightningBrightness.set(environmentManager.getLightningBrightness());
+
+		// Wind, roughness and boat wakes for the water's foam
+		waterSurfaceManager.upload(scene);
 
 		plugin.uboGlobal.saturation.set(config.saturation() / 100f);
 		plugin.uboGlobal.contrast.set(config.contrast() / 100f);

@@ -27,6 +27,13 @@ import static rs117.hd.utils.MathUtils.*;
 public class SceneContext {
 	public static final byte TILE_WATER_FLAG = 1;
 	public static final byte TILE_SKIP_FLAG = 1 << 1;
+	// Sides of a water tile bordering land (west, east, south, north), and whether a tile has land of its own
+	private static final int TILE_LAND_SIDES_SHIFT = 2;
+	public static final byte TILE_LAND_WEST_FLAG = 1 << TILE_LAND_SIDES_SHIFT;
+	public static final byte TILE_LAND_EAST_FLAG = 1 << TILE_LAND_SIDES_SHIFT + 1;
+	public static final byte TILE_LAND_SOUTH_FLAG = 1 << TILE_LAND_SIDES_SHIFT + 2;
+	public static final byte TILE_LAND_NORTH_FLAG = 1 << TILE_LAND_SIDES_SHIFT + 3;
+	public static final byte TILE_HAS_LAND_FLAG = 1 << 6;
 
 	public static final int TILE_OVERRIDE_MAIN = 0;
 	public static final int TILE_OVERRIDE_UNDERLAY = 1;
@@ -39,8 +46,30 @@ public class SceneContext {
 	public static final int VERTEX_IS_UNDERLAY = 1 << 3;
 	public static final int VERTEX_IS_HIGH_PRIORITY_COLOR = 1 << 4;
 	public static final int VERTEX_UNDER_WATER_DEPTH_SHIFT = 5;
-	// This only needs 10 bits, since depth slope 1380 * .55 = 9.6 bits, but reserve 16 to be safe
-	public static final int VERTEX_UNDER_WATER_DEPTH_MASK = 0xFFFF;
+	// Depth slope 1380 * .55 = 9.6 bits
+	public static final int VERTEX_UNDER_WATER_DEPTH_MASK = 0x3FF;
+	// Shore data kept per vertex, in the same steps as below. Distance is stored inverted, so unset vertices read as far
+	// from land.
+	private static final int VERTEX_WATER_ENCLOSURE_SHIFT = 15;
+	private static final int VERTEX_SHORE_DISTANCE_SHIFT = 21;
+	private static final int VERTEX_SHORE_DIRECTION_SHIFT = 28;
+
+	// Shore data in water surface vertex colors:
+	// - Bits 0-6: distance to land, 0 only on the shore, up to SHORE_DISTANCE_MAX tiles at SHORE_DISTANCE_STEPS
+	// - Bits 7-10: direction to land, in SHORE_DIRECTION_STEPS around the circle
+	// - Bits 11-14: square tile sides bordering land (west, east, south, north)
+	// - Bit 15: WATER_SQUARE_TILE_BIT
+	// - Bits 24-29: how enclosed the water is, from 0 for open water to WATER_ENCLOSURE_STEPS, in the unused alpha bits
+	public static final int SHORE_DISTANCE_MAX = 12;
+	public static final int SHORE_DISTANCE_STEPS = 0x7F;
+	public static final int SHORE_DIRECTION_SHIFT = 7;
+	public static final int SHORE_DIRECTION_STEPS = 16;
+	public static final int SHORE_SIDES_SHIFT = 11;
+	// Set on every corner of a square water tile except the north-east, so the second vertex of each triangle marks a
+	// square tile, and the first marks the south-west triangle
+	public static final int WATER_SQUARE_TILE_BIT = 1 << 15;
+	public static final int WATER_ENCLOSURE_SHIFT = 24;
+	public static final int WATER_ENCLOSURE_STEPS = 0x3F;
 
 	// Thread safe tile override variables
 	public final static ThreadLocal<TileOverrideVariables> TILE_OVERRIDE_VARIABLES = ThreadLocal.withInitial(TileOverrideVariables::new);
@@ -113,16 +142,57 @@ public class SceneContext {
 		vertexTerrainData.setBits(hash, value, mask, 0);
 	}
 
+	/**
+	 * @param distance   distance to the nearest land, in tiles
+	 * @param directionX direction towards the nearest land along the local X axis
+	 * @param directionZ direction towards the nearest land along the local Z axis
+	 * @param room       largest distance from land nearby, in tiles
+	 */
+	public void setVertexShoreData(int hash, float distance, float directionX, float directionZ, float room) {
+		int distanceSteps = round(saturate(distance / SHORE_DISTANCE_MAX) * SHORE_DISTANCE_STEPS);
+		int directionSteps = round(atan(directionZ, directionX) / TWO_PI * SHORE_DIRECTION_STEPS);
+		int enclosure = round((1 - saturate(room / SHORE_DISTANCE_MAX)) * WATER_ENCLOSURE_STEPS);
+		int value =
+			(SHORE_DISTANCE_STEPS - distanceSteps) << VERTEX_SHORE_DISTANCE_SHIFT |
+			(directionSteps & SHORE_DIRECTION_STEPS - 1) << VERTEX_SHORE_DIRECTION_SHIFT |
+			enclosure << VERTEX_WATER_ENCLOSURE_SHIFT;
+		int mask =
+			SHORE_DISTANCE_STEPS << VERTEX_SHORE_DISTANCE_SHIFT |
+			SHORE_DIRECTION_STEPS - 1 << VERTEX_SHORE_DIRECTION_SHIFT |
+			WATER_ENCLOSURE_STEPS << VERTEX_WATER_ENCLOSURE_SHIFT;
+		vertexTerrainData.setBits(hash, value, mask, 0);
+	}
+
+	public boolean isVertexShore(int hash) {
+		return vertexTerrainData.test(hash, VERTEX_IS_WATER | VERTEX_IS_LAND);
+	}
+
+	public int getVertexShoreData(int hash) {
+		int data = vertexTerrainData.getOrDefault(hash, 0);
+		int direction = data >>> VERTEX_SHORE_DIRECTION_SHIFT & SHORE_DIRECTION_STEPS - 1;
+		int enclosure = data >>> VERTEX_WATER_ENCLOSURE_SHIFT & WATER_ENCLOSURE_STEPS;
+		int distance = 0;
+		int shoreFlags = VERTEX_IS_WATER | VERTEX_IS_LAND;
+		if ((data & shoreFlags) != shoreFlags)
+			distance = max(1, SHORE_DISTANCE_STEPS - (data >>> VERTEX_SHORE_DISTANCE_SHIFT & SHORE_DISTANCE_STEPS));
+		return enclosure << WATER_ENCLOSURE_SHIFT | direction << SHORE_DIRECTION_SHIFT | distance;
+	}
+
+	/**
+	 * Shore data for a square water tile corner, including the tile's sides bordering land
+	 */
+	public int getSquareWaterTileShoreData(int hash, int plane, int x, int y, boolean isNorthEastCorner) {
+		int sides = tileFlags[getTileIdx(plane, x, y)] >> TILE_LAND_SIDES_SHIFT & 0xF;
+		int data = getVertexShoreData(hash) | sides << SHORE_SIDES_SHIFT;
+		return isNorthEastCorner ? data : data | WATER_SQUARE_TILE_BIT;
+	}
+
 	public boolean isVertexHighPriorityColor(int hash) {
 		return vertexTerrainData.test(hash, VERTEX_IS_HIGH_PRIORITY_COLOR);
 	}
 
 	public boolean isVertexLand(int hash) {
 		return vertexTerrainData.test(hash, VERTEX_IS_LAND);
-	}
-
-	public boolean isVertexWater(int hash) {
-		return vertexTerrainData.test(hash, VERTEX_IS_WATER);
 	}
 
 	public boolean isVertexOverlay(int hash) {
