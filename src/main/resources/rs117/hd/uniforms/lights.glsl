@@ -5,7 +5,7 @@
 #if DYNAMIC_LIGHTS
 struct PointLight {
     vec4 position;
-    vec4 color;
+    vec4 color; // rgb = color * strength, a = specular multiplier
 };
 
 layout(std140) uniform UBOLights {

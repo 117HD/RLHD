@@ -156,6 +156,11 @@
         "minimum": 0,
         "description": "Overworld night brightness multiplier while the daylight cycle is active. Defaults to 1; 0 disables the light and values above 1 brighten it."
       },
+      "specularMultiplier": {
+        "type": "number",
+        "minimum": 0,
+        "description": "Multiplier for the light's specular highlights. Defaults to 1; 0 removes the glint the light would otherwise leave on glossy surfaces such as water."
+      },
       "schedule": {
         "description": "When the light turns on or off based on the sun's altitude. Scheduled lights are disabled when the daylight cycle is disabled.",
         "oneOf": [
