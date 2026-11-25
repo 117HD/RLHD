@@ -44,8 +44,13 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -63,6 +68,7 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
+import net.runelite.client.events.PluginMessage;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginManager;
@@ -1899,6 +1905,42 @@ public class HdPlugin extends Plugin {
 
 		skyManager.updateConfig();
 		developerTools.updateConfig();
+	}
+
+	/**
+	 * Models other plugins asked to have drawn unlit, in exactly their own colors, per sender.
+	 * Sent as a PluginMessage with namespace "117hd" and name "unlit-models", holding "owner" (any string) and
+	 * "models" (the sender's full set of Model instances, replacing its earlier set; empty to clear).
+	 * "handled" is set to true in the message's data, so the sender can tell it is supported.
+	 */
+	private final Map<String, Set<Model>> unlitModels = new ConcurrentHashMap<>();
+
+	public boolean isUnlitModel(Model model) {
+		if (unlitModels.isEmpty())
+			return false;
+		for (var models : unlitModels.values())
+			if (models.contains(model))
+				return true;
+		return false;
+	}
+
+	@Subscribe
+	public void onPluginMessage(PluginMessage message) {
+		if (!"117hd".equals(message.getNamespace()) || !"unlit-models".equals(message.getName()))
+			return;
+		var data = message.getData();
+		Set<Model> models = Collections.newSetFromMap(new IdentityHashMap<>());
+		if (data.get("models") instanceof Collection)
+			for (Object model : (Collection<?>) data.get("models"))
+				if (model instanceof Model)
+					models.add((Model) model);
+		String owner = String.valueOf(data.get("owner"));
+		if (models.isEmpty()) {
+			unlitModels.remove(owner);
+		} else {
+			unlitModels.put(owner, models);
+		}
+		data.put("handled", true);
 	}
 
 	@Subscribe
