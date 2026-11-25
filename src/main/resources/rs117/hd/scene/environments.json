@@ -221,7 +221,8 @@
     "fogDepth": 50,
     "groundFogStart": -150,
     "groundFogEnd": -300,
-    "groundFogOpacity": 0.66
+    "groundFogOpacity": 0.66,
+    "groundFogUnderRoofs": true
   },
   {
     "area": "STRONGHOLD_OF_SECURITY_DEATH",
@@ -544,7 +545,8 @@
     "fogDepth": 40,
     "groundFogEnd": -1000,
     "groundFogStart": -200,
-    "groundFogOpacity": 0.3
+    "groundFogOpacity": 0.3,
+    "groundFogUnderRoofs": true
   },
   {
     "area": "TOA_LOOT_ROOM",
@@ -581,6 +583,7 @@
     "directionalColor": "#ffc875",
     "directionalStrength": 0,
     "groundFogOpacity": 1,
+    "groundFogUnderRoofs": true,
     "groundFogStart": -1900,
     "groundFogEnd": -2750,
     "instantTransition": true,
@@ -2088,7 +2091,21 @@
     "windStrength": 30,
     "windAngle": 140,
     "groundFogOpacity": 0.7,
+    "groundFogUnderRoofs": true,
+<<<<<<< HEAD
     "waterCausticsStrength": 40
+=======
+    "waterCausticsStrength": 40,
+    "sky": {
+      "parent": "NIGHT",
+      "skyVisibility": 0.6,
+      "moonVisibility": 0.7,
+      "skyFogDensity": 0.11,
+      "starVisibility": 0.439,
+      "starHorizonHeight": 0.93,
+      "auroraVisibility": 0.439
+    }
+>>>>>>> 503f25b7bba67ee6e1deb106add9e0aa832e8e8a
   },
   {
     "area": "DEATHS_OFFICE",
@@ -2186,7 +2203,8 @@
     "fogDepth": 80,
     "groundFogStart": -800,
     "groundFogEnd": -1100,
-    "groundFogOpacity": 0.5
+    "groundFogOpacity": 0.5,
+    "groundFogUnderRoofs": true
   },
   {
     "area": "FOSSIL_ISLAND_UNDERWATER_AREA",
@@ -2204,6 +2222,7 @@
     "groundFogStart": -450,
     "groundFogEnd": -700,
     "groundFogOpacity": 0.65,
+    "groundFogUnderRoofs": true,
     "waterCausticsStrength": 4
   },
   {
@@ -2218,6 +2237,7 @@
     "groundFogStart": -450,
     "groundFogEnd": -700,
     "groundFogOpacity": 0.65,
+    "groundFogUnderRoofs": true,
     "waterCausticsStrength": 4
   },
   {
@@ -2232,6 +2252,7 @@
     "groundFogStart": -50,
     "groundFogEnd": -700,
     "groundFogOpacity": 0.5,
+    "groundFogUnderRoofs": true,
     "waterCausticsStrength": 42
   },
   {
