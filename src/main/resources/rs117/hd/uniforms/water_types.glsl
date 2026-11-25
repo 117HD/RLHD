@@ -12,7 +12,9 @@ struct WaterType {
     float duration;
     float fresnelAmount;
     vec3 surfaceColor;
+    int noWaves; // in surfaceColor's padding
     vec3 foamColor;
+    int noScroll; // in foamColor's padding
     vec3 depthColor;
     int normalMap;
 };

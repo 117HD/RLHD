@@ -72,4 +72,25 @@ layout(std140) uniform UBOGlobal {
 
     float lightningBrightness;
     float elapsedTime;
+    vec2 windDirection; // along local X and Z, unit length
+    vec2 windDrift; // total drift along local X and Z, in seconds at the default wind speed
+    vec4 windHistory[WIND_HISTORY_LENGTH / 4]; // wind angle at the start of each recent second, indexed by the second
+    vec4 roughnessHistory[WIND_HISTORY_LENGTH / 4]; // and the water's roughness
+    float waterRoughness; // 1 for normal open water
+    float waterChurnTime; // seconds, running faster the rougher the water
+    // Boat paths from each boat back: position in tiles relative to the scene, age in seconds, and distance back from
+    // the stern in tiles
+    vec4 boatWakePoints[BOAT_WAKE_MAX_BOATS * BOAT_WAKE_MAX_POINTS];
+    vec4 boatWakeBounds[BOAT_WAKE_MAX_BOATS]; // each wake's min x, min z, max x, max z, with its bow and room for its foam
+    vec4 boatWakeHeadings[BOAT_WAKE_MAX_BOATS]; // direction each boat faces, x and z, then its stern, x and z
+    // Each wake's number of points, seconds since its boat stopped and since it moved off, then 1 going backwards
+    vec4 boatWakeStates[BOAT_WAKE_MAX_BOATS];
+    vec4 boatWakeSizes[BOAT_WAKE_MAX_BOATS]; // each boat's length and width in tiles, 1 for a square front, then 1 for a big NPC ship
+    float detailDrawDistance; // in tiles
+    vec2 waveScroll; // how far the ocean waves and lace have scrolled along local X and Z, in tiles
+    int waveRegionRepeat; // 1 to repeat the ocean waves and lace in every region
+    float waveMaxRoughness; // the most of roughnessHistory
+    int waveHistorySteady; // 1 when every second of windHistory and roughnessHistory is the same
+    // The camera's position in wave cells at each recent second, two seconds to each, to thin out far waves
+    vec4 waveCameraHistory[WIND_HISTORY_LENGTH / 2];
 } uboGlobal;

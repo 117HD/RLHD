@@ -8947,6 +8947,12 @@
     ]
   },
   {
+    "name": "FISHING_TRAWLER_INTERIOR",
+    "aabbs": [
+      [ 2012, 4824, 2021, 4826 ]
+    ]
+  },
+  {
     "name": "FISHING_TRAWLER_MAIN",
     "aabbs": [
       [ 1856, 4800, 1919, 4862 ]

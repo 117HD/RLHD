@@ -8,6 +8,7 @@ import static rs117.hd.HdPlugin.TEXTURE_UNIT_NEBULA_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TERRAIN_SHADOW_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILED_LIGHTING_MAP;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_WATER_NOISE;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 
 public class SceneShaderProgram extends ShaderProgram {
@@ -17,6 +18,7 @@ public class SceneShaderProgram extends ShaderProgram {
 	protected final UniformTexture uniTiledLightingTextureArray = addUniformTexture("tiledLightingArray");
 	protected final UniformTexture uniTextureFaces = addUniformTexture("textureFaces");
 	protected final UniformTexture uniNebulaMap = addUniformTexture("nebulaMap");
+	protected final UniformTexture uniWaterNoise = addUniformTexture("waterNoise");
 
 	public SceneShaderProgram() {
 		super(t -> t
@@ -25,6 +27,7 @@ public class SceneShaderProgram extends ShaderProgram {
 		uniTiledLightingTextureArray.ignoreMissing = true;
 		uniTerrainShadowMap.ignoreMissing = true;
 		uniNebulaMap.ignoreMissing = true;
+		uniWaterNoise.ignoreMissing = true;
 	}
 
 	@Override
@@ -40,6 +43,7 @@ public class SceneShaderProgram extends ShaderProgram {
 		uniTiledLightingTextureArray.set(TEXTURE_UNIT_TILED_LIGHTING_MAP);
 		uniTextureFaces.set(TEXTURE_UNIT_TEXTURED_FACES);
 		uniNebulaMap.set(TEXTURE_UNIT_NEBULA_MAP);
+		uniWaterNoise.set(TEXTURE_UNIT_WATER_NOISE);
 	}
 
 	public static class Water extends SceneShaderProgram {}

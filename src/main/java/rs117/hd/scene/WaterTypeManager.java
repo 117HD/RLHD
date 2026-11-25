@@ -24,8 +24,12 @@
  */
 package rs117.hd.scene;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +40,7 @@ import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.FileWatcher;
+import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
@@ -79,9 +84,7 @@ public class WaterTypeManager {
 				sceneManager.getLoadingLock().lock();
 				sceneManager.completeAllStreaming();
 
-				var rawWaterTypes = path.loadJson(plugin.getGson(), WaterType[].class);
-				if (rawWaterTypes == null)
-					throw new IOException("Empty or invalid: " + path);
+				var rawWaterTypes = loadWaterTypes(path);
 				log.debug("Loaded {} water types", rawWaterTypes.length);
 
 				var waterTypes = new WaterType[rawWaterTypes.length + 1];
@@ -169,6 +172,54 @@ public class WaterTypeManager {
 	public void restart() {
 		shutDown();
 		startUp();
+	}
+
+	private WaterType[] loadWaterTypes(ResourcePath path) throws IOException {
+		// Parsed manually first, like materials, so each water type can inherit the values it doesn't set from its parent
+		var gson = plugin.getGson();
+		var rawWaterTypes = path.loadJson(gson, JsonArray.class);
+		if (rawWaterTypes == null)
+			throw new IOException("Empty or invalid: " + path);
+
+		var rawWaterTypeMap = new HashMap<String, JsonObject>();
+		var validWaterTypes = new ArrayList<JsonObject>();
+		for (var element : rawWaterTypes) {
+			if (!element.isJsonObject()) {
+				log.error("Invalid water type. Expected an object. Got: '{}'", element);
+				continue;
+			}
+
+			var waterType = element.getAsJsonObject();
+			var name = waterType.get("name");
+			if (name == null || !name.isJsonPrimitive() || !name.getAsJsonPrimitive().isString()) {
+				log.error("Water type missing a name: '{}'", waterType);
+				continue;
+			}
+
+			if (rawWaterTypeMap.putIfAbsent(name.getAsString(), waterType) != null) {
+				log.error("Duplicate water type name: '{}'", name);
+				continue;
+			}
+
+			validWaterTypes.add(waterType);
+		}
+
+		// Except the vanilla texture index, which would make the child replace its parent as that texture's water type
+		var resolvedWaterTypes = GsonUtils.resolveParentDefinitions(
+			rawWaterTypeMap, "water type", null, (waterType, parent) -> {
+				for (var entry : parent.entrySet())
+					if (!waterType.has(entry.getKey()) && !entry.getKey().equals("vanillaTextureIndex"))
+						waterType.add(entry.getKey(), entry.getValue());
+			});
+
+		// In the order they're listed, which decides their indices
+		var waterTypesToParse = new JsonArray();
+		for (var waterType : validWaterTypes) {
+			var resolved = resolvedWaterTypes.get(waterType.get("name").getAsString());
+			if (resolved != null)
+				waterTypesToParse.add(resolved);
+		}
+		return gson.fromJson(waterTypesToParse, WaterType[].class);
 	}
 
 	private WaterType get(String name) {

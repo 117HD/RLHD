@@ -43,6 +43,8 @@ public class WaterType {
 	@JsonAdapter(ColorUtils.SrgbToLinearAdapter.class)
 	private float[] depthColor = rgb(0, 117, 142);
 	private boolean hasFoam = true;
+	private boolean hasWaves = true;
+	private boolean scrolls = true;
 	private float duration = 1;
 	public int fishingSpotRecolor = -1;
 	public boolean skipUnderwaterTerrain = false;
@@ -91,7 +93,9 @@ public class WaterType {
 		struct.duration.set(duration);
 		struct.fresnelAmount.set(fresnelAmount);
 		struct.surfaceColor.set(linearToSrgb(surfaceColor));
+		struct.noWaves.set(hasWaves ? 0 : 1);
 		struct.foamColor.set(linearToSrgb(foamColor));
+		struct.noScroll.set(scrolls ? 0 : 1);
 		struct.depthColor.set(linearToSrgb(depthColor));
 		struct.normalMap.set(Material.getTextureLayer(normalMap));
 	}

@@ -237,6 +237,22 @@
         "type": "number",
         "description": "The height where the `windStrength` will be reached. The closer objects are to this height, the stronger the wind will be. Defaults to 1280 (10 tiles in height)."
       },
+      "waveRoughness": {
+        "type": "number",
+        "description": "Multiplies how rough open water looks on top of what `windStrength` gives it, with more ocean waves, more visible lace and faster churn. Below 1 is calmer. Defaults to 1."
+      },
+      "waveScrollDirection": {
+        "type": "number",
+        "description": "Angle in degrees the ocean waves and lace scroll towards, as if sailing the other way. Zero is north and positive rotates clockwise, towards east. Defaults to 0."
+      },
+      "waveScrollSpeed": {
+        "type": "number",
+        "description": "How fast the ocean waves and lace scroll towards `waveScrollDirection`, in tiles per second. Boat wakes and shore foam stay put. Defaults to 0, for none."
+      },
+      "waveRegionRepeat": {
+        "type": "boolean",
+        "description": "Repeat the ocean waves and lace in every 64 by 64 tile region, so moving between copies of a scene in different regions, like the Fishing Trawler's, doesn't jump the pattern. Defaults to false."
+      },
       "sky": {
         "description": "Cycle-driven sky configuration, specified either as a preset, or as an object inheriting from a preset as its parent. Defaults to GIELINOR.",
         "oneOf": [

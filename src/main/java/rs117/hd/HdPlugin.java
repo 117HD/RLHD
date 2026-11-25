@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -105,6 +106,7 @@ import rs117.hd.renderer.legacy.LegacyRenderer;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.scene.AreaManager;
+import rs117.hd.scene.BoatWakes;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.GamevalManager;
@@ -117,6 +119,7 @@ import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SkyManager;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
+import rs117.hd.scene.WaterSurfaceManager;
 import rs117.hd.scene.WaterTypeManager;
 import rs117.hd.scene.daylight_cycle.StarField;
 import rs117.hd.utils.ColorUtils;
@@ -178,6 +181,10 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_NEBULA_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_WATER_NOISE = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+
+	// Texels across the water's noise texture. A power of two, which the water shader relies on to wrap it.
+	private static final int WATER_NOISE_SIZE = 256;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -276,6 +283,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private EnvironmentManager environmentManager;
+
+	@Inject
+	private WaterSurfaceManager waterSurfaceManager;
 
 	@Inject
 	private TextureManager textureManager;
@@ -379,6 +389,7 @@ public class HdPlugin extends Plugin {
 	private final int[] actualUiResolution = { 0, 0 }; // Includes stretched mode and DPI scaling
 	private final GLBuffer[] pboUi = new GLBuffer[3];
 	private int texUi;
+	private int texWaterNoise;
 	private int uiWidth;
 	private int uiHeight;
 	private GenericJob uiCopyJob;
@@ -743,6 +754,7 @@ public class HdPlugin extends Plugin {
 				initializeShaders();
 				initializeShaderHotswapping();
 				initializeUiTexture();
+				initializeWaterNoiseTexture();
 				initializeShadowMapFbo();
 
 				checkGLErrors();
@@ -759,6 +771,7 @@ public class HdPlugin extends Plugin {
 				lightManager.startUp();
 				skyManager.startUp();
 				environmentManager.startUp();
+				waterSurfaceManager.startUp();
 				fishingSpotReplacer.startUp();
 				gammaCalibrationOverlay.initialize();
 				npcDisplacementCache.initialize();
@@ -806,6 +819,7 @@ public class HdPlugin extends Plugin {
 				lwjglInitialized = false;
 
 				destroyUiTexture();
+				destroyWaterNoiseTexture();
 				destroyShaders();
 				destroyVaos();
 				destroyUbos();
@@ -981,6 +995,23 @@ public class HdPlugin extends Plugin {
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
 			.define("WATER_SPECULAR_REFLECTIONS", config.waterSpecularReflections())
 			.define("DECOUPLE_WATER_FROM_SKY_COLOR", config.decoupleSkyAndWaterColor())
+			// One setting for all the water's foam but the boat wakes. Kept apart in the shaders, which test each.
+			.define("SHORE_FOAM", config.waterFoam())
+			.define("OCEAN_LACE", config.waterFoam())
+			.define("OCEAN_WAVES", config.waterFoam())
+			.define("BOAT_WAKES", config.boatWakes())
+			.define("SHORE_DISTANCE_MAX", SceneContext.SHORE_DISTANCE_MAX)
+			.define("SHORE_DISTANCE_STEPS", SceneContext.SHORE_DISTANCE_STEPS)
+			.define("SHORE_DIRECTION_SHIFT", SceneContext.SHORE_DIRECTION_SHIFT)
+			.define("SHORE_DIRECTION_STEPS", SceneContext.SHORE_DIRECTION_STEPS)
+			.define("SHORE_SIDES_SHIFT", SceneContext.SHORE_SIDES_SHIFT)
+			.define("WATER_SQUARE_TILE_BIT", SceneContext.WATER_SQUARE_TILE_BIT)
+			.define("WATER_ENCLOSURE_SHIFT", SceneContext.WATER_ENCLOSURE_SHIFT)
+			.define("WATER_ENCLOSURE_STEPS", SceneContext.WATER_ENCLOSURE_STEPS)
+			.define("WIND_HISTORY_LENGTH", WaterSurfaceManager.WIND_HISTORY_LENGTH)
+			.define("BOAT_WAKE_MAX_BOATS", BoatWakes.MAX_BOATS)
+			.define("BOAT_WAKE_MAX_POINTS", BoatWakes.MAX_POINTS)
+			.define("WATER_NOISE_SIZE", WATER_NOISE_SIZE)
 			.define("DYNAMIC_LIGHTS", configDynamicLights != DynamicLights.NONE)
 			.define("TILED_LIGHTING", configTiledLighting)
 			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getTiledLightingLayers())
@@ -1290,6 +1321,33 @@ public class HdPlugin extends Plugin {
 		if (texUi != 0)
 			glDeleteTextures(texUi);
 		texUi = 0;
+	}
+
+	// Two random values per texel, tiling, which the water shader filters into smooth noise for its foam
+	private void initializeWaterNoiseTexture() {
+		ByteBuffer noise = BufferUtils.createByteBuffer(WATER_NOISE_SIZE * WATER_NOISE_SIZE * 2);
+		Random random = new Random(SEED);
+		while (noise.hasRemaining())
+			noise.put((byte) random.nextInt(256));
+		noise.flip();
+
+		texWaterNoise = glGenTextures();
+		glActiveTexture(TEXTURE_UNIT_WATER_NOISE);
+		glBindTexture(GL_TEXTURE_2D, texWaterNoise);
+		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RG8, WATER_NOISE_SIZE, WATER_NOISE_SIZE, 0, GL_RG, GL_UNSIGNED_BYTE, noise);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		checkGLErrors();
+	}
+
+	private void destroyWaterNoiseTexture() {
+		if (texWaterNoise != 0)
+			glDeleteTextures(texWaterNoise);
+		texWaterNoise = 0;
 	}
 
 	public void updateTiledLightingFbo() {
@@ -2004,6 +2062,8 @@ public class HdPlugin extends Plugin {
 							case KEY_LEGACY_BOAT_SILHOUETTES:
 							case KEY_WATER_SPECULAR_REFLECTIONS:
 							case KEY_DECOUPLE_WATER_FROM_SKY_COLOR:
+							case KEY_WATER_FOAM:
+							case KEY_BOAT_WAKES:
 							case KEY_CENTROID_QUALIFIER:
 							case KEY_VALIDATE_SHADERS:
 								recompilePrograms = true;
@@ -2197,6 +2257,7 @@ public class HdPlugin extends Plugin {
 
 			elapsedTime += deltaTime;
 			windOffset += deltaTime * environmentManager.getCurrentEnvironment().windSpeed;
+			waterSurfaceManager.update();
 		}
 		lastFrameTimeMillis = System.currentTimeMillis();
 		lastFrameClientTime = elapsedClientTime;

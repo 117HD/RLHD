@@ -6044,6 +6044,19 @@
     "groundMaterial": "TRANSPARENT"
   },
   {
+    "name": "FISHING_TRAWLER_INTERIOR",
+    "area": "FISHING_TRAWLER_INTERIOR",
+    "overlayIds": [
+      0,
+      6
+    ],
+    "underlayIds": [
+      75
+    ],
+    "waterType": "PLAIN_WATER_NO_WAVES",
+    "blended": false
+  },
+  {
     "name": "FISHING_TRAWLER",
     "area": "FISHING_TRAWLER",
     "overlayIds": [

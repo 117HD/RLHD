@@ -710,17 +710,11 @@ public class LegacySceneUploader {
 			}
 			else
 			{
-				// set colors for the shoreline to create a foam effect in the water shader
-				swColor = seColor = nwColor = neColor = 127;
-
-				if (sceneContext.isVertexWater(swVertexKey) && sceneContext.isVertexLand(swVertexKey))
-					swColor = 0;
-				if (sceneContext.isVertexWater(seVertexKey) && sceneContext.isVertexLand(seVertexKey))
-					seColor = 0;
-				if (sceneContext.isVertexWater(nwVertexKey) && sceneContext.isVertexLand(nwVertexKey))
-					nwColor = 0;
-				if (sceneContext.isVertexWater(neVertexKey) && sceneContext.isVertexLand(neVertexKey))
-					neColor = 0;
+				// Shore data for the water shader's foam
+				swColor = sceneContext.getSquareWaterTileShoreData(swVertexKey, tileZ, tileExX, tileExY, false);
+				seColor = sceneContext.getSquareWaterTileShoreData(seVertexKey, tileZ, tileExX, tileExY, false);
+				nwColor = sceneContext.getSquareWaterTileShoreData(nwVertexKey, tileZ, tileExX, tileExY, false);
+				neColor = sceneContext.getSquareWaterTileShoreData(neVertexKey, tileZ, tileExX, tileExY, true);
 			}
 
 			if (sceneContext.isVertexOverlay(neVertexKey) && sceneContext.isVertexUnderlay(neVertexKey))
@@ -1077,14 +1071,10 @@ public class LegacySceneUploader {
 						}
 					}
 				} else {
-					// set colors for the shoreline to create a foam effect in the water shader
-					colorA = colorB = colorC = 127;
-					if (sceneContext.isVertexWater(vertexKeyA) && sceneContext.isVertexLand(vertexKeyA))
-						colorA = 0;
-					if (sceneContext.isVertexWater(vertexKeyB) && sceneContext.isVertexLand(vertexKeyB))
-						colorB = 0;
-					if (sceneContext.isVertexWater(vertexKeyC) && sceneContext.isVertexLand(vertexKeyC))
-						colorC = 0;
+					// Shore data for the water shader's foam
+					colorA = sceneContext.getVertexShoreData(vertexKeyA);
+					colorB = sceneContext.getVertexShoreData(vertexKeyB);
+					colorC = sceneContext.getVertexShoreData(vertexKeyC);
 				}
 
 				if (sceneContext.isVertexOverlay(vertexKeyA) && sceneContext.isVertexUnderlay(vertexKeyA))
