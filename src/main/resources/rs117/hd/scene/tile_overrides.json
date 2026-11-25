@@ -5724,8 +5724,8 @@
       29,
       129
     ],
-    "minLightness": 16,
-    "maxLightness": 16,
+    "minLightness": 15,
+    "maxLightness": 15,
     "shiftHue": 1,
     "groundMaterial": "ROCK_6",
     "uvScale": 1.5,
@@ -6000,6 +6000,7 @@
     "name": "Mount Karuulm Mountainside",
     "area": "MOUNT_KARUULM",
     "overlayIds": [ 114, 115 ],
+    "shiftLightness": 2,
     "underlayIds": [
       27,
       29,
