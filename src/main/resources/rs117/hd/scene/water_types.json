@@ -29,7 +29,7 @@
     "foamColor": "#737865",
     "depthColor": "#29521a",
     "duration": 1.2,
-    "fishingSpotRecolor": 23454
+    "modelRecolor": "#047410"
   },
   {
     "name": "MLM_WATER",
@@ -57,7 +57,7 @@
     "foamColor": "#737865",
     "depthColor": "#29521a",
     "duration": 1.2,
-    "fishingSpotRecolor": 23454
+    "modelRecolor": "#047410"
   },
   {
     "name": "POISON_WASTE",

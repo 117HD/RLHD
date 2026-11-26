@@ -106,7 +106,6 @@ import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
-import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.GroundMaterialManager;
 import rs117.hd.scene.LightManager;
@@ -294,9 +293,6 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
-
-	@Inject
-	private FishingSpotReplacer fishingSpotReplacer;
 
 	@Inject
 	private NpcDisplacementCache npcDisplacementCache;
@@ -759,7 +755,6 @@ public class HdPlugin extends Plugin {
 				lightManager.startUp();
 				skyManager.startUp();
 				environmentManager.startUp();
-				fishingSpotReplacer.startUp();
 				gammaCalibrationOverlay.initialize();
 				npcDisplacementCache.initialize();
 
@@ -827,7 +822,6 @@ public class HdPlugin extends Plugin {
 			lightManager.shutDown();
 			environmentManager.shutDown();
 			skyManager.shutDown();
-			fishingSpotReplacer.shutDown();
 			areaManager.shutDown();
 			gamevalManager.shutDown();
 			gammaCalibrationOverlay.destroy();
@@ -2221,14 +2215,6 @@ public class HdPlugin extends Plugin {
 	@Subscribe
 	public void onClientTick(ClientTick clientTick) {
 		elapsedClientTime += 1 / 50f;
-	}
-
-	@Subscribe
-	public void onGameTick(GameTick gameTick) {
-		if (!isActive)
-			return;
-
-		fishingSpotReplacer.update();
 	}
 
 	@Subscribe

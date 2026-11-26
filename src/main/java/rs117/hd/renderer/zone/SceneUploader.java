@@ -2227,7 +2227,8 @@ public class SceneUploader implements AutoCloseable {
 		int orientation,
 		boolean isShadow,
 		DynamicModelVAO.View opaqueView,
-		DynamicModelVAO.View alphaView
+		DynamicModelVAO.View alphaView,
+		int waterModelRecolor
 	) {
 		if (writeCache == null)
 			writeCache = new VertexWriteCache.Collection();
@@ -2300,7 +2301,9 @@ public class SceneUploader implements AutoCloseable {
 			if (textureId != -1 || material.vanillaTextureIndex != -1)
 				color1 = color2 = color3 = 90;
 
-			if (faceOverride.modifiesColor) {
+			if (faceOverride.inheritTileColorType == InheritTileColorType.WATER && waterModelRecolor != -1) {
+				color1 = color2 = color3 = waterModelRecolor;
+			} else if (faceOverride.modifiesColor) {
 				color1 = faceOverride.modifyColor(color1);
 				color2 = faceOverride.modifyColor(color2);
 				color3 = faceOverride.modifyColor(color3);

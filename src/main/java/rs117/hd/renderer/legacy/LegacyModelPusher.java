@@ -526,7 +526,20 @@ public class LegacyModelPusher {
 			}
 
 			if (tile != null) {
-				if (modelOverride.inheritTileColorType != InheritTileColorType.NONE) {
+				if (modelOverride.inheritTileColorType == InheritTileColorType.WATER) {
+					int recolor = tileOverrideManager.getOverride(sceneContext, tile).waterType.modelRecolor;
+					if (recolor != -1) {
+						color1 = color2 = color3 = recolor;
+
+						packedAlphaPriorityFlags |= 1 << 20;
+					} else if (modelOverride.modifiesColor) {
+						color1 = modelOverride.modifyColor(color1);
+						color2 = modelOverride.modifyColor(color2);
+						color3 = modelOverride.modifyColor(color3);
+
+						packedAlphaPriorityFlags |= 1 << 20;
+					}
+				} else if (modelOverride.inheritTileColorType != InheritTileColorType.NONE) {
 					final Scene scene = sceneContext.scene;
 					SceneTileModel tileModel = tile.getSceneTileModel();
 					SceneTilePaint tilePaint = tile.getSceneTilePaint();

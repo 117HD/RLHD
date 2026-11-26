@@ -19,7 +19,9 @@ import rs117.hd.config.ShadowMode;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.ModelOverrideManager;
+import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.materials.Material;
+import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
@@ -345,6 +347,17 @@ public class ModelStreamingManager {
 		final PrimitiveCharArray visibleFaces = FACE_INDICES.acquire();
 		final PrimitiveCharArray culledFaces = FACE_INDICES.acquire();
 
+		int waterModelRecolor = -1;
+		if (modelOverride.inheritTileColorType == InheritTileColorType.WATER) {
+			int plane = tileObject != null ? tileObject.getPlane() : 0;
+			int tileExX = ((int) x >> LOCAL_COORD_BITS) + ctx.sceneContext.sceneOffset;
+			int tileExY = ((int) z >> LOCAL_COORD_BITS) + ctx.sceneContext.sceneOffset;
+			if (0 <= tileExX && tileExX < ctx.sceneContext.sizeX && 0 <= tileExY && tileExY < ctx.sceneContext.sizeZ)
+				waterModelRecolor = ctx.sceneContext
+					.getTileOverride(plane, tileExX, tileExY, SceneContext.TILE_OVERRIDE_MAIN)
+					.waterType.modelRecolor;
+		}
+
 		boolean isActor = renderable instanceof Actor;
 		boolean isPlayer = renderable instanceof Player;
 		final int renderMode = renderable.getRenderMode();
@@ -399,7 +412,8 @@ public class ModelStreamingManager {
 					orient,
 					true,
 					shadowView,
-					shadowView
+					shadowView,
+					waterModelRecolor
 				);
 				shadowView.end();
 			}
@@ -425,7 +439,8 @@ public class ModelStreamingManager {
 					orient,
 					ctx.isSquashed,
 					opaqueView,
-					alphaView
+					alphaView,
+					waterModelRecolor
 				);
 
 				if (opaqueView != alphaView && alphaView.getEndOffset() > alphaView.getStartOffset()) {

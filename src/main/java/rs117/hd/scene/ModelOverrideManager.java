@@ -45,9 +45,6 @@ public class ModelOverrideManager {
 	@Inject
 	private SceneManager sceneManager;
 
-	@Inject
-	private FishingSpotReplacer fishingSpotReplacer;
-
 	private final Int2ObjectHashMap<ModelOverride> modelOverrides = new Int2ObjectHashMap<>();
 	private final IntHashSet detailCullingBlacklist = new IntHashSet();
 
@@ -85,7 +82,6 @@ public class ModelOverrideManager {
 					}
 				}
 
-				addOverride(fishingSpotReplacer.getModelOverride(), gamevals);
 				addSailingCullingOverrides(gamevals);
 
 				detailCullingBlacklist.clear();
