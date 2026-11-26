@@ -225,11 +225,12 @@
         },
         "inheritTileColorType": {
           "type": "string",
-          "description": "Whether to inherit color from the overlay or underlay of the tile beneath. Defaults to NONE.",
+          "description": "Whether to inherit color from the overlay or underlay of the tile beneath, or from the water type's model recolor. Defaults to NONE.",
           "enum": [
             "NONE",
             "OVERLAY",
-            "UNDERLAY"
+            "UNDERLAY",
+            "WATER"
           ]
         },
         "hideInAreas": {

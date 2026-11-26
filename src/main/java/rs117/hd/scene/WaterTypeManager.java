@@ -61,9 +61,6 @@ public class WaterTypeManager {
 	private TileOverrideManager tileOverrideManager;
 
 	@Inject
-	private FishingSpotReplacer fishingSpotReplacer;
-
-	@Inject
 	private SceneManager sceneManager;
 
 	public static WaterType[] WATER_TYPES = {};
@@ -122,9 +119,6 @@ public class WaterTypeManager {
 
 				if (first)
 					return;
-
-				fishingSpotReplacer.despawnRuneLiteObjects();
-				fishingSpotReplacer.update();
 
 				boolean reloadScene = oldWaterTypes == null || oldWaterTypes.length != waterTypes.length;
 				if (!reloadScene) {

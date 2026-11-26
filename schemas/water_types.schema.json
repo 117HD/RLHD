@@ -89,9 +89,10 @@
         "type": "number",
         "description": "The duration before the UV scrolling repeats. Smaller numbers yield faster scrolling waves."
       },
-      "fishingSpotRecolor": {
-        "type": "integer",
-        "description": "A Jagex HSL value to apply to fishing spot replacement models on this water type."
+      "modelRecolor": {
+        "type": "string",
+        "description": "A hex color code to apply to models with inheritTileColorType WATER on this water type.",
+        "pattern": "^#[A-Fa-f0-9]{6}$"
       },
       "skipUnderwaterTerrain": {
         "type": "boolean",

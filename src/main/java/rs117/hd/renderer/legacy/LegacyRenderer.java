@@ -44,7 +44,6 @@ import rs117.hd.renderer.Renderer;
 import rs117.hd.renderer.SkyRenderer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
-import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
@@ -125,9 +124,6 @@ public class LegacyRenderer implements Renderer {
 
 	@Inject
 	private ModelHasher modelHasher;
-
-	@Inject
-	private FishingSpotReplacer fishingSpotReplacer;
 
 	@Inject
 	private NpcDisplacementCache npcDisplacementCache;
@@ -1374,7 +1370,6 @@ public class LegacyRenderer implements Renderer {
 		tileVisibilityCached = false;
 		lightManager.loadSceneLights(nextSceneContext);
 		lightManager.swapSceneLights(nextSceneContext);
-		fishingSpotReplacer.despawnRuneLiteObjects();
 		npcDisplacementCache.clear();
 
 		if (sceneContext != null)
@@ -1695,6 +1690,14 @@ public class LegacyRenderer implements Renderer {
 				}
 			}
 
+			Tile tile = null;
+			if (ModelHash.getType(hash) == ModelHash.TYPE_NPC) {
+				int tileExX = (x >> Perspective.LOCAL_COORD_BITS) + sceneContext.sceneOffset;
+				int tileExY = (z >> Perspective.LOCAL_COORD_BITS) + sceneContext.sceneOffset;
+				if (0 <= tileExX && tileExX < Constants.EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < Constants.EXTENDED_SCENE_SIZE)
+					tile = sceneContext.scene.getExtendedTiles()[plane][tileExX][tileExY];
+			}
+
 			// Temporary model (animated or otherwise not a static Model already in the scene buffer)
 			if (plugin.enableDetailedTimers)
 				frameTimer.begin(Timer.MODEL_BATCHING);
@@ -1724,7 +1727,7 @@ public class LegacyRenderer implements Renderer {
 				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
 				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
 
-				modelPusher.pushModel(sceneContext, null, uuid, model, modelOverride, preOrientation, true);
+				modelPusher.pushModel(sceneContext, tile, uuid, model, modelOverride, preOrientation, true);
 
 				faceCount = sceneContext.modelPusherResults[0];
 				if (sceneContext.modelPusherResults[1] == 0)

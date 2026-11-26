@@ -44,7 +44,8 @@ public class WaterType {
 	private float[] depthColor = rgb(0, 117, 142);
 	private boolean hasFoam = true;
 	private float duration = 1;
-	public int fishingSpotRecolor = -1;
+	@JsonAdapter(ColorUtils.JagexHslAdapter.class)
+	public int modelRecolor = -1;
 	public boolean skipUnderwaterTerrain = false;
 
 	public transient int index;

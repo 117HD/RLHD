@@ -29,7 +29,6 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
-import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.areas.AABB;
@@ -87,9 +86,6 @@ public class SceneManager {
 
 	@Inject
 	private NpcDisplacementCache npcDisplacementCache;
-
-	@Inject
-	private FishingSpotReplacer fishingSpotReplacer;
 
 	@Inject
 	private FrameTimer frameTimer;
@@ -718,7 +714,6 @@ public class SceneManager {
 
 		Stopwatch sw = Stopwatch.createStarted();
 
-		fishingSpotReplacer.despawnRuneLiteObjects();
 		npcDisplacementCache.clear();
 
 		boolean isFirst = root.sceneContext == null;

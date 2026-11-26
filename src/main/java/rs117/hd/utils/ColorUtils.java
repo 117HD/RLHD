@@ -8,6 +8,7 @@
  */
 package rs117.hd.utils;
 
+import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
@@ -473,6 +474,34 @@ public class ColorUtils {
 
 	public static String rgbToHex(float... linearRgb) {
 		return srgbToHex(linearToSrgb(linearRgb));
+	}
+
+	/**
+	 * Reads/writes a packed Jagex HSL value as a hex color code, e.g. for recoloring model faces.
+	 */
+	public static class JagexHslAdapter extends TypeAdapter<Integer> {
+		@Override
+		public Integer read(JsonReader in) throws IOException {
+			if (in.peek() == JsonToken.NULL) {
+				in.nextNull();
+				return -1;
+			}
+
+			if (in.peek() == JsonToken.STRING)
+				return hsl(in.nextString());
+
+			return in.nextInt();
+		}
+
+		@Override
+		public void write(JsonWriter out, Integer value) throws IOException {
+			if (value == null || value == -1) {
+				out.nullValue();
+				return;
+			}
+
+			out.value(srgbToHex(packedHslToSrgb(value)));
+		}
 	}
 
 	@Slf4j
