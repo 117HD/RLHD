@@ -86,6 +86,8 @@ import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowFiltering;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.VanillaShadowMode;
+import rs117.hd.model.modelreplaceer.ModelStore;
+import rs117.hd.model.modelreplaceer.types.objects.ModelDefinition;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.TiledLightingShaderProgram;
@@ -106,6 +108,7 @@ import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
+import rs117.hd.scene.AnimatedModelReplacer;
 import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.GroundMaterialManager;
@@ -297,6 +300,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
+
+	@Inject
+	private AnimatedModelReplacer animatedModelReplacer;
 
 	@Inject
 	private NpcDisplacementCache npcDisplacementCache;
@@ -755,6 +761,7 @@ public class HdPlugin extends Plugin {
 				areaManager.startUp();
 				groundMaterialManager.startUp();
 				tileOverrideManager.startUp();
+				ModelStore.load(getGson(), client.getTextureProvider().getTextures().length);
 				modelOverrideManager.startUp();
 				lightManager.startUp();
 				skyManager.startUp();
@@ -828,9 +835,11 @@ public class HdPlugin extends Plugin {
 			environmentManager.shutDown();
 			skyManager.shutDown();
 			fishingSpotReplacer.shutDown();
+			animatedModelReplacer.clear();
 			areaManager.shutDown();
 			gamevalManager.shutDown();
 			gammaCalibrationOverlay.destroy();
+			ModelDefinition.release();
 			npcDisplacementCache.destroy();
 			waterTypeManager.shutDown();
 			materialManager.shutDown();
@@ -2228,6 +2237,8 @@ public class HdPlugin extends Plugin {
 		if (!isActive)
 			return;
 
+		modelOverrideManager.updateScheduledReplacements();
+		animatedModelReplacer.update();
 		fishingSpotReplacer.update();
 	}
 

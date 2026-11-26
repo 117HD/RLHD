@@ -1,6 +1,10 @@
 package rs117.hd.scene;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
@@ -13,12 +17,15 @@ import net.runelite.api.*;
 import net.runelite.api.gameval.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
+import rs117.hd.model.modelreplaceer.types.objects.ModelDefinition;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.model_overrides.ModelReplacement;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
+import rs117.hd.utils.VariableSupplier;
 import rs117.hd.utils.collections.Int2ObjectHashMap;
 import rs117.hd.utils.collections.IntHashSet;
 
@@ -48,6 +55,14 @@ public class ModelOverrideManager {
 	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
 
+	@Inject
+	private AnimatedModelReplacer animatedModelReplacer;
+
+	@Inject
+	private SkyManager skyManager;
+
+	private final List<ModelReplacement> scheduledReplacements = new ArrayList<>();
+
 	private final Int2ObjectHashMap<ModelOverride> modelOverrides = new Int2ObjectHashMap<>();
 	private final IntHashSet detailCullingBlacklist = new IntHashSet();
 
@@ -63,7 +78,10 @@ public class ModelOverrideManager {
 				if (parsedOverrides == null)
 					throw new IOException("Empty or invalid: " + path);
 
+				animatedModelReplacer.clear();
 				modelOverrides.clear();
+				scheduledReplacements.clear();
+				VariableSupplier replacementVars = replacementVariables();
 				for (ModelOverride override : parsedOverrides) {
 					// Ignore trailing commas in the JSON
 					if (override == null)
@@ -75,6 +93,7 @@ public class ModelOverrideManager {
 						continue;
 					}
 
+					initializeReplacement(override, replacementVars);
 					addOverride(override, gamevals);
 
 					if (override.hideInAreas.length > 0) {
@@ -112,11 +131,64 @@ public class ModelOverrideManager {
 		}));
 	}
 
+	private VariableSupplier replacementVariables() {
+		return ModelReplacement.variables(plugin.vars, LocalDate.now(), skyManager.getState());
+	}
+
+	private void initializeReplacement(ModelOverride override, VariableSupplier vars) {
+		ModelReplacement replacement = override.modelReplacement;
+		if (replacement == null)
+			return;
+		if (override.seasonalTheme != null && override.seasonalTheme != plugin.configSeasonalTheme) {
+			override.modelReplacement = null;
+			return;
+		}
+
+		try {
+			replacement.initialize(vars);
+			if (replacement.hasConditions())
+				scheduledReplacements.add(replacement);
+		} catch (RuntimeException ex) {
+			log.warn("Invalid model replacement in override '{}': {}", override.description, ex.getMessage());
+			override.modelReplacement = null;
+		}
+	}
+
+	public void updateScheduledReplacements() {
+		if (scheduledReplacements.isEmpty())
+			return;
+		VariableSupplier vars = replacementVariables();
+		IdentityHashMap<ModelReplacement, ModelDefinition> changes = null;
+		for (ModelReplacement replacement : scheduledReplacements) {
+			ModelDefinition selected = replacement.select(vars);
+			if (selected != replacement.definition) {
+				if (changes == null)
+					changes = new IdentityHashMap<>();
+				changes.put(replacement, selected);
+			}
+		}
+		if (changes == null)
+			return;
+
+		var loadingLock = sceneManager.getLoadingLock();
+		loadingLock.lock();
+		try {
+			// Finish uploads using the old selections before publishing new ones.
+			sceneManager.completeAllStreaming();
+			changes.forEach((replacement, selected) -> replacement.definition = selected);
+			plugin.renderer.clearCaches();
+			plugin.renderer.reloadScene();
+		} finally {
+			loadingLock.unlock();
+		}
+	}
+
 	public void shutDown() {
 		if (fileWatcher != null)
 			fileWatcher.unregister();
 		fileWatcher = null;
 
+		scheduledReplacements.clear();
 		modelOverrides.clear();
 		modelOverrides.trimToSize();
 
@@ -141,6 +213,8 @@ public class ModelOverrideManager {
 			addEntry(ModelHash.TYPE_PROJECTILE, id, override, gamevals);
 		for (int id : override.graphicsObjectIds)
 			addEntry(ModelHash.TYPE_GRAPHICS_OBJECT, id, override, gamevals);
+		for (String name : override.custom117)
+			addEntry(ModelHash.TYPE_CUSTOM, name.hashCode(), override, gamevals);
 	}
 
 	private void addEntry(int type, int id, ModelOverride entry, GamevalManager.Handle gamevals) {
@@ -253,7 +327,12 @@ public class ModelOverrideManager {
 
 	@Nonnull
 	public ModelOverride getOverride(int uuid, int[] worldPos) {
-		var override = modelOverrides.get(ModelHash.getUuidWithoutSubType(uuid));
+		return getOverride(uuid, worldPos, false);
+	}
+
+	@Nonnull
+	public ModelOverride getOverride(int uuid, int[] worldPos, boolean custom) {
+		var override = custom ? modelOverrides.get(uuid) : modelOverrides.get(ModelHash.getUuidWithoutSubType(uuid));
 		if (override == null)
 			return ModelOverride.NONE;
 

@@ -28,6 +28,7 @@ import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
+import rs117.hd.model.modelreplaceer.types.objects.ModelDefinition;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.ModelPassthroughComputeProgram;
@@ -42,6 +43,7 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.renderer.SkyRenderer;
+import rs117.hd.scene.AnimatedModelReplacer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
@@ -54,6 +56,7 @@ import rs117.hd.scene.daylight_cycle.SkyState;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.model_overrides.ModelReplacement;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
@@ -116,6 +119,9 @@ public class LegacyRenderer implements Renderer {
 
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
+
+	@Inject
+	private AnimatedModelReplacer animatedModelReplacer;
 
 	@Inject
 	private LegacySceneUploader sceneUploader;
@@ -1297,6 +1303,7 @@ public class LegacyRenderer implements Renderer {
 	public void loadScene(Scene scene) {
 		if (!plugin.isActive())
 			return;
+		ModelDefinition.release();
 
 		int expandedChunks = plugin.configExpandedMapLoadingChunks;
 		if (HDUtils.sceneIntersects(scene, expandedChunks, areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
@@ -1542,6 +1549,35 @@ public class LegacyRenderer implements Renderer {
 		return true;
 	}
 
+	private Model findModelReplacement(
+		ModelReplacement replacement, Model originalModel, int id, int x, int z, long hash,
+		int drawOrientation, int impostorId
+	) {
+		ModelDefinition def = replacement == null ? null : replacement.definition;
+		if (def == null)
+			return originalModel;
+
+		frameTimer.begin(Timer.MODEL_REPLACEMENTS);
+
+		int tileX = (x >> Perspective.LOCAL_COORD_BITS) + sceneContext.sceneOffset;
+		int tileY = (z >> Perspective.LOCAL_COORD_BITS) + sceneContext.sceneOffset;
+		int plane = ModelHash.getPlane(hash);
+
+		Tile tile = sceneContext.scene.getExtendedTiles()[plane][tileX][tileY];
+		TileObject source = HDUtils.getTileObject(tile, hash);
+		int config = HDUtils.getObjectConfig(source);
+
+		int type = config & 0x3F;
+		int orientation = (config >> 6) & 0x3;
+
+		Model model = def.getModel(client, id, type, orientation);
+		frameTimer.end(Timer.MODEL_REPLACEMENTS);
+		if (model != null && source != null && animatedModelReplacer.request(
+			sceneContext.scene, source, replacement, def, model, drawOrientation, impostorId, false))
+			return null;
+		return model;
+	}
+
 	/**
 	 * Draw a Renderable in the scene
 	 *
@@ -1571,6 +1607,20 @@ public class LegacyRenderer implements Renderer {
 				return;
 		}
 
+		int plane = ModelHash.getPlane(hash);
+		int id = ModelHash.getIdOrIndex(hash);
+		int uuid = ModelHash.generateUuid(client, hash, renderable);
+		if (renderable instanceof DynamicObject) {
+			var def = client.getObjectDefinition(ModelHash.getUuidId(uuid));
+			if (def != null && def.getImpostorIds() != null) {
+				var impostor = def.getImpostor();
+				if (impostor != null)
+					uuid = ModelHash.packUuid(ModelHash.getUuidType(uuid), impostor.getId());
+			}
+		}
+		int[] worldPos = sceneContext.localToWorld(x, z, plane);
+		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
+
 		if (plugin.enableDetailedTimers)
 			frameTimer.begin(Timer.GET_MODEL);
 
@@ -1578,12 +1628,16 @@ public class LegacyRenderer implements Renderer {
 		try {
 			// getModel may throw an exception from vanilla client code
 			if (renderable instanceof Model) {
-				model = (Model) renderable;
+				model = findModelReplacement(modelOverride.modelReplacement, (Model) renderable, id, x, z, hash, orientation, -1);
+				if (model == null)
+					return;
 				offsetModel = model.getUnskewedModel();
 				if (offsetModel == null)
 					offsetModel = model;
 			} else {
-				offsetModel = model = renderable.getModel();
+				int impostorId = renderable instanceof DynamicObject ? ModelHash.getUuidId(uuid) : -1;
+				offsetModel = model = findModelReplacement(
+					modelOverride.modelReplacement, renderable.getModel(), id, x, z, hash, orientation, impostorId);
 			}
 			if (model == null || model.getFaceCount() == 0) {
 				// skip models with zero faces
@@ -1638,7 +1692,6 @@ public class LegacyRenderer implements Renderer {
 		eightIntWrite[6] = y << 16 | height & 0xFFFF; // Pack Y into the upper bits to easily preserve the sign
 		eightIntWrite[7] = z;
 
-		int plane = ModelHash.getPlane(hash);
 		int faceCount;
 		if (sceneContext.id == (offsetModel.getSceneId() & LegacySceneUploader.SCENE_ID_MASK)) {
 			// The model is part of the static scene buffer. The Renderable will then almost always be the Model instance, but if the scene
@@ -1658,17 +1711,6 @@ public class LegacyRenderer implements Renderer {
 
 			plugin.drawnStaticRenderableCount = plugin.drawnStaticRenderableCount + 1;
 		} else {
-			int uuid = ModelHash.generateUuid(client, hash, renderable);
-			if (renderable instanceof DynamicObject) {
-				var def = client.getObjectDefinition(ModelHash.getUuidId(uuid));
-				if (def != null && def.getImpostorIds() != null) {
-					var impostor = def.getImpostor();
-					if (impostor != null)
-						uuid = ModelHash.packUuid(ModelHash.getUuidType(uuid), impostor.getId());
-				}
-			}
-			int[] worldPos = sceneContext.localToWorld(x, z, plane);
-			ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 			if (modelOverride.hide)
 				return;
 

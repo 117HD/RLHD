@@ -127,16 +127,23 @@ public final class HDUtils {
 	// (gameObject.getConfig() >> 8) & 1, // 1-bit interactType != 0 (supports items)
 	// (gameObject.getConfig() >> 9) // should always be zero
 	public static int getObjectConfig(Tile tile, long hash) {
+		return getObjectConfig(getTileObject(tile, hash));
+	}
+
+	@Nullable
+	public static TileObject getTileObject(@Nullable Tile tile, long hash) {
+		if (tile == null)
+			return null;
 		if (tile.getWallObject() != null && tile.getWallObject().getHash() == hash)
-			return tile.getWallObject().getConfig();
+			return tile.getWallObject();
 		if (tile.getDecorativeObject() != null && tile.getDecorativeObject().getHash() == hash)
-			return tile.getDecorativeObject().getConfig();
+			return tile.getDecorativeObject();
 		if (tile.getGroundObject() != null && tile.getGroundObject().getHash() == hash)
-			return tile.getGroundObject().getConfig();
+			return tile.getGroundObject();
 		for (GameObject gameObject : tile.getGameObjects())
 			if (gameObject != null && gameObject.getHash() == hash)
-				return gameObject.getConfig();
-		return -1;
+				return gameObject;
+		return null;
 	}
 
 	public static int getObjectConfig(@Nullable TileObject tileObject) {

@@ -1,0 +1,50 @@
+{
+  "HOLLY": {
+    "modelIds": [43051],
+    "ambient": 20,
+    "contrast": 10,
+    "offsetZ": -40,
+    "offsetX": "ori == 0 ? -15 : 15"
+  },
+  "XMAS_TREE": {
+    "modelIds": [20491, 20492, 20493, 20494],
+    "ambient": 30,
+    "contrast": 30,
+    "animationId": 5058
+  },
+  "TORCH": {
+    "modelIds": [11821],
+    "ambient": 30,
+    "contrast": 30
+  },
+  "XMAS_BUSH": {
+    "modelIds": [43047, 43056],
+    "ambient": 20,
+    "contrast": 10,
+    "recolorFrom": [6257, 6261, 6241, 127],
+    "recolorTo": [37999, 38003, 37987, 38003],
+    "retextureFrom": [8, 60],
+    "retextureTo": [127, 128]
+  },
+  "XMAS_SNOW_TREE": {
+    "modelIds": [1637, 55839],
+    "conditionalModels": [
+      { "modelId": 43082, "chance": 70 }
+    ],
+    "ambient": 20,
+    "contrast": 10,
+    "recolorFrom": [6257, 6261, 6241, 127, 3470],
+    "recolorTo": [37999, 38003, 37987, 38003, 5665],
+    "retextureFrom": [8, 60],
+    "retextureTo": [127, 128]
+  },
+  "XMAS_SNOW_OAK": {
+    "modelIds": [1571, 55838],
+    "ambient": 25,
+    "contrast": 25,
+    "recolorFrom": [32664, 32698, 28436, 32767, 5218],
+    "recolorTo": [27516, 28573, 24345, 28573, 12548],
+    "retextureFrom": [8, 60],
+    "retextureTo": [127, 128]
+  }
+}
