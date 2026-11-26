@@ -801,6 +801,23 @@ public interface HdPluginConfig extends Config
 		return round(DEFAULT_LATLON[1]);
 	}
 
+	String KEY_INGAME_LATLON = "inGameLatLon";
+	@ConfigItem(
+		keyName = KEY_INGAME_LATLON,
+		name = "Use Gielinor lat/long",
+		description =
+			"Override the latitude and longitude coordinates with the in-game latitude and longitude of the player.<br>" +
+			"While enabled, the player's in-game map location influences the time of day.<br>" +
+			"The coordinates are the in-universe (Gielinor) coordinates used for Coordinate Clue Scrolls.<br>" +
+			"Applies to Default, Real-time, and Custom cycle modes.<br>" +
+			"When enabled, the configured Real-time latitude and longitude are ignored.",
+		position = 9,
+		section = daylightCycleSettings
+	)
+	default boolean enableInGameLatLon() {
+		return false;
+	}
+
 
 	/*====== Environment settings ======*/
 
